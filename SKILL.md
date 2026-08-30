@@ -59,6 +59,7 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 - `docs/rules/` 承接细节，AGENTS.md 按章节 `@` 引用
 - 执行与校验由 `scripts/verify-governance.js` 与 `.governance/generated/skills/` 负责
 - **同一规则不得在多处独立维护**；需修改时从源头改，再同步生成物
+- **变更归位与残留清理**的完整规则位于 `references/policies/lifecycle.policy.md`，代码修改/删除的补充约束位于 `references/policies/coding.policy.md`；本文件只保留入口指针，不复制规则正文
 
 ### Rule Priority（规则冲突裁决顺序）
 

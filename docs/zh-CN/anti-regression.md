@@ -7,6 +7,8 @@
 - **入口文件自动加载** — `AGENTS.md` / `CLAUDE.md` / `.cursor/rules/` 每次会话开始自动读取（见 `references/templates/agents-md.template.md`）
 - **六阶段操作生命周期** — Understand → Plan → Implement → Validate → Synchronize → Report（见 `references/policies/lifecycle.policy.md`）
 - **代码修改/删除保护** — 动已有代码先做上下文分析与归属判定；删除必须理由 + 引用搜索 + 迁移方案（见 `references/policies/coding.policy.md`）
+- **变更归位与残留清理** — 删除/重命名/移动/替换/弃用/拆分合并/配置/API/生成物变更时，区分当前层、兼容层和历史层，不留未解释残留（见 `references/policies/lifecycle.policy.md`）
+- **规则捕获** — 开发者提出的持久性要求必须分类并明确裁定后才能进入 `AGENTS.md` / `docs/rules/**`；未决候选保存在可恢复状态中（见 `references/policies/lifecycle.policy.md`）
 - **CHANGELOG 变更分类** — 纯文档不改；修复 → `Fixed`；新能力 → `Added`；破坏性 → `Changed`（见 `references/policies/lifecycle.policy.md`）
 - **治理文件保护** — 受保护文件须 原因 → CHANGELOG → 版本升级 → 跑校验器。权威清单在 `references/policies/governance-files.policy.md`（单一事实源）；本页不复述
 - **规则优先级** — 系统/平台安全 > 用户明确要求 > 治理完整性 > AGENTS.md > docs/rules/ > 既有代码约定

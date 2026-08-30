@@ -291,7 +291,7 @@
       "source": null,
       "type": "generated",
       "generator": "state",
-      "description": "Current state (maturity, phase, agent identity)"
+      "description": "Current state (maturity, phase, agent identity, optional rule-capture candidates)"
     },
     {
       "phase": "B",

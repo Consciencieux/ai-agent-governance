@@ -10,6 +10,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **Rule capture and change hygiene** — governed-project agents now collect developer-stated persistent requirements for explicit adjudication before rule-file writes, preserve resumable candidates in `state.json`, and apply current/compatibility/history surface checks across deletion, rename, migration, replacement, deprecation, API/config and generated-artifact changes.
 - **Secret scanning coverage** — staged-diff scanning now covers Slack, Google, Stripe, Azure, JWT, base64/PEM material, connection strings, and punctuated credential values; force-added `.env` files are scanned, `tests/` is not a global bypass, and reports include real added-line numbers.
 - **Fail-closed state handling** — malformed lock, sync-rule, or Git-policy JSON is no longer treated as an absent/safe configuration.
 - **CI validation** — an empty `.github/workflows/` directory no longer satisfies the default CI workflow check.

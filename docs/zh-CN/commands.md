@@ -117,11 +117,11 @@ Git 工作流治理没有独立提示词 —— 它作为运行期规则自动�
 
 | 组件 | 提示词 | 职责 |
 | --- | --- | --- |
-| drift-check | `check governance drift` · `governance health report` · `is governance intact` | 将 manifest 与现实比对，报告漂移；`activity-report` 模式聚合审计轨迹，`freshness` 模式标记过时文档，`consistency` 模式标记文档间矛盾 |
+| drift-check | `check governance drift` · `governance health report` · `is governance intact` | 将 manifest 与现实比对，报告漂移；`activity-report` 模式聚合审计轨迹和当前规则捕获候选，`freshness` 模式标记过时文档，`consistency` 模式标记文档间矛盾 |
 | governance-validator | `governance check` · `verify governance` · `validate AGENTS` | 运行校验器，记录 `validation.json` |
 | ci-generator | `setup CI` · `add CI` · `create workflow` | 为检测到的技术栈生成 CI 管线 |
 | repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | 检测环境，返回技术栈报告 |
-| state-manager | `update state` · `record progress` | 把进度持久化到 `.governance/state.json` |
+| state-manager | `update state` · `record progress` | 把进度和当前规则捕获候选持久化到 `.governance/state.json`，并在活动轨迹记录已捕获/待决/已解决的候选 ID |
 | plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` | 创建 TASK 计划、勾选里程碑、标记任务完成 |
 | review-manager | 深度：`review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下`（轻量）— `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查`（全量）— 范围：默认本次变更集，加路径参数限定范围，或 `review the whole project` · `全项目审核`（轻量）/ `audit everything` · `全项目彻查`（全量） | 深度 × 范围二维评审（轻量/全量 × 变更集/指定路径/全项目） |
 | release-manager | `release` · `publish version` · `/release vX.Y.Z` | 执行带审批门禁的发布流程 |

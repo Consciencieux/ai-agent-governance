@@ -15,6 +15,12 @@
 | manifest | 清单（manifest） | 清單（manifest） |
 | maturity | 成熟度 | 成熟度 |
 | lifecycle | 生命周期 | 生命週期 |
+| change hygiene | 变更归位与残留清理 | 變更歸位與殘留清理 |
+| compatibility surface | 兼容/过渡层 | 相容/過渡層 |
+| historical surface | 历史层 | 歷史層 |
+| rule capture | 规则捕获 | 規則捕獲 |
+| candidate | 候选 | 候選 |
+| one-off instruction | 一次性指令 | 一次性指令 |
 | milestone | 里程碑 | 里程碑 |
 | plan | 计划 | 計劃 |
 | archive | 归档 | 歸檔 |

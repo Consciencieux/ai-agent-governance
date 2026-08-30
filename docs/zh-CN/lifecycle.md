@@ -6,6 +6,8 @@
 
 **完整规范在 skill 本体里** —— `references/policies/lifecycle.policy.md`，INIT 时复制进被治理项目为 `docs/rules/lifecycle.md`。本页只是开发者摘要。
 
+完整生命周期还包括变更归位与残留清理（高影响变更的当前层/兼容层/历史层检查）和规则捕获（持久性开发者要求写入规则文件前必须明确裁定）；两者均由同一政策文件定义。
+
 ### 变更分类（何时写 CHANGELOG）
 
 | 变更类型 | CHANGELOG 动作 |

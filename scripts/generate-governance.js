@@ -185,6 +185,11 @@ function generateState(inputs) {
     locked: null,
     completed: ["docs", "agents", "rules"],
     blocked: [],
+    rule_capture: {
+      status: "none",
+      task_id: "",
+      candidates: [],
+    },
   }, null, 2) + "\n";
 }
 

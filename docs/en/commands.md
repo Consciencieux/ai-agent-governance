@@ -117,11 +117,11 @@ These components are automatically invoked by the lifecycle prompts. Users norma
 
 | Component | Prompts | Responsibility |
 | --- | --- | --- |
-| drift-check | `check governance drift` · `governance health report` · `is governance intact` | compares manifest against reality, reports drift; `activity-report` mode aggregates the audit trail, `freshness` mode flags stale docs, `consistency` mode flags cross-document contradictions |
+| drift-check | `check governance drift` · `governance health report` · `is governance intact` | compares manifest against reality, reports drift; `activity-report` mode aggregates the audit trail and current rule-capture candidates, `freshness` mode flags stale docs, `consistency` mode flags cross-document contradictions |
 | governance-validator | `governance check` · `verify governance` · `validate AGENTS` | runs the validator, records `validation.json` |
 | ci-generator | `setup CI` · `add CI` · `create workflow` | generates the CI pipeline for the detected stack |
 | repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | inspects the environment, returns the stack report |
-| state-manager | `update state` · `record progress` | persists progress into `.governance/state.json` |
+| state-manager | `update state` · `record progress` | persists progress and current rule-capture candidates into `.governance/state.json`, and records captured/pending/resolved candidate IDs in the activity trail |
 | plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` | creates TASK plans, checks off milestones, marks tasks completed |
 | review-manager | depth: `review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下` (light) — `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查` (full) — scope: default = change set, append a path to scope it, or `review the whole project` · `全项目审核` (light) / `audit everything` · `全项目彻查` (full) | review across depth × scope (lightweight/full × change set/path/whole project) |
 | release-manager | `release` · `publish version` · `/release vX.Y.Z` | executes the approval-gated release flow |

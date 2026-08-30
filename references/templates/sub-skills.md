@@ -102,7 +102,7 @@ State machine: `understand → plan → implement → validate → synchronize �
 At the end of every task (or on interruption), update `.governance/state.json`:
 
 ```json
-{"maturity":"","phase":"","agent_id":"","task_id":"","locked":null,"completed":[],"blocked":[],"task_start_sha":"","updatedAt":"<ISO>"}
+{"maturity":"","phase":"","agent_id":"","task_id":"","locked":null,"completed":[],"blocked":[],"task_start_sha":"","updatedAt":"<ISO>","rule_capture":{"status":"none","task_id":"","candidates":[]}}
 ```
 
 - `maturity`: LEVEL_0_EMPTY / LEVEL_1_PROTOTYPE / LEVEL_2_ACTIVE / LEVEL_3_PRODUCTION
@@ -112,17 +112,19 @@ At the end of every task (or on interruption), update `.governance/state.json`:
 - `completed`: list of done items (docs, agents, rules, security, ci, state)
 - `blocked`: external blockers with reason (e.g. "github_permission")
 - `task_start_sha`: at task start, write `git rev-parse HEAD` here; resume keeps the original (never overwrite mid-task); consumed by `scripts/check-sync.js` as the change-set base
+- `rule_capture`: optional current-task state for persistent/unclear requirement candidates; `status` is `none / collecting / awaiting_adjudication / resolved`. Missing in older projects means `none`; candidates use a unique `rc-<task_id>-<sequence>` ID, normalized text, scope, classification, reason, target and status.
 
 Multi-agent rule: before starting, run `node scripts/check-lock.js` (exit 1 = another agent holds `locked`) or read state.json — wait or coordinate, never edit the same file in parallel. Never remove a completed entry. If a previous run left state, resume from it instead of restarting.
 
-**Audit trail (activity log):** at the same end-of-task point, append exactly ONE line to `.governance/activity.jsonl` (append-only JSON Lines, git-ignored runtime output):
+**Audit trail (activity log):** at the same task-execution end point, append exactly ONE line to `.governance/activity.jsonl` (append-only JSON Lines, git-ignored runtime output). A resumed execution with the same `task_id` may append a new linked line, but never rewrites an old line:
 
 ```json
-{"ts":"<ISO>","agent_id":"<id>","task_id":"<id>","phase":"<phase>","action":"<action>","files":["<paths>"],"commands":["<cmd>"],"result":"ok|blocked|failed","summary":"<one line>"}
+{"ts":"<ISO>","agent_id":"<id>","task_id":"<id>","phase":"<phase>","action":"<action>","files":["<paths>"],"commands":["<cmd>"],"result":"ok|blocked|failed","summary":"<one line>","rules_captured":["rc-<task>-01"],"rules_pending":["rc-<task>-02"],"rules_resolved":[{"id":"rc-<task>-03","decision":"one-off"}]}
 ```
 
 - `action` vocabulary (v1): `init / inspect / plan / implement / modify / delete / commit / release / audit / migrate`
-- **Redaction (mandatory):** mask any secret-like token in `summary` / `commands` (same pattern classes as `scripts/check-secrets.js`) before writing — never log secret material
+- **Redaction (mandatory):** mask any secret-like token in `summary` / `commands` / candidate text and the new rule fields (same pattern classes as `scripts/check-secrets.js`) before writing — never log secret material
+- **Rule capture:** collect only developer-stated persistent behavioral requirements. `one-off` items are report-only; `persistent` and `unclear` items require explicit ID-based adjudication before a rule-file write. If adjudication is missing, set `state.json.rule_capture.status` to `awaiting_adjudication`, keep the task `blocked`, and resume from lifecycle Phase 5b after the developer decides.
 - Never overwrite or rewrite existing lines (append-only); rotation is deferred
 ````
 
@@ -153,6 +155,7 @@ description: Use to detect governance drift in this repo — compare declared ar
 
 - Read the last N entries (default 50): group by `agent_id` / by `action` / failed-only (`result != "ok"`)
 - Output a summary table + the failed entries with `ts` / `agent_id` / `task_id` / `summary`
+- Read `.governance/state.json.rule_capture` and report its current unresolved candidates first. Use candidate IDs to reconcile `rules_pending`, `rules_captured` and `rules_resolved`; report current pending count, not the historical sum of old pending records.
 - Never print `commands` / `files` from failed entries verbatim when they may contain secret material (apply the same redaction as state-manager)
 
 **freshness mode** — flag governance docs gone stale relative to code activity (report-only, NEVER a gate):

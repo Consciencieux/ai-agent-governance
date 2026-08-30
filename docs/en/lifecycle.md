@@ -6,6 +6,8 @@ Every development task performed by any agent in a governed project follows a si
 
 **The full spec lives in the skill body** — `references/policies/lifecycle.policy.md` — which is copied into governed projects as `docs/rules/lifecycle.md`. This page is a developer summary only.
 
+The full lifecycle also includes Change Hygiene (current/compatibility/history surface checks for high-impact changes) and Rule Capture (explicit adjudication before persistent developer requirements enter the rule files); both are defined in the same policy.
+
 ### Change classification (when CHANGELOG is written)
 
 | Change | CHANGELOG action |

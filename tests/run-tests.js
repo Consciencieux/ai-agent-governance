@@ -1192,6 +1192,28 @@ test("generate-governance: sub-skills generator writes all 8 sub-skills", () => 
   return expected.every((e) => names.includes(e) && fs.existsSync(path.join(base, e, "SKILL.md")));
 });
 
+test("generate-governance: state includes the rule-capture recovery scaffold", () => {
+  const dir = tmp("gen-rule-state");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "RuleState", "--phase", "B"], { encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const state = JSON.parse(fs.readFileSync(path.join(dir, ".governance/state.json"), "utf8"));
+  return state.rule_capture && state.rule_capture.status === "none" &&
+    state.rule_capture.task_id === "" && Array.isArray(state.rule_capture.candidates);
+});
+
+test("payload: generated agent and sub-skills carry change-hygiene and rule-capture contracts", () => {
+  const dir = tmp("gen-change-contract");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "ChangeContract", "--phase", "C"], { encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const agents = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
+  const stateSkill = fs.readFileSync(path.join(dir, ".governance/generated/skills/state-manager/SKILL.md"), "utf8");
+  const driftSkill = fs.readFileSync(path.join(dir, ".governance/generated/skills/drift-check/SKILL.md"), "utf8");
+  return /Change hygiene/i.test(agents) && /Rule Capture/i.test(agents) &&
+    /rule_capture/.test(stateSkill) && /rules_captured/.test(stateSkill) &&
+    /rules_pending/.test(stateSkill) && /rules_resolved/.test(stateSkill) &&
+    /current unresolved candidates/.test(driftSkill);
+});
+
 test("generate-governance: CI workflow is selected by stack", () => {
   const nodeDir = tmp("gen-ci-node");
   spawnSync(process.execPath, [GENERATOR, "--target", nodeDir, "--project-name", "S", "--phase", "B", "--stack", "node"], { encoding: "utf8" });
