@@ -1,6 +1,5 @@
 # Rule Capture（TASK 计划）
 
-[English](../../en/plans/rule-capture.md) · [简体中文](rule-capture.md) · [繁體中文](../../zh-TW/plans/rule-capture.md)
 
 > **状态：已实现（2026-08-30，待 Release 归档）。** 本计划已在当前工作树交付；发布时按仓库规则归档。
 >

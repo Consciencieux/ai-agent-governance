@@ -1,6 +1,5 @@
 # 审查后备积压（TASK 计划）
 
-[English](../../en/plans/post-review-remediation.md) · [简体中文](post-review-remediation.md) · [繁體中文](../../zh-TW/plans/post-review-remediation.md)
 
 > **状态：已完成（2026-08-29）。** 交付对账（`scripts/check-plan-delivery.js`）现在会审计本计划声明的文件。既有缺陷与可选钩子重新实现要求均已落地，并由下方验证矩阵覆盖。
 

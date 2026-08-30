@@ -1,6 +1,5 @@
 # 变更归位与残留清理（TASK 计划）
 
-[English](../../en/plans/removal-hygiene.md) · [简体中文](removal-hygiene.md) · [繁體中文](../../zh-TW/plans/removal-hygiene.md)
 
 > **状态：已实现（2026-08-30，待 Release 归档）。** 本计划已在当前工作树交付；发布时按仓库规则归档。
 >
