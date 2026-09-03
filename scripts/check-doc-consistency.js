@@ -159,12 +159,21 @@ function changelogCoverage(releaseGate) {
   const governedChange = paths.some((p) => p === "SKILL.md" || p === "AGENTS.md" || p === "CHANGELOG.md" || p === "package.json" || p.startsWith("references/") || p.startsWith("scripts/") || p.startsWith(".github/"));
   if (!governedChange) return { applicable: false, ok: true };
   const c = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
-  // Daily mode: changes must land under [Unreleased]. At release time the standard
-  // flow renames [Unreleased] -> [X.Y.Z] BEFORE --release-gate runs, so the release
-  // mode accepts the latest versioned section instead (the semantic is "this change
-  // is recorded", not the literal [Unreleased] marker).
-  const head = releaseGate ? /##\s+\[[^\]]+\]/i : /##\s+\[Unreleased\]/i;
-  return { applicable: true, ok: head.test(c) && /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(c) };
+  if (!c) return { applicable: true, ok: false };
+  // Section-scoped check: the category must sit INSIDE the section that carries the
+  // change record. Daily mode requires the [Unreleased] section; at release time the
+  // standard flow renames [Unreleased] -> [X.Y.Z] BEFORE --release-gate runs, so the
+  // release mode accepts the topmost versioned section instead ("the change is
+  // recorded" — not the literal [Unreleased] marker). A category in an older section
+  // must NOT satisfy the newest section — that is an unrecorded change, not coverage.
+  const heads = c.match(/^##\s+\[[^\]]+\][^\n]*/gm) || [];
+  const head = heads.find((h) => releaseGate || /\[Unreleased\]/i.test(h));
+  if (!head) return { applicable: true, ok: false };
+  const start = c.indexOf(head);
+  const rest = c.slice(start);
+  const next = rest.match(/\n##\s+\[[^\]]+\]/);
+  const sec = next ? rest.slice(0, next.index) : rest;
+  return { applicable: true, ok: /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) };
 }
 
 function mdFiles() {
@@ -198,7 +207,7 @@ function main() {
   // ---- 11. CHANGELOG coverage ----
   const changelog = changelogCoverage(releaseGate);
   if (changelog.applicable && !changelog.ok) {
-    const item = "governance/payload changes require CHANGELOG.md with an [Unreleased] entry and a change category";
+    const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)";
     issues.changelog_coverage.push(item);
     if (releaseGate) gateIssues.push({ kind: "changelog_coverage", item });
   }

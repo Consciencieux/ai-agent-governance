@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented here.
 
+## [0.11.2] - 2026-09-03
+
+### Fixed
+
+- **Consistency-gate changelog coverage is section-scoped** — the required change category must sit *inside* the section that carries the record (daily: the `[Unreleased]` section; release time: the topmost versioned section after the standard `[Unreleased]` → `[X.Y.Z]` rename). A category in an older section no longer satisfies an empty newest section — previously the gate passed vacuously when an old versioned section carried any category (found during v0.11.1 release validation and re-audited afterward).
+
 ## [0.11.1] - 2026-09-03
 
 ### Added

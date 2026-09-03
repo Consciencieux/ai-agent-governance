@@ -1931,6 +1931,32 @@ test("consistency --release-gate: versioned changelog without category still fai
   return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
 });
 
+test("consistency --release-gate: oldest section category does not cover the empty newest section (regression)", () => {
+  // A category in an OLD versioned section must not satisfy coverage for the change
+  // the newest section claims (recorded elsewhere or not at all).
+  const dir = tmp("changelog-oldcat");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "## [0.11.1] - 2026-09-03\n\n## [0.11.0] - 2026-08-30\n\n### Added\n- y\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
+});
+
+test("consistency --gate: daily mode still requires [Unreleased] after a release (old-vs-new section)", () => {
+  // Post-release repo shape: only versioned sections exist. Daily mode must keep
+  // reporting the advisory (which is why the next change adds a fresh [Unreleased]),
+  // while the release date's own name matches the topmost versioned section.
+  const dir = tmp("changelog-daily");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "## [0.11.1] - 2026-09-03\n\n### Added\n- x\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.issues.changelog_coverage.length === 1;
+});
+
 // ---------- runner (must stay after ALL test registrations) ----------
 let failed = 0;
 for (const t of tests) {
