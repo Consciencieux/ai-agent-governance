@@ -24,6 +24,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - **Governed-project sync groups** — two layers: (L1) declarative `.governance/sync-rules.json` (watch/require) + checklist-driven Phase 5; (L2) `scripts/check-sync.js` mechanical verification against the actual change set. Designs: [../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
 - **INIT scripted generator** — deterministic, snapshot-testable INIT generation (`scripts/generate-governance.js`); phased A → B → C. Design: [../archive/init-scripted-generator.md](../archive/init-scripted-generator.md)
 - **Plan delivery gate** — `scripts/check-plan-delivery.js`: mechanical plan-vs-delivery reconciliation (fail-closed before archiving)
+- **Plan archive gate** — canonical plan-status keywords (design/active/implemented/completed/archived) + release-scoped pending-archive gate (`--release-gate` in check-doc-consistency.js) + delivery extraction fix (`####` subsections no longer truncated)
 - **Install-payload integrity gate** — 3 tests proving copied gate scripts are self-contained (no sibling `require`) and that `init-spec.json`'s copy list matches what INIT writes
 - **Consent policy rewrite** — one confirmation per change set across five sync points; plan approval demoted to intent alignment (`consent-policy-hardening` plan)
 - **Governance principles index** — pointers-only index of 18 principles + a `--gate` check that keeps every row's source resolvable

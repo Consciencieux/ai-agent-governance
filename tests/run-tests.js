@@ -1905,6 +1905,32 @@ test("consistency --json: per-plan classification and pending count (progress vi
   return byPlan["docs/en/plans/design.md"] === "design" && byPlan["docs/en/plans/wip.md"] === "active" && out.pendingArchive === 0;
 });
 
+test("consistency --release-gate: versioned changelog section satisfies coverage (post-rename regression)", () => {
+  const dir = tmp("changelog-rename");
+  gitInit(dir);
+  // a governed file change (package.json: not a consent sync point) makes changelogCoverage applicable
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  // daily state: [Unreleased] present with a category -> passes
+  write(path.join(dir, "CHANGELOG.md"), "## [Unreleased]\n\n### Added\n- x\n");
+  const daily = spawnSync(process.execPath, [CONSISTENCY, "--release-gate"], { cwd: dir, encoding: "utf8" });
+  if (daily.status !== 0) return false;
+  // the standard release step renames [Unreleased] -> [X.Y.Z] BEFORE the gate runs;
+  // the gate must accept the versioned section (semantic: change is recorded)
+  write(path.join(dir, "CHANGELOG.md"), "## [0.11.1] - 2026-09-03\n\n### Added\n- x\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate"], { cwd: dir, encoding: "utf8" });
+  return r.status === 0;
+});
+
+test("consistency --release-gate: versioned changelog without category still fails", () => {
+  const dir = tmp("changelog-nocat");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "## [0.11.1] - 2026-09-03\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
+});
+
 // ---------- runner (must stay after ALL test registrations) ----------
 let failed = 0;
 for (const t of tests) {

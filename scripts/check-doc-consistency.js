@@ -153,13 +153,18 @@ function changedPaths() {
   }).filter(Boolean);
 }
 
-function changelogCoverage() {
+function changelogCoverage(releaseGate) {
   const paths = changedPaths();
   if (!paths || paths.length === 0) return { applicable: false, ok: true };
   const governedChange = paths.some((p) => p === "SKILL.md" || p === "AGENTS.md" || p === "CHANGELOG.md" || p === "package.json" || p.startsWith("references/") || p.startsWith("scripts/") || p.startsWith(".github/"));
   if (!governedChange) return { applicable: false, ok: true };
   const c = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
-  return { applicable: true, ok: /##\s+\[Unreleased\]/i.test(c) && /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(c) };
+  // Daily mode: changes must land under [Unreleased]. At release time the standard
+  // flow renames [Unreleased] -> [X.Y.Z] BEFORE --release-gate runs, so the release
+  // mode accepts the latest versioned section instead (the semantic is "this change
+  // is recorded", not the literal [Unreleased] marker).
+  const head = releaseGate ? /##\s+\[[^\]]+\]/i : /##\s+\[Unreleased\]/i;
+  return { applicable: true, ok: head.test(c) && /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(c) };
 }
 
 function mdFiles() {
@@ -191,7 +196,7 @@ function main() {
   const version = currentVersion();
 
   // ---- 11. CHANGELOG coverage ----
-  const changelog = changelogCoverage();
+  const changelog = changelogCoverage(releaseGate);
   if (changelog.applicable && !changelog.ok) {
     const item = "governance/payload changes require CHANGELOG.md with an [Unreleased] entry and a change category";
     issues.changelog_coverage.push(item);

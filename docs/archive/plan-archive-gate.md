@@ -1,6 +1,5 @@
 # 计划归档门禁（TASK 计划）
 
-[English](../../en/plans/plan-archive-gate.md) · [简体中文](plan-archive-gate.md) · [繁體中文](../../zh-TW/plans/plan-archive-gate.md)
 
 > **状态：已实现（2026-09-03）。** 交付验证（`scripts/check-plan-delivery.js`）跳过纯设计计划；本行即标记。
 
@@ -102,3 +101,4 @@
 - 本计划自身状态翻成 implemented 后 `npm test` 与 `npm run check` 立即保持绿——release 作用域决策的回归证明。
 - 三语 commands.md 编辑后 `scripts/check-doc-parity.js` 保持绿。
 - 记录真实输出；绝不声称"应当通过"。
+
