@@ -111,9 +111,9 @@ Runs `scripts/verify-governance.js` and records results into `.governance/valida
 
 Persists progress into `.governance/state.json` (maturity, phase, agent identity, completed/blocked items) so later sessions resume correctly. Runs automatically at the end of every task.
 
-### Runtime Components
+### Generated Skills
 
-These components are automatically invoked by the lifecycle prompts. Users normally only interact with the lifecycle prompts above.
+These are generated skills, not scripts. Each is loaded from `.governance/generated/skills/<name>/SKILL.md`; the generated project's `AGENTS.md` contains the authoritative runtime registry. Users normally only interact with the prompts above.
 
 | Component | Prompts | Responsibility |
 | --- | --- | --- |
@@ -122,7 +122,7 @@ These components are automatically invoked by the lifecycle prompts. Users norma
 | ci-generator | `setup CI` · `add CI` · `create workflow` | generates the CI pipeline for the detected stack |
 | repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | inspects the environment, returns the stack report |
 | state-manager | `update state` · `record progress` | persists progress and current rule-capture candidates into `.governance/state.json`, and records captured/pending/resolved candidate IDs in the activity trail |
-| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` | creates TASK plans, checks off milestones, marks tasks completed |
+| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `archive completed plan` | creates TASK plans, checks off milestones, marks tasks completed, archives completed plans at release |
 | review-manager | depth: `review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下` (light) — `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查` (full) — scope: default = change set, append a path to scope it, or `review the whole project` · `全项目审核` (light) / `audit everything` · `全项目彻查` (full) | review across depth × scope (lightweight/full × change set/path/whole project) |
 | release-manager | `release` · `publish version` · `/release vX.Y.Z` | executes the approval-gated release flow |
 

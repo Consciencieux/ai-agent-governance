@@ -166,7 +166,8 @@
         "LINT_CMD": "lint_cmd",
         "BUILD_CMD": "build_cmd",
         "npm run governance-check | uv run scripts/check_governance.py | ...": "governance_cmd",
-        "CONVENTION: e.g. Conventional Commits in <lang>": "convention"
+        "CONVENTION: e.g. Conventional Commits in <lang>": "convention",
+        "GENERATED_SKILL_REGISTRY": "generated_skill_registry"
       },
       "description": "Agent guidelines (keep <=150 lines)"
     },

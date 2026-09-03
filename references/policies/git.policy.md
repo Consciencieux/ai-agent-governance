@@ -96,7 +96,7 @@ push/PR 前必须确认：
 
 ## 治理文件保护
 
-修改 `AGENTS.md`、`CLAUDE.md`、`docs/rules/**`、`.governance/manifest.json`、`.governance/preflight.json`、`.governance/git-policy.json`、`.governance/sync-rules.json`、`scripts/verify-governance.js`、`scripts/check-lock.js`、`scripts/check-git-policy.js`、`scripts/check-secrets.js`、`scripts/check-sync.js`、`.githooks/pre-commit`、`.githooks/commit-msg`、`opencode.json`、CI 配置（`.github/workflows/**`、`.gitlab-ci.yml`）需要特殊权限（清单以 `references/policies/governance-files.policy.md` 为准）：
+修改 `AGENTS.md`、`CLAUDE.md`、`docs/rules/**`、`.governance/manifest.json`、`.governance/preflight.json`、`.governance/git-policy.json`、`.governance/sync-rules.json`、`scripts/verify-governance.js`、`scripts/check-lock.js`、`scripts/check-git-policy.js`、`scripts/check-secrets.js`、`scripts/check-sync.js`、`scripts/check-doc-consistency.js`、`.githooks/pre-commit`、`.githooks/commit-msg`、`opencode.json`、CI 配置（`.github/workflows/**`、`.gitlab-ci.yml`）需要特殊权限（清单以 `references/policies/governance-files.policy.md` 为准）：
 说明原因 → 更新 CHANGELOG → **更新 `.governance/manifest.json` 的 `governance_version`** → 运行 `scripts/verify-governance.js`。
 涉及权限/安全/删除保护/校验步骤的修改必须用户明确确认。
 未经用户明确同意不得放宽权限限制或移除校验步骤。普通业务任务不得隐式触发本流程。

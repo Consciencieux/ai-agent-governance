@@ -323,8 +323,21 @@ test("check-git-policy: feature branch exits 0", () => {
   gitInit(dir);
   spawnSync("git", ["checkout", "-q", "-b", "feature/agent-20260812-fix"], { cwd: dir });
   write(path.join(dir, ".governance/git-policy.json"), JSON.stringify({ protectedBranches: ["main", "master"], directPush: false, requireReview: true, allowForcePush: false }));
+  write(path.join(dir, ".gitignore"), [".env", ".env.*", "!.env.example", "*.key", "*.pem", "*.p12", "*.pfx", "credentials.json", "secrets.*"].join("\n"));
   const r = spawnSync(process.execPath, [GIT_POLICY_CHECK], { cwd: dir, encoding: "utf8" });
   return r.status === 0;
+});
+
+test("check-git-policy: missing sensitive-file gitignore patterns exits 1", () => {
+  const dir = tmp("gitpolicy-gitignore");
+  gitInit(dir);
+  spawnSync("git", ["checkout", "-q", "-b", "feature/agent-20260812-fix"], { cwd: dir });
+  write(path.join(dir, ".governance/git-policy.json"), JSON.stringify({ protectedBranches: ["main", "master"], directPush: false, requireReview: true, allowForcePush: false }));
+  write(path.join(dir, ".gitignore"), ".env\n");
+  const r = spawnSync(process.execPath, [GIT_POLICY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gitignoreBaseline.ok === false && out.gitignoreBaseline.missing.includes("*.pem");
 });
 
 test("check-secrets: staged fake secret exits 1 without leaking the token", () => {
@@ -991,7 +1004,7 @@ test("generate-governance: AGENTS.md has resolved placeholders", () => {
   const dir = tmp("gen-placeholder");
   spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "MyProject", "--phase", "A"]);
   const content = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
-  return content.includes("MyProject") && !content.includes("{{PROJECT_NAME}}");
+  return content.includes("MyProject") && content.includes("## Generated Skills") && content.includes("review-manager") && content.includes(".governance/generated/skills/review-manager/SKILL.md") && content.includes("not scripts") && !content.includes("{{PROJECT_NAME}}") && !content.includes("{{GENERATED_SKILL_REGISTRY}}");
 });
 
 test("generate-governance: manifest lists created artifacts with correct types", () => {
@@ -1168,6 +1181,33 @@ test("check-plan-delivery: a bare bashname matches its runtime artifact (normali
   // identifier corpus must be able to find it WITHOUT the checker's own source counting.
   fs.writeFileSync(path.join(dir, "docs/archive/p.md"),
     "# P\n\n### Affected Files\n\n- `git-policy.json` — runtime artifact\n");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  return r.status === 0;
+});
+
+test("check-plan-delivery: #### subsection declarations are verified (extraction regression)", () => {
+  // The section regex used to stop at the `\n###` prefix of `####` subsection lines, so an
+  // Affected Files section written with #### subsections extracted as empty and its
+  // declarations were never verified (vacuous pass). A missing file inside a ####
+  // subsection must now exit 1.
+  const dir = tmp("plandel-subsec-missing");
+  buildPlanRepo(dir, "# P\n\n### Affected Files\n\n#### Payload\n\n- `references/templates/never-created.md` — new\n\n#### Repo-infra\n\n- `scripts/x.js` — new\n");
+  fs.writeFileSync(path.join(dir, "scripts/x.js"), "x", "utf8");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stdout.includes("never-created.md");
+});
+
+test("check-plan-delivery: #### content is in scope but the next ### section is not", () => {
+  // The section must include #### subsections but stop at the next ### (#3-level) heading;
+  // an example path in a later validation section (src/a.ts) must NOT be treated as a
+  // declaration, or the gate would flag a fixture example as undelivered.
+  const dir = tmp("plandel-subsec-boundary");
+  fs.mkdirSync(path.join(dir, "docs/archive"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "references/templates"), { recursive: true });
+  write(path.join(dir, "docs/archive/p.md"),
+    "# P\n\n### Affected Files\n\n- `references/templates/real.md` — new\n\n#### Payload\n\n- `references/templates/real2.md` — new\n\n### Validation Method\n\n- Fixture: change `src/a.ts` -> exit 1\n");
+  fs.writeFileSync(path.join(dir, "references/templates/real.md"), "x", "utf8");
+  fs.writeFileSync(path.join(dir, "references/templates/real2.md"), "x", "utf8");
   const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
   return r.status === 0;
 });
@@ -1785,6 +1825,84 @@ test("consistency --gate: a partial marker phrase is not a full principle (regre
   if (r.status !== 1) return false;
   const out = JSON.parse(r.stdout);
   return out.gatePass === false && out.gateIssues.some((g) => g.item.includes("SKILL.md") && g.item.includes("intent alignment"));
+});
+
+test("consistency: implemented plan is pending-archive — advisory in --gate, fail-closed in --release-gate", () => {
+  // The documented lifecycle lets a completed plan wait in plans/ for the release commit,
+  // so the always-on gate must stay green (advisory only); the release flow's
+  // --release-gate must fail and name the plan.
+  const dir = tmp("plans-pending");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs/en/plans"), { recursive: true });
+  write(path.join(dir, "docs/en/plans/done.md"), "# P\n\n> **Status: implemented (2026-08-30, pending Release archive).**\n");
+  const gate = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (gate.status !== 0) return false;
+  const gateOut = JSON.parse(gate.stdout);
+  if (!gateOut.issues.plans_pending_archive || gateOut.issues.plans_pending_archive.length !== 1) return false;
+  const rel = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (rel.status !== 1) return false;
+  const relOut = JSON.parse(rel.stdout);
+  return relOut.gateIssues.some((g) => g.kind === "plans_pending_archive" && g.item.includes("done.md"));
+});
+
+test("consistency --gate: unknown plan status exits 1 (fixable on the spot)", () => {
+  const dir = tmp("plans-unknown");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs/en/plans"), { recursive: true });
+  write(path.join(dir, "docs/en/plans/no-status.md"), "# P\n\n### Task Purpose\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("no-status.md"));
+});
+
+test("consistency: design and archived plan statuses are never flagged", () => {
+  const dir = tmp("plans-clean");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs/en/plans"), { recursive: true });
+  write(path.join(dir, "docs/en/plans/design.md"), "# P\n\n> **Status: design plan, not implemented.**\n");
+  write(path.join(dir, "docs/en/plans/done-archived.md"), "# P\n\n> **Status: archived**\n");
+  const gate = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (gate.status !== 0) return false;
+  const out = JSON.parse(gate.stdout);
+  return out.planStatuses.every((p) => p.status === "design" || p.status === "archived") && out.pendingArchive === 0;
+});
+
+test("consistency: zh-CN and zh-TW keyword variants are classified", () => {
+  const dir = tmp("plans-trilingual");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  for (const lang of ["en", "zh-CN", "zh-TW"]) fs.mkdirSync(path.join(dir, `docs/${lang}/plans`), { recursive: true });
+  write(path.join(dir, "docs/en/plans/imp.md"), "# P\n\n> **Status: implemented**\n");
+  write(path.join(dir, "docs/zh-CN/plans/imp.md"), "# P\n\n> **状态：已实现（2026-08-30，待归档）。**\n");
+  write(path.join(dir, "docs/zh-TW/plans/imp.md"), "# P\n\n> **狀態：已實作（2026-08-30，待歸檔）。**\n");
+  const gate = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (gate.status !== 0) return false;
+  const out = JSON.parse(gate.stdout);
+  if (out.planStatuses.length !== 3 || out.pendingArchive !== 3) return false;
+  return out.planStatuses.every((p) => p.status === "implemented");
+});
+
+test("consistency --release-gate: zh-TW implemented keyword triggers pending-archive", () => {
+  const dir = tmp("plans-tw-pending");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs/zh-TW/plans"), { recursive: true });
+  write(path.join(dir, "docs/zh-TW/plans/imp.md"), "# P\n\n> **狀態：已實作（2026-08-30，待歸檔）。**\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "plans_pending_archive");
+});
+
+test("consistency --json: per-plan classification and pending count (progress view)", () => {
+  const dir = tmp("plans-progress");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs/en/plans"), { recursive: true });
+  write(path.join(dir, "docs/en/plans/design.md"), "# P\n\n> **Status: design plan, not implemented.**\n");
+  write(path.join(dir, "docs/en/plans/wip.md"), "# P\n\n> **Status: Active**\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  const byPlan = Object.fromEntries(out.planStatuses.map((p) => [p.plan, p.status]));
+  return byPlan["docs/en/plans/design.md"] === "design" && byPlan["docs/en/plans/wip.md"] === "active" && out.pendingArchive === 0;
 });
 
 // ---------- runner (must stay after ALL test registrations) ----------

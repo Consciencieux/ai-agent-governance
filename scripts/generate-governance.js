@@ -260,10 +260,28 @@ function parseSubSkills(md) {
       if (lines[k].startsWith(fence) && lines[k].trim().length === fence.length) break;
       body.push(lines[k]);
     }
-    out.push({ name, body: body.join("\n").replace(/\s+$/, "") + "\n" });
+    const bodyText = body.join("\n").replace(/\s+$/, "") + "\n";
+    const descriptionMatch = bodyText.match(/^description:\s*(.+)$/im);
+    const description = descriptionMatch ? descriptionMatch[1].trim() : "";
+    out.push({ name, body: bodyText, description });
     i = k;
   }
   return out;
+}
+
+function generateSkillRegistry(md) {
+  const skills = parseSubSkills(md);
+  const rows = skills.map((sk) => {
+    const marker = sk.description.match(/\s+Triggers on\s+/i);
+    const purpose = (marker ? sk.description.slice(0, marker.index) : sk.description).replace(/\|/g, "\\|") || "Generated project skill";
+    const triggers = (marker ? sk.description.slice(marker.index + marker[0].length) : "See SKILL.md").replace(/\|/g, "\\|");
+    return `| ${sk.name} | \.governance/generated/skills/${sk.name}/SKILL.md | ${purpose} | ${triggers} |`;
+  });
+  return [
+    "| Skill | Entry point | Purpose | Triggers |",
+    "| --- | --- | --- | --- |",
+    ...rows,
+  ].join("\n");
 }
 
 function generateSubSkills(inputs, skillDir, targetAbs, dirRel) {
@@ -333,6 +351,7 @@ function main() {
   if (!projectName && !file) { console.error("error: --project-name is required (or use --file)"); process.exit(2); }
 
   const spec = readJSON(SPEC_PATH);
+  const subSkillsSource = fs.readFileSync(path.join(SKILL_DIR, "references", "templates", "sub-skills.md"), "utf8");
   const inputs = file ? readJSON(file) : { project_name: projectName };
   inputs.phase = phase;
   inputs.governance_version = inputs.governance_version || defaultGovernanceVersion(spec);
@@ -350,6 +369,7 @@ function main() {
   if (ciPlatformArg) inputs.ci_platform = ciPlatformArg;
   inputs.stack = inputs.stack || "docs-only";
   inputs.ci_platform = inputs.ci_platform || "github";
+  inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource);
 
   const maxPhaseIdx = PHASE_ORDER.indexOf(phase);
   if (maxPhaseIdx < 0) { console.error("error: --phase must be A, B, or C"); process.exit(2); }

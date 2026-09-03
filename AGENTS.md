@@ -27,7 +27,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Turn-scoped consent + exceptions A/B | `references/policies/git.policy.md` § 确认范围 · this file § Git Operation Safety Protocol | both |
 | Payload self-containment | `references/init-spec.json` § invariants | repo |
 
-Two gates keep this index and its sources honest: the consent cluster and the protected-files cluster are verified by `node scripts/check-doc-consistency.js --gate` (part of `npm run check`).
+Three always-on gate clusters keep this index and its sources honest: the consent cluster, the protected-files cluster, and the plan-status cluster (unknown status fails) are verified by `node scripts/check-doc-consistency.js --gate` (part of `npm run check`). The pending-archive cluster (an implemented/Completed plan still in `docs/*/plans/`) is fail-closed only in `--release-gate`, run as release.md Phase 4 step 3.
 
 ## Repository architecture
 
@@ -37,6 +37,7 @@ Hard rules that follow from this:
 
 - **Changing skill behavior = editing `references/` only** (+ `SKILL.md` if a pointer/entry changes + `CHANGELOG.md` if behavioral). Done. Docs edits never change what the skill does.
 - **`docs/` edits are a documentation duty, not the feature.** When a sub-skill gains/changes trigger words, syncing them into `docs/{en,zh-CN,zh-TW}/commands.md` exists so USERS can learn how to invoke the skill — it serves the manual, not the skill. The skill works with or without it.
+- **Generated skills vs scripts** — generated skills are loaded from `.governance/generated/skills/<name>/SKILL.md`; they are not `scripts/<name>.js`. The registry is generated from `references/templates/sub-skills.md`; keep the distinction explicit in agent-facing instructions.
 - **Never restate skill content into `docs/`.** Docs reference the skill (file + section pointer), they do not copy workflows, step lists, or full trigger inventories.
 - **Change placement and residue cleanup** — changes to the current source, references, compatibility layer, history and generated projections must be classified and reconciled; the full payload rule is `references/policies/lifecycle.policy.md` § 变更归位与残留清理.
 - **Rule capture** — developer-stated persistent requirements are classified and explicitly adjudicated before entering governed-project rule files; the full payload rule is `references/policies/lifecycle.policy.md` § Rule Capture.
@@ -61,6 +62,7 @@ Modifying `SKILL.md`, `references/policies/**`, `references/templates/**`, `refe
 - Small changes (single file, no public-interface change) skip the full lifecycle and CHANGELOG entry; medium/large changes follow the full six-phase lifecycle (per `references/policies/lifecycle.policy.md` scope tiers)
 - Plans are design docs in each language tree's `plans/` (`docs/<lang>/plans/`); completed plans are archived to `docs/archive/` (shared, single-language) at release, never deleted
 - **Every TASK plan declares a `Target`** — `payload` (ships to governed projects: `SKILL.md`, `references/`, `scripts/`, `LICENSE`), `repo-infra` (`docs/`, `tests/`, `package.json`, `.github/`, README/CONTRIBUTING/CHANGELOG/AGENTS.md), or `both`. When `Target: both`, the plan must enumerate the sync points per domain — that enumeration is what stops a cross-domain rule from being updated in one place only. Write filenames outside the Affected Files section without backticks: the delivery gate treats every backticked token inside that section as a delivery declaration.
+- **Every TASK plan's Status line leads with a canonical keyword** — `design plan, not implemented` / `Active` / `implemented` / `Completed` / `archived` (zh variants per `references/policies/lifecycle.policy.md` Phase 2). Anything else reads as unknown and fails `check-doc-consistency.js --gate`. An implemented/Completed plan still sitting in `docs/*/plans/` is pending-archive — advisory in everyday checks (the documented lifecycle lets it wait for the release commit), fail-closed only under `--release-gate` at release.
 
 ## Validation (standard verification procedure)
 

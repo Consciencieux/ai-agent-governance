@@ -180,8 +180,8 @@ Proceed with release?
 
 1. **再次检查仓库状态**：`git status`、`git rev-parse HEAD`。要求工作区干净、HEAD 与 Proposal 中 `headSha` 一致；若检测到变化 → **停止执行并重新分析版本**（重新走 Phase 1-3）。
 2. **版本同步**：更新 `package.json` → CHANGELOG（`[Unreleased]` 移入 `[X.Y.Z]`）→ `.governance/manifest.json` 的 `governance_version` 与 `release` 字段。
-3. **计划交付对账（gate）**：归档前运行 `node scripts/check-plan-delivery.js --gate`（退出码必须 0）——比对待归档计划声明的 Affected Files / 标识符是否已实际交付。**声明未交付不得归档**：要么补齐交付，要么修正过时的计划声明。纯设计计划（顶部显式标注 `Status: design plan, not implemented`）跳过对账，也不得归档。
-4. **归档计划**：本版本已完成的里程碑条目（含勾选状态与验收结果）聚合写入 `docs/plans/archive/vX.Y.Z.md`（一个版本一个文件）；已完成的 `TASK_<name>.md` 以独立文件原样移入 `docs/plans/archive/`（保留原文件名）。**保留原文，绝不删除**。未完成的里程碑继续留在 `docs/plans/`。
+3. **计划交付对账（gate）**：归档前运行 `node scripts/check-plan-delivery.js --gate`（退出码必须 0）——比对待归档计划声明的 Affected Files / 标识符是否已实际交付。**声明未交付不得归档**：要么补齐交付，要么修正过时的计划声明。纯设计计划（顶部显式标注 `Status: design plan, not implemented`）跳过对账，也不得归档。同一步还需运行 `node scripts/check-doc-consistency.js --release-gate`（退出码必须 0）：待归档门禁——任何状态为 implemented/Completed 且仍留在 `docs/plans/` 或 `docs/*/plans/` 下的计划都会使其失败。没有该脚本的形态（如手写检查）逐字枚举 `docs/plans/` 与 `docs/*/plans/` 下全部计划的状态行，任何 implemented/Completed 计划未归档即停止。
+4. **归档计划**：本版本已完成的里程碑条目（含勾选状态与验收结果）聚合写入 `docs/plans/archive/vX.Y.Z.md`（一个版本一个文件）；已完成的 `TASK_<name>.md` 以独立文件原样移入 `docs/plans/archive/`（保留原文件名）。**保留原文，绝不删除**。未完成的里程碑继续留在 `docs/plans/`。归档运行的先决条件：不存在任何状态为 implemented/Completed 而未归档的计划（第 3 步的 release-gate 已强制）。
 5. **提交 release commit**：`git add`（仅版本同步与归档相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 6. **校验**：运行 `scripts/verify-governance.js`，退出码必须为 0。
 7. **生成/更新 Proposal**：把 Proposal 的 `headSha` 更新为新 HEAD、`recommended` 为 `X.Y.Z`，写入 `.governance/release-proposal.json`（execute 依此做发布前重新验证）。

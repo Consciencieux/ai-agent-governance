@@ -27,7 +27,7 @@ ai-agent-governance/
 │   ├── templates/
 │   │   ├── agents-md.template.md   # AGENTS.md 範本
 │   │   ├── feature-doc.template.md # Feature 文件範本（含反虛構規則）
-│   │   ├── sub-skills.md           # 8 個生成的 Agent 模組（repository-inspection、ci-generator、governance-validator、state-manager、drift-check、release-manager、plan-manager、review-manager）
+│   │   ├── sub-skills.md           # 生成 skill 的來源；每個會變成 .governance/generated/skills/<name>/SKILL.md，不是腳本
 │   │   ├── env-example.template.md # .env.example 範本（佔位符、按依賴裁剪）
 │   │   ├── gitmessage.template.md  # .gitmessage.txt 範本（提交約定）
 │   │   ├── git-policy.template.md  # .governance/git-policy.json 範本（Git 工作流程策略）

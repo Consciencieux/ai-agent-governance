@@ -27,10 +27,14 @@ Do NOT maintain a fixed inventory here. Two docs are mandatory and must stay fre
 
 **Change hygiene:** for removal, rename, move, replacement, deprecation, split/merge, configuration/API/data-format or generated-artifact changes, search the full impact surface before editing. Keep current behavior in the current layer, intentional compatibility in a transition layer with an owner and removal condition, and reasons in history. No unexplained residue, duplicate authority or broken projection may remain.
 
+## Generated Skills
+The entries below are skills, not scripts. Load the indicated `SKILL.md` when a request matches its triggers; do not execute a skill as `node scripts/<name>.js`. Scripts are standalone support tools under `scripts/` and are run only when the selected skill instructs you to run them.
+{{GENERATED_SKILL_REGISTRY}}
+
 ## Agent Operating Lifecycle
 All agents MUST follow this lifecycle for every dev task. Scope tiers: small (single file, <50 lines, no public-interface change) runs Understand → Implement → Validate → Report only; medium/large run the full lifecycle with a TASK plan. Full detail: @docs/rules/lifecycle.md
 - **Phase 1 Understand**: read AGENTS.md, docs/ARCHITECTURE.md, docs/features/, recent CHANGELOG.md before acting.
-- **Phase 2 Plan**: medium/large changes MUST first create `docs/plans/TASK_<name>.md` (Status, Task Purpose, Current Problem, Proposed Solution, Affected Files, Risks, Validation Method). Affected Files must be based on reference search (`rg`), not guesswork.
+- **Phase 2 Plan**: medium/large changes MUST first create `docs/plans/TASK_<name>.md` (Status, Task Purpose, Current Problem, Proposed Solution, Affected Files, Risks, Validation Method). The Status line must lead with a canonical keyword (Active / design plan, not implemented / implemented / Completed / archived) so gates can classify it — anything else reads as unknown and fails the consistency gate. Affected Files must be based on reference search (`rg`), not guesswork.
 - **Phase 3 Implement**: respect architecture, keep backward compatibility, do not restructure without reason. Before touching any public interface/module/file, search its references first and include the found files in the plan. Maintain the Change Hygiene Ledger for old/new names, paths, config keys, commands and dynamic references.
 - **Phase 4 Validate**: run tests, lint, build; record real output.
 - **Phase 5 Synchronize Knowledge** (medium/large only): update CHANGELOG.md (at merge/release boundaries, not per commit), Feature Registry, ARCHITECTURE.md (if changed), check off the corresponding milestone in docs/plans/DEVELOPMENT_PLAN.md (if one exists), and set the completed TASK_<name>.md Status to Completed. Reconcile sync groups per `.governance/sync-rules.json` — a watch hit without its required files = task not done; run `node scripts/check-sync.js` (exit 0 required). Run Rule Capture before writing: developer-confirmed persistent requirements only; one-off requirements are not written; unclear/unconfirmed items remain in `state.json.rule_capture` and block completion. Archiving happens at RELEASE, not here.
@@ -98,7 +102,7 @@ Note: users may request governance changes via explicit instruction (through the
 - Never force push; never push directly to protected branches. Small single-file doc/typo changes may skip the branch, but must be reported.
 
 ## Governance File Protection
-Modifying AGENTS.md, CLAUDE.md, docs/rules/**, .governance/manifest.json, .governance/preflight.json, .governance/git-policy.json, .governance/sync-rules.json, scripts/verify-governance.js, scripts/check-lock.js, scripts/check-git-policy.js, scripts/check-secrets.js, scripts/check-sync.js, .githooks/pre-commit, .githooks/commit-msg, opencode.json, or CI config (.github/workflows/**, .gitlab-ci.yml) requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
+Modifying AGENTS.md, CLAUDE.md, docs/rules/**, .governance/manifest.json, .governance/preflight.json, .governance/git-policy.json, .governance/sync-rules.json, scripts/verify-governance.js, scripts/check-lock.js, scripts/check-git-policy.js, scripts/check-secrets.js, scripts/check-sync.js, scripts/check-doc-consistency.js, .githooks/pre-commit, .githooks/commit-msg, opencode.json, or CI config (.github/workflows/**, .gitlab-ci.yml) requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
 
 ## Mandatory Pre-commit Checklist
 CHANGELOG must be updated before push/PR. No CHANGELOG update → no push.

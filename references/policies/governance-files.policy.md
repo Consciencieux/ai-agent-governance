@@ -19,6 +19,7 @@
 | `scripts/check-git-policy.js` | Git 策略门禁 |
 | `scripts/check-secrets.js` | 密钥扫描门禁 |
 | `scripts/check-sync.js` | 同步组门禁 |
+| `scripts/check-doc-consistency.js` | 文档一致性门禁 |
 | `.githooks/pre-commit` | 暂存内容一致性门禁（默认不启用） |
 | `.githooks/commit-msg` | 已确认提交消息门禁（默认不启用） |
 | `opencode.json` | Agent 配置 |

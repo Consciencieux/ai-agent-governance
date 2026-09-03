@@ -112,9 +112,9 @@ Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自�
 把進度持久化到 `.governance/state.json`（成熟度、階段、Agent 身分、已完成/阻塞項），讓後續會話正確續跑。每個任務結束自動執行。
 
 
-### 執行期元件
+### 生成的 Skills
 
-這些元件由生命週期提示詞自動觸發，使用者通常只需要使用上面的生命週期提示詞。
+這些是生成的 skill，不是腳本。每個 skill 都從 `.governance/generated/skills/<name>/SKILL.md` 載入；生成專案的 `AGENTS.md` 包含權威執行時索引。使用者通常只需要使用上面的提示詞。
 
 | 元件 | 提示詞 | 職責 |
 | --- | --- | --- |
@@ -123,7 +123,7 @@ Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自�
 | ci-generator | `setup CI` · `add CI` · `create workflow` | 為偵測到的技術棧生成 CI 管線 |
 | repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | 偵測環境，返回技術棧報告 |
 | state-manager | `update state` · `record progress` | 把進度和當前規則捕獲候選持久化到 `.governance/state.json`，並在活動軌跡記錄已捕獲/待決/已解決的候選 ID |
-| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` | 建立 TASK 計劃、勾選里程碑、標記任務完成 |
+| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `歸檔已完成計劃` | 建立 TASK 計劃、勾選里程碑、標記任務完成、發佈時歸檔已完成計劃 |
 | review-manager | 深度：`review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下`（輕量）— `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查`（全量）— 範圍：預設本次變更集，加路徑參數限定範圍，或 `review the whole project` · `全项目审核`（輕量）/ `audit everything` · `全项目彻查`（全量） | 深度 × 範圍二維審核（輕量/全量 × 變更集/指定路徑/全專案） |
 | release-manager | `release` · `publish version` · `/release vX.Y.Z` | 執行帶審批閘門的發佈流程 |
 

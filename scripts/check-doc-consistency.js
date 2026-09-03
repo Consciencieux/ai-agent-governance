@@ -15,12 +15,22 @@
 //   9. principles-index pointers — every file referenced by the AGENTS.md governance
 //      principles index must exist (the index is pointers-only, so a moved file silently
 //      turns it into a lie unless this is checked).
+//   10. plan-status classification — TASK plans under docs/{lang}/plans/ carry a canonical
+//      status keyword (design/implemented/completed/archived). Unknown status is a
+//      always-on gate failure (fixable on the spot); an implemented/completed plan still
+//      sitting in plans/ is pending-archive — advisory in default/--gate (the documented
+//      lifecycle lets a completed plan wait for the release commit), fail-closed only in
+//      --release-gate. The scan no-ops when the trilingual trees are absent (governed
+//      projects). --json also reports the per-plan classification (progress view).
+//   11. changelog coverage — release-gate reports changed governance/payload surfaces
+//      without an Unreleased entry in CHANGELOG.md.
 //
 // Modes: default = advisory, ALWAYS exit 0 (heuristics, not a gate).
-//        --gate  = fail-closed on the mechanically checkable clusters ONLY (#2 and #8,
-//                  after #2's trigger tightening); the other heuristics still report
+//        --gate  = fail-closed on the mechanically checkable clusters ONLY (#2, #8 and
+//                  #10's unknown status); the other heuristics still report
 //                  but never affect the exit code.
-// Usage: node scripts/check-doc-consistency.js [--json] [--gate]
+//        --release-gate = --gate plus #10's pending-archive and #11's changelog clusters.
+// Usage: node scripts/check-doc-consistency.js [--json] [--gate] [--release-gate]
 
 const fs = require("fs");
 const path = require("path");
@@ -86,6 +96,28 @@ const CONSENT_MARKERS = [
 // protection-floor mention. The single-source-of-truth pointer already exempts deferrals.
 const CLAIMS_PROTECTED_LIST = /(?:以下|下表|下面是|以下为|如下).{0,20}(?:清单|列表|文件)|(?:受保护|protected).{0,20}(?:清单|列表|list).{0,12}(?:如下|以下是|如下表|is|are|为)|(?:following|list(?:ed)? below|protected files? (?:include|are|listed)|清单如下|清单为|list is:)/i;
 
+// #10 plan-status contract: the first Status/状态 line of a TASK plan must LEAD with one
+// canonical keyword. The set is identical across the three language trees and matches the
+// contract in references/policies/lifecycle.policy.md. Anything else is "unknown" —
+// reported, never guessed (the pre-existing prose variants stay visible instead of being
+// silently widened into a match).
+const PLAN_STATUS_LINE = /^>\s*\*\*\s*(?:Status|状态|狀態)\s*[:：]\s*([^*\n]+)/im;
+const PLAN_STATUS_KEYWORDS = [
+  { status: "design", re: /^(?:design plan, not implemented|设计计划，未实现|設計計劃，未實作)/ },
+  { status: "active", re: /^active/i },
+  { status: "implemented", re: /^(?:implemented|已实现|已實作)/ },
+  { status: "completed", re: /^(?:completed|已完成)/i },
+  { status: "archived", re: /^(?:archived|已归档|已歸檔)/ },
+];
+function classifyPlanStatus(content) {
+  const head = content.split(/\r?\n/).slice(0, 12).join("\n");
+  const m = head.match(PLAN_STATUS_LINE);
+  if (!m) return "unknown";
+  const value = m[1].trim();
+  for (const k of PLAN_STATUS_KEYWORDS) if (k.re.test(value)) return k.status;
+  return "unknown";
+}
+
 function walk(dir, base = dir) {
   const out = [];
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -112,6 +144,24 @@ function currentVersion() {
   }
 }
 
+function changedPaths() {
+  const r = spawnSync("git", ["status", "--porcelain=v1", "-uall"], { cwd: ROOT, encoding: "utf8" });
+  if (r.status !== 0) return null;
+  return String(r.stdout || "").split(/\r?\n/).filter(Boolean).map((line) => {
+    const raw = line.slice(3).trim();
+    return (raw.includes(" -> ") ? raw.split(" -> ").pop() : raw).replace(/\\/g, "/");
+  }).filter(Boolean);
+}
+
+function changelogCoverage() {
+  const paths = changedPaths();
+  if (!paths || paths.length === 0) return { applicable: false, ok: true };
+  const governedChange = paths.some((p) => p === "SKILL.md" || p === "AGENTS.md" || p === "CHANGELOG.md" || p === "package.json" || p.startsWith("references/") || p.startsWith("scripts/") || p.startsWith(".github/"));
+  if (!governedChange) return { applicable: false, ok: true };
+  const c = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
+  return { applicable: true, ok: /##\s+\[Unreleased\]/i.test(c) && /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(c) };
+}
+
 function mdFiles() {
   const out = [];
   const top = ["README.md", "CONTRIBUTING.md", "SKILL.md", "AGENTS.md"];
@@ -134,9 +184,19 @@ function mdFiles() {
 function main() {
   const json = process.argv.includes("--json");
   const gate = process.argv.includes("--gate");
-  const issues = { version_examples: [], protected_lists: [], adr_statuses: [], broken_links: [], numeric_claims: [], prompt_sync: [] };
+  const releaseGate = process.argv.includes("--release-gate"); // implies gate behavior + pending-archive
+  const anyGate = gate || releaseGate;
+  const issues = { version_examples: [], protected_lists: [], adr_statuses: [], broken_links: [], numeric_claims: [], prompt_sync: [], plans_status_unknown: [], plans_pending_archive: [], changelog_coverage: [] };
   const gateIssues = [];
   const version = currentVersion();
+
+  // ---- 11. CHANGELOG coverage ----
+  const changelog = changelogCoverage();
+  if (changelog.applicable && !changelog.ok) {
+    const item = "governance/payload changes require CHANGELOG.md with an [Unreleased] entry and a change category";
+    issues.changelog_coverage.push(item);
+    if (releaseGate) gateIssues.push({ kind: "changelog_coverage", item });
+  }
 
   // ---- 1. version-example sync ----
   if (version) {
@@ -238,9 +298,36 @@ function main() {
     }
   }
 
+  // ---- 10. plan-status classification & pending archive ----
+  // Scan the trilingual plans/ trees; no-op where they are absent (governed projects).
+  // Unknown status is an always-on gate failure (one-line fix); pending-archive is
+  // advisory outside --release-gate because the documented lifecycle lets a completed
+  // plan legitimately wait in plans/ for the release commit that archives it.
+  const planStatuses = [];
+  for (const lang of ["en", "zh-CN", "zh-TW"]) {
+    const dir = path.join(DOCS, lang, "plans");
+    if (!fs.existsSync(dir)) continue;
+    for (const rel of walk(dir)) {
+      const planRel = (path.join("docs", lang, "plans", rel)).replace(/\\/g, "/");
+      const c = readFile(path.join(ROOT, planRel));
+      if (!c) continue;
+      const status = classifyPlanStatus(c);
+      planStatuses.push({ plan: planRel, status });
+      if (status === "unknown") {
+        const item = `${planRel}: no canonical status keyword (design/implemented/completed/archived)`;
+        issues.plans_status_unknown.push(item);
+        gateIssues.push({ kind: "plans_status_unknown", item });
+      } else if (status === "implemented" || status === "completed") {
+        const item = `${planRel}: ${status} but not yet archived (archive at release)`;
+        if (releaseGate) gateIssues.push({ kind: "plans_pending_archive", item });
+        else issues.plans_pending_archive.push(item);
+      }
+    }
+  }
+
   // ---- 3. ADR status sync ----
-  const changelog = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
-  const releasedVersions = [...changelog.matchAll(/^## \[(\d+\.\d+\.\d+)\]/gm)].map((m) => m[1]);
+  const changelogText = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
+  const releasedVersions = [...changelogText.matchAll(/^## \[(\d+\.\d+\.\d+)\]/gm)].map((m) => m[1]);
   const adrDir = path.join(DOCS, "design-decisions");
   if (fs.existsSync(adrDir)) {
     for (const f of walk(adrDir)) {
@@ -318,7 +405,8 @@ function main() {
     }
   }
 
-  const report = { timestamp: new Date().toISOString(), version, issues, parity: parityPass, gate, gatePass: gateIssues.length === 0, gateIssues };
+  const pendingArchive = planStatuses.filter((p) => p.status === "implemented" || p.status === "completed").length;
+  const report = { timestamp: new Date().toISOString(), version, issues, parity: parityPass, gate: anyGate, releaseGate, gatePass: gateIssues.length === 0, gateIssues, planStatuses, pendingArchive };
 
   // Append to drift-report.json if present (runtime output, optional)
   try {
@@ -327,7 +415,8 @@ function main() {
     if (rawDrift) {
       const drift = JSON.parse(rawDrift);
       drift.consistency = issues;
-      drift.consistencyGate = { gate, pass: gateIssues.length === 0, issues: gateIssues };
+      drift.consistencyGate = { gate: anyGate, releaseGate, pass: gateIssues.length === 0, issues: gateIssues };
+      drift.planStatuses = planStatuses;
       fs.writeFileSync(driftPath, JSON.stringify(drift, null, 2) + "\n");
     }
   } catch (e) {
@@ -348,10 +437,18 @@ function main() {
         for (const i of v.slice(0, 5)) console.log(`  - ${i}`);
       }
     }
+    if (planStatuses.length > 0) {
+      const counts = {};
+      for (const p of planStatuses) counts[p.status] = (counts[p.status] || 0) + 1;
+      const summary = Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(", ");
+      const pending = pendingArchive > 0 ? ` (${pendingArchive} pending archive — advisory outside --release-gate)` : "";
+      console.log(`ℹ plan statuses: ${summary}${pending}`);
+    }
     if (total === 0 && gateIssues.length === 0) console.log("✓ no consistency issues");
   }
-  // advisory mode ALWAYS exits 0; --gate exits 1 only when a gate-class cluster failed
-  process.exit(gate && gateIssues.length > 0 ? 1 : 0);
+  // advisory mode ALWAYS exits 0; --gate/--release-gate exit 1 only when a gate-class
+  // cluster failed (--release-gate additionally fails on pending-archive)
+  process.exit(anyGate && gateIssues.length > 0 ? 1 : 0);
 }
 
 main();

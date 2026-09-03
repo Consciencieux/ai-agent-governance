@@ -2,6 +2,8 @@
 
 [English](../../en/plans/skill-lifecycle-management.md) · [简体中文](skill-lifecycle-management.md) · [繁體中文](../../zh-TW/plans/skill-lifecycle-management.md)
 
+> **状态：设计计划，未实现。** 暂缓的设计计划；当版本同步步骤证明不够用时再重启（roadmap 近期条目）。
+
 ### 任务目的
 
 治理 Agent 能力本身的生命周期 —— **INSTALL → UPDATE → ROLLBACK** —— 让 skill（含 `ai-agent-governance` 自身）从"一次性安装"变为可检查、可更新、可回滚。治理对象从 Agent 行为扩展到 Agent 能力本身。

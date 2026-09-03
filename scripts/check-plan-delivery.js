@@ -209,7 +209,13 @@ function verifyBehaviours(content) {
 }
 
 function extractSection(content, names) {
-  const re = new RegExp("###\\s*(?:" + names.join("|") + ")([\\s\\S]*?)(?=\\n###|$)", "i");
+  // Stop at any SAME-OR-LOWER level heading (H1-H3). The former lookahead `(?=\n###|$)`
+  // also matched the `\n###` prefix of `####` subsection lines, so an Affected Files
+  // section written with `####` subsections extracted as empty and its declarations
+  // were never verified (vacuous pass — found by the plan-archive-gate review; the
+  // archived rule-capture.md carries that defect). `####` subsections are part of the
+  // section; the next `###` section (risks, validation) is not.
+  const re = new RegExp("###\\s*(?:" + names.join("|") + ")([\\s\\S]*?)(?=\\n#{1,3}\\s|$)", "i");
   const m = content.match(re);
   return m ? m[1] : null;
 }

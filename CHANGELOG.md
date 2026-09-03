@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented here.
 
+## [Unreleased]
+
+### Added
+
+- **Planned Archive Gate** — canonical, machine-readable TASK-plan status keywords (`design plan, not implemented` / `Active` / `implemented` / `Completed` / `archived`, contract in `references/policies/lifecycle.policy.md` Phase 2): an unknown status fails the always-on consistency gate; an implemented/Completed plan still sitting in `docs/*/plans/` is pending-archive — advisory in everyday checks (the documented lifecycle lets it wait for the release commit), fail-closed only in the new `--release-gate` mode wired into release.md Phase 4 step 3. `check-doc-consistency.js --json` gains a per-plan status classification plus a pending-archive count (machine-queryable completion-progress view). The delivery gate's Affected-Files extraction no longer truncates at `####` subsections (previously such sections extracted as empty and their declarations were verified vacuously).
+
+### Fixed
+
+- **Governance protection and secret-scan documentation alignment** — `scripts/check-doc-consistency.js` is now included in the protected-file list and all synchronized summaries. Clarified that the repository's `tests/` secret fixtures avoid regex matches by construction; the scanner does not grant a path-based `tests/` exemption.
+- **Git policy security baseline** — `scripts/check-git-policy.js` now fails closed when a governed project `.gitignore` omits required environment, key, certificate, or credential patterns.
+- **Release documentation coverage** — the consistency checker now reports governance/payload changes without an `[Unreleased]` CHANGELOG category and enforces that requirement during `--release-gate`.
+
 ## [0.11.0] - 2026-08-30
 
 ### Added

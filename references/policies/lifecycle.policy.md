@@ -27,7 +27,7 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 ## Phase 2 — Plan（计划）
 
 **中/大型**修改必须先创建 `docs/plans/TASK_<name>.md`，必须包含：
-- **Status**：Active / Completed（创建时为 Active）
+- **Status**：首行以规范关键词开头——`Active`（进行中，创建时的初始状态）、`design plan, not implemented`（纯设计计划，不在交付对账范围）、`implemented` / `已实现`（已实现、待归档）、`Completed` / `已完成`（任务收尾，Phase 5 设置；待归档）、`archived` / `已归档`（归档即断言完成）。不以规范关键词开头的状态视为 unknown——门禁照实报告，绝不猜测。**归档发生在 RELEASE，不在 Phase 5**：任何 implemented/Completed 状态的计划在归档步骤运行时不得留在 `docs/plans/` 或 `docs/*/plans/` 下——发布工作流的 release-gate 步骤强制此先决条件
 - **Task Purpose**：任务目的
 - **Current Problem**：当前问题
 - **Proposed Solution**：提议方案

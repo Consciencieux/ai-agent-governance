@@ -12,6 +12,19 @@ const { spawnSync } = require("child_process");
 
 const POLICY = path.join(process.cwd(), ".governance", "git-policy.json");
 
+const REQUIRED_GITIGNORE_PATTERNS = [".env", ".env.*", "!.env.example", "*.key", "*.pem", "*.p12", "*.pfx", "credentials.json", "secrets.*"];
+
+function gitignoreBaseline() {
+  try {
+    const content = fs.readFileSync(path.join(process.cwd(), ".gitignore"), "utf8");
+    const lines = new Set(content.split(/\r?\n/).map((line) => line.trim()).filter(Boolean));
+    const missing = REQUIRED_GITIGNORE_PATTERNS.filter((pattern) => !lines.has(pattern));
+    return { present: true, missing, ok: missing.length === 0 };
+  } catch (e) {
+    return { present: false, missing: REQUIRED_GITIGNORE_PATTERNS.slice(), ok: false };
+  }
+}
+
 function readPolicy() {
   try {
     return { policy: JSON.parse(fs.readFileSync(POLICY, "utf8")), missing: false, error: null };
@@ -66,7 +79,9 @@ if (!policyShapeValid) {
 
 const protectedBranches = policy ? policy.protectedBranches : [];
 const directPush = policy ? policy.directPush : true;
-const blocked = branch !== null && protectedBranches.includes(branch) && !directPush;
+const baseline = gitignoreBaseline();
+const branchBlocked = branch !== null && protectedBranches.includes(branch) && !directPush;
+const blocked = branchBlocked || (!policyResult.missing && !baseline.ok);
 
 if (process.argv.includes("--json")) {
   process.stdout.write(
@@ -77,6 +92,8 @@ if (process.argv.includes("--json")) {
         protectedBranches,
         directPush,
         blocked,
+        branchBlocked,
+        gitignoreBaseline: baseline,
       },
       null,
       2
@@ -89,7 +106,11 @@ if (!policy) {
   console.log("no .governance/git-policy.json — policy absent, proceed");
   process.exit(0);
 }
-if (blocked) {
+if (!baseline.ok) {
+  console.error(`BLOCKED: .gitignore is missing required sensitive-file patterns: ${baseline.missing.join(", ")}`);
+  process.exit(1);
+}
+if (branchBlocked) {
   console.error(
     `BLOCKED: current branch "${branch}" is protected and directPush=false — ` +
       `create a feature branch (feature/agent-<date>-<summary>) before modifying/committing`

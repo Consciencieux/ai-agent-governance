@@ -2,6 +2,8 @@
 
 [English](skill-lifecycle-management.md) · [简体中文](../../zh-CN/plans/skill-lifecycle-management.md) · [繁體中文](../../zh-TW/plans/skill-lifecycle-management.md)
 
+> **Status: design plan, not implemented.** Deferred design; revisit when the version-sync step proves insufficient (roadmap Near-term entry).
+
 ### Task Purpose
 
 Govern the lifecycle of agent capabilities themselves — **INSTALL → UPDATE → ROLLBACK** — so a skill (including `ai-agent-governance` itself) becomes checkable, updatable and rollback-safe instead of a one-time installation. The governance object extends from agent behavior to agent capability.
