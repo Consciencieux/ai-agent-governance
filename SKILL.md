@@ -140,6 +140,10 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 
 若上下文可能不足：**Phase 1 第 1–2 步（docs/rules/ + AGENTS.md）完成后可暂停**，输出"阶段一完成，请回复『继续』以生成剩余文件"。未获"继续"指令不得省略任何项；获得指令后从 `.governance/state.json` 断点续跑。
 
+### 工程克制（Engineering Restraint）
+
+新增任何机制（代码、状态、配置、流程、门禁、计划、审查步骤）前先过机制测试：若它今天不存在，当前需求是否仍会独立证明其必要？已批准需求优先，冲突时升级而非删减需求。完整规则见 `references/policies/coding.policy.md` § 工程克制与机制测试。
+
 ### 治理文件保护（Governance Protection）
 
 以下文件是**治理体系本身**，修改需要特殊权限（防止 Agent 自我解除限制）。**完整清单见 `references/policies/governance-files.policy.md`（单一事实源）**，此处为摘要：

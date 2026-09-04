@@ -99,6 +99,9 @@
 | trilingual | 三语 | 三語 |  |  |
 | glossary | 术语表 | 術語表 | 術語表 | 术语表 |
 | terminology gate | 术语门禁 | 術語門禁 |  |  |
+| engineering restraint | 工程克制 | 工程克制 |  |  |
+| machinery test | 机制测试 | 機制測試 |  |  |
+| overengineering | 过度工程 | 過度工程 |  |  |
 | software | 软件 | 軟體 |  |  |
 | default | 默认 | 預設 |  |  |
 | server | 服务器 | 伺服器 |  |  |
