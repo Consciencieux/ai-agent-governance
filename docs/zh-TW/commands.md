@@ -16,7 +16,7 @@
 | CI 搭建 | `setup CI` | `add CI` · `create workflow` |
 | 治理校驗 | `governance check` | `verify governance` · `validate AGENTS` |
 | 狀態記錄 | `update state` | `record progress` |
-| 審查變動或專案 | `review this` | `review the changes` · `audit recent changes` · `review my changes` · `審核一下` · `review the whole project` · `deep review` |
+| 審查變動或專案 | `review this` | `review the changes` · `audit recent changes` · `review my changes` · `审核一下` · `review the whole project` · `deep review` |
 | 準備發佈版本 | `release` | `publish version` · `create release` · `/release vX.Y.Z` |
 
 Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自動生效：任務開始前自動執行 `scripts/check-git-policy.js`，在受保護分支上阻止直接提交/推送（見 `.governance/git-policy.json`）。同理 `push` / `merge` 也不是提示詞 —— 它們是需確認的寫入操作：Agent 會說明意圖並等待你的明確批准（見 `docs/rules/git-policy.md`）。
@@ -49,7 +49,7 @@ Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自�
 
 ```
 建立 docs/plans/TASK_<name>.md
-→ 与開發者确认
+→ 與開發者確認
 → 開始實作
 ```
 
@@ -62,10 +62,10 @@ Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自�
 執行流程：
 
 ```
-读取当前狀態
+讀取當前狀態
 → 偵測漂移
 → 校驗工件
-→ 应用最小补丁
+→ 應用最小補丁
 ```
 
 #### release
@@ -75,7 +75,7 @@ Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自�
 執行流程：
 
 ```
-分析变更
+分析變更
 → SemVer Proposal + 風險分級
 → 批准
 → tag
@@ -123,7 +123,7 @@ Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自�
 | ci-generator | `setup CI` · `add CI` · `create workflow` | 為偵測到的技術棧生成 CI 管線 |
 | repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | 偵測環境，返回技術棧報告 |
 | state-manager | `update state` · `record progress` | 把進度和當前規則捕獲候選持久化到 `.governance/state.json`，並在活動軌跡記錄已捕獲/待決/已解決的候選 ID |
-| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `歸檔已完成計劃` | 建立 TASK 計劃、勾選里程碑、標記任務完成、發佈時歸檔已完成計劃 |
+| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `archive completed plan` | 建立 TASK 計劃、勾選里程碑、標記任務完成、發佈時歸檔已完成計劃 |
 | review-manager | 深度：`review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下`（輕量）— `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查`（全量）— 範圍：預設本次變更集，加路徑參數限定範圍，或 `review the whole project` · `全项目审核`（輕量）/ `audit everything` · `全项目彻查`（全量） | 深度 × 範圍二維審核（輕量/全量 × 變更集/指定路徑/全專案） |
 | release-manager | `release` · `publish version` · `/release vX.Y.Z` | 執行帶審批閘門的發佈流程 |
 

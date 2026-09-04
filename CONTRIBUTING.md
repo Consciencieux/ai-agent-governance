@@ -21,16 +21,16 @@ The test suite covers: empty project (exit 1), full default structure (exit 0, 2
 | `scripts/generate-governance.js` | INIT generator: deterministic bootstrap scaffolding (spec: `references/init-spec.json`) |
 | `references/init-spec.json` | machine-readable INIT spec (single source of truth for generated output) |
 | `tests/run-tests.js` | test harness |
-| `docs/en/` `docs/zh-CN/` `docs/zh-TW/` | user/developer manual — how to use the skill (trigger words, plans, roadmap), one tree per language; NOT part of the skill payload |
+| `docs/en/` `docs/zh-CN/` `docs/zh-TW/` | project knowledge — developer-maintained, read by developers and agents working here (how to use the skill: trigger words, plans, roadmap), one tree per language; NOT part of the skill payload |
 | `docs/glossary.md` | trilingual terminology table (single source of truth for terms) |
 | `docs/design-decisions/` | architecture decision records (shared, single-language 简体中文) |
 | `docs/archive/` | completed plan archives (shared, single-language, never translated) |
 
-**Where does a new file go?** If deleting the file would break agent execution (INIT/AUDIT/RELEASE read it) → `references/`. If it only helps humans understand, maintain or contribute → `docs/<language>/`.
+**Where does a new file go?** If deleting the file would break agent execution (INIT/AUDIT/RELEASE read it) → `references/`. If it is project knowledge — how to use, maintain or contribute, read by developers AND agents working in this repo — → `docs/<language>/`.
 
 ## Language Policy (by audience)
 
-- **Agent-facing files are single-language** — `SKILL.md`, `AGENTS.md`, `references/**`, and the bodies of generated artifacts (AGENTS.md, rules, sub-skills) never carry a second language section. Convention: this skill's own execution docs (`SKILL.md`, `references/policies`, `references/workflows`) are 中文; auto-loaded agent guidance (`AGENTS.md`, generated template bodies) is English.
+- **Agent-facing files are single-language** — `SKILL.md`, `AGENTS.md`, `references/**`, and the bodies of generated artifacts (AGENTS.md, rules, sub-skills) never carry a second language section. Convention: this skill's own execution docs (`SKILL.md`, `references/policies`, `references/workflows`) are 中文; auto-loaded agent guidance (`AGENTS.md`, template bodies) is English.
 - **Developer-facing files are trilingual and split** - the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`); the 简体中文/繁體中文 translations live inside their trees (`docs/zh-CN/README.md`, `docs/zh-TW/README.md`, ...). **简体中文 (zh-CN) is the canonical source** - edits originate there, then propagate to English and 繁體中文 (Taiwan usage). Editing one language requires updating the other two in the same change (stable docs). In-flight drafts may defer translation until they stabilize, but the parity gate must pass before push/release. Parity mapping: the English entry files are the root `README.md`/`CONTRIBUTING.md` (not duplicated under `docs/en/`). Structural parity is enforced by `scripts/check-doc-parity.js` (CI + release precondition `docs.parity_passed`).
 - **Terminology** — before introducing a term, check `docs/glossary.md` and add the trilingual entry if missing; keep renderings consistent across all files.
 

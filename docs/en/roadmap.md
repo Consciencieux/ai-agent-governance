@@ -18,7 +18,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - Secret scanning gate — `scripts/check-secrets.js` blocks secret-like staged content (validator 21 checks)
 - Governance score — validator `--json` outputs composite `score` (unweighted v1) + CI shields.io badge endpoint artifact
 - Doc freshness — `scripts/check-doc-freshness.js` flags stale governance docs via `git log` commit dates (advisory only)
-- Doc consistency — `scripts/check-doc-consistency.js` flags cross-document contradictions (version examples, protected lists, ADR statuses, roadmap targets, links, numeric claims; advisory only)
+- Doc consistency — `scripts/check-doc-consistency.js` flags cross-document contradictions (version examples, protected lists, ADR statuses, roadmap targets, links, numeric claims; advisory default; consent/protected-list/principles-index/plan-status clusters fail-closed under `--gate`/`--release-gate`, changelog coverage only under `--release-gate`)
 - **Review manager** — 8th sub-skill: multi-agent deep review workflow (5 fixed domains, severity-sorted report, fix + gate verification). Design: [../archive/review-manager.md](../archive/review-manager.md)
 - **Tiered review gate** — release/push risk tiering (low = lightweight only; medium = suggested deep review at approval; high = review-manager required); lightweight scripts always run. Design: [../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
 - **Governed-project sync groups** — two layers: (L1) declarative `.governance/sync-rules.json` (watch/require) + checklist-driven Phase 5; (L2) `scripts/check-sync.js` mechanical verification against the actual change set. Designs: [../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
@@ -28,7 +28,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - **Install-payload integrity gate** — 3 tests proving copied gate scripts are self-contained (no sibling `require`) and that `init-spec.json`'s copy list matches what INIT writes
 - **Consent policy rewrite** — one confirmation per change set across five sync points; plan approval demoted to intent alignment (`consent-policy-hardening` plan)
 - **Governance principles index** — pointers-only index of 18 principles + a `--gate` check that keeps every row's source resolvable
-- [x] **Rule capture** — stop stated requirements from living only in chat context: the agent pre-classifies each requirement (persistent / one-off / unclear), the developer adjudicates at Phase 6, confirmed rules are written into `AGENTS.md` / `docs/rules/**`, unconfirmed ones leave a `rules_pending` trace in the activity trail. Design: [../archive/rule-capture.md](../archive/rule-capture.md)
+- **Rule capture** — stop stated requirements from living only in chat context: the agent pre-classifies each requirement (persistent / one-off / unclear), the developer adjudicates at Phase 6, confirmed rules are written into `AGENTS.md` / `docs/rules/**`, unconfirmed ones leave a `rules_pending` trace in the activity trail. Design: [../archive/rule-capture.md](../archive/rule-capture.md)
 
 ### Near-term
 
@@ -46,6 +46,6 @@ Note: design plans for unimplemented features live in each language tree's `plan
 
 **Maintenance rule (rolling re-baseline, at each release):**
 
-1. **On completion** — move the item to `Done`, check `[x]`, drop its horizon label (done items carry no horizon). Archive its design doc to `docs/archive/` (shared, single-language).
-2. **Horizons are relative** — after removing completed items, promote the remainder: Mid-term → Near-term, Long-term → Mid-term, Very long-term → Long-term (as demand warrants).
+1. **On completion** — move the item to `Done` (done items carry no horizon label). Archive its design doc to `docs/archive/` (shared, single-language).
+2. **Horizons are relative** — after removing completed items, promote the remainder: Mid-term → Near-term, Long-term → Mid-term (as demand warrants).
 3. **Trigger** — the re-ordering is part of the release flow (the `release-manager` step that archives plans also re-baselines this roadmap), not an ad-hoc edit; otherwise labels go stale.

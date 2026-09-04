@@ -18,6 +18,9 @@ node scripts/verify-governance.js --help   # 用法
 
 - **manifest 模式** — `.governance/manifest.json` 声明了非空 `artifacts` 数组时，路径以它为准（结构适配）。追加 manifest 相关检查（schema、工件 kind、治理版本、可选 release 元数据）。
 - **默认模式** — 无 manifest 时检查内置默认清单（AGENTS.md、CHANGELOG format、architecture/features/plans/rules 目录、.gitignore、.env.example、CI 工作流、脚本、.governance/ 状态文件、治理版本）。
+- **生成技能检查（两种模式共存）** — 当 `.governance/generated/skills/` 存在时，对每个子技能目录检查其 `SKILL.md` 是否真实且在项目树内（符号链接文件、或目录链接到树外均被拒绝）。这些检查附加到当前模式清单，因此 `N/M checks passed` 中的 `M` 随生成技能数量增加。
+
+工件路径经过包含性校验：manifest 条目尝试逃逸项目根（或通过链接解析到树外）时报告为失败，而不是 stat 到项目外。
 
 权威检查清单在 `scripts/verify_governance.js`（`DEFAULTS` 数组）；`check-doc-consistency.js` 用它交叉核对 docs 里的数值声明。运行时输出 `validation.json` / `drift-report.json` 不是 required artifact —— fresh checkout 无它们也能通过。
 

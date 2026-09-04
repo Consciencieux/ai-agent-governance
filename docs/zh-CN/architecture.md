@@ -14,7 +14,7 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 | `references/` | **Skill 主体——skill 行为唯一存放处。** 复制进被治理项目、或定义 skill 如何行动的策略、模板、工作流。 | agent（skill 使用者） | 单语 |
 | `scripts/` | Skill 运行时脚本（校验器、检查、生成器、发布工具）——属于安装载荷 | agent/CI | 代码 |
 | `LICENSE` | MIT 许可证——属于安装载荷 | 安装者 | — |
-| `docs/` | **用户/开发者手册。不属于 skill 载荷。** 说明如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、路线图、术语表。 | 用户/开发者 | 三语 |
+| `docs/` | **项目知识。不属于 skill 载荷。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、路线图、术语表。 | 开发者 + Agent | 三语 |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`CONTRIBUTING.md`、`README.md`、`AGENTS.md` | 仓库基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
 
 ### 仓库布局
@@ -46,7 +46,7 @@ ai-agent-governance/
 │   ├── check-secrets.js        # 密钥扫描门禁（暂存区扫描，绝不打印密钥）
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）
 │   ├── check-doc-freshness.js  # 文档过时度（git log 日期，建议性，exit 0）
-│   ├── check-doc-consistency.js # 文档间矛盾（建议性，exit 0）
+│   ├── check-doc-consistency.js # 文档一致性 + consent/受保护清单/原则索引/计划状态簇（默认建议性；--gate/--release-gate fail-closed；changelog 覆盖仅 --release-gate fail-closed）
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
 │   ├── check-layout-sync.js    # architecture.md 仓库布局 vs references/ + scripts/（fail-closed 门禁）
 │   ├── check-plan-delivery.js  # 计划声明 vs 实际交付（归档前门禁）
@@ -58,7 +58,7 @@ ai-agent-governance/
 │  ▼ 安装载荷到此为止——以下全是仓库基础设施，
 │    不随 skill 复制进安装目录（与 README Install 一节同规则）
 │
-├── docs/                       # 用户/开发者手册——怎么用 skill（触发词、计划、路线图）
+├── docs/                       # 项目知识——开发者维护，开发者与 Agent 共享读取（触发词、计划、路线图）
 │   ├── glossary.md             # 三语术语对照表（共享）
 │   ├── design-decisions/       # 架构决策记录（共享，简体单语）
 │   ├── archive/                # 已完成计划归档（共享，单语）

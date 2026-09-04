@@ -30,8 +30,12 @@ function docCandidates() {
   ];
   try {
     const m = JSON.parse(fs.readFileSync(path.join(ROOT, ".governance", "manifest.json"), "utf8"));
-    if (typeof m.doc_root === "string" && m.doc_root && m.doc_root !== "docs") {
-      return docs.map((d) => d.replace(/^docs\//, m.doc_root + "/"));
+    const dr = typeof m.doc_root === "string" ? m.doc_root.trim().replace(/[\\/]+$/, "") : "";
+    // Containment: a crafted doc_root (absolute, drive-relative "C:docs", ".."-escaping)
+    // must not redirect the scan outside the project tree.
+    const driveRelative = /^[A-Za-z]:/.test(dr);
+    if (dr && dr !== "docs" && !path.isAbsolute(dr) && !driveRelative && !dr.split(/[\\/]/).includes("..")) {
+      return docs.map((d) => d.replace(/^docs\//, dr + "/"));
     }
   } catch (e) {
     if (process.env.DEBUG) console.error(`[DEBUG] manifest unreadable: ${e.message}`);

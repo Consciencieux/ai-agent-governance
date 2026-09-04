@@ -1,6 +1,6 @@
 ---
 name: ai-agent-governance
-version: 0.11.2
+version: 0.11.3
 description: >-
   Use when initializing, retrofitting, auditing, OR releasing a project's AI-agent governance framework. Init mode: one-shot bootstrap of AGENTS.md, feature registry, lifecycle, CI validation, security baseline. Audit mode: health-check an already-governed project, detect drift vs .governance/manifest.json, apply minimal fixes. Release mode: version-synced, validated releases via the generated release-manager sub-skill. Triggers on "initialize governance", "setup project for AI agents", "create AGENTS.md framework", "audit governance", "governance health check", "fix governance drift", "release", "publish version", "check skill update", "update this skill". Also loads the generated sub-skills in .governance/generated/skills for ongoing agent work. Do NOT use for normal development tasks.
 ---
@@ -150,12 +150,14 @@ docs/rules/**              （规则文件）
 .governance/manifest.json       （治理工件清单）
 .governance/preflight.json      （回滚快照）
 .governance/git-policy.json     （Git 工作流策略）
+.governance/sync-rules.json     （同步组声明）
 scripts/verify-governance.js
 scripts/check-lock.js
 scripts/check-git-policy.js
 scripts/check-secrets.js
 scripts/check-sync.js
 scripts/check-doc-consistency.js
+scripts/check-doc-freshness.js
 .githooks/pre-commit
 .githooks/commit-msg
 opencode.json / .github/workflows/**

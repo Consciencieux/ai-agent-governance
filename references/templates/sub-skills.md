@@ -203,6 +203,8 @@ Follow `references/workflows/release.md` (the single source of truth). Release l
 
 Core principle: AI analyzes and proposes; the developer authorizes; no release operation runs without explicit confirmation.
 
+> **Tool boundary:** `scripts/release-manager.js` is the TAG EXECUTOR — it only analyzes (`plan`, read-only) and creates the annotated git tag (`execute`, and only with `--yes`). It does NOT create a GitHub Release, package assets, or push branches; those are steps of THIS sub-skill's own Phase 4 sequence below. Never delegate the whole release to the script — it is a tag gate, not a release engine.
+
 ## release_requirements (all must pass)
 
 - `git.require_clean_status`: `git status --porcelain` empty
@@ -286,7 +288,7 @@ If you cannot determine whether a change is breaking or a feature: mark it Poten
 ````
 ---
 name: plan-manager
-description: Use to manage this repo's development plans — create TASK_<name>.md before medium/large changes, check off milestones in docs/plans/DEVELOPMENT_PLAN.md and mark TASK Status when work completes. Triggers on "create task plan", "update development plan", "check off milestone", "mark task completed", "plan this task".
+description: Use to manage this repo's development plans — create TASK_<name>.md before medium/large changes, check off milestones in docs/plans/DEVELOPMENT_PLAN.md, mark TASK Status when work completes, and archive completed plans at release. Triggers on "create task plan", "update development plan", "check off milestone", "mark task completed", "plan this task", "archive completed plan".
 ---
 
 # Plan Manager

@@ -83,8 +83,12 @@ test("full default structure exits 0 (defaults mode)", () => {
   const dir = tmp("full");
   buildFullDefault(dir);
 
-  const r = run(dir);
-  return r.status === 0 && r.stdout.includes("21/21 checks passed.");
+  const r = run(dir, ["--json"]);
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  // 21 = the DEFAULTS baseline; generated-skills checks append only when the
+  // .governance/generated/skills/ tree exists (this fixture has none).
+  return out.total === 21 && out.total === out.passed;
 });
 
 test("empty CI workflow directory does not satisfy the validator", () => {
@@ -532,6 +536,60 @@ test("check-sync: NUL status parsing preserves untracked unicode/space paths", (
   if (r.status !== 0) return false;
   const out = JSON.parse(r.stdout);
   return out.clean === true && out.unsynced.length === 0;
+});
+
+test("check-sync: --advisory reports unsynced groups but exits 0", () => {
+  const dir = tmp("sync-advisory");
+  gitInit(dir);
+  fs.mkdirSync(path.join(dir, "src"), { recursive: true });
+  write(path.join(dir, "src", "a.ts"), "x");
+  spawnSync("git", ["add", "src/a.ts"], { cwd: dir });
+  write(path.join(dir, ".governance", "sync-rules.json"),
+    JSON.stringify({ syncGroups: [{ name: "api-architecture", watch: ["src/**"], require: ["docs/ARCHITECTURE.md"] }] }));
+  write(path.join(dir, ".governance", "state.json"), JSON.stringify({ task_start_sha: "" }));
+  const r = spawnSync(process.execPath, [SYNC_CHECK, "--advisory", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.clean === false && out.unsynced.some((u) => u.group === "api-architecture");
+});
+
+test("check-secrets: github_pat_ form hits github-pat pattern", () => {
+  const dir = tmp("secrets-pat2");
+  gitInit(dir);
+  const value = assemble("github_pat_", "Q0ABCDEFGHIJKLMNOPQRSTUV1234567890");
+  write(path.join(dir, "ci.yml"), assemble("token: ", value));
+  spawnSync("git", ["add", "ci.yml"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stderr.includes("github-pat") && !r.stderr.includes(value);
+});
+
+test("check-secrets: generic connection string hits generic-connection-string pattern", () => {
+  const dir = tmp("secrets-connstr");
+  gitInit(dir);
+  const value = assemble("mongodb://", "appuser:supersecretpass", "@db.internal:27017/app");
+  write(path.join(dir, "config.js"), assemble("const db = '", value, "';"));
+  spawnSync("git", ["add", "config.js"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stderr.includes("generic-connection-string") && !r.stderr.includes("supersecretpass");
+});
+
+test("check-secrets: modified-file hunk reports the correct line number", () => {
+  const dir = tmp("secrets-modified");
+  gitInit(dir);
+  // COMMIT the baseline first: only then is the staged diff a real modification hunk
+  // (@@ -1,3 +1,4 @@ with context lines), which is what exercises the line counter.
+  write(path.join(dir, "app.js"), "const a = 1;\nconst b = 2;\nconst c = 3;\n");
+  spawnSync("git", ["add", "app.js"], { cwd: dir });
+  spawnSync("git", ["-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "-m", "baseline"], { cwd: dir });
+  const secretLine = assemble("const to", "ken = 'abcdefgh", "12345678';");
+  write(path.join(dir, "app.js"), "const a = 1;\nconst b = 2;\nconst c = 3;\n" + secretLine + "\n");
+  spawnSync("git", ["add", "app.js"], { cwd: dir });
+  const raw = spawnSync("git", ["diff", "--cached", "-U0"], { cwd: dir, encoding: "utf8" });
+  if (!/^@@ -\d+(,\d+)? \+\d+/m.test(String(raw.stdout)) || /@@ -0,0/.test(String(raw.stdout))) return false;
+  const r = spawnSync(process.execPath, [SECRET_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.hits.length === 1 && out.hits[0].pattern === "credential-assignment" && out.hits[0].line === 4;
 });
 
 test("check-sync: rename matching uses the destination path", () => {
@@ -1955,6 +2013,220 @@ test("consistency --gate: daily mode still requires [Unreleased] after a release
   if (r.status !== 0) return false;
   const out = JSON.parse(r.stdout);
   return out.issues.changelog_coverage.length === 1;
+});
+
+test("consistency --release-gate: AGENTS.md-only change is doc-only and exempt from changelog coverage", () => {
+  const dir = tmp("changelog-doconly");
+  gitInit(dir);
+  // AGENTS.md is a consent sync point, so the fixture must carry the full markers;
+  // the point under test is that a doc-only AGENTS.md edit is NOT a changelog-required change.
+  writeConsentSyncPoint(dir, "AGENTS.md", CONSENT_THREE_MARKERS_TEXT);
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.length === 0 && !out.issues.changelog_coverage.length;
+});
+
+test("consistency --release-gate: references change without changelog record still fails", () => {
+  const dir = tmp("changelog-refcat");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "references/policies/coding.policy.md"), "# Coding\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
+});
+
+test("validator: generated skill missing SKILL.md exits 1 (no longer masked by dir entry)", () => {
+  const dir = tmp("noskill-file");
+  buildFullDefault(dir);
+  fs.mkdirSync(path.join(dir, ".governance/generated/skills/review-manager"), { recursive: true });
+  const r = run(dir);
+  return r.status === 1 && r.stdout.includes("Generated skill") && r.stdout.includes("review-manager/SKILL.md");
+});
+
+test("consistency --release-gate: docs/rules change (governed-project rule) still requires changelog", () => {
+  const dir = tmp("changelog-docrules");
+  gitInit(dir);
+  write(path.join(dir, "docs/rules/lifecycle.md"), "# Lifecycle\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
+});
+
+test("validator: manifest artifact path escaping ROOT fails (containment)", () => {
+  const dir = tmp("escape-artifact");
+  buildFullDefault(dir);
+  // The escape target must EXIST outside ROOT, otherwise the assertion passes for the
+  // trivial reason that the file is missing and containment is never exercised.
+  fs.writeFileSync(path.join(path.dirname(dir), "escape-sentinel.txt"), "x");
+  const m = JSON.parse(fs.readFileSync(path.join(dir, ".governance/manifest.json"), "utf8"));
+  m.artifacts.push({ name: "escape", path: "../escape-sentinel.txt", kind: "file" });
+  fs.writeFileSync(path.join(dir, ".governance/manifest.json"), JSON.stringify(m));
+  const r = run(dir, ["--json"]);
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  const check = out.results.find((x) => x.name === "escape");
+  return check !== undefined && check.ok === false;
+});
+
+test("validator: a project reached through a symlinked root still validates", () => {
+  const dir = tmp("symlink-root");
+  buildFullDefault(dir);
+  // Manifest mode is where the containment comparison runs, so the fixture needs real
+  // artifacts declared; with an empty array the validator falls back to defaults mode
+  // and the symlinked-root path is never exercised.
+  const artifacts = ["AGENTS.md", "CHANGELOG.md", ".gitignore", ".env.example"].map((p) => ({ name: p, path: p, kind: "file" }));
+  const m = JSON.parse(fs.readFileSync(path.join(dir, ".governance/manifest.json"), "utf8"));
+  m.schema_version = "1";
+  m.artifacts = artifacts;
+  fs.writeFileSync(path.join(dir, ".governance/manifest.json"), JSON.stringify(m));
+  const link = path.join(path.dirname(dir), path.basename(dir) + "-link");
+  if (!linkDir(dir, link)) {
+    console.log("  (skipped: directory links not permitted on this platform)");
+    return true;
+  }
+  const direct = run(dir, ["--json"]);
+  const viaLink = spawnSync(process.execPath, [VALIDATOR, "--json"], { cwd: link, encoding: "utf8" });
+  const a = JSON.parse(direct.stdout);
+  const b = JSON.parse(viaLink.stdout);
+  // Same tree, same verdict: the containment check must not treat the canonical path as
+  // out-of-tree just because the cwd was reached through a link.
+  return a.mode === "manifest" && b.mode === "manifest" &&
+    a.passed === b.passed && a.total === b.total && direct.status === viaLink.status;
+});
+
+// Windows blocks file symlinks without developer mode but allows directory junctions;
+// POSIX allows both. Returns false when the platform refuses, so a test can skip openly.
+function linkDir(target, linkPath) {
+  try {
+    fs.symlinkSync(path.resolve(target), path.resolve(linkPath), "junction");
+    return true;
+  } catch {
+    const r = spawnSync("cmd", ["/c", "mklink", "/J", path.resolve(linkPath), path.resolve(target)], { encoding: "utf8" });
+    return r.status === 0;
+  }
+}
+
+test("validator: a skill directory symlinked out of the tree is rejected", () => {
+  const dir = tmp("symlink-skilldir");
+  buildFullDefault(dir);
+  const outside = path.join(path.dirname(dir), path.basename(dir) + "-outside");
+  fs.mkdirSync(outside, { recursive: true });
+  fs.writeFileSync(path.join(outside, "SKILL.md"), "# Evil\n");
+  fs.mkdirSync(path.join(dir, ".governance/generated/skills"), { recursive: true });
+  if (!linkDir(outside, path.join(dir, ".governance/generated/skills/evil"))) {
+    console.log("  (skipped: directory links not permitted on this platform)");
+    return true;
+  }
+  const r = run(dir, ["--json"]);
+  if (r.status !== 1) return false;
+  const check = JSON.parse(r.stdout).results.find((x) => x.name === "Generated skill: evil/SKILL.md");
+  // The out-of-tree junction must be enumerated AND rejected — not silently accepted
+  // because lstat only guards the final path component.
+  return check !== undefined && check.ok === false;
+});
+
+test("validator: symlinked generated SKILL.md is rejected (real file required)", () => {
+  const dir = tmp("symlink-skill");
+  buildFullDefault(dir);
+  const sk = path.join(dir, ".governance/generated/skills/review-manager");
+  fs.mkdirSync(sk, { recursive: true });
+  fs.writeFileSync(path.join(dir, "outside.txt"), "x");
+  try {
+    fs.symlinkSync(path.join(dir, "outside.txt"), path.join(sk, "SKILL.md"), "file");
+  } catch (e) {
+    console.log("  (skipped: symlink creation not permitted — " + e.code + ")");
+    return true;
+  }
+  return run(dir).status === 1;
+});
+
+test("generate-governance: --file phase drives generation (not just the echoed input)", () => {
+  const dir = tmp("gen-file-phase");
+  const input = path.join(dir, "input.json");
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(input, JSON.stringify({ project_name: "FilePhase", phase: "C" }));
+  const target = path.join(dir, "proj");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", target, "--file", input, "--json"], { encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  const skills = fs.existsSync(path.join(target, ".governance/generated/skills"));
+  const agents = fs.readFileSync(path.join(target, "AGENTS.md"), "utf8");
+  return out.phase === "C" && skills && !agents.includes("**Availability:**");
+});
+
+test("generate-governance: registry caps triggers for BOTH separator styles", () => {
+  const dir = tmp("gen-registry-density");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "Density", "--phase", "A"], { encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const rows = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8")
+    .split("\n")
+    .filter((l) => l.startsWith("| ") && l.includes(".governance/generated/skills/"));
+  if (rows.length === 0) return false;
+  // review-manager separates triggers with "·" — the previous comma-only split left it
+  // uncapped at 700+ chars. Every row must now stay bounded.
+  return rows.every((l) => l.length < 320);
+});
+
+test("consistency: ordinary source/test/scratch changes do NOT demand a changelog", () => {
+  const cases = ["src/app.js", "tests/foo.test.js", "notes.txt"];
+  return cases.every((f) => {
+    const dir = tmp("changelog-scope-" + path.basename(f, path.extname(f)));
+    gitInit(dir);
+    fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true });
+    write(path.join(dir, f), "x");
+    write(path.join(dir, "CHANGELOG.md"), "## [0.1.0] - 2026-01-01\n");
+    const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+    if (r.status !== 0) return false;
+    return !JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
+  });
+});
+
+test("check-plan-delivery: a directory artifact still matches its descendants", () => {
+  const dir = tmp("plandel-dirfrag");
+  fs.mkdirSync(path.join(dir, "docs/en/plans"), { recursive: true });
+  write(path.join(dir, "docs/en/plans/x.md"),
+    "# X\n\n> **Status: implemented**\n\n> **Target: payload**\n\n### Affected Files\n\n- `.governance/generated/skills/review-manager/SKILL.md` — generated skill\n");
+  fs.mkdirSync(path.join(dir, "references/templates"), { recursive: true });
+  write(path.join(dir, "references/templates/sub-skills.md"), "## 1. review-manager\n\n.governance/generated/skills\n");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 0 && out.undelivered === 0;
+});
+
+test("check-lock: control characters in state fields cannot repaint the terminal", () => {
+  const dir = tmp("lock-ansi");
+  fs.mkdirSync(path.join(dir, ".governance"), { recursive: true });
+  write(path.join(dir, ".governance/state.json"), JSON.stringify({
+    locked: "holder",
+    agent_id: "\u001b[31mFAKE\u001b[0m NO LOCK HELD",
+    task_id: "t\u0000x",
+  }));
+  const r = spawnSync(process.execPath, [LOCK_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && !r.stderr.includes("\u001b") && !r.stderr.includes("\u0000");
+});
+
+test("validator: complete generated skills pass and the check is reported", () => {
+  const dir = tmp("skill-ok");
+  buildFullDefault(dir);
+  const sk = path.join(dir, ".governance/generated/skills/drift-check");
+  fs.mkdirSync(sk, { recursive: true });
+  write(path.join(sk, "SKILL.md"), "# Drift Check\n");
+  const r = run(dir, ["--json"]);
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.results.some((x) => x.name === "Generated skill: drift-check/SKILL.md" && x.ok === true);
+});
+
+test("generate-governance: partial init registry notes Phase C availability (full init omits note)", () => {
+  const dirA = tmp("gen-registry-a");
+  spawnSync(process.execPath, [GENERATOR, "--target", dirA, "--project-name", "RegA", "--phase", "A"]);
+  const a = fs.readFileSync(path.join(dirA, "AGENTS.md"), "utf8");
+  if (!a.includes("**Availability:**") || !a.includes("Phase C")) return false;
+  const dirC = tmp("gen-registry-c");
+  spawnSync(process.execPath, [GENERATOR, "--target", dirC, "--project-name", "RegC", "--phase", "C"]);
+  const c = fs.readFileSync(path.join(dirC, "AGENTS.md"), "utf8");
+  return c.includes("review-manager") && !c.includes("**Availability:**");
 });
 
 // ---------- runner (must stay after ALL test registrations) ----------

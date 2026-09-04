@@ -269,18 +269,42 @@ function parseSubSkills(md) {
   return out;
 }
 
-function generateSkillRegistry(md) {
+function generateSkillRegistry(md, phase, targetAbs) {
   const skills = parseSubSkills(md);
   const rows = skills.map((sk) => {
     const marker = sk.description.match(/\s+Triggers on\s+/i);
-    const purpose = (marker ? sk.description.slice(0, marker.index) : sk.description).replace(/\|/g, "\\|") || "Generated project skill";
-    const triggers = (marker ? sk.description.slice(marker.index + marker[0].length) : "See SKILL.md").replace(/\|/g, "\\|");
+    // Registry rows are scanned by modes of widely different capability: keep a short
+    // purpose clause and at most three main triggers; the full description/trigger
+    // inventory lives in the generated SKILL.md itself.
+    const rawPurpose = (marker ? sk.description.slice(0, marker.index) : sk.description).replace(/\|/g, "\\|");
+    // Bound the clause: first sentence when there is one, else a hard character cap —
+    // single-sentence descriptions previously escaped truncation entirely.
+    let purpose = rawPurpose.split(/\.\s/)[0].trim();
+    if (purpose.length > 100) purpose = purpose.slice(0, 97).trimEnd() + "…";
+    if (!purpose) purpose = "Generated project skill";
+    const triggerList = marker ? sk.description.slice(marker.index + marker[0].length).replace(/\|/g, "\\|") : "";
+    // Triggers are separated by "," in some entries and "·" in others: split on both, or
+    // the cap silently no-ops (review: the longest row kept its full 13-trigger inventory).
+    const parts = triggerList.split(/\s*[,·]\s*/).map((t) => t.trim()).filter(Boolean);
+    const triggers = parts.length > 0
+      ? parts.slice(0, 3).join(", ").replace(/[.;·]\s*$/, "") + (parts.length > 3 ? ", …" : "")
+      : "See SKILL.md";
     return `| ${sk.name} | \.governance/generated/skills/${sk.name}/SKILL.md | ${purpose} | ${triggers} |`;
   });
+  // The note describes DISK state, not this invocation: a phased init (A then C) leaves
+  // AGENTS.md untouched on the C run (writeIfAbsent skips it), so keying the note on the
+  // current --phase alone would strand a stale "pending" note in a completed project.
+  const skillsWritten = targetAbs
+    ? fs.existsSync(path.join(targetAbs, ".governance", "generated", "skills"))
+    : false;
+  const note = phase === "C" || skillsWritten
+    ? ""
+    : "\n> **Availability:** the skill files under `.governance/generated/skills/` are written by the generator's Phase C — the entries above become loadable after a complete initialization (`--phase C` or one full run). Until then, treat them as reference-only.\n";
   return [
     "| Skill | Entry point | Purpose | Triggers |",
     "| --- | --- | --- | --- |",
     ...rows,
+    note,
   ].join("\n");
 }
 
@@ -322,7 +346,9 @@ function defaultGovernanceVersion(spec) {
     // Fall back to the version declared in the machine-readable spec below.
   }
   const fallback = spec && spec.inputs && spec.inputs.governance_version && spec.inputs.governance_version.default;
-  return typeof fallback === "string" && fallback.length > 0 ? fallback : "0.10.1";
+  // Last-resort sentinel only: keep it in step with package.json's current version when
+  // touching this file (a stale value here silently exports an outdated governance_version).
+  return typeof fallback === "string" && fallback.length > 0 ? fallback : "0.11.3";
 }
 
 // --- Main ---
@@ -353,7 +379,11 @@ function main() {
   const spec = readJSON(SPEC_PATH);
   const subSkillsSource = fs.readFileSync(path.join(SKILL_DIR, "references", "templates", "sub-skills.md"), "utf8");
   const inputs = file ? readJSON(file) : { project_name: projectName };
-  inputs.phase = phase;
+  // Phase: an explicit --phase always wins; otherwise a phase already present in the
+  // input JSON file is respected, falling back to the CLI default (A).
+  if (args.includes("--phase")) inputs.phase = phase;
+  else if (!inputs.phase) inputs.phase = phase;
+  const effectivePhase = inputs.phase;
   inputs.governance_version = inputs.governance_version || defaultGovernanceVersion(spec);
   inputs.description = inputs.description || "";
   inputs.project_name = inputs.project_name || projectName || "";
@@ -369,9 +399,9 @@ function main() {
   if (ciPlatformArg) inputs.ci_platform = ciPlatformArg;
   inputs.stack = inputs.stack || "docs-only";
   inputs.ci_platform = inputs.ci_platform || "github";
-  inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource);
+inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effectivePhase, path.resolve(target));
 
-  const maxPhaseIdx = PHASE_ORDER.indexOf(phase);
+  const maxPhaseIdx = PHASE_ORDER.indexOf(effectivePhase);
   if (maxPhaseIdx < 0) { console.error("error: --phase must be A, B, or C"); process.exit(2); }
 
   const artifacts = spec.artifacts.filter((a) => {
@@ -542,7 +572,7 @@ function main() {
   }
 
   if (json) {
-    process.stdout.write(JSON.stringify({ target: targetAbs, phase, results }, null, 2) + "\n");
+    process.stdout.write(JSON.stringify({ target: targetAbs, phase: effectivePhase, results }, null, 2) + "\n");
   } else {
     const created = results.filter((r) => r.action === "created" || r.action === "created-dir").length;
     const skipped = results.filter((r) => r.action === "skipped").length;

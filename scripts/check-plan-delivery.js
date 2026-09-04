@@ -113,10 +113,12 @@ function verifyDeclaredPath(declared) {
   const raw = declared.trim().replace(/^`|`$/g, "");
 
   for (const [frag, proofs] of RUNTIME_ARTIFACTS) {
-    // Match a declared path to an artifact fragment by exact/prefix path OR by basename
+    // Match a declared path to an artifact fragment by exact path, by a path-BOUNDARY
+    // prefix (".governance/generated/skills" is a directory fragment, so files beneath it
+    // are the same artifact — but ".../validation.json.bak" is NOT), or by basename
     // (a plan often cites the bare "git-policy.json" for ".governance/git-policy.json").
     const fragBase = path.basename(frag);
-    const matchesFrag = raw === frag || raw.startsWith(frag) || raw === fragBase || raw.endsWith("/" + fragBase);
+    const matchesFrag = raw === frag || raw.startsWith(frag + "/") || raw === fragBase || raw.endsWith("/" + fragBase);
     if (matchesFrag) {
       const found = proofs.filter((pf) => {
         const c = readFileSafe(pf);

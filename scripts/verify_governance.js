@@ -2,7 +2,7 @@
 // PAYLOAD SCRIPT — copied standalone into governed projects (references/init-spec.json).
 // Keep it self-contained: Node builtins only, never require() a sibling module.
 // Governance Validator — plain Node, no dependencies.
-// Usage: node scripts/verify-governance.js [--json]
+// Usage: node scripts/verify_governance.js [--json]
 // Paths come from .governance/manifest.json when present (structure-adaptive);
 // otherwise built-in defaults are used.
 // Exit code 0 when every governance artifact exists, 1 otherwise.
@@ -21,7 +21,27 @@ Options:
 }
 
 const ROOT = process.cwd();
+// Containment comparisons must use a canonical baseline: process.cwd() keeps the logical
+// path, so a project reached through a symlink/junction (macOS /tmp, Windows junctions, CI
+// workspace links) would otherwise make every realpath'd artifact look out-of-tree.
+const ROOT_REAL = (() => {
+  try {
+    return fs.realpathSync(ROOT);
+  } catch {
+    return ROOT;
+  }
+})();
 const MANIFEST = path.join(ROOT, ".governance", "manifest.json");
+
+// Path is inside the project when it neither escapes by segment nor resolves outside ROOT.
+function insideRoot(abs) {
+  try {
+    const rel = path.relative(ROOT_REAL, fs.realpathSync(abs));
+    return rel === "" || (!path.isAbsolute(rel) && !rel.split(/[\\/]/).includes(".."));
+  } catch {
+    return false;
+  }
+}
 
 // [name, relativePath, checker]
 // validation.json / drift-report.json are runtime outputs (optional), NOT required artifacts:
@@ -56,6 +76,12 @@ function isFile(p) {
   } catch {
     return false;
   }
+}
+
+// Manifest-supplied strings reach stdout/stderr: strip control chars (ANSI escapes can
+// repaint a failing report as passing) and bound the length.
+function sanitizeOut(s) {
+  return String(s).replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, "?").slice(0, 120);
 }
 
 function isDir(p) {
@@ -178,17 +204,63 @@ function loadManifestChecks() {
     const m = JSON.parse(fs.readFileSync(MANIFEST, "utf8"));
     if (!Array.isArray(m.artifacts) || m.artifacts.length === 0) return null;
     return m.artifacts.map((a) => {
-      const rel = path.normalize(a.path);
-      const abs = path.join(ROOT, rel);
-      return {
-        name: a.name || rel,
-        path: rel,
-        ok: a.kind === "dir" ? isDir(abs) : isFile(abs),
-      };
+      const rel = path.normalize(String(a.path || ""));
+      // Containment: a crafted manifest ("../../etc/passwd") or an in-tree symlink pointing
+      // outside must not turn the validator into an out-of-tree stat. Segment-based test so
+      // a legitimate name like "..config.yml" is not mistaken for an escape.
+      const escapes = rel === "" || rel === "." || path.isAbsolute(rel) || rel.split(/[\\/]/).includes("..");
+      let ok = false;
+      if (!escapes) {
+        const abs = path.join(ROOT, rel);
+        if (insideRoot(abs)) {
+          try {
+            const st = fs.statSync(abs);
+            ok = a.kind === "dir" ? st.isDirectory() : st.isFile();
+          } catch {
+            ok = false;
+          }
+        }
+      }
+      return { name: sanitizeOut(a.name || rel), path: rel, ok };
     });
   } catch {
     return null;
   }
+}
+
+function generatedSkillsChecks() {
+  const base = path.join(ROOT, ".governance", "generated", "skills");
+  if (!isDir(base)) return [];
+  let names;
+  try {
+    // Junctions/symlinks report isDirectory() === false as Dirent, so filtering on that
+    // would silently DROP an out-of-tree linked skill dir instead of rejecting it. Take
+    // every non-hidden entry and let the per-skill containment check decide.
+    names = fs.readdirSync(base, { withFileTypes: true })
+      .filter((e) => !e.name.startsWith("."))
+      .filter((e) => e.isDirectory() || e.isSymbolicLink())
+      .map((e) => e.name)
+      .sort();
+  } catch {
+    // Unreadable skills tree is a governance verdict, not a crash.
+    return [{ name: "Generated skills tree", path: ".governance/generated/skills", ok: false }];
+  }
+  return names.map((n) => {
+    const sk = path.join(base, n, "SKILL.md");
+    // A real skill file is a regular file inside the skills tree: lstat rejects a symlinked
+    // SKILL.md, insideRoot rejects a skill DIRECTORY symlinked out of the project.
+    let ok = false;
+    try {
+      ok = fs.lstatSync(sk).isFile() && insideRoot(sk);
+    } catch {
+      ok = false;
+    }
+    return {
+      name: "Generated skill: " + sanitizeOut(n) + "/SKILL.md",
+      path: ".governance/generated/skills/" + n + "/SKILL.md",
+      ok,
+    };
+  });
 }
 
 const manifestChecks = loadManifestChecks();
@@ -196,6 +268,7 @@ const results = manifestChecks
   ? (() => {
       const checks = [
         ...manifestChecks,
+        ...generatedSkillsChecks(),
         { name: "CHANGELOG format", path: "CHANGELOG.md", ok: hasChangelogFormat() },
         { name: "Git policy", path: ".governance/git-policy.json", ok: hasValidGitPolicy() },
         { name: "Sync groups check", path: "scripts/check-sync.js", ok: isFile(path.join(ROOT, "scripts/check-sync.js")) },
@@ -209,11 +282,14 @@ const results = manifestChecks
       }
       return checks;
     })()
-  : DEFAULTS.map(([name, rel, check]) => {
-      const target = rel === null ? null : path.join(ROOT, rel);
-      const ok = rel === null ? check() : check(target);
-      return { name, path: rel || "(auto)", ok };
-    });
+  : [
+      ...DEFAULTS.map(([name, rel, check]) => {
+        const target = rel === null ? null : path.join(ROOT, rel);
+        const ok = rel === null ? check() : check(target);
+        return { name, path: rel || "(auto)", ok };
+      }),
+      ...generatedSkillsChecks(),
+    ];
 
 const missing = results.filter((r) => !r.ok);
 const pass = results.length - missing.length;

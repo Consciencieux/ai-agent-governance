@@ -18,6 +18,9 @@ Exit code 0 when every governance artifact exists, 1 otherwise.
 
 - **Manifest mode** — when `.governance/manifest.json` declares a non-empty `artifacts` array, paths are resolved from it (structure-adaptive). Adds manifest-specific checks (schema, artifact kinds, governance version, optional release metadata).
 - **Defaults mode** — without a manifest, a built-in defaults list is checked (AGENTS.md, CHANGELOG format, architecture/features/plans/rules dirs, .gitignore, .env.example, CI workflow, scripts, .governance/ state files, governance version).
+- **Generated-skills checks (both modes)** — when `.governance/generated/skills/` exists, one check per skill directory asserts a real `SKILL.md` inside the project tree (a symlinked file, or a skill directory linked out of the tree, is rejected). These append to the mode's list, so `M` in `N/M checks passed` grows with the number of generated skills.
+
+Artifact paths are containment-checked: a manifest entry that escapes the project root (or resolves outside it through a link) is reported as failed rather than stat'ed out-of-tree.
 
 The authoritative check list lives in `scripts/verify_governance.js` (the `DEFAULTS` array); `check-doc-consistency.js` cross-checks numeric claims in docs against it. Runtime outputs `validation.json` / `drift-report.json` are NOT required artifacts — a fresh checkout passes without them.
 

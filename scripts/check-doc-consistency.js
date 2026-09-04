@@ -156,7 +156,24 @@ function changedPaths() {
 function changelogCoverage(releaseGate) {
   const paths = changedPaths();
   if (!paths || paths.length === 0) return { applicable: false, ok: true };
-  const governedChange = paths.some((p) => p === "SKILL.md" || p === "AGENTS.md" || p === "CHANGELOG.md" || p === "package.json" || p.startsWith("references/") || p.startsWith("scripts/") || p.startsWith(".github/"));
+  // Allowlist, not denylist: only a change to the governance/mechanism surface demands a
+  // CHANGELOG record. Ordinary source/test/scratch files are out of this check's scope —
+  // their recording duty belongs to the project's own lifecycle, and a denylist here made
+  // an untracked note file fail the release gate.
+  // docs/rules/** IS in scope: in governed projects those are the rule files (policy
+  // payload). Plain docs/**, README, CONTRIBUTING, CHANGELOG, LICENSE and this repo's
+  // AGENTS.md stay out — doc-only edits carry no CHANGELOG entry by repo rule.
+  const MECHANISM = [
+    (p) => p === "SKILL.md",
+    (p) => p === "package.json",
+    (p) => p.startsWith("references/"),
+    (p) => p.startsWith("scripts/"),
+    (p) => p.startsWith(".github/"),
+    (p) => p.startsWith("docs/rules/"),
+    (p) => p.startsWith(".governance/"),
+    (p) => p.startsWith(".githooks/"),
+  ];
+  const governedChange = paths.some((p) => MECHANISM.some((m) => m(p)));
   if (!governedChange) return { applicable: false, ok: true };
   const c = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
   if (!c) return { applicable: true, ok: false };

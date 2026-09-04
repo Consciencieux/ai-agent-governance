@@ -21,16 +21,16 @@ npm test        # 或 node tests/run-tests.js
 | `scripts/generate-governance.js` | INIT 產生器：確定性引導鷹架（規範：`references/init-spec.json`） |
 | `references/init-spec.json` | 機器可讀 INIT 規範（生成產出的單一事實源） |
 | `tests/run-tests.js` | 測試套件 |
-| `docs/en/` `docs/zh-CN/` `docs/zh-TW/` | 使用者/開發者手冊 —— 怎麼用 skill（觸發詞、計劃、路線圖），每種語言一棵目錄樹；不屬於 skill 載荷 |
+| `docs/en/` `docs/zh-CN/` `docs/zh-TW/` | 專案知識 —— 開發者維護，開發者與本倉庫工作的 Agent 共享讀取（怎麼用 skill：觸發詞、計劃、路線圖），每種語言一棵目錄樹；不屬於 skill 載荷 |
 | `docs/glossary.md` | 三語術語對照表（術語的單一事實來源） |
 | `docs/design-decisions/` | 架構決策記錄（共享，簡體單語） |
 | `docs/archive/` | 已完成計劃歸檔（共享，單語，絕不翻譯） |
 
-**新檔案放哪裡？** 如果刪掉該檔案會導致 Agent 無法執行（INIT/AUDIT/RELEASE 需要讀它）→ `references/`；如果只是幫人理解、維護、貢獻 → `docs/<語言>/`。
+**新檔案放哪裡？** 如果刪掉該檔案會導致 Agent 無法執行（INIT/AUDIT/RELEASE 需要讀它）→ `references/`；如果是專案知識——開發者與在本倉庫工作的 Agent 共享讀取怎麼用、維護、貢獻 → `docs/<語言>/`。
 
 ## 語言政策（按受眾）
 
-- **Agent 面向的檔案一律單語** —— `SKILL.md`、`AGENTS.md`、`references/**` 以及生成產物的正文（AGENTS.md、rules、子技能）絕不攜帶第二語言段落。慣例：本 skill 自身的執行文件（`SKILL.md`、`references/policies`、`references/workflows`）用中文；自動載入的 Agent 指引（`AGENTS.md`、生成範本正文）用英文。
+- **Agent 面向的檔案一律單語** —— `SKILL.md`、`AGENTS.md`、`references/**` 以及生成產物的正文（AGENTS.md、rules、子技能）絕不攜帶第二語言段落。慣例：本 skill 自身的執行文件（`SKILL.md`、`references/policies`、`references/workflows`）用中文；自動載入的 Agent 指引（`AGENTS.md`、範本文本）用英文。
 - **開發者面向的檔案三語且拆分** -- 根目錄只保留英文首頁（`README.md`、`CONTRIBUTING.md`）；簡體/繁體翻譯下沉到各自語言樹（`docs/zh-CN/README.md`、`docs/zh-TW/README.md`…）。**簡體中文（zh-CN）是源語言** -- 修改從簡體發起，再同步到英文與繁體中文（臺灣用語）。改一種語言必須**在同一次改動裡同步另兩種**（穩定文件）；活躍草稿可延遲翻譯至內容穩定，但 push/release 前必須補齊（parity 閘門兜底）。一致性映射：英文入口檔案即根目錄 `README.md`/`CONTRIBUTING.md`（不在 `docs/en/` 下重複）。結構一致性由 `scripts/check-doc-parity.js` 強制（CI + 發佈前置 `docs.parity_passed`）。
 - **術語** —— 引入新術語前先查 `docs/glossary.md`，缺漏則補三語條目；所有檔案保持同一譯法。
 

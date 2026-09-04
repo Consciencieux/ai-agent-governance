@@ -75,9 +75,15 @@ if (lock === null) {
   process.exit(0);
 }
 
+// State-supplied strings reach the terminal: ANSI escapes could repaint "LOCK HELD" as
+// released, so every interpolated field is stripped and bounded, not just the lock value.
+const safe = (v) => String(typeof v === "string" ? v : JSON.stringify(v))
+  .replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, "?")
+  .slice(0, 60);
+
 console.error(
-  `LOCK HELD by ${typeof lock === "string" ? lock : JSON.stringify(lock)}` +
-    ` (agent_id: ${state.agent_id || "?"}, task_id: ${state.task_id || "?"})` +
+  `LOCK HELD by ${safe(lock)}` +
+    ` (agent_id: ${safe(state.agent_id || "?")}, task_id: ${safe(state.task_id || "?")})` +
     ` — wait or coordinate; do NOT modify the same files in parallel`
 );
 process.exit(1);

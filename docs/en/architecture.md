@@ -14,7 +14,7 @@ The skill's behavior (operating modes INIT/AUDIT/RELEASE, lifecycle pipeline, de
 | `references/` | **Skill body — the only place skill behavior lives.** Policies, templates, workflows that get copied into governed projects or define how the skill acts. | agents (skill users) | single |
 | `scripts/` | Skill runtime scripts (validator, checks, generators, release tool) — part of the install payload | agents/CI | code |
 | `LICENSE` | MIT license — part of the install payload | installers | — |
-| `docs/` | **User/developer manual. NOT part of the skill payload.** Explains how to use the skill (trigger words in `commands.md`), design plans (`plans/`), roadmap, glossary. | users/developers | trilingual |
+| `docs/` | **Project knowledge. NOT part of the skill payload.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), roadmap, glossary. | developers + agents | trilingual |
 | `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `CONTRIBUTING.md`, `README.md`, `AGENTS.md` | Repo infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
 
 ### Repository Layout
@@ -46,7 +46,7 @@ ai-agent-governance/
 │   ├── check-secrets.js        # secret scan gate (staged diff, never prints the secret)
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
 │   ├── check-doc-freshness.js  # doc staleness (git log dates, advisory, exit 0)
-│   ├── check-doc-consistency.js # cross-doc contradictions (advisory, exit 0)
+│   ├── check-doc-consistency.js # cross-doc contradictions + consent/protected-list/principles-index/plan-status clusters (advisory default; --gate/--release-gate fail-closed; changelog coverage fail-closed only in --release-gate)
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
 │   ├── check-layout-sync.js    # architecture.md Repository Layout vs references/ + scripts/ (fail-closed gate)
 │   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
@@ -58,7 +58,7 @@ ai-agent-governance/
 │  ▼ install payload ends here — everything below is repo infrastructure,
 │    NOT copied into skill installations (same rule as the README Install section)
 │
-├── docs/                       # user/developer manual — how to use the skill (trigger words, plans, roadmap)
+├── docs/                       # project knowledge — developer-maintained, read by developers & agents (trigger words, plans, roadmap)
 │   ├── glossary.md             # trilingual terminology table (shared)
 │   ├── design-decisions/       # architecture decision records (shared, single-language 简体中文)
 │   ├── archive/                # completed plan archives (shared, single-language)

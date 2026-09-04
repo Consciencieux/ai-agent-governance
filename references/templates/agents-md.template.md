@@ -28,7 +28,7 @@ Do NOT maintain a fixed inventory here. Two docs are mandatory and must stay fre
 **Change hygiene:** for removal, rename, move, replacement, deprecation, split/merge, configuration/API/data-format or generated-artifact changes, search the full impact surface before editing. Keep current behavior in the current layer, intentional compatibility in a transition layer with an owner and removal condition, and reasons in history. No unexplained residue, duplicate authority or broken projection may remain.
 
 ## Generated Skills
-The entries below are skills, not scripts. Load the indicated `SKILL.md` when a request matches its triggers; do not execute a skill as `node scripts/<name>.js`. Scripts are standalone support tools under `scripts/` and are run only when the selected skill instructs you to run them.
+The entries below are skills, not scripts. Load the indicated `SKILL.md` when a request matches its triggers; do not execute a skill as `node scripts/<name>.js`. Scripts are standalone support tools under `scripts/` and are run when the selected skill, AGENTS.md, or the operating lifecycle rules require them (e.g. the lifecycle's validation phase directly invokes the gate scripts).
 {{GENERATED_SKILL_REGISTRY}}
 
 ## Agent Operating Lifecycle
@@ -76,7 +76,7 @@ Secrets, unrelated refactors, restructuring without cause, skipping Definition o
 | --- | --- |
 | Read | automatic |
 | Create Documentation | automatic |
-| Modify Code | allowed, must validate |
+| Modify Code | allowed, must validate (protected governance files listed below require the protection flow) |
 | Modify 3+ Files at Once | confirmation required |
 | Delete Code | confirmation required |
 | Dependency Change | confirmation required |
@@ -102,7 +102,7 @@ Note: users may request governance changes via explicit instruction (through the
 - Never force push; never push directly to protected branches. Small single-file doc/typo changes may skip the branch, but must be reported.
 
 ## Governance File Protection
-Modifying AGENTS.md, CLAUDE.md, docs/rules/**, .governance/manifest.json, .governance/preflight.json, .governance/git-policy.json, .governance/sync-rules.json, scripts/verify-governance.js, scripts/check-lock.js, scripts/check-git-policy.js, scripts/check-secrets.js, scripts/check-sync.js, scripts/check-doc-consistency.js, .githooks/pre-commit, .githooks/commit-msg, opencode.json, or CI config (.github/workflows/**, .gitlab-ci.yml) requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
+Modifying AGENTS.md, CLAUDE.md, docs/rules/**, .governance/manifest.json, .governance/preflight.json, .governance/git-policy.json, .governance/sync-rules.json, scripts/verify-governance.js, scripts/check-lock.js, scripts/check-git-policy.js, scripts/check-secrets.js, scripts/check-sync.js, scripts/check-doc-consistency.js, scripts/check-doc-freshness.js, .githooks/pre-commit, .githooks/commit-msg, opencode.json, or CI config (.github/workflows/**, .gitlab-ci.yml) requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
 
 ## Mandatory Pre-commit Checklist
 CHANGELOG must be updated before push/PR. No CHANGELOG update → no push.

@@ -85,7 +85,7 @@
     },
     "governance_version": {
       "type": "string",
-      "default": "0.10.1",
+      "default": "0.11.3",
       "description": "Governance framework version stamped into manifest/CHANGELOG"
     },
     "release_version": {
@@ -371,7 +371,7 @@
       "source": "references/templates/sub-skills.md",
       "type": "generated",
       "generator": "sub-skills",
-      "description": "Generated sub-skills (agent-driven until the generator implements them)"
+      "description": "Generated sub-skills written by the Phase C sub-skills generator"
     },
     {
       "phase": "C",

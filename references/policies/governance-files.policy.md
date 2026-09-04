@@ -20,10 +20,12 @@
 | `scripts/check-secrets.js` | 密钥扫描门禁 |
 | `scripts/check-sync.js` | 同步组门禁 |
 | `scripts/check-doc-consistency.js` | 文档一致性门禁 |
+| `scripts/check-doc-freshness.js` | 文档新鲜度检查（建议性，但 payload 脚本） |
 | `.githooks/pre-commit` | 暂存内容一致性门禁（默认不启用） |
 | `.githooks/commit-msg` | 已确认提交消息门禁（默认不启用） |
 | `opencode.json` | Agent 配置 |
 | `.github/workflows/**` | CI 配置 |
+| `.gitlab-ci.yml` | CI 配置（GitLab 平台） |
 
 ## .governance/ Git 跟踪策略
 
@@ -35,6 +37,7 @@
 | `state.json` | 治理状态（当前态） | 提交 |
 | `preflight.json` | 回滚快照 | 提交 |
 | `git-policy.json` | Git 工作流策略 | 提交 |
+| `sync-rules.json` | 同步组声明（Phase 5 对照执行） | 提交 |
 | `generated/skills/` | 治理产物 | 提交 |
 | `docs/plans/archive/` | 归档的已完成 TASK 计划（治理历史；非 validator 必查，但必须提交） | 提交 |
 
@@ -64,6 +67,7 @@ Tracked:
 - state.json
 - preflight.json
 - git-policy.json
+- sync-rules.json
 - generated/
 
 Ignored:

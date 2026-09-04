@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // Release Manager — zero-dependency Node tool for the AI-assisted, human-approval-gated release flow.
-// plan:    analyze change classifications, produce a Release Proposal (READ-ONLY, never writes).
-// execute: create the annotated git tag AFTER developer approval (--yes), re-verifying state first.
+// Role: TAG EXECUTOR. plan: analyze change classifications, produce a Release Proposal
+// (READ-ONLY, never writes). execute: create the annotated git tag AFTER developer approval
+// (--yes), re-verifying state first. It does NOT create GitHub Releases, package assets, or
+// push branches — those are orchestrated by the release-manager sub-skill
+// (references/templates/sub-skills.md §6) with human approval.
 
 const fs = require("fs");
 const { spawnSync } = require("child_process");
@@ -10,6 +13,8 @@ const USAGE = `Usage:
   release-manager.js plan --json <input>          Analyze changes, propose a version (read-only)
   release-manager.js plan --file <path>           Same as --json, reading the input from a file
   release-manager.js execute --proposal <file> [--yes] [--push]
+Role: TAG EXECUTOR — this tool creates/validates the annotated git tag; the GitHub Release,
+asset packaging and upload are orchestrated by the release-manager sub-skill, not this script.
 Options:
   --json <input>     JSON: {"current":"X.Y.Z","changes":[{"type":"breaking|feature|fix|docs|refactor|test|ci|chore","description":"...","uncertain":false}]}
   --file <path>      JSON input read from a file (avoids shell quoting issues)
@@ -230,7 +235,12 @@ function execute(argv) {
   const existing = git(["tag", "-l", tag]);
   if (String(existing.stdout || "").trim() !== "") fail(`execute: tag ${tag} already exists`, 4);
 
-  const summary = proposal.summary || `Release ${fmt(ver)}`;
+  // Summary is embedded in a git tag message: control chars would corrupt the record, and
+  // the proposal may be hand-written. Strip C0/C1/DEL plus the Unicode line terminators
+  // (U+2028/2029/U+0085 break "single line" for JSON and most renderers), then bound the
+  // length on a code-POINT boundary so a surrogate pair is never split.
+  const cleaned = String(proposal.summary || "").replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, " ").trim();
+  const summary = [...cleaned].slice(0, 140).join("") || `Release ${fmt(ver)}`;
   const t = git(["tag", "-a", tag, "-m", `Release ${fmt(ver)}: ${summary}`]);
   if (t.status !== 0) fail("execute: git tag failed: " + t.stderr, 5);
   console.log(`tag ${tag} created (annotated)`);

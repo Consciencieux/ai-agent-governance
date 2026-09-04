@@ -14,7 +14,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 | `references/` | **Skill 主體——skill 行為唯一存放處。** 複製進被治理專案、或定義 skill 如何行動的策略、模板、工作流程。 | agent（skill 使用者） | 單語 |
 | `scripts/` | Skill 執行時腳本（校驗器、檢查、生成器、發佈工具）——屬於安裝載荷 | agent/CI | 程式碼 |
 | `LICENSE` | MIT 授權條款——屬於安裝載荷 | 安裝者 | — |
-| `docs/` | **使用者/開發者手冊。不屬於 skill 載荷。** 說明如何使用 skill（`commands.md` 觸發詞）、設計計劃（`plans/`）、路線圖、術語表。 | 使用者/開發者 | 三語 |
+| `docs/` | **專案知識。不屬於 skill 載荷。** 開發者維護，供開發者與在本倉庫工作的 Agent 讀取：如何使用 skill（`commands.md` 觸發詞）、設計計劃（`plans/`）、路線圖、術語表。 | 開發者 + Agent | 三語 |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`CONTRIBUTING.md`、`README.md`、`AGENTS.md` | 倉庫基礎設施：CI、發佈流程、變更日誌、貢獻指南 | 倉庫維護者 | 按檔案 |
 
 ### 倉庫佈局
@@ -46,7 +46,7 @@ ai-agent-governance/
 │   ├── check-secrets.js        # 密鑰掃描閘門（暫存區掃描，絕不列印密鑰）
 │   ├── check-sync.js           # 同步組閘門（watch/require 對照，exit 1）
 │   ├── check-doc-freshness.js  # 文件過時度（git log 日期，建議性，exit 0）
-│   ├── check-doc-consistency.js # 文件間矛盾（建議性，exit 0）
+│   ├── check-doc-consistency.js # 文件一致性 + consent/受保護清單/原則索引/計劃狀態簇（預設建議性；--gate/--release-gate fail-closed；changelog 覆蓋僅 --release-gate fail-closed）
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
 │   ├── check-layout-sync.js    # architecture.md 倉庫佈局 vs references/ + scripts/（fail-closed 閘門）
 │   ├── check-plan-delivery.js  # 計劃宣告 vs 實際交付（歸檔前閘門）
@@ -58,7 +58,7 @@ ai-agent-governance/
 │  ▼ 安裝載荷到此為止——以下全是倉庫基礎設施，
 │    不隨 skill 複製進安裝目錄（與 README Install 一節同規則）
 │
-├── docs/                       # 使用者/開發者手冊——怎麼用 skill（觸發詞、計劃、路線圖）
+├── docs/                       # 專案知識——開發者維護，開發者與 Agent 共享讀取（觸發詞、計劃、路線圖）
 │   ├── glossary.md             # 三語術語對照表（共享）
 │   ├── design-decisions/       # 架構決策記錄（共享，簡體單語）
 │   ├── archive/                # 已完成計劃歸檔（共享，單語）

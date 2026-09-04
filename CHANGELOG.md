@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented here.
 
+## [0.11.3] - 2026-09-04
+
+### Added
+
+- **Generated-skill integrity check** — `scripts/verify_governance.js` now verifies every subdirectory of `.governance/generated/skills/` carries its `SKILL.md` (via `lstat`, so a symlinked SKILL.md is not counted); deleting one skill's file is no longer masked by a directory-only manifest entry. Manifest artifact paths are also containment-checked via `realpath`, so a crafted `.governance/manifest.json` cannot turn the validator into an out-of-tree stat or let an in-tree symlink point outside ROOT.
+- **Doc-only exemption in changelog coverage** — a change touching only project knowledge docs (`docs/**` — **not** `docs/rules/**`, which are governed-project rule files), README, CONTRIBUTING, AGENTS.md, CHANGELOG or LICENSE no longer triggers the "changelog required" report (repo rule: doc-only edits carry no CHANGELOG entry); mechanism changes (`references/`, `scripts/`, `SKILL.md`, `package.json`, `.github/`, `docs/rules/` in governed projects) still require it.
+
+### Fixed
+
+- **Phased-init contract** — the generated skill registry now states that skill files under `.governance/generated/skills/` are written in Phase C (entries are reference-only until a complete init), instead of silently advertising unloadable entries after Phase A/B.
+- **Script-runtime guidance in generated AGENTS.md** — scripts are run when the selected skill, AGENTS.md or the operating lifecycle rules require them (the lifecycle validation phase itself invokes gate scripts), not "only when a skill instructs".
+- **`release-manager` tool boundary** — `scripts/release-manager.js` is documented as the tag executor (tag creation only; GitHub Release, packaging and uploads are orchestrated by the release-manager sub-skill).
+- **Registry density** — generated skill registry rows keep a one-clause purpose and up to three main triggers; the full trigger inventory stays in each generated `SKILL.md`.
+- **Changelog-coverage cluster attribution** — the changelog coverage check is fail-closed only in `--release-gate`; docs (architecture.md, roadmap.md) now state that accurately.
+- **Whole-project review findings** (lightweight audit, 5 domains — all verified before fixing):
+  - *Fixed*: `init-spec.json` `governance_version` default 0.10.1 → 0.11.2 (fresh INITs were stamped with an outdated version; the generator's sentinel was subordinated to the spec default).
+  - *Fixed*: `.gitignore` now carries the full `check-git-policy.js` required patterns (`!.env.example`, `credentials.json`, `secrets.*`) — the repo matches the baseline it enforces.
+  - *Fixed*: `governance-files.policy.md` — `sync-rules.json` added to the tracked-governance-state table; `check-doc-freshness.js` added to the protected-files list (+ synced into `git.policy.md` and the generated AGENTS.md protected list; the generated AGENTS.md permission matrix now points at the protection flow for governance files).
+  - *Fixed*: `release-manager.js` sanitises the tag message summary (control chars stripped, bounded length); `check-lock.js` strips control characters from echoed lock values.
+  - *Fixed*: `check-plan-delivery.js` no longer matches a bare path prefix (`.governance/validation.json.bak` was accepted as the artifact).
+  - *Fixed*: `generate-governance.js` `--file` input phase is respected unless `--phase` is explicitly passed.
+  - *Fixed*: `check-doc-freshness.js` validates `doc_root` containment (absolute/`..`-escaping manifests fall back to `docs`).
+  - *Docs*: zh-TW commands.md trigger list aligned with the source trigger (`审核一下`), simplified-vs-traditional leak in zh-TW workflow lines corrected; README "Next up" re-aligned with the roadmap (all four listed features already shipped); roadmap maintenance rule + Done-section `[x]` consistency cleaned (horizon chain no longer references the removed 5th horizon).
+  - *Tests*: `generic-connection-string`, `github_pat_` form, modified-file hunk line numbers, and `check-sync --advisory` are now covered (the first two are payload scripts shipped to every governed project).
+- **Second-pass review: regressions from the first pass, fixed** (each reproduced before fixing):
+  - *Fixed*: validator containment no longer fails a project reached through a symlinked/junctioned root — the baseline is realpath'd too (previously 6/23 checks passed via a junction, 23/23 direct). Escape detection is segment-based, so a legitimate `..config.yml` is no longer rejected.
+  - *Fixed*: changelog coverage is an allowlist again (`SKILL.md`, `package.json`, `references/`, `scripts/`, `.github/`, `docs/rules/`, `.governance/`, `.githooks/`). The first pass had inverted it into a denylist, which made an ordinary `src/` edit — or a single untracked scratch file — fail the release gate in governed projects.
+  - *Fixed*: generated-skill checks now reject a skill DIRECTORY linked out of the tree (`lstat` alone only guarded the final path component, and `Dirent.isDirectory()` silently dropped junction entries instead of failing them). The skills-tree read is also wrapped: an unreadable tree is a governance verdict, not a crash.
+  - *Fixed*: `--file` phase now actually drives generation (the resolved phase feeds artifact filtering, the registry note and the JSON report; previously it was written to the inputs object and never read).
+  - *Fixed*: registry trigger capping handles both `,` and `·` separators, and the purpose clause has a hard character cap — the longest row (review-manager) had escaped truncation entirely.
+  - *Fixed*: the Phase C availability note keys off disk state, so a phased `A` → `C` init no longer strands a stale "pending" note in a completed project.
+  - *Fixed*: plan-delivery matches directory artifacts by path boundary (`frag + "/"`), restoring descendants of `.governance/generated/skills` while still rejecting `…/validation.json.bak`.
+  - *Fixed*: control-character sanitisation covers every interpolated field (`check-lock` agent_id/task_id, validator artifact names) and the tag message now also strips U+0085/U+2028/U+2029 and slices on a code-point boundary.
+  - *Docs*: the always-on gate cluster count corrected to four (principles-index was missing) in AGENTS.md + architecture.md/roadmap.md ×3; `sync-rules.json` added to the policy's own `.governance/README.md` template; SKILL.md protected summary re-synced; `.gitlab-ci.yml` added to the single source of truth; CONTRIBUTING's "where does a file go" rule no longer contradicts the docs classification ×3; validator.md documents the generated-skills checks ×3; the release flow now lists the two generator version defaults as sync points; the release-manager tool boundary no longer cites a workflow file governed projects never receive.
+
 ## [0.11.2] - 2026-09-03
 
 ### Fixed

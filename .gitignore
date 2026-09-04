@@ -6,10 +6,13 @@ node_modules/
 .governance/activity.jsonl
 .env
 .env.*
+!.env.example
 *.pem
 *.key
 *.p12
 *.pfx
+credentials.json
+secrets.*
 .DS_Store
 Thumbs.db
 dist/

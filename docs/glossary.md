@@ -37,6 +37,7 @@
 | backup | 备份 | 備份 |
 | repository | 仓库 | 倉庫 |
 | project | 项目 | 專案 |
+| project knowledge | 项目知识 | 專案知識 |
 | file | 文件 | 檔案 |
 | directory | 目录 | 目錄 |
 | documentation | 文档 | 文件 |
@@ -78,7 +79,6 @@
 | near-term | 近期 | 近期 |
 | mid-term | 中期 | 中期 |
 | long-term | 远期 | 遠期 |
-| very long-term | 超远期 | 超遠期 |
 | single source of truth | 单一事实源 | 單一事實來源 |
 | anti-fabrication | 反虚构 | 反虛構 |
 | human-in-the-loop | 人机协作审批 | 人機協作審批 |
