@@ -315,8 +315,8 @@ node scripts/generate-governance.js --target <项目根> --phase C \
 ```json
 {
   "schema_version": "1.0",
-  "governance_version": "0.11.2",
-  "release": { "version": "0.11.2", "tag": "v0.11.2", "validated": false },
+  "governance_version": "0.11.3",
+  "release": { "version": "0.11.3", "tag": "v0.11.3", "validated": false },
   "doc_root": "docs",
   "artifacts": [
     { "name": "AGENTS.md", "path": "AGENTS.md", "kind": "file", "type": "policy" },

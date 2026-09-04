@@ -1,6 +1,7 @@
 # Commands
 
 [English](commands.md) · [简体中文](../zh-CN/commands.md) · [繁體中文](../zh-TW/commands.md)
+<!-- i18n-reviewed: 43ffdb8 -->
 
 All prompts below are chat prompts for AI coding agents, not shell commands. They follow the governance lifecycle: **Initialize → Develop → Maintain → Release**.
 

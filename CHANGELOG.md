@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented here.
 
+## [Unreleased]
+
+### Added
+
+- **Terminology gate** — `docs/glossary.md` gains optional `Forbidden zh-CN` / `Forbidden zh-TW` columns registering renderings that must not appear in that language tree (e.g. protocol: zh-TW uses 協定, never 協議). `scripts/check-doc-consistency.js` scans the language trees and reports `terminology_usage`, fail-closed under `--gate`/`--release-gate`, with a per-line escape hatch `<!-- i18n: allow X -->` for deliberate source-form quotes (trigger words stay unregistered by policy). Structural parity could never catch this class: term drift and simplified/traditional leaks are structurally identical. No glossary (governed projects) → the check no-ops.
+- **Translation freshness** — `scripts/check-doc-freshness.js` derives per-pair translation status from git instead of a handwritten manifest: 简体中文 is the source, `docs/en/**` and `docs/zh-TW/**` its translations. A source committed after its translation — or carrying uncommitted edits — marks the translation `stale`; a same-commit pair reports "synchronized commit" and explicitly does NOT claim translation correctness. `<!-- i18n-status: draft -->` marks in-flight work (tolerated daily, blocked at release) and `<!-- i18n-reviewed: <sha> -->` records a human verdict for pairs where the source moved but the translation was already correct. New `--release-gate` mode exits 1 on stale or draft translations; the default stays advisory (exit 0). Projects without trilingual trees no-op.
+
+### Fixed
+
+- zh-TW simplified-character leaks corrected (模板→範本 in architecture/bootstrap-output, 检查→檢查 and 安装→安裝/扫描→掃描/意图→意圖 in skill-discovery and the skill-lifecycle plan) — surfaced by the terminology registration scan; the gate itself flagged the 模板-class leak on its first run.
+- `docs/en/commands.md` was left out of the v0.11.3 trigger realignment; it is now recorded as reviewed against the source commit.
+- SKILL.md embedded manifest examples still showed 0.11.2 after the v0.11.3 release.
+- **Review fixes for both gates** (each verified by mutation or probe):
+  - Translation freshness no longer false-blocks the documented workflow — source and translation edited in ONE uncommitted changeset are "in flight", not stale (previously every pre-commit release-gate run of a normal doc task failed).
+  - An untracked translation reports its own `uncommitted` status instead of silently passing as `translated`; a recorded `i18n-reviewed` marker that no longer covers the source goes `stale` again; `reviewCoversSource` now uses `merge-base --is-ancestor`, so a descendant or bogus SHA can never claim coverage.
+  - The glossary parser is fail-closed: aligned separator rows (`:---:`) are no longer misregistered as forbidden variants, each table re-declares its header, and a glossary that exists but cannot be parsed is REPORTED as a governance data defect instead of silently disabling the gate. The report gains a `termsRegistered` count (positive proof the parser ran).
+  - Root `README.md` / `CONTRIBUTING.md` (the English landing files per the language policy) are now freshness-paired with their zh-CN originals.
+  - Docs sync: drift-check freshness/consistency mode text no longer claims "NEVER a gate / exit 0 always"; lifecycle, AGENTS.md and init-spec labels state the fail-closed forms; the glossary documents the trigger-word registration policy and the in-table limitation of the exemption marker; the plan ×3 reflect the delivered enforcement strength.
+  - Tests: the two vacuous assertions (same-commit `why`, positive parser-run marker) fixed; 8 tests added covering stale-release-gate blocking, bogus SHA, untracked translation, same-changeset workflow, zh-CN leg, preceding-line exemption, malformed glossary and the aligned-separator regression.
+
 ## [0.11.3] - 2026-09-04
 
 ### Added

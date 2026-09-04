@@ -80,7 +80,7 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 3. **密钥扫描门禁** —— `node scripts/check-secrets.js`（暂存区密钥类内容 → exit 1，绝不打印密钥）
 4. **治理校验器** —— `node scripts/verify-governance.js`（治理工件缺失 → exit 1）
 5. **项目自身验证** —— 测试、静态检查、构建（按 AGENTS.md Development Commands）
-6. **建议层（exit 0，仅报告，不阻断）** —— `node scripts/check-doc-freshness.js`（过时文档）与 `node scripts/check-doc-consistency.js`（文档间矛盾）；结果可写入 `.governance/drift-report.json`
+6. **报告层（默认 exit 0，仅报告；发布形态 fail-closed）** —— `node scripts/check-doc-freshness.js`（过时文档 + 译文新鲜度）与 `node scripts/check-doc-consistency.js`（文档间矛盾）；结果可写入 `.governance/drift-report.json`。两者都有 fail-closed 的发布形态：`check-doc-consistency.js --gate/--release-gate`（consent/受保护清单/原则索引/计划状态/术语门禁）与 `check-doc-freshness.js --release-gate`（译文落后源文档或仍为 draft）
 
 **规则**：第 1-5 项为**门禁层**，任何一项 exit ≠ 0 即任务未完成，不得宣称完成；第 6 项仅产出报告，稳定项目允许显示过时/矛盾而不阻塞。门禁层全部通过 + 记录真实输出，才进入 Phase 5。
 

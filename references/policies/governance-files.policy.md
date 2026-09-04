@@ -20,7 +20,7 @@
 | `scripts/check-secrets.js` | 密钥扫描门禁 |
 | `scripts/check-sync.js` | 同步组门禁 |
 | `scripts/check-doc-consistency.js` | 文档一致性门禁 |
-| `scripts/check-doc-freshness.js` | 文档新鲜度检查（建议性，但 payload 脚本） |
+| `scripts/check-doc-freshness.js` | 文档新鲜度 + 译文新鲜度检查（默认建议性；`--release-gate` fail-closed） |
 | `.githooks/pre-commit` | 暂存内容一致性门禁（默认不启用） |
 | `.githooks/commit-msg` | 已确认提交消息门禁（默认不启用） |
 | `opencode.json` | Agent 配置 |

@@ -41,8 +41,8 @@ skill 更新操作**安裝層**（`~/.agents/skills/...`），而非 `project/.g
                       |
                       v
                Skill Manager
-                  ├── check update（检查更新）
-                  ├── install（安装）
+                    ├── check update（檢查更新）
+                  ├── install（安裝）
                   └── rollback（回滾）
                       |
                       v

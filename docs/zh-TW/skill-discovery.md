@@ -11,16 +11,16 @@
 ### 工作原理
 
 ```
-安装目录（按 Agent：.agents/skills · .claude/skills · .opencode/skills · ...）
+安裝目錄（按 Agent：.agents/skills · .claude/skills · .opencode/skills · ...）
         |
         v
-Agent 扫描 skill 元資料（frontmatter：name + description）
+Agent 掃描 skill 元資料（frontmatter：name + description）
         |
         v
-使用者意图 → description 匹配（如 "initialize project governance"）
+使用者意圖 → description 匹配（如 "initialize project governance"）
         |
         v
-加载 SKILL.md → 执行工作流程（INIT / AUDIT / RELEASE）
+加載 SKILL.md → 執行工作流程（INIT / AUDIT / RELEASE）
 ```
 
 frontmatter 的 `description` 是匹配的關鍵 —— 它聲明了 Agent 用來匹配的觸發短語。使用者只需要輸入想要的提示詞：

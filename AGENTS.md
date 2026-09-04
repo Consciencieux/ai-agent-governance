@@ -27,7 +27,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Turn-scoped consent + exceptions A/B | `references/policies/git.policy.md` § 确认范围 · this file § Git Operation Safety Protocol | both |
 | Payload self-containment | `references/init-spec.json` § invariants | repo |
 
-Four always-on gate clusters keep this index and its sources honest: the consent cluster, the protected-files cluster, the principles-index cluster (every row's source must resolve), and the plan-status cluster (unknown status fails) are verified by `node scripts/check-doc-consistency.js --gate` (part of `npm run check`). The pending-archive cluster (an implemented/Completed plan still in `docs/*/plans/`) and the changelog-coverage cluster (a governance/mechanism change without a CHANGELOG record; doc-only changes are exempt) are fail-closed only in `--release-gate`, run as release.md Phase 4 step 3.
+Four always-on gate clusters keep this index and its sources honest: the consent cluster, the protected-files cluster, the principles-index cluster (every row's source must resolve), and the plan-status cluster (unknown status fails) are verified by `node scripts/check-doc-consistency.js --gate` (part of `npm run check`). The terminology cluster (glossary-registered forbidden renderings, exempt per line with `<!-- i18n: allow X -->` — inside a Markdown table only the preceding line of the table's first row works; later rows must be reworded) is fail-closed in the same `--gate` run. The pending-archive cluster (an implemented/Completed plan still in `docs/*/plans/`) and the changelog-coverage cluster (a governance/mechanism change without a CHANGELOG record; doc-only changes are exempt) are fail-closed only in `--release-gate`, run as release.md Phase 4 step 3 — alongside `node scripts/check-doc-freshness.js --release-gate`, which blocks when a translation lags its 简体中文 source or is still marked draft.
 
 ## Repository architecture
 
@@ -74,8 +74,8 @@ Run the gate group (`npm run check`) before declaring any task done; run the ful
   - `npm test` — the full test suite (`tests/run-tests.js`); must exit 0 (always)
   - `node scripts/check-doc-parity.js` — three language trees structurally parallel (after any `docs/` / root `README.md` / `CONTRIBUTING.md` edit)
   - `node scripts/check-layout-sync.js` — `docs/{en,zh-CN,zh-TW}/architecture.md` Repository Layout must list every file under `references/` + `scripts/` (after any `references/` / `scripts/` / `architecture.md` edit)
-- **Advisory layer (exit 0, report only):**
-  - `node scripts/check-doc-freshness.js` — stale governance docs (periodic drift-check)
+- **Advisory layer (default exit 0, report only; release-gate forms fail-closed):**
+  - `node scripts/check-doc-freshness.js` — stale governance docs + translation freshness (periodic drift-check; `--release-gate` blocks stale/draft translations)
   - `node scripts/check-doc-consistency.js` — cross-document contradictions (periodic drift-check)
 - `scripts/verify_governance.js` runs in default mode on this repo and fails by design (skill repo shape) — do not "fix" that by fabricating governance artifacts
 

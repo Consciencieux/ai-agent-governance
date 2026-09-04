@@ -45,8 +45,8 @@ ai-agent-governance/
 │   ├── check-git-policy.js     # Git 工作流门禁（受保护分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # 密钥扫描门禁（暂存区扫描，绝不打印密钥）
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）
-│   ├── check-doc-freshness.js  # 文档过时度（git log 日期，建议性，exit 0）
-│   ├── check-doc-consistency.js # 文档一致性 + consent/受保护清单/原则索引/计划状态簇（默认建议性；--gate/--release-gate fail-closed；changelog 覆盖仅 --release-gate fail-closed）
+│   ├── check-doc-freshness.js  # 文档过时度 + 译文新鲜度（git log 日期；建议性，--release-gate 阻断过时/draft 译文）
+│   ├── check-doc-consistency.js # 文档一致性 + consent/受保护清单/原则索引/计划状态/术语簇（默认建议性；--gate/--release-gate fail-closed；changelog 覆盖仅 --release-gate fail-closed）
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
 │   ├── check-layout-sync.js    # architecture.md 仓库布局 vs references/ + scripts/（fail-closed 门禁）
 │   ├── check-plan-delivery.js  # 计划声明 vs 实际交付（归档前门禁）

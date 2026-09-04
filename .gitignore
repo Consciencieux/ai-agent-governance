@@ -1,4 +1,6 @@
 node_modules/
+# Test scratch fixtures (run-tests tmp(); diagnostic probes) — never commit
+tests/.tmp/
 # Governance runtime outputs (desired/current state stays tracked)
 .governance/validation.json
 .governance/drift-report.json

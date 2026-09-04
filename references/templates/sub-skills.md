@@ -158,19 +158,20 @@ description: Use to detect governance drift in this repo — compare declared ar
 - Read `.governance/state.json.rule_capture` and report its current unresolved candidates first. Use candidate IDs to reconcile `rules_pending`, `rules_captured` and `rules_resolved`; report current pending count, not the historical sum of old pending records.
 - Never print `commands` / `files` from failed entries verbatim when they may contain secret material (apply the same redaction as state-manager)
 
-**freshness mode** — flag governance docs gone stale relative to code activity (report-only, NEVER a gate):
+**freshness mode** — flag governance docs gone stale relative to code activity, and translations gone stale relative to their source doc:
 
 1. Compute per-doc staleness = days since its **last git commit** (`git log -1 --format=%cs -- <doc>`), NOT filesystem mtime (fresh clones have all mtimes equal to checkout time)
 2. Measure code activity in the same window: commits touching `src/`, `app/`, `packages/` etc. since the doc's last commit date
 3. Thresholds (advisory): doc not committed in 30+ days while code is active → `stale`; 90+ days → `very stale`
 4. Mandatory-doc pair (`docs/ARCHITECTURE.md`, `CHANGELOG.md`) reported first; feature docs (`docs/features/`) included
-5. Append the result to `.governance/drift-report.json` (nested under `freshness`):
+5. Translation freshness (trilingual trees only; 简体中文 is the source): per source/translation pair compare last commit times — source committed after the translation (or source carrying uncommitted edits) → `stale`; source+translation edited in the same uncommitted changeset → in flight, not stale; `<!-- i18n-status: draft -->` marks in-flight work; `<!-- i18n-reviewed: <sha> -->` records a human verdict that covers the source's current state (a marker that no longer covers it goes stale again)
+6. Append the result to `.governance/drift-report.json` (nested under `freshness` and `translationFreshness`):
    ```json
-   {"freshness": {"stale": ["docs/ARCHITECTURE.md"], "veryStale": []}}
+   {"freshness": {"stale": ["docs/ARCHITECTURE.md"], "veryStale": []}, "translationFreshness": {"stale": [], "draft": []}}
    ```
-6. Exit code is unaffected — freshness is advisory only; stable low-commit projects are allowed to show stale docs without failing
+7. Default mode exits 0 — freshness is advisory (stable low-commit projects may show stale docs). The release form `node scripts/check-doc-freshness.js --release-gate` FAILS (exit 1) when a translation is `stale` or `draft` — see release.md Phase 4 step 3
 
-**consistency mode** — flag cross-document contradictions (report-only, exit 0 always). Run `node scripts/check-doc-consistency.js --json` (or `npm run governance-consistency` if registered):
+**consistency mode** — flag cross-document contradictions. Run `node scripts/check-doc-consistency.js --json` (or `npm run governance-consistency` if registered):
 
 - **version-example sync** — `governance_version` / manifest examples in docs must match the current declared version
 - **protected-files sync** — protected-file summary lists must match the single source of truth (`references/policies/governance-files.policy.md`); summaries that defer to it ("single source of truth") are exempt
@@ -179,12 +180,11 @@ description: Use to detect governance drift in this repo — compare declared ar
 - **link validity** — relative markdown links must resolve to real files
 - **numeric claims** — documented counts (validator check count etc.) must match the source
 - **trilingual tree parity** — delegates to `scripts/check-doc-parity.js` (three language trees structurally parallel)
+- **terminology gate** — `docs/glossary.md`'s `Forbidden zh-CN` / `Forbidden zh-TW` columns register renderings that must not appear in that language tree (concept terms only; trigger words quoted in their source form are deliberate). A glossary that exists but cannot be parsed is reported, never silently skipped
 
-Append the result to `.governance/drift-report.json` (`consistency` object). Advisory only — heuristics, never a fail-closed gate.
+Append the result to `.governance/drift-report.json` (`consistency` object). Default mode is advisory — heuristics report but never affect the exit code. Fail-closed forms: `--gate` (protected lists, consent cluster, unknown plan status, terminology gate, malformed glossary) and `--release-gate` (adds pending-archive and changelog coverage).
 
-- Exit 0 always (reporting, not a gate)
-
-**standard validation sequence** — lifecycle Phase 4 runs the gates in order: `check-lock.js` (multi-agent) → `check-git-policy.js` → `check-secrets.js` → `verify-governance.js` → project test/lint/build → advisory (`check-doc-freshness.js` + `check-doc-consistency.js`, exit 0). Gates 1-5 fail-closed; the advisory pair reports only.
+**standard validation sequence** — lifecycle Phase 4 runs the gates in order: `check-lock.js` (multi-agent) → `check-git-policy.js` → `check-secrets.js` → `verify-governance.js` → project test/lint/build → advisory (`check-doc-freshness.js` + `check-doc-consistency.js`, exit 0). Gates 1-5 fail-closed; the advisory pair reports only. At RELEASE both advisory scripts have fail-closed forms: `check-doc-consistency.js --release-gate` and, for multi-language doc trees, `check-doc-freshness.js --release-gate` (stale or draft translations block).
 ````
 
 ---

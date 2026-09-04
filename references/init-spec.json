@@ -356,14 +356,14 @@
       "path": "scripts/check-doc-freshness.js",
       "source": "scripts/check-doc-freshness.js",
       "type": "copy",
-      "description": "Doc freshness check (advisory)"
+      "description": "Doc freshness + translation freshness check (advisory; --release-gate blocks stale/draft translations)"
     },
     {
       "phase": "C",
       "path": "scripts/check-doc-consistency.js",
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
-      "description": "Doc consistency check (advisory)"
+      "description": "Doc consistency check (advisory; --gate/--release-gate fail-closed clusters)"
     },
     {
       "phase": "C",

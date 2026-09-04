@@ -17,8 +17,8 @@
 - Agent 行為稽核 —— 追加式 .governance/activity.jsonl 逐任務稽核軌跡 + drift-check `activity-report` 模式
 - 密鑰掃描閘門 —— scripts/check-secrets.js 阻止暫存區密鑰類內容（校驗器 21 項）
 - 治理健康分 —— 校驗器 `--json` 輸出綜合 `score`（v1 等權）+ CI 產出 shields.io 徽章 endpoint 工件
-- 知識新鮮度 —— `scripts/check-doc-freshness.js` 經 `git log` 提交日期標記過時治理文件（僅建議性）
-- 內容一致性 —— `scripts/check-doc-consistency.js` 標記文件間交叉矛盾（版本示例/受保護清單/ADR 狀態/roadmap 目標/連結/數值聲明；預設建議性；consent/受保護清單/原則索引/計劃狀態簇在 `--gate`/`--release-gate` 下 fail-closed，changelog 覆蓋僅 `--release-gate` 下 fail-closed）
+- 知識新鮮度 —— `scripts/check-doc-freshness.js` 經 `git log` 提交日期標記過時治理文件，並按來源/譯文對派生譯文新鮮度（建議性；`--release-gate` 阻斷過時或 draft 譯文）
+- 內容一致性 —— `scripts/check-doc-consistency.js` 標記文件間交叉矛盾（版本示例/受保護清單/ADR 狀態/roadmap 目標/連結/數值聲明；預設建議性；consent/受保護清單/原則索引/計劃狀態/術語簇在 `--gate`/`--release-gate` 下 fail-closed，changelog 覆蓋僅 `--release-gate` 下 fail-closed）
 - **審核管理器** —— 第 8 個子技能：多智能體深度審查工作流程（固定 5 領域、嚴重度排序報告、修復 + 閘門驗證）。設計：[../archive/review-manager.md](../archive/review-manager.md)
 - **分級審核閘門** —— release/push 風險分級（低 = 僅輕量級；中 = 批准時建議深度審查；高 = 必須 review-manager）；輕量級腳本總是自動跑。設計：[../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
 - **被治理專案同步組** —— 兩層：（L1）聲明式 `.governance/sync-rules.json`（watch/require）+ 清單驅動 Phase 5；（L2）`scripts/check-sync.js` 對照實際改動集機械驗證。設計：[../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)

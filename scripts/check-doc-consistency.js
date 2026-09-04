@@ -24,10 +24,14 @@
 //      projects). --json also reports the per-plan classification (progress view).
 //   11. changelog coverage — release-gate reports changed governance/payload surfaces
 //      without an Unreleased entry in CHANGELOG.md.
+//   12. terminology gate — docs/glossary.md's Forbidden zh-CN / Forbidden zh-TW columns
+//      register renderings that must not appear in that language tree (concept terms
+//      only; trigger words quoted in source form are deliberate and stay unregistered).
+//      A glossary that exists but cannot be parsed is reported, never silently skipped.
 //
 // Modes: default = advisory, ALWAYS exit 0 (heuristics, not a gate).
-//        --gate  = fail-closed on the mechanically checkable clusters ONLY (#2, #8 and
-//                  #10's unknown status); the other heuristics still report
+//        --gate  = fail-closed on the mechanically checkable clusters ONLY (#2, #8, #10's
+//                  unknown status and #12); the other heuristics still report
 //                  but never affect the exit code.
 //        --release-gate = --gate plus #10's pending-archive and #11's changelog clusters.
 // Usage: node scripts/check-doc-consistency.js [--json] [--gate] [--release-gate]
@@ -193,6 +197,53 @@ function changelogCoverage(releaseGate) {
   return { applicable: true, ok: /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) };
 }
 
+// #12 terminology gate: docs/glossary.md is the term authority. Its optional
+// `Forbidden zh-CN` / `Forbidden zh-TW` columns register renderings that must NOT appear
+// in that language tree (e.g. protocol: zh-TW must use 協定, never 協議). Structural
+// parity cannot catch this class — term drift and simplified/traditional leaks look
+// structurally identical. Semicolon-separated variants; empty cell = no constraint.
+// Scope note: register CONCEPT terms only. Trigger words quoted in their source form
+// (e.g. the simplified `审核一下` inside a zh-TW doc) are deliberate and must not be
+// registered; a line carrying `<!-- i18n: allow <term> -->` (or the line above it —
+// an inline comment would split a Markdown table) is exempt either way.
+// Fail-closed parsing: a glossary that exists but yields no parseable header is reported
+// as malformed rather than silently disabling the gate.
+function glossaryForbidden() {
+  const c = readFile(path.join(DOCS, "glossary.md"));
+  if (!c) return null; // no glossary (governed projects) — check no-ops
+  const cols = { "zh-CN": new Map(), "zh-TW": new Map() };
+  let sawTable = false;
+  let sawHeader = false;
+  let header = null; // column layout of the table currently being read
+  for (const line of c.split(/\r?\n/)) {
+    if (!line.startsWith("|")) continue;
+    sawTable = true;
+    const cells = line.split("|").slice(1, -1).map((s) => s.trim());
+    // Separator rows come in alignment flavours (`---`, `:---`, `:---:`, `---:`) — treat
+    // them all as separators, never as data (a mis-parsed ":---:" would become a
+    // forbidden variant and fail every following table).
+    if (cells.every((cell) => /^:?-{3,}:?$/.test(cell.replace(/\s/g, "")))) continue;
+    if (/^English$/i.test(cells[0] || "")) {
+      header = cells.map((h) => h.toLowerCase()); // each table re-declares its layout
+      sawHeader = true;
+      continue;
+    }
+    if (!header) continue; // data before any header — ignore
+    const idxCN = header.indexOf("forbidden zh-cn");
+    const idxTW = header.indexOf("forbidden zh-tw");
+    const concept = cells[0] || "";
+    for (const [lang, idx] of [["zh-CN", idxCN], ["zh-TW", idxTW]]) {
+      if (idx < 0 || idx >= cells.length) continue; // table without that column: no constraint
+      const raw = cells[idx] || "";
+      for (const variant of raw.split(";").map((s) => s.trim()).filter(Boolean)) {
+        if (!cols[lang].has(variant)) cols[lang].set(variant, concept);
+      }
+    }
+  }
+  if (!sawHeader) return { cols, malformed: true }; // exists but unusable — report, never fail open
+  return { cols, malformed: false };
+}
+
 function mdFiles() {
   const out = [];
   const top = ["README.md", "CONTRIBUTING.md", "SKILL.md", "AGENTS.md"];
@@ -217,7 +268,7 @@ function main() {
   const gate = process.argv.includes("--gate");
   const releaseGate = process.argv.includes("--release-gate"); // implies gate behavior + pending-archive
   const anyGate = gate || releaseGate;
-  const issues = { version_examples: [], protected_lists: [], adr_statuses: [], broken_links: [], numeric_claims: [], prompt_sync: [], plans_status_unknown: [], plans_pending_archive: [], changelog_coverage: [] };
+  const issues = { version_examples: [], protected_lists: [], adr_statuses: [], broken_links: [], numeric_claims: [], prompt_sync: [], plans_status_unknown: [], plans_pending_archive: [], changelog_coverage: [], terminology_usage: [] };
   const gateIssues = [];
   const version = currentVersion();
 
@@ -422,6 +473,48 @@ function main() {
     }
   }
 
+  // ---- 12. terminology gate (gate class) ----
+  // Per-language forbidden renderings from the glossary. Runs only where a glossary and
+  // the language trees exist; governed projects have neither, so it no-ops there. A
+  // glossary that exists but cannot be parsed is a governance data defect and is
+  // reported (fail-closed) instead of silently disabling the gate.
+  let termsRegistered = 0;
+  const forbidden = glossaryForbidden();
+  if (forbidden && forbidden.malformed) {
+    const item = "docs/glossary.md exists but has no parseable header table — terminology gate cannot run; fix the glossary";
+    issues.terminology_usage.push(item);
+    if (anyGate) gateIssues.push({ kind: "terminology_usage", item });
+  } else if (forbidden) {
+    termsRegistered = forbidden.cols["zh-CN"].size + forbidden.cols["zh-TW"].size;
+    for (const lang of ["zh-CN", "zh-TW"]) {
+      const dir = path.join(DOCS, lang);
+      if (!fs.existsSync(dir)) continue;
+      const table = forbidden.cols[lang];
+      if (!table || table.size === 0) continue;
+      for (const rel of walk(dir)) {
+        const relPath = (path.join("docs", lang, rel)).replace(/\\/g, "/");
+        const content = readFile(path.join(ROOT, relPath));
+        if (!content) continue;
+        const lines = content.split(/\r?\n/);
+        lines.forEach((line, i) => {
+          for (const [variant, concept] of table) {
+            if (!line.includes(variant)) continue;
+            // Line-level exemption for deliberate source-form quotes. The marker may sit
+            // on the line itself OR on the line above — inside a Markdown table an inline
+            // HTML comment would split the table, so the preceding-line form is required
+            // (and only works before the table's first row; later rows must be reworded).
+            const esc = variant.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const allowRe = new RegExp("<!--\\s*i18n:\\s*allow\\b[^>]*" + esc);
+            if (allowRe.test(line) || (i > 0 && allowRe.test(lines[i - 1]))) continue;
+            const item = `${relPath}:${i + 1}: forbidden ${lang} rendering "${variant}" (concept: ${concept})`;
+            issues.terminology_usage.push(item);
+            if (anyGate) gateIssues.push({ kind: "terminology_usage", item });
+          }
+        });
+      }
+    }
+  }
+
   // ---- 7. trilingual tree parity (delegate) ----
   const parityScript = path.join(ROOT, "scripts", "check-doc-parity.js");
   let parityPass = "unavailable"; // never claim a pass we could not verify
@@ -437,7 +530,7 @@ function main() {
   }
 
   const pendingArchive = planStatuses.filter((p) => p.status === "implemented" || p.status === "completed").length;
-  const report = { timestamp: new Date().toISOString(), version, issues, parity: parityPass, gate: anyGate, releaseGate, gatePass: gateIssues.length === 0, gateIssues, planStatuses, pendingArchive };
+  const report = { timestamp: new Date().toISOString(), version, issues, parity: parityPass, gate: anyGate, releaseGate, gatePass: gateIssues.length === 0, gateIssues, planStatuses, pendingArchive, termsRegistered };
 
   // Append to drift-report.json if present (runtime output, optional)
   try {

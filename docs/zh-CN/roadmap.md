@@ -17,8 +17,8 @@
 - Agent 行为审计 —— 追加式 .governance/activity.jsonl 逐任务审计轨迹 + drift-check `activity-report` 模式
 - 密钥扫描门禁 —— scripts/check-secrets.js 阻止暂存区密钥类内容（校验器 21 项）
 - 治理健康分 —— 校验器 `--json` 输出综合 `score`（v1 等权）+ CI 产出 shields.io 徽章 endpoint 工件
-- 知识新鲜度 —— `scripts/check-doc-freshness.js` 经 `git log` 提交日期标记过时治理文档（仅建议性）
-- 内容一致性 —— `scripts/check-doc-consistency.js` 标记文档间交叉矛盾（版本示例/受保护清单/ADR 状态/roadmap 目标/链接/数值声明；默认建议性；consent/受保护清单/原则索引/计划状态簇在 `--gate`/`--release-gate` 下 fail-closed，changelog 覆盖仅 `--release-gate` 下 fail-closed）
+- 知识新鲜度 —— `scripts/check-doc-freshness.js` 经 `git log` 提交日期标记过时治理文档，并按源/译文对派生译文新鲜度（建议性；`--release-gate` 阻断过时或 draft 译文）
+- 内容一致性 —— `scripts/check-doc-consistency.js` 标记文档间交叉矛盾（版本示例/受保护清单/ADR 状态/roadmap 目标/链接/数值声明；默认建议性；consent/受保护清单/原则索引/计划状态/术语簇在 `--gate`/`--release-gate` 下 fail-closed，changelog 覆盖仅 `--release-gate` 下 fail-closed）
 - **审核管理器** —— 第 8 个子技能：多智能体深度审查工作流（固定 5 领域、严重度排序报告、修复 + 门禁验证）。设计：[../archive/review-manager.md](../archive/review-manager.md)
 - **分级审核门禁** —— release/push 风险分级（低 = 仅轻量级；中 = 批准时建议深度审查；高 = 必须 review-manager）；轻量级脚本总是自动跑。设计：[../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
 - **被治理项目同步组** —— 两层：（L1）声明式 `.governance/sync-rules.json`（watch/require）+ 清单驱动 Phase 5；（L2）`scripts/check-sync.js` 对照实际改动集机械验证。设计：[../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
