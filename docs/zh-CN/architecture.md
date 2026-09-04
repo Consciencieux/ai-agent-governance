@@ -45,6 +45,7 @@ ai-agent-governance/
 │   ├── check-git-policy.js     # Git 工作流门禁（受保护分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # 密钥扫描门禁（暂存区扫描，绝不打印密钥）
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）
+│   ├── check-coding-hygiene.js # 编码卫生（repo-infra：测试归属 + 残留标记，§5）
 │   ├── check-doc-freshness.js  # 文档过时度 + 译文新鲜度（git log 日期；建议性，--release-gate 阻断过时/draft 译文）
 │   ├── check-doc-consistency.js # 文档一致性 + consent/受保护清单/原则索引/计划状态/术语簇（默认建议性；--gate/--release-gate fail-closed；changelog 覆盖仅 --release-gate fail-closed）
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
@@ -82,7 +83,9 @@ ai-agent-governance/
 ├── package.json                # npm 脚本（test、check）
 ├── .github/                    # CI 工作流
 └── tests/
-    └── run-tests.js            # 测试套件
+    ├── run-tests.js            # 单一发现入口：runner + 共享 helper + 汇总
+    └── suites/                 # 领域套件（validator、security、consistency、docs、
+                                # release、generator、payload、hygiene）——见反补丁计划 §3
 ```
 
-安装载荷 = `SKILL.md` + `references/` + `scripts/` + `LICENSE` 四项。分割线以下（`docs/`、`tests/`、`package.json`、`.github/`、README、CONTRIBUTING、CHANGELOG、AGENTS.md）是仓库基础设施——不得复制进 skill 安装目录。
+安装载荷 = `SKILL.md` + `references/` + `scripts/` + `LICENSE` 四项。分割线以下（`docs/`、`tests/`、`package.json`、`.github/`、README、CONTRIBUTING、CHANGELOG、AGENTS.md）是仓库基础设施——不得复制进 skill 安装目录。一处例外说明：`scripts/check-coding-hygiene.js` 会随 tarball 分发（打包整目录复制 `scripts/`），但**未**在 `references/init-spec.json` 声明，INIT 从不安装或运行它；在本仓库布局之外运行时它报告 not applicable 并 exit 0。

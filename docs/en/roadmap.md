@@ -29,6 +29,11 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - **Consent policy rewrite** — one confirmation per change set across five sync points; plan approval demoted to intent alignment (`consent-policy-hardening` plan)
 - **Governance principles index** — pointers-only index of 18 principles + a `--gate` check that keeps every row's source resolvable
 - **Rule capture** — stop stated requirements from living only in chat context: the agent pre-classifies each requirement (persistent / one-off / unclear), the developer adjudicates at Phase 6, confirmed rules are written into `AGENTS.md` / `docs/rules/**`, unconfirmed ones leave a `rules_pending` trace in the activity trail. Design: [../archive/rule-capture.md](../archive/rule-capture.md)
+- **Terminology gate** — glossary `Forbidden zh-CN`/`Forbidden zh-TW` columns enforced across the language trees (fail-closed in `--gate`, per-line exemptions, no-op without a glossary). Design: [../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
+- **Translation freshness** — git-derived per-pair status (stale / draft / reviewed markers), `--release-gate` blocks lagging translations; no handwritten manifest. Design: [../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
+- **Engineering restraint (machinery test)** — unapproved machinery must justify itself; approved requirements win; semantic seams stay legal. Design: [../archive/engineering-restraint.md](../archive/engineering-restraint.md)
+- **Root-cause repair protocol + failure budget** — reproduction-first plan fields, `repairSessionId` binding, 1st/2nd/3rd failure escalation. Design: [../archive/anti-patch-development.md](../archive/anti-patch-development.md)
+- **Test architecture split + coding hygiene gate** — single discovery entry plus eight domain suites (set-reconciled), gated against monolith regression and empty suites. Design: [../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 
 ### Near-term
 

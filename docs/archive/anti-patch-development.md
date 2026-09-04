@@ -1,8 +1,7 @@
 # 反补丁式开发与测试架构治理（TASK 计划）
 
-[English](../../en/plans/anti-patch-development.md) · [简体中文](anti-patch-development.md) · [繁體中文](../../zh-TW/plans/anti-patch-development.md)
 
-> **Status: design plan, not implemented.**（设计计划，未实现。）本计划治理 AI 在反复打补丁、局部修复和失败重试中的行为，不把“文件行数”本身当作质量标准。
+> **Status: archived.**（已归档。归档即断言完成。）（已实现，待归档。已交付：§1 根因修复协议、§2 失败预算（`references/policies/lifecycle.policy.md`）、§3 测试架构拆分（`tests/suites/` + 单一发现入口）、§5 的机械子集（`scripts/check-coding-hygiene.js`）。§4 快速路径、§6 补丁债务报告、§7 release-gate 接线仍为设计，按机制测试各自单独举证后再落地。）本计划治理 AI 在反复打补丁、局部修复和失败重试中的行为，不把“文件行数”本身当作质量标准。
 
 **Target：both** —— `payload` 增加根因修复、失败升级和回归证据规则；`repo-infra` 拆分测试架构、增加债务检测、记录指标并补齐测试。两个域分别列在“受影响文件”中。
 
@@ -39,6 +38,12 @@
 保留 `npm test` 与 `node tests/run-tests.js` 作为兼容入口，但将 `tests/run-tests.js` 收敛为测试发现、公共 runner 和汇总出口；按领域拆分到 `tests/suites/`，例如 validator、generator、policy、docs、release、payload。公共 fixture 和断言辅助函数进入明确命名的测试支持模块。
 
 拆分采用基线递减策略：先保持测试行为与输出不变，再逐批迁移；不以机械行数阈值阻断既有基线，只阻止新代码继续扩大单体文件，并在每次迁移后保留领域级可运行入口。迁移必须是单向的：测试迁入 `tests/suites/` 后从旧单体文件删除，旧文件只保留 runner，不保留第二套测试注册或实现；CI 和本地命令始终使用唯一的测试发现入口。迁移前后的测试 ID、数量和结果必须对账。
+
+目录形状：`tests/support/`（tmp、write、git 辅助、fixture、公共断言）与 `tests/suites/{validator,security,docs,generator,release,consistency,payload}.test.js`（领域划分以迁移时实际区段归属为准，不机械套用清单）。迁移边界：不引入 Jest/Mocha 等新依赖；不为此创建复杂 fixture 框架；不要求每个 suite 有独立 CLI；先迁移一组并对账其测试名称、数量、结果与输出，再迁移下一组。执行模型保持现状：暂不切换 `node:test`——它是标准能力，但会引入执行模型、输出与兼容行为变化，当前自定义 runner 已能工作，职责拆分的收益更明确，待拆分完成后再评估。
+
+batch-2 待办（尚未交付，故不列入受影响文件）：tests/support/ 收拢共享 helper（当前由 run-tests.js 的 global 注入承担）、tests/fixtures/ 最小回归场景。
+
+时机：拆分不阻塞功能开发；下一次涉及测试结构的大改动、或 `tests/run-tests.js` 再增长约 200–300 行之前执行；不做一次性全量重写。测试文件本身不是测试失败根因——拆分改善可维护性，不替代对具体失败的单独修复。
 
 #### 4. 低风险快速路径
 
@@ -85,11 +90,9 @@
 
 - `tests/run-tests.js` —— 保留兼容入口并迁移为 runner/汇总出口
 - `tests/suites/**` —— 按领域拆分现有测试
-- `tests/support/**` —— 集中 fixture、runner 辅助和通用断言
 - `scripts/check-coding-hygiene.js` —— 增加补丁债务、测试归属和残留证据检查（若现有计划已交付则扩展该脚本，不重复创建同类门禁）
 - `scripts/check-doc-consistency.js` —— 检查修复协议和同步文档标记
 - `scripts/check-doc-freshness.js` —— 报告失败记录和测试文档的过时状态（如适用）
-- `tests/fixtures/**` —— 提供“修复前失败、修复后通过”的最小回归场景
 - `docs/{en,zh-CN,zh-TW}/commands.md` —— 说明 review-manager 与根因修复流程的触发方式
 - `CHANGELOG.md` —— 在行为变化的发布边界记录门禁和测试架构变化
 
@@ -104,6 +107,7 @@
 - 根因、迁移是否充分和补丁是否真正简化仍需人工判断；门禁只证明证据、结构和回归执行结果。
 - 不把每一次小修都强制升级成完整审查；只有重复失败、高风险接口或跨模块变更触发 review-manager。
 - 本计划与 consent/change-hygiene 计划互补：前者治理“是否得到授权、删除/重命名是否有证据”，本计划治理“是否在错误反馈回路中持续堆补丁”。
+- 与工程克制原则（Engineering Restraint）的关系：本计划是工程克制在修复域的具体适用。新增或扩展反补丁机制时，先遵循其机制测试；已批准的反补丁协议不因其复杂而被 Agent 自行删减；冲突或必要性不明确时必须升级，不得本地裁决。各项机制在实现时各自单独举证（解决哪个当前问题、不用它的具体损失、是否已有机制可承载、是否最窄方案），不以单一证据捆绑获批。机制必要性裁决记录在 TASK 计划或审查结论中——`repairSessionId` 自身实现并获批前，不作为记录位置。
 
 ### 验证方法
 

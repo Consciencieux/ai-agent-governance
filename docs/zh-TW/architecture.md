@@ -45,6 +45,7 @@ ai-agent-governance/
 │   ├── check-git-policy.js     # Git 工作流程閘門（受保護分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # 密鑰掃描閘門（暫存區掃描，絕不列印密鑰）
 │   ├── check-sync.js           # 同步組閘門（watch/require 對照，exit 1）
+│   ├── check-coding-hygiene.js # 編碼衛生（repo-infra：測試歸屬 + 殘留標記，§5）
 │   ├── check-doc-freshness.js  # 文件過時度 + 譯文新鮮度（git log 日期；建議性，--release-gate 阻斷過時/draft 譯文）
 │   ├── check-doc-consistency.js # 文件一致性 + consent/受保護清單/原則索引/計劃狀態/術語簇（預設建議性；--gate/--release-gate fail-closed；changelog 覆蓋僅 --release-gate fail-closed）
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
@@ -82,7 +83,9 @@ ai-agent-governance/
 ├── package.json                # npm 腳本（test、check）
 ├── .github/                    # CI 工作流程
 └── tests/
-    └── run-tests.js            # 測試套件
+    ├── run-tests.js            # 單一發現入口：runner + 共享 helper + 彙總
+    └── suites/                 # 領域套件（validator、security、consistency、docs、
+                                # release、generator、payload、hygiene）——見反補丁計劃 §3
 ```
 
-安裝載荷 = `SKILL.md` + `references/` + `scripts/` + `LICENSE` 四項。分割線以下（`docs/`、`tests/`、`package.json`、`.github/`、README、CONTRIBUTING、CHANGELOG、AGENTS.md）是倉庫基礎設施——不得複製進 skill 安裝目錄。
+安裝載荷 = `SKILL.md` + `references/` + `scripts/` + `LICENSE` 四項。分割線以下（`docs/`、`tests/`、`package.json`、`.github/`、README、CONTRIBUTING、CHANGELOG、AGENTS.md）是倉庫基礎設施——不得複製進 skill 安裝目錄。一處例外說明：`scripts/check-coding-hygiene.js` 會隨 tarball 分發（打包整目錄複製 `scripts/`），但**未**在 `references/init-spec.json` 宣告，INIT 從不安裝或執行它；在本倉庫佈局之外執行時它報告 not applicable 並 exit 0。

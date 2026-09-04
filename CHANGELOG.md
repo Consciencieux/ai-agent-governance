@@ -2,13 +2,20 @@
 
 All notable changes to this project will be documented here.
 
-## [Unreleased]
+## [0.12.0] - 2026-09-04
 
 ### Added
 
 - **Terminology gate** — `docs/glossary.md` gains optional `Forbidden zh-CN` / `Forbidden zh-TW` columns registering renderings that must not appear in that language tree (e.g. protocol: zh-TW uses 協定, never 協議). `scripts/check-doc-consistency.js` scans the language trees and reports `terminology_usage`, fail-closed under `--gate`/`--release-gate`, with a per-line escape hatch `<!-- i18n: allow X -->` for deliberate source-form quotes (trigger words stay unregistered by policy). Structural parity could never catch this class: term drift and simplified/traditional leaks are structurally identical. No glossary (governed projects) → the check no-ops.
+- **Coding hygiene gate** — new `scripts/check-coding-hygiene.js`, wired into `npm run check`: fail-closed on monolith test registration in `tests/run-tests.js` (any quote style) and on an empty `tests/suites/*.test.js` (tests lost during migration); ownerless `TODO`/`FIXME`/`HACK` markers are advisory only. It ships inside the tarball because packaging copies `scripts/` wholesale, but is NOT declared in `init-spec.json` — run outside this repo's suite layout it reports `applicable: false` and exits 0. Anti-patch plan §5 mechanical subset; the non-mechanizable claims (root cause correctness, semantic quality of a fix) are explicitly refused rather than faked.
 - **Translation freshness** — `scripts/check-doc-freshness.js` derives per-pair translation status from git instead of a handwritten manifest: 简体中文 is the source, `docs/en/**` and `docs/zh-TW/**` its translations. A source committed after its translation — or carrying uncommitted edits — marks the translation `stale`; a same-commit pair reports "synchronized commit" and explicitly does NOT claim translation correctness. `<!-- i18n-status: draft -->` marks in-flight work (tolerated daily, blocked at release) and `<!-- i18n-reviewed: <sha> -->` records a human verdict for pairs where the source moved but the translation was already correct. New `--release-gate` mode exits 1 on stale or draft translations; the default stays advisory (exit 0). Projects without trilingual trees no-op.
 - **Engineering restraint (machinery test)** — `references/policies/coding.policy.md` gains a compact Engineering Restraint / Machinery Test section: unapproved machinery must justify itself ("if this did not exist today, would current requirements independently justify it?"), approved requirements always win (conflicts escalate, never silently trim), and semantic seams stay legal. `SKILL.md` points at it. Deliberately no new gate, field, review step, plan section, or distribution surface — the section ships through the existing docs/rules copy channel.
+- **Root-cause repair protocol + failure budget** — `references/policies/lifecycle.policy.md` gains the repair-domain protocol (anti-patch plan §1–2): reproduction-first plan fields for medium/large bug fixes, regression test must fail before the fix, `repairSessionId` binding (attempts grouped, reset only by developer adjudication), failure budget with escalation levels (1st re-understand, 2nd expand + review-manager, 3rd stop and re-plan), and evidence-based success criteria (gates pass with real output, not "last command green"). Ships to governed projects via docs/rules/lifecycle.md.
+
+### Changed
+
+- **Test architecture split** — the 2503-line `tests/run-tests.js` monolith became a single discovery entry (runner + shared helpers + summary) plus eight domain suites under `tests/suites/` (validator, security, consistency, docs, release, generator, payload, hygiene). Migration was verbatim and set-reconciled: the 180 pre-split test names match the post-split set exactly (0 missing, 0 extra), then grew to 188 with the new hygiene coverage. Batch 2 (consolidating shared helpers into `tests/support/`) is deliberately deferred — the shared scope is preserved so behavior and output stay identical. Anti-patch plan §3.
+- **ADR-0007** records the governance-plan architecture: engineering restraint and anti-patch stay independent with orthogonal trigger conditions (adding machinery vs handling repeated failure), bridged by boundary clauses only — no hierarchy, no third authority source.
 
 ### Fixed
 

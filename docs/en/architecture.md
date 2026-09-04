@@ -45,6 +45,7 @@ ai-agent-governance/
 │   ├── check-git-policy.js     # Git workflow gate (protected branch + directPush=false → exit 1)
 │   ├── check-secrets.js        # secret scan gate (staged diff, never prints the secret)
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
+│   ├── check-coding-hygiene.js # coding hygiene (repo-infra: test-ownership + residue markers, §5)
 │   ├── check-doc-freshness.js  # doc staleness + translation freshness (git log dates; advisory, --release-gate blocks stale/draft translations)
 │   ├── check-doc-consistency.js # cross-doc contradictions + consent/protected-list/principles-index/plan-status/terminology clusters (advisory default; --gate/--release-gate fail-closed; changelog coverage fail-closed only in --release-gate)
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
@@ -82,7 +83,9 @@ ai-agent-governance/
 ├── package.json                # npm scripts (test, check)
 ├── .github/                    # CI workflows
 └── tests/
-    └── run-tests.js            # test suite
+    ├── run-tests.js            # single discovery entry: runner + shared helpers + summary
+    └── suites/                 # domain suites (validator, security, consistency, docs,
+                                # release, generator, payload, hygiene) — see anti-patch plan §3
 ```
 
-Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations.
+Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations. One nuance: `scripts/check-coding-hygiene.js` travels inside the tarball (packaging copies `scripts/` wholesale) but is NOT declared in `references/init-spec.json`, so INIT never installs or runs it; run outside this repo's layout it reports "not applicable" and exits 0.

@@ -29,6 +29,11 @@
 - **确认政策重写** —— 跨五个同步点提交前一次确认；计划批准降为意图对齐（`consent-policy-hardening` 计划）
 - **治理原则索引** —— 18 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
 - **规则捕获** —— 不让口头要求只活在对话上下文里：Agent 对每条要求预分类（持久 / 一次性 / 模糊），开发者在 Phase 6 裁定，确认的规则写入 `AGENTS.md` / `docs/rules/**`，未确认的在行为轨迹里留 `rules_pending` 痕迹。设计：[../archive/rule-capture.md](../archive/rule-capture.md)
+- **术语门禁** —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
+- **翻译新鲜度** —— Git 派生的逐对状态（stale / draft / reviewed 标记），`--release-gate` 阻断落后译文；无手写 manifest。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
+- **工程克制（机制测试）** —— 未经批准的新增机制必须自证；已批准需求优先；语义接缝合法。设计：[../archive/engineering-restraint.md](../archive/engineering-restraint.md)
+- **根因修复协议 + 失败预算** —— 复现优先的计划字段、`repairSessionId` 绑定、第一/二/三次失败升级。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
+- **测试架构拆分 + 编码卫生门禁** —— 单一发现入口 + 八个领域套件（集合对账），并对单体回归与空套件设门禁。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 
 ### 近期
 

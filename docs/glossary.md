@@ -16,6 +16,9 @@
 | maturity | 成熟度 | 成熟度 |  |  |
 | lifecycle | 生命周期 | 生命週期 |  |  |
 | change hygiene | 变更归位与残留清理 | 變更歸位與殘留清理 |  |  |
+| coding hygiene | 编码卫生 | 編碼衛生 |  |  |
+| root-cause repair protocol | 根因修复协议 | 根因修復協定 |  |  |
+| failure budget | 失败预算 | 失敗預算 |  |  |
 | compatibility surface | 兼容/过渡层 | 相容/過渡層 |  |  |
 | historical surface | 历史层 | 歷史層 |  |  |
 | rule capture | 规则捕获 | 規則捕獲 |  |  |
