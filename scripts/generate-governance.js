@@ -417,7 +417,7 @@ function defaultGovernanceVersion(spec) {
   const fallback = spec && spec.inputs && spec.inputs.governance_version && spec.inputs.governance_version.default;
   // Last-resort sentinel only: keep it in step with package.json's current version when
   // touching this file (a stale value here silently exports an outdated governance_version).
-  return typeof fallback === "string" && fallback.length > 0 ? fallback : "0.13.0";
+  return typeof fallback === "string" && fallback.length > 0 ? fallback : "0.13.1";
 }
 
 // --- Main ---

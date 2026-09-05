@@ -1,8 +1,7 @@
 # 仓库边界拆分 —— 载荷目录 vs 仓库工具(TASK 计划)
 
-[English](../../en/plans/repository-boundary-split.md) · [简体中文](repository-boundary-split.md) · [繁體中文](../../zh-TW/plans/repository-boundary-split.md)
 
-> **Status: implemented.**(状态:已实现。)2026-09-05 受众审计的后续。`content-audience-portability` 计划修复了 CONTENT 泄漏;本计划修复的是允许泄漏的 STRUCTURE:声明的分发角色没有任何东西强制执行。`package-skill.sh` 整目录复制,所以只要文件住在 `references/` 或 `scripts/` 下,无论 `init-spec.json` 为它声明了什么角色,它都会被打给每个 tarball 用户。当前树实测:按体积计 tarball 的 45%(7 个文件,约 51 KB)是本仓库自己的维护内容,任何技能用户都无法对其行使操作。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-09-05，待 Release 归档）。本计划已在当前工作树交付；发布时按仓库规则归档。）
 
 **Target: both** —— `payload` 改变 tarball 携带的内容(7 个 repo-only 文件移出分发目录)并强化 `init-spec.json` 与角色门禁;`repo-infra` 重接所有指向被移动路径的引用(package.json 脚本、CI、测试、AGENTS.md、SKILL.md、三语 architecture)并记录新规则。两类分别列于 Affected Files。
 

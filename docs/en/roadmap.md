@@ -36,6 +36,9 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - **Test architecture split + coding hygiene gate** — single discovery entry plus eight domain suites (set-reconciled), gated against monolith regression and empty suites. Design: [../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **Distribution-role completeness gate** — every file under `references/` + `scripts/` carries exactly one declared role (INSTALLED / SKILL-INTERNAL), verified by `repo-tools/check-role-completeness.js` (no unclassified file, no overlap, no stale declaration, packaging boundary matches). Design: [../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **Scope-tiered verification + evidence tiers** — `check:docs` / `check:payload` / `check:tests` / `check:full` entries matched to change scope, with each gate's output classified as mechanical / human-attested / unverified so a green run is never read as more proof than it is. Design: [../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **Physical distribution boundary** — repo maintenance content can no longer ship to tarball users: 7 repo-only files (skill-release flow, packaging script, five repo-only gates) moved out of `references/` and `scripts/` into `repo-tools/` and `repo-workflows/`, which the packaging step cannot reach. Role gate reverse check + complete tarball-manifest equality test keep declarations and packaging the same fact. Design: [../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
+- **Release flows split by audience** — `release.md` is governed-project-release only; this repo's own flow lives in the self-contained `repo-workflows/skill-release.md` (SemVer judging, tiered review and transactionality carried inline). Design: [../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
+- **INSTALLED content made project-portable** — rule text in the shipped payload no longer mixes audiences: no `npm run` commands in projects without package.json, no skill-repo docs paths, no unconditional trilingual obligations, no dangling pointers. Design: [../archive/content-audience-portability.md](../archive/content-audience-portability.md)
 
 ### Near-term
 
@@ -53,7 +56,7 @@ release-related task: these are known gaps in what a green gate actually proves.
   self-attested (a caller-supplied string in the proposal); `headSha` is mechanically
   verified. `execute` prints that the value is self-attested, so a signed tag does not
   imply a review happened. Revisit when release approval must prove reviewer identity, or
-  review evidence must be bound to a commit. Reference: [plans/gate-repair-and-ssot-alignment.md](plans/gate-repair-and-ssot-alignment.md) § C6
+  review evidence must be bound to a commit. Reference: [../archive/gate-repair-and-ssot-alignment.md](../archive/gate-repair-and-ssot-alignment.md) § C6
 
 ### Mid-term
 

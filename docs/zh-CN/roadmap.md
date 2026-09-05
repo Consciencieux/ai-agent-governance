@@ -35,7 +35,10 @@
 - **根因修复协议 + 失败预算** —— 复现优先的计划字段、`repairSessionId` 绑定、第一/二/三次失败升级。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **测试架构拆分 + 编码卫生门禁** —— 单一发现入口 + 八个领域套件（集合对账），并对单体回归与空套件设门禁。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **分发角色完备门禁** —— `references/` 与 `scripts/` 下每个文件都携带唯一声明角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 验证（无未分类文件、无重叠、无陈旧声明、打包边界一致）。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
-- **门禁分级 + 证据等级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口按变更范围匹配，每个门禁的产出标注为机械 / 人工背书 / 未验证，使绿色结果不被读成超出其实际证明力的结论。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **门禁分级 + 证据等级** —— 
+- **物理分发边界** —— 仓库维护内容不再随 tarball 发给技能用户：7 个 repo-only 文件（skill 发布流程、打包脚本、五个仓库专属门禁）从 `references/` 与 `scripts/` 移入打包步骤无法触达的 `repo-tools/` 与 `repo-workflows/`。角色门禁反向检查 + 完整 tarball 清单相等性测试保证「声明」与「打包」是同一事实。设计：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
+- **发布流程按受众拆分** —— `release.md` 仅覆盖被治理项目发布；本仓库自身的流程在内聚自足的 `repo-workflows/skill-release.md`（SemVer 判定、分级审核、事务性条款内联承载）。设计：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
+- **INSTALLED 内容项目可移植化** —— 载荷规则正文不再混用受众：没有 package.json 的项目不再出现 `npm run` 命令、无技能仓库 docs 路径、无无条件三语义务、无悬空指针。设计：[../archive/content-audience-portability.md](../archive/content-audience-portability.md)`check:docs` / `check:payload` / `check:tests` / `check:full` 各入口按变更范围匹配，每个门禁的产出标注为机械 / 人工背书 / 未验证，使绿色结果不被读成超出其实际证明力的结论。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 
 ### 近期
 
@@ -52,7 +55,7 @@
 - **评审证据绑定** —— 状态：延后。当前行为：`reviewStatus` 是自证声明（提案中由调用
   方提供的字符串）；`headSha` 是机械校验的。`execute` 会打印该值为自证声明，因此签名
   标签并不意味着评审发生过。重新评估条件：发布批准需要证明评审者身份，或评审证据必须
-  绑定到具体 commit。参见：[plans/gate-repair-and-ssot-alignment.md](plans/gate-repair-and-ssot-alignment.md) § C6
+  绑定到具体 commit。参见：[../archive/gate-repair-and-ssot-alignment.md](../archive/gate-repair-and-ssot-alignment.md) § C6
 
 ### 中期
 

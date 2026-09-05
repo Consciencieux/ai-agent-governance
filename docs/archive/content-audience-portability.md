@@ -1,8 +1,7 @@
 # 内容受众与可移植性边界（TASK 计划）
 
-[English](../../en/plans/content-audience-portability.md) · [简体中文](content-audience-portability.md) · [繁體中文](../../zh-TW/plans/content-audience-portability.md)
 
-> **Status: implemented.**（状态：已实现。）响应 2026-09-05 一次只读审计（针对发布载荷）：结构边界健全（打包正确、角色分类完备且经门禁验证），**但 INSTALLED 规则正文的内容仍然混用受众**。九处已确认泄漏——「`npm run check`」传到没有 package.json 的目标项目、技能仓库的 `docs/archive/` 出现在同一文件自己写着 `docs/plans/archive/` 的被治理项目规则里、硬编码的三语义务、悬空指针、以及两个生成的子技能叫目标项目运行它们没有的脚本。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-09-05，待 Release 归档）。本计划已在当前工作树交付；发布时按仓库规则归档。）
 
 **Target: both** —— `payload` 改写泄漏的规则文本（`references/policies/lifecycle.policy.md`、`references/templates/sub-skills.md`、`SKILL.md`、`references/workflows/release.md`、`scripts/check-layout-sync.js`）并新增 tarball→INIT 边界测试；`repo-infra` 在文档与术语表中记录双轴模型并添加可移植性检查。两个域分别列在「受影响文件」中。
 

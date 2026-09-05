@@ -1,8 +1,7 @@
 # 门禁修复与单一事实源对齐（TASK 计划）
 
-[English](../../en/plans/gate-repair-and-ssot-alignment.md) · [简体中文](gate-repair-and-ssot-alignment.md) · [繁體中文](../../zh-TW/plans/gate-repair-and-ssot-alignment.md)
 
-> **Status: implemented.**（状态：已实现。）已在当前工作树交付；发布时归档。响应 2026-09-05 一次只读审计：多个门禁存在但失效、接线错误或强于其声称——受保护文件簇解析出 0 行、`check:payload` 漏掉守护 payload 编辑的那个门禁、CI 只跑 6 个门禁中的 2 个、`plans:delivery` 不带 `--gate` 运行、SKILL.md frontmatter `version` 永不被检测、归档计划携带非规范 Status 行。同次审计还确认了五处单一事实源违规（三份相互矛盾的发布流程、zh-CN/zh-TW 反向的未决声明、无人消费的 README 模板块、残缺的验证器检查清单、权限矩阵行不一致）。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-09-05，待 Release 归档）。本计划已在当前工作树交付；发布时按仓库规则归档。）
 
 **Target: both** —— `payload` 修复 INSTALLED 脚本行为（`scripts/check-doc-consistency.js`、`scripts/generate-governance.js`）与 `references/` 内容完整性（`references/templates/sub-skills.md`、`references/policies/governance-files.policy.md`、`SKILL.md`）；`repo-infra` 修复测试夹具、npm 接线、CI、仓库文档与归档状态。两个域分别列在“受影响文件”中。
 
