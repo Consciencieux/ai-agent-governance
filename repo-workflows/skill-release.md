@@ -83,16 +83,18 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 1. **再次检查仓库状态**：`git status`、`git rev-parse HEAD`。工作区干净且 HEAD 与 Proposal 中 `headSha` 一致；若变化 → 重新分析。
 2. **版本同步**（技能仓库三处 + tag，无 manifest）：
    - 更新 `package.json` 的 `version`
-   - 更新 CHANGELOG（`[Unreleased]` → `[X.Y.Z]`）
+   - 更新 CHANGELOG（`[Unreleased]` → `[X.Y.Z]`，并在顶部重建空 `[Unreleased]` 节）
    - 更新 `SKILL.md` frontmatter 的 `version`
    - 同步更新 `references/init-spec.json` 的 `inputs.governance_version.default` 与 `scripts/generate-governance.js` 的兜底哨兵（决定新 INIT 给被治理项目打上的版本号）
-3. **计划交付对账**：`node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
+3. **计划交付对账 + 发布门禁（全部在 release commit 之前）**：
+   - `node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
+   - `npm run check:skill-release`（exit 0；含 `check-doc-consistency.js --release-gate` 与 `check-doc-freshness.js --release-gate`）。**在归档与提交之前运行**：pending-archive（implemented 计划未归档）与 changelog 覆盖在此阶段失败还来得及补救——版本节推进有 `version_examples` 簇机械验证（CHANGELOG 最新版本节必须等于 package.json version，v0.13.1 发布曾因无此检查而漏改 CHANGELOG）。
 4. **归档计划**：已完成的 `TASK_<name>.md` 移入 `docs/archive/`（技能仓库共享单语），**保留原文，绝不删除**。
    - **归档冲突规则**：一份计划在本仓库存在三份语言副本（`docs/{en,zh-CN,zh-TW}/plans/X.md`），而 `docs/archive/` 是共享单语目录。**以简体中文副本为准**；en / zh-TW 副本不是归档候选。最终 `docs/archive/` 下只有一个 `X.md`。
    - 未完成的计划继续留在各语言树的 `plans/` 下。
 5. **更新 roadmap**：按 `docs/en/roadmap.md` 维护规则重置 horizon
 6. **提交 release commit**：`git add`（版本同步与归档相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`
-7. **运行发布门禁**：`npm run check:skill-release`（exit 0；`npm run check:release` 是其兼容别名）。该命令是 REPO-ONLY 的仓库维护入口（定义在 `package.json`），被治理项目没有它——目标项目的发布门禁见 `references/workflows/release.md`。
+7. **复跑轻量门禁**（release commit 之后、tag 之前）：`npm run check`（exit 0）——确认归档与版本同步的提交内容本身没有破坏任何门禁。
 8. **校验（本仓库以 `npm test` 为准）**：技能仓库的校验义务由第 7 步的 `npm test` + 发布门禁承担。`scripts/verify_governance.js` 在本仓库**预期退出码 1**（无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败——ADR-0006，本仓库不 dogfood 自身框架）。它不是本流程的门禁：**不得为了让它通过而伪造 `.governance/`**，也不得因其非零退出码而中止发布。
 9. **生成/更新 Proposal**：`headSha` 更新为新 HEAD
 10. **创建 annotated tag**：
@@ -121,3 +123,5 @@ AI 不得自动创建 tag、push tag、创建 release，除非：已生成 Relea
 批准后、执行前，必须重新检查 git HEAD 与 git status。任一变化 → 取消流程，重新 plan。
 
 **事务性**：任何前置检查失败 → 在开始写操作之前中止，不触碰仓库。进入写操作后（版本同步 → 归档 → release commit → tag → push → GitHub Release → 资产上传）必须连续完成；任一步失败立即停止，报告 ⚠️/❌ 与已完成/未完成清单，**不得改用别的方式重试**。tag 已创建但 GitHub Release 创建失败 → **不删除 tag、不强制重来**；报告 ⚠️ Blocked，由用户决定补建 release 或清理。
+
+**恢复**：中断后依据 `git log`（release commit / tag 是否已创建、push 是否到达远端）与 `.governance/release-proposal.json`（`headSha` 指向哪个提交）判断已完成步骤，**仅重做未完成部分**——已完成并推送的提交与 tag 绝不重做或强推。技能仓库无 `validation.json`，`git log` + proposal 即恢复依据。

@@ -931,6 +931,32 @@ test("consistency --gate: matching frontmatter version passes", () => {
   return !out.gateIssues.some((g) => g.kind === "version_examples");
 });
 
+// v0.13.1 regression: the release shipped with 40 entries still under [Unreleased] and no
+// [0.13.1] section — version sync skipped the CHANGELOG rename and every gate stayed green,
+// because changelog_coverage only asks "is the change recorded", never "has the version
+// section advanced". The newest versioned section is a release sync point like frontmatter.
+test("consistency --gate: stale CHANGELOG version section fails the gate", () => {
+  const dir = tmp("a5-changelog-stale");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "0.13.1" }));
+  write(path.join(dir, "CHANGELOG.md"),
+    "# Changelog\n\n## [Unreleased]\n\n### Changed\n\n- unreleased work\n\n## [0.13.0] - 2026-09-05\n\n### Fixed\n\n- old\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("newest version section [0.13.0]"));
+});
+
+test("consistency --gate: synced CHANGELOG version section passes", () => {
+  const dir = tmp("a5-changelog-ok");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "0.13.1" }));
+  write(path.join(dir, "CHANGELOG.md"),
+    "# Changelog\n\n## [Unreleased]\n\n## [0.13.1] - 2026-09-05\n\n### Fixed\n\n- the fix\n\n## [0.13.0] - 2026-09-05\n\n### Fixed\n\n- old\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return !out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("newest version section"));
+});
+
 // A6 regression: docs/archive/ was never scanned, so an archived plan could keep saying
 // "已实现（待 Release 归档）" — a pending-archive claim inside the archive — forever.
 // The archive IS the completed state, so a file living there must say archived.
@@ -1219,7 +1245,9 @@ test("consistency --release-gate: versioned changelog section satisfies coverage
   const dir = tmp("changelog-rename");
   gitInit(dir);
   // a governed file change (package.json: not a consent sync point) makes changelogCoverage applicable
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  // (version aligns with the changelog section: the version-section sync check must stay
+  // out of this fixture's way — it tests coverage semantics, not version drift)
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "0.11.1" }));
   // daily state: [Unreleased] present with a category -> passes
   write(path.join(dir, "CHANGELOG.md"), "## [Unreleased]\n\n### Added\n- x\n");
   const daily = spawnSync(process.execPath, [CONSISTENCY, "--release-gate"], { cwd: dir, encoding: "utf8" });
@@ -1259,7 +1287,7 @@ test("consistency --gate: daily mode still requires [Unreleased] after a release
   // while the release date's own name matches the topmost versioned section.
   const dir = tmp("changelog-daily");
   gitInit(dir);
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "0.11.1" }));
   write(path.join(dir, "CHANGELOG.md"), "## [0.11.1] - 2026-09-03\n\n### Added\n- x\n");
   const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
   if (r.status !== 0) return false;

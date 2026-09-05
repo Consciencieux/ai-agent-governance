@@ -2,7 +2,9 @@
 // PAYLOAD SCRIPT — copied standalone into governed projects (references/init-spec.json).
 // Keep it self-contained: Node builtins only, never require() a sibling module.
 // Doc Consistency Check — read-only. Detects cross-document contradictions:
-//   1. version-example sync   — examples of governance_version/manifest values vs current
+//   1. version-example sync   — examples of governance_version/manifest values vs current;
+//                               frontmatter version and CHANGELOG newest version section are
+//                               release sync points and must equal the current version
 //   2. protected-files sync   — summary lists vs the single source of truth
 //   3. ADR status sync        — "Accepted (Unreleased)" ADRs whose feature already shipped
 //   4. link validity          — relative markdown links must resolve
@@ -327,6 +329,25 @@ function main() {
         const fv = /^version:\s*["']?(\d+\.\d+\.\d+)["']?\s*$/m.exec(fm[1]);
         if (fv && fv[1] !== version) {
           const item = `${f}: frontmatter version ${fv[1]} != ${version} (release sync point)`;
+          issues.version_examples.push(item);
+          if (anyGate) gateIssues.push({ kind: "version_examples", item });
+        }
+      }
+    }
+    // CHANGELOG top version section is the fourth release sync point (skill-release.md
+    // Phase 4 step 2 renames [Unreleased] -> [X.Y.Z] during version sync). It has no
+    // mechanical backstop either: the v0.13.1 release shipped with 40 entries still under
+    // [Unreleased] and every gate green, because changelog_coverage only asks "is the
+    // change recorded", never "has the version section advanced". The newest versioned
+    // section (first `## [X.Y.Z]` heading, [Unreleased] skipped) must equal the current
+    // version. No versioned section yet (fresh project) or no CHANGELOG → no-op.
+    const cl = readFile(path.join(ROOT, "CHANGELOG.md"));
+    if (cl) {
+      const heads = cl.match(/^##\s+\[(\d+\.\d+\.\d+)\]/gm) || [];
+      if (heads.length > 0) {
+        const top = /^##\s+\[(\d+\.\d+\.\d+)\]/.exec(heads[0]);
+        if (top && top[1] !== version) {
+          const item = `CHANGELOG.md: newest version section [${top[1]}] != current version ${version} (release sync point — version sync must rename [Unreleased] to the new version)`;
           issues.version_examples.push(item);
           if (anyGate) gateIssues.push({ kind: "version_examples", item });
         }
