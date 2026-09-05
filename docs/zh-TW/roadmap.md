@@ -34,6 +34,8 @@
 - **工程克制（機制測試）** —— 未經批准的新增機制必須自證；已批准需求優先；語義接縫合法。設計：[../archive/engineering-restraint.md](../archive/engineering-restraint.md)
 - **根因修復協定 + 失敗預算** —— 重現優先的計劃欄位、`repairSessionId` 綁定、第一/二/三次失敗升級。設計：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **測試架構拆分 + 編碼衛生閘門** —— 單一發現入口 + 八個領域套件（集合對帳），並對單體回歸與空套件設閘門。設計：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
+- **分發角色完備閘門** —— `references/` 與 `scripts/` 下每個檔案都攜帶唯一宣告角色（INSTALLED / SKILL-INTERNAL），由 `scripts/check-role-completeness.js` 驗證（無未分類檔案、無重疊、無陳舊宣告、打包邊界一致）。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **閘門分級 + 證據等級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口依變更範圍匹配，每個閘門的產出標註為機械 / 人工背書 / 未驗證，使綠色結果不被讀成超出其實際證明力的結論。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 
 ### 近期
 

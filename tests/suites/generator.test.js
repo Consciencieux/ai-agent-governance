@@ -7,16 +7,6 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = (test) => {
-function listFiles(dir) {
-  const out = [];
-  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    const p = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...listFiles(p));
-    else out.push(p);
-  }
-  return out.sort();
-}
-
 test("generate-governance: Phase A creates expected file tree", () => {
   const dir = tmp("gen-tree");
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "TestApp", "--phase", "A"], { encoding: "utf8" });
@@ -27,16 +17,22 @@ test("generate-governance: Phase A creates expected file tree", () => {
     "docs/rules/security.md",
     "docs/rules/coding.md",
     "docs/rules/testing.md",
+    "docs/rules/governance-files.md",
+    "docs/features/_TEMPLATE.md",
     "AGENTS.md",
     "CHANGELOG.md",
     "README.md",
-    "docs/features/.gitkeep",
     "docs/plans/DEVELOPMENT_PLAN.md",
     "docs/plans/archive/.gitkeep",
     "docs/ARCHITECTURE.md",
   ];
   const actual = [];
+  // Deduplicate: a file present twice in the expected list would push twice and the count
+  // assertion would pass vacuously (found by review).
+  const seen = new Set();
   for (const e of expected) {
+    if (seen.has(e)) continue;
+    seen.add(e);
     if (fs.existsSync(path.join(dir, e))) actual.push(e);
   }
   return actual.length === expected.length;
@@ -73,7 +69,7 @@ test("generate-governance: manifest lists created artifacts with correct types",
   const count = (t) => m.artifacts.filter((a) => a.type === t).length;
   const validKinds = m.artifacts.every((a) => a.kind === "file" || a.kind === "dir");
   const agentsType = m.artifacts.find((a) => a.path === "AGENTS.md").type;
-  return count("policy") === 9 && count("script") === 5 && count("state") === 6 && validKinds && agentsType === "policy";
+  return count("policy") === 10 && count("script") === 5 && count("state") === 6 && validKinds && agentsType === "policy";
 });
 
 test("generate-governance: gitignore covers sensitive filenames", () => {
@@ -129,7 +125,7 @@ test("generate-governance: --json outputs structured result", () => {
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "JsonTest", "--phase", "A", "--json"], { encoding: "utf8" });
   if (r.status !== 0) return false;
   const out = JSON.parse(r.stdout);
-  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 13;
+  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 15;
 });
 
 test("generate-governance: missing --project-name exits 2", () => {

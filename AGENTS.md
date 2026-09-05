@@ -26,6 +26,12 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Release transactionality | `references/workflows/release.md` § 事务性 | payload |
 | Turn-scoped consent + exceptions A/B | `references/policies/git.policy.md` § 确认范围 · this file § Git Operation Safety Protocol | both |
 | Payload self-containment | `references/init-spec.json` § invariants | repo |
+| Distribution roles (declared, never inferred) | `references/init-spec.json` § invariants + § distribution | repo |
+| Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
+| Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理 · `references/policies/lifecycle.policy.md` § 变更归位与残留清理 | payload |
+| Root-cause repair protocol + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
+| Scope tiering (rule-decided, not self-judged) | `references/policies/lifecycle.policy.md` § 规模分级 | payload |
+| Test protection | `references/policies/testing.policy.md` § 测试保护 | payload |
 
 Four always-on gate clusters keep this index and its sources honest: the consent cluster, the protected-files cluster, the principles-index cluster (every row's source must resolve), and the plan-status cluster (unknown status fails) are verified by `node scripts/check-doc-consistency.js --gate` (part of `npm run check`). The terminology cluster (glossary-registered forbidden renderings, exempt per line with `<!-- i18n: allow X -->` — inside a Markdown table only the preceding line of the table's first row works; later rows must be reworded) is fail-closed in the same `--gate` run. The pending-archive cluster (an implemented/Completed plan still in `docs/*/plans/`) and the changelog-coverage cluster (a governance/mechanism change without a CHANGELOG record; doc-only changes are exempt) are fail-closed only in `--release-gate`, run as release.md Phase 4 step 3 — alongside `node scripts/check-doc-freshness.js --release-gate`, which blocks when a translation lags its 简体中文 source or is still marked draft.
 
@@ -64,25 +70,45 @@ Modifying `SKILL.md`, `references/policies/**`, `references/templates/**`, `refe
 - **Every TASK plan declares a `Target`** — `payload` (ships to governed projects: `SKILL.md`, `references/`, `scripts/`, `LICENSE`), `repo-infra` (`docs/`, `tests/`, `package.json`, `.github/`, README/CONTRIBUTING/CHANGELOG/AGENTS.md), or `both`. When `Target: both`, the plan must enumerate the sync points per domain — that enumeration is what stops a cross-domain rule from being updated in one place only. Write filenames outside the Affected Files section without backticks: the delivery gate treats every backticked token inside that section as a delivery declaration.
 - **Every TASK plan's Status line leads with a canonical keyword** — `design plan, not implemented` / `Active` / `implemented` / `Completed` / `archived` (zh variants per `references/policies/lifecycle.policy.md` Phase 2). Anything else reads as unknown and fails `check-doc-consistency.js --gate`. An implemented/Completed plan still sitting in `docs/*/plans/` is pending-archive — advisory in everyday checks (the documented lifecycle lets it wait for the release commit), fail-closed only under `--release-gate` at release.
 
-## Validation (standard verification procedure)
+## Validation (gate tiering by change scope)
 
-Run the gate group (`npm run check`) before declaring any task done; run the full group (`npm run check:all`) before release. Record real output (never claim "should pass").
+Run the gate group before declaring any task done; run the full group (`npm run check:all`) before release. Record real output (never claim "should pass").
 
-- **Impact-face check** — before touching any public interface/module/file, search its references first (`rg "<name>"`); found files enter the Affected Files list. At task end, compare actual changed files (`git diff --name-only`) against that list: listed-but-unchanged → fix or justify; changed-but-not-listed → explain (or revert if it was a lazy side-edit). Also compare the changed set against the plan's `Target`: a file outside the declared domain is an out-of-domain edit and must be explained or reverted — payload edits smuggled into a `repo-infra` task are exactly how the install payload got broken once.
+**Scope tiering** — match the narrowest entry below by `git diff --name-only` prefix. When scope is uncertain, ESCALATE to the larger scope — never narrow the verification. The entries share the same fail-closed semantics: each gate exits 0 / 1 the same way, only the set of gates that runs changes.
 
-- **Gate layer (fail-closed, exit ≠ 0 blocks):**
-  - `npm test` — the full test suite (`tests/run-tests.js`); must exit 0 (always)
-  - `node scripts/check-doc-parity.js` — three language trees structurally parallel (after any `docs/` / root `README.md` / `CONTRIBUTING.md` edit)
-  - `node scripts/check-layout-sync.js` — `docs/{en,zh-CN,zh-TW}/architecture.md` Repository Layout must list every file under `references/` + `scripts/` (after any `references/` / `scripts/` / `architecture.md` edit)
-- **Advisory layer (default exit 0, report only; release-gate forms fail-closed):**
-  - `node scripts/check-doc-freshness.js` — stale governance docs + translation freshness (periodic drift-check; `--release-gate` blocks stale/draft translations)
-  - `node scripts/check-doc-consistency.js` — cross-document contradictions (periodic drift-check)
-- `scripts/verify_governance.js` runs in default mode on this repo and fails by design (skill repo shape) — do not "fix" that by fabricating governance artifacts
+| Scope | When to use | What it runs |
+| --- | --- | --- |
+| `npm run check:docs` | `docs/`, `README.md`, `CONTRIBUTING.md`, `architecture.md` changed | test + parity + consistency + layout |
+| `npm run check:payload` | `references/`, `scripts/`, `SKILL.md`, `LICENSE` changed | test + layout + consistency + role-completeness + hygiene |
+| `npm run check:tests` | `tests/`, `.gitattributes` changed | test + hygiene |
+| `npm run check:full` | default, uncertain scope, or explicit full request | test + parity + layout + consistency + hygiene + role-completeness |
+| `npm run check:all` | release, audit, or explicit full audit | check + freshness + plan delivery |
+
+**What each gate checks and what it proves (evidence tiers):**
+
+| Gate | Checks | Evidence tier | What pass means |
+| --- | --- | --- | --- |
+| `npm test` | all 193 tests | mechanical | conditions satisfied for the changed scope |
+| `check-doc-parity.js` | trilingual tree structure (files, headings, tables) | mechanical | trees are structurally parallel (NOT semantic equivalence) |
+| `check-layout-sync.js` | `references/` + `scripts/` files listed in architecture.md ×3 | mechanical | no file added without a documented home |
+| `check-doc-consistency.js --gate` | 12 cross-document fact clusters (frozen: new checks must create standalone scripts when existing ones cannot host them) | mechanical | declared facts match their sources |
+| `check-coding-hygiene.js --gate` | monolith test registration, suite ownership, residue markers | mechanical | test architecture is intact |
+| `check-role-completeness.js --gate` | every references/scripts/ file classified, no overlap, packaging matches | mechanical | distribution contract is complete |
+| `check-doc-freshness.js` | stale governance docs + translation staleness | mechanical (report only; `--release-gate` blocks stale/draft) | report only; pass ≠ correct, only that no mechanical staleness was detected |
+| `check-plan-delivery.js` | plan declarations vs delivered paths/identifiers | mechanical | no declared file or identifier is missing |
+| `verify_governance.js` | governance artifact existence | mechanical | runs in default mode here, fails by design (ADR-0006) |
+
+**Evidence tier definitions:**
+- `mechanical` — marker, structure, path, regex, file existence. Pass = "mechanical condition satisfied", NOT "behavior is correct" or "semantics are accurate".
+- `human-attested` — requires user-in-the-loop or human review (e.g. release approval, translation review, root cause evaluation). Currently no automated gate produces this tier.
+- `unverified claim` — declaration only, no independent verification available (e.g. "regression test was failing before the fix"). Not a gate output.
+
+**Impact-face check** — before touching any public interface/module/file, search its references first (`rg "<name>"`); found files enter the Affected Files list. At task end, compare actual changed files (`git diff --name-only`) against that list: listed-but-unchanged → fix or justify; changed-but-not-listed → explain (or revert if it was a lazy side-edit). Also compare the changed set against the plan's `Target`: a file outside the declared domain is an out-of-domain edit and must be explained or reverted — payload edits smuggled into a `repo-infra` task are exactly how the install payload got broken once.
 
 ## Conventions
 
 - Language policy by audience: agent-facing files (`SKILL.md`, `references/**`, generated artifact bodies) are single-language - never add a second language section; developer-facing files are trilingual and split - the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`), translations live in their trees (`docs/zh-CN/`, `docs/zh-TW/`), and `docs/en/` holds the rest of the English docs; historical records (`docs/design-decisions/`, `docs/archive/`) are shared single-language 简体中文. 简体中文 is the canonical source; editing one language requires updating the other two in the same change. New terms must be added to `docs/glossary.md` first
-- Install payload: the skill consists of `SKILL.md` + `references/` + `scripts/` + `LICENSE` only; `docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md are repo infrastructure and must not be copied into skill installations
+- Distribution roles (use these three names, never the bare word "payload" — it used to mean all three and that ambiguity produced real defects): **INSTALLED** = INIT writes it into the governed project (it appears as a `source` in `references/init-spec.json`); **SKILL-INTERNAL** = travels in the tarball and the skill executor reads it, but INIT never installs it, so a governed project does NOT have it (`references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`, `scripts/check-coding-hygiene.js`, `scripts/check-doc-parity.js`, `scripts/check-layout-sync.js`, `scripts/check-plan-delivery.js`, `scripts/check-role-completeness.js`, `scripts/package-skill.sh`, `scripts/release-manager.js`); **REPO-ONLY** = never in the tarball (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md, `.gitattributes`). Two consequences: a SKILL-INTERNAL file must never be cited as a rule source for governed projects, and a SKILL-INTERNAL script must no-op outside this repo's shape. Full table: `docs/en/architecture.md` § Three distribution roles
 - Commit messages: Conventional Commits, in English
 - Sync group: adding or modifying a sub-skill (in `references/templates/sub-skills.md`) or a check script requires updating, in the same change: `docs/{en,zh-CN,zh-TW}/commands.md` (trigger words — user manual duty, see Repository architecture), `docs/{en,zh-CN,zh-TW}/validator.md` (if validator behavior), `CHANGELOG.md` (if behavioral) — `check-doc-consistency.js`'s prompt-sync check enforces the commands.md half
 - Releases follow `references/workflows/release.md`: plan (read-only) → developer approval → tag → GitHub Release. No tag/push/release without explicit approval. **Path mapping for THIS repo** — `release.md` is payload written for governed projects (`docs/plans/` → `docs/plans/archive/`, milestones in `DEVELOPMENT_PLAN.md`); this repo's equivalents are: plans in the three language trees (`docs/{en,zh-CN,zh-TW}/plans/`) → archived to `docs/archive/` (shared, single-language); no `DEVELOPMENT_PLAN.md` — milestone tracking lives in `docs/en/roadmap.md`. Follow release.md's steps, substitute these paths. **Caveats unique to this repo** (release.md is written for governed projects and does not cover these):

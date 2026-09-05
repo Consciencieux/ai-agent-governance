@@ -34,6 +34,8 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - **Engineering restraint (machinery test)** — unapproved machinery must justify itself; approved requirements win; semantic seams stay legal. Design: [../archive/engineering-restraint.md](../archive/engineering-restraint.md)
 - **Root-cause repair protocol + failure budget** — reproduction-first plan fields, `repairSessionId` binding, 1st/2nd/3rd failure escalation. Design: [../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **Test architecture split + coding hygiene gate** — single discovery entry plus eight domain suites (set-reconciled), gated against monolith regression and empty suites. Design: [../archive/anti-patch-development.md](../archive/anti-patch-development.md)
+- **Distribution-role completeness gate** — every file under `references/` + `scripts/` carries exactly one declared role (INSTALLED / SKILL-INTERNAL), verified by `scripts/check-role-completeness.js` (no unclassified file, no overlap, no stale declaration, packaging boundary matches). Design: [../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **Scope-tiered verification + evidence tiers** — `check:docs` / `check:payload` / `check:tests` / `check:full` entries matched to change scope, with each gate's output classified as mechanical / human-attested / unverified so a green run is never read as more proof than it is. Design: [../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 
 ### Near-term
 

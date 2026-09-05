@@ -7,20 +7,6 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = (test) => {
-const PARITY_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc-parity.js");
-
-function buildParityTrees(dir) {
-  // minimal three-tree fixture with one parallel doc + root entry files
-  write(path.join(dir, "README.md"), "# AI Agent Governance\n\n[English](README.md) · [简体中文](docs/zh-CN/README.md) · [繁體中文](docs/zh-TW/README.md)\n\n## Intro\n\n- Hello\n");
-  write(path.join(dir, "CONTRIBUTING.md"), "# Contributing\n\n## Development\n");
-  for (const lang of ["en", "zh-CN", "zh-TW"]) {
-    write(path.join(dir, "docs", lang, "README.md"), `# 标题\n\n## 章节\n\n- 项目\n`);
-    write(path.join(dir, "docs", lang, "doc.md"), `# Doc\n\n## Section\n\n- one\n\n## Table\n\n| a | b |\n| --- | --- |\n| 1 | 2 |\n`);
-  }
-  // zh-CN/zh-TW in-tree CONTRIBUTING.md must also exist for entry checks
-  write(path.join(dir, "docs", "zh-CN", "CONTRIBUTING.md"), "# 贡献\n\n## 开发\n");
-  write(path.join(dir, "docs", "zh-TW", "CONTRIBUTING.md"), "# 貢獻\n\n## 開發\n");
-}
 
 test("doc parity: parallel trees exit 0", () => {
   const dir = tmp("parity-ok");
@@ -45,31 +31,8 @@ test("doc parity: missing file in one tree exits 1", () => {
   return r.status === 1 && r.stdout.includes("missing in docs/en/");
 });
 
-const FRESHNESS_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc-freshness.js");
 
 // commit file(s) with a forced author/committer date: `git commit --date=<iso>`
-function gitCommitAt(dir, files, dateIso, msg) {
-  spawnSync("git", ["add", ...files], { cwd: dir });
-  spawnSync("git", ["commit", "-q", "-m", msg, "--date=" + dateIso], {
-    cwd: dir,
-    env: { ...process.env, GIT_AUTHOR_DATE: dateIso, GIT_COMMITTER_DATE: dateIso },
-  });
-}
-
-function buildFreshnessFixture(dir) {
-  gitInit(dir);
-  // docs/ARCHITECTURE.md committed 60 days ago
-  write(path.join(dir, "docs", "ARCHITECTURE.md"), "# Arch\n");
-  const oldDate = new Date(Date.now() - 60 * 86400000).toISOString().slice(0, 10);
-  gitCommitAt(dir, ["docs/ARCHITECTURE.md"], oldDate + "T00:00:00+00:00", "doc old");
-  // src/ code committed recently (code active)
-  write(path.join(dir, "src", "main.ts"), "export const x = 1;\n");
-  gitCommitAt(dir, ["src/main.ts"], new Date().toISOString(), "code recent");
-  // CHANGELOG.md committed recently (fresh)
-  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n");
-  gitCommitAt(dir, ["CHANGELOG.md"], new Date().toISOString(), "changelog fresh");
-}
-
 test("doc freshness: stale doc flagged, fresh doc not flagged (exit 0)", () => {
   const dir = tmp("freshness");
   buildFreshnessFixture(dir);
@@ -107,18 +70,6 @@ test("doc freshness: drift-report.json gains freshness section", () => {
 
 
 // Trilingual fixture: glossary with forbidden renderings + one doc per language tree.
-function buildI18nFixture(dir, opts = {}) {
-  gitInit(dir);
-  write(path.join(dir, "docs", "glossary.md"),
-    "# Glossary\n\n| English | 简体中文 | 繁體中文 | Forbidden zh-CN | Forbidden zh-TW |\n" +
-    "| --- | --- | --- | --- | --- |\n" +
-    "| protocol | 协议 | 協定 | 協定 | 協議 |\n" +
-    "| template | 模板 | 範本 | 範本 | 模板 |\n");
-  write(path.join(dir, "docs", "zh-CN", "guide.md"), opts.zhCN || "# 指南\n\n使用协议与模板。\n");
-  write(path.join(dir, "docs", "en", "guide.md"), opts.en || "# Guide\n\nUse the protocol and template.\n");
-  write(path.join(dir, "docs", "zh-TW", "guide.md"), opts.zhTW || "# 指南\n\n使用協定與範本。\n");
-}
-
 test("terminology gate: forbidden rendering in a language tree is reported and gated", () => {
   const dir = tmp("term-hit");
   buildI18nFixture(dir, { zhTW: "# 指南\n\n使用協議與範本。\n" }); // 協議 is forbidden in zh-TW
@@ -351,26 +302,6 @@ test("translation freshness: governed project without trilingual trees no-ops", 
   const gated = spawnSync(process.execPath, [FRESHNESS_CHECK, "--release-gate"], { cwd: dir, encoding: "utf8" });
   return r.status === 0 && out.translations.length === 0 && gated.status === 0;
 });
-
-function buildLayoutRepo(dir, treeFiles) {
-  fs.mkdirSync(path.join(dir, "docs/en"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "docs/zh-CN"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "docs/zh-TW"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "references/templates"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
-  for (const f of treeFiles) {
-    if (f.startsWith("references/") || f.startsWith("scripts/")) {
-      fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true });
-      fs.writeFileSync(path.join(dir, f), "x", "utf8");
-    }
-  }
-  const tree = treeFiles.map((f) => "├── " + f + "   # file").join("\n");
-  const fence = String.fromCharCode(96, 96, 96);
-  const layout = "### Repository Layout\n\n" + fence + "\nai-agent-governance/\n" + tree + "\n" + fence + "\n";
-  for (const lang of ["en", "zh-CN", "zh-TW"]) {
-    fs.writeFileSync(path.join(dir, `docs/${lang}/architecture.md`), layout, "utf8");
-  }
-}
 
 test("check-layout-sync: tree covering all files exits 0", () => {
   const dir = tmp("layout-ok");

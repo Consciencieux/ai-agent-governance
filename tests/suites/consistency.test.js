@@ -199,12 +199,12 @@ test("validator: manifest sync check keeps an explicit false ok field", () => {
   return check && check.ok === false;
 });
 
-const CONSISTENCY_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc-consistency.js");
 
 test("doc consistency: clean repo exits 0 with no issues", () => {
   const dir = tmp("consistency-clean");
-  // minimal valid repo: version example matches package.json
+  // minimal valid repo: version example matches package.json, protected-files source present
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.2.3" }));
+  write(path.join(dir, "docs", "rules", "governance-files.md"), "| Path | Nature |\n| --- | --- |\n| `AGENTS.md` | entry |\n");
   write(path.join(dir, "docs", "en", "doc.md"), "# Doc\n\n## Section\n");
   write(path.join(dir, "docs", "zh-CN", "doc.md"), "# Doc\n\n## Section\n");
   write(path.join(dir, "docs", "zh-TW", "doc.md"), "# Doc\n\n## Section\n");
@@ -273,14 +273,6 @@ test("doc consistency: sub-skill trigger missing from commands.md is flagged", (
   const out = JSON.parse(r.stdout);
   return r.status === 0 && out.issues.prompt_sync.some((i) => i.includes("unique-trigger-xyz"));
 });
-
-function buildPlanRepo(dir, planBody) {
-  fs.mkdirSync(path.join(dir, "docs/en/plans"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "docs/archive"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "references/templates"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
-  fs.writeFileSync(path.join(dir, "docs/archive/some-plan.md"), planBody, "utf8");
-}
 
 test("check-plan-delivery: archived plan declaring a missing file exits 1 in gate mode", () => {
   const dir = tmp("plandel-missing");
@@ -520,28 +512,6 @@ test("generate-governance: hook artifacts use the first complete fence and are t
     fs.readFileSync(path.join(dir, ".gitignore"), "utf8").includes(".governance/consent.json") && modeOk;
 });
 
-function findPosixShell() {
-  const candidates = ["sh"];
-  if (process.platform === "win32") {
-    for (const base of [process.env.ProgramFiles, process.env["ProgramFiles(x86)"]]) {
-      if (!base) continue;
-      candidates.push(path.join(base, "Git", "bin", "sh.exe"));
-      candidates.push(path.join(base, "Git", "usr", "bin", "sh.exe"));
-    }
-    const where = spawnSync("where.exe", ["git"], { encoding: "utf8" });
-    for (const line of String(where.stdout || "").split(/\r?\n/).filter(Boolean)) {
-      const cmdDir = path.dirname(line.trim());
-      const gitRoot = path.basename(cmdDir).toLowerCase() === "cmd" ? path.dirname(cmdDir) : path.dirname(path.dirname(cmdDir));
-      candidates.push(path.join(gitRoot, "bin", "sh.exe"), path.join(gitRoot, "usr", "bin", "sh.exe"));
-    }
-  }
-  for (const candidate of [...new Set(candidates)]) {
-    const probe = spawnSync(candidate, ["-c", "exit 0"], { encoding: "utf8" });
-    if (!probe.error && probe.status === 0) return candidate;
-  }
-  return null;
-}
-
 test("payload: hooks pass sh -n and real git commit matrix", () => {
   const shell = findPosixShell();
   if (!shell) {
@@ -579,18 +549,7 @@ test("payload: hooks pass sh -n and real git commit matrix", () => {
   return missingConsent.status === 1;
 });
 
-const CONSISTENCY = path.join(__dirname, "..", "..", "scripts", "check-doc-consistency.js");
 
-const CONSENT_THREE_MARKERS_TEXT =
-  "One confirmation per change set — echo the full git command sequence before committing.\n" +
-  "Plan approval is intent alignment, not a commit authorisation workaround.\n" +
-  "A Proposal approved at the Approval Gate covers the release sequence.\n" +
-  "If any step fails, stop and report — never retry differently.\n" +
-  "If push is rejected (non-fast-forward), stop and report — never pull/rebase.";
-
-function writeConsentSyncPoint(dir, rel, content) {
-  write(path.join(dir, rel), content);
-}
 
 test("consistency --gate: complete five sync points exit 0", () => {
   const dir = tmp("consent-ok");
@@ -643,6 +602,8 @@ test("consistency --gate: marker removed from one sync point exits 1 and names i
 test("consistency --gate: governed-project shape skips absent sync points (3 of 5 exist)", () => {
   const dir = tmp("consent-governed");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  // the protected-files source must exist so the check doesn't report "source missing"
+  write(path.join(dir, "docs", "rules", "governance-files.md"), "| Path | Nature |\n| --- | --- |\n| `AGENTS.md` | entry |\n");
   // generated AGENTS.md + docs/rules/git-policy.md + docs/rules/lifecycle.md exist in a governed project
   writeConsentSyncPoint(dir, "AGENTS.md", CONSENT_THREE_MARKERS_TEXT);
   writeConsentSyncPoint(dir, "docs/rules/git-policy.md", CONSENT_THREE_MARKERS_TEXT);
@@ -1070,16 +1031,6 @@ test("validator: a project reached through a symlinked root still validates", ()
 
 // Windows blocks file symlinks without developer mode but allows directory junctions;
 // POSIX allows both. Returns false when the platform refuses, so a test can skip openly.
-function linkDir(target, linkPath) {
-  try {
-    fs.symlinkSync(path.resolve(target), path.resolve(linkPath), "junction");
-    return true;
-  } catch {
-    const r = spawnSync("cmd", ["/c", "mklink", "/J", path.resolve(linkPath), path.resolve(target)], { encoding: "utf8" });
-    return r.status === 0;
-  }
-}
-
 test("validator: a skill directory symlinked out of the tree is rejected", () => {
   const dir = tmp("symlink-skilldir");
   buildFullDefault(dir);

@@ -2,7 +2,23 @@
   "$schema": "init-spec-v1",
   "description": "Machine-readable specification for the INIT scripted generator. SKILL.md references this file; never restate its contents in prose. Single source of truth for what the generator produces.",
   "invariants": {
-    "copied_scripts_are_self_contained": "Artifacts of type 'copy' under scripts/ are copied into governed projects FILE BY FILE. Each one must therefore run standalone: Node builtins only, no relative require() of sibling modules, no reads of skill-repo files. Extracting shared helpers into a library breaks every governed project unless the library is added here too - and even then it burdens each project with an implicit dependency. Duplication across these scripts is deliberate, not an oversight. Enforced by the 'payload:' tests in tests/run-tests.js (static invariant + end-to-end load check)."
+    "copied_scripts_are_self_contained": "Artifacts of type 'copy' under scripts/ are copied into governed projects FILE BY FILE. Each one must therefore run standalone: Node builtins only, no relative require() of sibling modules, no reads of skill-repo files. Extracting shared helpers into a library breaks every governed project unless the library is added here too - and even then it burdens each project with an implicit dependency. Duplication across these scripts is deliberate, not an oversight. Enforced by the 'payload:' tests in tests/run-tests.js (static invariant + end-to-end load check).",
+    "distribution_roles_are_declared_not_inferred": "Every file under references/ and scripts/ has exactly one distribution role. INSTALLED = it appears as an artifact 'source' below (INIT writes it into the governed project). SKILL-INTERNAL = it is listed in distribution.skillInternal (it travels in the tarball because packaging copies references/ and scripts/ wholesale, but INIT never installs it, so a governed project does NOT have it). Roles are HUMAN decisions and must never be inferred from directory or filename: copy/template/generated, renames (lifecycle.policy.md -> docs/rules/lifecycle.md, verify_governance.js -> verify-governance.js), one-to-many outputs (githooks-template.md -> pre-commit + commit-msg) and static inline content all encode contract decisions a generator cannot recover. Enforced by scripts/check-role-completeness.js: no unclassified file, no file in both sets, no declared path that does not exist, and the tarball's file set must match the union of both roles."
+  },
+  "distribution": {
+    "skillInternal": [
+      "references/init-spec.json",
+      "references/workflows/release.md",
+      "scripts/check-coding-hygiene.js",
+      "scripts/check-doc-parity.js",
+      "scripts/check-layout-sync.js",
+      "scripts/check-plan-delivery.js",
+      "scripts/check-role-completeness.js",
+      "scripts/generate-governance.js",
+      "scripts/package-skill.sh",
+      "scripts/release-manager.js"
+    ],
+    "undecided": {}
   },
   "phases": {
     "A": {
@@ -85,7 +101,7 @@
     },
     "governance_version": {
       "type": "string",
-      "default": "0.12.0",
+      "default": "0.13.0",
       "description": "Governance framework version stamped into manifest/CHANGELOG"
     },
     "release_version": {
@@ -153,6 +169,20 @@
       "source": "references/policies/testing.policy.md",
       "type": "copy",
       "description": "Testing standards rules"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/governance-files.md",
+      "source": "references/policies/governance-files.policy.md",
+      "type": "copy",
+      "description": "Protected-files list and .governance/ git-tracking policy — the single source of truth that the installed scripts/check-doc-consistency.js reads at runtime, so it must exist inside the governed project (not only in the skill tarball)"
+    },
+    {
+      "phase": "A",
+      "path": "docs/features/_TEMPLATE.md",
+      "source": "references/templates/feature-doc.template.md",
+      "type": "copy",
+      "description": "Feature doc template with anti-fabrication rules — SKILL.md's Feature placeholder strategy tells the agent to copy this into docs/features/, so the governed project needs the file itself"
     },
     {
       "phase": "A",

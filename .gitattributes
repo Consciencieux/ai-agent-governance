@@ -1,0 +1,19 @@
+# Line endings — repository storage is LF for every text file.
+# Why this exists: the index is already 100% LF, but that only held because contributors
+# happened to have compatible core.autocrlf settings. Without this file a machine with
+# core.autocrlf=false (or =input on a CRLF working tree) can commit CRLF blobs, which
+# turns every later diff into a whole-file change. Declaring it here makes the rule
+# repository-owned instead of per-machine configuration.
+* text=auto eol=lf
+
+# Shell scripts must stay LF even on Windows checkouts (they run under sh/bash).
+*.sh text eol=lf
+
+# Binary — never touched by eol conversion.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.gz binary
+*.tar binary
+*.zip binary

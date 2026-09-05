@@ -13,14 +13,6 @@ module.exports = (test) => {
 // green, because tests only ever ran inside this repo where the helper sits next door.
 // Two layers: a static invariant check (precise) and an end-to-end run (trusts nothing).
 
-const SKILL_ROOT = path.join(__dirname, "..", "..");
-
-function copiedScriptSources() {
-  const spec = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "references", "init-spec.json"), "utf8"));
-  return spec.artifacts
-    .filter((a) => a.type === "copy" && a.path.startsWith("scripts/"))
-    .map((a) => ({ source: a.source, target: a.path }));
-}
 
 test("payload: copied gate scripts declare no local require (self-containment)", () => {
   const offenders = [];
@@ -90,4 +82,63 @@ test("payload: every copied gate script loads in a governed project (no MODULE_N
   return true;
 });
 
+
+test("payload: INIT installs the protected-files list the installed check reads", () => {
+    const dir = tmp("payload-protected-list");
+    const g = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "ProtList", "--phase", "C"], { encoding: "utf8" });
+    if (g.status !== 0) return false;
+    const installed = path.join(dir, "docs", "rules", "governance-files.md");
+    if (!fs.existsSync(installed)) return false;
+    const body = fs.readFileSync(installed, "utf8");
+    if (!body.includes("AGENTS.md") || !body.includes("check-secrets.js")) return false;
+    const run = spawnSync(process.execPath, [path.join(dir, "scripts", "check-doc-consistency.js"), "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+    if (run.status !== 0) return false;
+    return JSON.parse(run.stdout).gatePass === true;
+  });
+
+  test("payload: a governed project missing the protected list fails loudly, not silently", () => {
+    const dir = tmp("payload-protected-missing");
+    spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "NoList", "--phase", "C"], { encoding: "utf8" });
+    fs.unlinkSync(path.join(dir, "docs", "rules", "governance-files.md"));
+    const run = spawnSync(process.execPath, [path.join(dir, "scripts", "check-doc-consistency.js"), "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+    if (run.status !== 1) return false;
+    return JSON.parse(run.stdout).issues.protected_lists.some((i) => i.includes("source missing"));
+  });
+
+  test("payload: INIT installs the feature-doc template SKILL.md tells agents to copy", () => {
+    const dir = tmp("payload-feature-template");
+    const g = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "FeatTpl", "--phase", "C"], { encoding: "utf8" });
+    if (g.status !== 0) return false;
+    const tpl = path.join(dir, "docs", "features", "_TEMPLATE.md");
+    if (!fs.existsSync(tpl)) return false;
+    const body = fs.readFileSync(tpl, "utf8");
+    // content check, not mere existence: the anti-fabrication contract must travel with it
+    return /PLACEHOLDER/.test(body) && body.length > 200;
+  });
+
+  test("role completeness: every file under references/ and scripts/ carries a declared role", () => {
+    const ROLE_CHECK = path.join(__dirname, "..", "..", "scripts", "check-role-completeness.js");
+    const repo = path.join(__dirname, "..", "..");
+    const r = spawnSync(process.execPath, [ROLE_CHECK, "--gate", "--json"], { cwd: repo, encoding: "utf8" });
+    if (r.status !== 0) return false;
+    const o = JSON.parse(r.stdout);
+    return o.gatePass === true && o.counts.undecided === 0 && o.counts.installed > 0 && o.counts.skillInternal > 0;
+  });
+
+  test("role completeness: an unclassified file under scripts/ fails the gate", () => {
+    const ROLE_CHECK = path.join(__dirname, "..", "..", "scripts", "check-role-completeness.js");
+    const dir = tmp("role-unclassified");
+    fs.mkdirSync(path.join(dir, "references", "policies"), { recursive: true });
+    fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+    write(path.join(dir, "references", "policies", "x.policy.md"), "# x\n");
+    write(path.join(dir, "scripts", "stray.js"), "// unclassified\n");
+    write(path.join(dir, "scripts", "package-skill.sh"), 'cp SKILL.md "$STAGING/"\ncp -R references "$STAGING/"\ncp -R scripts "$STAGING/"\n');
+    write(path.join(dir, "references", "init-spec.json"), JSON.stringify({
+      artifacts: [{ path: "docs/rules/x.md", source: "references/policies/x.policy.md", type: "copy" }],
+      distribution: { skillInternal: ["references/init-spec.json", "scripts/package-skill.sh"], undecided: {} },
+    }));
+    const r = spawnSync(process.execPath, [ROLE_CHECK, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+    if (r.status !== 1) return false;
+    return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "unclassified" && g.item.includes("stray.js"));
+  });
 };

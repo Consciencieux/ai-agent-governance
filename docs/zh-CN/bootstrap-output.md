@@ -13,10 +13,11 @@ INIT 脚本化生成器（`scripts/generate-governance.js`）为被治理项目�
 | docs/rules/security.md | references/policies/security.policy.md |
 | docs/rules/coding.md | references/policies/coding.policy.md |
 | docs/rules/testing.md | references/policies/testing.policy.md |
+| docs/rules/governance-files.md | references/policies/governance-files.policy.md |
 | AGENTS.md | references/templates/agents-md.template.md（占位符已解析） |
 | CHANGELOG.md | 静态（Keep a Changelog，含 Unreleased 段） |
 | README.md | 静态引导 + 文档索引 |
-| docs/features/ | 目录占位（登记真实功能前为空） |
+| docs/features/ | 目录占位 + _TEMPLATE.md（功能模板，含反虚构规则） |
 | docs/plans/ + docs/plans/archive/ | 目录（归档按生命周期 Phase 5） |
 | docs/plans/DEVELOPMENT_PLAN.md | 静态里程碑计划 |
 | docs/ARCHITECTURE.md | 静态骨架（组件登记表 + ADR） |

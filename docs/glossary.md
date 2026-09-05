@@ -102,6 +102,9 @@
 | trilingual | 三语 | 三語 |  |  |
 | glossary | 术语表 | 術語表 | 術語表 | 术语表 |
 | terminology gate | 术语门禁 | 術語門禁 |  |  |
+| INSTALLED (role) | 安装到被治理项目 | 安裝到被治理專案 |  |  |
+| SKILL-INTERNAL (role) | 随 tarball 但不安装 | 隨 tarball 但不安裝 |  |  |
+| REPO-ONLY (role) | 仅本仓库 | 僅本倉庫 |  |  |
 | engineering restraint | 工程克制 | 工程克制 |  |  |
 | machinery test | 机制测试 | 機制測試 |  |  |
 | overengineering | 过度工程 | 過度工程 |  |  |

@@ -5,6 +5,7 @@
 - 遵循项目既有代码风格与格式化配置（Formatter/Lint 配置为基准，不自定义风格）
 - 命名：按语言惯例（camelCase / snake_case / PascalCase），保持一致
 - 保持向后兼容；不因重构热情破坏公共接口
+- **行尾由仓库声明，不靠每台机器的 Git 配置**：仓库根应提供 `.gitattributes`（`* text=auto eol=lf`，`*.sh` 强制 LF，二进制后缀标 `binary`）。理由是 `core.autocrlf` 是**本机**设置——一台配置不同的机器就能提交 CRLF blob，使之后每次 diff 变成整文件改动。没有 Formatter/Lint 配置的项目（如纯脚本仓库）也应至少有这一条，因为它约束的是仓库存储而非编辑器行为。**注意**：本 skill 的 INIT 当前不生成 `.gitattributes`，被治理项目需自行添加（本仓库的 `.gitattributes` 可作为模板参考）。
 
 ## 结构与依赖
 

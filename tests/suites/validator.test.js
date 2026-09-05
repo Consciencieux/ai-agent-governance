@@ -12,32 +12,6 @@ test("empty project exits 1 (governance missing)", () => {
   return r.status === 1;
 });
 
-function buildFullDefault(dir) {
-  const dirs = ["docs/features", "docs/plans", "docs/rules", ".governance", ".github/workflows", "scripts"];
-  for (const d of dirs) fs.mkdirSync(path.join(dir, d), { recursive: true });
-  const files = [
-    ["AGENTS.md", "x"],
-    ["CHANGELOG.md", "## [Unreleased]\n"],
-    ["docs/ARCHITECTURE.md", "# Arch\n\n## Component Registry\n\n| Component | Responsibility | Dependencies | Entry |\n| --- | --- | --- | --- |\n| auth | login | db | src/auth.ts |\n"],
-    ["docs/features/auth.md", "x"],
-    ["docs/plans/DEVELOPMENT_PLAN.md", "x"],
-    ["docs/rules/lifecycle.md", "x"],
-    [".gitignore", "x"],
-    [".env.example", "x"],
-    [".github/workflows/ci.yml", "x"],
-    [".governance/state.json", "{}"],
-    [".governance/preflight.json", "{}"],
-  ];
-  for (const [p, c] of files) write(path.join(dir, p), c);
-  write(path.join(dir, ".governance/manifest.json"), JSON.stringify({ governance_version: "1.0.0", artifacts: [] }));
-  write(path.join(dir, ".governance/git-policy.json"), JSON.stringify({ protectedBranches: ["main", "master"], directPush: false, requireReview: true, allowForcePush: false }));
-  fs.copyFileSync(VALIDATOR, path.join(dir, "scripts/verify-governance.js"));
-  fs.copyFileSync(LOCK_CHECK, path.join(dir, "scripts/check-lock.js"));
-  fs.copyFileSync(GIT_POLICY_CHECK, path.join(dir, "scripts/check-git-policy.js"));
-  fs.copyFileSync(SECRET_CHECK, path.join(dir, "scripts/check-secrets.js"));
-  fs.copyFileSync(SYNC_CHECK, path.join(dir, "scripts/check-sync.js"));
-}
-
 test("full default structure exits 0 (defaults mode)", () => {
   const dir = tmp("full");
   buildFullDefault(dir);

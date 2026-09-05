@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented here.
 
+## [0.13.0] - 2026-09-05
+
+### Added
+
+- **Repository-owned line endings** — new `.gitattributes` (`* text=auto eol=lf`, `*.sh` forced LF, binary suffixes marked) plus the matching rule in `references/policies/coding.policy.md`. The index was already 100% LF, but only because contributors happened to have compatible `core.autocrlf` values — a machine configured differently could commit CRLF blobs and turn later diffs into whole-file changes.
+- **Distribution-role completeness gate** — new `scripts/check-role-completeness.js` (SKILL-INTERNAL, wired into `npm run check` via `--gate`): every file under `references/` + `scripts/` must be classified as INSTALLED (in `init-spec.json` artifact `source`) or SKILL-INTERNAL (in `distribution.skillInternal`); no overlap, no stale declarations, and the packaging boundary (`package-skill.sh` copy list) must match the union of both roles. Two previously unclassified files (`governance-files.policy.md`, `feature-doc.template.md`) adjudicated into INSTALLED — the former is the protected-files list that the installed `check-doc-consistency.js` reads at runtime (now also installed as `docs/rules/governance-files.md`), the latter is the feature-doc template `SKILL.md` already tells agents to copy.
+- **Scope-tiered verification entries** — `npm run check:docs` / `check:payload` / `check:tests` / `check:full` supplement the full `npm run check`, so agents can run only the gates relevant to their change scope. `AGENTS.md` validation section rewritten with a scope table, evidence tiers (mechanical / human-attested / unverified), and an "escalate on uncertain scope" rule.
+
+### Changed
+
+- **Test helper consolidation (anti-patch plan §3, batch 2)** — the 17 helper functions and 7 path/text constants that batch 1 left duplicated between `tests/run-tests.js` and the suites now live once in `tests/support/helpers.js`; the entry is down to 56 lines (runner + summary + support mirroring) and every duplicate definition is gone (verified: 0 duplicate helpers, 0 duplicate consts).
+- **`check-doc-consistency.js` evidence tiers** — `--json` output now includes an `evidence` field mapping each cluster to `mechanical` / `human-attested` / `unverified`. Responsibility frozen: new checks may only be added when existing scripts cannot host them.
+- **`docs/{en,zh-CN,zh-TW}/architecture.md`** — distribution-role table no longer carries hand-maintained counts (point to `check-role-completeness.js --gate` output instead). `docs/{en,zh-CN,zh-TW}/bootstrap-output.md` — Phase A artifact table updated to reflect the two new INSTALLED files.
+
+### Fixed
+
+- **`check-doc-consistency.js` principles-index false positive** — check 9 scanned every Markdown table row in `AGENTS.md` for backticked paths, so the scope-tiering table's `architecture.md` (a bare filename in a "when to use" cell, not a pointer) was read as a broken index pointer and turned `npm run check` red. The scan is now scoped to rows whose Scope column holds a known value (`payload` / `both` / `repo`), which is what distinguishes the principles index from the other tables in the file.
+
 ## [0.12.0] - 2026-09-04
 
 ### Added
@@ -14,7 +32,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **Test architecture split** — the 2503-line `tests/run-tests.js` monolith became a single discovery entry (runner + shared helpers + summary) plus eight domain suites under `tests/suites/` (validator, security, consistency, docs, release, generator, payload, hygiene). Migration was verbatim and set-reconciled: the 180 pre-split test names match the post-split set exactly (0 missing, 0 extra), then grew to 188 with the new hygiene coverage. Batch 2 (consolidating shared helpers into `tests/support/`) is deliberately deferred — the shared scope is preserved so behavior and output stay identical. Anti-patch plan §3.
+- **Test architecture split** — the 2503-line `tests/run-tests.js` monolith became a single discovery entry (runner + shared helpers + summary) plus eight domain suites under `tests/suites/` (validator, security, consistency, docs, release, generator, payload, hygiene). Migration was verbatim and set-reconciled: the 180 pre-split test names match the post-split set exactly (0 missing, 0 extra), then grew to 193 with the hygiene, role-completeness and payload coverage. Batch 2 (consolidating shared helpers into `tests/support/`) is deliberately deferred — the shared scope is preserved so behavior and output stay identical. Anti-patch plan §3.
 - **ADR-0007** records the governance-plan architecture: engineering restraint and anti-patch stay independent with orthogonal trigger conditions (adding machinery vs handling repeated failure), bridged by boundary clauses only — no hierarchy, no third authority source.
 
 ### Fixed

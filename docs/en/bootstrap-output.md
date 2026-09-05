@@ -13,10 +13,11 @@ The INIT scripted generator (`scripts/generate-governance.js`) produces a determ
 | docs/rules/security.md | references/policies/security.policy.md |
 | docs/rules/coding.md | references/policies/coding.policy.md |
 | docs/rules/testing.md | references/policies/testing.policy.md |
+| docs/rules/governance-files.md | references/policies/governance-files.policy.md |
 | AGENTS.md | references/templates/agents-md.template.md (placeholders resolved) |
 | CHANGELOG.md | static (Keep a Changelog, Unreleased section) |
 | README.md | static bootstrap with documentation index |
-| docs/features/ | dir placeholder (empty until real features registered) |
+| docs/features/ | dir placeholder + _TEMPLATE.md (feature template with anti-fabrication rules) |
 | docs/plans/ + docs/plans/archive/ | dirs (archive per Lifecycle Phase 5) |
 | docs/plans/DEVELOPMENT_PLAN.md | static milestone plan |
 | docs/ARCHITECTURE.md | static skeleton (component registry + ADRs) |

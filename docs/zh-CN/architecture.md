@@ -6,16 +6,33 @@
 
 skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计原则）定义在 skill 本体里，不在本页：见 [SKILL.md](../../SKILL.md) 与 `references/`。本页只记录文件都放在哪里。
 
+### 三种分发角色（给任何文件归类前先读这里）
+
+"载荷（payload）"过去同时指三件不同的事——这正是一个仓库专用工具被标成"NOT payload"却放在 `scripts/` 里、以及一个子技能引用了被治理项目根本收不到的工作流文件的原因。改用下面三个互斥角色名；`references/init-spec.json` 是判定角色的机器可读权威：
+
+| 角色 | 定义 | 如何核验 | 例子 |
+| --- | --- | --- | --- |
+| **INSTALLED（安装到被治理项目）** | INIT 把它写进被治理项目（copy / template / generated）。该项目的 Agent 在运行期读它。 | 在 `init-spec.json` 中作为 `source` 出现（当前数量见 `check-role-completeness.js --gate` 输出） | `references/policies/coding.policy.md` → `docs/rules/coding.md`；`scripts/check-secrets.js`；`agents-md.template.md` → `AGENTS.md` |
+| **SKILL-INTERNAL（随 tarball 但不安装）** | 随 tarball 分发（打包整目录复制 `references/` + `scripts/`）且由 **skill 执行器**读取——但 INIT 从不安装它，所以被治理项目里没有这个文件。 | 在 `init-spec.json` 的 `distribution.skillInternal` 中列出 | `references/workflows/release.md`、`references/init-spec.json`、`scripts/generate-governance.js`、`scripts/release-manager.js`、`scripts/package-skill.sh`，以及仅本仓库运行的门禁（`check-doc-parity`、`check-layout-sync`、`check-plan-delivery`、`check-coding-hygiene`、`check-role-completeness`） |
+| **REPO-ONLY（仅本仓库）** | 完全不进 tarball。约束在本仓库上的工作。 | 在 `references/`/`scripts/`/`SKILL.md`/`LICENSE` 之外 | `AGENTS.md`、`docs/**`、`tests/**`、`package.json`、`.github/**`、`.gitattributes` |
+
+角色是**人的决定，绝不推断**：`copy`/`template`/`generated`、重命名（`lifecycle.policy.md` → `docs/rules/lifecycle.md`、`verify_governance.js` → `verify-governance.js`）、一对多输出（`githooks-template.md` → `pre-commit` + `commit-msg`）以及 13 条内嵌静态内容工件，都编码了生成器无法从文件树恢复的契约决定。**可机械化的只是抓漏**：`scripts/check-role-completeness.js --gate` 会在出现未分类文件、同时属于两个集合、声明路径已不存在、或角色声明与 `package-skill.sh` 实际打包不符时失败。角色确实未决的文件放进 `distribution.undecided` 并记录待裁定问题，该门禁保持红色直到裁定——目前是 `governance-files.policy.md`（一个 INSTALLED 的检查器读它，但它自己没被安装）与 `feature-doc.template.md`（SKILL.md 让 Agent 复制一个被治理项目没有的文件）。
+
+由此得出两条规则，且在本表存在之前两条都被违反过：
+
+1. **SKILL-INTERNAL 文件绝不能被当作被治理项目的规则来源引用**（那里没有这个文件）。子技能与生成的 AGENTS.md 文本只能指向 INSTALLED 路径——`docs/rules/*`、被治理项目自己的 `AGENTS.md`、或复制过去的 `scripts/*`。
+2. **SKILL-INTERNAL 脚本在本仓库形态之外必须 no-op**，因为打包仍会带上它。`check-coding-hygiene.js` 的做法是：缺少套件布局时报告 `applicable: false`。
+
 ### 目录职责
 
 | 路径 | 职责 | 读者 | 语言 |
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill 入口 / 产品规范 | agent（skill 使用者） | 单语 |
-| `references/` | **Skill 主体——skill 行为唯一存放处。** 复制进被治理项目、或定义 skill 如何行动的策略、模板、工作流。 | agent（skill 使用者） | 单语 |
-| `scripts/` | Skill 运行时脚本（校验器、检查、生成器、发布工具）——属于安装载荷 | agent/CI | 代码 |
-| `LICENSE` | MIT 许可证——属于安装载荷 | 安装者 | — |
-| `docs/` | **项目知识。不属于 skill 载荷。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、路线图、术语表。 | 开发者 + Agent | 三语 |
-| `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`CONTRIBUTING.md`、`README.md`、`AGENTS.md` | 仓库基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
+| `references/` | **Skill 主体——skill 行为唯一存放处。** INSTALLED 与 SKILL-INTERNAL 混装（见角色表）。 | agent（skill 使用者） | 单语 |
+| `scripts/` | Skill 运行时脚本。同样混装：7 个是 INSTALLED（复制进被治理项目），其余是只在本仓库运行的 SKILL-INTERNAL 工具。 | agent/CI | 代码 |
+| `LICENSE` | MIT 许可证——随 tarball 分发 | 安装者 | — |
+| `docs/` | **项目知识。REPO-ONLY。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、路线图、术语表。 | 开发者 + Agent | 三语 |
+| `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`CONTRIBUTING.md`、`README.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
 
 ### 仓库布局
 
@@ -45,7 +62,8 @@ ai-agent-governance/
 │   ├── check-git-policy.js     # Git 工作流门禁（受保护分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # 密钥扫描门禁（暂存区扫描，绝不打印密钥）
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）
-│   ├── check-coding-hygiene.js # 编码卫生（repo-infra：测试归属 + 残留标记，§5）
+│   ├── check-coding-hygiene.js # 编码卫生（SKILL-INTERNAL：测试归属 + 残留标记）
+│   ├── check-role-completeness.js # 分发角色完整性（SKILL-INTERNAL：未分类/重叠/失效路径/打包边界）
 │   ├── check-doc-freshness.js  # 文档过时度 + 译文新鲜度（git log 日期；建议性，--release-gate 阻断过时/draft 译文）
 │   ├── check-doc-consistency.js # 文档一致性 + consent/受保护清单/原则索引/计划状态/术语簇（默认建议性；--gate/--release-gate fail-closed；changelog 覆盖仅 --release-gate fail-closed）
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
@@ -83,7 +101,8 @@ ai-agent-governance/
 ├── package.json                # npm 脚本（test、check）
 ├── .github/                    # CI 工作流
 └── tests/
-    ├── run-tests.js            # 单一发现入口：runner + 共享 helper + 汇总
+    ├── run-tests.js            # 单一发现入口：仅 runner + 汇总
+    ├── support/helpers.js      # 共享 fixture、git 辅助、脚本路径常量、临时根生命周期
     └── suites/                 # 领域套件（validator、security、consistency、docs、
                                 # release、generator、payload、hygiene）——见反补丁计划 §3
 ```

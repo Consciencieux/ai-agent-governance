@@ -29,6 +29,16 @@
 //      only; trigger words quoted in source form are deliberate and stay unregistered).
 //      A glossary that exists but cannot be parsed is reported, never silently skipped.
 //
+// FROZEN RESPONSIBILITY: this script performs only the cross-document fact consistency
+// checks listed above. A new check may create a standalone script only when the existing
+// scripts' responsibility, input and failure semantics cannot host it; otherwise the
+// addition is refused. Decision: every cluster here is a "mechanical evidence" check
+// (marker, structure, path, regex) — see the `evidence` field in --json output.
+//
+// Evidence tiers: mechanical = structure/marker/path/regex; human-attested = review
+// approval; unverified = declaration with no independent verification.
+// Pass means "mechanical condition satisfied", not "behavior is correct".
+//
 // Modes: default = advisory, ALWAYS exit 0 (heuristics, not a gate).
 //        --gate  = fail-closed on the mechanically checkable clusters ONLY (#2, #8, #10's
 //                  unknown status and #12); the other heuristics still report
@@ -295,12 +305,35 @@ function main() {
   }
 
   // ---- 2. protected-files sync ----
-  // Single source of truth: references/policies/governance-files.policy.md table.
-  const policy = readFile(path.join(ROOT, "references", "policies", "governance-files.policy.md")) || "";
+  // Single source of truth for the protected-files table. This script is INSTALLED into
+  // governed projects, where the skill's references/ tree does not exist — there the list
+  // lives at docs/rules/governance-files.md (INIT installs it). Try the governed-project
+  // path first, then the skill-repo path. If NEITHER exists the check reports a missing
+  // source instead of silently finding 0 protected paths and looking green.
+  const policyCandidates = [
+    path.join(ROOT, "docs", "rules", "governance-files.md"),
+    path.join(ROOT, "references", "policies", "governance-files.policy.md"),
+  ];
+  const policyPath = policyCandidates.find((p) => fs.existsSync(p));
+  const policy = policyPath ? readFile(policyPath) || "" : "";
+  if (!policyPath) {
+    const item = "protected-files source missing: neither docs/rules/governance-files.md nor references/policies/governance-files.policy.md exists — the protected-list cluster cannot run";
+    issues.protected_lists.push(item);
+    // release-gate blocks: a governed project with a docs/rules/ tree that lacks the
+    // protected-files source is a distribution contract defect. Fixtures without docs/rules/
+    // (the skill repo itself, minimal test fixtures) are not subject to this check.
+    if (releaseGate && fs.existsSync(path.join(ROOT, "docs/rules"))) gateIssues.push({ kind: "protected_lists", item });
+  }
   const protectedPaths = [];
   const tableRe = /^\|\s*`([^`]+)`\s*\|/gm;
   let tm;
-  while ((tm = tableRe.exec(policy))) {
+  // Only parse the FIRST table (the protected-files list under ## 受保护文件). The
+  // second table (## .governance/ Git 跟踪策略) lists git-tracking status, not
+  // governance file protection — entries like "docs/plans/archive/" from that table
+  // would otherwise be demanded from every AGENTS.md summary (found by review).
+  const firstTableEnd = policy.search(/\n## /);
+  const tableScope = firstTableEnd > 0 ? policy.slice(0, firstTableEnd) : policy;
+  while ((tm = tableRe.exec(tableScope))) {
     const p = tm[1].replace(/\*\*/g, "").split("/")[0];
     if (p === "AGENTS.md" || p === "CLAUDE.md" || p.startsWith("docs") || p.startsWith(".governance") || p.startsWith("scripts") || p === "opencode.json" || p.startsWith(".github")) {
       protectedPaths.push(tm[1]);
@@ -311,7 +344,7 @@ function main() {
     for (const f of summaries) {
       const c = readFile(path.join(ROOT, f));
       if (!c) continue;
-      if (f.includes("governance-files.policy.md") || f.includes("adr-000")) continue;
+      if (f.includes("governance-files.policy.md") || f.includes("governance-files.md") || f.includes("adr-000")) continue;
       const mentionsFlow = /治理文件保护|Governance File Protection|Governance file protection/i.test(c);
       if (mentionsFlow) {
         // Trigger tightening (P1 precondition): only documents that CLAIM to enumerate
@@ -360,13 +393,22 @@ function main() {
   // The AGENTS.md index is pointers-only by design, so a moved or renamed source silently
   // turns each row into a false claim. Assert every referenced file exists. Runs only where
   // the index exists (this repo); governed projects have no such index and are skipped.
+  // Scope: only the 4-column principles index table (columns: Principle | Source | Scope).
+  // Other tables in AGENTS.md (scope tiering, evidence tiers) also have backtick-delimited
+  // paths in their cells but are NOT the principles index — scanning them produces false
+  // positives (e.g. the scope table's "architecture.md" in the "when to use" column).
   const agentsDoc = readFile(path.join(ROOT, "AGENTS.md"));
   if (agentsDoc && /Governance principles index/i.test(agentsDoc)) {
     const bt = String.fromCharCode(96);
     const fileRe = new RegExp(bt + "([^" + bt + "]+)" + bt, "g");
+    const VALID_SCOPES = ["payload", "both", "repo"];
     for (const line of agentsDoc.split("\n")) {
       if (!line.startsWith("| ") || line.startsWith("| ---") || line.startsWith("| Principle")) continue;
       const cells = line.split("|").map((s) => s.trim());
+      // Only process rows where the Scope column (cells[3]) matches a known scope value —
+      // this distinguishes the principles index table from other tables in AGENTS.md.
+      const scope = (cells[3] || "").toLowerCase();
+      if (!VALID_SCOPES.includes(scope)) continue;
       const source = cells[2] || "";
       let fm;
       fileRe.lastIndex = 0;
@@ -530,7 +572,16 @@ function main() {
   }
 
   const pendingArchive = planStatuses.filter((p) => p.status === "implemented" || p.status === "completed").length;
-  const report = { timestamp: new Date().toISOString(), version, issues, parity: parityPass, gate: anyGate, releaseGate, gatePass: gateIssues.length === 0, gateIssues, planStatuses, pendingArchive, termsRegistered };
+  const EVIDENCE = {
+    version_examples: "mechanical", protected_lists: "mechanical", adr_statuses: "mechanical",
+    broken_links: "mechanical", numeric_claims: "mechanical", prompt_sync: "mechanical",
+    terminology_usage: "mechanical", changelog_coverage: "mechanical",
+    plans_status_unknown: "mechanical", plans_pending_archive: "mechanical",
+  };
+  // Note: consent_cluster, principles_index and trilingual_trees are also gate/mechanical
+  // but live only in gateIssues, not in the issues object — they are excluded from the
+  // evidence map so the --json output keys stay aligned with issues keys.
+  const report = { timestamp: new Date().toISOString(), version, issues, evidence: EVIDENCE, parity: parityPass, gate: anyGate, releaseGate, gatePass: gateIssues.length === 0, gateIssues, planStatuses, pendingArchive, termsRegistered };
 
   // Append to drift-report.json if present (runtime output, optional)
   try {

@@ -3,40 +3,10 @@
 
 
 const { spawnSync } = require("child_process");
-const fs = require("fs");
 const path = require("path");
 
 module.exports = (test) => {
 
-const RELEASE_TOOL = path.join(__dirname, "..", "..", "scripts", "release-manager.js");
-
-function runRelease(dir, args = []) {
-  return spawnSync(process.execPath, [RELEASE_TOOL, ...args], { cwd: dir, encoding: "utf8" });
-}
-
-function planChanges(current, changes) {
-  return runRelease(TMP_ROOT, ["plan", "--json", JSON.stringify({ current, changes })]);
-}
-
-function gitInit(dir) {
-  spawnSync("git", ["init", "-q"], { cwd: dir });
-  spawnSync("git", ["config", "user.email", "test@example.com"], { cwd: dir });
-  spawnSync("git", ["config", "user.name", "Test"], { cwd: dir });
-  write(path.join(dir, ".gitignore"), ".governance/\n");
-  write(path.join(dir, "file.txt"), "x");
-  spawnSync("git", ["add", "."], { cwd: dir });
-  spawnSync("git", ["commit", "-q", "-m", "init"], { cwd: dir });
-}
-
-function gitHead(dir) {
-  const r = spawnSync("git", ["rev-parse", "HEAD"], { cwd: dir, encoding: "utf8" });
-  return String(r.stdout || "").trim();
-}
-
-function gitTags(dir) {
-  const r = spawnSync("git", ["tag", "-l"], { cwd: dir, encoding: "utf8" });
-  return String(r.stdout || "").trim();
-}
 
 test("release plan: README-scale doc changes recommend patch", () => {
   const r = planChanges("1.2.3", [{ type: "docs", description: "rewrite README" }]);
