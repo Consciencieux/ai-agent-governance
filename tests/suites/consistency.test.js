@@ -257,7 +257,7 @@ test("doc consistency: numeric claim mismatch with validator source is flagged",
 test("doc consistency: parity unavailable is reported, not claimed as pass", () => {
   const dir = tmp("consistency-noparity");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  // no scripts/check-doc-parity.js in this fixture
+  // no repo-tools/check-doc-parity.js in this fixture
   const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
   return r.status === 0 && out.parity === "unavailable";

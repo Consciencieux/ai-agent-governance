@@ -2,7 +2,8 @@
 // PAYLOAD SCRIPT — copied standalone into governed projects (references/init-spec.json).
 // Keep it self-contained: Node builtins only, never require() a sibling module.
 // Governance Validator — plain Node, no dependencies.
-// Usage: node scripts/verify_governance.js [--json]
+// Usage: node scripts/verify-governance.js [--json]   (installed name; this file is
+//        verify_governance.js in the skill repo and is copied to the hyphen form)
 // Paths come from .governance/manifest.json when present (structure-adaptive);
 // otherwise built-in defaults are used.
 // Exit code 0 when every governance artifact exists, 1 otherwise.

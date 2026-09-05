@@ -12,9 +12,10 @@ const GIT_POLICY_CHECK = path.join(__dirname, "..", "..", "scripts", "check-git-
 const SECRET_CHECK = path.join(__dirname, "..", "..", "scripts", "check-secrets.js");
 const SYNC_CHECK = path.join(__dirname, "..", "..", "scripts", "check-sync.js");
 const GENERATOR = path.join(__dirname, "..", "..", "scripts", "generate-governance.js");
-const LAYOUT_CHECK = path.join(__dirname, "..", "..", "scripts", "check-layout-sync.js");
-const PLAN_DELIVERY = path.join(__dirname, "..", "..", "scripts", "check-plan-delivery.js");
-const PARITY_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc-parity.js");
+const LAYOUT_CHECK = path.join(__dirname, "..", "..", "repo-tools", "check-layout-sync.js");
+const ROLE_CHECK = path.join(__dirname, "..", "..", "repo-tools", "check-role-completeness.js");
+const PLAN_DELIVERY = path.join(__dirname, "..", "..", "repo-tools", "check-plan-delivery.js");
+const PARITY_CHECK = path.join(__dirname, "..", "..", "repo-tools", "check-doc-parity.js");
 const FRESHNESS_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc-freshness.js");
 const CONSISTENCY_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc-consistency.js");
 const RELEASE_TOOL = path.join(__dirname, "..", "..", "scripts", "release-manager.js");
@@ -160,14 +161,34 @@ function listFiles(dir) {
   return out.sort();
 }
 
+// The layout gate scans four directories since the payload/repo-tools boundary split,
+// and each must contribute files (the half-scan guard). A fixture that only creates
+// references/ + scripts/ would trip that guard rather than exercise the tree comparison,
+// so seed all four and let the caller's treeFiles decide what the docs claim.
+const LAYOUT_SCANNED_DIRS = ["references", "scripts", "repo-tools", "repo-workflows"];
+
 function buildLayoutRepo(dir, treeFiles) {
   fs.mkdirSync(path.join(dir, "docs/en"), { recursive: true });
   fs.mkdirSync(path.join(dir, "docs/zh-CN"), { recursive: true });
   fs.mkdirSync(path.join(dir, "docs/zh-TW"), { recursive: true });
   fs.mkdirSync(path.join(dir, "references/templates"), { recursive: true });
   fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "repo-tools"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "repo-workflows"), { recursive: true });
+  const declared = new Set(treeFiles);
+  // every scanned dir needs at least one file, and it must be documented, or the gate
+  // fails for a reason the test is not about
+  const seeded = [];
+  for (const d of ["repo-tools", "repo-workflows"]) {
+    if (!treeFiles.some((f) => f.startsWith(d + "/"))) {
+      const seed = d + "/seed.js";
+      fs.writeFileSync(path.join(dir, seed), "x", "utf8");
+      seeded.push(seed);
+    }
+  }
+  treeFiles = [...treeFiles, ...seeded];
   for (const f of treeFiles) {
-    if (f.startsWith("references/") || f.startsWith("scripts/")) {
+    if (LAYOUT_SCANNED_DIRS.some((d) => f.startsWith(d + "/"))) {
       fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true });
       fs.writeFileSync(path.join(dir, f), "x", "utf8");
     }
@@ -233,4 +254,4 @@ function linkDir(target, linkPath) {
 
 
 
-module.exports = { VALIDATOR, LOCK_CHECK, GIT_POLICY_CHECK, SECRET_CHECK, SYNC_CHECK, GENERATOR, LAYOUT_CHECK, PLAN_DELIVERY, PARITY_CHECK, FRESHNESS_CHECK, CONSISTENCY_CHECK, RELEASE_TOOL, SKILL_ROOT, CONSISTENCY, CONSENT_THREE_MARKERS_TEXT, TMP_ROOT, tmp, write, assemble, run, cleanup, buildFullDefault, buildParityTrees, gitCommitAt, buildFreshnessFixture, runRelease, planChanges, buildI18nFixture, gitInit, gitHead, gitTags, listFiles, buildLayoutRepo, buildPlanRepo, findPosixShell, copiedScriptSources, writeConsentSyncPoint, linkDir };
+module.exports = { VALIDATOR, LOCK_CHECK, GIT_POLICY_CHECK, SECRET_CHECK, SYNC_CHECK, GENERATOR, LAYOUT_CHECK, ROLE_CHECK, PLAN_DELIVERY, PARITY_CHECK, FRESHNESS_CHECK, CONSISTENCY_CHECK, RELEASE_TOOL, SKILL_ROOT, CONSISTENCY, CONSENT_THREE_MARKERS_TEXT, TMP_ROOT, tmp, write, assemble, run, cleanup, buildFullDefault, buildParityTrees, gitCommitAt, buildFreshnessFixture, runRelease, planChanges, buildI18nFixture, gitInit, gitHead, gitTags, listFiles, buildLayoutRepo, buildPlanRepo, findPosixShell, copiedScriptSources, writeConsentSyncPoint, linkDir };

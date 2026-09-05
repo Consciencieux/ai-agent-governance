@@ -117,7 +117,7 @@ test("payload: INIT installs the protected-files list the installed check reads"
   });
 
   test("role completeness: every file under references/ and scripts/ carries a declared role", () => {
-    const ROLE_CHECK = path.join(__dirname, "..", "..", "scripts", "check-role-completeness.js");
+    const ROLE_CHECK = path.join(__dirname, "..", "..", "repo-tools", "check-role-completeness.js");
     const repo = path.join(__dirname, "..", "..");
     const r = spawnSync(process.execPath, [ROLE_CHECK, "--gate", "--json"], { cwd: repo, encoding: "utf8" });
     if (r.status !== 0) return false;
@@ -126,16 +126,16 @@ test("payload: INIT installs the protected-files list the installed check reads"
   });
 
   test("role completeness: an unclassified file under scripts/ fails the gate", () => {
-    const ROLE_CHECK = path.join(__dirname, "..", "..", "scripts", "check-role-completeness.js");
+    const ROLE_CHECK = path.join(__dirname, "..", "..", "repo-tools", "check-role-completeness.js");
     const dir = tmp("role-unclassified");
     fs.mkdirSync(path.join(dir, "references", "policies"), { recursive: true });
     fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
     write(path.join(dir, "references", "policies", "x.policy.md"), "# x\n");
     write(path.join(dir, "scripts", "stray.js"), "// unclassified\n");
-    write(path.join(dir, "scripts", "package-skill.sh"), 'cp SKILL.md "$STAGING/"\ncp -R references "$STAGING/"\ncp -R scripts "$STAGING/"\n');
+    write(path.join(dir, "repo-tools", "package-skill.sh"), 'cp SKILL.md "$STAGING/"\ncp -R references "$STAGING/"\ncp -R scripts "$STAGING/"\n');
     write(path.join(dir, "references", "init-spec.json"), JSON.stringify({
       artifacts: [{ path: "docs/rules/x.md", source: "references/policies/x.policy.md", type: "copy" }],
-      distribution: { skillInternal: ["references/init-spec.json", "scripts/package-skill.sh"], undecided: {} },
+      distribution: { skillInternal: ["references/init-spec.json", "repo-tools/package-skill.sh"], undecided: {} },
     }));
     const r = spawnSync(process.execPath, [ROLE_CHECK, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
     if (r.status !== 1) return false;
@@ -202,4 +202,281 @@ test("payload: INIT installs the protected-files list the installed check reads"
     const exec = spawnSync(process.execPath, ["scripts/release-manager.js", "execute", "--proposal", "p.json"], { cwd: dir, encoding: "utf8" });
     return exec.status !== 0 && /NOT approved/i.test(String(exec.stderr || exec.stdout));
   });
+
+// ---------------------------------------------------------------------------
+// Phase contract (N20). AGENTS.md is a Phase A artifact while the scripts it
+// commands are installed at Phase B/C, so a Phase A project used to receive an
+// AGENTS.md ordering it to run files that do not exist. The three regressions the
+// plan requires, plus the upgrade path that the first fix attempt broke.
+// ---------------------------------------------------------------------------
+
+const PHASE_GEN = path.join(SKILL_ROOT, "scripts", "generate-governance.js");
+
+function genPhase(dir, phase) {
+  return spawnSync(process.execPath, [PHASE_GEN, "--target", dir, "--project-name", "demo", "--phase", phase], { cwd: SKILL_ROOT, encoding: "utf8" });
+}
+function installedScripts(dir) {
+  const p = path.join(dir, "scripts");
+  return fs.existsSync(p) ? fs.readdirSync(p) : [];
+}
+// An EXECUTABLE instruction, per the plan's §3a grammar — not every mention of a path.
+// A line that tells the agent to run something ("run `node scripts/x.js`", "- `scripts/x.js`"
+// in the protected list) must resolve; a line that explains a script obligation is DEFERRED
+// is prose about the rule, and requiring it to resolve would forbid the very sentence that
+// warns the reader the script is absent.
+function commandedScriptsIn(text) {
+  const out = new Set();
+  for (const line of String(text).split("\n")) {
+    if (/\bdeferred, not waived\b/i.test(line)) continue;          // the Phase A deferral notice
+    if (/^\s*>/.test(line) && !/\brun\b/i.test(line)) continue;    // block-quoted explanation
+    for (const m of line.matchAll(/scripts\/([\w.-]+\.js)/g)) out.add(m[1]);
+  }
+  return [...out];
+}
+
+test("phase contract: Phase A AGENTS.md names no script Phase A does not install", () => {
+  const dir = tmp("phase-a-no-uninstalled");
+  if (genPhase(dir, "A").status !== 0) return false;
+  const body = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
+  const installed = installedScripts(dir);
+  const broken = commandedScriptsIn(body).filter((n) => !installed.includes(n));
+  if (broken.length > 0) {
+    console.error("  Phase A AGENTS.md commands uninstalled scripts: " + broken.join(", "));
+    return false;
+  }
+  return true;
+});
+
+test("phase contract: Phase A AGENTS.md is marked initialization-incomplete", () => {
+  const dir = tmp("phase-a-marked");
+  if (genPhase(dir, "A").status !== 0) return false;
+  const body = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
+  // and the deferral must be explicit: a missing gate is not a passed gate
+  return /initialization is incomplete/i.test(body) && /deferred, not waived/i.test(body);
+});
+
+test("phase contract: Phase B/C AGENTS.md carries the requirements for the scripts that stage installs", () => {
+  for (const phase of ["B", "C"]) {
+    const dir = tmp("phase-" + phase + "-carries");
+    if (genPhase(dir, phase).status !== 0) return false;
+    const body = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
+    if (/initialization is incomplete/i.test(body)) return false;
+    if (!/check-secrets\.js/.test(body)) return false;           // Phase B script
+    if (phase === "C" && !/check-doc-consistency\.js/.test(body)) return false; // Phase C script
+    const broken = commandedScriptsIn(body).filter((n) => !installedScripts(dir).includes(n));
+    if (broken.length > 0) {
+      console.error("  Phase " + phase + " names uninstalled: " + broken.join(", "));
+      return false;
+    }
+  }
+  return true;
+});
+
+// The first fix pruned the template but kept writeIfAbsent, so a project initialized at
+// Phase A kept the Phase A body forever: after A -> B -> C it still showed the bootstrap
+// banner and still lacked every gate requirement whose scripts had just been installed.
+// Staged artifacts must be upgraded, and the result must equal a fresh install.
+test("phase contract: A -> B -> C upgrades AGENTS.md to be byte-identical with a fresh Phase C install", () => {
+  const inc = tmp("phase-upgrade-inc");
+  for (const ph of ["A", "B", "C"]) if (genPhase(inc, ph).status !== 0) return false;
+  const fresh = tmp("phase-upgrade-fresh");
+  if (genPhase(fresh, "C").status !== 0) return false;
+  const a = fs.readFileSync(path.join(inc, "AGENTS.md"), "utf8");
+  const b = fs.readFileSync(path.join(fresh, "AGENTS.md"), "utf8");
+  if (a !== b) {
+    console.error("  incremental Phase C body differs from a fresh Phase C install");
+    return false;
+  }
+  return !/initialization is incomplete/i.test(a);
+});
+
+// The upgrade must never clobber human edits: only a byte-exact earlier-phase rendering
+// is replaced.
+test("phase contract: a locally modified AGENTS.md is never overwritten by a later phase", () => {
+  const dir = tmp("phase-local-edit");
+  if (genPhase(dir, "A").status !== 0) return false;
+  const marker = "\n<!-- operator's own rule -->\n";
+  fs.appendFileSync(path.join(dir, "AGENTS.md"), marker, "utf8");
+  if (genPhase(dir, "C").status !== 0) return false;
+  return fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8").includes("operator's own rule");
+});
+
+// ---------------------------------------------------------------------------
+// §3a/§3c — closure of the GENERATED project. The gates in this repo check
+// declarations, structure and paths; none of them resolves a reference in the place
+// it is actually read. These two do, on a real fixture: every executable instruction
+// must name a file the target HAS, and every relative link must stay inside it.
+// Scope is all generated governance text — AGENTS.md, docs/rules/*.md AND the
+// generated sub-skills, which is where two of the audited leaks lived.
+// ---------------------------------------------------------------------------
+
+function generatedProject(label) {
+  const dir = tmp(label);
+  const r = spawnSync(process.execPath, [PHASE_GEN, "--target", dir, "--project-name", "closure", "--phase", "C"], { cwd: SKILL_ROOT, encoding: "utf8" });
+  return r.status === 0 ? dir : null;
+}
+function markdownFiles(root) {
+  const out = [];
+  (function walk(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) { if (!/^(node_modules|\.git)$/.test(e.name)) walk(p); }
+      else if (e.name.endsWith(".md")) out.push(p);
+    }
+  })(root);
+  return out;
+}
+
+test("payload closure: every executable instruction in the generated project resolves there", () => {
+  const dir = generatedProject("closure-exec");
+  if (!dir) return false;
+  const offenders = [];
+  for (const file of markdownFiles(dir)) {
+    const rel = path.relative(dir, file).replace(/\\/g, "/");
+    fs.readFileSync(file, "utf8").split("\n").forEach((line, i) => {
+      // §3a grammar: only lines that TELL the agent to run something. Prose that explains
+      // a deferral or cites provenance is not an executable instruction.
+      if (/deferred, not waived/i.test(line)) return;
+      if (/^\s*>/.test(line) && !/\brun\b/i.test(line)) return;
+      const runsSomething = /(^|\s)(run|运行|執行)\b/i.test(line) || /^\s*[-*]\s*`?(node|bash)\s/.test(line) || /^\s*```/.test(line) === false && /`(node|bash) [\w./-]+`/.test(line);
+      for (const m of line.matchAll(/\b(?:node|bash)\s+(scripts\/[\w.-]+\.(?:js|sh))/g)) {
+        if (!fs.existsSync(path.join(dir, m[1]))) offenders.push(`${rel}:${i + 1} -> ${m[1]}`);
+      }
+      if (!runsSomething) return;
+      for (const m of line.matchAll(/`(scripts\/[\w.-]+\.(?:js|sh))`/g)) {
+        if (!fs.existsSync(path.join(dir, m[1]))) offenders.push(`${rel}:${i + 1} -> ${m[1]}`);
+      }
+    });
+  }
+  if (offenders.length) {
+    console.error("  instructions naming absent files:\n    " + [...new Set(offenders)].join("\n    "));
+    return false;
+  }
+  return true;
+});
+
+test("payload closure: no generated file points at a skill-repo-only path", () => {
+  const dir = generatedProject("closure-repoonly");
+  if (!dir) return false;
+  // This repo's own npm scripts. A governed project defines its OWN scripts (the generated
+  // AGENTS.md has a Development Commands section, and two sub-skills offer `npm run
+  // governance-check` as a registered-script alternative) — those are the target's, not
+  // ours, and flagging them would be a false positive. Only THIS repo's script names and
+  // payload-internal paths are leaks.
+  const repoScripts = Object.keys(JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8")).scripts || {});
+  const offenders = [];
+  for (const file of markdownFiles(dir)) {
+    const rel = path.relative(dir, file).replace(/\\/g, "/");
+    fs.readFileSync(file, "utf8").split("\n").forEach((line, i) => {
+      // `references/…` is renamed or not installed by INIT; docs/{en,zh-CN,zh-TW} is this
+      // repo's trilingual tree and does not exist in a governed project.
+      for (const m of line.matchAll(/`(references\/[\w./-]+|docs\/(?:en|zh-CN|zh-TW)\/[\w./-]+)`/g)) {
+        offenders.push(`${rel}:${i + 1} -> ${m[1]}`);
+      }
+      for (const m of line.matchAll(/`npm run ([\w:-]+)`/g)) {
+        if (repoScripts.includes(m[1])) offenders.push(`${rel}:${i + 1} -> npm run ${m[1]} (this repo's script)`);
+      }
+    });
+  }
+  if (offenders.length) {
+    console.error("  repo-only references inside the generated project:\n    " + [...new Set(offenders)].join("\n    "));
+    return false;
+  }
+  return true;
+});
+
+test("payload closure: every relative markdown link stays inside the generated project", () => {
+  const dir = generatedProject("closure-links");
+  if (!dir) return false;
+  const offenders = [];
+  for (const file of markdownFiles(dir)) {
+    const rel = path.relative(dir, file).replace(/\\/g, "/");
+    const base = path.dirname(file);
+    fs.readFileSync(file, "utf8").split("\n").forEach((line, i) => {
+      for (const m of line.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+        const href = m[1].trim();
+        if (/^(https?:|mailto:|#)/.test(href)) continue;
+        const clean = href.split("#")[0];
+        if (!clean) continue;
+        const resolved = path.resolve(base, clean);
+        if (!resolved.startsWith(path.resolve(dir))) { offenders.push(`${rel}:${i + 1} -> ${href} (escapes the project)`); continue; }
+        if (!fs.existsSync(resolved)) offenders.push(`${rel}:${i + 1} -> ${href} (dead)`);
+      }
+    });
+  }
+  if (offenders.length) {
+    console.error("  dead or escaping links:\n    " + [...new Set(offenders)].join("\n    "));
+    return false;
+  }
+  return true;
+});
+// ---------------------------------------------------------------------------
+// Boundary split (repository-boundary-split plan §5). The distribution boundary is
+// PHYSICAL: package-skill.sh copies whole directories, so what ships is decided by
+// where a file lives, not by what init-spec.json declares about it. Before the split,
+// 7 repo-maintenance files (skill-release.md, package-skill.sh and five repo-only
+// gates) shipped to every user purely because they sat under references/ or scripts/.
+// These tests assert the two layers agree: declarations == packaging.
+// ---------------------------------------------------------------------------
+
+test("boundary: tarball manifest equals the declared allow-set exactly", () => {
+  const sh = findPosixShell();
+  if (!sh) { console.error("  no POSIX shell available"); return false; }
+  const pack = spawnSync(sh, ["repo-tools/package-skill.sh", "0.0.0-test"], { cwd: SKILL_ROOT, encoding: "utf8" });
+  if (pack.status !== 0) { console.error("  packaging failed: " + (pack.stderr || "").slice(0, 200)); return false; }
+
+  const tarOut = spawnSync("tar", ["-tzf", path.join(SKILL_ROOT, "dist", "ai-agent-governance-skill.tar.gz")], { encoding: "utf8" });
+  if (tarOut.status !== 0) { console.error("  tar listing failed"); return false; }
+  // normalization: strip "./", force "/", drop directory entries
+  const members = String(tarOut.stdout).split(/\r?\n/).map((m) => m.trim()).filter(Boolean)
+    .map((m) => m.replace(/^\.\//, "").replace(/\\/g, "/"))
+    .filter((m) => m && !m.endsWith("/"));
+
+  const spec = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "references/init-spec.json"), "utf8"));
+  const declared = new Set(["SKILL.md", "LICENSE"]);
+  for (const a of spec.artifacts || []) if (a.source) declared.add(a.source);
+  for (const s of (spec.distribution || {}).skillInternal || []) declared.add(s);
+
+  const memberSet = new Set(members);
+  const extra = members.filter((m) => !declared.has(m));
+  const missing = [...declared].filter((d) => !memberSet.has(d));
+  if (extra.length || missing.length) {
+    if (extra.length) console.error("  shipped but not declared: " + extra.join(", "));
+    if (missing.length) console.error("  declared but not shipped: " + missing.join(", "));
+    return false;
+  }
+  return members.length > 0;
+});
+
+test("boundary: no repo-only path is present anywhere in the tarball", () => {
+  const tarball = path.join(SKILL_ROOT, "dist", "ai-agent-governance-skill.tar.gz");
+  if (!fs.existsSync(tarball)) return false;               // previous test builds it
+  const tarOut = spawnSync("tar", ["-tzf", tarball], { encoding: "utf8" });
+  if (tarOut.status !== 0) return false;
+  const members = String(tarOut.stdout).split(/\r?\n/).map((m) => m.trim().replace(/^\.\//, "").replace(/\\/g, "/")).filter(Boolean);
+  // Recursive, not top-level-only: the pre-split leaks all sat BELOW the four roots.
+  const forbidden = [/^repo-tools\//, /^repo-workflows\//, /^docs\//, /^tests\//, /^\.github\//, /^package\.json$/, /^AGENTS\.md$/, /^CHANGELOG\.md$/];
+  const bad = members.filter((m) => forbidden.some((re) => re.test(m)));
+  if (bad.length) { console.error("  repo-only members in tarball: " + bad.join(", ")); return false; }
+  return true;
+});
+
+test("boundary: declaring a repo-only file as distributed fails the role gate", () => {
+  const dir = tmp("boundary-reverse");
+  // minimal repo shape: references/ + scripts/ + a repo-tools file wrongly declared
+  fs.mkdirSync(path.join(dir, "references"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "repo-tools"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "scripts", "a.js"), "// x", "utf8");
+  fs.writeFileSync(path.join(dir, "repo-tools", "tool.js"), "// repo-only", "utf8");
+  fs.writeFileSync(path.join(dir, "references", "init-spec.json"), JSON.stringify({
+    artifacts: [{ path: "scripts/a.js", source: "scripts/a.js", type: "copy", phase: "B" }],
+    distribution: { skillInternal: ["references/init-spec.json", "repo-tools/tool.js"], undecided: {} }
+  }), "utf8");
+  const r = spawnSync(process.execPath, [ROLE_CHECK, "--json", "--gate"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) { console.error("  expected the reverse check to fail the gate"); return false; }
+  const out = JSON.parse(r.stdout);
+  return (out.issues.overlap || []).some((i) => /repo-only directory/.test(i));
+});
 };
+

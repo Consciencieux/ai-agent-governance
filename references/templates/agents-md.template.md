@@ -5,6 +5,12 @@
 ```
 # {{PROJECT_NAME}} — Agent Guidelines
 
+<!-- phase:A -->
+> **Governance initialization is incomplete — this is a bootstrap checkpoint, not a usable governance state.** Resume from `.governance/state.json`; the gate scripts, validator, Git-policy and sync checks arrive when initialization continues.
+>
+> **Which rules bind you right now:** the process rules in this file and in `docs/rules/*.md` apply as written. Their *script* obligations do not yet — `scripts/` is empty at this stage, so any `docs/rules/*.md` clause naming `scripts/check-*.js` or `scripts/verify-governance.js` (the standard verification sequence, the pre-commit secret scan, the Git-policy gate, the sync-group gate) is **deferred, not waived**: it binds from the stage that installs that script, and the rule text stays authoritative for that stage. A missing gate is never a passed gate — do not read "cannot run it" as "cleared it". If a task needs one of those gates before initialization completes, finish initialization first.
+<!-- /phase -->
+
 ## Project Overview
 {{1-sentence description}}
 
@@ -37,7 +43,7 @@ All agents MUST follow this lifecycle for every dev task. Scope tiers: small (si
 - **Phase 2 Plan**: medium/large changes MUST first create `docs/plans/TASK_<name>.md` (Status, Task Purpose, Current Problem, Proposed Solution, Affected Files, Risks, Validation Method). The Status line must lead with a canonical keyword (Active / design plan, not implemented / implemented / Completed / archived) so gates can classify it — anything else reads as unknown and fails the consistency gate. Affected Files must be based on reference search (`rg`), not guesswork.
 - **Phase 3 Implement**: respect architecture, keep backward compatibility, do not restructure without reason. Before touching any public interface/module/file, search its references first and include the found files in the plan. Maintain the Change Hygiene Ledger for old/new names, paths, config keys, commands and dynamic references.
 - **Phase 4 Validate**: run tests, lint, build; record real output.
-- **Phase 5 Synchronize Knowledge** (medium/large only): update CHANGELOG.md (at merge/release boundaries, not per commit), Feature Registry, ARCHITECTURE.md (if changed), check off the corresponding milestone in docs/plans/DEVELOPMENT_PLAN.md (if one exists), and set the completed TASK_<name>.md Status to Completed. Reconcile sync groups per `.governance/sync-rules.json` — a watch hit without its required files = task not done; run `node scripts/check-sync.js` (exit 0 required). Run Rule Capture before writing: developer-confirmed persistent requirements only; one-off requirements are not written; unclear/unconfirmed items remain in `state.json.rule_capture` and block completion. Archiving happens at RELEASE, not here.
+- **Phase 5 Synchronize Knowledge** (medium/large only): update CHANGELOG.md (at merge/release boundaries, not per commit), Feature Registry, ARCHITECTURE.md (if changed), check off the corresponding milestone in docs/plans/DEVELOPMENT_PLAN.md (if one exists), and set the completed TASK_<name>.md Status to Completed. Reconcile sync groups per `.governance/sync-rules.json` — a watch hit without its required files = task not done. Run Rule Capture before writing: developer-confirmed persistent requirements only; one-off requirements are not written; unclear/unconfirmed items remain in `state.json.rule_capture` and block completion. Archiving happens at RELEASE, not here.
 - **Phase 6 Report**: modified files, new features, deleted/renamed/replaced/deprecated content, Change Hygiene Ledger results, captured/pending rules, validation results and doc updates. Compare actual changed files against the planned Affected Files list — listed-but-unchanged → fix or justify; changed-but-not-listed → explain.
 - Forbidden: changing code without updating project knowledge.
 
@@ -92,12 +98,19 @@ Note: users may request governance changes via explicit instruction (through the
 - **One confirmation per change set.** After any task, before committing: echo the full git command sequence (files to add, each commit message with its type prefix, push target), wait for one explicit confirmation covering `add` → `commit` → `push`. A user's write instruction ("push", "commit these changes") triggers this echo — it is NOT the consent itself. No per-step re-asking.
 - **Plan approval is intent alignment** — aligning "what to change / how", not a commit authorisation. Size tiering decides whether a plan document is written, never whether the user confirms the commit.
 - **Hard constraints:** the echo IS the sequence (never deviate from it); a step fails → stop and report (never retry differently, never improvise); push rejected (non-fast-forward) → stop and report (never pull/rebase yourself); task-level phrasing ("wrap it up", "finish the task") is NOT a write instruction; ambiguous ("提交一下") → ask first.
+<!-- phase:B+ -->
 - Before any `git commit`: run `node scripts/check-secrets.js` — exit 0 required (never commit secret-like material). After a sync-group-triggering change, run `node scripts/check-sync.js` — exit 0 required (watch/require pairs must be reconciled).
+<!-- /phase -->
 - Release sequence: a Proposal approved at the Approval Gate covers that one release's write ops; no per-step re-asking.
 - Full detail: @docs/rules/git-policy.md
 
 ## Git Workflow Governance
+<!-- phase:B+ -->
 - Before starting work run `scripts/check-git-policy.js`; on a protected branch with `directPush: false` (see `.governance/git-policy.json`), create a feature branch `feature/agent-<YYYYMMDD>-<summary>` first.
+<!-- /phase -->
+<!-- phase:A -->
+- On a protected branch, create a feature branch `feature/agent-<YYYYMMDD>-<summary>` before implementing. (The mechanical branch check arrives with the gate scripts in the next initialization stage.)
+<!-- /phase -->
 - Flow: feature branch → implement → test → commit → push branch → PR → human approval → merge into the protected branch.
 - Never force push; never push directly to protected branches. Small single-file doc/typo changes may skip the branch, but must be reported.
 
@@ -111,13 +124,17 @@ The protected files list is:
 - `.governance/preflight.json`
 - `.governance/git-policy.json`
 - `.governance/sync-rules.json`
+<!-- phase:B+ -->
 - `scripts/verify-governance.js`
 - `scripts/check-lock.js`
 - `scripts/check-git-policy.js`
 - `scripts/check-secrets.js`
 - `scripts/check-sync.js`
+<!-- /phase -->
+<!-- phase:C -->
 - `scripts/check-doc-consistency.js`
 - `scripts/check-doc-freshness.js`
+<!-- /phase -->
 - `.githooks/pre-commit`
 - `.githooks/commit-msg`
 - `opencode.json`

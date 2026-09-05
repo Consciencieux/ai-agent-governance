@@ -11,7 +11,7 @@
 //      inventory must agree in BOTH directions (missing = a skill users cannot discover;
 //      stale = a trigger the manual advertises that no source declares). ADR-0008 makes
 //      this copy deliberate and gate-enforced; authority stays in the skill sources.
-//   7. trilingual tree parity — delegated to scripts/check-doc-parity.js
+//   7. trilingual tree parity — delegated to repo-tools/check-doc-parity.js
 //   8. consent-cluster sync   — every EXISTING consent sync point must declare the same
 //      markers (Exception A, Exception B, echo-never-waived); missing points are skipped,
 //      so both this repo (4 points) and governed projects (2 points) are covered.

@@ -2,7 +2,7 @@
 
 [English](../../en/plans/content-audience-portability.md) · [简体中文](content-audience-portability.md) · [繁體中文](../../zh-TW/plans/content-audience-portability.md)
 
-> **Status: design plan, not implemented.**（状态：设计计划，未实现。）响应 2026-09-05 一次只读审计（针对发布载荷）：结构边界健全（打包正确、角色分类完备且经门禁验证），**但 INSTALLED 规则正文的内容仍然混用受众**。九处已确认泄漏——「`npm run check`」传到没有 package.json 的目标项目、技能仓库的 `docs/archive/` 出现在同一文件自己写着 `docs/plans/archive/` 的被治理项目规则里、硬编码的三语义务、悬空指针、以及两个生成的子技能叫目标项目运行它们没有的脚本。
+> **Status: implemented.**（状态：已实现。）响应 2026-09-05 一次只读审计（针对发布载荷）：结构边界健全（打包正确、角色分类完备且经门禁验证），**但 INSTALLED 规则正文的内容仍然混用受众**。九处已确认泄漏——「`npm run check`」传到没有 package.json 的目标项目、技能仓库的 `docs/archive/` 出现在同一文件自己写着 `docs/plans/archive/` 的被治理项目规则里、硬编码的三语义务、悬空指针、以及两个生成的子技能叫目标项目运行它们没有的脚本。
 
 **Target: both** —— `payload` 改写泄漏的规则文本（`references/policies/lifecycle.policy.md`、`references/templates/sub-skills.md`、`SKILL.md`、`references/workflows/release.md`、`scripts/check-layout-sync.js`）并新增 tarball→INIT 边界测试；`repo-infra` 在文档与术语表中记录双轴模型并添加可移植性检查。两个域分别列在「受影响文件」中。
 
@@ -85,28 +85,32 @@
 
 明确**不建**禁词门禁：「INSTALLED 不得包含 `npm run check`」这类黑名单会误报，也抓不住任意新泄漏。改为：
 
-- **3a. 生成引用可解析检查**：在现有 payload 夹具框架的 INIT 之后，验证生成子技能（`docs/rules/*.md`、`AGENTS.md`、`.governance/generated/skills/**`）中每条 `node scripts/...` / `bash scripts/...` 指令都能解析为生成项目里实际存在的文件。把现有 payload 测试 `INIT installs the release tag executor the sub-skill invokes`（已对 release-manager 做此检查）扩展为覆盖**全部**生成子技能与 review/drift 流程，以及 AGENTS.md 与 docs/rules 文件。
+- **3a. 生成引用可解析检查**：在现有 payload 夹具框架的 INIT 之后，验证生成子技能（`docs/rules/*.md`、`AGENTS.md`、`.governance/generated/skills/**`）中每条**可执行指令**都能解析为生成项目里实际存在的文件。为避免对散文猜测，可执行指令定义为恰好两种形态：以 `Run:` / `运行：` 开头后跟命令的句子，或以 `node scripts/...`、`bash scripts/...` 或 npm 脚本名开头的 fenced code 行。**不判定**：说明性提及（「安装的 `scripts/check-sync.js`」）、出处括号（「取自 `references/init-spec.json`」）、条件描述（「若项目有这样的树...」）或非命令的代码示例。这是评审点 5 要求的最小语法；其余仍属对散文的不可判定判断。把现有 payload 测试 `INIT installs the release tag executor the sub-skill invokes`（已对 release-manager 做此检查）扩展为覆盖全部生成子技能与 review/drift 流程，以及 AGENTS.md 与 docs/rules 文件。
 - **3b. check-layout-sync.js 被治理项目形态的独立行为测试**：断言退出 0 + `applicable: false`（镜像 check-coding-hygiene 的 no-op 测试）。
-- **3c. 载荷围栏内的死链扫查**：check-doc-consistency.js 的 broken-links 簇已能解析相对 markdown 链接；把它的 INSTALLED 文件检查（`references/` 现已入扫描集）扩展为同时标记「载荷文件链接到被治理项目中不可能存在的路径」。若无法保证无歧义就以 advisory 提示级呈现；不把散文扫描变成门禁。
+- **3c. 死链扫查 —— 放在 payload 夹具，不是 check-doc-consistency.js。** 冻结责任条款（consistency § FROZEN）说新检查只有属于"跨文档事实簇"才进该脚本；目标运行时可移植性不属于。正确的居所是 payload 夹具：INIT 后解析生成 AGENTS.md 与 docs/rules/*.md 中每条相对 markdown 链接，指向生成项目之外的即标记。这留在 `tests/suites/payload.test.js`（机械、逐夹具）；它的生产门禁形式应是一个职责明确的新脚本（`check-payload-portability.js`），**不是**扩展 `check-doc-consistency.js`。若夹具检查开始产生误报（如目标规则故意指向 `docs/`），降为 advisory 提示级，而非移入门禁。
+
+**裁定 —— 引用闭包的证据形式是「审计义务 + 干净目标验证」，不是完整机械门禁。** 记在此处而非另立 ADR：闭包原则本身没有可辩护的反面（没人主张引用不必解析），所以它是原则，不是决策。真正是决策的是**如何执行**，而它有一个真实的被否决方案。
+
+- **否决：通用闭包门禁** —— 遍历每个载荷文件的每条引用，凡在被治理项目里解析不开就失败。它无法区分**可执行指令**（「run `scripts/check-sync.js`」）与**出处说明**（「取自 `references/init-spec.json`」）或 SKILL-INTERNAL 文件里刻意的技能仓库表述。这三者都是合法的 `references/…` 提及，因此该门禁要么泛滥误报，要么需要人工维护白名单——与上面否决的禁词扫描器同一失效模式，只是高了一层。
+- **采纳**：在问题本身无歧义处做窄机械检查（3a：**生成产物**里的 `node scripts/x` 指令必须在生成项目中解析——这是可执行断言，答案是布尔的），加上 `AGENTS.md` § Reference-closure check 与 `SKILL.md` § Audit 流程 step 3 的常设审计义务，其主要证据是 tarball → INIT → 在那里解析。
+- **重新评估条件**：同类缺陷在有该义务的情况下再逃逸三次以上；或出现可机械区分「可执行指令」与「出处提及」的办法（例如为生成产物中的可运行命令规定语法）。届时门禁变便宜，上述反对意见即消失。
 
 #### 4. 发布流程受众拆分（被治理项目政策保留，技能仓库停止借用）
 
 2026-09-05 的 RELEASE 模式评估（对照 AGENTS.md:113 与 `references/workflows/release.md` 审计）发现：发布流程与文件内容存在**同源的受众混用**——一份流程文件携带三种意图（发布本 skill、发布被治理项目、完成本仓库维护）。AGENTS.md:113 是症状：五条「Caveats unique to this repo」+「Path mapping for THIS repo」把一份被治理项目政策补丁成本仓库的发布。
 
-**采纳并做一处修正。** 评估的核心提案是对的（停止借用被治理项目政策；新增一部简短的技能仓库发布文档；把仓库维护与发布有效性分离）。但其中两步需要修正：
+**采纳的裁定（相对初稿已修正）。** 评审的核心提案正确，本节现在陈述完整拆分——把仓库专属内容移出 `release.md`，而非「原样保留加例外」。初稿写「release.md 保留其目标项目内容、但不动其仓库专属行」让文档自相矛盾：`release.md:38`（本仓库的 validator 豁免）与 `release.md:183,198`（生成器默认值、`package-skill.sh` 打包）**正是本仓库的内容**，不属于被治理项目的发布政策。它们若留下，`release.md` 依旧是「目标项目流程 + 本仓库例外」——本计划要终结的正是这个混用。
 
-- **`release.md` 保留其被治理项目内容** —— 它是写给被治理项目的 payload 工件（SKILL-INTERNAL，按 AGENTS.md「release.md is payload written for governed projects」）。目标项目的测试/变更日志/manifest/同步组/tag/GitHub Release **属于它、不移除**。但它对 `check-plan-delivery.js` / `check-doc-parity.js` / `check-layout-sync.js` / 本仓库归档规则的无条件引用**要修**——那些是本仓库专用能力，必须条件化（能力检测）或对无法满足的结构去掉硬性 ❌。
-- **`check:release` 不是「被治理项目侧」门禁。** 它定义在本仓库 `package.json`，运行本仓库的 test、三语文档、计划交付、归档状态、译文新鲜度、CHANGELOG 覆盖——全部 REPO-ONLY 内容。被治理项目没有 `package.json`、没有三语文档树、没有 `check-plan-delivery.js`。它是**本仓库维护**投入检查，绝不是目标项目能运行的命令。重新标注：`check:release`（保留，但文档明确它是本仓库专用），或拆成 `check:skill-release` / `check:repo` / `check:repo-release`。仅当命名混淆实际发生才拆；先做语义文档修订。
+**重置后的目标形态：**
 
-**目标形态（本轮只记录，不实施）：**
-
-- `release.md` = **Governed Project Release**（保留；目标项目内容保留）。
-- `skill-release.md`（新增，SKILL-INTERNAL）= **Skill Repository Release** —— skill 版本源（SKILL.md frontmatter、package.json、CHANGELOG、init-spec default、generator fallback、tag）、skill 测试、tarball 构建、tarball 内容白名单、校验和、GitHub Release、用户批准。
+- `release.md` = **仅 Governed Project Release**。移除其本仓库自豁免与路径映射；每条「本仓库」子句移到 `skill-release.md`。`validator.passed` 保留被治理项目要求（`verify_governance.js` 退出码 0；目标真缺它是另一种错误，不是本仓库的 ADR-0006 豁免）；`docs.parity_passed` 保留条件；`plan.delivery_verified` 保留条件（§1.5 的 N8 修复）。对目标项目已具备结构的豁免也移除——其唯一正当居所是技能仓库自己的发布文档。
+- `skill-release.md`（新增，SKILL-INTERNAL）= **Skill Repository Release** —— skill 版本源（SKILL.md frontmatter、package.json、CHANGELOG、init-spec default、generator fallback、tag）、skill 测试、tarball 构建、tarball 内容白名单、校验和、GitHub Release、用户批准。它同时承接 `release.md` 中所有「本仓库」子句，使两份文件干净地切成五块。
+- `check:release` —— **拆分不是可选项。** 命名混淆已实际发生（它在**本仓库**的 package.json 中，跑本仓库的 test/三语文档/计划交付/归档/翻译/CHANGELOG，而被治理项目一个都没有）。裁定：`check:skill-release` = skill 发行物检查（测试 + payload + 打包边界）；`check:repo-release` = 本仓库维护/归档检查。`check:release` 仅作为有文档记录的 repo-only 兼容别名保留（如果保留的话）。拆分与 `skill-release.md` 同一变更集落地。
 - `plan/archive/roadmap` = **Repo Maintenance** —— 照常运行，但永不再描述为「skill 工件有效性证明」。
 
-**刻意不抽象共享工作流。** 评估较早前的步骤（两个流程共同引用一份「发布政策」散文）按其自身理由被否决：那样会重新制造「一个共享流程 + 两套例外 + 两种路径映射」。共享**行为**（SemVer 判定、headSha 绑定、工作区检查、tag 创建、用户确认语义）保留在脚本（`release-manager.js`）中，两份文档各自描述自己的流程。散文中的少量重复是可接受的。
+**刻意不抽象共享工作流。**（不变）共享行为留在脚本；两份文档各自描述自己的流程。
 
-**C6 继续延后。** Skill Release 只要求用户批准；`reviewStatus` 继续明确标为 self-attested；`headSha` 保持真实绑定。不提前实现评审证据，也不被治理项目的 review-manager 交叉污染。
+**C6 继续延后。**（不变）
 
 #### 5. 依赖方向规则（第 1–4 节检查的定义层）
 
@@ -132,7 +136,7 @@ generated ──> skill-internal : 禁止
 
 **`references/…` 指针类 —— 系统性，不是偶发。** 已完成的审计（2026-09-05）确认泄漏 K10 只是一条通用规则违反的一个实例：**任何 INSTALLED 文件只要用 `references/` 路径引用载荷同侪，在目标项目里就是断的**，因为 INIT 要么重命名它（`references/policies/lifecycle.policy.md` → `docs/rules/lifecycle.md`），要么根本不装。八个确认实例：`git.policy.md:23,64,95,99`（4 处——一个此前完全不在计划里的文件）、`sub-skills.md:177,202,286`（3 处）、`lifecycle.policy.md:108,109`（2 处）、`governance-files.policy.md:58`（1 处）。修法是一条规则、处处适用：**INSTALLED 文件用目标拥有的路径引用同侪**（`docs/rules/*.md`），或者陈述事实而不给路径。
 
-**交叉受众审计 —— 已完成（2026-09-05），发现如下。** 全量交叉引用审计已覆盖 `references/policies/*.md`、`references/templates/*.md`、`SKILL.md`、`references/workflows/*.md`、`init-spec.json`、全部 INSTALLED 与 SKILL-INTERNAL 脚本、`package-skill.sh`、生成的子技能，以及两个真实夹具（`--phase A`、`--phase C`）加解压后的 tarball。结果：**已知 10 处全部在实时夹具上确认；8 处新增真实缺陷；11 处确认为合法双重使用**（审计能够**证明正确**与能够发现缺陷同样重要）。分类合计：12 目标项目泄漏 · 8 skill 内部依赖泄漏 · 4 错误路径 · 5 重复权威源 · 3 仅文档无执行者 · 11 合法双重使用。
+**交叉受众审计 —— 已完成（2026-09-05），发现如下。** 全量交叉引用审计已覆盖 `references/policies/*.md`、`references/templates/*.md`、`SKILL.md`、`references/workflows/*.md`、`references/init-spec.json`、全部 INSTALLED 与 SKILL-INTERNAL 脚本、`package-skill.sh`、生成的子技能，以及两个真实夹具（`--phase A`、`--phase C`）加解压后的 tarball。结果：**已知 10 处全部在实时夹具上确认；8 处新增真实缺陷；11 处确认为合法双重使用**（审计能够**证明正确**与能够发现缺陷同样重要）。分类合计：12 目标项目泄漏 · 8 skill 内部依赖泄漏 · 4 错误路径 · 5 重复权威源 · 3 仅文档无执行者 · 11 合法双重使用。
 
 需并入 §1 的新缺陷（此前未列）：
 
@@ -192,16 +196,18 @@ Phase A 产物必须：生成静态骨架；明确写出初始化尚未完成；
 
 **payload（INSTALLED / SKILL-INTERNAL 内容与行为）：**
 
-- `references/policies/lifecycle.policy.md` —— §1.1（4 处泄漏）+ N9（2 条 `references/…` 指针）
-- `references/templates/sub-skills.md` —— §1.2（2 处幸存引用）+ N6/N7（3 条 `references/…` 指针）+ N8（无条件 glossary）
+- `references/policies/lifecycle.policy.md` —— §1.1（4 处泄漏）+ N9（2 条 references/…  指针）
+- `references/templates/sub-skills.md` —— §1.2（2 处幸存引用）+ N6/N7（3 条 references/…  指针）+ N8（无条件 glossary）
 - `references/policies/governance-files.policy.md` —— §1.3（SKILL.md 节指针，以及同一行的 agents-md.template.md 子句）+ N10 + N12/N13（跟踪表中混用两种根）
-- `references/policies/git.policy.md` —— **N4/N5：四条 `references/…` 指针**（L23、L64、L95、L99）。单文件命中最多；原计划中缺失。
+- `references/policies/git.policy.md` —— **N4/N5：四条 references/…  指针**（L23、L64、L95、L99）。单文件命中最多；原计划中缺失。
 - `references/policies/coding.policy.md` —— N2（「本仓库的 `.gitattributes`」作为模板指针）
-- `SKILL.md` —— §1.4（死计划指针 L49 **与** L278 的 `docs/<lang>/bootstrap-output.md`）
-- `references/workflows/release.md` —— §1.5（硬门禁 L41）+ N16（release_requirements 与 sub-skills.md 重复，且已漂移）
+- `SKILL.md` —— §1.4（死计划指针 L49 **与** L278 的 docs/<lang>/bootstrap-output.md）
+- `references/workflows/release.md` —— §1.5（硬门禁 L41）+ N16（release_requirements 与 sub-skills.md 重复，且已漂移）+ §4 —— 移除其本仓库自豁免（L38、L183、L198）与路径映射，移入 skill-release.md
+- `references/workflows/skill-release.md` —— **新增（SKILL-INTERNAL）** —— §4 Skill Repository Release：skill 版本源、skill 测试、tarball 构建与内容白名单、校验和、GitHub Release、用户批准；承接所有从 release.md 移除的「本仓库」子句。不在 init-spec 作工件（是 SKILL-INTERNAL，非 INSTALLED），不进被治理目标，随 tarball 分发。
+- `references/templates/sub-skills.md` ——（已列于上）§1.2 + §4 —— 被治理项目 release-manager 子技能不再以 `references/workflows/release.md` 为权威；引用已安装的目标流程并保留自己的 11 项要求
 - `references/templates/agents-md.template.md` —— **N20：Phase A 契约，已裁定（a）** —— 按阶段裁剪脚本子句；Phase A 只产出静态骨架 + 初始化未完成标记
 - `scripts/generate-governance.js` —— N20 按阶段渲染 AGENTS.md 模板（`--phase` 开关已存在，模板产出须遵从它）
-- `references/workflows/ci.md` —— N19（生成的 ci.yml 调用 verify-governance.js；干净 `--phase A` 下不可达，但属同一契约）
+- `references/workflows/ci.md` — **N19：裁定为非缺陷，未作改动。** 依 `references/init-spec.json` 实测：`.github/workflows/ci.yml` 是 **Phase B** 工件，而 `scripts/verify-governance.js` 同样在 **Phase B** 安装，生成的工作流不会引用本阶段尚未安装的脚本。阶段闭包成立；此处列出仅为记录已核查。
 - `scripts/check-layout-sync.js` —— §1.6（no-op 守卫）
 - `scripts/check-role-completeness.js` —— **N3：与 K9 同样的 no-op 违反**（已算出 `applicable:false` 仍 exit 1）
 - `scripts/verify_governance.js` —— N29（用法行写着目标没有的下划线文件名）
@@ -211,6 +217,6 @@ Phase A 产物必须：生成静态骨架；明确写出初始化尚未完成；
 - `docs/glossary.md` —— audience / portability 术语（本变更集已随计划加）
 - `docs/{en,zh-CN,zh-TW}/architecture.md` —— §2 双轴模型
 - `AGENTS.md` —— §2 可移植性规则（INSTALLED 内容须 project-portable）
-- `tests/suites/payload.test.js` —— §3a 生成引用可解析（全部子技能 + 规则）+ N20 的三个阶段契约回归（Phase A 不引用未安装脚本 · Phase A 标记初始化未完成 · Phase B/C 携带该阶段所装脚本的要求）
+- `tests/suites/payload.test.js` —— §3a 生成引用可解析（全部子技能 + 规则）+ N20 的三个阶段契约回归（Phase A 不引用未安装脚本 · Phase A 标记初始化未完成 · Phase B/C 携带该阶段所装脚本的要求）+ §3c 死链扫查（payload 夹具，不是 check-doc-consistency.js）
 - `tests/suites/docs.test.js` —— §3b check-layout-sync no-op；§3c 若实施则死链提示
 - `CHANGELOG.md` —— 发布条目

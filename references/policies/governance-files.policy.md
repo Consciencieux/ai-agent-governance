@@ -1,6 +1,6 @@
 # 治理文件清单（单一事实源）
 
-本文件是「治理文件保护」与 `.governance/` Git 跟踪策略的**唯一清单来源**。SKILL.md 的「治理文件保护」节、生成的 AGENTS.md（`references/templates/agents-md.template.md`）、`docs/rules/git-policy.md` 中的清单均以本文件为准；生成物必须内嵌同一份清单（目标项目不引用本仓库文件）。
+本文件是「治理文件保护」与 `.governance/` Git 跟踪策略的**唯一清单来源**。项目 `AGENTS.md` 的保护节与 `docs/rules/git-policy.md` 中的清单均以本文件为准；每份摘要内嵌同一份清单，不跨文件引用外部路径。
 
 ## 受保护文件（修改需走「治理文件保护」流程）
 
@@ -55,4 +55,4 @@
 
 ## .governance/README.md
 
-INIT 生成 `.governance/` 目录时同时生成 README.md。**其正文是 `references/init-spec.json` 中该产物的 `content` 字段（单一事实源）**，由 `scripts/generate-governance.js` 直接写出；本文件不复制一份模板——曾经存在的那份从未被任何代码消费，只会与真实产物静默分叉（审计 2026-09-05）。README 的内容契约是：逐个说明 `.governance/` 下每个文件的用途与 Git 跟踪状态，与上方「.governance/ Git 跟踪策略」表保持一致。
+INIT 生成 `.governance/` 目录时同时生成 README.md，由生成器直接写出，**不复制模板**——曾经存在的那份模板从未被任何代码消费，只会与真实产物静默分叉（审计 2026-09-05）。README 的内容契约是：逐个说明 `.governance/` 下每个文件的用途与 Git 跟踪状态，与上方「.governance/ Git 跟踪策略」表保持一致。（生成器与其产物定义随技能包分发，不在被治理项目内。）

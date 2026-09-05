@@ -17,15 +17,15 @@ for which role a file has:
 | Role | Definition | How to verify | Examples |
 | --- | --- | --- | --- |
 | **INSTALLED** | INIT writes it into the governed project (copy / template / generated). The governed project's agents read it at runtime. | listed as a `source` in `init-spec.json` (see `check-role-completeness.js --gate` for current counts) | `references/policies/coding.policy.md` → `docs/rules/coding.md`; `scripts/check-secrets.js`; `agents-md.template.md` → `AGENTS.md` |
-| **SKILL-INTERNAL** | Ships inside the tarball (packaging copies `references/` + `scripts/` wholesale) and the SKILL EXECUTOR reads it — but INIT never installs it, so a governed project never has this file. | listed in `init-spec.json` `distribution.skillInternal` | `references/workflows/release.md`, `references/init-spec.json`, `scripts/generate-governance.js`, `scripts/package-skill.sh`, plus the repo-only gates (`check-doc-parity`, `check-layout-sync`, `check-plan-delivery`, `check-coding-hygiene`, `check-role-completeness`) |
-| **REPO-ONLY** | Never in the tarball at all. Governs work on THIS repository. | outside `references/`/`scripts/`/`SKILL.md`/`LICENSE` | `AGENTS.md`, `docs/**`, `tests/**`, `package.json`, `.github/**`, `.gitattributes` |
+| **SKILL-INTERNAL** | Ships inside the tarball (packaging copies `references/` + `scripts/` wholesale) and the SKILL EXECUTOR reads it — but INIT never installs it, so a governed project never has this file. | listed in `init-spec.json` `distribution.skillInternal` | exactly three: `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js` |
+| **REPO-ONLY** | Never in the tarball at all. Governs work on THIS repository. | outside `references/`/`scripts/`/`SKILL.md`/`LICENSE` | `repo-tools/**`, `repo-workflows/**`, `AGENTS.md`, `docs/**`, `tests/**`, `package.json`, `.github/**`, `.gitattributes` |
 
 Roles are **human decisions, never inferred**: `copy`/`template`/`generated`, renames
 (`lifecycle.policy.md` → `docs/rules/lifecycle.md`, `verify_governance.js` →
 `verify-governance.js`), one-to-many outputs (`githooks-template.md` → `pre-commit` +
 `commit-msg`) and the inline-content artifacts (`type: "static"`) all encode contract decisions a
 generator cannot recover from the file tree. What IS mechanical is catching omissions:
-`scripts/check-role-completeness.js --gate` fails on an unclassified file, a file in both
+`repo-tools/check-role-completeness.js --gate` fails on an unclassified file, a file in both
 sets, a declared path that no longer exists, or a role claim that `package-skill.sh` does
 not actually ship. Files whose role is genuinely unresolved sit in
 `distribution.undecided` with the open question recorded, and keep that gate red until
@@ -43,6 +43,43 @@ Two rules follow, and both were violated before this table existed:
 2. **A SKILL-INTERNAL script must no-op outside this repo's shape**, because packaging
    still ships it. `check-coding-hygiene.js` does this by reporting `applicable: false`
    when the suite layout is absent.
+
+### The second axis: portability (where a file GOES vs whether its content HOLDS there)
+
+The distribution role answers *where the file is delivered*. It does not answer *who reads
+it* or *whether its statements are true in the place it is read*. Those are a separate
+axis, and conflating the two produced a class of real defects: files correctly classified
+as INSTALLED whose text told a governed project to run `npm run check` (no package.json
+there), pointed at `references/…` siblings (renamed or never installed by INIT), or
+assumed a trilingual docs tree.
+
+| Audience | Reads it where | Portability the content must have |
+| --- | --- | --- |
+| skill executor | in the skill package | skill-portable — may name payload paths (`references/…`), never repo-only ones (`docs/`, `package.json`) |
+| governed-project agent | in the target project | project-portable — every path, command and script named must exist THERE |
+| this-repo contributor | in this repository | repo-specific — may name anything here |
+| generator | reads templates, writes target files | output must be project-portable at the stage that writes it |
+
+Per-file examples: `SKILL.md` = skill-portable · `lifecycle.policy.md` = project-portable
+(installed as `docs/rules/lifecycle.md`) · `release.md` = governed-project-portable ·
+`skill-release.md` = skill-repo-specific · `check-doc-parity.js` and the other repo-only
+gates = repo-specific · `AGENTS.md` (this repo's) = repo-specific.
+
+Three rules follow:
+
+1. **INSTALLED content must be project-portable.** An INSTALLED file references its
+   siblings by the path the TARGET has (`docs/rules/*.md`), or states the fact without a
+   path. A repo-specific command or path fact belongs in a repo file, never in installed
+   rule text.
+2. **Validate in the execution environment, not the authoring one.** The authoring repo
+   resolves references the target cannot; correctness is judged by generating a real
+   project and resolving there. "Looks repo-specific" is the wrong filter — it catches
+   `本仓库` and misses every reference that reads normally but simply is not installed.
+   Defects distribute by resolvability, not by suspicious wording.
+3. **Stage-portability is part of it.** A Phase A artifact may not command a script that
+   Phase B installs. The generated `AGENTS.md` prunes its clauses per stage
+   (`<!-- phase:A -->` / `<!-- phase:B+ -->` / `<!-- phase:C -->`) and later stages
+   upgrade the file in place, so the rules a project holds always match the scripts it has.
 
 ### Directory Roles
 
@@ -76,27 +113,33 @@ ai-agent-governance/
 │   │   └── governance-files.policy.md   # protected files + .governance git-tracking policy
 │   └── workflows/
 │       ├── ci.md               # CI templates (capability detection + degradation)
-│       └── release.md          # release preconditions + version consistency
-├── scripts/                    # skill runtime scripts
+│       └── release.md          # release preconditions + version consistency (governed projects)
+├── scripts/                    # skill runtime scripts — INSTALLED into governed projects + the generator
 │   ├── verify_governance.js    # validator (manifest-driven paths + governance_version)
 │   ├── check-lock.js           # multi-agent lock check (read-only, exit 1 = lock held)
 │   ├── check-git-policy.js     # Git workflow gate (protected branch + directPush=false → exit 1)
 │   ├── check-secrets.js        # secret scan gate (staged diff, never prints the secret)
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
-│   ├── check-coding-hygiene.js # coding hygiene (SKILL-INTERNAL: test-ownership + residue markers)
-│   ├── check-role-completeness.js # distribution-role completeness (SKILL-INTERNAL: unclassified/overlap/stale/packaging)
 │   ├── check-doc-freshness.js  # doc staleness + translation freshness (git log dates; advisory, --release-gate blocks stale/draft translations)
 │   ├── check-doc-consistency.js # cross-doc contradictions + consent/protected-list/principles-index/plan-status/terminology clusters (advisory default; --gate/--release-gate fail-closed; changelog coverage fail-closed only in --release-gate)
-│   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
-│   ├── check-layout-sync.js    # architecture.md Repository Layout vs references/ + scripts/ (fail-closed gate)
-│   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
-│   ├── generate-governance.js  # INIT scripted generator (deterministic bootstrap, spec: references/init-spec.json)
-│   ├── package-skill.sh        # release payload tarball packaging
+│   ├── generate-governance.js  # INIT scripted generator (SKILL-INTERNAL; spec: references/init-spec.json)
 │   └── release-manager.js      # plan (read-only) + execute (approval-gated) release tool
 ├── LICENSE                     # MIT
 │
 │  ▼ install payload ends here — everything below is repo infrastructure,
-│    NOT copied into skill installations (same rule as the README Install section)
+│    NOT copied into skill installations. The boundary is PHYSICAL: package-skill.sh
+│    copies SKILL.md + references/ + scripts/ + LICENSE, so a file placed below this
+│    line cannot reach a tarball no matter what role it declares.
+│
+├── repo-tools/                 # THIS repo's own gates and packaging — never distributed
+│   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
+│   ├── check-layout-sync.js    # architecture.md Repository Layout vs the four scanned dirs (fail-closed gate)
+│   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
+│   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
+│   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
+│   └── package-skill.sh        # release payload tarball packaging
+├── repo-workflows/             # THIS repo's own process docs — never distributed
+│   └── skill-release.md        # skill repo release flow (three version places + tag, tarball build)
 │
 ├── docs/                       # project knowledge — developer-maintained, read by developers & agents (trigger words, plans, roadmap)
 │   ├── glossary.md             # trilingual terminology table (shared)
@@ -128,4 +171,4 @@ ai-agent-governance/
                                 # release, generator, payload, hygiene) — see anti-patch plan §3
 ```
 
-Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations. One nuance: `scripts/check-coding-hygiene.js` travels inside the tarball (packaging copies `scripts/` wholesale) but is NOT declared in `references/init-spec.json`, so INIT never installs or runs it; run outside this repo's layout it reports "not applicable" and exits 0.
+Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations. One nuance: `repo-tools/check-coding-hygiene.js` travels inside the tarball (packaging copies `scripts/` wholesale) but is NOT declared in `references/init-spec.json`, so INIT never installs or runs it; run outside this repo's layout it reports "not applicable" and exits 0.

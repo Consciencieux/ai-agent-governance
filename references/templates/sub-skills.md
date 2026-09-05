@@ -169,18 +169,18 @@ description: Use to detect governance drift in this repo — compare declared ar
    ```json
    {"freshness": {"stale": ["docs/ARCHITECTURE.md"], "veryStale": []}, "translationFreshness": {"stale": [], "draft": []}}
    ```
-7. Default mode exits 0 — freshness is advisory (stable low-commit projects may show stale docs). The release form `node scripts/check-doc-freshness.js --release-gate` FAILS (exit 1) when a translation is `stale` or `draft` — see release.md Phase 4 step 3
+7. Default mode exits 0 — freshness is advisory (stable low-commit projects may show stale docs). The release form `node scripts/check-doc-freshness.js --release-gate` FAILS (exit 1) when a translation is `stale` or `draft` — the release-manager sub-skill runs it as a Phase 4 release gate
 
 **consistency mode** — flag cross-document contradictions. Run `node scripts/check-doc-consistency.js --json` (or `npm run governance-consistency` if registered):
 
 - **version-example sync** — `governance_version` / manifest examples in docs must match the current declared version
-- **protected-files sync** — protected-file summary lists must match the single source of truth (`references/policies/governance-files.policy.md`); summaries that defer to it ("single source of truth") are exempt
+- **protected-files sync** — protected-file summary lists must match the single source of truth (`docs/rules/governance-files.md`); summaries that defer to it ("single source of truth") are exempt
 - **ADR status sync** — ADRs marked `Accepted (Unreleased)` whose feature already shipped in a released CHANGELOG section
 - **roadmap target validity** — unfinished items whose target version ≤ current version
 - **link validity** — relative markdown links must resolve to real files
 - **numeric claims** — documented counts (validator check count etc.) must match the source
-- **trilingual tree parity** — delegates to `scripts/check-doc-parity.js` (three language trees structurally parallel)
-- **terminology gate** — `docs/glossary.md`'s `Forbidden zh-CN` / `Forbidden zh-TW` columns register renderings that must not appear in that language tree (concept terms only; trigger words quoted in their source form are deliberate). A glossary that exists but cannot be parsed is reported, never silently skipped
+- **multi-language tree parity** — only when the project maintains parallel language trees AND a parity checker is installed; skip otherwise
+- **terminology gate** — only when the project keeps a glossary: its `Forbidden <lang>` columns register renderings that must not appear in that language tree (concept terms only; trigger words quoted in their source form are deliberate). A glossary that exists but cannot be parsed is reported, never silently skipped
 
 Append the result to `.governance/drift-report.json` (`consistency` object). Default mode is advisory — heuristics report but never affect the exit code. Fail-closed forms: `--gate` (protected lists, consent cluster, unknown plan status, terminology gate, malformed glossary) and `--release-gate` (adds pending-archive and changelog coverage).
 
@@ -199,7 +199,7 @@ description: Use to cut a tagged release for this repo with a human-in-the-loop 
 
 # Release Manager
 
-Follow `references/workflows/release.md` (the single source of truth). Release lifecycle: Design → Implement → Validate → Release → Audit.
+This sub-skill IS the release flow for this project — it carries the requirements and phases below; there is no other document to consult. Release lifecycle: Design → Implement → Validate → Release → Audit.
 
 Core principle: AI analyzes and proposes; the developer authorizes; no release operation runs without explicit confirmation.
 
@@ -283,7 +283,7 @@ If you cannot determine whether a change is breaking or a feature: mark it Poten
 
 ## Permissions
 
-`plan` is read-only and may run automatically. Git tag, push, and `gh release create` are write operations — they run ONLY after an explicit developer approval (the approval covers this release's write sequence); state intent and wait for confirmation. Modifying `references/workflows/release.md` or manifest `release` fields follows the Governance File Protection flow.
+`plan` is read-only and may run automatically. Git tag, push, and `gh release create` are write operations — they run ONLY after an explicit developer approval (the approval covers this release's write sequence); state intent and wait for confirmation. Modifying this sub-skill or manifest `release` fields follows the Governance File Protection flow.
 ````
 
 ---
@@ -386,7 +386,7 @@ Both modes run the same 5 domains (fixed, no dynamic expansion in v1):
 2. **Dispatch parallel subagents** — the 5 fixed domains above, one pass each.
 3. **Summarize** — sorted by severity (severe / general / trivial), each with file path + line number + evidence.
 4. **Fix** — severe and general must be fixed; trivial items reported for the user to decide.
-5. **Gate verification** — run `npm run check` (tests + parity) and record real output.
+5. **Gate verification** — run the project's own test command and the installed gates (`node scripts/verify-governance.js`, `node scripts/check-secrets.js`), and record real output.
 
 ## Full audit workflow (additional mandatory steps)
 

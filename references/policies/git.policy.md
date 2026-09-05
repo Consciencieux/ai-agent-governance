@@ -20,7 +20,7 @@
 
 - `git add .` / `git add -A`（全量暂存，必须先检查 `git status` 与 `.gitignore`，确认无 `.env`/密钥/构建产物）
 - `git rm` / `git restore`（删除文件 / 丢弃工作区改动，有破坏性）
-- `git tag`（创建/删除 tag；发布流程中须先经 Approval Gate，见 `references/workflows/release.md`）
+- `git tag`（创建/删除 tag；发布流程中须先经 Approval Gate，见项目的发布流程）
 - `git reset` / `git rebase` / `git revert`
 - `git merge`
 - `git stash`
@@ -61,7 +61,7 @@
 - `checkout` 携带未提交改动切换分支
 - `commit --amend` 已推送的提交（视同 force push）
 
-**发布序列（RELEASE）**：在 Approval Gate 批准一次 Release Proposal，即覆盖**该次发布序列的全部写操作**（版本同步 → 归档 → release commit → tag → push 分支 → push tag → GitHub Release → 资产上传），不再逐步追问（见 `references/workflows/release.md`）。前提：完整 Proposal 已展示且获明确批准、工作区与 HEAD 仍与批准时的 `headSha` 一致、不触碰发布序列之外的内容。中途任一校验失败 → 停止并重新走 plan，不得擅自跳过。
+**发布序列（RELEASE）**：在 Approval Gate 批准一次 Release Proposal，即覆盖**该次发布序列的全部写操作**（版本同步 → 归档 → release commit → tag → push 分支 → push tag → GitHub Release → 资产上传），不再逐步追问（见项目的发布流程）。前提：完整 Proposal 已展示且获明确批准、工作区与 HEAD 仍与批准时的 `headSha` 一致、不触碰发布序列之外的内容。中途任一校验失败 → 停止并重新走 plan，不得擅自跳过。
 
 ## Mandatory Pre-commit Checklist
 
@@ -92,11 +92,11 @@ push/PR 前必须确认：
 - **流程**：建分支 → 实现 → 测试 → commit → push 分支 → 创建 PR → 人工批准 → 合入受保护分支。
 - **禁止**：`directPush=false` 时在受保护分支上直接提交/推送；force push 一律禁止（`allowForcePush=false`）。
 - **小型改动豁免**：单文件、纯文档/typo 级修改且不涉及受保护分支的可跳过分支直接提交，但必须在报告中说明；涉及受保护分支的修改一律走分支流程。
-- **与发布流程的关系**：RELEASE 模式按 `references/workflows/release.md` 走 tag/push 流程，不受本分支工作流约束（发布是受控的、需批准的写操作）。
+- **与发布流程的关系**：RELEASE 模式按项目的发布流程走 tag/push，不受本分支工作流约束（发布是受控的、需批准的写操作）。生成的 `release-manager` 子技能承载该流程。
 
 ## 治理文件保护
 
-修改 `AGENTS.md`、`CLAUDE.md`、`docs/rules/**`、`.governance/manifest.json`、`.governance/preflight.json`、`.governance/git-policy.json`、`.governance/sync-rules.json`、`scripts/verify-governance.js`、`scripts/check-lock.js`、`scripts/check-git-policy.js`、`scripts/check-secrets.js`、`scripts/check-sync.js`、`scripts/check-doc-consistency.js`、`scripts/check-doc-freshness.js`、`.githooks/pre-commit`、`.githooks/commit-msg`、`opencode.json`、CI 配置（`.github/workflows/**`、`.gitlab-ci.yml`）需要特殊权限（清单以 `references/policies/governance-files.policy.md` 为准）：
+修改 `AGENTS.md`、`CLAUDE.md`、`docs/rules/**`、`.governance/manifest.json`、`.governance/preflight.json`、`.governance/git-policy.json`、`.governance/sync-rules.json`、`scripts/verify-governance.js`、`scripts/check-lock.js`、`scripts/check-git-policy.js`、`scripts/check-secrets.js`、`scripts/check-sync.js`、`scripts/check-doc-consistency.js`、`scripts/check-doc-freshness.js`、`.githooks/pre-commit`、`.githooks/commit-msg`、`opencode.json`、CI 配置（`.github/workflows/**`、`.gitlab-ci.yml`）需要特殊权限（清单以 `docs/rules/governance-files.md` 为准）：
 说明原因 → 更新 CHANGELOG → **更新 `.governance/manifest.json` 的 `governance_version`** → 运行 `scripts/verify-governance.js`。
 涉及权限/安全/删除保护/校验步骤的修改必须用户明确确认。
 未经用户明确同意不得放宽权限限制或移除校验步骤。普通业务任务不得隐式触发本流程。

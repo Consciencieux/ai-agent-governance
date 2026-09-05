@@ -134,4 +134,63 @@ test("generate-governance: missing --project-name exits 2", () => {
   return r.status === 2;
 });
 
+// Phase-marker grammar (N20). The first implementation silently swallowed the rest of the
+// file when a marker was left unclosed — taking "never force push" and the protected-file
+// list with it — and accepted typos like `phase:A+` by excluding them from every stage.
+// A generated governance artifact that is silently truncated is worse than a loud failure,
+// so the grammar is strict and unbalanced markers are a hard error.
+function withTemplate(body, fn) {
+  const T = path.join(SKILL_ROOT, "references", "templates", "agents-md.template.md");
+  const original = fs.readFileSync(T, "utf8");
+  const fence = original.indexOf("```");
+  const head = original.slice(0, fence);
+  try {
+    fs.writeFileSync(T, head + "```\n# {{PROJECT_NAME}}\n\n" + body + "\n```\n", "utf8");
+    return fn();
+  } finally {
+    fs.writeFileSync(T, original, "utf8");
+  }
+}
+function genInto(phase) {
+  const dir = tmp("gen-marker-" + phase + "-" + Math.random().toString(36).slice(2, 7));
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", phase], { encoding: "utf8" });
+  return { r, dir, agents: path.join(dir, "AGENTS.md") };
+}
+
+test("phase markers: an unclosed block is a hard error, never a silent truncation", () => {
+  return withTemplate("<!-- phase:B+ -->\nKEEP-B\nTAIL-MUST-NOT-VANISH", () => {
+    const { r, agents } = genInto("C");
+    if (r.status === 0) return false;                       // must not succeed
+    if (fs.existsSync(agents)) {
+      const body = fs.readFileSync(agents, "utf8");
+      if (!/TAIL-MUST-NOT-VANISH/.test(body)) return false; // must not write a truncated file
+    }
+    return /unclosed/i.test(String(r.stderr || r.stdout));
+  });
+});
+
+test("phase markers: an unknown spec is rejected instead of silently excluded", () => {
+  return withTemplate("<!-- phase:A+ -->\nTYPO\n<!-- /phase -->", () => {
+    const { r } = genInto("A");
+    return r.status !== 0 && /unknown phase marker/i.test(String(r.stderr || r.stdout));
+  });
+});
+
+test("phase markers: a stray closing marker is rejected", () => {
+  return withTemplate("BODY\n<!-- /phase -->", () => {
+    const { r } = genInto("A");
+    return r.status !== 0 && /stray/i.test(String(r.stderr || r.stdout));
+  });
+});
+
+test("phase markers: nesting restores the enclosing block's state", () => {
+  // outer excluded at Phase A; the inner close must NOT resurrect the tail of the outer block
+  return withTemplate("<!-- phase:C -->\nOUT\n<!-- phase:C -->\nIN\n<!-- /phase -->\nAFTER-INNER\n<!-- /phase -->\nNEUTRAL", () => {
+    const { r, agents } = genInto("A");
+    if (r.status !== 0) return false;
+    const body = fs.readFileSync(agents, "utf8");
+    return /NEUTRAL/.test(body) && !/OUT/.test(body) && !/IN/.test(body) && !/AFTER-INNER/.test(body);
+  });
+});
+
 };

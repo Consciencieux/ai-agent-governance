@@ -5,16 +5,19 @@
   "private": true,
   "scripts": {
     "test": "node tests/run-tests.js",
-    "docs:parity": "node scripts/check-doc-parity.js",
-    "docs:layout": "node scripts/check-layout-sync.js",
-    "check": "npm test && npm run docs:parity && npm run docs:layout && node scripts/check-doc-consistency.js --gate && node scripts/check-coding-hygiene.js --gate && node scripts/check-role-completeness.js --gate",
+    "docs:parity": "node repo-tools/check-doc-parity.js",
+    "docs:layout": "node repo-tools/check-layout-sync.js",
+    "check": "npm test && npm run docs:parity && npm run docs:layout && node scripts/check-doc-consistency.js --gate && node repo-tools/check-coding-hygiene.js --gate && node repo-tools/check-role-completeness.js --gate",
     "check:docs": "npm test && npm run docs:parity && node scripts/check-doc-consistency.js --gate && npm run docs:layout",
-    "check:payload": "npm test && npm run docs:layout && node scripts/check-doc-consistency.js --gate && node scripts/check-coding-hygiene.js --gate && node scripts/check-role-completeness.js --gate",
-    "check:tests": "npm test && node scripts/check-coding-hygiene.js --gate",
+    "check:payload": "npm test && npm run docs:layout && node scripts/check-doc-consistency.js --gate && node repo-tools/check-coding-hygiene.js --gate && node repo-tools/check-role-completeness.js --gate",
+    "check:tests": "npm test && node repo-tools/check-coding-hygiene.js --gate",
     "check:full": "npm run check",
     "check:all": "npm run check && node scripts/check-doc-freshness.js && npm run plans:delivery",
-    "check:release": "npm run check && node scripts/check-plan-delivery.js --gate && node scripts/check-doc-consistency.js --release-gate && node scripts/check-doc-freshness.js --release-gate",
-    "plans:delivery": "node scripts/check-plan-delivery.js --gate"
+    "check:skill-release": "npm run check && node repo-tools/check-plan-delivery.js --gate && node scripts/check-doc-consistency.js --release-gate && node scripts/check-doc-freshness.js --release-gate",
+    "check:repo-release": "npm test && node repo-tools/check-coding-hygiene.js --gate && node repo-tools/check-plan-delivery.js --gate && node scripts/check-doc-freshness.js",
+    "check:release": "npm run check:skill-release",
+    "check:release": "npm run check:skill-release",
+    "plans:delivery": "node repo-tools/check-plan-delivery.js --gate"
   },
   "engines": {
     "node": ">=18"

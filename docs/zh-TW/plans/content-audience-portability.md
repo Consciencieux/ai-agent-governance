@@ -2,7 +2,7 @@
 
 [English](../../en/plans/content-audience-portability.md) · [简体中文](../../zh-CN/plans/content-audience-portability.md) · [繁體中文](content-audience-portability.md)
 
-> **Status: design plan, not implemented.**（狀態：設計計劃，未實作。）回應 2026-09-05 一次唯讀稽核（針對發佈載荷）：結構邊界健全（打包正確、角色分類完備且經閘門驗證），**但 INSTALLED 規則正文的內容仍然混用受眾**。九處已確認洩漏——「`npm run check`」傳到沒有 package.json 的目標專案、技能倉庫的 `docs/archive/` 出現在同一檔案自己寫著 `docs/plans/archive/` 的被治理專案規則裡、硬編碼的三語義務、懸空指標、以及兩個生成的子技能叫目標專案運行它們沒有的腳本。
+> **Status: implemented.**（狀態：已實作。）回應 2026-09-05 一次唯讀稽核（針對發佈載荷）：結構邊界健全（打包正確、角色分類完備且經閘門驗證），**但 INSTALLED 規則正文的內容仍然混用受眾**。九處已確認洩漏——「`npm run check`」傳到沒有 package.json 的目標專案、技能倉庫的 `docs/archive/` 出現在同一檔案自己寫著 `docs/plans/archive/` 的被治理專案規則裡、硬編碼的三語義務、懸空指標、以及兩個生成的子技能叫目標專案運行它們沒有的腳本。
 
 **Target: both** —— `payload` 改寫洩漏的規則文字（`references/policies/lifecycle.policy.md`、`references/templates/sub-skills.md`、`SKILL.md`、`references/workflows/release.md`、`scripts/check-layout-sync.js`）並新增 tarball→INIT 邊界測試；`repo-infra` 在文件與術語表中記錄雙軸模型並添加可移植性檢查。兩個域分別列在「受影響檔案」中。
 
@@ -85,28 +85,32 @@
 
 明確**不建**禁詞閘門：「INSTALLED 不得包含 `npm run check`」這類黑名單會誤報，也抓不住任意新洩漏。改為：
 
-- **3a. 生成引用可解析檢查**：在現有 payload 夾具框架的 INIT 之後，驗證生成子技能（`docs/rules/*.md`、`AGENTS.md`、`.governance/generated/skills/**`）中每條 `node scripts/...` / `bash scripts/...` 指令都能解析為生成專案裡實際存在的檔案。把現有 payload 測試 `INIT installs the release tag executor the sub-skill invokes`（已對 release-manager 做此檢查）擴展為覆蓋**全部**生成子技能與 review/drift 流程，以及 AGENTS.md 與 docs/rules 檔案。
+- **3a. 生成引用可解析檢查**：在現有 payload 夾具框架的 INIT 之後，驗證生成子技能（`docs/rules/*.md`、`AGENTS.md`、`.governance/generated/skills/**`）中每條**可執行指令**都能解析為生成專案裡實際存在的檔案。為避免對散文猜測，可執行指令定義為恰好兩種形態：以 `Run:` / `運行：` 開頭後跟命令的句子，或以 `node scripts/...`、`bash scripts/...` 或 npm 腳本名開頭的 fenced code 行。**不判定**：說明性提及（「安裝的 `scripts/check-sync.js`」）、出處括號（「取自 `references/init-spec.json`」）、條件描述（「若專案有這樣的樹...」）或非命令的程式碼範例。這是評審點 5 要求的最小語法；其餘仍屬對散文的不可判定判斷。把現有 payload 測試 `INIT installs the release tag executor the sub-skill invokes`（已對 release-manager 做此檢查）擴展為覆蓋全部生成子技能與 review/drift 流程，以及 AGENTS.md 與 docs/rules 檔案。
 - **3b. check-layout-sync.js 被治理專案形態的獨立行為測試**：斷言退出 0 + `applicable: false`（鏡像 check-coding-hygiene 的 no-op 測試）。
-- **3c. 載荷圍欄內的死鏈掃查**：check-doc-consistency.js 的 broken-links 簇已能解析相對 markdown 連結；把它的 INSTALLED 檔案檢查（`references/` 現已入掃描集）擴展為同時標記「載荷檔案連結到被治理專案中不可能存在的路徑」。若無法保證無歧義就以 advisory 提示級呈現；不把散文掃描變成閘門。
+- **3c. 死鏈掃查 —— 放在 payload 夾具，不是 check-doc-consistency.js。** 凍結責任條款（consistency § FROZEN）說新檢查只有屬於「跨文件事實簇」才進該腳本；目標執行時可移植性不屬於。正確的居所是 payload 夾具：INIT 後解析生成 AGENTS.md 與 docs/rules/*.md 中每條相對 markdown 連結，指向生成專案之外的即標記。這留在 `tests/suites/payload.test.js`（機械、逐夾具）；它的生產閘門形式應是一個職責明確的新腳本（`check-payload-portability.js`），**不是**擴展 `check-doc-consistency.js`。若夾具檢查開始產生誤報（如目標規則故意指向 `docs/`），降為 advisory 提示級，而非移入閘門。
+
+**裁定 —— 引用閉包的證據形式是「稽核義務 + 乾淨目標驗證」，不是完整機械閘門。** 記在此處而非另立 ADR：閉包原則本身沒有可辯護的反面（沒人主張引用不必解析），所以它是原則，不是決策。真正是決策的是**如何執行**，而它有一個真實的被否決方案。
+
+- **否決：通用閉包閘門** —— 遍歷每個載荷檔案的每條引用，凡在被治理專案裡解析不開就失敗。它無法區分**可執行指令**（「run `scripts/check-sync.js`」）與**出處說明**（「取自 `references/init-spec.json`」）或 SKILL-INTERNAL 檔案裡刻意的技能倉庫表述。這三者都是合法的 `references/…` 提及，因此該閘門要嘛氾濫誤報，要嘛需要人工維護白名單——與上面否決的禁詞掃描器同一失效模式，只是高了一層。
+- **採納**：在問題本身無歧義處做窄機械檢查（3a：**生成產物**裡的 `node scripts/x` 指令必須在生成專案中解析——這是可執行斷言，答案是布林的），加上 `AGENTS.md` § Reference-closure check 與 `SKILL.md` § Audit 流程 step 3 的常設稽核義務，其主要證據是 tarball → INIT → 在那裡解析。
+- **重新評估條件**：同類缺陷在有該義務的情況下再逃逸三次以上；或出現可機械區分「可執行指令」與「出處提及」的辦法（例如為生成產物中的可運行命令規定語法）。屆時閘門變便宜，上述反對意見即消失。
 
 #### 4. 發佈流程受眾拆分（被治理專案政策保留，技能倉庫停止借用）
 
 2026-09-05 的 RELEASE 模式評估（對照 AGENTS.md:113 與 `references/workflows/release.md` 稽核）發現：發佈流程與檔案內容存在**同源的受眾混用**——一份流程檔案攜帶三種意圖（發佈本 skill、發佈被治理專案、完成本倉庫維護）。AGENTS.md:113 是症狀：五條「Caveats unique to this repo」+「Path mapping for THIS repo」把一份被治理專案政策補丁成本倉庫的發佈。
 
-**採納並做一處修正。** 評估的核心提案是對的（停止借用被治理專案政策；新增一部簡短的技能倉庫發佈文件；把倉庫維護與發佈有效性分離）。但其中兩步需要修正：
+**採納的裁定（相對初稿已修正）。** 評審的核心提案正確，本節現在陳述完整拆分——把倉庫專屬內容移出 `release.md`，而非「原樣保留加例外」。初稿寫「release.md 保留其目標專案內容、但不動其倉庫專屬行」讓文件自相矛盾：`release.md:38`（本倉庫的 validator 豁免）與 `release.md:183,198`（生成器預設值、`package-skill.sh` 打包）**正是本倉庫的內容**，不屬於被治理專案的發佈政策。它們若留下，`release.md` 依舊是「目標專案流程 + 本倉庫例外」——本計劃要終結的正是這個混用。
 
-- **`release.md` 保留其被治理專案內容** —— 它是寫給被治理專案的 payload 工件（SKILL-INTERNAL，按 AGENTS.md「release.md is payload written for governed projects」）。目標專案的測試/變更日誌/manifest/同步組/tag/GitHub Release **屬於它、不移除**。但它對 `check-plan-delivery.js` / `check-doc-parity.js` / `check-layout-sync.js` / 本倉庫歸檔規則的無條件引用**要修**——那些是本倉庫專用能力，必須條件化（能力偵測）或對無法滿足的結構去掉硬性 ❌。
-- **`check:release` 不是「被治理專案側」閘門。** 它定義在本倉庫 `package.json`，運行本倉庫的 test、三語文件、計劃交付、歸檔狀態、譯文新鮮度、CHANGELOG 覆蓋——全部 REPO-ONLY 內容。被治理專案沒有 `package.json`、沒有三語文件樹、沒有 `check-plan-delivery.js`。它是**本倉庫維護**投入檢查，絕不是目標專案能運行的命令。重新標註：`check:release`（保留，但文件明確它是本倉庫專用），或拆成 `check:skill-release` / `check:repo` / `check:repo-release`。僅當命名混淆實際發生才拆；先做語義文件修訂。
+**重置後的目標形態：**
 
-**目標形態（本輪只記錄，不實施）：**
-
-- `release.md` = **Governed Project Release**（保留；目標專案內容保留）。
-- `skill-release.md`（新增，SKILL-INTERNAL）= **Skill Repository Release** —— skill 版本源（SKILL.md frontmatter、package.json、CHANGELOG、init-spec default、generator fallback、tag）、skill 測試、tarball 構建、tarball 白名單、校驗和、GitHub Release、使用者批准。
+- `release.md` = **僅 Governed Project Release**。移除其本倉庫自豁免與路徑映射；每條「本倉庫」子句移到 `skill-release.md`。`validator.passed` 保留被治理專案要求（`verify_governance.js` 退出碼 0；目標真缺它是另一種錯誤，不是本倉庫的 ADR-0006 豁免）；`docs.parity_passed` 保留條件；`plan.delivery_verified` 保留條件（§1.5 的 N8 修復）。對目標專案已具備結構的豁免也移除——其唯一正當居所是技能倉庫自己的發佈文件。
+- `skill-release.md`（新增，SKILL-INTERNAL）= **Skill Repository Release** —— skill 版本源（SKILL.md frontmatter、package.json、CHANGELOG、init-spec default、generator fallback、tag）、skill 測試、tarball 構建、tarball 白名單、校驗和、GitHub Release、使用者批准。它同時承接 `release.md` 中所有「本倉庫」子句，使兩份檔案乾淨地切成五塊。
+- `check:release` —— **拆分不是可選項。** 命名混淆已實際發生（它在**本倉庫**的 package.json 中，跑本倉庫的 test/三語文件/計劃交付/歸檔/翻譯/CHANGELOG，而被治理專案一個都沒有）。裁定：`check:skill-release` = skill 發行物檢查（測試 + payload + 打包邊界）；`check:repo-release` = 本倉庫維護/歸檔檢查。`check:release` 僅作為有文件記錄的 repo-only 相容別名保留（如果保留的話）。拆分與 `skill-release.md` 同一變更集落地。
 - `plan/archive/roadmap` = **Repo Maintenance** —— 照常運行，但永不再描述為「skill 工件有效性證明」。
 
-**刻意不抽象共享工作流。** 評估較早前的步驟（兩個流程共同引用一份「發佈政策」散文）按其自身理由被否決：那樣會重新製造「一個共享流程 + 兩套例外 + 兩種路徑映射」。共享**行為**（SemVer 判定、headSha 綁定、工作區檢查、tag 建立、使用確認語義）保留在腳本（`release-manager.js`）中，兩份文件各自描述自己的流程。散文中的少量重複是可接受的。
+**刻意不抽象共享工作流。**（不變）共享行為留在腳本；兩份檔案各自描述自己的流程。
 
-**C6 繼續延後。** Skill Release 只要求使用者批准；`reviewStatus` 繼續明確標為 self-attested；`headSha` 保持真實綁定。不提前實作評審證據，也不被被治理專案的 review-manager 交叉污染。
+**C6 繼續延後。**（不變）
 
 #### 5. 依賴方向規則（第 1–4 節檢查的定義層）
 
@@ -132,7 +136,7 @@ generated ──> skill-internal : 禁止
 
 **`references/…` 指標類 —— 系統性，不是偶發。** 已完成的稽核（2026-09-05）確認洩漏 K10 只是一條通用規則違反的一個實例：**任何 INSTALLED 檔案只要用 `references/` 路徑引用載荷同儕，在目標專案裡就是斷的**，因為 INIT 要嘛重新命名它（`references/policies/lifecycle.policy.md` → `docs/rules/lifecycle.md`），要嘛根本不裝。八個確認實例：`git.policy.md:23,64,95,99`（4 處——一個此前完全不在計劃裡的檔案）、`sub-skills.md:177,202,286`（3 處）、`lifecycle.policy.md:108,109`（2 處）、`governance-files.policy.md:58`（1 處）。修法是一條規則、處處適用：**INSTALLED 檔案用目標擁有的路徑引用同儕**（`docs/rules/*.md`），或者陳述事實而不給路徑。
 
-**交叉受眾稽核 —— 已完成（2026-09-05），發現如下。** 全量交叉引用稽核已覆蓋 `references/policies/*.md`、`references/templates/*.md`、`SKILL.md`、`references/workflows/*.md`、`init-spec.json`、全部 INSTALLED 與 SKILL-INTERNAL 腳本、`package-skill.sh`、生成的子技能，以及兩個真實夾具（`--phase A`、`--phase C`）加解壓後的 tarball。結果：**已知 10 處全部在即時夾具上確認；8 處新增真實缺陷；11 處確認為合法雙重使用**（稽核能夠**證明正確**與能夠發現缺陷同樣重要）。分類合計：12 目標專案洩漏 · 8 skill 內部依賴洩漏 · 4 錯誤路徑 · 5 重複權威源 · 3 僅文件無執行者 · 11 合法雙重使用。
+**交叉受眾稽核 —— 已完成（2026-09-05），發現如下。** 全量交叉引用稽核已覆蓋 `references/policies/*.md`、`references/templates/*.md`、`SKILL.md`、`references/workflows/*.md`、`references/init-spec.json`、全部 INSTALLED 與 SKILL-INTERNAL 腳本、`package-skill.sh`、生成的子技能，以及兩個真實夾具（`--phase A`、`--phase C`）加解壓後的 tarball。結果：**已知 10 處全部在即時夾具上確認；8 處新增真實缺陷；11 處確認為合法雙重使用**（稽核能夠**證明正確**與能夠發現缺陷同樣重要）。分類合計：12 目標專案洩漏 · 8 skill 內部依賴洩漏 · 4 錯誤路徑 · 5 重複權威源 · 3 僅文件無執行者 · 11 合法雙重使用。
 
 需併入 §1 的新缺陷（此前未列）：
 
@@ -192,16 +196,18 @@ Phase A 產物必須：生成靜態骨架；明確寫出初始化尚未完成；
 
 **payload（INSTALLED / SKILL-INTERNAL 內容與行為）：**
 
-- `references/policies/lifecycle.policy.md` —— §1.1（4 處洩漏）+ N9（2 條 `references/…` 指標）
-- `references/templates/sub-skills.md` —— §1.2（2 處倖存引用）+ N6/N7（3 條 `references/…` 指標）+ N8（無條件 glossary）
+- `references/policies/lifecycle.policy.md` —— §1.1（4 處洩漏）+ N9（2 條 references/…  指標）
+- `references/templates/sub-skills.md` —— §1.2（2 處倖存引用）+ N6/N7（3 條 references/…  指標）+ N8（無條件 glossary）
 - `references/policies/governance-files.policy.md` —— §1.3（SKILL.md 節指標，以及同一行的 agents-md.template.md 子句）+ N10 + N12/N13（追蹤表中混用兩種根）
-- `references/policies/git.policy.md` —— **N4/N5：四條 `references/…` 指標**（L23、L64、L95、L99）。單檔案命中最多；原計劃中缺失。
+- `references/policies/git.policy.md` —— **N4/N5：四條 references/…  指標**（L23、L64、L95、L99）。單檔案命中最多；原計劃中缺失。
 - `references/policies/coding.policy.md` —— N2（「本倉庫的 `.gitattributes`」作為範本指標）
-- `SKILL.md` —— §1.4（死計劃指標 L49 **與** L278 的 `docs/<lang>/bootstrap-output.md`）
-- `references/workflows/release.md` —— §1.5（硬閘門 L41）+ N16（release_requirements 與 sub-skills.md 重複，且已漂移）
+- `SKILL.md` —— §1.4（死計劃指標 L49 **與** L278 的 docs/<lang>/bootstrap-output.md）
+- `references/workflows/release.md` —— §1.5（硬閘門 L41）+ N16（release_requirements 與 sub-skills.md 重複，且已漂移）+ §4 —— 移除其本倉庫自豁免（L38、L183、L198）與路徑映射，移入 skill-release.md
+- `references/workflows/skill-release.md` —— **新增（SKILL-INTERNAL）** —— §4 Skill Repository Release：skill 版本源、skill 測試、tarball 構建與內容白名單、校驗和、GitHub Release、使用者批准；承接所有從 release.md 移除的「本倉庫」子句。不在 init-spec 作工件（是 SKILL-INTERNAL，非 INSTALLED），不進被治理目標，隨 tarball 分發。
+- `references/templates/sub-skills.md` ——（已列於上）§1.2 + §4 —— 被治理專案 release-manager 子技能不再以 `references/workflows/release.md` 為權威；引用已安裝的目標流程並保留自己的 11 項要求
 - `references/templates/agents-md.template.md` —— **N20：Phase A 契約，已裁定（a）** —— 按階段裁剪腳本子句；Phase A 只產出靜態骨架 + 初始化未完成標記
 - `scripts/generate-governance.js` —— N20 按階段渲染 AGENTS.md 範本（`--phase` 開關已存在，範本產出須遵從它）
-- `references/workflows/ci.md` —— N19（生成的 ci.yml 呼叫 verify-governance.js；乾淨 `--phase A` 下不可達，但屬同一契約）
+- `references/workflows/ci.md` — **N19：裁定為非缺陷，未作改動。** 依 `references/init-spec.json` 實測：`.github/workflows/ci.yml` 是 **Phase B** 工件，而 `scripts/verify-governance.js` 同樣在 **Phase B** 安裝，生成的工作流不會引用本階段尚未安裝的腳本。階段閉包成立；此處列出僅為記錄已核查。
 - `scripts/check-layout-sync.js` —— §1.6（no-op 守衛）
 - `scripts/check-role-completeness.js` —— **N3：與 K9 同樣的 no-op 違反**（已算出 `applicable:false` 仍 exit 1）
 - `scripts/verify_governance.js` —— N29（用法行寫著目標沒有的底線檔案名稱）
@@ -211,6 +217,6 @@ Phase A 產物必須：生成靜態骨架；明確寫出初始化尚未完成；
 - `docs/glossary.md` —— audience / portability 術語（本變更集已隨計劃加）
 - `docs/{en,zh-CN,zh-TW}/architecture.md` —— §2 雙軸模型
 - `AGENTS.md` —— §2 可移植性規則（INSTALLED 內容須 project-portable）
-- `tests/suites/payload.test.js` —— §3a 生成引用可解析（全部子技能 + 規則）+ N20 的三個階段契約迴歸（Phase A 不引用未安裝腳本 · Phase A 標記初始化未完成 · Phase B/C 攜帶該階段所裝腳本的要求）
+- `tests/suites/payload.test.js` —— §3a 生成引用可解析（全部子技能 + 規則）+ N20 的三個階段契約迴歸（Phase A 不引用未安裝腳本 · Phase A 標記初始化未完成 · Phase B/C 攜帶該階段所裝腳本的要求）+ §3c 死鏈掃查（payload 夾具，不是 check-doc-consistency.js）
 - `tests/suites/docs.test.js` —— §3b check-layout-sync no-op；§3c 若實施則死鏈提示
 - `CHANGELOG.md` —— 發佈條目

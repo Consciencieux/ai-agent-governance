@@ -431,31 +431,133 @@ test("permission matrix rows match between SKILL.md and the AGENTS.md template",
   return true;
 });
 
-// C3: the emptiness guard fired only when BOTH roots vanished, so renaming `references/`
-// left `scripts/` alone carrying the check — the scan silently enforced half the corpus
-// and still printed a green line with a plausible count (audit 2026-09-05).
+// C3: the emptiness guard fired only when BOTH roots vanished, so losing one root left the
+// other alone carrying the check — the scan silently enforced half the corpus and still
+// printed a green line with a plausible count (audit 2026-09-05). Note `references/` is the
+// shape marker: without it the script reports not-applicable (a governed project has
+// scripts/ but no references/), so the half-scan case is exercised by emptying scripts/.
 test("check-layout-sync: one empty root dir fails instead of half-scanning", () => {
   const dir = tmp("layout-half-scan");
   buildLayoutRepo(dir, ["references/policies/a.md", "scripts/b.js"]);
-  fs.rmSync(path.join(dir, "references"), { recursive: true, force: true });
+  fs.rmSync(path.join(dir, "scripts"), { recursive: true, force: true });
   const r = spawnSync(process.execPath, [LAYOUT_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   if (r.status !== 1) return false;
   const out = JSON.parse(r.stdout);
-  return out.pass === false && out.issues.some((i) => i.includes("references"));
+  return out.pass === false && out.issues.some((i) => i.includes("scripts"));
+});
+
+// The same guard must not fire in a governed project, which has scripts/ but no
+// references/ — that is not a half-scan, it is a different repository shape.
+test("check-layout-sync: a governed-project shape reports not-applicable", () => {
+  const dir = tmp("layout-governed-shape");
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "scripts/verify-governance.js"), "// x", "utf8");
+  const r = spawnSync(process.execPath, [LAYOUT_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.applicable === false && out.pass === true;
+});
+
+// ...but in THIS repo's shape (the docs trees are present) a missing references/ is a real
+// defect and must still fail. Keying not-applicable on references/ made the two cases
+// indistinguishable, so deleting the tree turned the gate green and silently disabled the
+// per-directory half-scan protection above (audit 2026-09-05).
+test("check-layout-sync: docs trees present but references/ missing still fails", () => {
+  const dir = tmp("layout-repo-missing-refs");
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "scripts/a.js"), "// x", "utf8");
+  for (const lang of ["en", "zh-CN", "zh-TW"]) {
+    fs.mkdirSync(path.join(dir, "docs", lang), { recursive: true });
+    fs.writeFileSync(path.join(dir, "docs", lang, "architecture.md"), "```\nscripts/a.js\n```\n", "utf8");
+  }
+  const r = spawnSync(process.execPath, [LAYOUT_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.pass === false && out.issues.some((i) => /references/.test(i));
+});
+
+// Same shape/defect confusion in the role gate: "no init-spec.json" was treated as "not
+// this repo", so deleting the distribution declaration passed the gate.
+test("check-role-completeness: references/ present but init-spec.json missing fails", () => {
+  const dir = tmp("role-missing-spec");
+  fs.mkdirSync(path.join(dir, "references", "policies"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "references/policies/x.md"), "x", "utf8");
+  const r = spawnSync(process.execPath, [ROLE_CHECK, "--json", "--gate"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.applicable === true && out.gatePass === false;
+});
+
+test("check-role-completeness: a governed-project shape reports not-applicable", () => {
+  const dir = tmp("role-governed-shape");
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "scripts/verify-governance.js"), "// x", "utf8");
+  const r = spawnSync(process.execPath, [ROLE_CHECK, "--json", "--gate"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.applicable === false && out.gatePass === true;
 });
 
 // C7: the release-only clusters (pending-archive, archived-plan status, changelog
 // coverage, translation staleness) fired only when a human typed --release-gate. The npm
 // entry makes the documented release.md step runnable; CI deliberately does NOT run it,
 // because pending-archive is legal between task completion and the release commit.
+// C7: the release-only clusters (pending-archive, archived-plan status, changelog
+// coverage, translation staleness) are fail-closed ONLY under --release-gate. A previous
+// refactor pointed check:release at a --gate-level command and the assertions were
+// simultaneously relaxed to bare substrings, so the downgrade shipped green. Resolve npm
+// aliases before asserting: a gate reached through `npm run check` must count as present,
+// and a forbidden gate must not be hidden behind an alias either.
+function resolveNpmScript(pkg, name, seen) {
+  seen = seen || new Set();
+  if (seen.has(name)) return "";
+  seen.add(name);
+  const raw = (pkg.scripts || {})[name] || "";
+  return raw.replace(/npm run ([\w:-]+)/g, (_, ref) => " " + resolveNpmScript(pkg, ref, seen) + " ");
+}
+
 test("package.json exposes a check:release entry with the release-only gates", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
-  const cmd = (pkg.scripts || {})["check:release"] || "";
+  const cmd = resolveNpmScript(pkg, "check:release");
   if (!/check-doc-consistency\.js --release-gate/.test(cmd)) return false;
   if (!/check-doc-freshness\.js --release-gate/.test(cmd)) return false;
   if (!/check-plan-delivery\.js --gate/.test(cmd)) return false;
   const ci = fs.readFileSync(path.join(SKILL_ROOT, ".github/workflows/ci.yml"), "utf8");
   return !/release-gate/.test(ci);
+});
+
+test("package.json exposes check:skill-release with the full skill-release gates", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
+  const cmd = resolveNpmScript(pkg, "check:skill-release");
+  // release-only clusters must be fail-closed, not advisory
+  if (!/check-doc-consistency\.js --release-gate/.test(cmd)) return false;
+  if (!/check-doc-freshness\.js --release-gate/.test(cmd)) return false;
+  if (!/check-plan-delivery\.js --gate/.test(cmd)) return false;
+  // and the standard gate group still runs underneath
+  if (!/check-doc-parity\.js/.test(cmd)) return false;
+  if (!/check-role-completeness\.js --gate/.test(cmd)) return false;
+  return true;
+});
+
+test("package.json exposes check:repo-release with repo-maintenance gates only", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
+  const cmd = resolveNpmScript(pkg, "check:repo-release");
+  if (!/check-plan-delivery\.js --gate/.test(cmd)) return false;
+  if (!/check-doc-freshness\.js/.test(cmd)) return false;
+  // repo maintenance only: the payload-structure gates belong to check:skill-release.
+  // Asserted on the ALIAS-RESOLVED command so wrapping them in `npm run check` cannot
+  // smuggle them past this check.
+  if (/check-doc-parity\.js/.test(cmd)) return false;
+  if (/check-doc-consistency\.js/.test(cmd)) return false;
+  return true;
+});
+
+// Mutation guard for the alias resolver itself: if it stopped expanding `npm run`, the
+// three tests above would silently weaken into substring checks against a short string.
+test("resolveNpmScript expands npm run aliases transitively", () => {
+  const fake = { scripts: { a: "npm run b && node x.js", b: "npm run c", c: "node deep.js --release-gate" } };
+  const out = resolveNpmScript(fake, "a");
+  return /node deep\.js --release-gate/.test(out) && /node x\.js/.test(out) && !/npm run/.test(out);
 });
 
 
@@ -469,16 +571,24 @@ test("package.json exposes a check:release entry with the release-only gates", (
 // built around invoking it, so that contradiction predates this change and removing the
 // calls would gut the flow. Recorded as an open conflict in the gate-repair plan instead.
 test("sub-skills.md does not tell a governed project to run absent check scripts", () => {
+  // After the boundary split the guard is stronger than "these three are SKILL-INTERNAL":
+  // repo-tools/ and repo-workflows/ are REPO-ONLY by directory, so nothing under them can
+  // reach a governed project at all. sub-skills.md is INSTALLED, so the only scripts it may
+  // tell a target to RUN are the ones INIT actually installs (artifacts with a scripts/ path).
   const spec = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "references/init-spec.json"), "utf8"));
-  const internal = new Set((spec.distribution && spec.distribution.skillInternal) || []);
-  const pinned = ["scripts/check-plan-delivery.js", "scripts/check-doc-parity.js", "scripts/package-skill.sh"];
-  // Guard the guard: if one of these ever becomes INSTALLED, revisit this test.
-  for (const p of pinned) if (!internal.has(p)) return false;
+  const installedScripts = new Set(
+    (spec.artifacts || []).map((a) => a.path).filter((p) => p && p.startsWith("scripts/")).map((p) => p.slice("scripts/".length))
+  );
   const sub = fs.readFileSync(path.join(SKILL_ROOT, "references/templates/sub-skills.md"), "utf8");
-  for (const p of pinned) {
-    const base = p.replace(/^scripts\//, "");
-    const runnable = new RegExp("(?:node|bash|sh)\\s+scripts/" + base.replace(/[.*+?^${}()|[\]\\]/g, function (m) { return "\\" + m; }));
-    if (runnable.test(sub)) return false;
+  const offenders = [];
+  for (const m of sub.matchAll(/(?:node|bash|sh)\s+scripts\/([\w.-]+\.(?:js|sh))/g)) {
+    if (!installedScripts.has(m[1])) offenders.push(m[1]);
+  }
+  // and no runnable reference into the repo-only trees may exist at all
+  for (const m of sub.matchAll(/(?:node|bash|sh)\s+(repo-tools|repo-workflows)\/[\w.-]+/g)) offenders.push(m[0]);
+  if (offenders.length) {
+    console.error("  sub-skills.md commands scripts a governed project does not have: " + [...new Set(offenders)].join(", "));
+    return false;
   }
   return true;
 });

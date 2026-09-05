@@ -116,6 +116,75 @@ function extractCodeBlock(raw) {
   return body.join("\n");
 }
 
+// Stage-conditional template content (N20). A template may wrap clauses in
+//   <!-- phase:A -->  ... <!-- /phase -->      keep in Phase A only
+//   <!-- phase:B+ --> ... <!-- /phase -->      keep from Phase B onward
+//   <!-- phase:C -->  ... <!-- /phase -->      keep in Phase C only
+// Rationale: AGENTS.md is a Phase A artifact, but the gate scripts it commands are
+// installed in Phase B. Emitting those clauses at Phase A produced a project whose own
+// AGENTS.md ordered the agent to run files that do not exist. Unmarked content is
+// stage-neutral and always kept.
+//
+// The grammar is STRICT and unbalanced markers are a hard error, never a silent prune:
+// an unclosed block used to drop the entire rest of the file (taking "never force push"
+// and the protected-file list with it) while still reporting success, and a typo like
+// `phase:A+` used to be accepted and excluded from every stage. A generated governance
+// artifact that is silently truncated is worse than one that fails loudly.
+const PHASE_SPECS = { A: (p) => p === "A", "B+": (p) => p === "B" || p === "C", C: (p) => p === "C" };
+
+function prunePhaseBlocks(body, phase) {
+  const lines = String(body).split("\n");
+  const out = [];
+  const stack = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const open = /^\s*<!--\s*phase:([^\s>]+)\s*-->\s*$/.exec(line);
+    if (open) {
+      const spec = open[1];
+      if (!PHASE_SPECS[spec]) {
+        throw new Error(`unknown phase marker "${spec}" at line ${i + 1} (expected A, B+ or C)`);
+      }
+      stack.push(PHASE_SPECS[spec](phase));
+      continue;
+    }
+    if (/^\s*<!--\s*\/phase\s*-->\s*$/.test(line)) {
+      if (!stack.length) throw new Error(`stray <!-- /phase --> at line ${i + 1}`);
+      stack.pop();
+      continue;
+    }
+    if (stack.every(Boolean)) out.push(line);
+  }
+  if (stack.length) throw new Error(`${stack.length} unclosed <!-- phase:... --> block(s)`);
+  return out.join("\n");
+}
+
+// Phase-conditional artifacts cannot use writeIfAbsent: the file is written once at
+// Phase A and every later stage skips it, so a Phase C project would keep the Phase A
+// rendering forever — permanently missing the gate requirements whose scripts Phase B
+// and C just installed, and permanently displaying the "initialization is incomplete"
+// banner. Measured before this fix: A -> B -> C left the banner in place and
+// check-secrets.js absent from AGENTS.md at Phase C.
+//
+// Upgrade rule: overwrite ONLY when the file on disk is byte-identical to what an
+// EARLIER phase of this same template would have produced (i.e. it is an untouched
+// generated artifact). A user-edited file is never overwritten — it is reported as
+// skipped so the operator can reconcile it by hand. No fingerprint state is stored;
+// the candidate set is just the earlier-phase renderings.
+function writeOrUpgradeStaged(filepath, content, priorRenderings, mode) {
+  if (fs.existsSync(filepath)) {
+    const current = fs.readFileSync(filepath, "utf8");
+    if (current === content) return { path: filepath, action: "skipped" };
+    if (priorRenderings.includes(current)) {
+      fs.writeFileSync(filepath, content, "utf8");
+      if (mode && process.platform !== "win32") fs.chmodSync(filepath, mode);
+      return { path: filepath, action: "upgraded" };
+    }
+    return { path: filepath, action: "skipped", reason: "locally modified — reconcile by hand" };
+  }
+  return writeIfAbsent(filepath, content, mode);
+}
+
+
 function artifactType(artPath) {
   if (artPath === "AGENTS.md") return "policy";
   if (artPath.startsWith("docs/rules/")) return "policy";
@@ -463,9 +532,30 @@ inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effecti
           result = { path: artPath, action: "error", error: "source not found: " + art.source };
         } else {
           const raw = fs.readFileSync(sourcePath, "utf8");
-          const body = extractCodeBlock(raw);
+          const codeBlock = extractCodeBlock(raw);
+          // A prior-phase rendering must reproduce that phase EXACTLY, including the
+          // phase-dependent skill registry (Phase A/B carry a "reference-only" availability
+          // note that Phase C drops). Rendering priors with the current phase's registry
+          // made the comparison miss, so an A->B->C upgrade kept a stale Phase B body.
+          const renderAt = (ph) => {
+            const scoped = { ...inputs, generated_skill_registry: generateSkillRegistry(subSkillsSource, ph, path.resolve(target)) };
+            return resolvePlaceholders(prunePhaseBlocks(codeBlock, ph), art.placeholders, scoped);
+          };
           const executable = artPath === ".githooks/pre-commit" || artPath === ".githooks/commit-msg";
-          result = writeIfAbsent(targetPath, resolvePlaceholders(body, art.placeholders, inputs), executable ? 0o755 : null);
+          const staged = /<!--\s*phase:/.test(codeBlock);
+          try {
+            if (staged) {
+              const priors = PHASE_ORDER.slice(0, PHASE_ORDER.indexOf(effectivePhase)).map(renderAt);
+              result = writeOrUpgradeStaged(targetPath, renderAt(effectivePhase), priors, executable ? 0o755 : null);
+            } else {
+              result = writeIfAbsent(targetPath, renderAt(effectivePhase), executable ? 0o755 : null);
+            }
+          } catch (e) {
+            // A malformed phase marker is a template authoring bug. Report it as a normal
+            // artifact error (with the template path) instead of an uncaught stack trace,
+            // and write nothing: a half-pruned governance file is the worst outcome.
+            result = { path: artPath, action: "error", error: `${art.source}: ${e.message}` };
+          }
         }
         break;
       }

@@ -35,10 +35,10 @@ AI 仅在前两阶段自动行动（分析 + 提案，只读）；任何写操�
 | `release.tag_required` | 目标 tag 尚不存在（`git tag -l <tag>` 为空） | ⚠️ Blocked，tag 已存在 |
 | `release.proposal_approved` | Release Proposal 已生成（`scripts/release-manager.js plan`）且开发者已**明确批准** | ⚠️ Blocked，等待批准 |
 | `release.review_satisfied` | Proposal 风险/审核字段有效；高风险 Proposal 的 `reviewStatus` 为 `completed` 或 `explicitly-approved` | ❌ 停止发布，先完成深度审核或逐项取得开发者确认 |
-| `validator.passed` | `scripts/verify-governance.js` 退出码 0 | ❌ 停止发布。**豁免**：skill 仓库自身发布不适用本项（skill 仓库无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败）；skill 仓库自身以 `tests.required`（npm test 退出码 0）替代 |
-| `docs.parity_passed` | `scripts/check-doc-parity.js` 退出码 0（三语文档树结构平行） | ⚠️ Blocked，先同步缺失/漂移的文档；仅适用于维护三语文档树的仓库 |
+| `validator.passed` | `scripts/verify-governance.js` 退出码 0 | ❌ 停止发布 |
+| `docs.parity_passed` | 多语言文档树结构平行 | ⚠️ Blocked，先同步缺失/漂移的文档；**仅当**项目维护多语言文档树且安装了平行度检查器时机械执行，否则跳过 |
 | `sync.passed` | `scripts/check-sync.js` 退出码 0（同步组无漏项：watch 命中的组其 require 文件已一并更新） | ❌ 停止发布，先补齐漏同步的文件 |
-| `plan.delivery_verified` | `scripts/check-plan-delivery.js` 退出码 0（待归档计划声明的 Affected Files / 标识符 / 验证手段均已实际交付） | ❌ 停止发布，先补齐声明未交付项或修正计划 |
+| `plan.delivery_verified` | 待归档计划声明的 Affected Files / 标识符 / 验证手段均已实际交付 | ⚠️ Blocked，先补齐声明未交付项或修正过时的计划声明；**仅当**项目安装了交付对账检查器时机械执行，否则按计划逐项人工核对 |
 
 ## 版本一致性规则
 
@@ -59,7 +59,7 @@ AI 首先分析当前仓库状态，包括：
 - 当前 Git tag / 当前版本号（`git tag -l`、package.json）
 - `git log` 与 `git diff`（自上次发布以来的变更）
 - 文件变化、API/interface 变化、用户可见功能变化
-- **已裁定延后的发布安全事项**：读 roadmap 的「Deferred release-safety decisions」小节（本仓库为 `docs/{en,zh-CN,zh-TW}/roadmap.md`；被治理项目为其等价路线图）。这些条目记录了「门禁绿灯」实际证明范围之外的已知缺口——发布前必须知道自己在依赖什么、不在依赖什么。它们不阻断发布，但若某条的触发条件已经成立（例如本次发布要求证明评审者身份），应先停下另开 TASK 计划。
+- **已裁定延后的发布安全事项**：读项目路线图的「Deferred release-safety decisions」小节（若项目维护路线图）。这些条目记录了「门禁绿灯」实际证明范围之外的已知缺口——发布前必须知道自己在依赖什么、不在依赖什么。它们不阻断发布，但若某条的触发条件已经成立（例如本次发布要求证明评审者身份），应先停下另开 TASK 计划。
 
 然后运行只读分析工具生成 Proposal：
 
@@ -180,8 +180,8 @@ Proceed with release?
 开发者确认后，AI 执行：
 
 1. **再次检查仓库状态**：`git status`、`git rev-parse HEAD`。要求工作区干净、HEAD 与 Proposal 中 `headSha` 一致；若检测到变化 → **停止执行并重新分析版本**（重新走 Phase 1-3）。
-2. **版本同步**：更新 `package.json` → CHANGELOG（`[Unreleased]` 移入 `[X.Y.Z]`）→ `.governance/manifest.json` 的 `governance_version` 与 `release` 字段。**技能仓库自身发布时还须同步生成器的版本默认值**：`references/init-spec.json` 的 `inputs.governance_version.default` 与 `scripts/generate-governance.js` 的兜底哨兵——它们决定新 INIT 给被治理项目打上的版本号，漏改会让全新项目带着上一个版本号出生。
-3. **计划交付对账（gate）**：归档前运行 `node scripts/check-plan-delivery.js --gate`（退出码必须 0）——比对待归档计划声明的 Affected Files / 标识符是否已实际交付。**声明未交付不得归档**：要么补齐交付，要么修正过时的计划声明。纯设计计划（顶部显式标注 `Status: design plan, not implemented`）跳过对账，也不得归档。同一步还需运行 `node scripts/check-doc-consistency.js --release-gate`（退出码必须 0）：待归档门禁——任何状态为 implemented/Completed 且仍留在 `docs/plans/` 或 `docs/*/plans/` 下的计划都会使其失败。没有该脚本的形态（如手写检查）逐字枚举 `docs/plans/` 与 `docs/*/plans/` 下全部计划的状态行，任何 implemented/Completed 计划未归档即停止。**多语言文档树的项目**追加运行 `node scripts/check-doc-freshness.js --release-gate`（退出码必须 0）：译文落后于源文档（或仍标注 draft）即阻断发布；单语项目该检查自然 no-op。
+2. **版本同步**：更新 `package.json` → CHANGELOG（`[Unreleased]` 移入 `[X.Y.Z]`）→ `.governance/manifest.json` 的 `governance_version` 与 `release` 字段。
+3. **计划交付对账 + 待归档门禁（gate）**：归档前必须确认两件事，任一不通过即停止发布。①**交付对账**——待归档计划声明的 Affected Files / 标识符是否已实际交付；**声明未交付不得归档**，要么补齐交付，要么修正过时的计划声明；纯设计计划（顶部显式标注 `Status: design plan, not implemented`）跳过对账，也不得归档。②**待归档状态**——任何状态为 implemented/Completed 却仍留在 `docs/plans/` 或 `docs/*/plans/` 下的计划都必须先归档。已安装 `scripts/check-doc-consistency.js` 的项目运行 `node scripts/check-doc-consistency.js --release-gate`（退出码必须 0）机械执行第 ② 项；未安装交付对账检查器的项目（该脚本不随 INIT 安装）逐项人工核对第 ① 项，逐字枚举计划状态行核对第 ② 项。**多语言文档树的项目**追加运行 `node scripts/check-doc-freshness.js --release-gate`（退出码必须 0）：译文落后于源文档（或仍标注 draft）即阻断发布；单语项目该检查自然 no-op。
 4. **归档计划**：本版本已完成的里程碑条目（含勾选状态与验收结果）聚合写入 `docs/plans/archive/vX.Y.Z.md`（一个版本一个文件）；已完成的 `TASK_<name>.md` 以独立文件原样移入 `docs/plans/archive/`（保留原文件名）。**保留原文，绝不删除**。未完成的里程碑继续留在 `docs/plans/`。归档运行的先决条件：不存在任何状态为 implemented/Completed 而未归档的计划（第 3 步的 release-gate 已强制）。
 5. **提交 release commit**：`git add`（仅版本同步与归档相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 6. **校验**：运行 `scripts/verify-governance.js`，退出码必须为 0。
@@ -195,8 +195,7 @@ Proceed with release?
    `--yes` 是开发者批准的记录标记；**没有 `--yes` 该工具拒绝一切写操作**（等价于手工 `git tag -a vX.Y.Z -m "Release vX.Y.Z: <summary>"`）。execute 会再次检查工作区干净且 HEAD == proposal `headSha`。
 9. **推送**：`git push origin main` → `git push origin vX.Y.Z`（写操作均需用户确认，见权限）。
 10. **创建 Release**：GitHub 项目执行 `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`（gh 未登录/未安装 → ⚠️ Blocked，提示用户）。
-11. **打包并上传技能载荷资产**：运行 `bash scripts/package-skill.sh vX.Y.Z` 生成 `dist/ai-agent-governance-skill.tar.gz`（版本稳定名，只含 SKILL.md + references/ + scripts/ + LICENSE，见 SKILL.md 安装载荷定义），随后 `gh release upload vX.Y.Z dist/ai-agent-governance-skill.tar.gz`。**校验**：`tar -tzf` 列出的内容必须只有载荷，不得含 docs/、tests/、README 等基础设施文件。
-12. **更新状态**：把 `.governance/manifest.json` 的 `release.validated` 置为 `true`，重新校验并记录到 `validation.json`。
+11. **更新状态**：把 `.governance/manifest.json` 的 `release.validated` 置为 `true`，重新校验并记录到 `validation.json`。
 
 ## 安全规则
 

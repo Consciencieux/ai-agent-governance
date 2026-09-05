@@ -3,7 +3,7 @@ const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 
-const HYGIENE = path.join(__dirname, "..", "..", "scripts", "check-coding-hygiene.js");
+const HYGIENE = path.join(__dirname, "..", "..", "repo-tools", "check-coding-hygiene.js");
 const repo = path.join(__dirname, "..", "..");
 
 // fixture text is assembled so the checker's own advisory scan never reads it as debt

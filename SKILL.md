@@ -41,12 +41,12 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 
 ### 版本与更新（Version & Update）
 
-- 本 skill 的版本记录在 SKILL.md frontmatter 的 `version` 字段（发布时与 package.json / CHANGELOG / tag 同步，见 `references/workflows/release.md` 版本一致性规则）。
+- 本 skill 的版本记录在 SKILL.md frontmatter 的 `version` 字段（发布时与 package.json / CHANGELOG / tag 同步，见 `repo-workflows/skill-release.md` 版本一致性；被治理项目的版本一致性规则见 `references/workflows/release.md`）。
 - 用户说 "check skill update" / "update this skill" 时，Agent 执行：
 
   1. 读取本地 `version`
   2. 查询上游最新 release（`gh release view` 或 fetch `https://api.github.com/repos/Consciencieux/ai-agent-governance/releases/latest`）
-  3. 比较并报告：本地版本 vs 最新版本、CHANGELOG 差异摘要、更新方式（当前为手动 clone；完整自动化 INSTALL → UPDATE → ROLLBACK 由 ai-skill-manager 提供，见 `docs/zh-CN/plans/skill-lifecycle-management.md`）
+  3. 比较并报告：本地版本 vs 最新版本、CHANGELOG 差异摘要、更新方式（当前为手动 clone；完整自动化 INSTALL → UPDATE → ROLLBACK 由独立的 ai-skill-manager skill 提供，尚未发布）
 
 - **绝不自动更新**（需用户明确同意）；更新后重新加载 skill。
 
@@ -210,9 +210,10 @@ Phase 0 检测时同时判定项目成熟度，按等级调整初始化策略：
 
 1. 读取 `.governance/manifest.json`，确认 `governance_version` 与声明工件
 2. 运行 `scripts/verify-governance.js --json`，比对声明与实际 → 得到偏差清单（缺失工件、版本漂移）
-3. 输出**治理健康报告**：通过项 / 缺失项 / 版本漂移，写入 `.governance/validation.json` 与 `.governance/drift-report.json`
-4. **最小补丁**：仅修复缺失项，不重建、不重构、不迁移结构；修复治理文件走「治理文件保护」流程（需用户确认）
-5. 若 `governance_version` 与基线不一致 → 报告版本漂移，说明差异，**不擅自降级/升级**；用户要求升级时走「版本迁移（MIGRATE）」流程。
+3. **引用闭包核查**：治理规则里的引用是否在**本项目**解析得开。逐个检查 `AGENTS.md`、`docs/rules/*.md` 与 `.governance/generated/skills/**` 所引用的文件、命令与脚本路径，凡"文中要求、项目里没有"的即为缺陷——它让 Agent 收到无法执行的指令。工件存在性检查不覆盖这一类：一份规则可以完整存在，却通篇指向不存在的路径。
+4. 输出**治理健康报告**：通过项 / 缺失项 / 版本漂移 / 断裂引用，写入 `.governance/validation.json` 与 `.governance/drift-report.json`
+5. **最小补丁**：仅修复缺失项，不重建、不重构、不迁移结构；修复治理文件走「治理文件保护」流程（需用户确认）
+6. 若 `governance_version` 与基线不一致 → 报告版本漂移，说明差异，**不擅自降级/升级**；用户要求升级时走「版本迁移（MIGRATE）」流程。
 
 **长期运行期**：INIT 完成后，日常任务的巡检由生成的 `.governance/generated/skills/drift-check` 子技能承担；AUDIT 模式用于定期人工健康检查。
 
@@ -275,7 +276,7 @@ Phase 0 检测时同时判定项目成熟度，按等级调整初始化策略：
 
 ### Phase 1：治理体系构建（生成器执行 + Agent 判断与确认门）
 
-**写文件的活全部交给生成器**，Agent 只负责判断、确认与人工兜底。产物清单与生成规则的单一事实源是 `references/init-spec.json`（**本节不复述工件列表**，避免双源漂移）；人类可读的产物一览见 `docs/<lang>/bootstrap-output.md`。
+**写文件的活全部交给生成器**，Agent 只负责判断、确认与人工兜底。产物清单与生成规则的单一事实源是 `references/init-spec.json`（**本节不复述工件列表**，避免双源漂移）。
 
 **1. Agent 判断（Phase 0 的检测结论 → 生成器输入）**
 
