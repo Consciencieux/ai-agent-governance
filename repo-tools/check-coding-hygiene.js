@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // Coding Hygiene Check — governs THIS repo's test architecture (anti-patch plan §5).
-// It ships inside the payload tarball because packaging copies scripts/ wholesale, but it
-// is NOT declared in references/init-spec.json, so INIT never installs or runs it in a
-// governed project. Shape-guard below: without tests/run-tests.js AND tests/suites/ the
-// check reports "not applicable" and exits 0 — a governed project must never see a
-// failure from a check that does not describe its layout.
+// REPO-ONLY: lives under repo-tools/, which the packaging step cannot reach — it never
+// travels in the tarball and never reaches a governed project. Shape-guard below still
+// applies: without tests/run-tests.js AND tests/suites/ the check reports "not applicable"
+// and exits 0 (a guarded baseline, kept per engineering restraint — it costs nothing and
+// protects against a future file wrongly moved back into a shipped dir).
 // Checks the mechanically verifiable subset of §5; each states the problem it solves and
 // why it is the narrowest solution (engineering-restraint machinery test):
 //   1. single-discovery entry — run-tests.js must not register tests anymore (monolith
@@ -20,7 +20,7 @@
 //      (advisory class — wording/ownership is a human judgement, never gate it here).
 // NOT verifiable/refused to fake: "root cause is truly correct" / semantic quality of
 // a fix / "before-fix fail" of historical commits — those stay judgement + evidence.
-// Usage: node scripts/check-coding-hygiene.js [--json] [--gate]
+// Usage: node repo-tools/check-coding-hygiene.js [--json] [--gate]
 // Exit: --gate fails only on checks 1-2 (mechanical); 3 is advisory (exit 0).
 const fs = require("fs");
 const path = require("path");

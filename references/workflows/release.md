@@ -42,13 +42,14 @@ AI 仅在前两阶段自动行动（分析 + 提案，只读）；任何写操�
 
 ## 版本一致性规则
 
-同一版本**五处**必须一致：
+同一版本**四处**必须一致：
 
 - `package.json` 的 `version`
 - `CHANGELOG.md` 顶部版本节
 - `.governance/manifest.json` 的 `governance_version`
-- SKILL.md frontmatter 的 `version`
 - Git tag `v<version>`
+
+> 说明：生成的子技能 SKILL.md（`.governance/generated/skills/*/SKILL.md`）不携带 `version` 字段，因此不是版本同步点；被治理项目的版本同步是「package.json → CHANGELOG → manifest → tag」四处，由 `release-manager` 子技能 Phase 4 执行。
 
 SemVer：MAJOR.MINOR.PATCH —— 破坏性 → MAJOR，新能力 → MINOR，修复 → PATCH。
 

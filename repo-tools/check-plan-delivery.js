@@ -14,7 +14,7 @@
 // 中文同义词亦可：写入/接线。
 //
 // Usage:
-//   node scripts/check-plan-delivery.js [--json] [--gate] [--plan <file>]
+//   node repo-tools/check-plan-delivery.js [--json] [--gate] [--plan <file>]
 // Exit 0: every declared item is delivered (or --advisory default when not --gate).
 // Exit 1: undelivered declarations found (only in --gate mode, or always with --gate).
 

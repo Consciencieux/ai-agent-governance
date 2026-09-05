@@ -41,7 +41,7 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 
 ### 版本与更新（Version & Update）
 
-- 本 skill 的版本记录在 SKILL.md frontmatter 的 `version` 字段（发布时与 package.json / CHANGELOG / tag 同步，见 `repo-workflows/skill-release.md` 版本一致性；被治理项目的版本一致性规则见 `references/workflows/release.md`）。
+- 本 skill 的版本记录在 SKILL.md frontmatter 的 `version` 字段；发布时与 `package.json` / CHANGELOG / `references/init-spec.json` 的 `governance_version.default` / `scripts/generate-governance.js` 的兜底哨兵 / Git tag 同步（本 skill 仓库自身的发布流程见其 skill-release.md；被治理项目的版本一致性规则见 `references/workflows/release.md`）。
 - 用户说 "check skill update" / "update this skill" 时，Agent 执行：
 
   1. 读取本地 `version`

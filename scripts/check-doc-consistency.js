@@ -321,7 +321,7 @@ function main() {
       }
       // YAML frontmatter carries an UNQUOTED `version: X.Y.Z`, which the regex above cannot
       // match (its "version" alternative requires literal double quotes). SKILL.md's
-      // frontmatter is one of this repo's three release sync points, so it was the only one
+      // frontmatter is one of this repo's five release sync points, so it was the only one
       // with no mechanical backstop — a release could ship a stale skill version and pass
       // every gate (audit 2026-09-05). Gate class: a version sync point must not drift.
       const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(c);
@@ -344,10 +344,39 @@ function main() {
     const cl = readFile(path.join(ROOT, "CHANGELOG.md"));
     if (cl) {
       const heads = cl.match(/^##\s+\[(\d+\.\d+\.\d+)\]/gm) || [];
-      if (heads.length > 0) {
-        const top = /^##\s+\[(\d+\.\d+\.\d+)\]/.exec(heads[0]);
-        if (top && top[1] !== version) {
-          const item = `CHANGELOG.md: newest version section [${top[1]}] != current version ${version} (release sync point — version sync must rename [Unreleased] to the new version)`;
+      const top = /^##\s+\[(\d+\.\d+\.\d+)\]/.exec(heads[0] || "");
+      if (top && top[1] !== version) {
+        const item = `CHANGELOG.md: newest version section [${top[1]}] != current version ${version} (release sync point — version sync must rename [Unreleased] to the new version)`;
+        issues.version_examples.push(item);
+        if (anyGate) gateIssues.push({ kind: "version_examples", item });
+      }
+    }
+    // The two generator sync points live OUTSIDE .md files, which mdFiles() cannot see:
+    // `references/init-spec.json` `inputs.governance_version.default` (stamped into every
+    // new governed project's manifest) and `scripts/generate-governance.js`'s fallback
+    // sentinel. Both are skill-release.md Phase 4 step 2 sync points — a release that
+    // bumps them silently changes the version stamped into future INITs. Gate class:
+    // a version sync point must not drift. No-op when either file is absent (a governed
+    // project does not have references/init-spec.json — it is SKILL-INTERNAL).
+    const specPath = path.join(ROOT, "references", "init-spec.json");
+    if (fs.existsSync(specPath)) {
+      const spec = readFile(specPath);
+      if (spec) {
+        const dv = /"governance_version"[^}]*?"default"\s*:\s*"(\d+\.\d+\.\d+)"/.exec(spec);
+        if (dv && dv[1] !== version) {
+          const item = `references/init-spec.json: inputs.governance_version.default ${dv[1]} != ${version} (release sync point — INIT stamps this into every new governed project)`;
+          issues.version_examples.push(item);
+          if (anyGate) gateIssues.push({ kind: "version_examples", item });
+        }
+      }
+    }
+    const genPath = path.join(ROOT, "scripts", "generate-governance.js");
+    if (fs.existsSync(genPath)) {
+      const gen = readFile(genPath);
+      if (gen) {
+        const sv = /fallback\s*:\s*"(\d+\.\d+\.\d+)"/.exec(gen);
+        if (sv && sv[1] !== version) {
+          const item = `scripts/generate-governance.js: fallback sentinel ${sv[1]} != ${version} (release sync point — last-resort default when package.json is unavailable)`;
           issues.version_examples.push(item);
           if (anyGate) gateIssues.push({ kind: "version_examples", item });
         }

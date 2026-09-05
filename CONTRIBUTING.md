@@ -36,13 +36,13 @@ The test suite covers: empty project (exit 1), full default structure (exit 0, 2
 
 ## Changing Governance Artifacts
 
-`SKILL.md`, `references/`, `scripts/` define the governance framework itself. Changes follow the release policy (see `references/workflows/release.md`):
+`SKILL.md`, `references/`, `scripts/` define the governance framework itself. Releases of this skill repo follow its own flow (see `repo-workflows/skill-release.md`):
 
 1. Update `CHANGELOG.md` (classify: doc-only → none; fix → Fixed; feature → Added; breaking → Changed)
 2. Bump `package.json` version (SemVer: breaking → MAJOR, feature → MINOR, fix → PATCH)
-3. Keep version consistency: package.json · CHANGELOG · tag
+3. Keep version consistency: package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` default · `scripts/generate-governance.js` sentinel · tag
 4. Run `npm test` before pushing
-5. Release only with the `release-manager` flow (preconditions → version sync → validate → tag → push → GitHub Release)
+5. Release only with the `release-manager` flow (preconditions → version sync → archive → validate → tag → push → GitHub Release)
 
 ## Commit Conventions
 

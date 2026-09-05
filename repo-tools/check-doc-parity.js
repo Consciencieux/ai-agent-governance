@@ -4,7 +4,7 @@
 // must exist in each tree with the same heading hierarchy, code-block count, table
 // dimensions and list-item count. Also verifies the root English landing files
 // (README.md, CONTRIBUTING.md) exist. Structural parity is NOT semantic parity.
-// Usage: node scripts/check-doc-parity.js [--json]
+// Usage: node repo-tools/check-doc-parity.js [--json]
 // Exit 0: trees are parallel. Exit 1: drift found.
 
 const fs = require("fs");

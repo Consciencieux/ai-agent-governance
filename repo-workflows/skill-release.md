@@ -11,7 +11,7 @@
 | `git.require_clean_status` | 工作区干净 | ⚠️ Blocked |
 | `tests.required` | `npm test` 退出码 0 | ❌ 停止 |
 | `changelog.required` | CHANGELOG 已记录本次变更 | ⚠️ Blocked |
-| `version.manifest_match_tag` | `package.json` / CHANGELOG / `SKILL.md` frontmatter `version` 与 tag 一致（无 `.governance/manifest.json`） | ❌ 停止 |
+| `version.manifest_match_tag` | `package.json` / CHANGELOG / `SKILL.md` frontmatter `version` / `references/init-spec.json` `governance_version.default` / `scripts/generate-governance.js` 哨兵与 tag 一致（无 `.governance/manifest.json`）；`check-doc-consistency.js --gate` 的 `version_examples` 簇机械验证 | ❌ 停止 |
 | `release.tag_required` | 目标 tag 尚不存在 | ⚠️ Blocked |
 | `release.proposal_approved` | Release Proposal 已生成且开发者已明确批准 | ⚠️ Blocked |
 | `release.review_satisfied` | 高风险 Proposal 的 `reviewStatus` 为 `completed` 或 `explicitly-approved` | ❌ 停止 |
@@ -21,13 +21,15 @@
 
 与被治理项目的差异：无 `validator.passed`。技能仓库没有 `.governance/manifest.json`，也没有软件项目形态的治理工件，`verify_governance.js` 按默认检查必然失败（ADR-0006）——该项由 `tests.required`（`npm test` 退出码 0）替代。注：`.governance/release-proposal.json` 是本流程的运行时产物（git 忽略），与上述「无 manifest」不矛盾。
 
-## 版本一致性（版本号三处 + tag，无 manifest）
+## 版本一致性（五个同步点 + tag，无 manifest）
 
-技能仓库无 `.governance/manifest.json`，版本一致性简化为三处：
+技能仓库无 `.governance/manifest.json`，版本一致性落实为：
 
 - `package.json` 的 `version`
 - `CHANGELOG.md` 顶部版本节（`[X.Y.Z]`）
 - `SKILL.md` frontmatter `version`
+- `references/init-spec.json` 的 `inputs.governance_version.default`（新 INIT 给被治理项目盖章的版本）
+- `scripts/generate-governance.js` 的兜底哨兵（package.json 不可用时的最后默认值）
 
 + Git tag `v<version>`
 
@@ -93,7 +95,7 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
    - **归档冲突规则**：一份计划在本仓库存在三份语言副本（`docs/{en,zh-CN,zh-TW}/plans/X.md`），而 `docs/archive/` 是共享单语目录。**以简体中文副本为准**；en / zh-TW 副本不是归档候选。最终 `docs/archive/` 下只有一个 `X.md`。
    - 未完成的计划继续留在各语言树的 `plans/` 下。
 5. **更新 roadmap**：按 `docs/en/roadmap.md` 维护规则重置 horizon
-6. **提交 release commit**：`git add`（版本同步与归档相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`
+6. **提交 release commit**：`git add`（版本同步、归档与 roadmap 相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 7. **复跑轻量门禁**（release commit 之后、tag 之前）：`npm run check`（exit 0）——确认归档与版本同步的提交内容本身没有破坏任何门禁。
 8. **校验（本仓库以 `npm test` 为准）**：技能仓库的校验义务由第 7 步的 `npm test` + 发布门禁承担。`scripts/verify_governance.js` 在本仓库**预期退出码 1**（无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败——ADR-0006，本仓库不 dogfood 自身框架）。它不是本流程的门禁：**不得为了让它通过而伪造 `.governance/`**，也不得因其非零退出码而中止发布。
 9. **生成/更新 Proposal**：`headSha` 更新为新 HEAD

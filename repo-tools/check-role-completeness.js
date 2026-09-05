@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Role Completeness Check — SKILL-INTERNAL (in scripts/, deliberately NOT in init-spec).
+// Role Completeness Check — REPO-ONLY (lives under repo-tools/, never ships in the tarball).
 // Enforces the distribution-role contract declared in references/init-spec.json:
 //   1. every file under references/ + scripts/ is classified — either an artifact `source`
 //      (INSTALLED) or listed in distribution.skillInternal (SKILL-INTERNAL);

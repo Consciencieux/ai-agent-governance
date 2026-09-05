@@ -957,6 +957,33 @@ test("consistency --gate: synced CHANGELOG version section passes", () => {
   return !out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("newest version section"));
 });
 
+// Generator sync points live outside .md files (mdFiles() cannot see them): init-spec.json
+// `governance_version.default` stamps every new governed project and generate-governance.js's
+// fallback sentinel is its last-resort default. A release that drifts either silently changes
+// the version future INITs report — the v0.13.1 audit found no backstop for either.
+test("consistency --gate: stale init-spec default fails the gate", () => {
+  const dir = tmp("a5-initspec-stale");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "0.13.1" }));
+  fs.mkdirSync(path.join(dir, "references"), { recursive: true });
+  write(path.join(dir, "references", "init-spec.json"),
+    '{\n  "distribution": { "skillInternal": [] },\n  "inputs": {\n    "governance_version": {\n      "type": "string",\n      "default": "0.12.0",\n      "description": "x"\n    }\n  }\n}\n');
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("init-spec.json"));
+});
+
+test("consistency --gate: stale generator sentinel fails the gate", () => {
+  const dir = tmp("a5-generator-stale");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "0.13.1" }));
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  write(path.join(dir, "scripts", "generate-governance.js"), '  return typeof fallback === "string" && fallback.length > 0 ? fallback : "0.12.0";\n');
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("generate-governance.js"));
+});
+
 // A6 regression: docs/archive/ was never scanned, so an archived plan could keep saying
 // "已实现（待 Release 归档）" — a pending-archive claim inside the archive — forever.
 // The archive IS the completed state, so a file living there must say archived.

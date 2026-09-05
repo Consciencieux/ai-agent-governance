@@ -139,7 +139,7 @@ ai-agent-governance/
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
-│   └── skill-release.md        # skill repo release flow (three version places + tag, tarball build)
+│   └── skill-release.md        # skill repo release flow (five version sync points + tag, tarball build)
 │
 ├── docs/                       # project knowledge — developer-maintained, read by developers & agents (trigger words, plans, roadmap)
 │   ├── glossary.md             # trilingual terminology table (shared)
@@ -171,4 +171,4 @@ ai-agent-governance/
                                 # release, generator, payload, hygiene) — see anti-patch plan §3
 ```
 
-Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations. One nuance: `repo-tools/check-coding-hygiene.js` travels inside the tarball (packaging copies `scripts/` wholesale) but is NOT declared in `references/init-spec.json`, so INIT never installs or runs it; run outside this repo's layout it reports "not applicable" and exits 0.
+Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations. `repo-tools/` and `repo-workflows/` are REPO-ONLY by directory: the packaging step copies only the four payload items, so nothing under them can reach a tarball.

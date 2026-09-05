@@ -16,7 +16,6 @@
     "check:skill-release": "npm run check && node repo-tools/check-plan-delivery.js --gate && node scripts/check-doc-consistency.js --release-gate && node scripts/check-doc-freshness.js --release-gate",
     "check:repo-release": "npm test && node repo-tools/check-coding-hygiene.js --gate && node repo-tools/check-plan-delivery.js --gate && node scripts/check-doc-freshness.js",
     "check:release": "npm run check:skill-release",
-    "check:release": "npm run check:skill-release",
     "plans:delivery": "node repo-tools/check-plan-delivery.js --gate"
   },
   "engines": {

@@ -21,7 +21,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 由此得出兩條規則，且在本表存在之前兩條都被違反過：
 
 1. **SKILL-INTERNAL 檔案絕不能被當作被治理專案的規則來源引用**（那裡沒有這個檔案）。子技能與生成的 AGENTS.md 文本只能指向 INSTALLED 路徑——`docs/rules/*`、被治理專案自己的 `AGENTS.md`、或複製過去的 `scripts/*`。
-2. **SKILL-INTERNAL 腳本在本倉庫形態之外必須 no-op**，因為打包仍會帶上它。`check-coding-hygiene.js` 的做法是：缺少套件佈局時報告 `applicable: false`。
+2. **SKILL-INTERNAL 腳本在本倉庫形態之外必須 no-op**，因為打包仍會帶上它（角色是 SKILL-INTERNAL 的檔案隨 tarball 走、INIT 不安裝）。`check-coding-hygiene.js`（現為 REPO-ONLY，不再打包）的做法是：缺少套件佈局時報告 `applicable: false`。
 
 ### 第二條軸：可移植性（檔案"去哪裡"與其內容"在那裡是否成立"）
 
@@ -111,7 +111,7 @@ ai-agent-governance/
 │   ├── check-coding-hygiene.js # 編碼衛生（測試歸屬 + 殘留標記）
 │   └── package-skill.sh        # 發佈載荷 tarball 打包
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發
-│   └── skill-release.md        # 技能倉庫發佈流程（版本三處 + tag、tarball 建置）
+│   └── skill-release.md        # 技能倉庫發佈流程（版本五個同步點 + tag、tarball 建置）
 │
 │   ├── glossary.md             # 三語術語對照表（共享）
 │   ├── design-decisions/       # 架構決策記錄（共享，簡體單語）
@@ -142,4 +142,4 @@ ai-agent-governance/
                                 # release、generator、payload、hygiene）——見反補丁計劃 §3
 ```
 
-安裝載荷 = `SKILL.md` + `references/` + `scripts/` + `LICENSE` 四項。分割線以下（`docs/`、`tests/`、`package.json`、`.github/`、README、CONTRIBUTING、CHANGELOG、AGENTS.md）是倉庫基礎設施——不得複製進 skill 安裝目錄。一處例外說明：`repo-tools/check-coding-hygiene.js` 會隨 tarball 分發（打包整目錄複製 `scripts/`），但**未**在 `references/init-spec.json` 宣告，INIT 從不安裝或執行它；在本倉庫佈局之外執行時它報告 not applicable 並 exit 0。
+安裝載荷 = `SKILL.md` + `references/` + `scripts/` + `LICENSE` 四項。分割線以下（`docs/`、`tests/`、`package.json`、`.github/`、README、CONTRIBUTING、CHANGELOG、AGENTS.md）是倉庫基礎設施——不得複製進 skill 安裝目錄。`repo-tools/` 與 `repo-workflows/` 按目錄即為 REPO-ONLY：打包步驟只複製以上四項，它們不可能進入 tarball。
