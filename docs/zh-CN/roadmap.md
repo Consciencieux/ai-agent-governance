@@ -23,7 +23,7 @@
 - **分级审核门禁** —— release/push 风险分级（低 = 仅轻量级；中 = 批准时建议深度审查；高 = 必须 review-manager）；轻量级脚本总是自动跑。设计：[../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
 - **被治理项目同步组** —— 两层：（L1）声明式 `.governance/sync-rules.json`（watch/require）+ 清单驱动 Phase 5；（L2）`scripts/check-sync.js` 对照实际改动集机械验证。设计：[../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
 - **INIT 生成器脚本化** —— 确定性、可快照测试的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期。设计：[../archive/init-scripted-generator.md](../archive/init-scripted-generator.md)
-- **计划交付门禁** —— `scripts/check-plan-delivery.js`：计划与实际交付的机械对账（归档前 fail-closed）
+- **计划交付门禁** —— `repo-tools/check-plan-delivery.js`：计划与实际交付的机械对账（归档前 fail-closed）
 - **计划归档门禁** —— 规范计划状态关键词（design/active/implemented/completed/archived）+ release 作用域的待归档门禁（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修复（`####` 子节不再截断）
 - **安装载荷完整性门禁** —— 3 项测试证明复制的门禁脚本自包含（无兄弟 `require`）且 `init-spec.json` 的复制清单与 INIT 实际写入一致
 - **确认政策重写** —— 跨五个同步点提交前一次确认；计划批准降为意图对齐（`consent-policy-hardening` 计划）
@@ -34,7 +34,7 @@
 - **工程克制（机制测试）** —— 未经批准的新增机制必须自证；已批准需求优先；语义接缝合法。设计：[../archive/engineering-restraint.md](../archive/engineering-restraint.md)
 - **根因修复协议 + 失败预算** —— 复现优先的计划字段、`repairSessionId` 绑定、第一/二/三次失败升级。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **测试架构拆分 + 编码卫生门禁** —— 单一发现入口 + 八个领域套件（集合对账），并对单体回归与空套件设门禁。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
-- **分发角色完备门禁** —— `references/` 与 `scripts/` 下每个文件都携带唯一声明角色（INSTALLED / SKILL-INTERNAL），由 `scripts/check-role-completeness.js` 验证（无未分类文件、无重叠、无陈旧声明、打包边界一致）。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **分发角色完备门禁** —— `references/` 与 `scripts/` 下每个文件都携带唯一声明角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 验证（无未分类文件、无重叠、无陈旧声明、打包边界一致）。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **门禁分级 + 证据等级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口按变更范围匹配，每个门禁的产出标注为机械 / 人工背书 / 未验证，使绿色结果不被读成超出其实际证明力的结论。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 
 ### 近期

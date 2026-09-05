@@ -6,7 +6,7 @@
 // skill files (scripts, templates, spec) were added but the architecture doc stayed
 // stale — so an agent cannot "skip reading the architecture" and silently drift it.
 //
-// Usage: node scripts/check-layout-sync.js [--json]
+// Usage: node repo-tools/check-layout-sync.js [--json]
 // Exit 0: layout is in sync. Exit 1: files missing from the tree (fix the docs).
 
 const fs = require("fs");
@@ -17,7 +17,11 @@ const DOCS = path.join(ROOT, "docs");
 const TREES = ["en", "zh-CN", "zh-TW"];
 // Map tree heading to the section we extract (structure differs only by translation)
 const HEADING = /###\s+(Repository Layout|仓库布局|倉庫佈局)/;
-const DIRS = ["references", "scripts"];
+// The four directories whose contents must be documented in every architecture.md tree.
+// repo-tools/ and repo-workflows/ joined the list when the payload/repo boundary became
+// physical: a file dropped into them still needs a documented home, and leaving them
+// unscanned would let repo tooling accumulate undocumented (boundary-split plan §4).
+const DIRS = ["references", "scripts", "repo-tools", "repo-workflows"];
 
 function listFiles(dir) {
   let entries;
@@ -64,6 +68,22 @@ function extractTreeFileTokens(architectureMd) {
 function main() {
   const json = process.argv.includes("--json");
   const missingByTree = {};
+  // Shape guard: this check describes THIS repo's layout (references/ + scripts/ mirrored
+  // in three architecture.md trees). "Is this that shape?" is answered by the docs side,
+  // NOT by `references/`: the three architecture.md trees are what this gate reads, and a
+  // governed project has none of them. Keying the guard on `references/` was wrong twice
+  // over — a governed project fell through to the half-scan branch and exited 1, and
+  // deleting `references/` HERE turned the gate green instead of failing, silently
+  // disabling the per-directory protection immediately below (audit 2026-09-05).
+  // With the docs trees as the marker, a missing `references/` in this repo still reaches
+  // that protection and still fails, which is the whole point of it.
+  const treesPresent = TREES.filter((lang) => fs.existsSync(path.join(DOCS, lang, "architecture.md")));
+  if (treesPresent.length === 0) {
+    if (json) process.stdout.write(JSON.stringify({ pass: true, applicable: false, issues: [] }, null, 2) + "\n");
+    else console.log("✓ layout sync: not applicable (no docs/<lang>/architecture.md trees — not this repo's shape)");
+    process.exit(0);
+  }
+
   // Per-directory guard, not just the union: renaming `references/` away used to leave
   // `scripts/` alone carrying the check, so the scan silently enforced HALF the corpus and
   // still printed a confident green line with a plausible file count. Each configured root

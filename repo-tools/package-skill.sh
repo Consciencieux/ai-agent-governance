@@ -4,7 +4,7 @@
 # docs/, tests/, package.json, .github/, README, CONTRIBUTING, CHANGELOG, AGENTS.md
 # are repository infrastructure and MUST NOT be included.
 #
-# Usage: bash scripts/package-skill.sh [version]
+# Usage: bash repo-tools/package-skill.sh [version]
 #   version defaults to the version in package.json.
 # Output: dist/ai-agent-governance-skill.tar.gz (version-stable name, uploaded as a release asset)
 

@@ -101,10 +101,22 @@ function candidatePaths(declared) {
     // Bare filename with no directory: resolve against the known homes. Plans often cite
     // just "sync-rules.template.md" instead of "references/templates/sync-rules.template.md".
     if (!c.includes("/")) {
-      for (const home of ["references/templates", "references/policies", "references/workflows", "scripts", "tests", "docs", "docs/archive"]) {
+      for (const home of ["references/templates", "references/policies", "references/workflows", "scripts", "repo-tools", "repo-workflows", "tests", "docs", "docs/archive"]) {
         expanded.push(home + "/" + c);
       }
     }
+    // Relocation-aware resolution. A plan records the path a file had WHEN IT SHIPPED, and
+    // archived plans are permanent history that must not be rewritten. When the payload /
+    // repo-tools boundary split moved six gates and skill-release.md out of the shipped
+    // dirs, every historical declaration of scripts/<gate>.js became "undelivered" even
+    // though the delivery happened and the file still exists — one directory over. Resolve
+    // the old path to its current home instead of failing, and instead of editing history.
+    const RELOCATIONS = [
+      [/^scripts\/(check-doc-parity|check-plan-delivery|check-layout-sync|check-role-completeness|check-coding-hygiene)\.js$/, "repo-tools/$1.js"],
+      [/^scripts\/package-skill\.sh$/, "repo-tools/package-skill.sh"],
+      [/^references\/workflows\/skill-release\.md$/, "repo-workflows/skill-release.md"]
+    ];
+    for (const [re, to] of RELOCATIONS) if (re.test(c)) expanded.push(c.replace(re, to));
   }
   return [...new Set(expanded)];
 }

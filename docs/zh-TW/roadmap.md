@@ -23,7 +23,7 @@
 - **分級審核閘門** —— release/push 風險分級（低 = 僅輕量級；中 = 批准時建議深度審查；高 = 必須 review-manager）；輕量級腳本總是自動跑。設計：[../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
 - **被治理專案同步組** —— 兩層：（L1）聲明式 `.governance/sync-rules.json`（watch/require）+ 清單驅動 Phase 5；（L2）`scripts/check-sync.js` 對照實際改動集機械驗證。設計：[../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
 - **INIT 生成器腳本化** —— 確定性、可快照測試的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期。設計：[../archive/init-scripted-generator.md](../archive/init-scripted-generator.md)
-- **計劃交付閘門** —— `scripts/check-plan-delivery.js`：計劃與實際交付的機械對帳（歸檔前 fail-closed）
+- **計劃交付閘門** —— `repo-tools/check-plan-delivery.js`：計劃與實際交付的機械對帳（歸檔前 fail-closed）
 - **計劃歸檔閘門** —— 規範計劃狀態關鍵詞（design/active/implemented/completed/archived）+ release 作用域的待歸檔閘門（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修復（`####` 子節不再截斷）
 - **安裝載荷完整性閘門** —— 3 項測試證明複製的閘門腳本自包含（無兄弟 `require`）且 `init-spec.json` 的複製清單與 INIT 實際寫入一致
 - **確認政策重寫** —— 跨五個同步點提交前一次確認；計劃批准降為意圖對齊（`consent-policy-hardening` 計劃）
@@ -34,7 +34,7 @@
 - **工程克制（機制測試）** —— 未經批准的新增機制必須自證；已批准需求優先；語義接縫合法。設計：[../archive/engineering-restraint.md](../archive/engineering-restraint.md)
 - **根因修復協定 + 失敗預算** —— 重現優先的計劃欄位、`repairSessionId` 綁定、第一/二/三次失敗升級。設計：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **測試架構拆分 + 編碼衛生閘門** —— 單一發現入口 + 八個領域套件（集合對帳），並對單體回歸與空套件設閘門。設計：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
-- **分發角色完備閘門** —— `references/` 與 `scripts/` 下每個檔案都攜帶唯一宣告角色（INSTALLED / SKILL-INTERNAL），由 `scripts/check-role-completeness.js` 驗證（無未分類檔案、無重疊、無陳舊宣告、打包邊界一致）。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **分發角色完備閘門** —— `references/` 與 `scripts/` 下每個檔案都攜帶唯一宣告角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 驗證（無未分類檔案、無重疊、無陳舊宣告、打包邊界一致）。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **閘門分級 + 證據等級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口依變更範圍匹配，每個閘門的產出標註為機械 / 人工背書 / 未驗證，使綠色結果不被讀成超出其實際證明力的結論。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 
 ### 近期
