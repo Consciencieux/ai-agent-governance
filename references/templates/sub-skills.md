@@ -223,7 +223,7 @@ Any failure → report ⚠️/❌ with the exact item; do NOT proceed.
 
 ## Phase 1 — Analyze
 
-Inspect the repository: current tag/version, `git log` / `git diff` since the last release, file changes, API/interface changes, user-visible changes. Run the read-only analyzer:
+Inspect the repository: current tag/version, `git log` / `git diff` since the last release, file changes, API/interface changes, user-visible changes. Also read the roadmap's **Deferred release-safety decisions** section (if the project keeps one): those entries record known gaps between what a green gate proves and what it does not. They do not block a release, but if one of their revisit conditions now holds, stop and open a TASK plan instead of releasing past it. Run the read-only analyzer:
 
 `node scripts/release-manager.js plan --json '<{"current":"X.Y.Z","changes":[{"type":"...","description":"...","uncertain":false}]}>'`
 

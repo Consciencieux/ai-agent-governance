@@ -164,4 +164,42 @@ test("payload: INIT installs the protected-files list the installed check reads"
     const out = JSON.parse(r.stdout);
     return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-lock.js"));
   });
+
+  // The generated release-manager sub-skill invokes scripts/release-manager.js, but the
+  // script was declared SKILL-INTERNAL, so INIT never installed it and a governed
+  // project's release flow stopped at step 8 on a missing file. Adjudicated to INSTALLED
+  // (it requires no sibling module and reads nothing from the skill repo). These two tests
+  // pin the runtime dependency the sub-skill actually has.
+  test("payload: INIT installs the release tag executor the sub-skill invokes", () => {
+    const dir = tmp("payload-release-manager");
+    const gen = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", "C"], { encoding: "utf8" });
+    if (gen.status !== 0) return false;
+    const installed = path.join(dir, "scripts/release-manager.js");
+    if (!fs.existsSync(installed)) return false;
+    // Every path the generated sub-skill tells the agent to run must resolve.
+    const skill = path.join(dir, ".governance/generated/skills/release-manager/SKILL.md");
+    if (!fs.existsSync(skill)) return false;
+    const body = fs.readFileSync(skill, "utf8");
+    for (const m of body.match(/(?:node|bash|sh)\s+(scripts\/[\w.-]+)/g) || []) {
+      const rel = m.replace(/^(?:node|bash|sh)\s+/, "");
+      if (!fs.existsSync(path.join(dir, rel))) return false;
+    }
+    return true;
+  });
+
+  test("payload: the installed release executor runs standalone and refuses to write", () => {
+    const dir = tmp("payload-release-manager-run");
+    const gen = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", "C"], { encoding: "utf8" });
+    if (gen.status !== 0) return false;
+    // Loads with Node builtins only, inside a project that has no skill-repo files.
+    const plan = spawnSync(process.execPath, ["scripts/release-manager.js", "plan", "--json", JSON.stringify({ current: "1.0.0", changes: [{ type: "fix", description: "x" }] })], { cwd: dir, encoding: "utf8" });
+    if (plan.status !== 0) return false;
+    let proposal;
+    try { proposal = JSON.parse(plan.stdout); } catch { return false; }
+    if (!proposal.recommended || !proposal.riskLevel) return false;
+    // Without --yes it must perform no write operation.
+    fs.writeFileSync(path.join(dir, "p.json"), JSON.stringify(proposal));
+    const exec = spawnSync(process.execPath, ["scripts/release-manager.js", "execute", "--proposal", "p.json"], { cwd: dir, encoding: "utf8" });
+    return exec.status !== 0 && /NOT approved/i.test(String(exec.stderr || exec.stdout));
+  });
 };

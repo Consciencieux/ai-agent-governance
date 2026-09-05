@@ -59,6 +59,7 @@ AI 首先分析当前仓库状态，包括：
 - 当前 Git tag / 当前版本号（`git tag -l`、package.json）
 - `git log` 与 `git diff`（自上次发布以来的变更）
 - 文件变化、API/interface 变化、用户可见功能变化
+- **已裁定延后的发布安全事项**：读 roadmap 的「Deferred release-safety decisions」小节（本仓库为 `docs/{en,zh-CN,zh-TW}/roadmap.md`；被治理项目为其等价路线图）。这些条目记录了「门禁绿灯」实际证明范围之外的已知缺口——发布前必须知道自己在依赖什么、不在依赖什么。它们不阻断发布，但若某条的触发条件已经成立（例如本次发布要求证明评审者身份），应先停下另开 TASK 计划。
 
 然后运行只读分析工具生成 Proposal：
 
@@ -256,8 +257,8 @@ AI 不得自动创建 tag、自动 push tag、自动创建 release，除非：
 ```json
 {
   "release": {
-    "version": "0.8.0",
-    "tag": "v0.8.0",
+    "version": "0.13.0",
+    "tag": "v0.13.0",
     "validated": false
   }
 }

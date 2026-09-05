@@ -44,6 +44,17 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - **Remote governance dashboard** — observability for governed repositories (dependencies: activity audit trail + score, both already shipped)
 - **Monorepo multi-governance domains** — validator multi-root resolution + multiple manifests (only when real monorepo demand appears)
 
+### Deferred release-safety decisions
+
+Adjudicated, recorded, and deliberately not implemented. Check this list before any
+release-related task: these are known gaps in what a green gate actually proves.
+
+- **Review-evidence binding** — Status: deferred. Current behavior: `reviewStatus` is
+  self-attested (a caller-supplied string in the proposal); `headSha` is mechanically
+  verified. `execute` prints that the value is self-attested, so a signed tag does not
+  imply a review happened. Revisit when release approval must prove reviewer identity, or
+  review evidence must be bound to a commit. Reference: [plans/gate-repair-and-ssot-alignment.md](plans/gate-repair-and-ssot-alignment.md) § C6
+
 ### Mid-term
 
 - **Demo repository** — a real governed example project showing the governance artifacts in action (mid-term; until then this repo serves as a *lightweight-governance* reference: release flow + plans/archive + ADRs + tests, but NOT a full governed software project — its validator runs in default mode fail by design)

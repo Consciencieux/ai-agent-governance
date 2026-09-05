@@ -80,7 +80,45 @@ Add the "Modify 3+ Files at Once | confirmation required" row to `SKILL.md` § A
 ### Adjudicated: not doing / deferred
 
 - **C5 mechanical `.gitattributes` check — not doing.** An existence check proves nothing about content (a `.gitattributes` without `text=auto eol=lf` would pass), and content checking crosses into disproportionate machinery; the rule itself already states that INIT does not generate the file and governed projects add it themselves. The machinery test fails — it stays prose.
-- **C6 review-evidence binding — honesty only this round, real binding deferred.** `execute`'s `reviewStatus` is a caller-supplied string and `plan` never emits `completed`, so any proposal reaching that branch was hand-written — which IS the intended human-in-the-loop shape, but it means the check verifies a DECLARATION, not that a review happened. This round only makes `execute` state that the value is self-attested, so a signed tag no longer silently implies "reviewed". Real binding needs a review-evidence artifact plus a review workflow: new machinery that today's requirement does not independently justify. Handled separately.
+#### C6 review-evidence binding — deferred decision, not forgotten
+
+**The problem.** `release-manager.js execute` gates a high-risk release on
+`proposal.reviewStatus` being `completed` or `explicitly-approved`. That value is read
+from the proposal JSON the caller supplies. `plan` never emits either value (it emits
+`required` / `suggested` / `not-required`), so any proposal reaching that branch was
+hand-edited — which IS the intended human-in-the-loop shape, but it means the gate verifies
+a DECLARATION, not that a review happened. Demonstrated during the audit: a hand-written
+proposal with `reviewStatus: "completed"` produced a signed annotated tag, exit 0, with no
+review of any kind. Contrast the `headSha` binding in the same function, which really does
+`git rev-parse HEAD` and aborts on drift.
+
+**Current risk.** Low-to-moderate, and bounded by the threat model: the actor must already
+hold write access, hand-author the JSON, and pass `--yes`. This is a shortcut available to
+an agent cutting corners, not an external attack surface. The residual harm is a signed tag
+that asserts a review which never occurred.
+
+**Why not this round.** Real binding needs two things that do not exist yet: a review
+evidence artifact (a record review-manager emits, bound to a commit) and a workflow for
+`execute` to verify it against. Building both is new machinery, and the machinery test
+fails: this change set's requirement is repairing inert gates, and that requirement would
+not independently justify inventing an evidence format plus a verification flow. What WAS
+done is the honest minimum — `execute` now prints that the value is self-attested, so a
+signed tag no longer silently implies "reviewed".
+
+**Why not proposal-digest signing.** The audit's cheaper suggestion was to have `plan`
+sign or hash the proposal so `execute` can detect a hand-written file. Rejected: it
+detects the wrong thing. Hand-editing the proposal is the DOCUMENTED approval path — a
+developer setting `explicitly-approved` after item-by-item confirmation is following the
+flow, not subverting it. A digest would turn the sanctioned path into a gate failure while
+still proving nothing about whether a review occurred. It buys "the file came from
+`plan`", which is not the property in question.
+
+**Revisit when** any of these becomes true: release approval must prove REVIEWER IDENTITY;
+review evidence must be bound to a specific commit; an audit trail of high-risk releases is
+required for compliance; or review-manager starts emitting a durable artifact for another
+reason (at which point the verification side is cheap). Until then the honest declaration
+stands. Create a standalone TASK plan when a trigger fires — do not fold it into an
+unrelated change set.
 
 ### Verification (evidence tiers)
 

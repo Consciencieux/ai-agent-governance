@@ -1040,6 +1040,24 @@ test("check-sync: an unsupported wildcard-segment pattern blocks instead of sile
   return (out.unsupportedPatterns || []).some((b) => b.pattern === "packages/*/src/**");
 });
 
+// The scan set used to be 4 top-level files + docs/, so references/ was never examined —
+// the INSTALLED policy and template bodies (including the agents-md template that becomes
+// every governed project's AGENTS.md) could carry a stale protected-files summary and no
+// gate would ever look. This was the real reason the template appeared exempt long after
+// its section parsed correctly; wording and block shape were red herrings.
+test("consistency --gate: references/ is in the scan set (installed bodies are judged)", () => {
+  const dir = tmp("refs-scanned");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  writeRealShapePolicy(dir, "| `AGENTS.md` | entry |\n| `scripts/check-secrets.js` | script |\n");
+  // An installed template body that names a path the policy does not have.
+  write(path.join(dir, "references/templates/agents-md.template.md"),
+    "# AGENTS.md\n\n## Governance File Protection\n\nThe protected files list is:\n\n- `AGENTS.md`\n- `scripts/check-gone.js`\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("agents-md.template.md") && g.item.includes("check-gone.js"));
+});
+
 test("consistency: advisory mode stays exit 0 even with gate-class violations", () => {
   const dir = tmp("consent-advisory");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));

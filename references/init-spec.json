@@ -15,8 +15,7 @@
       "scripts/check-plan-delivery.js",
       "scripts/check-role-completeness.js",
       "scripts/generate-governance.js",
-      "scripts/package-skill.sh",
-      "scripts/release-manager.js"
+      "scripts/package-skill.sh"
     ],
     "undecided": {}
   },
@@ -394,6 +393,13 @@
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
       "description": "Doc consistency check (advisory; --gate/--release-gate fail-closed clusters)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/release-manager.js",
+      "source": "scripts/release-manager.js",
+      "type": "copy",
+      "description": "Release tag executor (plan = read-only analysis, execute = annotated tag behind --yes + headSha binding + clean-tree recheck). The generated release-manager sub-skill invokes it, so a governed project must actually have it — it was SKILL-INTERNAL by misclassification, which made that project's release flow unexecutable."
     },
     {
       "phase": "C",

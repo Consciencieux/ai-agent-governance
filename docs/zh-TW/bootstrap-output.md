@@ -41,6 +41,7 @@ INIT 腳本化生成器（`scripts/generate-governance.js`）為被治理專案�
 | --- | --- |
 | .github/workflows/ci.yml（或 .gitlab-ci.yml） | 從 references/workflows/ci.md 按輸入選擇 |
 | scripts/check-doc-freshness.js + check-doc-consistency.js | 從本 skill 原樣複製 |
+| scripts/release-manager.js | 從本 skill 原樣複製（生成的 release-manager 子技能會呼叫它） |
 | .governance/generated/skills/ | 從 references/templates/sub-skills.md 生成 |
 | .githooks/pre-commit + .githooks/commit-msg | references/templates/githooks-template.md；可執行、可選啟用，INIT 不自動啟用 |
 

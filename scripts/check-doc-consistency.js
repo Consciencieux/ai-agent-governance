@@ -274,6 +274,18 @@ function mdFiles() {
       }
     }
   }
+  // references/ carries the INSTALLED policy and template bodies — the agents-md template
+  // is the source of every governed project's AGENTS.md. Omitting this tree meant those
+  // files were never in the scan set at all, so their protected-files summaries could drift
+  // regardless of wording or shape (the reason the template looked "exempt" long after its
+  // section parsed correctly). Governed projects have no references/, so this is a no-op
+  // there.
+  const refs = path.join(ROOT, "references");
+  if (fs.existsSync(refs)) {
+    for (const rel of walk(refs)) {
+      if (rel.endsWith(".md")) out.push((path.join("references", rel)).replace(/\\/g, "/"));
+    }
+  }
   return out;
 }
 
