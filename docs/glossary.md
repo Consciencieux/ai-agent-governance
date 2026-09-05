@@ -7,6 +7,10 @@
 | governance framework | 治理框架 | 治理框架 |  |  |
 | bootstrap / INIT | 初始化 | 初始化 |  |  |
 | audit | 巡检 | 巡檢 |  |  |
+| distribution role | 分发角色 | 分發角色 |  |  |
+| audience | 受众 | 受眾 |  |  |
+| portability | 可移植性 | 可移植性 |  |  |
+| portable | 可移植 | 可移植 |  |  |
 | release | 发布 | 發佈 | 發佈 | 发布 |
 | drift | 漂移 | 漂移 |  |  |
 | drift detection | 漂移检测 | 漂移偵測 |  |  |
