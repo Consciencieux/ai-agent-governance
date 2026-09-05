@@ -3,6 +3,7 @@
 
 
 const { spawnSync } = require("child_process");
+const fs = require("fs");
 const path = require("path");
 
 module.exports = (test) => {
@@ -159,6 +160,35 @@ test("release execute: null proposal is rejected cleanly", () => {
   write(proposalPath, "null");
   const r = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
   return r.status === 3 && /proposal must be a JSON object/.test(r.stderr) && !/TypeError/.test(r.stderr) && gitTags(dir) === "";
+});
+
+// T5.5 (repository-boundary-split plan §5): skill-release.md is self-contained. The SemVer
+// judging rules, tiered review table and transactionality clauses live inline; the only
+// sanctioned mention of the governed-project release.md is a usage-boundary pointer — a
+// line that names the governed-project audience. A rule citation ("…见 release.md §…")
+// reintroduces the pre-split dependency and must fail. Self-mutation-verified: the
+// reintroduced citation appended below MUST be flagged, or the guard itself is broken.
+function releaseMdRuleCitations(body) {
+  const offenders = [];
+  body.split(/\r?\n/).forEach((line, i) => {
+    if (!line.includes("references/workflows/release.md")) return;
+    if (/被治理项目|目标项目|governed project/i.test(line)) return; // usage-boundary pointer
+    offenders.push(`line ${i + 1}: ${line.trim()}`);
+  });
+  return offenders;
+}
+
+test("skill-release.md: release.md mentions stay usage-boundary pointers, not rule citations", () => {
+  const body = fs.readFileSync(path.join(SKILL_ROOT, "repo-workflows", "skill-release.md"), "utf8");
+  const offenders = releaseMdRuleCitations(body);
+  if (offenders.length) {
+    console.error("  rule citations of release.md found in skill-release.md: " + offenders.join(" | "));
+    return false;
+  }
+  // mutation check: the L53/L57-style dependency (rule text citing release.md, no audience
+  // marker) must be caught — otherwise this test proves nothing
+  const mutated = body + "\n事务性条款见 `references/workflows/release.md`。\n";
+  return releaseMdRuleCitations(mutated).length > 0;
 });
 
 };

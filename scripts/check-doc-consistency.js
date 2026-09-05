@@ -775,9 +775,16 @@ function main() {
   }
 
   // ---- 7. trilingual tree parity (delegate) ----
-  const parityScript = path.join(ROOT, "scripts", "check-doc-parity.js");
+  // Candidate paths in order (repository-boundary-split plan §4): the skill repo keeps the
+  // parity script under repo-tools/ (REPO-ONLY there); a governed project has neither, so
+  // the delegation no-ops. Probing scripts/ second preserves any layout that still carries
+  // it there — existsSync candidates, never an assumed location.
+  const parityScript = [
+    path.join(ROOT, "repo-tools", "check-doc-parity.js"),
+    path.join(ROOT, "scripts", "check-doc-parity.js"),
+  ].find((p) => fs.existsSync(p));
   let parityPass = "unavailable"; // never claim a pass we could not verify
-  if (fs.existsSync(parityScript)) {
+  if (parityScript) {
     const parity = spawnSync(process.execPath, [parityScript, "--json"], { cwd: ROOT, encoding: "utf8" });
     try {
       const p = JSON.parse(parity.stdout);

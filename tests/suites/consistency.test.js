@@ -263,6 +263,28 @@ test("doc consistency: parity unavailable is reported, not claimed as pass", () 
   return r.status === 0 && out.parity === "unavailable";
 });
 
+test("doc consistency: parity delegate finds the script under repo-tools/ (first candidate)", () => {
+  const dir = tmp("consistency-parity-repotools");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "repo-tools"), { recursive: true });
+  write(path.join(dir, "repo-tools", "check-doc-parity.js"),
+    "process.stdout.write(JSON.stringify({ pass: true }));\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 0 && out.parity === true;
+});
+
+test("doc consistency: parity delegate still finds the script under scripts/ (second candidate)", () => {
+  const dir = tmp("consistency-parity-scripts");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  write(path.join(dir, "scripts", "check-doc-parity.js"),
+    "process.stdout.write(JSON.stringify({ pass: true }));\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 0 && out.parity === true;
+});
+
 test("doc consistency: sub-skill trigger missing from commands.md is flagged", () => {
   const dir = tmp("consistency-prompt");
   // fixture: sub-skills.md with one trigger, commands.md without it
