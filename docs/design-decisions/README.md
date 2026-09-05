@@ -12,5 +12,6 @@
 | [ADR-0004](adr-0004-human-in-the-loop-release.md) | Human-in-the-loop 发布流程（Analyze → Proposal → Approval → Execute） | Accepted（v0.4.0） |
 | [ADR-0006](adr-0006-no-dogfooding.md) | 本仓库不狗粮自身治理框架 | Accepted |
 | [ADR-0007](adr-0007-plan-layering-orthogonal-triggers.md) | 治理计划分层独立与正交触发（工程克制 × 反补丁） | Accepted |
+| [ADR-0008](adr-0008-trigger-inventory-commands-md-exception.md) | 触发词清单复制的规则冲突裁定（commands.md 例外） | Accepted |
 
 状态：Proposed / Accepted / Superseded / Deprecated。
