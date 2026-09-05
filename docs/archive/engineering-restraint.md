@@ -1,7 +1,7 @@
 # 工程克制：反过度工程（对现有规则层的增补，TASK 计划）
 
 
-> **状态：已归档。** 归档即断言完成。 本计划把「Engineering Restraint — Anti-Overengineering」原则作为**对现有规则层的窄增补**落地：在 coding.policy.md 增加一个简短小节（机制测试 + 两条边界），SKILL.md 加一行指针。不新建政策文件、不新增门禁、不新增审查问题、不新增 TASK 字段、不新增分发面。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已归档。 归档即断言完成。 本计划把「Engineering Restraint — Anti-Overengineering」原则作为对现有规则层的窄增补落地：在 coding.policy.md 增加一个简短小节（机制测试 + 两条边界），SKILL.md 加一行指针。不新建政策文件、不新增门禁、不新增审查问题、不新增 TASK 字段、不新增分发面。）
 
 **Target：both** —— 判据：既有语义所有者 coding.policy.md 已在 INIT 复制清单中（分发为 docs/rules/coding.md），增补它 = 复用既有分发通道、零新增复制面；不是"看似适合所有项目"就进 payload。
 

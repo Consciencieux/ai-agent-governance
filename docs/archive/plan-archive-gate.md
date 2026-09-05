@@ -1,7 +1,7 @@
 # 计划归档门禁（TASK 计划）
 
 
-> **状态：已实现（2026-09-03）。** 交付验证（`scripts/check-plan-delivery.js`）跳过纯设计计划；本行即标记。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-09-03）。 交付验证（`scripts/check-plan-delivery.js`）跳过纯设计计划；本行即标记。）
 
 **Target: both** —— `payload` 把计划状态契约与 release 门禁接线落到被治理项目的工件（`references/`，含 INIT 复制的 `scripts/check-doc-consistency.js`）；`repo-infra` 维护本仓库的门禁簇、交付门禁提取修复、测试与三语文档同步。两类交付点分列在下方"受影响文件"。
 

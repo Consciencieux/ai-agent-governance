@@ -74,7 +74,7 @@ description: Use to check that this repo's governance artifacts are intact befor
 
 Run: `node scripts/verify-governance.js` (or registered npm script `npm run governance-check`).
 
-Path resolution: uses `.governance/manifest.json` artifacts when present (structure-adaptive), otherwise built-in defaults. Checks: AGENTS.md, CHANGELOG.md, ARCHITECTURE, features, plans, rules, .gitignore, .env.example, CI config, validator self, `.governance/` (dir, manifest.json, state.json, preflight.json), governance_version. `validation.json` / `drift-report.json` are runtime outputs and are NOT required.
+Path resolution: uses `.governance/manifest.json` artifacts when present (structure-adaptive), otherwise built-in defaults. Checks: AGENTS.md, CHANGELOG.md (existence + Keep a Changelog format), ARCHITECTURE, features, plans, rules, .gitignore, .env.example, CI config, validator self, scripts/check-lock.js, .governance/git-policy.json (valid policy), scripts/check-git-policy.js, scripts/check-secrets.js, scripts/check-sync.js, `.governance/` (dir, manifest.json, state.json, preflight.json), governance_version. `validation.json` / `drift-report.json` are runtime outputs and are NOT required. The authoritative list is `DEFAULTS` in scripts/verify-governance.js — it wins on any discrepancy.
 
 Then update `.governance/validation.json`:
 
@@ -215,6 +215,9 @@ Core principle: AI analyzes and proposes; the developer authorizes; no release o
 - `release.proposal_approved`: a Release Proposal was generated and the developer explicitly approved it
 - `release.review_satisfied`: Proposal risk/review metadata is valid; a high-risk Proposal has `reviewStatus` set to `completed` or `explicitly-approved`
 - `validator.passed`: `node scripts/verify-governance.js` exit 0
+- `docs.parity_passed`: multi-language doc trees are structurally parallel — only when the project HAS such trees and a parity checker; skip otherwise
+- `sync.passed`: `node scripts/check-sync.js` exit 0 (declared sync groups satisfied for this change set)
+- `plan.delivery_verified`: every path/identifier a completed plan declared was actually delivered — verify against the plan's Affected Files before archiving it
 
 Any failure → report ⚠️/❌ with the exact item; do NOT proceed.
 
@@ -259,14 +262,16 @@ Only after explicit approval:
 
 1. Re-verify: `git status` clean AND `git rev-parse HEAD` equals the proposal `headSha`; any change → abort and re-run Analyze.
 2. Sync versions: `package.json` → CHANGELOG (move `[Unreleased]` into `[X.Y.Z]`) → `.governance/manifest.json` (`governance_version` + `release` field).
-3. Archive completed milestones (aggregated into `docs/plans/archive/vX.Y.Z.md`, one file per version) and completed `TASK_<name>.md` files (moved as individual files, original names). Keep the original entries, never delete. Unfinished milestones stay in `docs/plans/`.
-4. Commit: `git add` (version sync + archive files only) → `git commit -m "release: vX.Y.Z - <summary>"`. Version changes and the archive MUST be in the same commit — the tag must point to a HEAD that contains them.
-5. Run `node scripts/verify-governance.js`; exit code must be 0.
-6. Refresh the proposal: update `headSha` to the new HEAD, write `.governance/release-proposal.json`.
-7. `node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes` (creates the annotated tag; `--yes` is the recorded approval — without it the tool refuses all writes; it re-verifies clean tree + `headSha`).
-8. `git push origin main` → `git push origin vX.Y.Z` — write operations, user confirmation required.
-9. `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`. gh missing/unauthenticated → ⚠️ Blocked with reason.
-10. Set `manifest.release.validated` to `true`, re-run validator, record into `.governance/validation.json`.
+3. Run the release-only gates, all exit 0 before anything is written: `node scripts/check-doc-consistency.js --release-gate` (adds pending-archive + CHANGELOG coverage) and, for multi-language doc trees, `node scripts/check-doc-freshness.js --release-gate` (stale or draft translations block). Also reconcile each completed plan's Affected Files against what was actually delivered before archiving it. Any failure → stop and re-plan; never continue with a partial fix.
+4. Archive completed milestones (aggregated into `docs/plans/archive/vX.Y.Z.md`, one file per version) and completed `TASK_<name>.md` files (moved as individual files, original names). Keep the original entries, never delete. Unfinished milestones stay in `docs/plans/`. An archived plan's Status line must say `archived` — the archive is the completed state.
+5. Commit: `git add` (version sync + archive files only) → `git commit -m "release: vX.Y.Z - <summary>"`. Version changes and the archive MUST be in the same commit — the tag must point to a HEAD that contains them.
+6. Run `node scripts/verify-governance.js`; exit code must be 0.
+7. Refresh the proposal: update `headSha` to the new HEAD, write `.governance/release-proposal.json`.
+8. `node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes` (creates the annotated tag; `--yes` is the recorded approval — without it the tool refuses all writes; it re-verifies clean tree + `headSha`).
+9. `git push origin main` → `git push origin vX.Y.Z` — write operations, user confirmation required.
+10. `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`. gh missing/unauthenticated → ⚠️ Blocked with reason.
+11. Package and attach the distributable when the project ships one (use the project's own packaging command, e.g. an npm script or build task), then attach it: `gh release upload vX.Y.Z <artifact>`; verify the uploaded asset is listed on the release. Skip when the project publishes no artifact.
+12. Set `manifest.release.validated` to `true`, re-run validator, record into `.governance/validation.json`.
 
 ## Uncertainty
 

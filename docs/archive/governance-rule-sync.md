@@ -1,5 +1,7 @@
 # 治理规则同步与元治理（TASK 计划）
 
+> **Status: archived.**（已归档。归档即断言完成。）
+
 **Target：both** —— 本仓库基础设施（`AGENTS.md`、`package.json`、`tests/`、ADR、本计划）与 skill 载荷（`scripts/check-doc-consistency.js`）。跨域同步义务见「受影响文件」；本计划是 Target 字段的首个用例。
 
 ### 任务目的

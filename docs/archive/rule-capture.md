@@ -1,7 +1,7 @@
 # Rule Capture（TASK 计划）
 
 
-> **状态：已实现（2026-08-30，待 Release 归档）。** 本计划已在当前工作树交付；发布时按仓库规则归档。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-08-30，待 Release 归档）。 本计划已在当前工作树交付；发布时按仓库规则归档。）
 >
 > **Target: both** —— `payload` 交付给被治理项目（`references/`、`scripts/`）；`repo-infra` 维护本仓库的 `AGENTS.md`、测试和开发者文档。两类交付点分列在“受影响文件”中。
 >

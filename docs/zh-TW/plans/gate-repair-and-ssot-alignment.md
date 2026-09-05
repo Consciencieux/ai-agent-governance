@@ -2,7 +2,7 @@
 
 [English](../../en/plans/gate-repair-and-ssot-alignment.md) · [简体中文](../../zh-CN/plans/gate-repair-and-ssot-alignment.md) · [繁體中文](gate-repair-and-ssot-alignment.md)
 
-> **Status: design plan, not implemented.**（狀態：設計計劃，未實作。）回應 2026-09-05 一次唯讀稽核：多個閘門存在但失效、接線錯誤或強於其聲稱——受保護文件簇解析出 0 行、`check:payload` 漏掉守護 payload 編輯的那個閘門、CI 只跑 6 個閘門中的 2 個、`plans:delivery` 不帶 `--gate` 執行、SKILL.md frontmatter `version` 永不被偵測、歸檔計劃攜帶非規範 Status 行。同次稽核還確認了五處單一事實源違規（三份相互矛盾的發佈流程、zh-CN/zh-TW 反向的未決聲明、無人消費的 README 模塊、殘缺的驗證器檢查清單、權限矩陣行不一致）。
+> **Status: implemented.**（狀態：已實作。）已在當前工作樹交付；發佈時歸檔。回應 2026-09-05 一次唯讀稽核：多個閘門存在但失效、接線錯誤或強於其聲稱——受保護文件簇解析出 0 行、`check:payload` 漏掉守護 payload 編輯的那個閘門、CI 只跑 6 個閘門中的 2 個、`plans:delivery` 不帶 `--gate` 執行、SKILL.md frontmatter `version` 永不被偵測、歸檔計劃攜帶非規範 Status 行。同次稽核還確認了五處單一事實源違規（三份相互矛盾的發佈流程、zh-CN/zh-TW 反向的未決聲明、無人消費的 README 模塊、殘缺的驗證器檢查清單、權限矩陣行不一致）。
 
 **Target: both** —— `payload` 修復 INSTALLED 腳本行為（`scripts/check-doc-consistency.js`、`scripts/generate-governance.js`）與 `references/` 內容完整性（`references/templates/sub-skills.md`、`references/policies/governance-files.policy.md`、`SKILL.md`）；`repo-infra` 修復測試夾具、npm 接線、CI、倉庫文件與歸檔狀態。兩個域分別列在「受影響檔案」中。
 
@@ -77,6 +77,11 @@
 
 將「Modify 3+ Files at Once | confirmation required」行補入 `SKILL.md` § Agent Permission Model，與 `references/templates/agents-md.template.md` 及 `lifecycle.policy.md` § 規模分級 一致。
 
+### 已裁定不做 / 延後
+
+- **C5 `.gitattributes` 機械校驗 —— 不做。** 存在性檢查證明不了內容（一個沒有 `text=auto eol=lf` 的 `.gitattributes` 照樣通過），內容校驗則越界成不成比例的機制；且該規則本身已聲明 INIT 不生成、被治理專案自行添加。機制測試不通過，維持散文規則。
+- **C6 評審證據綁定 —— 本次只做誠實化，實質綁定延後。** `execute` 的 `reviewStatus` 是呼叫方提供的字串，`plan` 從不產出 `completed`，所以走到該分支的提案必然是手寫的——這正是 human-in-the-loop 的預期形態，但它校驗的是**聲明**而非「評審發生過」。本次僅讓 `execute` 明確列印該值為自證聲明（不再讓簽名標籤隱含「已評審」）。真正的綁定需要評審證據工件 + 評審工作流，屬於新機制，當前需求不足以獨立證成，另案處理。
+
 ### 驗證（證據等級）
 
 - 每項修復都配備機械反向測試，能在真實檔案/真實夾具上重現原始失效模式（測試證明閘門能變紅——不只是它是綠的）。
@@ -89,7 +94,7 @@
 **payload（INSTALLED / SKILL-INTERNAL 行為與內容）：**
 
 - `scripts/check-doc-consistency.js` —— A1（受保護文件表格提取）、A5（frontmatter 版本）、A6（archive-status 掃描）
-- `scripts/generate-governance.js` —— A5（版本哨兵保持同步；核實沒有其他副本分叉）
+- `scripts/generate-governance.js` —— A5 僅核實：哨兵已與 package.json / init-spec 一致（0.13.0），無需改動。
 - `references/templates/sub-skills.md` —— B1（發佈流程標記 + Phase 4 步驟）、B4（驗證器檢查清單）
 - `references/policies/governance-files.policy.md` —— B3（無用 README 模塊移除）
 - `SKILL.md` —— B5（權限矩陣行）；版本 frontmatter 必須保持同步（A5）
@@ -99,10 +104,11 @@
 - `package.json` —— A2（範圍分級組合）、A4（`plans:delivery --gate`）
 - `.github/workflows/ci.yml` —— A3（執行 npm run check）
 - `AGENTS.md` —— A3 措辭、A2 表格核對（已正確——僅核實）
+- `docs/en/architecture.md` —— B2（陳舊工件計數措辭；該修復涉及三語樹）
 - `docs/zh-CN/architecture.md` —— B2
 - `docs/zh-TW/architecture.md` —— B2
-- `docs/archive/*.md` —— A6（21 個檔案，Status 規範化）
+- `docs/archive/` —— A6：21 份歸檔計劃的 Status 行全部規範化（目錄級改動，非單檔案）
 - `tests/suites/consistency.test.js` —— A1 夾具重塑、A5 反向測試、A6 反向測試、B1 標記集測試
 - `tests/suites/docs.test.js` —— A2 組合測試（package.json 入口等價）
-- `tests/support/helpers.js` —— 新測試共享的夾具助手
+- `tests/support/helpers.js` —— 未改動：新夾具助手只被單個套件使用，提取進共享層屬於過早抽象（工程克制）。
 - `CHANGELOG.md` —— 發佈條目

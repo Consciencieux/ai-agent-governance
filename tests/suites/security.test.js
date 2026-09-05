@@ -111,6 +111,43 @@ test("check-secrets: staged fake secret exits 1 without leaking the token", () =
   return r.status === 1 && r.stderr.includes("aws-access-key") && !r.stderr.includes(value);
 });
 
+// C4: git prints "Binary files … differ" instead of content for blobs it treats as binary
+// (auto-detected NUL bytes, or declared `binary` / `-diff` in .gitattributes), so the line
+// loop never saw them and the gate reported "clean" for content it had not read — a
+// one-line, legitimate-looking bypass of a security gate (audit 2026-09-05).
+test("check-secrets: a secret in a -diff marked file is still caught", () => {
+  const dir = tmp("secrets-nodiff");
+  gitInit(dir);
+  const value = assemble("AKIA", "IOSFODNN7EXAMPLE");
+  write(path.join(dir, ".gitattributes"), "secrets.env -diff\n");
+  write(path.join(dir, "secrets.env"), assemble("AWS_KEY=", value));
+  spawnSync("git", ["add", "-A"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stderr.includes("aws-access-key") && !r.stderr.includes(value);
+});
+
+test("check-secrets: a secret inside a real binary blob is still caught", () => {
+  const dir = tmp("secrets-binary");
+  gitInit(dir);
+  const value = assemble("AKIA", "IOSFODNN7EXAMPLE");
+  fs.writeFileSync(
+    path.join(dir, "blob.bin"),
+    Buffer.concat([Buffer.from([0, 1, 2, 0]), Buffer.from(assemble("SECRET=", value))])
+  );
+  spawnSync("git", ["add", "-A"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stderr.includes("aws-access-key");
+});
+
+test("check-secrets: a clean binary file does not produce a false hit", () => {
+  const dir = tmp("secrets-binary-clean");
+  gitInit(dir);
+  fs.writeFileSync(path.join(dir, "img.bin"), Buffer.from([0, 1, 2, 3, 4, 0]));
+  spawnSync("git", ["add", "-A"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 0;
+});
+
 test("check-secrets: github PAT hits github-pat pattern", () => {
   const dir = tmp("secrets-pat");
   gitInit(dir);

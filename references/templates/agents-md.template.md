@@ -102,7 +102,29 @@ Note: users may request governance changes via explicit instruction (through the
 - Never force push; never push directly to protected branches. Small single-file doc/typo changes may skip the branch, but must be reported.
 
 ## Governance File Protection
-Modifying AGENTS.md, CLAUDE.md, docs/rules/**, .governance/manifest.json, .governance/preflight.json, .governance/git-policy.json, .governance/sync-rules.json, scripts/verify-governance.js, scripts/check-lock.js, scripts/check-git-policy.js, scripts/check-secrets.js, scripts/check-sync.js, scripts/check-doc-consistency.js, scripts/check-doc-freshness.js, .githooks/pre-commit, .githooks/commit-msg, opencode.json, or CI config (.github/workflows/**, .gitlab-ci.yml) requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
+The protected files list is:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `docs/rules/**`
+- `.governance/manifest.json`
+- `.governance/preflight.json`
+- `.governance/git-policy.json`
+- `.governance/sync-rules.json`
+- `scripts/verify-governance.js`
+- `scripts/check-lock.js`
+- `scripts/check-git-policy.js`
+- `scripts/check-secrets.js`
+- `scripts/check-sync.js`
+- `scripts/check-doc-consistency.js`
+- `scripts/check-doc-freshness.js`
+- `.githooks/pre-commit`
+- `.githooks/commit-msg`
+- `opencode.json`
+- `.github/workflows/**`
+- `.gitlab-ci.yml`
+
+Modifying any of them requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
 
 ## Mandatory Pre-commit Checklist
 CHANGELOG must be updated before push/PR. No CHANGELOG update → no push.

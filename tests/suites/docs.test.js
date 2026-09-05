@@ -338,4 +338,148 @@ test("check-layout-sync: architecture.md without a Repository Layout block exits
   return r.status === 1;
 });
 
+// A2/A4 regression: the scope-tier entries in package.json must match what AGENTS.md's
+// scope table promises. `check:payload` shipped WITHOUT check-doc-consistency --gate — the
+// tier documented for references/ + SKILL.md edits skipped the gate that owns the consent
+// markers and protected-files list living in exactly those files (audit 2026-09-05).
+// `plans:delivery` shipped without --gate, so check:all could never fail on delivery.
+test("package.json scope tiers match the AGENTS.md scope table", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
+  const s = pkg.scripts || {};
+  const required = {
+    "check:docs": ["npm test", "docs:parity", "check-doc-consistency.js --gate", "docs:layout"],
+    "check:payload": ["npm test", "docs:layout", "check-doc-consistency.js --gate", "check-coding-hygiene.js --gate", "check-role-completeness.js --gate"],
+    "check:tests": ["npm test", "check-coding-hygiene.js --gate"],
+
+};
+  for (const [entry, parts] of Object.entries(required)) {
+    const cmd = s[entry] || "";
+    for (const p of parts) if (!cmd.includes(p)) return false;
+  }
+  // Delivery must be gated, otherwise check:all reports success on a broken plan.
+  if (!/check-plan-delivery\.js\s+--gate/.test(s["plans:delivery"] || "")) return false;
+  return /plans:delivery/.test(s["check:all"] || "");
+});
+
+// A3 regression: CI ran only `npm test` + parity, so layout / consistency / hygiene /
+// role-completeness never blocked the build while AGENTS.md claimed "fails CI" — the
+// always-on gate clusters were enforced by agent discipline alone (audit 2026-09-05).
+test("CI runs the full fail-closed gate group", () => {
+  const ci = fs.readFileSync(path.join(SKILL_ROOT, ".github/workflows/ci.yml"), "utf8");
+  // The badge step may swallow its own failure (ADR-0006); the gate group may not.
+  const gateLine = ci.split("\n").find((l) => /run:\s*npm run check\b/.test(l));
+  if (!gateLine || /\|\|\s*true/.test(gateLine)) return false;
+  return /verify_governance\.js[^\n]*\|\|\s*true/.test(ci);
+});
+
+// B1 regression: release.md is SKILL-INTERNAL, so a governed project never has it — the
+// operative copy is the release-manager section of sub-skills.md that INIT generates.
+// That copy carried only 3 of release.md's 6 requirement markers (parity / sync / delivery
+// were missing), so the deficient version was the one actually executed (audit 2026-09-05).
+test("sub-skills release-manager covers every release.md requirement marker", () => {
+  const rel = fs.readFileSync(path.join(SKILL_ROOT, "references/workflows/release.md"), "utf8");
+  const sub = fs.readFileSync(path.join(SKILL_ROOT, "references/templates/sub-skills.md"), "utf8");
+  const MARKER = /(?:git\.require_clean_status|tests\.required|changelog\.required|version\.manifest_match_tag|release\.tag_required|release\.proposal_approved|release\.review_satisfied|validator\.passed|docs\.parity_passed|sync\.passed|plan\.delivery_verified)/g;
+  const inRelease = new Set(rel.match(MARKER) || []);
+  const inSub = new Set(sub.match(MARKER) || []);
+  if (inRelease.size === 0) return false;
+  for (const m of inRelease) if (!inSub.has(m)) return false;
+  return true;
+});
+
+// The generated sub-skill must carry the release-only gates and the packaging step — but
+// only in forms a GOVERNED PROJECT can actually execute: check-doc-consistency.js and
+// check-doc-freshness.js are INSTALLED, whereas check-plan-delivery.js and package-skill.sh
+// are SKILL-INTERNAL and must appear as an obligation, not as a command to run.
+test("sub-skills release-manager Phase 4 keeps the release-only gates and packaging step", () => {
+  const sub = fs.readFileSync(path.join(SKILL_ROOT, "references/templates/sub-skills.md"), "utf8");
+  const start = sub.indexOf("Only after explicit approval");
+  if (start < 0) return false;
+  const phase4 = sub.slice(start, start + 4000);
+  return /check-doc-consistency\.js --release-gate/.test(phase4)
+    && /check-doc-freshness\.js --release-gate/.test(phase4)
+    && /Affected Files/.test(phase4)
+    && /gh release upload/.test(phase4);
+});
+
+// B4 regression: the governance-validator sub-skill is what a governed project installs,
+// and its Checks line omitted five of the validator's DEFAULTS entries (lock, git policy
+// + its json, secret scan, sync groups) — the shipped description understated what the
+// validator actually enforces (audit 2026-09-05).
+test("sub-skills validator Checks line covers the validator DEFAULTS tools", () => {
+  const sub = fs.readFileSync(path.join(SKILL_ROOT, "references/templates/sub-skills.md"), "utf8");
+  const start = sub.indexOf("Path resolution:");
+  if (start < 0) return false;
+  const line = sub.slice(start, sub.indexOf("\n", start));
+  for (const needed of ["check-lock.js", "git-policy.json", "check-git-policy.js", "check-secrets.js", "check-sync.js"]) {
+    if (!line.includes(needed)) return false;
+  }
+  return /DEFAULTS/.test(sub.slice(start, start + 900));
+});
+
+// B5 regression: the "Modify 3+ Files at Once" rule is real (lifecycle.policy.md § 规模分级)
+// and the generated AGENTS.md template carried it, but SKILL.md's matrix — the indexed
+// authority — did not (audit 2026-09-05).
+test("permission matrix rows match between SKILL.md and the AGENTS.md template", () => {
+  const skill = fs.readFileSync(path.join(SKILL_ROOT, "SKILL.md"), "utf8");
+  const tmpl = fs.readFileSync(path.join(SKILL_ROOT, "references/templates/agents-md.template.md"), "utf8");
+  const ACTIONS = ["Read", "Create Documentation", "Modify Code", "Modify 3+ Files at Once", "Delete Code", "Dependency Change", "Git Commit / Git Push"];
+  for (const a of ACTIONS) {
+    if (!skill.includes("| " + a + " |")) return false;
+    if (!tmpl.includes("| " + a + " |")) return false;
+  }
+  return true;
+});
+
+// C3: the emptiness guard fired only when BOTH roots vanished, so renaming `references/`
+// left `scripts/` alone carrying the check — the scan silently enforced half the corpus
+// and still printed a green line with a plausible count (audit 2026-09-05).
+test("check-layout-sync: one empty root dir fails instead of half-scanning", () => {
+  const dir = tmp("layout-half-scan");
+  buildLayoutRepo(dir, ["references/policies/a.md", "scripts/b.js"]);
+  fs.rmSync(path.join(dir, "references"), { recursive: true, force: true });
+  const r = spawnSync(process.execPath, [LAYOUT_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.pass === false && out.issues.some((i) => i.includes("references"));
+});
+
+// C7: the release-only clusters (pending-archive, archived-plan status, changelog
+// coverage, translation staleness) fired only when a human typed --release-gate. The npm
+// entry makes the documented release.md step runnable; CI deliberately does NOT run it,
+// because pending-archive is legal between task completion and the release commit.
+test("package.json exposes a check:release entry with the release-only gates", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
+  const cmd = (pkg.scripts || {})["check:release"] || "";
+  if (!/check-doc-consistency\.js --release-gate/.test(cmd)) return false;
+  if (!/check-doc-freshness\.js --release-gate/.test(cmd)) return false;
+  if (!/check-plan-delivery\.js --gate/.test(cmd)) return false;
+  const ci = fs.readFileSync(path.join(SKILL_ROOT, ".github/workflows/ci.yml"), "utf8");
+  return !/release-gate/.test(ci);
+});
+
+
+
+// sub-skills.md is INSTALLED — INIT writes it into the governed project as generated
+// sub-skills, where a SKILL-INTERNAL script does NOT exist. Telling an agent to run one
+// is an instruction that cannot execute. This diff introduced exactly that defect
+// (check-plan-delivery.js, check-doc-parity.js and package-skill.sh), so pin those three.
+//
+// release-manager.js is deliberately NOT pinned: the generated release-manager sub-skill is
+// built around invoking it, so that contradiction predates this change and removing the
+// calls would gut the flow. Recorded as an open conflict in the gate-repair plan instead.
+test("sub-skills.md does not tell a governed project to run absent check scripts", () => {
+  const spec = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "references/init-spec.json"), "utf8"));
+  const internal = new Set((spec.distribution && spec.distribution.skillInternal) || []);
+  const pinned = ["scripts/check-plan-delivery.js", "scripts/check-doc-parity.js", "scripts/package-skill.sh"];
+  // Guard the guard: if one of these ever becomes INSTALLED, revisit this test.
+  for (const p of pinned) if (!internal.has(p)) return false;
+  const sub = fs.readFileSync(path.join(SKILL_ROOT, "references/templates/sub-skills.md"), "utf8");
+  for (const p of pinned) {
+    const base = p.replace(/^scripts\//, "");
+    const runnable = new RegExp("(?:node|bash|sh)\\s+scripts/" + base.replace(/[.*+?^${}()|[\]\\]/g, function (m) { return "\\" + m; }));
+    if (runnable.test(sub)) return false;
+  }
+  return true;
+});
 };

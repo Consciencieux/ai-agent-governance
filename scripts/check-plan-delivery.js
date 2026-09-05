@@ -211,15 +211,31 @@ function verifyBehaviours(content) {
 }
 
 function extractSection(content, names) {
-  // Stop at any SAME-OR-LOWER level heading (H1-H3). The former lookahead `(?=\n###|$)`
-  // also matched the `\n###` prefix of `####` subsection lines, so an Affected Files
-  // section written with `####` subsections extracted as empty and its declarations
-  // were never verified (vacuous pass — found by the plan-archive-gate review; the
-  // archived rule-capture.md carries that defect). `####` subsections are part of the
-  // section; the next `###` section (risks, validation) is not.
-  const re = new RegExp("###\\s*(?:" + names.join("|") + ")([\\s\\S]*?)(?=\\n#{1,3}\\s|$)", "i");
-  const m = content.match(re);
-  return m ? m[1] : null;
+  // Accept the heading at H2-H4 and return EVERY matching section concatenated.
+  //
+  // Two defects this shape avoids:
+  //   1. The anchor used to be a literal "###", which matches inside "####" but never
+  //      inside "##" — a plan written with `## Affected Files` extracted nothing while the
+  //      script still printed "every declared path delivered". That is the heading level
+  //      the shipped plan template uses, so such plans were unverifiable.
+  //   2. Returning only the FIRST matching level then dropped the other one: a plan with
+  //      both `## Affected Files` and a later `### Affected Files` had its H2 declarations
+  //      silently discarded (review finding). Same for two sections at the same level.
+  // Each match stops at the next heading of the SAME OR HIGHER level, so deeper
+  // subsections stay inside their section and a sibling section is never absorbed.
+  const parts = [];
+  for (const h of ["##", "###", "####"]) {
+    const depth = h.length;
+    // The heading must start a line and carry EXACTLY this depth: `(?:^|\n)` anchors it,
+    // and the `(?!#)` guard stops "##" from also matching the "##" prefix of "###".
+    const re = new RegExp(
+      "(?:^|\\n)" + h + "(?!#)\\s*(?:" + names.join("|") + ")([\\s\\S]*?)(?=\\n#{1," + depth + "}(?!#)\\s|$)",
+      "gi"
+    );
+    let m;
+    while ((m = re.exec(content))) parts.push(m[1]);
+  }
+  return parts.length > 0 ? parts.join("\n") : null;
 }
 
 // A plan that openly declares itself design-only / not implemented is out of delivery

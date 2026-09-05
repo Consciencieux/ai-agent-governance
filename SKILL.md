@@ -2,7 +2,7 @@
 name: ai-agent-governance
 version: 0.13.0
 description: >-
-  Use when initializing, retrofitting, auditing, OR releasing a project's AI-agent governance framework. Init mode: one-shot bootstrap of AGENTS.md, feature registry, lifecycle, CI validation, security baseline. Audit mode: health-check an already-governed project, detect drift vs .governance/manifest.json, apply minimal fixes. Release mode: version-synced, validated releases via the generated release-manager sub-skill. Triggers on "initialize governance", "setup project for AI agents", "create AGENTS.md framework", "audit governance", "governance health check", "fix governance drift", "release", "publish version", "check skill update", "update this skill". Also loads the generated sub-skills in .governance/generated/skills for ongoing agent work. Do NOT use for normal development tasks.
+  Use when initializing, retrofitting, auditing, OR releasing a project's AI-agent governance framework. Init mode: one-shot bootstrap of AGENTS.md, feature registry, lifecycle, CI validation, security baseline. Audit mode: health-check an already-governed project, detect drift vs .governance/manifest.json, apply minimal fixes. Release mode: version-synced, validated releases via the generated release-manager sub-skill. Triggers on "initialize project governance", "initialize governance", "setup project for AI agents", "create AGENTS.md framework", "audit governance", "governance health check", "fix governance drift", "release", "publish version", "check skill update", "update this skill". Also loads the generated sub-skills in .governance/generated/skills for ongoing agent work. Do NOT use for normal development tasks.
 ---
 
 # Governance Bootstrap
@@ -81,6 +81,7 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 | Read | automatic |
 | Create Documentation | automatic |
 | Modify Code | allowed，但必须验证（测试/静态检查/构建） |
+| Modify 3+ Files at Once | confirmation required（跨 3 个以上文件的改动先经用户确认，见 `references/policies/lifecycle.policy.md` § 规模分级） |
 | Delete Code | confirmation required |
 | Dependency Change | confirmation required |
 | Git Commit / Git Push | 一次确认 per 变更集（见下方确认范围） |

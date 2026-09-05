@@ -2,7 +2,7 @@
 
 [English](gate-repair-and-ssot-alignment.md) · [简体中文](../../zh-CN/plans/gate-repair-and-ssot-alignment.md) · [繁體中文](../../zh-TW/plans/gate-repair-and-ssot-alignment.md)
 
-> **Status: design plan, not implemented.** Responds to a read-only audit (2026-09-05): several gates exist but are inert, mis-wired, or stronger than their claims — the protected-files cluster parses zero rows, `check:payload` omits the gate that guards payload edits, CI runs 2 of 6 gates, `plans:delivery` runs without `--gate`, SKILL.md frontmatter `version` is unreachable, and archived plans carry non-canonical Status lines. The same audit also confirmed five single-source-of-truth violations (three divergent release flows, an inverted undecided claim in zh-CN/zh-TW, a dead README template block, a lossy validator check list, a permission-matrix row mismatch).
+> **Status: implemented.** Delivered in the working tree; archived at release. Responds to a read-only audit (2026-09-05): several gates exist but are inert, mis-wired, or stronger than their claims — the protected-files cluster parses zero rows, `check:payload` omits the gate that guards payload edits, CI runs 2 of 6 gates, `plans:delivery` runs without `--gate`, SKILL.md frontmatter `version` is unreachable, and archived plans carry non-canonical Status lines. The same audit also confirmed five single-source-of-truth violations (three divergent release flows, an inverted undecided claim in zh-CN/zh-TW, a dead README template block, a lossy validator check list, a permission-matrix row mismatch).
 
 **Target: both** — `payload` fixes INSTALLED script behavior (`scripts/check-doc-consistency.js`, `scripts/generate-governance.js`), `references/` content integrity (`references/templates/sub-skills.md`, `references/policies/governance-files.policy.md`, `SKILL.md`), and INIT payload coupling; `repo-infra` fixes test fixtures, npm wiring, CI, repo docs, and archive statuses. The two domains are listed separately under Affected Files.
 
@@ -77,6 +77,11 @@ Complete the `governance-validator` Checks line so it enumerates all 21 checks i
 
 Add the "Modify 3+ Files at Once | confirmation required" row to `SKILL.md` § Agent Permission Model, matching `references/templates/agents-md.template.md` and `lifecycle.policy.md` § 规模分级.
 
+### Adjudicated: not doing / deferred
+
+- **C5 mechanical `.gitattributes` check — not doing.** An existence check proves nothing about content (a `.gitattributes` without `text=auto eol=lf` would pass), and content checking crosses into disproportionate machinery; the rule itself already states that INIT does not generate the file and governed projects add it themselves. The machinery test fails — it stays prose.
+- **C6 review-evidence binding — honesty only this round, real binding deferred.** `execute`'s `reviewStatus` is a caller-supplied string and `plan` never emits `completed`, so any proposal reaching that branch was hand-written — which IS the intended human-in-the-loop shape, but it means the check verifies a DECLARATION, not that a review happened. This round only makes `execute` state that the value is self-attested, so a signed tag no longer silently implies "reviewed". Real binding needs a review-evidence artifact plus a review workflow: new machinery that today's requirement does not independently justify. Handled separately.
+
 ### Verification (evidence tiers)
 
 - Every fix ships with a mechanical negative test that reproduces the original failure mode on the production file/real fixture (tests prove the gate CAN red — not just that it is green).
@@ -89,7 +94,7 @@ Add the "Modify 3+ Files at Once | confirmation required" row to `SKILL.md` § A
 **payload (INSTALLED / SKILL-INTERNAL behavior and content):**
 
 - `scripts/check-doc-consistency.js` — A1 (protected-files table extraction), A5 (frontmatter version), A6 (archive-status scan)
-- `scripts/generate-governance.js` — A5 (version sentinel stays in sync; verify no other copy diverges)
+- `scripts/generate-governance.js` — A5 verification only: the fallback sentinel was confirmed already in sync with package.json and init-spec (0.13.0), so no edit was needed.
 - `references/templates/sub-skills.md` — B1 (release-flow markers + Phase 4 steps), B4 (validator check list)
 - `references/policies/governance-files.policy.md` — B3 (dead README template block removal)
 - `SKILL.md` — B5 (permission matrix row); version frontmatter must stay synced (A5)
@@ -99,10 +104,11 @@ Add the "Modify 3+ Files at Once | confirmation required" row to `SKILL.md` § A
 - `package.json` — A2 (scope-tier composition), A4 (`plans:delivery --gate`)
 - `.github/workflows/ci.yml` — A3 (run npm run check)
 - `AGENTS.md` — A3 wording, A2 table check (already correct — verify only)
+- `docs/en/architecture.md` — B2 (stale artifact-count wording; the fix spans all three trees)
 - `docs/zh-CN/architecture.md` — B2
 - `docs/zh-TW/architecture.md` — B2
-- `docs/archive/*.md` — A6 (21 files, Status normalization)
+- `docs/archive/` — A6: Status line normalized across all 21 archived plans (directory-wide edit, not a single file)
 - `tests/suites/consistency.test.js` — A1 fixture reshape, A5 negative test, A6 negative test, B1 marker-set test
 - `tests/suites/docs.test.js` — A2 composition test (package.json entry equivalence)
-- `tests/support/helpers.js` — fixture helpers if shared by the new tests
+- `tests/support/helpers.js` — not changed: the new fixture helper is used by one suite only, so extracting it into the shared layer would be premature (engineering restraint).
 - `CHANGELOG.md` — release entry

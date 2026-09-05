@@ -1,5 +1,7 @@
 # Governed-Project Sync Groups（TASK 计划）
 
+> **Status: archived.**（已归档。归档即断言完成。）
+
 ### 任务目的
 
 把隐式同步规则变成**显式、可对照的声明**，让被治理项目的 Agent 不再随文件增长而漏同步。本 skill 仓库自身有硬编码的同步检查（`check-doc-consistency.js` 的 prompt-sync）；被治理项目需要**声明式、项目专属**的等价物。

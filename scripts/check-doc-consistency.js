@@ -7,7 +7,10 @@
 //   3. ADR status sync        — "Accepted (Unreleased)" ADRs whose feature already shipped
 //   4. link validity          — relative markdown links must resolve
 //   5. numeric claims         — documented counts (sub-skills, validator checks, tests)
-//   6. prompt sync            - sub-skill triggers must appear in all three commands.md
+//   6. prompt sync            - sub-skill / main-skill triggers and the commands.md
+//      inventory must agree in BOTH directions (missing = a skill users cannot discover;
+//      stale = a trigger the manual advertises that no source declares). ADR-0008 makes
+//      this copy deliberate and gate-enforced; authority stays in the skill sources.
 //   7. trilingual tree parity — delegated to scripts/check-doc-parity.js
 //   8. consent-cluster sync   — every EXISTING consent sync point must declare the same
 //      markers (Exception A, Exception B, echo-never-waived); missing points are skipped,
@@ -40,10 +43,11 @@
 // Pass means "mechanical condition satisfied", not "behavior is correct".
 //
 // Modes: default = advisory, ALWAYS exit 0 (heuristics, not a gate).
-//        --gate  = fail-closed on the mechanically checkable clusters ONLY (#2, #8, #10's
-//                  unknown status and #12); the other heuristics still report
-//                  but never affect the exit code.
-//        --release-gate = --gate plus #10's pending-archive and #11's changelog clusters.
+//        --gate  = fail-closed on the mechanically checkable clusters ONLY (#1's
+//                  frontmatter version sync point, #2, #6, #8, #10's unknown status and
+//                  #12); the other heuristics still report but never affect the exit code.
+//        --release-gate = --gate plus #10's pending-archive + archived-plan status and
+//                  #11's changelog clusters.
 // Usage: node scripts/check-doc-consistency.js [--json] [--gate] [--release-gate]
 
 const fs = require("fs");
@@ -301,6 +305,20 @@ function main() {
       while ((m = re.exec(c))) {
         if (m[1] !== version) issues.version_examples.push(`${f}:${m[1]} != ${version}`);
       }
+      // YAML frontmatter carries an UNQUOTED `version: X.Y.Z`, which the regex above cannot
+      // match (its "version" alternative requires literal double quotes). SKILL.md's
+      // frontmatter is one of this repo's three release sync points, so it was the only one
+      // with no mechanical backstop — a release could ship a stale skill version and pass
+      // every gate (audit 2026-09-05). Gate class: a version sync point must not drift.
+      const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(c);
+      if (fm) {
+        const fv = /^version:\s*["']?(\d+\.\d+\.\d+)["']?\s*$/m.exec(fm[1]);
+        if (fv && fv[1] !== version) {
+          const item = `${f}: frontmatter version ${fv[1]} != ${version} (release sync point)`;
+          issues.version_examples.push(item);
+          if (anyGate) gateIssues.push({ kind: "version_examples", item });
+        }
+      }
     }
   }
 
@@ -327,45 +345,174 @@ function main() {
   const protectedPaths = [];
   const tableRe = /^\|\s*`([^`]+)`\s*\|/gm;
   let tm;
-  // Only parse the FIRST table (the protected-files list under ## 受保护文件). The
-  // second table (## .governance/ Git 跟踪策略) lists git-tracking status, not
-  // governance file protection — entries like "docs/plans/archive/" from that table
-  // would otherwise be demanded from every AGENTS.md summary (found by review).
-  const firstTableEnd = policy.search(/\n## /);
-  const tableScope = firstTableEnd > 0 ? policy.slice(0, firstTableEnd) : policy;
-  while ((tm = tableRe.exec(tableScope))) {
-    const p = tm[1].replace(/\*\*/g, "").split("/")[0];
-    if (p === "AGENTS.md" || p === "CLAUDE.md" || p.startsWith("docs") || p.startsWith(".governance") || p.startsWith("scripts") || p === "opencode.json" || p.startsWith(".github")) {
-      protectedPaths.push(tm[1]);
+  // Parse ONLY the protected-files table. The document has two tables: the protected-files
+  // list under "## 受保护文件" and a git-tracking table under "## .governance/ Git 跟踪策略";
+  // entries like "docs/plans/archive/" from the second would otherwise be demanded from
+  // every AGENTS.md summary (found by review).
+  //
+  // Section-scoped, NOT prefix-scoped: the previous `policy.slice(0, search(/\n## /))`
+  // truncated at the FIRST heading, but that heading ("## 受保护文件") PRECEDES its own
+  // table — so the window ended before any row and protectedPaths was permanently empty,
+  // silently disabling the whole cluster in this repo and in every governed project
+  // (audit 2026-09-05). Split into sections and pick the one that owns the list.
+  const policySections = policy.split(/\n(?=## )/);
+  const protectedSection =
+    policySections.find((s) => /^##\s*受保护文件|^##\s*Protected [Ff]iles/m.test(s)) ||
+    // Fallback for a reworded heading: the first section that actually contains
+    // backticked table rows. Never fall back to the whole document — that would
+    // re-admit the git-tracking table this scoping exists to exclude.
+    policySections.find((s) => tableRe.test(s) && ((tableRe.lastIndex = 0), true));
+  const tableScope = protectedSection || "";
+  // Harvest EVERY backticked token in the first cell, not just the first one: the policy
+  // writes combined entries ("`AGENTS.md` / `CLAUDE.md`") in a single cell, and taking
+  // only the leading match dropped CLAUDE.md from the authoritative set — which then made
+  // every summary that lists it look stale.
+  for (const row of tableScope.match(/^\|[^\n]*\|/gm) || []) {
+    const firstCell = row.split("|")[1] || "";
+    for (const bt of firstCell.match(/`([^`]+)`/g) || []) {
+      const raw = bt.slice(1, -1).replace(/\*\*/g, "").trim();
+      const head = raw.split("/")[0];
+      if (
+        head === "AGENTS.md" || head === "CLAUDE.md" || head === "opencode.json" ||
+        head.startsWith("docs") || head.startsWith(".governance") || head.startsWith("scripts") ||
+        head.startsWith(".github") || head === ".githooks" || head === ".gitlab-ci.yml"
+      ) {
+        protectedPaths.push(raw);
+      }
     }
   }
+  // A policy source that exists but yields no rows is a parse defect, not a clean state —
+  // report it instead of passing vacuously (this is exactly how the bug above survived).
+  if (policy && protectedPaths.length === 0) {
+    const item = "protected-files table parsed 0 rows from the policy source — the enumeration cluster cannot run (parser/document shape mismatch)";
+    issues.protected_lists.push(item);
+    if (anyGate) gateIssues.push({ kind: "protected_lists", item });
+  }
   if (protectedPaths.length > 0) {
+    const protectedSet = new Set(protectedPaths);
+    // A declared path is "governance-shaped" if it looks like an entry of this list.
+    // Only such tokens are judged; ordinary prose paths (docs/en/architecture.md, README)
+    // are not claims about the protected list and must never be flagged.
+    // `scripts/` is matched wholesale rather than by a `check-`/`verify-` prefix allowlist:
+    // the prefix list silently ignored `verify_governance.js` (this repo's real filename)
+    // and any future governance script named otherwise, which is exactly the stale-entry
+    // case Rule 4 exists to catch. `.github/workflows` carries a `/` anchor so that a
+    // lookalike directory (`.github/workflows-backup/`) is not swept in.
+    const GOVERNANCE_SHAPED = /^(?:AGENTS\.md|CLAUDE\.md|opencode\.json|docs\/rules\/|\.governance\/|scripts\/[\w.-]+\.(?:js|sh)|\.githooks\/|\.github\/workflows\/|\.gitlab-ci\.yml)/;
     const summaries = mdFiles().filter((f) => f !== "CHANGELOG.md" && !f.startsWith("docs/archive/"));
     for (const f of summaries) {
       const c = readFile(path.join(ROOT, f));
       if (!c) continue;
       if (f.includes("governance-files.policy.md") || f.includes("governance-files.md") || f.includes("adr-000")) continue;
       const mentionsFlow = /治理文件保护|Governance File Protection|Governance file protection/i.test(c);
-      if (mentionsFlow) {
-        // Trigger tightening (P1 precondition): only documents that CLAIM to enumerate
-        // the list are held to its completeness — the flow mention and the enumeration
-        // claim may appear in different places, so each is tested independently.
-        const claimsEnum = CLAIMS_PROTECTED_LIST.test(c);
-        if (!claimsEnum) continue;
-        // Single-source-of-truth deferral is exempt BY DESIGN — but only when the
-        // deferral phrase sits in the SAME section as the enumeration claim. A repo can
-        // mention "single source of truth" elsewhere (e.g. the AGENTS.md principles index
-        // table) without deferring this particular listing; an unrelated mention must not
-        // disable the check (review: AGENTS.md was exempted by an index row while its
-        // protection clause sat 10 lines away). Scope the exemption to the section that
-        // actually carries the enumeration claim.
-        const sections = c.split(/\n(?=## )/);
-        const claimSection = sections.find((s) => CLAIMS_PROTECTED_LIST.test(s));
-        if (claimSection && /单一事实源|single source of truth|完整清单见|完整清单以/i.test(claimSection)) continue;
-        for (const p of protectedPaths) {
-          if (!c.includes(p)) gateIssues.push({ kind: "protected_lists", item: `${f}: missing ${p}` });
+      if (!mentionsFlow) continue;
+      // Only documents that CLAIM to enumerate the list are judged; the flow mention and
+      // the enumeration claim are tested independently (they may sit in different places).
+      const claimsEnum = CLAIMS_PROTECTED_LIST.test(c);
+      if (!claimsEnum) continue;
+
+      // Scope the claim to its own section so an unrelated single-source-of-truth mention
+      // elsewhere (e.g. the AGENTS.md principles index) cannot disable the check.
+      // Split on ANY heading level: SKILL.md carries its protection block under "### ",
+      // so a "## "-only split found no claim section and fell back to the whole file —
+      // which dragged unrelated prose (".governance/state.json" in the state-file docs)
+      // into the declaration scan and produced a false stale-entry report.
+      //
+      // Judge EVERY section that claims an enumeration, not just the first. Taking only the
+      // first anchored the installed agents-md template on its permission matrix (which
+      // says "protected governance files listed below"), leaving the real protection
+      // section — and therefore every generated project's AGENTS.md — unexamined.
+      const sections = c.split(/\n(?=#{2,4}\s)/);
+      const claimSections = sections.filter((s) => CLAIMS_PROTECTED_LIST.test(s));
+      if (claimSections.length === 0) claimSections.push(c);
+      for (const claimSection of claimSections) {
+      const defersToSource = /单一事实源|single source of truth|完整清单见|完整清单以/i.test(claimSection);
+
+      // Harvest every path the document actually declares, in ALL declaration forms:
+      // fenced code blocks (SKILL.md, agents-md.template.md), Markdown table rows, and
+      // plain/backticked list items. Parsing only tables is what let code-block summaries
+      // drift unchecked (audit 2026-09-05).
+      //
+      // Scope: the ENUMERATION BLOCK, not the whole section. A protection section also
+      // discusses state files and workflow prose ("写入 .governance/state.json"), and
+      // those mentions are not claims about the protected list — judging them produced
+      // false "stale entry" reports on first run.
+      const declared = new Set();
+      const addToken = (raw) => {
+        const t = String(raw || "").trim().replace(/[`*]/g, "").replace(/[，,。.;；]$/, "");
+        if (!t) return;
+        // Take the path-looking head of the line: entries carry trailing prose
+        // ("scripts/check-lock.js  （锁检查）") that must not become part of the token.
+        const head = t.split(/[\s（(]/)[0];
+        if (head && GOVERNANCE_SHAPED.test(head)) declared.add(head);
+      };
+      // The enumeration block: every fenced block / table / list run that follows the
+      // enumeration claim inside the claim section — plus the claim's own prose line, which
+      // is how the INSTALLED agents-md template writes its list ("Modifying A, B, C ...
+      // requires:"). Parsing only fenced/table/unordered-list forms left three shapes
+      // invisible, and an unparsed shape does not merely skip Rule 4: it also collapses
+      // Rule 3, because `declared.size === 0` reads as "declares nothing" (review finding).
+      const claimIdx = claimSection.search(CLAIMS_PROTECTED_LIST);
+      const afterClaim = claimIdx >= 0 ? claimSection.slice(claimIdx) : claimSection;
+      const blocks = [];
+      for (const m of afterClaim.match(/```[\s\S]*?```/g) || []) blocks.push({ kind: "fence", text: m });
+      for (const m of afterClaim.match(/(?:^\|[^\n]*\|\n?)+/gm) || []) blocks.push({ kind: "table", text: m });
+      // Ordered (`1.`) as well as unordered (`-`/`*`/`+`) list runs.
+      for (const m of afterClaim.match(/(?:^[ \t]*(?:[-*+]|\d+[.)])[ \t]+[^\n]*\n?)+/gm) || []) blocks.push({ kind: "list", text: m });
+      // Indented (4-space / tab) code blocks.
+      for (const m of afterClaim.match(/(?:^(?: {4}|\t)[^\n]*\n?)+/gm) || []) blocks.push({ kind: "indented", text: m });
+      // Inline prose enumeration: the claim sentence itself, split on separators.
+      const proseLine = afterClaim.split("\n")[0] || "";
+      if (proseLine) blocks.push({ kind: "prose", text: proseLine });
+      for (const b of blocks) {
+        const lines = b.kind === "fence" ? b.text.split("\n").slice(1, -1) : b.text.split("\n");
+        for (const line of lines) {
+          if (/^\s*\|?\s*-{2,}/.test(line)) continue; // table separator
+          const stripped = line.replace(/^[ \t]*(?:[-*+]|\d+[.)])[ \t]+/, "").replace(/^[ \t]*\|?\s*/, "");
+          // Separators that enumerate: " / ", ", ", "、", " or ".
+          for (const part of stripped.split(/\s\/\s|,\s|、|\sor\s/)) addToken(part);
+          for (const bt of line.match(/`([^`]+)`/g) || []) addToken(bt);
         }
       }
+
+      // Rule 4 (always on): a declared governance path that is NOT in the authoritative
+      // list is stale — a renamed or deleted file left behind in a summary. A pointer to
+      // the single source of truth excuses INCOMPLETENESS, never INCORRECTNESS.
+      for (const d of declared) {
+        if (protectedSet.has(d)) continue;
+        // Directory-style entries cover their descendants. Both `docs/rules/**` and a
+        // slash-less `docs/rules**` must work: stripping the stars can leave the stem
+        // without a trailing slash, which used to fail the containment test outright.
+        const covered = [...protectedSet].some((p) => {
+          let stem = p.replace(/\*+$/, "");
+          if (!stem.endsWith("/")) {
+            if (!p.endsWith("*")) return false; // a concrete file, not a directory entry
+            stem += "/";
+          }
+          return d.startsWith(stem);
+        });
+        if (covered) continue;
+        const item = `${f}: declares \`${d}\` which is not in the protected-files list (renamed, removed, or never existed)`;
+        issues.protected_lists.push(item);
+        if (anyGate) gateIssues.push({ kind: "protected_lists", item });
+      }
+
+      // Rule 1: a pure pointer (no governance paths declared) is complete by construction.
+      // `continue` now skips this SECTION, not the file — a document may hold several
+      // claim sections and each is judged on its own.
+      if (declared.size === 0) continue;
+      // Rule 2: partial list + pointer — omissions are legitimate, correctness was already
+      // enforced above. Rule 3: an enumeration WITHOUT a pointer claims to be the list, so
+      // it must be complete.
+      if (defersToSource) continue;
+      for (const p of protectedPaths) {
+        if (!c.includes(p)) {
+          const item = `${f}: missing ${p}`;
+          issues.protected_lists.push(item);
+          if (anyGate) gateIssues.push({ kind: "protected_lists", item });
+        }
+      }
+      } // end claim-section loop
     }
   }
 
@@ -449,6 +596,32 @@ function main() {
     }
   }
 
+  // Archived plans are held to a different rule than plans/: the archive IS the completed
+  // state, so "archiving asserts completion" — a file sitting in docs/archive/ must SAY
+  // archived. Before this scan the cluster only walked docs/*/plans/, so 19 of 21 archived
+  // plans carried a non-canonical or missing Status line (several still said "已实现（待
+  // Release 归档）" — a pending-archive claim inside the archive) and nothing noticed
+  // (audit 2026-09-05). Fail-closed at release; advisory day to day, matching how the
+  // pending-archive rule is tiered for plans/.
+  const archiveDir = path.join(DOCS, "archive");
+  if (fs.existsSync(archiveDir)) {
+    for (const rel of walk(archiveDir)) {
+      if (!rel.endsWith(".md") || /^README\.md$/i.test(rel)) continue;
+      const planRel = path.join("docs", "archive", rel).replace(/\\/g, "/");
+      const c = readFile(path.join(ROOT, planRel));
+      if (!c) continue;
+      const status = classifyPlanStatus(c);
+      planStatuses.push({ plan: planRel, status });
+      if (status === "archived") continue;
+      const item =
+        status === "unknown"
+          ? `${planRel}: archived plan has no canonical Status line (archiving asserts completion — say archived)`
+          : `${planRel}: archived plan still claims "${status}" (the archive is the completed state)`;
+      issues.plans_status_unknown.push(item);
+      if (releaseGate) gateIssues.push({ kind: "plans_status_unknown", item });
+    }
+  }
+
   // ---- 3. ADR status sync ----
   const changelogText = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
   const releasedVersions = [...changelogText.matchAll(/^## \[(\d+\.\d+\.\d+)\]/gm)].map((m) => m[1]);
@@ -496,7 +669,13 @@ function main() {
     }
   }
 
-  // ---- 6. prompt sync (sub-skill triggers must appear in commands.md) ----
+  // ---- 6. prompt sync (gate class; sub-skill triggers <-> commands.md) ----
+  // ADR-0008: the trigger inventory in commands.md is a DELIBERATE, controlled copy (users
+  // discover sub-skills from the manual), with sub-skills.md staying the authority. Because
+  // the copy is mandated, BOTH directions are defects: a trigger missing from a language
+  // tree hides a skill from users, and a trigger left behind after removal advertises one
+  // that no longer exists. Previously this cluster was advisory and one-directional, so
+  // AGENTS.md's "enforces" claim was not backed by anything.
   const subSkills = readFile(path.join(ROOT, "references", "templates", "sub-skills.md")) || "";
   const triggers = new Set();
   for (const line of subSkills.split("\n")) {
@@ -507,10 +686,36 @@ function main() {
   }
   if (triggers.size > 0) {
     for (const lang of ["en", "zh-CN", "zh-TW"]) {
-      const cmd = readFile(path.join(DOCS, lang, "commands.md")) || "";
+      const cmdPath = path.join(DOCS, lang, "commands.md");
+      const cmd = readFile(cmdPath) || "";
       if (!cmd) continue;
       for (const t of triggers) {
-        if (!cmd.includes("`" + t + "`")) issues.prompt_sync.push(`${lang}/commands.md missing trigger \`${t}\``);
+        if (!cmd.includes("`" + t + "`")) {
+          const item = `${lang}/commands.md missing trigger \`${t}\``;
+          issues.prompt_sync.push(item);
+          if (anyGate) gateIssues.push({ kind: "prompt_sync", item });
+        }
+      }
+      // Reverse direction: a trigger the manual advertises that NO source declares is a
+      // stale advertisement (renamed or removed). Two authorities exist and both are
+      // legitimate: sub-skills.md owns generated sub-skill triggers, SKILL.md owns the
+      // main skill's mode triggers (INIT / AUDIT / drift). Judging against sub-skills.md
+      // alone reported every main-skill trigger as stale on first run. Scope to the
+      // inventory table rows so prose and code samples are never judged.
+      const skillEntry = readFile(path.join(ROOT, "SKILL.md")) || "";
+      for (const row of cmd.match(/^\|[^\n]*\|/gm) || []) {
+        for (const bt of row.match(/`([^`]+)`/g) || []) {
+          const t = bt.slice(1, -1).trim();
+          // Only trigger-shaped tokens: natural-language phrases or /slash commands.
+          if (!/^[a-z0-9][a-z0-9 /*-]*$/i.test(t)) continue;
+          if (/[./\\]/.test(t) && !t.startsWith("/")) continue;
+          if (triggers.has(t)) continue;
+          // Declared anywhere in either authority (quoted or plain) → not stale.
+          if (subSkills.includes(t) || skillEntry.includes(t)) continue;
+          const item = `${lang}/commands.md advertises \`${t}\` which no skill source declares (removed or renamed trigger)`;
+          issues.prompt_sync.push(item);
+          if (anyGate) gateIssues.push({ kind: "prompt_sync", item });
+        }
       }
     }
   }

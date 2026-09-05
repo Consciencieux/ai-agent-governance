@@ -1,6 +1,6 @@
 # Content Consistency Check（TASK 计划）
 
-> **状态：已实现，已归档。** 实现见 `scripts/check-doc-consistency.js`（7 类交叉矛盾检查：版本示例 / 受保护清单 / ADR 状态 / roadmap 目标 / 链接 / 数值声明 / 三树委托 check-doc-parity.js，恒 exit 0 建议性）；drift-check 子技能模板已含 consistency 模式（`references/templates/sub-skills.md`）。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现，已归档。 实现见 `scripts/check-doc-consistency.js`（7 类交叉矛盾检查：版本示例 / 受保护清单 / ADR 状态 / roadmap 目标 / 链接 / 数值声明 / 三树委托 check-doc-parity.js，恒 exit 0 建议性）；drift-check 子技能模板已含 consistency 模式（`references/templates/sub-skills.md`）。）
 
 ### 任务目的
 

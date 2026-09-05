@@ -141,4 +141,27 @@ test("payload: INIT installs the protected-files list the installed check reads"
     if (r.status !== 1) return false;
     return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "unclassified" && g.item.includes("stray.js"));
   });
+
+  // A governed project's AGENTS.md is generated from agents-md.template.md. That summary
+  // used to be a comma-separated prose sentence, which the consistency gate's declaration
+  // parser (fenced blocks / tables / list runs) could not see — so the protected-files
+  // list in EVERY generated project could drift from the policy unnoticed. Reshaping the
+  // template into a list closed that hole; this pins both the shape and the detection.
+  test("payload: a generated project's protected-files summary is gate-checked", () => {
+    const dir = tmp("payload-protected-drift");
+    const gen = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", "C"], { encoding: "utf8" });
+    if (gen.status !== 0) return false;
+    const rules = path.join(dir, "docs/rules/governance-files.md");
+    const agents = path.join(dir, "AGENTS.md");
+    if (!fs.existsSync(rules) || !fs.existsSync(agents)) return false;
+    // The summary must be in a parseable shape, not prose.
+    if (!/^- `scripts\/check-lock\.js`$/m.test(fs.readFileSync(agents, "utf8"))) return false;
+    // Rename one entry in the AUTHORITATIVE list only; the summary is now stale.
+    fs.writeFileSync(rules, fs.readFileSync(rules, "utf8").replace(/scripts\/check-lock\.js/g, "scripts/check-renamed.js"));
+    fs.copyFileSync(CONSISTENCY_CHECK, path.join(dir, "scripts/check-doc-consistency.js"));
+    const r = spawnSync(process.execPath, ["scripts/check-doc-consistency.js", "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+    if (r.status !== 1) return false;
+    const out = JSON.parse(r.stdout);
+    return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-lock.js"));
+  });
 };

@@ -1,7 +1,7 @@
 # 审查后备积压（TASK 计划）
 
 
-> **状态：已完成（2026-08-29）。** 交付对账（`scripts/check-plan-delivery.js`）现在会审计本计划声明的文件。既有缺陷与可选钩子重新实现要求均已落地，并由下方验证矩阵覆盖。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已完成（2026-08-29）。 交付对账（`scripts/check-plan-delivery.js`）现在会审计本计划声明的文件。既有缺陷与可选钩子重新实现要求均已落地，并由下方验证矩阵覆盖。）
 
 **Target：both** —— 载荷侧运行时行为已在 `scripts/`、`references/init-spec.json` 及钩子模板/策略中落地；仓库侧同步已在 `docs/`（归档链接与布局）、`SKILL.md`、`CHANGELOG.md` 及三语计划副本中完成。钩子条目现已实现，不再延期。
 

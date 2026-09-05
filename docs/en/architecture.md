@@ -23,7 +23,7 @@ for which role a file has:
 Roles are **human decisions, never inferred**: `copy`/`template`/`generated`, renames
 (`lifecycle.policy.md` → `docs/rules/lifecycle.md`, `verify_governance.js` →
 `verify-governance.js`), one-to-many outputs (`githooks-template.md` → `pre-commit` +
-`commit-msg`) and 13 static inline-content artifacts all encode contract decisions a
+`commit-msg`) and the inline-content artifacts (`type: "static"`) all encode contract decisions a
 generator cannot recover from the file tree. What IS mechanical is catching omissions:
 `scripts/check-role-completeness.js --gate` fails on an unclassified file, a file in both
 sets, a declared path that no longer exists, or a role claim that `package-skill.sh` does

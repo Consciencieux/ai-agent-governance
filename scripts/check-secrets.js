@@ -63,6 +63,10 @@ if (error) {
 }
 
 const hits = [];
+// Files git refused to diff as text and that could not be read back as a blob. They are
+// NOT evidence of cleanliness — reporting them separately keeps the gate honest about
+// what it actually inspected.
+const unscanned = [];
 let currentFile = null;
 let nextLine = null;
 const lines = out.split("\n");
@@ -77,6 +81,35 @@ for (const line of lines) {
     continue;
   }
   if (line.startsWith("--- ") || line.startsWith("diff --git") || line.startsWith("index ")) {
+    continue;
+  }
+  // Git prints "Binary files a/x and b/x differ" instead of content for blobs it treats as
+  // binary — either auto-detected (NUL bytes) or declared via .gitattributes (`binary` /
+  // `-diff`). The line loop below therefore never sees that content, and the gate used to
+  // report "clean" for a file it had not read: staging a key inside a `-diff` file was a
+  // one-line, legitimate-looking bypass of a SECURITY gate (audit 2026-09-05). Read the
+  // staged blob directly and scan it; if that is not possible, report the file as
+  // UNSCANNED rather than counting it toward a clean result.
+  if (line.startsWith("Binary files ")) {
+    const bm = /^Binary files (?:a\/(.+?)|\/dev\/null) and (?:b\/(.+?)|\/dev\/null) differ$/.exec(line);
+    const bfile = (bm && (bm[2] || bm[1])) || currentFile || "(unknown)";
+    let blob = null;
+    const shown = spawnSync("git", ["show", ":" + bfile], { encoding: "latin1", maxBuffer: 1 << 26 });
+    if (shown.status === 0 && typeof shown.stdout === "string") blob = shown.stdout;
+    if (blob === null) {
+      unscanned.push(bfile);
+    } else {
+      let n = 0;
+      for (const bline of blob.split(/\r?\n/)) {
+        n++;
+        for (const p of PATTERNS) {
+          if (p.re.test(bline)) {
+            hits.push({ file: bfile, line: n, pattern: p.name });
+            break;
+          }
+        }
+      }
+    }
     continue;
   }
   if (line.startsWith(" ")) {
@@ -98,7 +131,7 @@ for (const line of lines) {
 }
 
 if (process.argv.includes("--json")) {
-  process.stdout.write(JSON.stringify({ clean: hits.length === 0, hits }, null, 2) + "\n");
+  process.stdout.write(JSON.stringify({ clean: hits.length === 0, hits, unscanned }, null, 2) + "\n");
   process.exit(hits.length === 0 ? 0 : 1);
 }
 
@@ -109,6 +142,14 @@ if (hits.length > 0) {
   }
   console.error("Remove the material from the staged diff before committing.");
   process.exit(1);
+}
+if (unscanned.length > 0) {
+  // Exit 0 (nothing secret-like was found in what could be read) but never let the word
+  // "clean" stand for content the scanner could not open.
+  console.log("check-secrets: no secrets found in scannable content");
+  console.log("  UNSCANNED (binary blob could not be read back):");
+  for (const f of unscanned) console.log(`    ${f}`);
+  process.exit(0);
 }
 console.log("check-secrets: clean");
 process.exit(0);

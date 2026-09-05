@@ -53,29 +53,6 @@
 
 `validation.json` / `drift-report.json` / `release-proposal.json` / `activity.jsonl` / `consent.json` 由 AUDIT/RELEASE/任务运行产生，**不作为 required artifact**——fresh-checkout CI 必须无它们也通过。
 
-## .governance/README.md 生成模板
+## .governance/README.md
 
-INIT 生成 `.governance/` 目录时应同时生成 README.md：
-
-```
-# .governance
-
-This directory stores AI Agent Governance state.
-
-Tracked:
-- manifest.json
-- state.json
-- preflight.json
-- git-policy.json
-- sync-rules.json
-- generated/
-
-Ignored:
-- validation.json
-- drift-report.json
-- release-proposal.json
-- activity.jsonl
-- consent.json
-
-Do not delete manually.
-```
+INIT 生成 `.governance/` 目录时同时生成 README.md。**其正文是 `references/init-spec.json` 中该产物的 `content` 字段（单一事实源）**，由 `scripts/generate-governance.js` 直接写出；本文件不复制一份模板——曾经存在的那份从未被任何代码消费，只会与真实产物静默分叉（审计 2026-09-05）。README 的内容契约是：逐个说明 `.governance/` 下每个文件的用途与 Git 跟踪状态，与上方「.governance/ Git 跟踪策略」表保持一致。

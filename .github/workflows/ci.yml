@@ -14,8 +14,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm test
-      - run: node scripts/check-doc-parity.js
+      - run: npm run check
       - name: Governance badge endpoint
         run: |
           node scripts/verify_governance.js --json > governance-report.json || true

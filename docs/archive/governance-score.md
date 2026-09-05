@@ -1,7 +1,7 @@
 # Governance Score & Badge（TASK 计划）
 
 
-> **状态：已实现，已归档。** 实现见 `scripts/verify_governance.js`（--json 输出 score 字段）与 `.github/workflows/ci.yml`（shields.io badge endpoint 工件）、`references/workflows/ci.md`（被治理项目模板）。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现，已归档。 实现见 `scripts/verify_governance.js`（--json 输出 score 字段）与 `.github/workflows/ci.yml`（shields.io badge endpoint 工件）、`references/workflows/ci.md`（被治理项目模板）。）
 
 ### 任务目的
 

@@ -64,12 +64,19 @@ function extractTreeFileTokens(architectureMd) {
 function main() {
   const json = process.argv.includes("--json");
   const missingByTree = {};
-  const actual = new Set(DIRS.flatMap((d) => listFiles(path.join(ROOT, d))));
-  if (actual.size === 0) {
-    if (json) process.stdout.write(JSON.stringify({ pass: false, issues: ["no files found under references/ or scripts/"] }, null, 2) + "\n");
-    else console.log("✗ no files found under references/ or scripts/");
+  // Per-directory guard, not just the union: renaming `references/` away used to leave
+  // `scripts/` alone carrying the check, so the scan silently enforced HALF the corpus and
+  // still printed a confident green line with a plausible file count. Each configured root
+  // must contribute files (audit 2026-09-05).
+  const perDir = DIRS.map((d) => ({ dir: d, files: listFiles(path.join(ROOT, d)) }));
+  const emptyDirs = perDir.filter((e) => e.files.length === 0).map((e) => e.dir);
+  if (emptyDirs.length > 0) {
+    const msg = `no files found under ${emptyDirs.join(", ")} — layout scan would cover only part of the tree`;
+    if (json) process.stdout.write(JSON.stringify({ pass: false, issues: [msg] }, null, 2) + "\n");
+    else console.log(`✗ ${msg}`);
     process.exit(1);
   }
+  const actual = new Set(perDir.flatMap((e) => e.files));
 
   for (const lang of TREES) {
     const file = path.join(DOCS, lang, "architecture.md");

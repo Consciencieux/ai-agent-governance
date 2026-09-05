@@ -33,7 +33,26 @@ function globMatch(pattern, file) {
     }
     return file.startsWith(prefix + "/") || file === prefix;
   }
+  // A trailing slash means "this directory and everything under it". The template
+  // documents this form and the DEFAULT shipped sync-rules uses it (feature-registry's
+  // `require: ["docs/features/"]`), but it was unimplemented — so that group could never
+  // be satisfied and every INITed project carried a permanently false BLOCK
+  // (audit 2026-09-05).
+  if (pattern.endsWith("/")) return file.startsWith(pattern);
   return false;
+}
+
+// Supported pattern forms are deliberately narrow (exact path, `prefix/**`, `prefix/`).
+// A wildcard SEGMENT (`packages/*/src/**`, `**/*.ts`, `src/*.ts`) is not supported, and
+// silently matching nothing is the wrong failure mode: the project believes it declared a
+// rule that never fires. Report such patterns so they fail loudly instead.
+function unsupportedPattern(pattern) {
+  const p = String(pattern).replace(/\\/g, "/");
+  // Strip the ONE supported wildcard (a trailing `/**`) and judge what remains. Testing
+  // `endsWith("/**")` first let `packages/*/src/**` through: it ends correctly but carries
+  // an unsupported wildcard SEGMENT in the middle, which globMatch cannot honour.
+  const stem = p.endsWith("/**") ? p.slice(0, -3) : p;
+  return stem.includes("*");
 }
 
 function nulPaths(buffer) {
@@ -143,9 +162,13 @@ const changedResult = changedPaths(base);
 if (changedResult.error) failClosed(changedResult.error);
 const changed = changedResult.paths;
 const unsynced = [];
+const badPatterns = [];
 for (const g of policy.syncGroups) {
   const watch = g.watch || [];
   const require = g.require || [];
+  for (const p of [...watch, ...require]) {
+    if (unsupportedPattern(p)) badPatterns.push({ group: g.name, pattern: p });
+  }
   const hit = watch.some((p) => changed.some((f) => globMatch(p, f)));
   if (!hit) continue;
   const synced = require.some((p) => changed.some((f) => globMatch(p, f)));
@@ -170,8 +193,18 @@ try {
 }
 
 if (json) {
-  process.stdout.write(JSON.stringify({ clean: unsynced.length === 0, base, unsynced }, null, 2) + "\n");
-  process.exit(unsynced.length === 0 || advisory ? 0 : 1);
+  process.stdout.write(JSON.stringify({ clean: unsynced.length === 0 && badPatterns.length === 0, base, unsynced, unsupportedPatterns: badPatterns }, null, 2) + "\n");
+  process.exit((unsynced.length === 0 && badPatterns.length === 0) || advisory ? 0 : 1);
+}
+
+// An unsupported pattern is a rule that can never fire — reporting "synced" for it would
+// be a false assurance, so it blocks like an unsynced group.
+if (badPatterns.length > 0) {
+  console.error("check-sync: BLOCKED - unsupported pattern form (wildcard segments are not supported):");
+  for (const b of badPatterns) {
+    console.error(`  ${b.group}: ${b.pattern}  — use an exact path, "prefix/**" or "prefix/"`);
+  }
+  if (!advisory) process.exit(1);
 }
 
 if (unsynced.length === 0) {

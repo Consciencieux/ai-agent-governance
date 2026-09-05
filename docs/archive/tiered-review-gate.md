@@ -1,6 +1,6 @@
 # Tiered Review Gate（TASK 计划）
 
-> **状态：已实现（2026-08-29）。** 本页保留路线图条目 `Tiered review gate` 的设计记录；风险字段与审核规则已写入 `references/workflows/release.md`（见 [roadmap.md](../zh-CN/roadmap.md)）。
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-08-29）。 本页保留路线图条目 `Tiered review gate` 的设计记录；风险字段与审核规则已写入 `references/workflows/release.md`（见 [roadmap.md](../zh-CN/roadmap.md)）。）
 
 ### 任务目的
 

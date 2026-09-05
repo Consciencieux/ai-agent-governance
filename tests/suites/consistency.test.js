@@ -333,6 +333,37 @@ test("check-plan-delivery: a bare bashname matches its runtime artifact (normali
   return r.status === 0;
 });
 
+test("check-plan-delivery: ## Affected Files is extracted (template heading level)", () => {
+  // C1: the section anchor was the literal "###", which matches inside "####" but never
+  // inside "##" — so a plan written with `## Affected Files` extracted nothing and the
+  // script still printed "every declared path delivered". That is the heading level the
+  // SHIPPED plan template uses (references/templates/sub-skills.md), so every plan written
+  // to this skill's own template was unverifiable in a governed project (audit 2026-09-05).
+  const dir = tmp("plandel-h2");
+  buildPlanRepo(dir, "# P\n\n## Affected Files\n\n- `references/templates/never-created-h2.md` — new\n");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stdout.includes("never-created-h2.md");
+});
+
+test("check-plan-delivery: every Affected Files section is scanned, not just the first", () => {
+  // Review finding: returning the first matching heading level discarded the others, so a
+  // plan with BOTH `## Affected Files` and a later `### Affected Files` had its H2
+  // declarations silently dropped — the same vacuous-pass class the H2 fix was closing.
+  const dir = tmp("plandel-multi-section");
+  buildPlanRepo(dir, "# P\n\n## Affected Files\n\n- `scripts/ghost-in-h2.js` — new\n\n### Affected Files\n\n- `scripts/x.js` — new\n");
+  fs.writeFileSync(path.join(dir, "scripts/x.js"), "x", "utf8");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stdout.includes("ghost-in-h2.js");
+});
+
+test("check-plan-delivery: a second same-level Affected Files section is also scanned", () => {
+  const dir = tmp("plandel-two-sections");
+  buildPlanRepo(dir, "# P\n\n## Affected Files\n\n- `scripts/x.js` — new\n\n## Notes\n\ntext\n\n## Affected Files\n\n- `scripts/ghost-second.js` — new\n");
+  fs.writeFileSync(path.join(dir, "scripts/x.js"), "x", "utf8");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stdout.includes("ghost-second.js");
+});
+
 test("check-plan-delivery: #### subsection declarations are verified (extraction regression)", () => {
   // The section regex used to stop at the `\n###` prefix of `####` subsection lines, so an
   // Affected Files section written with #### subsections extracted as empty and its
@@ -760,6 +791,253 @@ test("consistency --gate: claimed enumeration with a missing entry still fails",
   if (r.status !== 1) return false;
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-secrets.js"));
+});
+
+// --- A1 regression set: governance-list declaration check (audit 2026-09-05) ---
+// The cluster previously parsed the policy table with `slice(0, search(/\n## /))`, which
+// truncated BEFORE the table in the real document (its own heading precedes it) — so the
+// authoritative set was empty and the whole cluster was inert in production. The old
+// fixtures hid it by writing bare tables with no heading. These four use the REAL document
+// shape (heading + table) and pin the pointer semantics:
+//   pointer excuses INCOMPLETENESS, never INCORRECTNESS.
+
+function writeRealShapePolicy(dir, rows) {
+  // Real shape: H1 + intro prose + "## 受保护文件" heading + table. The heading before the
+  // table is the exact condition the old parser could not survive.
+  write(path.join(dir, "references/policies/governance-files.policy.md"),
+    "# 治理文件清单（单一事实源）\n\n本文件是唯一清单来源。\n\n## 受保护文件（修改需走流程）\n\n| 路径 | 性质 |\n| --- | --- |\n" + rows + "\n## .governance/ Git 跟踪策略\n\n| 路径 | 跟踪 |\n| --- | --- |\n| `docs/plans/archive/` | tracked |\n");
+  fs.mkdirSync(path.join(dir, "docs/zh-CN"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "docs/zh-TW"), { recursive: true });
+  write(path.join(dir, "docs/zh-CN/README.md"), "# R\n");
+  write(path.join(dir, "docs/zh-TW/README.md"), "# R\n");
+}
+
+test("consistency --gate: A1 pure pointer with no declared paths passes", () => {
+  const dir = tmp("a1-pointer");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  writeRealShapePolicy(dir, "| `AGENTS.md` | entry |\n| `scripts/check-secrets.js` | script |\n");
+  // Claims enumeration + defers to the source, declares NOTHING itself.
+  write(path.join(dir, "docs/en/README.md"),
+    "# R\n\n## 治理文件保护\n\n受保护文件的完整清单见 `references/policies/governance-files.policy.md`（单一事实源）。\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  if (out.gatePass !== true || out.gateIssues.some((g) => g.kind === "protected_lists")) return false;
+  // LIVENESS CONTROL: an "expected pass" assertion is vacuous if the cluster is dead — it
+  // would pass equally against a disabled gate (proven by mutation). Add one ghost path to
+  // the SAME fixture and require the cluster to react, so this test can only pass when the
+  // gate is actually running. The wording must be one CLAIMS_PROTECTED_LIST recognises,
+  // otherwise the document is not judged at all and the control proves nothing.
+  write(path.join(dir, "docs/en/README.md"),
+    "# R\n\n## 治理文件保护\n\n受保护文件清单为（完整清单见 `references/policies/governance-files.policy.md`，单一事实源）：\n\n- `scripts/check-ghost.js`\n");
+  const live = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  return live.status === 1 && JSON.parse(live.stdout).gateIssues.some((g) => g.kind === "protected_lists");
+});
+
+test("consistency --gate: A1 partial list + pointer may omit entries (incompleteness excused)", () => {
+  const dir = tmp("a1-partial-ok");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  writeRealShapePolicy(dir, "| `AGENTS.md` | entry |\n| `scripts/check-secrets.js` | script |\n| `scripts/check-lock.js` | script |\n");
+  // Lists only ONE of three, but points at the single source of truth: legitimate summary.
+  write(path.join(dir, "docs/en/README.md"),
+    "# R\n\n## 治理文件保护\n\n受保护文件清单为（完整清单见 `references/policies/governance-files.policy.md`，单一事实源）：\n\n- `AGENTS.md`\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  if (out.gatePass !== true || out.gateIssues.some((g) => g.kind === "protected_lists")) return false;
+  // LIVENESS CONTROL (see above): the omission is excused, but a WRONG entry in the very
+  // same list must still fail — otherwise this fixture proves nothing about the rule.
+  write(path.join(dir, "docs/en/README.md"),
+    "# R\n\n## 治理文件保护\n\n受保护文件清单为（完整清单见 `references/policies/governance-files.policy.md`，单一事实源）：\n\n- `AGENTS.md`\n- `scripts/check-renamed-away.js`\n");
+  const live = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  return live.status === 1 && JSON.parse(live.stdout).gateIssues.some((g) => g.item.includes("check-renamed-away.js"));
+});
+
+test("consistency --gate: A1 partial list + pointer still fails on a ghost/renamed path", () => {
+  const dir = tmp("a1-ghost");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  writeRealShapePolicy(dir, "| `AGENTS.md` | entry |\n| `scripts/check-secrets.js` | script |\n");
+  // Pointer present, but declares a path that is NOT in the authoritative list — the
+  // stale-entry case a rename leaves behind. The pointer must NOT excuse this.
+  write(path.join(dir, "docs/en/README.md"),
+    "# R\n\n## 治理文件保护\n\n受保护文件清单为（完整清单见 `references/policies/governance-files.policy.md`，单一事实源）：\n\n- `AGENTS.md`\n- `scripts/check-OLDNAME.js`\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-OLDNAME.js"));
+});
+
+test("consistency --gate: A1 stale path inside a fenced code block is detected", () => {
+  const dir = tmp("a1-codeblock");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  writeRealShapePolicy(dir, "| `AGENTS.md` | entry |\n| `scripts/check-secrets.js` | script |\n");
+  // SKILL.md / agents-md.template.md declare their summary in a fenced block, not a table.
+  // Parsing only tables is what let those two drift unchecked.
+  write(path.join(dir, "docs/en/README.md"),
+    "# R\n\n## 治理文件保护\n\n受保护文件清单为（完整清单见 `references/policies/governance-files.policy.md`，单一事实源）：\n\n```\nAGENTS.md\nscripts/check-GONE.js\n```\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-GONE.js"));
+});
+
+// A5 regression: SKILL.md frontmatter version is a release sync point but the version
+// regex required quoted forms, so unquoted YAML `version: X.Y.Z` never matched and a
+// stale skill version passed every gate (audit 2026-09-05).
+test("consistency --gate: stale frontmatter version fails the gate", () => {
+  const dir = tmp("a5-frontmatter-stale");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "2.0.0" }));
+  // Not SKILL.md: that filename is a consent sync point, so its markers would turn the
+  // gate red for an unrelated reason and the assertion below would pass vacuously.
+  write(path.join(dir, "docs/en/guide.md"), "---\nname: x\nversion: 1.4.9\n---\n\n# Guide\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  // The frontmatter finding must be the reason, not a side effect of another cluster.
+  return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("frontmatter version 1.4.9"));
+});
+
+test("consistency --gate: matching frontmatter version passes", () => {
+  const dir = tmp("a5-frontmatter-ok");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "2.0.0" }));
+  // Not SKILL.md: that filename is a consent sync point and would fail this fixture on
+  // unrelated markers. The frontmatter check is filename-independent by design.
+  write(path.join(dir, "docs/en/guide.md"), "---\nname: x\nversion: 2.0.0\n---\n\n# Guide\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return !out.gateIssues.some((g) => g.kind === "version_examples");
+});
+
+// A6 regression: docs/archive/ was never scanned, so an archived plan could keep saying
+// "已实现（待 Release 归档）" — a pending-archive claim inside the archive — forever.
+// The archive IS the completed state, so a file living there must say archived.
+test("consistency --release-gate: archived plan still claiming implemented fails", () => {
+  const dir = tmp("a6-archive-stale");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n### Fixed\n\n- x\n");
+  write(path.join(dir, "docs/archive/old-plan.md"),
+    "# Old Plan\n\n> **Status: implemented.**（已实现，待 Release 归档。）\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("old-plan.md") && /still claims/.test(g.item));
+});
+
+test("consistency --release-gate: archived plan with no Status line fails", () => {
+  const dir = tmp("a6-archive-nostatus");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n### Fixed\n\n- x\n");
+  write(path.join(dir, "docs/archive/no-status.md"), "# No Status Plan\n\nSome design text.\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("no-status.md"));
+});
+
+test("consistency: a properly archived plan passes and is counted", () => {
+  const dir = tmp("a6-archive-ok");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n### Fixed\n\n- x\n");
+  write(path.join(dir, "docs/archive/good.md"),
+    "# Good Plan\n\n> **Status: archived.**（已归档。归档即断言完成。）\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.planStatuses.some((p) => p.plan === "docs/archive/good.md" && p.status === "archived");
+});
+
+// ADR-0008: the commands.md trigger inventory is a deliberate controlled copy, so the
+// prompt-sync cluster is gate class and BOTH directions are defects. Previously it was
+// advisory and only checked "missing", while AGENTS.md claimed it "enforces" the sync.
+test("consistency --gate: a trigger missing from commands.md fails the gate", () => {
+  const dir = tmp("adr8-missing");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "references/templates/sub-skills.md"),
+    'name: demo-skill\ndescription: Does a thing. Triggers on "do the thing", "run demo".\n');
+  for (const lang of ["en", "zh-CN", "zh-TW"]) {
+    write(path.join(dir, `docs/${lang}/commands.md`), "# Commands\n\n| Case | Trigger |\n| --- | --- |\n| A | `do the thing` |\n");
+  }
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "prompt_sync" && g.item.includes("run demo"));
+});
+
+test("consistency --gate: a stale trigger left in commands.md fails the gate", () => {
+  const dir = tmp("adr8-stale");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "references/templates/sub-skills.md"),
+    'name: demo-skill\ndescription: Does a thing. Triggers on "do the thing".\n');
+  for (const lang of ["en", "zh-CN", "zh-TW"]) {
+    // advertises a trigger no source declares — the removal case the old check was blind to
+    write(path.join(dir, `docs/${lang}/commands.md`),
+      "# Commands\n\n| Case | Trigger |\n| --- | --- |\n| A | `do the thing` |\n| B | `removed trigger phrase` |\n");
+  }
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "prompt_sync" && g.item.includes("removed trigger phrase"));
+});
+
+test("consistency --gate: a main-skill trigger declared in SKILL.md is not stale", () => {
+  const dir = tmp("adr8-mainskill");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "references/templates/sub-skills.md"),
+    'name: demo-skill\ndescription: Does a thing. Triggers on "do the thing".\n');
+  // SKILL.md owns the main skill's mode triggers; sub-skills.md owns sub-skill triggers.
+  // Judging the manual against sub-skills.md alone flagged every mode trigger as stale.
+  write(path.join(dir, "SKILL.md"),
+    '---\nname: x\nversion: 1.0.0\ndescription: Triggers on "audit governance".\n---\n\n# X\n');
+  for (const lang of ["en", "zh-CN", "zh-TW"]) {
+    write(path.join(dir, `docs/${lang}/commands.md`),
+      "# Commands\n\n| Case | Trigger |\n| --- | --- |\n| A | `do the thing` |\n| B | `audit governance` |\n");
+  }
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return !out.gateIssues.some((g) => g.kind === "prompt_sync");
+});
+
+// C2: the template documents a trailing-slash directory form and the DEFAULT shipped
+// sync-rules uses it (feature-registry's `require: ["docs/features/"]`), but globMatch
+// never implemented it — so that group was permanently unsatisfiable in every INITed
+// project, producing a false BLOCK (audit 2026-09-05).
+test("check-sync: a trailing-slash require pattern matches files under it", () => {
+  const dir = tmp("sync-trailing-slash");
+  gitInit(dir);
+  write(path.join(dir, "seed.txt"), "seed");
+  spawnSync("git", ["add", "-A"], { cwd: dir });
+  spawnSync("git", ["commit", "-q", "-m", "seed"], { cwd: dir });
+  const base = String(spawnSync("git", ["rev-parse", "HEAD"], { cwd: dir, encoding: "utf8" }).stdout).trim();
+  write(path.join(dir, ".governance/sync-rules.json"), JSON.stringify({
+    syncGroups: [{ name: "feature-registry", watch: ["src/**"], require: ["docs/features/"] }],
+  }));
+  write(path.join(dir, "src/a.ts"), "x");
+  write(path.join(dir, "docs/features/login.md"), "y");
+  spawnSync("git", ["add", "-A"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SYNC_CHECK, "--json", "--base", base], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 0 && out.clean === true;
+});
+
+// A wildcard-segment pattern silently matched nothing, so a project believed it had a rule
+// that could never fire. Unsupported forms now fail loudly instead of passing green.
+test("check-sync: an unsupported wildcard-segment pattern blocks instead of silently missing", () => {
+  const dir = tmp("sync-bad-pattern");
+  gitInit(dir);
+  write(path.join(dir, "seed.txt"), "seed");
+  spawnSync("git", ["add", "-A"], { cwd: dir });
+  spawnSync("git", ["commit", "-q", "-m", "seed"], { cwd: dir });
+  const base = String(spawnSync("git", ["rev-parse", "HEAD"], { cwd: dir, encoding: "utf8" }).stdout).trim();
+  write(path.join(dir, ".governance/sync-rules.json"), JSON.stringify({
+    syncGroups: [{ name: "g", watch: ["packages/*/src/**"], require: ["docs/x.md"] }],
+  }));
+  write(path.join(dir, "packages/a/src/i.ts"), "x");
+  spawnSync("git", ["add", "-A"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SYNC_CHECK, "--json", "--base", base], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return (out.unsupportedPatterns || []).some((b) => b.pattern === "packages/*/src/**");
 });
 
 test("consistency: advisory mode stays exit 0 even with gate-class violations", () => {

@@ -215,6 +215,17 @@ function execute(argv) {
   if (proposal.riskLevel === "high" && !["completed", "explicitly-approved"].includes(proposal.reviewStatus)) {
     fail("execute: high-risk proposal requires completed review or explicit risk approval", 4);
   }
+  // HONESTY BOUNDARY (audit 2026-09-05): `reviewStatus` is a caller-supplied string read
+  // from the proposal file. `plan` never emits "completed"/"explicitly-approved", so any
+  // proposal reaching this point with one of those values was edited by hand — which is
+  // the intended human-in-the-loop workflow, but it means this check verifies a
+  // DECLARATION, not that a review happened. The headSha binding below is real (it ties
+  // approval to a specific commit); the review binding is self-attested. Binding it to
+  // verifiable review evidence needs a review-evidence artifact and workflow — deliberately
+  // NOT invented here (see the gate-repair plan's deferred C6 item).
+  if (proposal.riskLevel === "high") {
+    console.error(`note: reviewStatus="${proposal.reviewStatus}" is a self-attested declaration; no review artifact is verified.`);
+  }
   const ver = parseVersion(proposal.recommended);
   if (!ver) fail("execute: proposal has no valid recommended version", 3);
   const tag = "v" + fmt(ver);
