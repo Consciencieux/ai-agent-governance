@@ -2,7 +2,7 @@
 
 [English](../../en/plans/plan-delivery-anchors.md) · [简体中文](../../zh-CN/plans/plan-delivery-anchors.md) · [繁體中文](plan-delivery-anchors.md)
 
-> **狀態：設計計劃，未實作。** 交付對帳（`scripts/check-plan-delivery.js`）跳過純設計計劃；本行即標記。
+> **狀態：設計計劃，未實作。** 交付對帳（`repo-tools/check-plan-delivery.js`）跳過純設計計劃；本行即標記。
 
 **Target：repo-infra** —— 交付門禁與其測試屬倉庫基礎設施，宣告規範落在 `AGENTS.md`。本計劃不產出任何進入被治理專案的內容。
 
@@ -27,7 +27,7 @@
 
 ### 受影響檔案
 
-- scripts/check-plan-delivery.js —— 錨點解析、先後判定、凍結基線
+- repo-tools/check-plan-delivery.js —— 錨點解析、先後判定、凍結基線
 - tests/run-tests.js —— 覆蓋下列驗證場景的迴歸
 - AGENTS.md —— 計劃宣告規範中的錨點要求
 - CHANGELOG.md —— 門禁行為變更

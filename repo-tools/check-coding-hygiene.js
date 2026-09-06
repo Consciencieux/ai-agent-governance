@@ -15,7 +15,8 @@
 //      Narrowest: per-file registration count > 0; non-suite files (fixtures, README)
 //      are out of scope by extension.
 //   3. unexplained residue — TODO/FIXME/HACK markers without an owner in current-layer
-//      governance surfaces (scripts/, references/, tests/ excluding suite fixtures) are
+//      governance surfaces (scripts/, repo-tools/, repo-workflows/, references/, tests/
+//      excluding suite fixtures) are
 //      unadjudicated patch debt. Narrowest: markers lacking "(owner)"; report-only
 //      (advisory class — wording/ownership is a human judgement, never gate it here).
 // NOT verifiable/refused to fake: "root cause is truly correct" / semantic quality of
@@ -28,7 +29,15 @@ const path = require("path");
 const ROOT = process.cwd();
 const RUN_TESTS = path.join(ROOT, "tests", "run-tests.js");
 const SUITES_DIR = path.join(ROOT, "tests", "suites");
-const SCAN_DIRS = ["scripts", "references", "tests"];
+// Residue scanning covers every source tree this repository maintains. `repo-tools/`
+// joined the list when the payload/repo-tools boundary split moved six gate scripts out
+// of `scripts/`: for that window the gates themselves — including this one — were the only
+// JavaScript in the repo exempt from the hygiene check, because the enumeration still
+// named the directory they had left. Same defect class as the release sync points that
+// listed five sources while the gate verified two (v0.13.1 follow-up): a rule declares a
+// set, the mechanism silently covers a subset. Adding a directory to the repo means adding
+// it here.
+const SCAN_DIRS = ["scripts", "repo-tools", "repo-workflows", "references", "tests"];
 // A test registration in any quote style — a monolith that re-registers with single
 // quotes or template literals must not slip past check 1 (found by review).
 const TEST_REGISTRATION = /^\s*test\(\s*["'`]/gm;

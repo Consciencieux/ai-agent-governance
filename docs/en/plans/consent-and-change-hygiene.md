@@ -48,7 +48,7 @@ Run consent validation immediately before commit/tag/release writes. Run change-
 #### Payload
 
 - `scripts/check-consent.js` — validate change-set-bound consent evidence
-- `scripts/check-coding-hygiene.js` — reconcile deletion/rename/migration declarations with Git state
+- `repo-tools/check-coding-hygiene.js` — reconcile deletion/rename/migration declarations with Git state
 - `references/init-spec.json` — copy and declare the new standalone scripts and consent schema
 - `references/templates/githooks-template.md` — enforce consent validation before writes
 - `references/templates/agents-md.template.md` — document evidence and risk tiers

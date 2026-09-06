@@ -48,7 +48,7 @@
 #### Payload
 
 - `scripts/check-consent.js` —— 驗證綁定變更集的確認憑證
-- `scripts/check-coding-hygiene.js` —— 將刪除/重新命名/遷移聲明與 Git 狀態對帳
+- `repo-tools/check-coding-hygiene.js` —— 將刪除/重新命名/遷移聲明與 Git 狀態對帳
 - `references/init-spec.json` —— 複製並聲明新的獨立腳本與確認憑證格式
 - `references/templates/githooks-template.md` —— 寫操作前強制確認驗證
 - `references/templates/agents-md.template.md` —— 記錄證據與風險分級

@@ -160,7 +160,11 @@ function verifyDeclaredPath(declared) {
 // Identifiers declared in a plan (e.g. `sync.passed`, `task_start_sha`) must be findable
 // somewhere in the payload/infrastructure — otherwise the promise was never wired in.
 const IDENTIFIER_RE = /^[a-z][a-z0-9_]*(?:[._][a-z0-9_]+)+$/i;
-const SEARCH_ROOTS = ["references", "scripts", "tests", "AGENTS.md", "SKILL.md", "package.json", "CHANGELOG.md"];
+// Every tree a plan can legitimately deliver into. repo-tools/ and repo-workflows/ were
+// absent until the boundary split moved six gates and the release flow there: an identifier
+// wired into one of those files would have been reported as never delivered. Adding a
+// top-level directory to the repository means adding it here.
+const SEARCH_ROOTS = ["references", "scripts", "repo-tools", "repo-workflows", "tests", "AGENTS.md", "SKILL.md", "package.json", "CHANGELOG.md"];
 
 function walkFiles(rel) {
   const abs = path.join(ROOT, rel);
@@ -183,7 +187,18 @@ function corpus() {
       // Exclude the checker's own source and CHANGELOG: a comment naming an identifier (or a
       // changelog entry describing a bug about it) is not evidence the identifier is WIRED
       // in. Self-reference and historical description both create false "verified" hits.
-      if (f === "scripts/check-plan-delivery.js" || f === "CHANGELOG.md") continue;
+      // Self-exclusion must track this file's real location. It read "scripts/..." after the
+      // move, and only looked correct because repo-tools/ was outside SEARCH_ROOTS — two stale
+      // assumptions cancelling out. With repo-tools/ now searched, a comment in this very file
+      // would otherwise count as proof that an identifier is wired in.
+      // Compare on a normalised path: walkFiles builds with path.join, so on Windows it
+      // yields backslashes while the exclusion list is written with forward slashes. The
+      // original literal ("scripts/check-plan-delivery.js") therefore never matched on
+      // Windows at all — the self-exclusion only ever worked on POSIX, and after the move
+      // it named a path that no longer exists on either.
+      const norm = f.split(path.sep).join("/");
+      const selfRel = path.relative(ROOT, __filename).split(path.sep).join("/");
+      if (norm === selfRel || norm === "CHANGELOG.md") continue;
       const c = readFileSafe(f);
       if (c) searchCorpus.push([f, c]);
     }
@@ -195,7 +210,7 @@ function verifyIdentifier(id) {
   const hits = corpus().filter(([, c]) => c.includes(id));
   return hits.length > 0
     ? { ok: true, how: "found in " + hits[0][0] }
-    : { ok: false, how: "identifier never wired in (searched references/, scripts/, tests/, root docs)" };
+    : { ok: false, how: "identifier never wired in (searched " + SEARCH_ROOTS.join(", ") + ")" };
 }
 
 // Behavioural declarations: "writes: X in Y" / "wires: X in Y" (also 写入/接线).

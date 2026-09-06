@@ -2,7 +2,7 @@
 
 [English](plan-delivery-anchors.md) · [简体中文](../../zh-CN/plans/plan-delivery-anchors.md) · [繁體中文](../../zh-TW/plans/plan-delivery-anchors.md)
 
-> **Status: design plan, not implemented.** Delivery verification (`scripts/check-plan-delivery.js`) skips design-only plans; this line is what marks it.
+> **Status: design plan, not implemented.** Delivery verification (`repo-tools/check-plan-delivery.js`) skips design-only plans; this line is what marks it.
 
 **Target: repo-infra** — the delivery gate and its tests are repo infrastructure; the declaration convention lands in `AGENTS.md`. Nothing here ships to governed projects.
 
@@ -27,7 +27,7 @@ Make the delivery gate verify that declared content actually landed in the decla
 
 ### Affected Files
 
-- scripts/check-plan-delivery.js — anchor parsing, predates detection, frozen baseline
+- repo-tools/check-plan-delivery.js — anchor parsing, predates detection, frozen baseline
 - tests/run-tests.js — regression coverage for the cases below
 - AGENTS.md — anchor requirement in the plan-declaration convention
 - CHANGELOG.md — gate behaviour change

@@ -478,5 +478,104 @@ test("boundary: declaring a repo-only file as distributed fails the role gate", 
   const out = JSON.parse(r.stdout);
   return (out.issues.overlap || []).some((i) => /repo-only directory/.test(i));
 });
+
+// v0.13.1 shipped 34 AppleDouble members (._SKILL.md, scripts/._generate-governance.js,
+// one per payload file) because it was packaged on macOS, where cp/tar carry extended
+// attributes into the archive. No governance boundary was crossed, but every user
+// unpacked a directory of junk twins. The packaging script now suppresses them AND
+// refuses to publish an archive that still contains any.
+test("packaging: the tarball carries no platform metadata files", () => {
+  const tarball = path.join(SKILL_ROOT, "dist", "ai-agent-governance-skill.tar.gz");
+  if (!fs.existsSync(tarball)) {
+    // Prerequisite missing: the manifest test above builds it, and it skips (not fails)
+    // when no POSIX shell exists. Distinguish that environment gap from a metadata leak
+    // instead of failing silently.
+    console.error("  prerequisite tarball missing — skipping (no POSIX shell on this machine?)");
+    return false;
+  }
+  const tarOut = spawnSync("tar", ["-tzf", tarball], { encoding: "utf8" });
+  if (tarOut.status !== 0) return false;
+  const junk = String(tarOut.stdout).split(/\r?\n/).map((m) => m.trim()).filter(Boolean)
+    .filter((m) => /(^|\/)\._/.test(m) || /(^|\/)\.DS_Store$/.test(m));
+  if (junk.length) { console.error("  platform metadata in tarball: " + junk.slice(0, 6).join(", ")); return false; }
+  return true;
+});
+
+test("packaging: metadata surviving the copy step aborts the build instead of shipping", () => {
+  const sh = findPosixShell();
+  if (!sh) { console.error("  no POSIX shell available"); return false; }
+  // The mutation must run against an ISOLATED mini-repo, never the real checkout: this
+  // test comments out the packaging script's cleanup lines, and doing that to the real
+  // repo-tools/package-skill.sh left a weakened protected file behind if the process
+  // died mid-test, plus real dist/ was shared state across suite runs.
+  const dir = tmp("packaging-mutation-isolated");
+  for (const d of ["references", "scripts", "repo-tools"]) fs.mkdirSync(path.join(dir, d), { recursive: true });
+  fs.cpSync(path.join(SKILL_ROOT, "SKILL.md"), path.join(dir, "SKILL.md"));
+  fs.cpSync(path.join(SKILL_ROOT, "LICENSE"), path.join(dir, "LICENSE"));
+  fs.cpSync(path.join(SKILL_ROOT, "package.json"), path.join(dir, "package.json"));
+  fs.cpSync(path.join(SKILL_ROOT, "references"), path.join(dir, "references"), { recursive: true });
+  fs.cpSync(path.join(SKILL_ROOT, "scripts"), path.join(dir, "scripts"), { recursive: true });
+
+  const script = path.join(dir, "repo-tools", "package-skill.sh");
+  const original = fs.readFileSync(path.join(SKILL_ROOT, "repo-tools", "package-skill.sh"), "utf8");
+  const junkFile = path.join(dir, "references", "._probe");
+  const tarball = path.join(dir, "dist", "ai-agent-governance-skill.tar.gz");
+
+  // Comment the find lines out entirely. Merely rewriting their `|| true` tail leaves the
+  // delete running, which is how an earlier version of this test passed vacuously.
+  const weakened = original.split("\n").map((l) => (/^find "\$STAGING"/.test(l) ? "# " + l : l)).join("\n");
+  if (weakened === original) { console.error("  cleanup lines not found — test needs updating"); return false; }
+  fs.writeFileSync(script, weakened, "utf8");
+  fs.writeFileSync(junkFile, "x", "utf8");
+
+  const r = spawnSync(sh, ["repo-tools/package-skill.sh", "0.0.0-probe"], { cwd: dir, encoding: "utf8" });
+  if (r.status === 0) { console.error("  packaging succeeded despite metadata in the payload"); return false; }
+  if (fs.existsSync(tarball)) { console.error("  a junk-bearing tarball was left on disk"); return false; }
+  return /platform metadata/i.test(String(r.stderr || "") + String(r.stdout || ""));
+});
+
+// check-plan-delivery verifies identifiers against a search corpus. When the boundary
+// split moved six gates into repo-tools/, SEARCH_ROOTS still named the old trees, so an
+// identifier wired into one of those files would have been reported as never delivered.
+// A mutation test removing the two roots passed green — nothing pinned the set — so both
+// the enumerated set AND the behavioural path are pinned here.
+test("plan delivery: search roots cover every tree a plan can deliver into", () => {
+  const src = fs.readFileSync(path.join(SKILL_ROOT, "repo-tools", "check-plan-delivery.js"), "utf8");
+  const m = /const SEARCH_ROOTS = \[([^\]]+)\]/.exec(src);
+  if (!m) { console.error("  SEARCH_ROOTS not found"); return false; }
+  const roots = m[1].split(",").map((s) => s.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
+  // all nine entries: the five source trees AND the four root files. Pinning only the
+  // trees left the root files unpinned — dropping package.json from the list would stop
+  // identifier verification against it with the test still green.
+  for (const need of ["references", "scripts", "repo-tools", "repo-workflows", "tests", "AGENTS.md", "SKILL.md", "package.json", "CHANGELOG.md"]) {
+    if (!roots.includes(need)) { console.error("  missing search root: " + need); return false; }
+  }
+  return true;
+});
+
+test("plan delivery: an identifier wired into repo-tools/ verifies as delivered", () => {
+  const dir = tmp("delivery-repo-tools");
+  const planDir = path.join(dir, "docs", "en", "plans");
+  fs.mkdirSync(planDir, { recursive: true });
+  fs.mkdirSync(path.join(dir, "repo-tools"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "references"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  // The identifier must be a token inside Affected Files: that is the section the checker
+  // mechanically extracts identifier declarations from. An earlier version of this test
+  // declared it in Validation Method (narrative) and passed even when the identifier was
+  // never wired anywhere — the assertion was vacuous and its mutation correspondence did
+  // not hold.
+  fs.writeFileSync(path.join(planDir, "probe.md"), [
+    "# Probe (TASK plan)", "", "> **Status: implemented.**", "", "**Target: repo-infra**", "",
+    "### Affected Files", "", "- `zzz_delivered_flag` — wired in repo-tools/probe-tool.js"
+  ].join("\n"), "utf8");
+  fs.writeFileSync(path.join(dir, "repo-tools", "probe-tool.js"), "// zzz_delivered_flag\n", "utf8");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--json"], { cwd: dir, encoding: "utf8" });
+  let j;
+  try { j = JSON.parse(r.stdout); } catch { return false; }
+  const flagged = JSON.stringify(j).includes("zzz_delivered_flag");
+  if (flagged) console.error("  a wired repo-tools identifier was reported undelivered: " + JSON.stringify(j).slice(0, 300));
+  return !flagged;
+});
 };
 

@@ -2,7 +2,7 @@
 
 [English](../../en/plans/plan-delivery-anchors.md) · [简体中文](plan-delivery-anchors.md) · [繁體中文](../../zh-TW/plans/plan-delivery-anchors.md)
 
-> **状态：设计计划，未实现。** 交付对账（`scripts/check-plan-delivery.js`）跳过纯设计计划；本行即标记。
+> **状态：设计计划，未实现。** 交付对账（`repo-tools/check-plan-delivery.js`）跳过纯设计计划；本行即标记。
 
 **Target：repo-infra** —— 交付门禁与其测试属仓库基础设施，声明规范落在 `AGENTS.md`。本计划不产出任何进入被治理项目的内容。
 
@@ -27,7 +27,7 @@
 
 ### 受影响文件
 
-- scripts/check-plan-delivery.js —— 锚点解析、先后判定、冻结基线
+- repo-tools/check-plan-delivery.js —— 锚点解析、先后判定、冻结基线
 - tests/run-tests.js —— 覆盖下列验证场景的回归
 - AGENTS.md —— 计划声明规范中的锚点要求
 - CHANGELOG.md —— 门禁行为变更

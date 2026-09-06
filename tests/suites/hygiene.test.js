@@ -11,6 +11,46 @@ const marker = ["// TO", "DO: figure out ordering"].join("");
 const suiteFile = (name) => "module.exports = (test) => {\n  test(\"" + name + "\", () => true);\n};\n";
 
 module.exports = (test) => {
+  // The residue scan must cover every source tree the repo maintains. When the boundary
+  // split moved six gates from scripts/ to repo-tools/, the scan list still named the old
+  // directory, so those files — the gates themselves — silently left the check: a marker
+  // planted in repo-tools/ was invisible while the identical marker in scripts/ was caught.
+  // Nothing failed, because no test pinned the scanned set. This does.
+  test("coding hygiene: the residue scan covers every maintained source tree", () => {
+    const src = fs.readFileSync(HYGIENE, "utf8");
+    const m = /const SCAN_DIRS = \[([^\]]+)\]/.exec(src);
+    if (!m) { console.error("  SCAN_DIRS not found"); return false; }
+    const scanned = m[1].split(",").map((s) => s.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
+    // every top-level directory holding first-party source the repo maintains — five trees
+    // since the boundary split added repo-tools/ and repo-workflows/. Pinning only four left
+    // repo-workflows/ unpinned.
+    const expected = ["scripts", "repo-tools", "repo-workflows", "references", "tests"];
+    const missing = expected.filter((d) => !scanned.includes(d));
+    if (missing.length) { console.error("  unscanned source trees: " + missing.join(", ")); return false; }
+    return true;
+  });
+
+  // Behavioural counterpart: prove the coverage on a real fixture rather than on the
+  // constant alone, so renaming the constant cannot make the test above vacuous.
+  test("coding hygiene: a marker inside repo-tools/ is reported like one inside scripts/", () => {
+    const dir = tmp("hygiene-repo-tools");
+    fs.mkdirSync(path.join(dir, "tests", "suites"), { recursive: true });
+    fs.mkdirSync(path.join(dir, "repo-tools"), { recursive: true });
+    fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+    fs.writeFileSync(path.join(dir, "tests", "run-tests.js"), "require('./suites/a.test.js');\n", "utf8");
+    fs.writeFileSync(path.join(dir, "tests", "suites", "a.test.js"), suiteFile("x"), "utf8");
+    fs.writeFileSync(path.join(dir, "repo-tools", "tool.js"), marker + "\n", "utf8");
+    const r = spawnSync(process.execPath, [HYGIENE, "--json"], { cwd: dir, encoding: "utf8" });
+    let j;
+    try { j = JSON.parse(r.stdout); } catch { return false; }
+    // Assert the CATEGORY and the path, not just "the string appears somewhere in the
+    // JSON": a weak contains() would pass if the file showed up in any unrelated field.
+    const unresolved = ((j.issues || {}).unresolved_marker || []);
+    const found = unresolved.some((i) => /repo-tools\/tool\.js/.test(String(i)));
+    if (!found) console.error("  a marker in repo-tools/ went unreported: " + JSON.stringify(j).slice(0, 220));
+    return found;
+  });
+
   test("coding hygiene: current repo passes the mechanical gate", () => {
     const r = spawnSync(process.execPath, [HYGIENE, "--gate", "--json"], { cwd: repo, encoding: "utf8" });
     if (r.status !== 0) return false;

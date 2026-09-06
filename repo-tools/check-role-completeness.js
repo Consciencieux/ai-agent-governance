@@ -43,12 +43,17 @@ function walk(dir, out = []) {
 }
 
 // The packaged file set, taken from package-skill.sh's copy list rather than guessed.
+// The flag portion is deliberately permissive: the packaging script varies its cp flags
+// by platform (`-R`, `-RX`, or a `$CP_FLAGS` variable for macOS xattr suppression), and a
+// pattern pinned to one spelling silently reported "nothing is packaged" the moment those
+// flags changed — turning this gate's packaging check into a false alarm rather than a
+// finding. Match the source operand, not the flags.
 function packagedPrefixes() {
   const sh = path.join(ROOT, "repo-tools", "package-skill.sh");
   let text = "";
   try { text = fs.readFileSync(sh, "utf8"); } catch { return null; }
   const prefixes = [];
-  for (const m of text.matchAll(/^cp (?:-R )?(\S+) "\$STAGING\/"/gm)) prefixes.push(m[1]);
+  for (const m of text.matchAll(/^cp\s+(?:[-$][^\s]*\s+)*([A-Za-z0-9_./-]+)\s+"\$STAGING\/"/gm)) prefixes.push(m[1]);
   return prefixes.length ? prefixes : null;
 }
 
