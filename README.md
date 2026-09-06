@@ -191,7 +191,7 @@ Claude Code · Cursor · Codex · opencode — and other AGENTS.md-based agents.
 
 ### Roadmap
 
-Next up: multi-agent coordination protocol · skill lifecycle management · remote governance dashboard · monorepo multi-governance domains.
+Next up: multi-agent coordination protocol · remote governance dashboard · monorepo multi-governance domains.
 
 Full roadmap with status and design docs: [docs/en/roadmap.md](docs/en/roadmap.md)
 

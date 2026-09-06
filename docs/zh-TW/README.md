@@ -191,7 +191,7 @@ Claude Code · Cursor · Codex · opencode —— 以及其他基於 AGENTS.md �
 
 ### Roadmap
 
-接下來：多 Agent 協調協定 · Skill 生命週期管理 · 遠端治理看板 · monorepo 多治理域。
+接下來：多 Agent 協調協定 · 遠端治理看板 · monorepo 多治理域。
 
 完整路線圖與設計文件：[docs/zh-TW/roadmap.md](roadmap.md)
 
