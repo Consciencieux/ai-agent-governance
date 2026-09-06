@@ -122,6 +122,7 @@ ai-agent-governance/
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
 │   ├── check-doc-freshness.js  # doc staleness + translation freshness (git log dates; advisory, --release-gate blocks stale/draft translations)
 │   ├── check-doc-consistency.js # cross-doc contradictions + consent/protected-list/principles-index/plan-status/terminology clusters (advisory default; --gate/--release-gate fail-closed; changelog coverage fail-closed only in --release-gate)
+│   ├── check-plan-sync.js      # plan/milestone reconciliation (advisory; --release-gate fail-closed; no-op without DEVELOPMENT_PLAN.md)
 │   ├── generate-governance.js  # INIT scripted generator (SKILL-INTERNAL; spec: references/init-spec.json)
 │   └── release-manager.js      # plan (read-only) + execute (approval-gated) release tool
 ├── LICENSE                     # MIT
@@ -135,6 +136,7 @@ ai-agent-governance/
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
 │   ├── check-layout-sync.js    # architecture.md Repository Layout vs the four scanned dirs (fail-closed gate)
 │   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
+│   ├── check-roadmap-sync.js   # roadmap index vs plan lifecycle state (implemented→Done, archived∉active, entries linked)
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
 │   └── package-skill.sh        # release payload tarball packaging

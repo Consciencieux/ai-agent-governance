@@ -577,5 +577,94 @@ test("plan delivery: an identifier wired into repo-tools/ verifies as delivered"
   if (flagged) console.error("  a wired repo-tools identifier was reported undelivered: " + JSON.stringify(j).slice(0, 300));
   return !flagged;
 });
-};
+// ---------------------------------------------------------------------------
+// Plan sync (scripts/check-plan-sync.js) — INSTALLED. The lifecycle policy says "tick the
+// milestone when the task completes", but a documented rule with no failure feedback is
+// the shape that keeps failing: an agent updates TASK_<name>.md and forgets
+// DEVELOPMENT_PLAN.md. Three decidable relations only, advisory by default, fail-closed
+// at release, no-op when the project does not use this structure (ADR-0009).
+// ---------------------------------------------------------------------------
 
+const PLAN_SYNC = path.join(SKILL_ROOT, "scripts", "check-plan-sync.js");
+
+function planSyncFixture(name, files) {
+  const dir = tmp(name);
+  for (const [rel, body] of Object.entries(files)) {
+    const abs = path.join(dir, rel);
+    fs.mkdirSync(path.dirname(abs), { recursive: true });
+    fs.writeFileSync(abs, body, "utf8");
+  }
+  return dir;
+}
+function runPlanSync(dir, flags) {
+  const r = spawnSync(process.execPath, [PLAN_SYNC, "--json", ...(flags || [])], { cwd: dir, encoding: "utf8" });
+  let j = null;
+  try { j = JSON.parse(r.stdout); } catch {}
+  return { status: r.status, json: j };
+}
+
+test("plan sync: an implemented TASK plan with no milestone is advisory, then blocks at release", () => {
+  const files = {
+    "docs/plans/DEVELOPMENT_PLAN.md": "# Development Plan\n\n## Milestones\n\n- [ ] M1: something else\n",
+    "docs/plans/TASK_alpha.md": "# Alpha\n\n> **Status: implemented.**\n"
+  };
+  const advisory = runPlanSync(planSyncFixture("psync-advisory", files));
+  const release = runPlanSync(planSyncFixture("psync-release", files), ["--release-gate"]);
+  // default mode reports but never blocks a commit; release mode is fail-closed
+  return advisory.status === 0
+    && advisory.json.issues.implemented_without_milestone.length === 1
+    && release.status === 1;
+});
+
+test("plan sync: an archived plan pointed at by an unchecked milestone fails at release", () => {
+  const dir = planSyncFixture("psync-archived", {
+    "docs/plans/DEVELOPMENT_PLAN.md": "# DP\n\n## Milestones\n\n- [ ] M1: finish TASK_beta.md\n",
+    "docs/plans/archive/TASK_beta.md": "# Beta\n\n> **Status: archived.**\n"
+  });
+  const r = runPlanSync(dir, ["--release-gate"]);
+  return r.status === 1 && r.json.issues.archived_still_pending.length === 1;
+});
+
+test("plan sync: a milestone naming a nonexistent TASK plan fails at release", () => {
+  const dir = planSyncFixture("psync-ghost", {
+    "docs/plans/DEVELOPMENT_PLAN.md": "# DP\n\n## Milestones\n\n- [ ] M1: see TASK_ghost.md\n"
+  });
+  const r = runPlanSync(dir, ["--release-gate"]);
+  return r.status === 1 && r.json.issues.milestone_plan_missing.length === 1;
+});
+
+test("plan sync: legitimate shapes pass (checked milestone for an archived plan, design plan without a milestone)", () => {
+  const checked = runPlanSync(planSyncFixture("psync-checked", {
+    "docs/plans/DEVELOPMENT_PLAN.md": "# DP\n\n## Milestones\n\n- [x] M1: done via TASK_beta.md\n",
+    "docs/plans/archive/TASK_beta.md": "# Beta\n\n> **Status: archived.**\n"
+  }), ["--release-gate"]);
+  const design = runPlanSync(planSyncFixture("psync-design", {
+    "docs/plans/DEVELOPMENT_PLAN.md": "# DP\n\n## Milestones\n\n- [ ] M1: unrelated\n",
+    "docs/plans/TASK_gamma.md": "# G\n\n> **Status: design plan, not implemented.**\n"
+  }), ["--release-gate"]);
+  // "design plan, not implemented" must not be read as implemented (substring trap)
+  return checked.status === 0 && design.status === 0;
+});
+
+test("plan sync: a project without this structure is not applicable (never forces a layout)", () => {
+  const noPlans = runPlanSync(planSyncFixture("psync-noplans", { "README.md": "# proj\n" }), ["--release-gate"]);
+  const noIndex = runPlanSync(planSyncFixture("psync-noindex", { "docs/plans/TASK_x.md": "# X\n\n> **Status: implemented.**\n" }), ["--release-gate"]);
+  return noPlans.status === 0 && noPlans.json.applicable === false
+    && noIndex.status === 0 && noIndex.json.applicable === false;
+});
+
+test("plan sync: INIT installs it and it runs standalone in the generated project", () => {
+  const dir = tmp("psync-installed");
+  const gen = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", "C"], { cwd: SKILL_ROOT, encoding: "utf8" });
+  if (gen.status !== 0) return false;
+  const installed = path.join(dir, "scripts", "check-plan-sync.js");
+  if (!fs.existsSync(installed)) { console.error("  INIT did not install check-plan-sync.js"); return false; }
+  // self-contained: no sibling require
+  const body = fs.readFileSync(installed, "utf8");
+  if (/require\(\s*['"]\.[^'"]+['"]\s*\)/.test(body)) { console.error("  copied script has a local require"); return false; }
+  const r = spawnSync(process.execPath, ["scripts/check-plan-sync.js", "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const j = JSON.parse(r.stdout);
+  return j.applicable === true && j.gatePass === true;
+});
+};

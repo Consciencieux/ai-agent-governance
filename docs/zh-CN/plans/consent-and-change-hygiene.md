@@ -60,7 +60,7 @@
 
 #### 仓库基础设施
 
-- `tests/run-tests.js` —— 覆盖摘要绑定、范围不匹配、删除、重命名、迁移与兜底
+- `tests/suites/*.test.js` —— 覆盖摘要绑定、范围不匹配、删除、重命名、迁移与兜底(归属对应领域的 suite;`tests/run-tests.js` 现在只是发现入口,不得注册测试——卫生门禁会因此失败)
 - `scripts/check-doc-consistency.js` —— 验证同步文档标记
 - `docs/{en,zh-CN,zh-TW}/commands.md` —— 记录用户触发词
 - `CHANGELOG.md` —— 在发布边界记录行为变化

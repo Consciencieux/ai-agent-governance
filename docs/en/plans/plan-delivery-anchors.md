@@ -2,7 +2,7 @@
 
 [English](plan-delivery-anchors.md) · [简体中文](../../zh-CN/plans/plan-delivery-anchors.md) · [繁體中文](../../zh-TW/plans/plan-delivery-anchors.md)
 
-> **Status: design plan, not implemented.** Delivery verification (`repo-tools/check-plan-delivery.js`) skips design-only plans; this line is what marks it.
+> **Status: implemented.**（已实现。）Delivered in v0.13.2+（2026-09-06）：anchor clauses（`— anchor: `snippet``）added to the delivery gate；an existing path with an anchor is verified by CONTENT, not existence. Deviation from the plan by design: no frozen baseline list — the strict-from-today anchor requirement replaces it, because the plan's own Risks section warned that a large frozen list weakens the rule from day one. Two regression tests + mutation verification. See CHANGELOG (boundary split batch).
 
 **Target: repo-infra** — the delivery gate and its tests are repo infrastructure; the declaration convention lands in `AGENTS.md`. Nothing here ships to governed projects.
 
@@ -28,7 +28,7 @@ Make the delivery gate verify that declared content actually landed in the decla
 ### Affected Files
 
 - repo-tools/check-plan-delivery.js — anchor parsing, predates detection, frozen baseline
-- tests/run-tests.js — regression coverage for the cases below
+- tests/suites/*.test.js — regression coverage for the cases below (run-tests.js is the discovery entry only; registering tests there fails the hygiene gate)
 - AGENTS.md — anchor requirement in the plan-declaration convention
 - CHANGELOG.md — gate behaviour change
 

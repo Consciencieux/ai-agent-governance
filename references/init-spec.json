@@ -390,6 +390,13 @@
     },
     {
       "phase": "C",
+      "path": "scripts/check-plan-sync.js",
+      "source": "scripts/check-plan-sync.js",
+      "type": "copy",
+      "description": "Plan/milestone reconciliation (advisory by default; --release-gate fail-closed; no-op when the project has no docs/plans/DEVELOPMENT_PLAN.md)"
+    },
+    {
+      "phase": "C",
       "path": "scripts/release-manager.js",
       "source": "scripts/release-manager.js",
       "type": "copy",

@@ -94,6 +94,7 @@ ai-agent-governance/
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）
 │   ├── check-doc-freshness.js  # 文档过时度 + 译文新鲜度（git log 日期；建议性，--release-gate 阻断过时/draft 译文）
 │   ├── check-doc-consistency.js # 文档一致性 + consent/受保护清单/原则索引/计划状态/术语簇（默认建议性；--gate/--release-gate fail-closed；changelog 覆盖仅 --release-gate fail-closed）
+│   ├── check-plan-sync.js      # 计划与里程碑对账（默认建议性；--release-gate fail-closed；无 DEVELOPMENT_PLAN.md 时 no-op）
 │   ├── generate-governance.js  # INIT 脚本化生成器（SKILL-INTERNAL；规范：references/init-spec.json）
 │   └── release-manager.js      # plan（只读）+ execute（审批门禁）发布工具
 ├── LICENSE                     # MIT
@@ -107,6 +108,7 @@ ai-agent-governance/
 │   ├── check-doc-parity.js     # 三语文档树平行度（CI + 发布前置）
 │   ├── check-layout-sync.js    # architecture.md 仓库布局 vs 四个受扫描目录（fail-closed 门禁）
 │   ├── check-plan-delivery.js  # 计划声明 vs 实际交付（归档前门禁）
+│   ├── check-roadmap-sync.js   # roadmap 索引 vs 计划生命周期状态（implemented→Done、archived 不在活跃 horizon、条目带链接）
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）
 │   ├── check-coding-hygiene.js # 编码卫生（测试归属 + 残留标记）
 │   └── package-skill.sh        # 发布载荷 tarball 打包

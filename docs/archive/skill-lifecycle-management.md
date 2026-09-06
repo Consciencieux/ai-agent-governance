@@ -1,8 +1,8 @@
 # Skill Lifecycle Management（TASK 計劃）
 
-[English](../../en/plans/skill-lifecycle-management.md) · [简体中文](../../zh-CN/plans/skill-lifecycle-management.md) · [繁體中文](skill-lifecycle-management.md)
+归档共享单语原文(简体中文为准)。原三语版本已随归档移除;本文件随 v0.13.2 归档于 2026-09-06。
 
-> **狀態：設計計劃，未實作。** 暫緩的設計計劃；當版本同步步驟證明不夠用時再重啟（roadmap 近期條目）。
+> **Status: archived.**（已歸檔。歸檔即斷言完成。）（原狀態：設計計劃，未實作。歸檔理由：§1（SKILL.md frontmatter version）早已交付，現為五個發佈同步點之一；其餘工作依 [Issue #1](https://github.com/Consciencieux/ai-agent-governance/issues/1) 的結論**應以獨立倉庫 `ai-skill-manager` 交付，但該倉庫尚未建立**——本倉庫無可交付物。**接管條件**：建立該倉庫後按 §3 方案 (a) 實施；在此之前 Issue #1 保持 OPEN 作為規劃記錄。歸檔於 2026-09-06，v0.13.2。）
 
 ### 任務目的
 
@@ -72,7 +72,7 @@ Agent 即可比較：`local: 0.5.0` vs `remote: 0.6.0` → 有更新。
 
 #### 3. 整合方式
 
-- **(a) 獨立 skill** —— `.agents/skills/skill-manager/`（推薦；安裝層職責）。已有種子：[`ai-skill-manager`](https://github.com/Consciencieux/ai-skill-manager)（Issue #1）。
+- **(a) 獨立 skill** —— `.agents/skills/skill-manager/`（推薦；安裝層職責）。規劃中的倉庫名：`ai-skill-manager`（**尚未建立**；規劃記錄見本倉庫 [Issue #1](https://github.com/Consciencieux/ai-agent-governance/issues/1)）。
 - **(b) 整合進 `ai-agent-governance` 的 UPDATE 模式** —— `/update-skill ai-agent-governance`；操作對象是 `~/.agents/skills/ai-agent-governance`，而非 `project/.governance`。
 
 #### 4. 更新流程
@@ -96,7 +96,7 @@ Inspect（读取 SKILL.md frontmatter 的本地版本）
 計劃（實作階段）：
 
 - `SKILL.md` —— frontmatter 增加 `version`（與發佈保持同步）；若選方案 (b) 另增 UPDATE 模式
-- 獨立實作位於單獨的 `ai-skill-manager` 倉庫（已存在，Issue #1）——本倉庫改動保持最小
+- 獨立實作應位於單獨的 `ai-skill-manager` 倉庫（**尚未建立**；見本倉庫 Issue #1）——本倉庫改動保持最小
 - `docs/zh-TW/roadmap.md` / `docs/zh-TW/architecture.md` —— 狀態與架構更新
 - `references/` —— 除非選方案 (b)，否則不變（新模式將引用更新流程）
 

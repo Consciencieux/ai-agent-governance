@@ -134,6 +134,8 @@ The protected files list is:
 <!-- phase:C -->
 - `scripts/check-doc-consistency.js`
 - `scripts/check-doc-freshness.js`
+- `scripts/check-plan-sync.js`
+- `scripts/release-manager.js`
 <!-- /phase -->
 - `.githooks/pre-commit`
 - `.githooks/commit-msg`

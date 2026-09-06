@@ -117,6 +117,7 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 - 更新 Feature Registry（docs/features/，如涉及功能）
 - 更新 Architecture Documentation（如架构变化）
 - 更新 `docs/plans/DEVELOPMENT_PLAN.md`：勾选对应里程碑、更新状态标记与验收结果（如存在对应里程碑）；归档在发布（RELEASE）时统一执行（见发布流程）
+  - **里程碑是索引，不是事实源**：里程碑清单只表达状态（勾选、验收结果），不复述 TASK 计划的设计、验证方式或 Affected Files——那些以 `docs/plans/TASK_<name>.md` 为单一事实源。每个里程碑应能指向其拥有的 TASK 计划（有则写明文件名）；计划新建、实现完成或归档时，在同一变更集内同步里程碑条目，不留到发布才对账。本约束的可判定部分由 `scripts/check-plan-sync.js` 机械对账（默认建议性，`--release-gate` 在发布时 fail-closed）：已实现计划有对应里程碑、归档计划不被未勾选里程碑指向、里程碑指名的计划文件存在。里程碑描述是否准确、任务是否真正完成、链接是否语义正确仍属人工判断，不机械化。
 - 已完成任务的 `TASK_<name>.md`：把文档顶部 `## Status` 更新为 `Completed` 并附完成日期；归档仍在发布（RELEASE）时统一执行
 - **归档不翻译** —— 归档的计划（`docs/plans/archive/`）与 ADR 决策史保持项目约定语言原样，绝不翻译（见 SKILL.md 语言政策·历史记录不翻译）
 

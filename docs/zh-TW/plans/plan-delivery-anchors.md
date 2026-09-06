@@ -2,7 +2,7 @@
 
 [English](../../en/plans/plan-delivery-anchors.md) · [简体中文](../../zh-CN/plans/plan-delivery-anchors.md) · [繁體中文](plan-delivery-anchors.md)
 
-> **狀態：設計計劃，未實作。** 交付對帳（`repo-tools/check-plan-delivery.js`）跳過純設計計劃；本行即標記。
+> **Status: implemented.**（已實現。）於 v0.13.2+（2026-09-06）交付：交付閘門新增錨點語法（`— anchor: `snippet``）；帶錨點的已存在路徑按**內容**驗證，而非僅存在性。與計劃的偏差（刻意）：未實施凍結基線清單——嚴格從當日起的錨點要求取代它，因計劃自身 Risks 節警告「大凍結清單會從發佈日起弱化規則」。兩個迴歸測試 + 變異驗證。見 CHANGELOG（邊界拆分批次）。
 
 **Target：repo-infra** —— 交付門禁與其測試屬倉庫基礎設施，宣告規範落在 `AGENTS.md`。本計劃不產出任何進入被治理專案的內容。
 
@@ -28,7 +28,7 @@
 ### 受影響檔案
 
 - repo-tools/check-plan-delivery.js —— 錨點解析、先後判定、凍結基線
-- tests/run-tests.js —— 覆蓋下列驗證場景的迴歸
+- tests/suites/*.test.js —— 覆蓋下列驗證場景的迴歸(run-tests.js 只是發現入口;在其中註冊測試會使衛生閘門失敗)
 - AGENTS.md —— 計劃宣告規範中的錨點要求
 - CHANGELOG.md —— 門禁行為變更
 

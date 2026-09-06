@@ -60,7 +60,7 @@
 
 #### 儲存庫基礎設施
 
-- `tests/run-tests.js` —— 覆蓋摘要綁定、範圍不匹配、刪除、重新命名、遷移與兜底
+- `tests/suites/*.test.js` —— 覆蓋摘要綁定、範圍不匹配、刪除、重新命名、遷移與兜底(歸屬對應領域的 suite;`tests/run-tests.js` 現在只是發現入口,不得註冊測試——衛生閘門會因此失敗)
 - `scripts/check-doc-consistency.js` —— 驗證同步文件標記
 - `docs/{en,zh-CN,zh-TW}/commands.md` —— 記錄使用者觸發詞
 - `CHANGELOG.md` —— 在發佈邊界記錄行為變化

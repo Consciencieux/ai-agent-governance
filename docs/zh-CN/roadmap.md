@@ -23,7 +23,7 @@
 - **分级审核门禁** —— release/push 风险分级（低 = 仅轻量级；中 = 批准时建议深度审查；高 = 必须 review-manager）；轻量级脚本总是自动跑。设计：[../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
 - **被治理项目同步组** —— 两层：（L1）声明式 `.governance/sync-rules.json`（watch/require）+ 清单驱动 Phase 5；（L2）`scripts/check-sync.js` 对照实际改动集机械验证。设计：[../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
 - **INIT 生成器脚本化** —— 确定性、可快照测试的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期。设计：[../archive/init-scripted-generator.md](../archive/init-scripted-generator.md)
-- **计划交付门禁** —— `repo-tools/check-plan-delivery.js`：计划与实际交付的机械对账（归档前 fail-closed）
+- **计划交付门禁** —— `repo-tools/check-plan-delivery.js`：计划与实际交付的机械对账（归档前 fail-closed）；锚点语法（`— anchor: `snippet``）对已存在文件的声明按**内容**验证，而非仅存在性。设计：[plans/plan-delivery-anchors.md](plans/plan-delivery-anchors.md)
 - **计划归档门禁** —— 规范计划状态关键词（design/active/implemented/completed/archived）+ release 作用域的待归档门禁（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修复（`####` 子节不再截断）
 - **安装载荷完整性门禁** —— 3 项测试证明复制的门禁脚本自包含（无兄弟 `require`）且 `init-spec.json` 的复制清单与 INIT 实际写入一致
 - **确认政策重写** —— 跨五个同步点提交前一次确认；计划批准降为意图对齐（`consent-policy-hardening` 计划）
@@ -42,8 +42,8 @@
 
 ### 近期
 
-- **多 Agent 协调协议** —— 并发 Agent 之间的标准化协调（锁检查已交付；review-manager 的并行子代理是其第一个真实用例）
-- **Skill 生命周期管理** —— 独立 [`ai-skill-manager`](https://github.com/Consciencieux/ai-skill-manager) skill（管理 .agents/skills/ 下所有 skill 的 INSTALL → UPDATE → ROLLBACK，含本 skill）。自 v0.6.0/v0.7.0 顺延；当版本同步步骤证明不够用时再重启。设计：[plans/skill-lifecycle-management.md](plans/skill-lifecycle-management.md)
+- **同意证据 + 变更卫生** —— 将评审/同意状态绑定到摘要；对账删除/重命名声明与 git diff。设计：[plans/consent-and-change-hygiene.md](plans/consent-and-change-hygiene.md)
+- **多 Agent 协调协议** —— 并发 Agent 之间的标准化协调（锁检查已交付；review-manager 的并行子代理是其第一个真实用例）。*尚无设计计划*
 - **远程治理看板** —— 被治理仓库的可观测性（依赖：审计轨迹 + 健康分，均已交付）
 - **monorepo 多治理域** —— 校验器多根解析 + 多 manifest（出现真实 monorepo 需求时再做）
 
@@ -62,7 +62,7 @@
 - **demo 示例仓库** —— 展示治理产物实际效果的真实示例项目（中期；在此之前本仓库仅作为*轻量治理*参考：发布流程 + plans/archive + ADR + 测试，**不是**完整的被治理软件项目——其 validator 默认模式必然失败属设计使然）
 - **生态完善** —— IDE 扩展（治理感知的编辑器集成；真实用户需求出现时触发）+ Cursor 兼容实测（验证文档声明的 `.cursor/rules` 兼容性；机制变化或问题报告时触发）
 
-说明：未实现功能的设计计划在各语言树的 `plans/`（如 `skill-lifecycle-management.md`）；已完成的 TASK 计划在发布时归档到 `docs/archive/`。被治理项目自身的开发计划由 INIT 生成在 `docs/plans/DEVELOPMENT_PLAN.md`。
+说明：未实现功能的设计计划在各语言树的 `plans/`；已完成的 TASK 计划在发布时归档到 `docs/archive/`。被治理项目自身的开发计划由 INIT 生成在 `docs/plans/DEVELOPMENT_PLAN.md`。
 
 **维护规则（每次发布滚动重排）：**
 

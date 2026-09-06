@@ -120,9 +120,8 @@ function candidatePaths(declared) {
   }
   return [...new Set(expanded)];
 }
-
-function verifyDeclaredPath(declared) {
-  const raw = declared.trim().replace(/^`|`$/g, "");
+function verifyDeclaredPath(declared, anchor) {
+  const raw = declared.trim().replace(/`|`$/g, "");
 
   for (const [frag, proofs] of RUNTIME_ARTIFACTS) {
     // Match a declared path to an artifact fragment by exact path, by a path-BOUNDARY
@@ -153,6 +152,21 @@ function verifyDeclaredPath(declared) {
 
   const cands = candidatePaths(raw);
   if (cands.length === 0) return { ok: true, how: "not a path" };
+
+  // Anchor semantics: an Affected Files entry naming a path may carry an optional
+  //   — anchor: `a-snippet-the-change-introduces`
+  // When present, the gate searches the target file content for the snippet and fails
+  // when absent. This closes the vacuous case where a plan declares an EXISTING file
+  // (existence predates the plan, so "exists" is satisfied before the plan is even
+  // written) and never delivers the promised change — the gate approved the plan while
+  // its declared rule never landed.
+  if (anchor) {
+    const found = cands.map(readFileSafe).find(Boolean);
+    if (!found) return { ok: false, how: "anchor declared for " + raw + " but the file is missing" };
+    if (!found.includes(anchor)) return { ok: false, how: "exists but anchor absent: " + anchor + " (the change was never delivered)" };
+    return { ok: true, how: "exists, anchor present: " + anchor };
+  }
+
   if (existsAny(cands)) return { ok: true, how: "exists" };
   return { ok: false, how: "not found (tried: " + cands.slice(0, 4).join(", ") + ")" };
 }
@@ -296,14 +310,29 @@ function auditPlan(relPath) {
 
   const af = extractSection(content, ["受影响文件", "Affected Files", "受影響檔案"]);
   if (af) {
-    const ticked = [...new Set((af.match(/`([^`]+)`/g) || []).map((s) => s.slice(1, -1)))]
-      .filter((t) => !behaviourTokens.has(t));
-    for (const t of ticked) {
+    // Line-wise parsing so an anchor can attach to an entry:
+    //   - `AGENTS.md` — anchor: `删除即删净`
+    // A global backtick matchAll would swallow the anchor INTO the same token (it
+    // contains a space), and the "skip tokens with spaces" rule would then drop the
+    // declaration entirely — silently unverifiable.
+    const entries = new Map(); // normalized token -> { token, anchor }
+    for (const line of af.split("\n")) {
+      const toks = [...line.matchAll(/`([^`]+)`/g)].map((m) => m[1]).filter((t) => t.trim());
+      if (!toks.length) continue;
+      // Behavioural declarations (writes:/wires:) own their tokens — verifyBehaviours
+      // checks them; path/identifier verification must not see them.
+      const isBehaviour = /(write[s]?|wire[s]?|[写入]|[接线])\s*[:：]\s*`/.test(line);
+      if (isBehaviour) continue;
+      const anchor = /—\s*anchor:\s*`([^`]+)`/i.exec(line);
+      const first = toks[0].trim();
+      if (!entries.has(first) || anchor) entries.set(first, { token: first, anchor: anchor ? anchor[1] : null });
+    }
+    for (const { token: t, anchor } of entries.values()) {
       if (t.includes(" ") || t.startsWith("--")) continue;
       const looksPath = /[\/]/.test(t) || /\.[a-z]{2,4}$/i.test(t);
       const looksId = IDENTIFIER_RE.test(t) && !looksPath;
       if (looksPath) {
-        const r = verifyDeclaredPath(t);
+        const r = verifyDeclaredPath(t, anchor);
         if (!r.ok) findings.push({ kind: "path", item: t, detail: r.how });
       } else if (looksId) {
         const r = verifyIdentifier(t);

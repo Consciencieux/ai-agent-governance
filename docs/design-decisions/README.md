@@ -13,5 +13,6 @@
 | [ADR-0006](adr-0006-no-dogfooding.md) | 本仓库不狗粮自身治理框架 | Accepted |
 | [ADR-0007](adr-0007-plan-layering-orthogonal-triggers.md) | 治理计划分层独立与正交触发（工程克制 × 反补丁） | Accepted |
 | [ADR-0008](adr-0008-trigger-inventory-commands-md-exception.md) | 触发词清单复制的规则冲突裁定（commands.md 例外） | Accepted |
+| [ADR-0009: 索引与事实源的边界](adr-0009-index-vs-fact-source.md) | roadmap/里程碑是索引、计划是事实源；本仓库机械验证、被治理项目仅文档约束 | Accepted |
 
 状态：Proposed / Accepted / Superseded / Deprecated。

@@ -60,7 +60,7 @@ Run consent validation immediately before commit/tag/release writes. Run change-
 
 #### Repository infrastructure
 
-- `tests/run-tests.js` — fixtures for digest binding, scope mismatch, deletion, rename, migration, and fallback behavior
+- `tests/suites/*.test.js` — fixtures for digest binding, scope mismatch, deletion, rename, migration, and fallback behavior (the suite owning each domain; `tests/run-tests.js` is the discovery entry only and must not register tests — the hygiene gate fails on that)
 - `scripts/check-doc-consistency.js` — verify synchronized documentation markers
 - `docs/{en,zh-CN,zh-TW}/commands.md` — document user-facing triggers
 - `CHANGELOG.md` — record the behavioral change at the release boundary

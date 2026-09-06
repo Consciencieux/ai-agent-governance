@@ -2,7 +2,7 @@
 
 [English](../../en/plans/plan-delivery-anchors.md) · [简体中文](plan-delivery-anchors.md) · [繁體中文](../../zh-TW/plans/plan-delivery-anchors.md)
 
-> **状态：设计计划，未实现。** 交付对账（`repo-tools/check-plan-delivery.js`）跳过纯设计计划；本行即标记。
+> **Status: implemented.**（已实现。）于 v0.13.2+（2026-09-06）交付：交付门禁新增锚点语法（`— anchor: `snippet``）；带锚点的已存在路径按**内容**验证，而非仅存在性。与计划的偏差（刻意）：未实施冻结基线清单——严格从当日起的锚点要求取代它，因计划自身 Risks 节警告「大冻结清单会从发布日起弱化规则」。两个回归测试 + 变异验证。见 CHANGELOG（边界拆分批次）。
 
 **Target：repo-infra** —— 交付门禁与其测试属仓库基础设施，声明规范落在 `AGENTS.md`。本计划不产出任何进入被治理项目的内容。
 
@@ -28,7 +28,7 @@
 ### 受影响文件
 
 - repo-tools/check-plan-delivery.js —— 锚点解析、先后判定、冻结基线
-- tests/run-tests.js —— 覆盖下列验证场景的回归
+- tests/suites/*.test.js —— 覆盖下列验证场景的回归(run-tests.js 只是发现入口;在其中注册测试会使卫生门禁失败)
 - AGENTS.md —— 计划声明规范中的锚点要求
 - CHANGELOG.md —— 门禁行为变更
 

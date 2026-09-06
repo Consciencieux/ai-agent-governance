@@ -12,6 +12,38 @@ test("check-sync: changed src without ARCHITECTURE.md exits 1", () => {
   const dir = tmp("sync-unsynced");
   gitInit(dir);
   fs.mkdirSync(path.join(dir, "src"), { recursive: true });
+
+// Anchor semantics: a plan declaring an EXISTING file must be able to prove the change
+// landed. Existence alone used to satisfy the gate before the plan was even written
+// (the vacuous case: removal-hygiene declared two landing points, neither received the
+// rule, gate reported 28 plans verified). The anchor clause closes it.
+test("check-plan-delivery: an anchor on an existing file verifies content, not just existence", () => {
+  const dir = tmp("plandel-anchor");
+  fs.mkdirSync(path.join(dir, "docs/archive"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  // the file exists but the promised rule never landed
+  write(path.join(dir, "AGENTS.md"), "# Agents\nnothing promised\n", "utf8");
+  write(path.join(dir, "docs/archive/p.md"), [
+    "# P", "", "> **Status: implemented.**", "", "**Target: repo-infra**", "",
+    "### Affected Files", "", "- `AGENTS.md` — anchor: `deletion means deletion`"
+  ].join("\n"));
+  const bad = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  write(path.join(dir, "AGENTS.md"), "# Agents\ndeletion means deletion\n", "utf8");
+  const good = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  return bad.status === 1 && good.status === 0;
+});
+
+test("check-plan-delivery: an entry without an anchor keeps existence semantics (back-compat)", () => {
+  const dir = tmp("plandel-noanchor");
+  fs.mkdirSync(path.join(dir, "docs/archive"), { recursive: true });
+  write(path.join(dir, "AGENTS.md"), "# Agents\nwhatever\n", "utf8");
+  write(path.join(dir, "docs/archive/p.md"), [
+    "# P", "", "> **Status: implemented.**", "", "**Target: repo-infra**", "",
+    "### Affected Files", "", "- `AGENTS.md` — receives the rule"
+  ].join("\n"));
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  return r.status === 0;
+});
   write(path.join(dir, "src", "a.ts"), "x");
   spawnSync("git", ["add", "src/a.ts"], { cwd: dir });
   write(

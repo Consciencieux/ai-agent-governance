@@ -23,7 +23,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 - **Tiered review gate** — release/push risk tiering (low = lightweight only; medium = suggested deep review at approval; high = review-manager required); lightweight scripts always run. Design: [../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
 - **Governed-project sync groups** — two layers: (L1) declarative `.governance/sync-rules.json` (watch/require) + checklist-driven Phase 5; (L2) `scripts/check-sync.js` mechanical verification against the actual change set. Designs: [../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
 - **INIT scripted generator** — deterministic, snapshot-testable INIT generation (`scripts/generate-governance.js`); phased A → B → C. Design: [../archive/init-scripted-generator.md](../archive/init-scripted-generator.md)
-- **Plan delivery gate** — `repo-tools/check-plan-delivery.js`: mechanical plan-vs-delivery reconciliation (fail-closed before archiving)
+- **Plan delivery gate** — `repo-tools/check-plan-delivery.js`: mechanical plan-vs-delivery reconciliation (fail-closed before archiving); anchor clauses (`— anchor: `snippet``) verify CONTENT for existing declared files, not just existence. Design: [plans/plan-delivery-anchors.md](plans/plan-delivery-anchors.md)
 - **Plan archive gate** — canonical plan-status keywords (design/active/implemented/completed/archived) + release-scoped pending-archive gate (`--release-gate` in check-doc-consistency.js) + delivery extraction fix (`####` subsections no longer truncated)
 - **Install-payload integrity gate** — 3 tests proving copied gate scripts are self-contained (no sibling `require`) and that `init-spec.json`'s copy list matches what INIT writes
 - **Consent policy rewrite** — one confirmation per change set across five sync points; plan approval demoted to intent alignment (`consent-policy-hardening` plan)
@@ -42,10 +42,10 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 
 ### Near-term
 
-- **Multi-agent coordination protocol** — standardized coordination across concurrent agents (lock check already shipped; review-manager's parallel subagents are its first real use case)
-- **Skill lifecycle management** — dedicated [`ai-skill-manager`](https://github.com/Consciencieux/ai-skill-manager) skill (INSTALL → UPDATE → ROLLBACK for all skills in .agents/skills/, including this skill). Deferred from v0.6.0/v0.7.0; revisit when the version-sync step proves insufficient. Design: [plans/skill-lifecycle-management.md](plans/skill-lifecycle-management.md)
-- **Remote governance dashboard** — observability for governed repositories (dependencies: activity audit trail + score, both already shipped)
-- **Monorepo multi-governance domains** — validator multi-root resolution + multiple manifests (only when real monorepo demand appears)
+- **Consent evidence + change hygiene** — bind review/consent status to a digest; reconcile deletion/rename declarations against git diff. Design: [plans/consent-and-change-hygiene.md](plans/consent-and-change-hygiene.md)
+- **Multi-agent coordination protocol** — standardized coordination across concurrent agents (lock check already shipped; review-manager's parallel subagents are its first real use case). *No design plan yet*
+- **Remote governance dashboard** — observability for governed repositories (dependencies: activity audit trail + score, both already shipped). *No design plan yet*
+- **Monorepo multi-governance domains** — validator multi-root resolution + multiple manifests (only when real monorepo demand appears). *No design plan yet*
 
 ### Deferred release-safety decisions
 
@@ -60,10 +60,10 @@ release-related task: these are known gaps in what a green gate actually proves.
 
 ### Mid-term
 
-- **Demo repository** — a real governed example project showing the governance artifacts in action (mid-term; until then this repo serves as a *lightweight-governance* reference: release flow + plans/archive + ADRs + tests, but NOT a full governed software project — its validator runs in default mode fail by design)
-- **Ecosystem polish** — IDE extension (governance-aware editor integration; trigger on real user demand) + Cursor compatibility field testing (verify the documented `.cursor/rules` compatibility; trigger on mechanism changes or reported issues)
+- **Demo repository** — a real governed example project showing the governance artifacts in action (mid-term; ...). *No design plan yet*
+- **Ecosystem polish** — IDE extension (governance-aware editor integration; trigger on real user demand) + Cursor compatibility field testing (verify the documented .cursor/rules compatibility; trigger on mechanism changes or reported issues). *No design plan yet*
 
-Note: design plans for unimplemented features live in each language tree's `plans/` (e.g. `skill-lifecycle-management.md`); completed TASK plans are archived into `docs/archive/` at release. Governed projects track their own development plans in `docs/plans/DEVELOPMENT_PLAN.md` (generated by INIT).
+Note: design plans for unimplemented features live in each language tree's `plans/` ; completed TASK plans are archived into `docs/archive/` at release. Governed projects track their own development plans in `docs/plans/DEVELOPMENT_PLAN.md` (generated by INIT).
 
 **Maintenance rule (rolling re-baseline, at each release):**
 

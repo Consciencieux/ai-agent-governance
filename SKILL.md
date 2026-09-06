@@ -46,7 +46,7 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 
   1. 读取本地 `version`
   2. 查询上游最新 release（`gh release view` 或 fetch `https://api.github.com/repos/Consciencieux/ai-agent-governance/releases/latest`）
-  3. 比较并报告：本地版本 vs 最新版本、CHANGELOG 差异摘要、更新方式（当前为手动 clone；完整自动化 INSTALL → UPDATE → ROLLBACK 由独立的 ai-skill-manager skill 提供，尚未发布）
+  3. 比较并报告：本地版本 vs 最新版本、CHANGELOG 差异摘要、更新方式（当前为手动 clone；完整自动化 INSTALL → UPDATE → ROLLBACK 属独立的 ai-skill-manager 项目（本仓库不交付；策划记录见原计划归档））
 
 - **绝不自动更新**（需用户明确同意）；更新后重新加载 skill。
 
