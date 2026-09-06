@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented here.
 
-## [Unreleased]
+## [0.13.2] - 2026-09-06
+
+### Changed
+
+- **Version synchronisation now advances all five release sync points** — package.json, SKILL.md frontmatter, `references/init-spec.json` `governance_version.default`, the generator fallback sentinel and the CHANGELOG version section, plus the manifest version examples that `version_examples` checks in SKILL.md and `references/workflows/release.md`. The v0.13.1 release advanced three of them; the backstops added afterwards caught the remaining two during this release rather than after it.
 
 ### Fixed
 
