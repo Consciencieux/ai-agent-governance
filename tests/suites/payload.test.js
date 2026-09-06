@@ -420,8 +420,8 @@ test("payload closure: every relative markdown link stays inside the generated p
 // ---------------------------------------------------------------------------
 
 test("boundary: tarball manifest equals the declared allow-set exactly", () => {
-  const sh = findPosixShell();
-  if (!sh) { console.error("  no POSIX shell available"); return false; }
+  const sh = findBashShell();
+  if (!sh) { console.error("  no bash available (package-skill.sh declares a bash shebang)"); return false; }
   const pack = spawnSync(sh, ["repo-tools/package-skill.sh", "0.0.0-test"], { cwd: SKILL_ROOT, encoding: "utf8" });
   if (pack.status !== 0) { console.error("  packaging failed: " + (pack.stderr || "").slice(0, 200)); return false; }
 
@@ -502,8 +502,8 @@ test("packaging: the tarball carries no platform metadata files", () => {
 });
 
 test("packaging: metadata surviving the copy step aborts the build instead of shipping", () => {
-  const sh = findPosixShell();
-  if (!sh) { console.error("  no POSIX shell available"); return false; }
+  const sh = findBashShell();
+  if (!sh) { console.error("  no bash available (package-skill.sh declares a bash shebang)"); return false; }
   // The mutation must run against an ISOLATED mini-repo, never the real checkout: this
   // test comments out the packaging script's cleanup lines, and doing that to the real
   // repo-tools/package-skill.sh left a weakened protected file behind if the process

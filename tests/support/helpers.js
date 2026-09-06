@@ -209,26 +209,47 @@ function buildPlanRepo(dir, planBody) {
   fs.writeFileSync(path.join(dir, "docs/archive/some-plan.md"), planBody, "utf8");
 }
 
-function findPosixShell() {
-  const candidates = ["sh"];
+// Two interpreter contracts live in this repo and must NOT share one probe:
+//   .githooks/*        "#!/bin/sh"            POSIX only  -> validate with sh
+//   package-skill.sh   "#!/usr/bin/env bash"  uses pipefail -> run with bash
+// Running the bash script under sh is exactly what broke CI (Ubuntu's /bin/sh is dash:
+// "Illegal option -o pipefail") while every Windows run stayed green, because Git for
+// Windows ships sh.exe AS bash. Validating the hooks with bash would be the mirror
+// mistake: it would stop catching bashisms that must never enter a POSIX hook.
+
+function findShell(kind) {
+  const exe = kind === "bash" ? "bash" : "sh";
+  const candidates = [exe];
   if (process.platform === "win32") {
     for (const base of [process.env.ProgramFiles, process.env["ProgramFiles(x86)"]]) {
       if (!base) continue;
-      candidates.push(path.join(base, "Git", "bin", "sh.exe"));
-      candidates.push(path.join(base, "Git", "usr", "bin", "sh.exe"));
+      candidates.push(path.join(base, "Git", "bin", exe + ".exe"));
+      candidates.push(path.join(base, "Git", "usr", "bin", exe + ".exe"));
     }
     const where = spawnSync("where.exe", ["git"], { encoding: "utf8" });
     for (const line of String(where.stdout || "").split(/\r?\n/).filter(Boolean)) {
       const cmdDir = path.dirname(line.trim());
       const gitRoot = path.basename(cmdDir).toLowerCase() === "cmd" ? path.dirname(cmdDir) : path.dirname(path.dirname(cmdDir));
-      candidates.push(path.join(gitRoot, "bin", "sh.exe"), path.join(gitRoot, "usr", "bin", "sh.exe"));
+      candidates.push(path.join(gitRoot, "bin", exe + ".exe"), path.join(gitRoot, "usr", "bin", exe + ".exe"));
     }
   }
+  // For bash the probe must exercise the feature the script relies on, not merely start.
+  const probeCmd = kind === "bash" ? "set -o pipefail; exit 0" : "exit 0";
   for (const candidate of [...new Set(candidates)]) {
-    const probe = spawnSync(candidate, ["-c", "exit 0"], { encoding: "utf8" });
+    const probe = spawnSync(candidate, ["-c", probeCmd], { encoding: "utf8" });
     if (!probe.error && probe.status === 0) return candidate;
   }
   return null;
+}
+
+// POSIX sh — for validating the generated hooks stay POSIX-clean.
+function findPosixShell() {
+  return findShell("sh");
+}
+
+// bash — for running repo-tools/package-skill.sh, which declares a bash shebang.
+function findBashShell() {
+  return findShell("bash");
 }
 
 function copiedScriptSources() {
@@ -254,4 +275,4 @@ function linkDir(target, linkPath) {
 
 
 
-module.exports = { VALIDATOR, LOCK_CHECK, GIT_POLICY_CHECK, SECRET_CHECK, SYNC_CHECK, GENERATOR, LAYOUT_CHECK, ROLE_CHECK, PLAN_DELIVERY, PARITY_CHECK, FRESHNESS_CHECK, CONSISTENCY_CHECK, RELEASE_TOOL, SKILL_ROOT, CONSISTENCY, CONSENT_THREE_MARKERS_TEXT, TMP_ROOT, tmp, write, assemble, run, cleanup, buildFullDefault, buildParityTrees, gitCommitAt, buildFreshnessFixture, runRelease, planChanges, buildI18nFixture, gitInit, gitHead, gitTags, listFiles, buildLayoutRepo, buildPlanRepo, findPosixShell, copiedScriptSources, writeConsentSyncPoint, linkDir };
+module.exports = { VALIDATOR, LOCK_CHECK, GIT_POLICY_CHECK, SECRET_CHECK, SYNC_CHECK, GENERATOR, LAYOUT_CHECK, ROLE_CHECK, PLAN_DELIVERY, PARITY_CHECK, FRESHNESS_CHECK, CONSISTENCY_CHECK, RELEASE_TOOL, SKILL_ROOT, CONSISTENCY, CONSENT_THREE_MARKERS_TEXT, TMP_ROOT, tmp, write, assemble, run, cleanup, buildFullDefault, buildParityTrees, gitCommitAt, buildFreshnessFixture, runRelease, planChanges, buildI18nFixture, gitInit, gitHead, gitTags, listFiles, buildLayoutRepo, buildPlanRepo, findPosixShell, findBashShell, copiedScriptSources, writeConsentSyncPoint, linkDir };

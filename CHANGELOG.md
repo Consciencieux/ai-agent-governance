@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- **CI broke on the first run after v0.14.0: the packaging tests ran a bash script under `sh`** — `repo-tools/package-skill.sh` declares `#!/usr/bin/env bash` and uses `set -o pipefail`, but the test helper looked for `sh`. On Ubuntu that resolves to dash: `set: Illegal option -o pipefail`, four packaging tests down. Every local run stayed green because Git for Windows ships `sh.exe` **as bash** (verified: `$BASH_VERSION=5.2.37`, and it accepts both `[[ ]]` and pipefail) — the authoring shell satisfied a contract the CI shell does not. The helper is now split by contract: `findPosixShell()` for the `#!/bin/sh` hooks, `findBashShell()` for the bash packaging script, and the bash probe exercises `pipefail` rather than merely checking that the shell starts.
+
+- **The hooks' POSIX-purity check was vacuous on Windows** — found while fixing the above: `sh -n` was supposed to prove the generated `.githooks/*` stay POSIX, but the same sh.exe-is-bash fact means it accepts every bashism, so a `[[ ]]` injected into a hook passed locally and only Ubuntu CI would have caught it. `sh -n` stays (it does catch syntax errors); a static bashism scan was added alongside it — shebang shape plus `[[ ]]`, `pipefail`, here-strings, array expansion, `function` keyword, `echo -e`, `source` — because that judgement is decidable on every platform. Mutation-verified: injecting `[[ ]]` or `echo -e` into the hook template turns the test red.
+
 ## [0.14.0] - 2026-09-06
 
 ### Changed

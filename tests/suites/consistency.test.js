@@ -610,6 +610,33 @@ test("payload: hooks pass sh -n and real git commit matrix", () => {
   const msg = path.join(dir, ".githooks/commit-msg");
   if (spawnSync(shell, ["-n", pre], { encoding: "utf8" }).status !== 0 || spawnSync(shell, ["-n", msg], { encoding: "utf8" }).status !== 0) return false;
 
+  // POSIX purity cannot be proven with the local shell: on Windows, sh.exe IS bash, so it
+  // accepts every bashism and this check would pass vacuously (verified: $BASH_VERSION is
+  // set, `[[ ]]` and pipefail both work). Scan statically instead — decidable everywhere.
+  const BASHISMS = [
+    [/\[\[/, "[[ ]] test"],
+    [/\bset\s+-o\s+pipefail\b/, "set -o pipefail"],
+    [/<<</, "here-string"],
+    [/\$\{[A-Za-z_][A-Za-z0-9_]*\[[@*]\]\}/, "array expansion"],
+    [/\bfunction\s+\w+\s*\(\)/, "function keyword form"],
+    [/\becho\s+-e\b/, "echo -e"],
+    [/\bsource\s/, "source (use . instead)"]
+  ];
+  for (const hookPath of [pre, msg]) {
+    const body = fs.readFileSync(hookPath, "utf8");
+    const shebang = body.split("\n")[0];
+    if (!/^#!.*\bsh\b/.test(shebang) || /bash/.test(shebang)) {
+      console.error("  " + path.basename(hookPath) + ": expected a POSIX sh shebang, got " + JSON.stringify(shebang));
+      return false;
+    }
+    for (const [re, label] of BASHISMS) {
+      if (re.test(body)) {
+        console.error("  " + path.basename(hookPath) + " declares #!/bin/sh but uses " + label);
+        return false;
+      }
+    }
+  }
+
   gitInit(dir);
   spawnSync("git", ["config", "core.hooksPath", ".githooks"], { cwd: dir });
   const first = "文档/带 空格.md";
