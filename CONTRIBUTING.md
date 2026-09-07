@@ -8,25 +8,19 @@
 npm test        # or node tests/run-tests.js
 ```
 
-The test suite covers: empty project (exit 1), full default structure (exit 0, 21 checks), custom doc root via manifest (manifest mode), missing governance_version (exit 1), `--json` output, `--help`, no legacy `.agent` leakage, optional `validation.json`, CHANGELOG format check, lock check (no state / unlocked / held), git policy check (invalid policy / protected-branch blocked / feature-branch ok), secret scan (hit exit 1 without leaking token / clean exit 0 / missing gate fails validator), sync groups check (unsynced exit 1 / synced exit 0 / missing gate fails validator), release planning (SemVer classification: docs/refactor → patch, CLI → minor, deleted API → major, uncertainty → clarification, `--file` input), approval gate (unapproved → no tag, approved → annotated tag), generate-governance (Phase A file tree / determinism / placeholder resolution / manifest types / dry-run / json output / missing args), plus doc parity (parallel trees exit 0 / heading drift exit 1 / missing file exit 1), doc freshness (stale/very-stale detection via git log dates), doc consistency (clean exit 0 / stale version example flagged / broken link flagged), and --json score (1.0 full / 0.95 partial). CI runs it on every push/PR.
+CI runs it on every push/PR.
 
 ## Where Things Live
 
-| Path | Purpose |
-| --- | --- |
-| `SKILL.md` | skill entry point / product spec — INIT/AUDIT/RELEASE orchestration |
-| `references/` | skill body — the only place skill behavior lives: `templates/` (generation templates) · `policies/` (`*.policy.md` rules copied into governed `docs/rules/`) · `workflows/` (CI + release specs) |
-| `scripts/verify_governance.js` | validator source, copied into governed projects |
-| `scripts/release-manager.js` | release tool: `plan` (read-only) + `execute` (approval-gated) |
-| `scripts/generate-governance.js` | INIT generator: deterministic bootstrap scaffolding (spec: `references/init-spec.json`) |
-| `references/init-spec.json` | machine-readable INIT spec (single source of truth for generated output) |
-| `tests/run-tests.js` | test harness |
-| `docs/en/` `docs/zh-CN/` `docs/zh-TW/` | project knowledge — developer-maintained, read by developers and agents working here (how to use the skill: trigger words, plans, roadmap), one tree per language; NOT part of the skill payload |
-| `docs/glossary.md` | trilingual terminology table (single source of truth for terms) |
-| `docs/design-decisions/` | architecture decision records (shared, single-language 简体中文) |
-| `docs/archive/` | completed plan archives (shared, single-language, never translated) |
+The full repository layout — every directory and its role, down to individual scripts — is documented in [docs/en/architecture.md](docs/en/architecture.md) (Repository Layout, single source of truth). Pointers only:
 
-**Where does a new file go?** If deleting the file would break agent execution (INIT/AUDIT/RELEASE read it) → `references/`. If it is project knowledge — how to use, maintain or contribute, read by developers AND agents working in this repo — → `docs/<language>/`.
+| Path | Where documented |
+| --- | --- |
+| `SKILL.md` · `references/` · `scripts/` | `docs/en/architecture.md` § Repository Layout |
+| `tests/run-tests.js` | test harness — run with `npm test` |
+| `docs/` trees · `docs/glossary.md` · `docs/design-decisions/` · `docs/archive/` | per-language docs, glossary, ADRs, archives |
+
+**Where does a new file go?** If the file defines governance behavior or generation mechanisms that agents must follow → `references/`. If it is project knowledge — how to use, maintain or contribute, read by developers AND agents working in this repo — → `docs/<language>/`. Test, CI and other development infrastructure go in their respective directories (`tests/`, `.github/`, ...).
 
 ## Language Policy (by audience)
 
@@ -36,7 +30,7 @@ The test suite covers: empty project (exit 1), full default structure (exit 0, 2
 
 ## Changing Governance Artifacts
 
-`SKILL.md`, `references/`, `scripts/` define the governance framework itself. Releases of this skill repo follow its own flow (see `repo-workflows/skill-release.md`):
+`SKILL.md`, `references/`, `scripts/` define the governance framework itself. Releases of this skill repo follow their own flow (see `repo-workflows/skill-release.md`):
 
 1. Update `CHANGELOG.md` (classify: doc-only → none; fix → Fixed; feature → Added; breaking → Changed)
 2. Bump `package.json` version (SemVer: breaking → MAJOR, feature → MINOR, fix → PATCH)
@@ -44,6 +38,38 @@ The test suite covers: empty project (exit 1), full default structure (exit 0, 2
 4. Run `npm test` before pushing
 5. Release only with the `release-manager` flow (preconditions → version sync → archive → validate → tag → push → GitHub Release)
 
+## Development Workflow
+
+1. Create a branch from `main` (short-lived, one logical change per branch)
+2. Inspect the affected surface: read the files the change touches and their references; classify the change (documentation / governance mechanism / script-validator / tests / CI-release) — the classification decides the validation scope
+3. Make the change, keeping the language and parity rules above
+4. Run the checks that match the change scope (see Validation Requirements)
+5. Review your own diff before committing: staged files, no generated outputs, no unrelated edits
+6. Commit with a Conventional Commit message (see Commit Conventions), push the branch, open a PR
+
+## Validation Requirements
+
+| Check | Role | When |
+| --- | --- | --- |
+| `npm run check:docs` | Gate | documentation (`docs/`, README, CONTRIBUTING) changes |
+| `npm run check:payload` | Gate | `references/` / `scripts/` / `SKILL.md` / LICENSE changes |
+| `npm run check:tests` | Gate | `tests/` changes |
+| `npm run check` | Gate | default / uncertain scope |
+| `npm run check:all` | Audit | before audit, or explicit full audit |
+| `npm run check:skill-release` | Release | before a release, per `repo-workflows/skill-release.md` |
+
+The narrower entries are gate-fail-closed for their scope; when in doubt, escalate to the larger scope — never narrow the verification. Which gates are advisory vs fail-closed, and what each pass means, is described in `AGENTS.md` § Validation.
+
 ## Commit Conventions
 
 Conventional Commits in English: `feat(scope): subject` / `fix(scope): subject`. Never commit generated runtime outputs (`.governance/validation.json`, `.governance/drift-report.json`, `.governance/release-proposal.json` are git-ignored).
+
+## AI-Assisted Contributions
+
+AI-assisted development is welcome. Contributors remain responsible for understanding, testing, reviewing, and validating generated changes. AI output does not override repository source-of-truth files, governance policies, or validation requirements.
+
+For potentially sensitive security issues, please avoid posting secrets or exploit details in public issues.
+
+## License
+
+[MIT](LICENSE) © 2026 Consciencieux

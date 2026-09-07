@@ -33,6 +33,8 @@
 
 + Git tag `v<version>`
 
+**tag-version 配对**：`tag` 的值必须与相邻的 `version` 配对（`"version": "X.Y.Z"` 旁应为 `"tag": "vX.Y.Z"`）。文档里的 manifest 示例（本仓库的 `SKILL.md`，以及被治理项目用的 `references/workflows/release.md` 中 release 字段示例）携带版本+标签对，二者矛盾即示例失真——v1.0.0 发布曾保留 `"tag": "v0.15.0"` 与 `"version": "1.0.0"` 并存且全部门禁全绿。现由 `check-doc-consistency.js --gate` 的 `version_examples` 簇机械验证（fail-closed），不依赖记忆。
+
 ## Phase 1：Analyze（分析）
 
 AI 分析当前仓库状态：

@@ -8,25 +8,19 @@
 npm test        # 或 node tests/run-tests.js
 ```
 
-测试套件覆盖：空项目（exit 1）、完整默认结构（exit 0，21 项检查）、自定义文档根经 manifest（manifest 模式）、缺 governance_version（exit 1）、`--json` 输出、`--help`、无 `.agent` 残留、`validation.json` 可选、CHANGELOG 格式检查、锁检查（无状态 / 未持锁 / 持锁）、Git 策略检查（非法策略 / 受保护分支阻止 / 特性分支通过）、密钥扫描（命中 exit 1 且不泄露 token / 干净 exit 0 / 缺门禁使校验器失败）、发布规划（SemVer 分类：docs/重构 → patch、CLI 命令 → minor、删除公开 API → major、不确定性 → 澄清、`--file` 输入）与审批门禁（未批准 → 无 tag，批准 → 创建 annotated tag）、文档一致性（三树平行 exit 0 / 标题漂移 exit 1 / 缺失文件 exit 1）、知识新鲜度（git log 日期检测 stale/very-stale）、内容一致性（干净 exit 0 / 版本示例标记 / 坏链标记）与 --json score（全过 1.0 / 部分 0.95）。CI 每次 push/PR 运行。
+CI 每次 push/PR 运行。
 
 ## 各目录用途
 
-| 路径 | 用途 |
-| --- | --- |
-| `SKILL.md` | skill 入口 / 产品规格 —— INIT/AUDIT/RELEASE 编排 |
-| `references/` | skill 本体 —— skill 行为唯一所在地：`templates/`（生成模板）· `policies/`（`*.policy.md` 规则，复制进被治理项目的 `docs/rules/`）· `workflows/`（CI + 发布规范） |
-| `scripts/verify_governance.js` | 校验器源码，复制进被治理项目 |
-| `scripts/release-manager.js` | 发布工具：`plan`（只读）+ `execute`（审批门禁） |
-| `scripts/generate-governance.js` | INIT 生成器：确定性引导脚手架（规范：`references/init-spec.json`） |
-| `references/init-spec.json` | 机器可读 INIT 规范（生成产出的单一事实源） |
-| `tests/run-tests.js` | 测试套件 |
-| `docs/en/` `docs/zh-CN/` `docs/zh-TW/` | 项目知识 —— 开发者维护，开发者与本仓库工作的 Agent 共享读取（怎么用 skill：触发词、计划、路线图），每种语言一棵目录树；不属于 skill 载荷 |
-| `docs/glossary.md` | 三语术语对照表（术语的单一事实源） |
-| `docs/design-decisions/` | 架构决策记录（共享，简体单语） |
-| `docs/archive/` | 已完成计划归档（共享，单语，绝不翻译） |
+完整仓库布局——每个目录及其角色、直到单个脚本——记录在 [docs/zh-CN/architecture.md](architecture.md)（Repository Layout，单一事实源）。此处仅保留指针：
 
-**新文件放哪里？** 如果删掉该文件会导致 Agent 无法执行（INIT/AUDIT/RELEASE 需要读它）→ `references/`；如果是项目知识——开发者与在本仓库工作的 Agent 共享读取如何用、维护、贡献 → `docs/<语言>/`。
+| 路径 | 记录于 |
+| --- | --- |
+| `SKILL.md` · `references/` · `scripts/` | `docs/zh-CN/architecture.md` § Repository Layout |
+| `tests/run-tests.js` | 测试入口——`npm test` 运行 |
+| `docs/` 树 · `docs/glossary.md` · `docs/design-decisions/` · `docs/archive/` | 各语言文档、术语表、ADR、归档 |
+
+**新文件放哪里？** 如果文件定义 Agent 必须遵循的治理行为或生成机制 → `references/`；如果是项目知识——开发者与在本仓库工作的 Agent 共享读取如何用、维护、贡献 → `docs/<语言>/`；测试、CI 等开发基础设施放入对应目录（`tests/`、`.github/` 等）。
 
 ## 语言政策（按受众）
 
@@ -36,14 +30,46 @@ npm test        # 或 node tests/run-tests.js
 
 ## 修改治理工件
 
-`SKILL.md`、`references/`、`scripts/` 定义治理框架本身。改动遵循发布策略（见 `references/workflows/release.md`）：
+`SKILL.md`、`references/`、`scripts/` 定义治理框架本身。本 skill 仓库的发布遵循其自身流程（见 `repo-workflows/skill-release.md`）：
 
 1. 更新 `CHANGELOG.md`（分类：纯文档 → 不记；修复 → Fixed；新能力 → Added；破坏性 → Changed）
 2. 升 `package.json` 版本（SemVer：破坏性 → MAJOR，新能力 → MINOR，修复 → PATCH）
-3. 保持版本一致：package.json · CHANGELOG · tag
+3. 保持版本一致：package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` 默认值 · `scripts/generate-governance.js` 哨兵值 · tag
 4. push 前必须 `npm test`
 5. 仅通过 `release-manager` 流程发布（前置检查 → 版本同步 → 校验 → tag → push → GitHub Release）
+
+## 开发工作流
+
+1. 从 `main` 创建分支（短生命周期，一个分支只做一个逻辑变更）
+2. 检查受影响面：读变更触及的文件及其引用；分类变更（文档 / 治理机制 / 脚本校验器 / 测试 / CI-发布）——分类决定验证范围
+3. 实施变更，遵循上文语言与 parity 规则
+4. 运行与变更范围匹配的检查（见下方验证要求）
+5. 提交前自查 diff：暂存文件、无生成产物、无无关编辑
+6. 用 Conventional Commit 提交（见提交约定）、推送分支、开 PR
+
+## 验证要求
+
+| 检查 | 角色 | 何时 |
+| --- | --- | --- |
+| `npm run check:docs` | Gate | 文档（`docs/`、README、CONTRIBUTING）变更 |
+| `npm run check:payload` | Gate | `references/` / `scripts/` / `SKILL.md` / LICENSE 变更 |
+| `npm run check:tests` | Gate | `tests/` 变更 |
+| `npm run check` | Gate | 默认 / 范围不确定 |
+| `npm run check:all` | 巡检 | 巡检前，或显式全量巡检 |
+| `npm run check:skill-release` | 发布 | 发布前，按 `repo-workflows/skill-release.md` |
+
+较窄条目对各自范围 fail-closed；不确定时**升级到更大范围**——绝不缩小验证。哪些门禁是 advisory 而非 fail-closed、通过各意味着什么，见 `AGENTS.md` § Validation。
 
 ## 提交约定
 
 英文 Conventional Commits：`feat(scope): subject` / `fix(scope): subject`。绝不提交生成的运行时输出（`.governance/validation.json`、`.governance/drift-report.json`、`.governance/release-proposal.json` 已被 git 忽略）。
+
+## AI 辅助贡献
+
+欢迎 AI 辅助开发。贡献者对理解、测试、评审与验证生成变更负最终责任。AI 输出不覆盖仓库的单一事实源文件、治理策略或验证要求。
+
+对可能敏感的安全问题，请勿在公开 issue 中发布机密或利用细节。
+
+## License
+
+[MIT](../../LICENSE) © 2026 Consciencieux

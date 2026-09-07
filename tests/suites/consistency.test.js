@@ -1047,6 +1047,34 @@ test("consistency --gate: synced CHANGELOG version section passes", () => {
   return !out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("newest version section"));
 });
 
+// v1.0.0 regression: the release advanced `"version": "1.0.0"` but left `"tag": "v0.15.0"`
+// in the manifest examples (SKILL.md + release.md). version_examples never looked at tag
+// values, so the pairing contradiction shipped green. The cluster now pairs adjacent
+// version/tag fields; pin both the fail and pass shapes here.
+test("consistency --gate: release example pairing version with mismatched tag fails", () => {
+  const dir = tmp("a5-tag-pair-stale");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs", "en"), { recursive: true });
+  write(path.join(dir, "docs/en/guide.md"),
+    '{\n  "schema_version": "1.0",\n  "governance_version": "1.0.0",\n  "release": { "version": "1.0.0", "tag": "v0.15.0", "validated": false }\n}\n');
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("pairs version 1.0.0 with tag v0.15.0"));
+});
+
+test("consistency --gate: matching tag pairing passes", () => {
+  const dir = tmp("a5-tag-pair-ok");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs", "en"), { recursive: true });
+  write(path.join(dir, "docs/en/guide.md"),
+    '{\n  "schema_version": "1.0",\n  "governance_version": "1.0.0",\n  "release": { "version": "1.0.0", "tag": "v1.0.0", "validated": false }\n}\n');
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return !out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("pairs version"));
+});
+
 // Generator sync points live outside .md files (mdFiles() cannot see them): init-spec.json
 // `governance_version.default` stamps every new governed project and generate-governance.js's
 // fallback sentinel is its last-resort default. A release that drifts either silently changes
@@ -1404,12 +1432,12 @@ test("consistency --release-gate: versioned changelog section satisfies coverage
   // out of this fixture's way — it tests coverage semantics, not version drift)
   write(path.join(dir, "package.json"), JSON.stringify({ version: "0.11.1" }));
   // daily state: [Unreleased] present with a category -> passes
-  write(path.join(dir, "CHANGELOG.md"), "## [Unreleased]\n\n### Added\n- x\n");
+  write(path.join(dir, "CHANGELOG.md"), "## [Unreleased]\n\n### Added\n\n- x\n");
   const daily = spawnSync(process.execPath, [CONSISTENCY, "--release-gate"], { cwd: dir, encoding: "utf8" });
   if (daily.status !== 0) return false;
   // the standard release step renames [Unreleased] -> [X.Y.Z] BEFORE the gate runs;
   // the gate must accept the versioned section (semantic: change is recorded)
-  write(path.join(dir, "CHANGELOG.md"), "## [0.11.1] - 2026-09-03\n\n### Added\n- x\n");
+  write(path.join(dir, "CHANGELOG.md"), "## [0.11.1] - 2026-09-03\n\n### Added\n\n- x\n");
   const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate"], { cwd: dir, encoding: "utf8" });
   return r.status === 0;
 });
@@ -1649,6 +1677,42 @@ test("generate-governance: partial init registry notes Phase C availability (ful
   spawnSync(process.execPath, [GENERATOR, "--target", dirC, "--project-name", "RegC", "--phase", "C"]);
   const c = fs.readFileSync(path.join(dirC, "AGENTS.md"), "utf8");
   return c.includes("review-manager") && !c.includes("**Availability:**");
+});
+
+// CHANGELOG 格式统一（lifecycle.policy.md § 格式统一）：版本节标题后必须空行、
+// 分类标题前后必须空行、列表项之间必须空行。v1.0.1 曾发现 32 个版本节混用两套
+// 空行风格（紧凑 `##`→`###`→item vs 空行分隔）；检查器现在对最新版本节强制统一格式。
+test("consistency --gate: changelog version heading without trailing blank fails", () => {
+  const dir = tmp("clfmt-head");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n### Fixed\n\n- one\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "changelog_coverage" && /format/.test(g.item));
+});
+
+test("consistency --gate: changelog adjacent list items without blank separator fails", () => {
+  const dir = tmp("clfmt-items");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n### Fixed\n\n- one\n- two\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "changelog_coverage" && /format/.test(g.item));
+});
+
+test("consistency --gate: properly formatted changelog section passes", () => {
+  const dir = tmp("clfmt-ok");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n### Fixed\n\n- one\n\n- two\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return !out.gateIssues.some((g) => g.kind === "changelog_coverage" && /format/.test(g.item));
 });
 
 };

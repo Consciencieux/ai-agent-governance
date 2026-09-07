@@ -51,6 +51,8 @@ AI 仅在前两阶段自动行动（分析 + 提案，只读）；任何写操�
 
 > 说明：生成的子技能 SKILL.md（`.governance/generated/skills/*/SKILL.md`）不携带 `version` 字段，因此不是版本同步点；被治理项目的版本同步是「package.json → CHANGELOG → manifest → tag」四处，由 `release-manager` 子技能 Phase 4 执行。
 
+> **tag-version 配对**：`tag` 的值必须与相邻的 `version` 配对（`"version": "X.Y.Z"` 旁应为 `"tag": "vX.Y.Z"`）——`manifest release 字段`示例及其他文档示例携带版本+标签对，二者矛盾即示例失真（v1.0.0 发布时曾把 tag 留在 v0.15.0、version 升到 1.0.0，示例因此自相矛盾）。已安装 `scripts/check-doc-consistency.js` 的项目由 `version_examples` 簇机械验证（fail-closed）；未安装者人工核对。
+
 SemVer：MAJOR.MINOR.PATCH —— 破坏性 → MAJOR，新能力 → MINOR，修复 → PATCH。
 
 ## Phase 1：Analyze（分析）
@@ -257,8 +259,8 @@ AI 不得自动创建 tag、自动 push tag、自动创建 release，除非：
 ```json
 {
   "release": {
-    "version": "1.0.0",
-    "tag": "v0.15.0",
+    "version": "1.0.1",
+    "tag": "v1.0.1",
     "validated": false
   }
 }

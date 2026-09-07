@@ -12,8 +12,7 @@ test("empty project exits 1 (governance missing)", () => {
   return r.status === 1;
 });
 
-test("full default structure exits 0 (defaults mode)", () => {
-  const dir = tmp("full");
+test("full default structure exits 0 (defaults mode)", () => {  const dir = tmp("full");
   buildFullDefault(dir);
 
   const r = run(dir, ["--json"]);
@@ -193,6 +192,65 @@ test("validator: malformed manifest.json falls back to defaults, exits 1", () =>
   // unparseable manifest => loadManifestChecks() returns null => defaults mode,
   // and "Governance version" cannot be read => must fail, never silently pass
   return r.status === 1 && r.stdout.includes("mode: defaults") && r.stdout.includes("Governance version");
+});
+
+// v1.0.0 pair regression: the release's manifest carried version 1.0.0 next to tag
+// v0.15.0 in the shipped examples (check-doc-consistency's pair check reaches .md only,
+// not JSON). checkReleaseMeta now enforces tag === "v" + version in the real manifest
+// file — the state a release reads. Both shapes pinned. Uses a manifest-mode fixture
+// (buildFullDefault has artifacts: [] so it runs DEFAULTS mode, where release is not
+// checked — a real governed project runs this check in manifest mode).
+function buildReleaseMetaFixture(dir, rel) {
+  const dirs = ["docs/features", "docs/plans", "docs/rules", ".governance", ".github/workflows", "scripts"];
+  for (const d of dirs) fs.mkdirSync(path.join(dir, d), { recursive: true });
+  write(path.join(dir, "AGENTS.md"), "x");
+  write(path.join(dir, "CHANGELOG.md"), "## [Unreleased]\n");
+  write(path.join(dir, "docs/ARCHITECTURE.md"), "# Arch\n\n## Component Registry\n\n| Component | Responsibility |\n| --- | --- |\n| auth | login |\n");
+  write(path.join(dir, "docs/features/auth.md"), "x");
+  write(path.join(dir, "docs/plans/DEVELOPMENT_PLAN.md"), "x");
+  write(path.join(dir, "docs/rules/lifecycle.md"), "x");
+  write(path.join(dir, ".gitignore"), "x");
+  write(path.join(dir, ".env.example"), "x");
+  write(path.join(dir, ".github/workflows/ci.yml"), "x");
+  write(path.join(dir, ".governance/state.json"), "{}");
+  write(path.join(dir, ".governance/preflight.json"), "{}");
+  const manifest = {
+    schema_version: "1.0",
+    governance_version: "1.0.0",
+    release: rel,
+    doc_root: "docs",
+    artifacts: [
+      { name: "AGENTS.md", path: "AGENTS.md", kind: "file" },
+      { name: "CHANGELOG.md", path: "CHANGELOG.md", kind: "file" },
+      { name: "Architecture doc", path: "docs/ARCHITECTURE.md", kind: "file" },
+      { name: "Feature registry", path: "docs/features", kind: "dir" },
+      { name: "Plans", path: "docs/plans", kind: "dir" },
+      { name: "Rules", path: "docs/rules", kind: "dir" },
+      { name: ".gitignore", path: ".gitignore", kind: "file" },
+      { name: ".env.example", path: ".env.example", kind: "file" },
+      { name: "CI workflow", path: ".github/workflows/ci.yml", kind: "file" },
+    ],
+  };
+  write(path.join(dir, ".governance/manifest.json"), JSON.stringify(manifest));
+  write(path.join(dir, ".governance/git-policy.json"), JSON.stringify({ protectedBranches: ["main", "master"], directPush: false, requireReview: true, allowForcePush: false }));
+  fs.copyFileSync(VALIDATOR, path.join(dir, "scripts/verify-governance.js"));
+  fs.copyFileSync(GIT_POLICY_CHECK, path.join(dir, "scripts/check-git-policy.js"));
+  fs.copyFileSync(SYNC_CHECK, path.join(dir, "scripts/check-sync.js"));
+  write(path.join(dir, ".governance/sync-rules.json"), JSON.stringify({ groups: [] }));
+}
+
+test("validator: manifest release tag must match its version", () => {
+  const dir = tmp("rel-tag-stale");
+  buildReleaseMetaFixture(dir, { version: "1.0.0", tag: "v0.15.0", validated: false });
+  const r = run(dir);
+  return r.status === 1 && r.stdout.includes("Release metadata");
+});
+
+test("validator: manifest release tag matching its version passes", () => {
+  const dir = tmp("rel-tag-ok");
+  buildReleaseMetaFixture(dir, { version: "1.0.0", tag: "v1.0.0", validated: false });
+  const r = run(dir);
+  return r.status === 0 && !r.stdout.includes("Release metadata ✗");
 });
 
 };

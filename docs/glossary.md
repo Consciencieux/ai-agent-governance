@@ -19,6 +19,12 @@
 | manifest | 清单（manifest） | 清單（manifest） |  |  |
 | maturity | 成熟度 | 成熟度 |  |  |
 | lifecycle | 生命周期 | 生命週期 |  |  |
+| repository-native | 仓库原生 | 倉庫原生 |  |  |
+| lifecycle-aware | 生命周期感知 | 生命週期可感知 |  |  |
+| fail-closed | 失败时默认阻断 | 失敗時預設阻斷 |  |  |
+| tool-neutral | 工具中立 | 工具中立 |  |  |
+| contract surface | 契约摘要 | 契約摘要 |  |  |
+| agent-specific | Agent 特定 | Agent 特定 |  |  |
 | change hygiene | 变更归位与残留清理 | 變更歸位與殘留清理 |  |  |
 | coding hygiene | 编码卫生 | 編碼衛生 |  |  |
 | root-cause repair protocol | 根因修复协议 | 根因修復協定 |  |  |

@@ -190,11 +190,16 @@ function checkReleaseMeta() {
     const rel = m.release;
     if (rel === undefined || rel === null) return null; // not declared -> no check
     if (typeof rel !== "object") return false;
-    return (
+    const shapeOk =
       typeof rel.version === "string" &&
       typeof rel.tag === "string" &&
-      typeof rel.validated === "boolean"
-    );
+      typeof rel.validated === "boolean";
+    if (!shapeOk) return false;
+    // Tag-version pairing: the tag must be the version with a leading "v" — a manifest
+    // carrying version 1.0.0 next to tag v0.15.0 (the v1.0.0 release's own contradiction,
+    // which the .md example check in check-doc-consistency.js does not reach: JSON is
+    // outside mdFiles()) is a factual defect in the state file a release reads.
+    return rel.tag === "v" + rel.version;
   } catch {
     return false;
   }

@@ -210,7 +210,7 @@ Core principle: AI analyzes and proposes; the developer authorizes; no release o
 - `git.require_clean_status`: `git status --porcelain` empty
 - `tests.required`: test command exit 0
 - `changelog.required`: CHANGELOG records the change
-- `version.manifest_match_tag`: `package.json.version` == `CHANGELOG` top version == `manifest.governance_version` == tag `v<version>`
+- `version.manifest_match_tag`: `package.json.version` == `CHANGELOG` top version == `manifest.governance_version` == tag `v<version>` (tag-version pairing — the manifest example's `"tag"` must match its `"version"`; `scripts/check-doc-consistency.js --gate` fails closed on a mismatch)
 - `release.tag_required`: target tag does not exist yet (`git tag -l <tag>`)
 - `release.proposal_approved`: a Release Proposal was generated and the developer explicitly approved it
 - `release.review_satisfied`: Proposal risk/review metadata is valid; a high-risk Proposal has `reviewStatus` set to `completed` or `explicitly-approved`

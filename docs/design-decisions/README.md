@@ -14,5 +14,6 @@
 | [ADR-0007](adr-0007-plan-layering-orthogonal-triggers.md) | 治理计划分层独立与正交触发（工程克制 × 反补丁） | Accepted |
 | [ADR-0008](adr-0008-trigger-inventory-commands-md-exception.md) | 触发词清单复制的规则冲突裁定（commands.md 例外） | Accepted |
 | [ADR-0009: 索引与事实源的边界](adr-0009-index-vs-fact-source.md) | roadmap/里程碑是索引、计划是事实源；本仓库机械验证、被治理项目仅文档约束 | Accepted |
+| [ADR-0010: 文档分层与入口层边界](adr-0010-entry-layer-boundary.md) | README/CONTRIBUTING 是入口层，不承担事实库职责；稳定契约可写但链接权威源 | Accepted |
 
 状态：Proposed / Accepted / Superseded / Deprecated。

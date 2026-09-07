@@ -16,7 +16,7 @@
 - 校驗器內容檢查 —— CHANGELOG 格式 + manifest `artifacts[].kind` 有效性
 - Git 工作流程治理 —— `.governance/git-policy.json` + `scripts/check-git-policy.js`（受保護分支、分支開發、禁止直推）
 - Agent 行為稽核 —— 追加式 .governance/activity.jsonl 逐任務稽核軌跡 + drift-check `activity-report` 模式
-- 密鑰掃描閘門 —— scripts/check-secrets.js 阻止暫存區密鑰類內容（校驗器 21 項）
+- 密鑰掃描閘門 —— scripts/check-secrets.js 阻止暫存區密鑰類內容（校驗器閘門）
 - 治理健康分 —— 校驗器 `--json` 輸出綜合 `score`（v1 等權）+ CI 產出 shields.io 徽章 endpoint 工件
 - 知識新鮮度 —— `scripts/check-doc-freshness.js` 經 `git log` 提交日期標記過時治理文件，並按來源/譯文對派生譯文新鮮度（建議性；`--release-gate` 阻斷過時或 draft 譯文）
 - 內容一致性 —— `scripts/check-doc-consistency.js` 標記文件間交叉矛盾（版本示例/受保護清單/ADR 狀態/roadmap 目標/連結/數值聲明；預設建議性；consent/受保護清單/原則索引/計劃狀態/術語簇在 `--gate`/`--release-gate` 下 fail-closed，changelog 覆蓋僅 `--release-gate` 下 fail-closed）
@@ -26,7 +26,7 @@
 - **INIT 生成器腳本化** —— 確定性、可快照測試的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期。設計：[../archive/init-scripted-generator.md](../archive/init-scripted-generator.md)
 - **計劃交付閘門** —— `repo-tools/check-plan-delivery.js`：計劃與實際交付的機械對帳（歸檔前 fail-closed）；錨點語法（`— anchor: `snippet``）對已存在文件的宣告按**內容**驗證，而非僅存在性。設計：[../archive/plan-delivery-anchors.md](../archive/plan-delivery-anchors.md)
 - **計劃歸檔閘門** —— 規範計劃狀態關鍵詞（design/active/implemented/completed/archived）+ release 作用域的待歸檔閘門（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修復（`####` 子節不再截斷）
-- **安裝載荷完整性閘門** —— 3 項測試證明複製的閘門腳本自包含（無兄弟 `require`）且 `init-spec.json` 的複製清單與 INIT 實際寫入一致
+- **安裝載荷完整性閘門** —— 測試證明複製的閘門腳本自包含（無兄弟 `require`）且 `init-spec.json` 的複製清單與 INIT 實際寫入一致
 - **確認政策重寫** —— 跨五個同步點提交前一次確認；計劃批准降為意圖對齊（`consent-policy-hardening` 計劃）
 - **治理原則索引** —— 26 條原則的純指標索引 + 一個 `--gate` 檢查保持每條來源可解析
 - **規則捕獲** —— 不讓口頭要求只活在對話上下文裡：Agent 對每條要求預分類（持久 / 一次性 / 模糊），開發者在 Phase 6 裁定，確認的規則寫入 `AGENTS.md` / `docs/rules/**`，未確認的在行為軌跡裡留 `rules_pending` 痕跡。設計：[../archive/rule-capture.md](../archive/rule-capture.md)
@@ -38,7 +38,7 @@
 - **範圍分級驗證 + 證據層級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 條目與 AGENTS.md 範圍表一致；`--release-gate` 僅用於發佈阻斷。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **分發角色完備閘門** —— `references/` 與 `scripts/` 下每個檔案都攜帶唯一宣告角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 驗證（無未分類檔案、無重疊、無陳舊宣告、打包邊界一致）。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **閘門分級 + 證據等級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口依變更範圍匹配，每個閘門的產出標註為機械 / 人工背書 / 未驗證，使綠色結果不被讀成超出其實際證明力的結論。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
-- **物理分發邊界** —— 倉庫維護內容不再隨 tarball 發給技能用戶：7 個 repo-only 檔案（skill 發佈流程、打包腳本、五個倉庫專屬閘門）從 `references/` 與 `scripts/` 移入打包步驟無法觸達的 `repo-tools/` 與 `repo-workflows/`。角色閘門反向檢查 + 完整 tarball 清單相等性測試保證「宣告」與「打包」是同一事實。設計：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
+- **物理分發邊界** —— 倉庫維護內容不再隨 tarball 發給技能用戶：repo-only 檔案（skill 發佈流程、打包腳本、倉庫專屬閘門）從 `references/` 與 `scripts/` 移入打包步驟無法觸達的 `repo-tools/` 與 `repo-workflows/`。角色閘門反向檢查 + 完整 tarball 清單相等性測試保證「宣告」與「打包」是同一事實。設計：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
 - **發佈流程按受眾拆分** —— `release.md` 僅覆蓋被治理專案發佈；本倉庫自身的流程在內聚自足的 `repo-workflows/skill-release.md`（SemVer 判定、分級審核、事務性條款內聯承載）。設計：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
 - **INSTALLED 內容專案可移植化** —— 載荷規則正文不再混用受眾：沒有 package.json 的專案不再出現 `npm run` 命令、無技能倉庫 docs 路徑、無無條件三語義務、無懸空指標。設計：[../archive/content-audience-portability.md](../archive/content-audience-portability.md)
 

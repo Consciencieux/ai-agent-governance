@@ -223,7 +223,36 @@ function changelogCoverage(releaseGate) {
     seen.set(m[1], (seen.get(m[1]) || 0) + 1);
   }
   const duplicateCategories = [...seen].filter(([, n]) => n > 1).map(([name]) => name);
-  return { applicable: true, duplicateCategories, ok: /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) && duplicateCategories.length === 0 };
+  // Unified section format (lifecycle.policy.md § CHANGELOG 结构契约 格式统一): the
+  // version heading must be followed by a blank line, every category heading must have a
+  // blank line before AND after it, and list items under a category must be separated by
+  // blank lines. The v1.0.x audit found 32 version sections mixing two styles (compact
+  // `##`→`###`→item vs spaced) — the section scanner sees only the newest section, so
+  // the format is enforced on the section being edited, not on history.
+  const secLines = sec.split(/\r?\n/);
+  const formatIssues = [];
+  for (let i = 0; i < secLines.length; i++) {
+    const line = secLines[i];
+    const isVersionHead = /^##\s+\[[^\]]+\]/.test(line);
+    const isCatHead = /^###\s+/.test(line);
+    const isItem = /^-\s+/.test(line);
+    const prev = secLines[i - 1];
+    const next = secLines[i + 1];
+    if (isVersionHead && next !== undefined && next !== "") {
+      formatIssues.push(`version heading not followed by a blank line (line ${i + 1})`);
+    }
+    if (isCatHead && (prev === undefined || prev !== "")) {
+      formatIssues.push(`category heading "${line}" not preceded by a blank line (line ${i + 1})`);
+    }
+    if (isCatHead && (next === undefined || next !== "")) {
+      formatIssues.push(`category heading "${line}" not followed by a blank line (line ${i + 1})`);
+    }
+    if (isItem && prev !== undefined && prev !== "" && /^-\s+/.test(prev)) {
+      formatIssues.push(`list items not separated by a blank line (lines ${i} and ${i + 1})`);
+    }
+  }
+  const ok = /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) && duplicateCategories.length === 0 && formatIssues.length === 0;
+  return { applicable: true, duplicateCategories, formatIssues, ok };
 }
 
 // #12 terminology gate: docs/glossary.md is the term authority. Its optional
@@ -319,10 +348,13 @@ function main() {
     const dup = (changelog.duplicateCategories || []).length > 0
       ? " (duplicate category heading(s): " + (changelog.duplicateCategories || []).join(", ") + ")"
       : "";
-    const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)" + dup;
+    const fmt = (changelog.formatIssues || []).length > 0
+      ? " (format: " + changelog.formatIssues.join("; ") + ")"
+      : "";
+    const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)" + dup + fmt;
     issues.changelog_coverage.push(item);
     // Structure defects fail CLOSED in both modes; "no record yet" only blocks at release.
-    if (releaseGate || (changelog.duplicateCategories || []).length > 0) gateIssues.push({ kind: "changelog_coverage", item });
+    if (releaseGate || (changelog.duplicateCategories || []).length > 0 || (changelog.formatIssues || []).length > 0) gateIssues.push({ kind: "changelog_coverage", item });
   }
 
   // ---- 1. version-example sync ----
@@ -335,6 +367,27 @@ function main() {
       let m;
       while ((m = re.exec(c))) {
         if (m[1] !== version) issues.version_examples.push(`${f}:${m[1]} != ${version}`);
+      }
+      // tag-version pairing: a `version` value paired with an adjacent `tag` value must
+      // agree (`tag` = `"v" + version`). The v1.0.0 release kept `"tag": "v0.15.0"`
+      // beside `"version": "1.0.0"` in the manifest examples (SKILL.md S3.2, release.md
+      // S5) and shipped green — version_examples only compared against the current
+      // version, never the adjacent tag. Match only INSIDE `{ ... }` object blocks with
+      // `"version"` and `"tag"` as neighbouring slots: a narrative HISTORY quote
+      // (release.md S2 "v1.0.0 曾保留 …" describes the bug, it does not assert it) lives
+      // in prose without an object block and must never be paired — first run of this
+      // checker matched that prose across 200 lines and failed the current tree.
+      const pairRe =
+        /\{[^{}]*"version"\s*:\s*"(\d+\.\d+\.\d+)"[^{}]*?\n?[^{}]*?"tag"\s*:\s*"(v\d+\.\d+\.\d+)"[^{}]*\}/g;
+      let pm;
+      while ((pm = pairRe.exec(c))) {
+        const ver = pm[1];
+        const tag = pm[2];
+        if (tag !== "v" + ver) {
+          const item = `${f}: release example pairs version ${ver} with tag ${tag} (tag must match the adjacent version)`;
+          issues.version_examples.push(item);
+          if (anyGate) gateIssues.push({ kind: "version_examples", item });
+        }
       }
       // YAML frontmatter carries an UNQUOTED `version: X.Y.Z`, which the regex above cannot
       // match (its "version" alternative requires literal double quotes). SKILL.md's

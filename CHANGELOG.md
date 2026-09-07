@@ -2,8 +2,17 @@
 
 All notable changes to this project will be documented here.
 
-
 ## [Unreleased]
+
+## [1.0.1] - 2026-09-08
+
+### Fixed
+
+- **v1.0.0 release left two manifest examples contradicting themselves** — `SKILL.md` and `references/workflows/release.md` carried `"version": "1.0.0"` next to a dormant `"tag": "v0.15.0"` (only the version was advanced in the release). The `version_examples` cluster never looks at tag values, so the contradiction shipped green. The tag fields are now corrected and the cluster gained a tag-version pairing check: a release example pairing a version with a mismatched tag fails the gate (fail-closed under `--gate`/`--release-gate`), with a mutation test reproducing the exact v1.0.0 shape. The rule texts were also synchronized — skill-release.md's and release.md's version-consistency sections, AGENTS.md's release line and the generated release-manager requirement now state the pairing rule explicitly, so both this repo's own flow and every governed project's flow carry it (no memory reliance). The real governed-project state file (`.governance/manifest.json`, JSON outside mdFiles()) is now also enforced: `verify_governance.js`'s Release metadata check requires `tag === "v" + version` (fail-closed in default manifest mode, mutation-tested against the exact v1.0.0 shape).
+
+- **packaging metadata test was stale against the post-split layout — and against the evolved defence stack** — the `packaging: metadata surviving the copy step` test invoked `repo-tools/package-skill.sh` from a mini-repo that never copied the script into its `repo-tools/` (the boundary split moved it from `scripts/`; the fixture's dir list predates it), and weakened the old cleanup lines by name while the defence had evolved to stack (COPYFILE_DISABLE/#-X/find-strip/tar flag detection/final JUNK grep) — on macOS tar auto-drops `._*` even unflagged, so no single weakened line can reintroduce junk. The test now copies the moved script and asserts the behavioural invariant: a `._probe` planted in a shipped dir never reaches the tarball.
+
+- **CHANGELOG format was not unified across all 32 version sections** — `[0.14.1]` and older used a compact style (`## [X]` followed directly by `###`, categories and list items with no surrounding blank lines) while the newer sections used the spaced Keep-a-Changelog style, so the file mixed two formats. `lifecycle.policy.md` § CHANGELOG 结构契约 now carries a 格式统一 rule (version heading followed by a blank line · category heading surrounded by blank lines · list items separated by blank lines), the `changelogCoverage` cluster enforces it on the newest section (fail-closed under `--gate`/`--release-gate`, mutation-verified), and all 32 sections were reformatted to the single style with zero content change (verified by non-blank-line diff).
 
 ## [1.0.0] - 2026-09-07
 
@@ -82,7 +91,9 @@ All notable changes to this project will be documented here.
 - **The hooks' POSIX-purity check was vacuous on Windows** — fixed alongside the above: `sh -n` was supposed to prove the generated `.githooks/*` stay POSIX, but the same sh.exe-is-bash fact means it accepts every bashism. `sh -n` stays (it does catch syntax errors); a static bashism scan was added alongside it — shebang shape plus `[[ ]]`, `pipefail`, here-strings, array expansion, `function` keyword, `echo -e`, `source` — because that judgement is decidable on every platform.
 
 ## [0.14.0] - 2026-09-06
+
 ### Changed
+
 - **Governed projects get a graded plan/milestone reconciliation, not a full plan-governance subsystem** — the lifecycle policy says "tick the milestone when the task completes", but a documented rule with no failure feedback is the shape that keeps failing: an agent updates `TASK_<name>.md` and forgets `DEVELOPMENT_PLAN.md`. This repo hit the same class three times, so the risk is real in AI-maintained governed projects too — but that does not justify turning every commit into a plan-governance check. New INSTALLED gate `scripts/check-plan-sync.js` (Phase C) verifies exactly three decidable relations: an implemented TASK plan is named by some milestone · an archived plan is not pointed at by an UNCHECKED milestone · a milestone naming a TASK plan names one that exists. Three constraints keep it proportionate: **structure-compatible** (no `docs/plans/` or no `DEVELOPMENT_PLAN.md` → not applicable, exit 0; it never forces a project into this skill's layout), **timing-limited** (advisory by default, fail-closed only under `--release-gate`, wired into the governed-project release flow at Phase 4 step 3 — it catches "forgot to sync before release", not every commit), and **minimal in scope** (whether a milestone description is accurate, whether the task is genuinely done, and whether a link is semantically right stay human judgement — mechanising them would only manufacture false positives).
 
 - **ADR-0009 revised: the two domains now differ by enforcement GRADE, not by presence** — the first version recorded "this repo mechanises it, governed projects get documentation only". That was the right call on the evidence available then; the follow-up analysis showed the underlying failure mode (a rule with no failure feedback) applies to AI-maintained governed projects too. The ADR now records the graded model and the split it rests on: mechanically verified facts (file exists, status is canonical, versions agree, plans and milestones agree **before release**) versus judgements left to documentation (milestone accuracy, genuine completion, semantic correctness of a link).
@@ -96,8 +107,11 @@ All notable changes to this project will be documented here.
 - **Three design plans triaged after v0.13.2 review** — `plan-delivery-anchors` implemented (see above); `consent-and-change-hygiene` rewritten: its risk-tiering section was already implemented by the release flow, and its consent section merged with the long-deferred C6 (review-evidence binding) gap because both are the same defect (an authoritative statement is self-attested at the point of writing); `skill-lifecycle-management` archived — §1 (SKILL.md frontmatter version) was delivered long ago and is now one of the five release sync points, and the rest of the work lives in the external `ai-skill-manager` repo (Issue #1), so this repo has no deliverable left. Roadmap pointers updated in all three languages.
 
 ## [0.13.2] - 2026-09-06
+
 ### Changed
+
 - **Version synchronisation now advances all five release sync points** — package.json, SKILL.md frontmatter, `references/init-spec.json` `governance_version.default`, the generator fallback sentinel and the CHANGELOG version section, plus the manifest version examples that `version_examples` checks in SKILL.md and `references/workflows/release.md`. The v0.13.1 release advanced three of them; the backstops added afterwards caught the remaining two during this release rather than after it.
+
 ### Fixed
 
 - **The plan-delivery checker could not see the two new repo trees** — `SEARCH_ROOTS` named `references, scripts, tests` plus a few root files, so an identifier wired into `repo-tools/` or `repo-workflows/` (where six gates and the release flow moved in the boundary split) would have been reported as never delivered. Same defect class as the hygiene scan gap fixed alongside it and the release sync points fixed after v0.13.1: a file move leaves an enumeration behind, and nothing mechanically notices. The roots now include both new trees, and the self-exclusion comparison is normalised to one separator — two stale assumptions had been cancelling out: the exclusion path's pre-move spelling, `scripts/check-plan-delivery.js`, never matched on Windows, and after the move it named a path that no longer exists anywhere.
@@ -119,7 +133,9 @@ All notable changes to this project will be documented here.
 - **`skill-release.md` release gates moved ahead of the release commit** — the `check:skill-release` run (with `--release-gate`) previously executed AFTER the release commit (old step 7), so a pending-archive or changelog-coverage failure arrived after the commit existed; it now runs before archiving and committing (new step 3, alongside plan-delivery reconciliation), with a lighter `npm run check` re-run after the commit (new step 7). A recovery clause (git log + release-proposal.json as the resume evidence, never redo completed steps) was also added to the transactionality section, matching what `release.md` has always required of governed projects.
 
 ## [0.13.1] - 2026-09-05
+
 ### Changed
+
 - **The distribution boundary is now physical, not declarative — repo maintenance content no longer ships to users** — `package-skill.sh` copies `references/` and `scripts/` wholesale, so a file shipped to every tarball user purely by living in one of those directories, whatever role `init-spec.json` declared for it. Measured before the fix: 45% of the tarball by weight (7 files, ~51 KB) was this repository's own maintenance content — `skill-release.md` (which names this repo's npm scripts, its `package.json`, its trilingual roadmap and its archive), `package-skill.sh` (hardcodes THIS skill's tarball name) and five gates no executor reference ever mentions (`check-doc-parity`, `check-plan-delivery`, `check-layout-sync`, `check-role-completeness`, `check-coding-hygiene`). `check-role-completeness` had been proving the wrong thing: "the declared roles are consistent with a directory-based copy", never "the tarball carries only what should be distributed". The seven files moved to two new repo-only trees — `repo-tools/` (gates + packaging) and `repo-workflows/` (this repo's release flow) — which the packaging step physically cannot reach. `distribution.skillInternal` shrank from 10 entries to 3 (`references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`). Packaging stays a plain directory copy: no per-file role filter was added, because the directory layout is now the boundary itself.
 
 - **Two mechanical assertions now keep declarations and packaging the same fact** — the role gate gained a REVERSE check (any file under `repo-tools/` or `repo-workflows/` appearing in `artifacts` or `distribution.skillInternal` fails), and a new payload test compares the COMPLETE tar member list against the declared allow-set `{SKILL.md, LICENSE} ∪ artifacts[*].source ∪ distribution.skillInternal` — equality in both directions, plus a forbidden-prefix assertion that is recursive rather than top-level (every pre-split leak sat BELOW the four shipped roots while the top level looked clean). Verified by mutation: putting a repo-only file back under `references/`, or declaring a `repo-tools/` file as distributed, each turns two tests red. The layout gate now scans `repo-tools/` and `repo-workflows/` too, so repo tooling cannot accumulate undocumented.
@@ -133,6 +149,7 @@ All notable changes to this project will be documented here.
 - **The two-axis model (distribution role vs portability) is documented** — `docs/{en,zh-CN,zh-TW}/architecture.md` now separates *where a file goes* from *whether its content holds where it is read*, with the four-audience table, per-file portability examples, and the three rules that follow (INSTALLED content must be project-portable · validate in the execution environment, never the authoring one · stage-portability is part of it).
 
 - **Reference-closure check is now a stated obligation, not a lesson learned twice** — asked whether this repo's rules and the governed-project rules were mixed together, two successive answers classified files, named single sources of truth, reported green gates and concluded the boundary was sound. The third question — "does every reference resolve in the target environment?" — found 18 real defects. The difference was not diligence: nothing in `AGENTS.md`, `SKILL.md` or the policies had ever asked for a reference closure, so a directory inventory satisfied the letter of the rules. Three landing points now require the route to be walked instead of the map to be read: `AGENTS.md` § Reference-closure check (repo contributors — reference closure, stage closure, clean-target verification, forbidden reverse edges, plus the standing warning that gates verify declarations and never closure), `SKILL.md` § Audit 流程 step 3 (a skill executor auditing a governed project must confirm that what `AGENTS.md` / `docs/rules/*` / the generated sub-skills reference actually resolves THERE — artifact-existence checking does not cover a rule file that exists in full and points at nothing), and the principles index so the rule is discoverable at all.
+
 ### Fixed
 
 - **Review remediation for the boundary split (3 findings)** — (1) the parity delegate in `scripts/check-doc-consistency.js` still probed only `scripts/check-doc-parity.js`, a path the split emptied: in this repo the trilingual-parity delegation silently reported `parity: "unavailable"` while its own header comment and the no-parity test fixture already described the repo-tools shape. The guard now probes candidate paths in order (`repo-tools/` first, then `scripts/`) and still no-ops in a governed project where neither exists — both candidates are pinned by tests. (2) `AGENTS.md` still described `skill-release.md` as "SKILL-INTERNAL (ships in the tarball)", wording left over from before the move; it is REPO-ONLY under `repo-workflows/` and never ships. (3) T5.5 of the boundary-split plan is delivered: a release-suite test confines `references/workflows/release.md` mentions in `skill-release.md` to audience-marked usage-boundary pointers and is self-mutation-verified — a reintroduced rule citation fails it.
@@ -190,7 +207,9 @@ All notable changes to this project will be documented here.
 - **Declaration parsing covered only three of seven shapes** — ordered lists, inline prose enumerations, indented code blocks and any second block in the same section all evaded the protected-files check; because an unparsed shape yields "declares nothing", it also collapsed the completeness rule, not just the stale-entry rule. All four shapes are now parsed. The governance-path matcher also stopped under-matching (`verify_governance.js` and any script not named `check-*`/`verify-*` were invisible) and over-matching (`.github/workflows-backup/` was swept in), and directory coverage now handles a slash-less `docs/rules**`.
 
 - **`references/` was never in the consistency scan set** — the file list was four top-level files plus `docs/`, so the INSTALLED policy and template bodies — including the agents-md template that becomes every governed project's AGENTS.md — were never examined by any cluster. This, not wording or block shape, was why the template stayed exempt after its section already parsed correctly. Adding the tree immediately surfaced a real stale version example in `references/workflows/release.md` (0.8.0), now fixed.
+
 ### Changed
+
 - **`scripts/release-manager.js` adjudicated from SKILL-INTERNAL to INSTALLED** — the generated release-manager sub-skill invokes it three times, but INIT never installed it, so a governed project's release flow stopped at the tag step on a missing file. The script requires no sibling module and reads nothing from the skill repo (its only `references/` mention is a comment), so it satisfies the self-containment invariant and the classification was simply wrong. Removing the calls instead was rejected: it would have taken `--yes`, the headSha binding and the clean-tree recheck out of the release path, i.e. traded a broken flow for a weakened one. Roles are now INSTALLED 23 / SKILL-INTERNAL 9 / undecided 0.
 
 - **prompt-sync is now a gate cluster and checks both directions (ADR-0008)** — the trigger inventory in `commands.md` was simultaneously forbidden by AGENTS.md's "never restate skill content" rule and mandated by the sync-group rule, while the check itself was advisory and only detected missing entries. ADR-0008 adjudicates the conflict: the inventory is a deliberate, controlled copy with authority staying in the skill sources. The cluster is fail-closed under `--gate` and now also reports a trigger the manual advertises that no skill source declares. Main-skill mode triggers (`SKILL.md`) and sub-skill triggers (`sub-skills.md`) are both recognized as authorities.
@@ -202,24 +221,31 @@ All notable changes to this project will be documented here.
 - **`release-manager.js execute` no longer lets a signed tag imply "reviewed"** — `reviewStatus` is a caller-supplied string and `plan` never emits `completed`, so the high-risk guard verifies a declaration, not that a review happened. It now says so explicitly on stderr. Binding it to verifiable review evidence needs a review-evidence artifact and workflow, which today's requirement does not independently justify — deferred rather than invented.
 
 ## [0.13.0] - 2026-09-05
+
 ### Added
+
 - **Repository-owned line endings** — new `.gitattributes` (`* text=auto eol=lf`, `*.sh` forced LF, binary suffixes marked) plus the matching rule in `references/policies/coding.policy.md`. The index was already 100% LF, but only because contributors happened to have compatible `core.autocrlf` values — a machine configured differently could commit CRLF blobs and turn later diffs into whole-file changes.
 
 - **Distribution-role completeness gate** — new `scripts/check-role-completeness.js` (SKILL-INTERNAL, wired into `npm run check` via `--gate`): every file under `references/` + `scripts/` must be classified as INSTALLED (in `init-spec.json` artifact `source`) or SKILL-INTERNAL (in `distribution.skillInternal`); no overlap, no stale declarations, and the packaging boundary (`package-skill.sh` copy list) must match the union of both roles. Two previously unclassified files (`governance-files.policy.md`, `feature-doc.template.md`) adjudicated into INSTALLED — the former is the protected-files list that the installed `check-doc-consistency.js` reads at runtime (now also installed as `docs/rules/governance-files.md`), the latter is the feature-doc template `SKILL.md` already tells agents to copy.
 
 - **Scope-tiered verification entries** — `npm run check:docs` / `check:payload` / `check:tests` / `check:full` supplement the full `npm run check`, so agents can run only the gates relevant to their change scope. `AGENTS.md` validation section rewritten with a scope table, evidence tiers (mechanical / human-attested / unverified), and an "escalate on uncertain scope" rule.
+
 ### Changed
+
 - **Test helper consolidation (anti-patch plan §3, batch 2)** — the 17 helper functions and 7 path/text constants that batch 1 left duplicated between `tests/run-tests.js` and the suites now live once in `tests/support/helpers.js`; the entry is down to 56 lines (runner + summary + support mirroring) and every duplicate definition is gone.
 
 - **`check-doc-consistency.js` evidence tiers** — `--json` output now includes an `evidence` field mapping each cluster to `mechanical` / `human-attested` / `unverified`. Responsibility frozen: new checks may only be added when existing scripts cannot host them.
 
 - **`docs/{en,zh-CN,zh-TW}/architecture.md`** — distribution-role table no longer carries hand-maintained counts (point to `check-role-completeness.js --gate` output instead). `docs/{en,zh-CN,zh-TW}/bootstrap-output.md` — Phase A artifact table updated to reflect the two new INSTALLED files.
+
 ### Fixed
 
 - **`check-doc-consistency.js` principles-index false positive** — check 9 scanned every Markdown table row in `AGENTS.md` for backticked paths, so the scope-tiering table's `architecture.md` (a bare filename in a "when to use" cell, not a pointer) was read as a broken index pointer and turned `npm run check` red. The scan is now scoped to rows whose Scope column holds a known value (`payload` / `both` / `repo`), which is what distinguishes the principles index from the other tables in the file.
 
 ## [0.12.0] - 2026-09-04
+
 ### Added
+
 - **Terminology gate** — `docs/glossary.md` gains optional `Forbidden zh-CN` / `Forbidden zh-TW` columns registering renderings that must not appear in that language tree (e.g. protocol: zh-TW uses 協定, never 協議). `scripts/check-doc-consistency.js` scans the language trees and reports `terminology_usage`, fail-closed under `--gate`/`--release-gate`, with a per-line escape hatch `<!-- i18n: allow X -->` for deliberate source-form quotes (trigger words stay unregistered by policy). Structural parity could never catch this class: term drift and simplified/traditional leaks are structurally identical. No glossary (governed projects) → the check no-ops.
 
 - **Coding hygiene gate** — new `scripts/check-coding-hygiene.js`, wired into `npm run check`: fail-closed on monolith test registration in `tests/run-tests.js` (any quote style) and on an empty `tests/suites/*.test.js` (tests lost during migration); ownerless `TODO`/`FIXME`/`HACK` markers are advisory only. It ships inside the tarball because packaging copies `scripts/` wholesale, but is NOT declared in `init-spec.json` — run outside this repo's suite layout it reports `applicable: false` and exits 0. Anti-patch plan §5 mechanical subset; the non-mechanizable claims (root cause correctness, semantic quality of a fix) are explicitly refused rather than faked.
@@ -229,15 +255,23 @@ All notable changes to this project will be documented here.
 - **Engineering restraint (machinery test)** — `references/policies/coding.policy.md` gains a compact Engineering Restraint / Machinery Test section: unapproved machinery must justify itself ("if this did not exist today, would current requirements independently justify it?"), approved requirements always win (conflicts escalate, never silently trim), and semantic seams stay legal. `SKILL.md` points at it. Deliberately no new gate, field, review step, plan section, or distribution surface — the section ships through the existing docs/rules copy channel.
 
 - **Root-cause repair protocol + failure budget** — `references/policies/lifecycle.policy.md` gains the repair-domain protocol (anti-patch plan §1–2): reproduction-first plan fields for medium/large bug fixes, regression test must fail before the fix, `repairSessionId` binding (attempts grouped, reset only by developer adjudication), failure budget with escalation levels (1st re-understand, 2nd expand + review-manager, 3rd stop and re-plan), and evidence-based success criteria (gates pass with real output, not "last command green"). Ships to governed projects via docs/rules/lifecycle.md.
+
 ### Changed
+
 - **Test architecture split** — the 2503-line `tests/run-tests.js` monolith became a single discovery entry (runner + shared helpers + summary) plus eight domain suites under `tests/suites/` (validator, security, consistency, docs, release, generator, payload, hygiene). Migration was verbatim and set-reconciled: the 180 pre-split test names match the post-split set exactly (0 missing, 0 extra), then grew to 193 with the hygiene, role-completeness and payload coverage. Batch 2 (consolidating shared helpers into `tests/support/`) is deliberately deferred — the shared scope is preserved so behavior and output stay identical. Anti-patch plan §3.
 
 - **ADR-0007** records the governance-plan architecture: engineering restraint and anti-patch stay independent with orthogonal trigger conditions (adding machinery vs handling repeated failure), bridged by boundary clauses only — no hierarchy, no third authority source.
+
 ### Fixed
+
 - zh-TW simplified-character leaks corrected (模板→範本 in architecture/bootstrap-output, 检查→檢查 and 安装→安裝/扫描→掃描/意图→意圖 in skill-discovery and the skill-lifecycle plan) — surfaced by the terminology registration scan; the gate itself flagged the 模板-class leak on its first run.
+
 - `docs/en/commands.md` was left out of the v0.11.3 trigger realignment; it is now recorded as reviewed against the source commit.
+
 - SKILL.md embedded manifest examples still showed 0.11.2 after the v0.11.3 release.
+
 - **Review fixes for both gates**:
+
   - Translation freshness no longer false-blocks the documented workflow — source and translation edited in ONE uncommitted changeset are "in flight", not stale (previously every pre-commit release-gate run of a normal doc task failed).
   - An untracked translation reports its own `uncommitted` status instead of silently passing as `translated`; a recorded `i18n-reviewed` marker that no longer covers the source goes `stale` again; `reviewCoversSource` now uses `merge-base --is-ancestor`, so a descendant or bogus SHA can never claim coverage.
   - The glossary parser is fail-closed: aligned separator rows (`:---:`) are no longer misregistered as forbidden variants, each table re-declares its header, and a glossary that exists but cannot be parsed is REPORTED as a governance data defect instead of silently disabling the gate. The report gains a `termsRegistered` count (proof the parser ran).
@@ -245,10 +279,13 @@ All notable changes to this project will be documented here.
   - Docs sync: drift-check freshness/consistency mode text no longer claims "NEVER a gate / exit 0 always"; lifecycle, AGENTS.md and init-spec labels state the fail-closed forms; the glossary documents the trigger-word registration policy and the in-table limitation of the exemption marker; the plan ×3 reflect the delivered enforcement strength.
   - Two vacuous assertions in the new tests (same-commit `why`, positive parser-run marker) were themselves defective and are fixed.
 ## [0.11.3] - 2026-09-04
+
 ### Added
+
 - **Generated-skill integrity check** — `scripts/verify_governance.js` now verifies every subdirectory of `.governance/generated/skills/` carries its `SKILL.md` (via `lstat`, so a symlinked SKILL.md is not counted); deleting one skill's file is no longer masked by a directory-only manifest entry. Manifest artifact paths are also containment-checked via `realpath`, so a crafted `.governance/manifest.json` cannot turn the validator into an out-of-tree stat or let an in-tree symlink point outside ROOT.
 
 - **Doc-only exemption in changelog coverage** — a change touching only project knowledge docs (`docs/**` — **not** `docs/rules/**`, which are governed-project rule files), README, CONTRIBUTING, AGENTS.md, CHANGELOG or LICENSE no longer triggers the "changelog required" report (repo rule: doc-only edits carry no CHANGELOG entry); mechanism changes (`references/`, `scripts/`, `SKILL.md`, `package.json`, `.github/`, `docs/rules/` in governed projects) still require it.
+
 ### Fixed
 
 - **Phased-init contract** — the generated skill registry now states that skill files under `.governance/generated/skills/` are written in Phase C (entries are reference-only until a complete init), instead of silently advertising unloadable entries after Phase A/B.
@@ -262,6 +299,7 @@ All notable changes to this project will be documented here.
 - **Changelog-coverage cluster attribution** — the changelog coverage check is fail-closed only in `--release-gate`; docs (architecture.md, roadmap.md) now state that accurately.
 
 - **Whole-project review findings** (lightweight audit, 5 domains — all verified before fixing):
+
   - *Fixed*: `init-spec.json` `governance_version` default 0.10.1 → 0.11.2 (fresh INITs were stamped with an outdated version; the generator's sentinel was subordinated to the spec default).
   - *Fixed*: `.gitignore` now carries the full `check-git-policy.js` required patterns (`!.env.example`, `credentials.json`, `secrets.*`) — the repo matches the baseline it enforces.
   - *Fixed*: `governance-files.policy.md` — `sync-rules.json` added to the tracked-governance-state table; `check-doc-freshness.js` added to the protected-files list (+ synced into `git.policy.md` and the generated AGENTS.md protected list; the generated AGENTS.md permission matrix now points at the protection flow for governance files).
@@ -272,6 +310,7 @@ All notable changes to this project will be documented here.
   - *Docs*: zh-TW commands.md trigger list aligned with the source trigger (`审核一下`), simplified-vs-traditional leak in zh-TW workflow lines corrected; README "Next up" re-aligned with the roadmap (all four listed features already shipped); roadmap maintenance rule + Done-section `[x]` consistency cleaned (horizon chain no longer references the removed 5th horizon).
   - *Tests*: `generic-connection-string`, `github_pat_` form, modified-file hunk line numbers, and `check-sync --advisory` are now covered (the first two are payload scripts shipped to every governed project).
 - **Second-pass review: regressions from the first pass, fixed** (each reproduced before fixing):
+
   - *Fixed*: validator containment no longer fails a project reached through a symlinked/junctioned root — the baseline is realpath'd too (previously 6/23 checks passed via a junction, 23/23 direct). Escape detection is segment-based, so a legitimate `..config.yml` is no longer rejected.
   - *Fixed*: changelog coverage is an allowlist again (`SKILL.md`, `package.json`, `references/`, `scripts/`, `.github/`, `docs/rules/`, `.governance/`, `.githooks/`). The first pass had inverted it into a denylist, which made an ordinary `src/` edit — or a single untracked scratch file — fail the release gate in governed projects.
   - *Fixed*: generated-skill checks now reject a skill DIRECTORY linked out of the tree (`lstat` alone only guarded the final path component, and `Dirent.isDirectory()` silently dropped junction entries instead of failing them). The skills-tree read is also wrapped: an unreadable tree is a governance verdict, not a crash.
@@ -282,13 +321,17 @@ All notable changes to this project will be documented here.
   - *Fixed*: control-character sanitisation covers every interpolated field (`check-lock` agent_id/task_id, validator artifact names) and the tag message now also strips U+0085/U+2028/U+2029 and slices on a code-point boundary.
   - *Docs*: the always-on gate cluster count corrected to four (principles-index was missing) in AGENTS.md + architecture.md/roadmap.md ×3; `sync-rules.json` added to the policy's own `.governance/README.md` template; SKILL.md protected summary re-synced; `.gitlab-ci.yml` added to the single source of truth; CONTRIBUTING's "where does a file go" rule no longer contradicts the docs classification ×3; validator.md documents the generated-skills checks ×3; the release flow now lists the two generator version defaults as sync points; the release-manager tool boundary no longer cites a workflow file governed projects never receive.
 ## [0.11.2] - 2026-09-03
+
 ### Fixed
 
 - **Consistency-gate changelog coverage is section-scoped** — the required change category must sit *inside* the section that carries the record (daily: the `[Unreleased]` section; release time: the topmost versioned section after the standard `[Unreleased]` → `[X.Y.Z]` rename). A category in an older section no longer satisfies an empty newest section — previously the gate passed vacuously when an old versioned section carried any category (found during v0.11.1 release validation and re-audited afterward).
 
 ## [0.11.1] - 2026-09-03
+
 ### Added
+
 - **Planned Archive Gate** — canonical, machine-readable TASK-plan status keywords (`design plan, not implemented` / `Active` / `implemented` / `Completed` / `archived`, contract in `references/policies/lifecycle.policy.md` Phase 2): an unknown status fails the always-on consistency gate; an implemented/Completed plan still sitting in `docs/*/plans/` is pending-archive — advisory in everyday checks (the documented lifecycle lets it wait for the release commit), fail-closed only in the new `--release-gate` mode wired into release.md Phase 4 step 3. `check-doc-consistency.js --json` gains a per-plan status classification plus a pending-archive count (machine-queryable completion-progress view). The delivery gate's Affected-Files extraction no longer truncates at `####` subsections (previously such sections extracted as empty and their declarations were verified vacuously).
+
 ### Fixed
 
 - **Governance protection and secret-scan documentation alignment** — `scripts/check-doc-consistency.js` is now included in the protected-file list and all synchronized summaries. Clarified that the repository's `tests/` secret fixtures avoid regex matches by construction; the scanner does not grant a path-based `tests/` exemption.
@@ -298,9 +341,13 @@ All notable changes to this project will be documented here.
 - **Release documentation coverage** — the consistency checker now reports governance/payload changes without an `[Unreleased]` CHANGELOG category and enforces that requirement during `--release-gate`.
 
 ## [0.11.0] - 2026-08-30
+
 ### Added
+
 - **Opt-in commit-consistency hooks** — INIT now generates executable `.githooks/pre-commit` and `.githooks/commit-msg` scripts that fail closed without `.governance/consent.json`, preserve Unicode/space filenames through NUL-delimited Git output, and verify the confirmed commit message. INIT never enables `core.hooksPath`.
+
 ### Changed
+
 - **Rule capture and change hygiene** — governed-project agents now collect developer-stated persistent requirements for explicit adjudication before rule-file writes, preserve resumable candidates in `state.json`, and apply current/compatibility/history surface checks across deletion, rename, migration, replacement, deprecation, API/config and generated-artifact changes.
 
 - **Secret scanning coverage** — staged-diff scanning now covers Slack, Google, Stripe, Azure, JWT, base64/PEM material, connection strings, and punctuated credential values; force-added `.env` files are scanned, `tests/` is not a global bypass, and reports include real added-line numbers.
@@ -312,6 +359,7 @@ All notable changes to this project will be documented here.
 - **Release risk gating** — Release Proposals now include risk/review metadata; high-risk execution requires completed review evidence or explicit item-by-item risk approval, and malformed JSON inputs fail with controlled errors.
 
 - **Generated security baseline** — INIT-generated `.gitignore` now covers certificate bundles, private keys, credential files, secret filenames, logs, and other policy-declared sensitive artifacts.
+
 ### Fixed
 
 - **Sync and documentation edge cases** — sync checks now handle untracked, renamed, Unicode, and space-containing paths; archive Markdown links are checked on Windows and stale archive links were corrected.
@@ -319,6 +367,7 @@ All notable changes to this project will be documented here.
 - **Generator version drift** — generated manifests use the skill package version by default, and fenced-template extraction stops at the first matching fence.
 
 ## [0.10.1] - 2026-08-29
+
 ### Fixed
 
 - **review-manager audit (whole-project, lightweight): 17 confirmed defects fixed** — a full audit surfaced 23 findings; each was verified against its source and 17 were confirmed real and fixed, the rest evaluated as non-issues or intentionally-deferred. Script-logic fixes: `verify_governance.js`'s manifest-mode "Sync groups check" assigned the `isFile` function reference instead of calling it, so it always passed even when `scripts/check-sync.js` was missing (a fixture relied on that always-pass; it now copies the script); `check-lock.js` treated `"locked": false` as a held lock and falsely blocked — it is now normalised to "no lock"; `check-sync.js` wrote an empty `checked_at` timestamp and mis-parsed rename entries (`R old -> new`), now both fixed; `generate-governance.js` defaulted `governance_version` to a stale `"0.9.0"` (two sites) and `readJSON` threw an unhelpful raw stack on malformed input; `check-layout-sync.js` crashed on a missing `references/`/`scripts/` dir instead of failing closed. Version consistency: `references/init-spec.json`'s `governance_version` default was `0.9.0`; generated `.gitignore` and `.governance/README.md` omitted `activity.jsonl` from git-ignored despite the policy declaring it so. Governance-alignment: `SKILL.md` and `references/templates/agents-md.template.md` protected-file lists now include `scripts/check-secrets.js` and `scripts/check-sync.js` to match the single source of truth; `references/policies/governance-files.policy.md` gained the `scripts/check-sync.js` row the template already claimed. Docs: `review-this`/`deep-review` added to the Available Prompts main table in all three `commands.md`; the badge link in the three `validator.md` files pointed at a non-existent `docs/validator.md` (now links the validator script); `references/templates/sub-skills.md` section 8 used a 3-backtick fence while every other sub-skill uses 4 (latent parse-break risk). CI: `.github/workflows/ci.yml` gained a `permissions: contents: read` block. Tests: 4 check-secrets pattern classes (github-pat / openai-style-key / private-key-header / credential-assignment) added; a bilingual consent-marker regression test added (exercised the Chinese `回显`/`命令序列`/`意图对齐`/`覆盖`/`非快进` branches). Suite 102 → 107.
@@ -326,7 +375,9 @@ All notable changes to this project will be documented here.
 - **`check-secrets.js` now ignores the repo's own `tests/` dir** — `run-tests.js` deliberately holds scanner fixtures (`AKIA...`, `ghp_...`, `sk-...`, and private-key-header lines) that must look real to exercise every pattern class, so the staged-diff gate would otherwise block the very tests that safeguard it. `tests/` is repo infrastructure, never shipped in the payload, so a token there is test data. Scoped: no payload or real-source path is exempted.
 
 ## [0.10.0] - 2026-08-29
+
 ### Added
+
 - **Consent policy rewritten: one confirmation per change set (from `consent-policy-hardening` plan)** — the whole consent structure is rebuilt, not patched. The "each git write op needs per-turn confirmation" main rule and its two exception patches (release-sequence Exception B, explicit-instruction Exception A) are gone; replaced by a single principle: **before committing, echo the full git command sequence (files to add, each commit message with its type prefix, push target) and take ONE confirmation covering `add` → `commit` → `push`**. The user's write instruction ("push") triggers the echo — it is NOT the consent itself; the ambiguity that let the executor treat the instruction as consent is removed. Plan approval is demoted to **intent alignment** (align "what/how", not a commit authorisation); size tiering is demoted to deciding whether a plan document is written, never whether the user confirms. Across all five sync points (`AGENTS.md`, `references/policies/git.policy.md`, `references/policies/lifecycle.policy.md`, `references/templates/agents-md.template.md`, `SKILL.md`). New universal hard constraints: the echo IS the sequence (never deviate); any step fails → stop and report (never retry differently, never improvise); push rejected (non-fast-forward) → stop and report (never pull/rebase yourself); ambiguous remarks ("提交一下") → ask first. Independent confirmation (not covered by the pre-commit echo): `tag`, `reset`, `rebase`, `revert`, `merge`, force push, `clean`, `rm`, `restore`, `stash`, `pull`, checkout carrying uncommitted changes, amend of a pushed commit. `checkout -b` / clean switches are free. Gate sync: the consent-cluster markers now validate **five** sync points — `check-doc-consistency.js --gate` verifies `lifecycle.policy.md` too (its release marker is exempt by design since the lifecycle doc carries no release clause); each marker anchors on its own distinctive wording, so a section heading ("一次确认") or a bare `Approval Gate` mention no longer satisfies it; and markers that live only in git-flow files match the governed rendering by normalised basename, so `docs/rules/git-policy.md` is held to the release/mid-sequence/push markers as well.
 
 - **INIT generator completed (Phase A + B + C)** — the generator now covers all 13 Phase-1 steps: CI workflow selection from `references/workflows/ci.md` by `--stack` (node/python/rust/go/java/cpp/docs-only) and `--ci-platform` (github writes `.github/workflows/ci.yml`, gitlab writes `.gitlab-ci.yml`, none skips); sub-skills generation splits `sub-skills.md` into 8 per-skill `SKILL.md` files under `.governance/generated/skills/`; structure-adaptive behaviour makes `--maturity` actually change strategy (L0/L1 full skeleton, L2 incremental, **L3 audit-only — reports without writing unless `--force-l3`**) and `--doc-root` retargets governance docs into an existing documentation root (manifest paths remapped accordingly). A containment guard now rejects any `--doc-root` whose resolved path escapes the target directory (e.g. `../../escaped`), so a crafted doc root cannot write outside the project.
@@ -350,13 +401,17 @@ All notable changes to this project will be documented here.
 - **Validator and layout-gate edge-case tests** — 4 tests covering paths that previously had no coverage: validator with `.governance/` absent, validator with unparseable `manifest.json` (must fall back to defaults and still fail, never silently pass), `check-layout-sync` with a missing `architecture.md`, and `check-layout-sync` with an `architecture.md` that has no Repository Layout block.
 
 - **DEBUG diagnostics on failure-tolerant writes** — the three `.governance/drift-report.json` update sites (`check-doc-freshness.js`, `check-doc-consistency.js`, `check-sync.js`) plus the manifest read in `check-doc-freshness.js` swallowed every error silently by design; they now report the cause under `DEBUG=1`, keeping the same exit-code behaviour.
+
 ### Changed
+
 - `references/init-spec.json` — Phase C `shipped` corrected from `"later"` to `"v0.9.1"` (Phase C shipped in v0.9.0/0.9.1; the field was stale metadata).
+
 - **`check-doc-consistency.js` gains `--gate` mode; protected-files trigger tightened** — the script's two mechanically checkable rule clusters (consent-sync and protected-files) are now fail-closed under `--gate` (exit 1 when they fail; the other six heuristics still report but never affect the exit code). This is the delivery of P1 from the governance-rule-sync plan. The consent cluster asserts the five current markers over every sync GROUP with at least one present path — this repo checks 5 groups; a governed project checks the 3 that exist and skips the absent ones, so `--gate` is meaningful in both shapes. The protected-files check now requires the enumeration claim and the "single source of truth" deferral to sit in the same section, so an unrelated mention elsewhere (e.g. the principles index table) no longer disables it; and it no longer flags documents that merely *mention* the protection flow, only those that claim to enumerate the list. `npm run check` now runs the script once with `--gate`; `check:all` drops its duplicate advisory invocation.
 
 - **`release-manager.js` now requires `headSha` on execute** — the release-sequence blanket approval was scoped to a specific commit, but a hand-written proposal lacking `headSha` skipped the HEAD-identity recheck entirely. The field is now mandatory; `execute` aborts if it is absent.
 
 - **`.githooks` pre-commit hook removed before release** — the consent-consistency hook (`references/templates/githooks-template.md` + its `init-spec.json` artifact) was drawn up but pulled from the release. It was off by default and gate-verifiable, but its credential file was not git-ignored, it failed open when `consent.json` was missing, and it ignored the commit message — enough security-bearing false claims that it should not ship. Re-doing it is a separate plan; the removal keeps the payload clean.
+
 ### Fixed
 
 - **L3 audit mode still wrote the manifest** — the manifest is generated after the artifact loop and never consulted the audit flag, so `--maturity LEVEL_3_PRODUCTION` (documented as report-only) silently wrote `.governance/manifest.json` into a production repo. Now honours audit mode; `--force-l3` still writes.
@@ -380,12 +435,15 @@ All notable changes to this project will be documented here.
 - **Install payload was broken by a shared-library refactor (reverted)** — an unreleased change extracted `argValue`/`readJSON`/`walk` into `scripts/_lib.js` and rewired 5 scripts to `require('./_lib.js')`, but `_lib.js` was never added to `references/init-spec.json`'s copy list. Every governed project created by INIT got scripts that die with `MODULE_NOT_FOUND` on first run. The full 82-test suite stayed green throughout. Reverted rather than patched: `init-spec.json` copies those scripts **file by file**, so self-containment is a load-bearing invariant and the duplicated helpers are its deliberate price. Also reverted in the same batch: a CI rewrite that deleted the v0.8.0 governance-badge artifact; `release-manager --force` (an undeclared bypass of protected-branch enforcement); `--version` (resolves `../package.json`); and two secret patterns shipped with no test coverage.
 
 ## [0.9.1] - 2026-08-21
+
 ### Fixed
 
 - **Turn-scoped consent vs release sequence contradiction** — AGENTS.md / `references/policies/git.policy.md` / `references/templates/agents-md.template.md` stated that every git write op needs fresh per-turn confirmation (and explicitly that saying 发布吧 is not enough), while `references/workflows/release.md` states 批准覆盖本次 release 序列的全部写操作. The three consent clauses now carry the release-sequence exception: one Approval Gate approval covers the whole sequence (version sync → archive → commit → tag → push → release → asset upload), conditional on the shown Proposal and an unchanged working tree/HEAD. Surfaced by a real v0.9.0 release run where the agent asked for confirmation 6 times instead of once.
 
 ## [0.9.0] - 2026-08-21
+
 ### Added
+
 - **Impact-face check** — before touching any public interface/module/file, agents must search its references (`rg`) and include found files in the Affected Files plan (Phase 2/3); at task end, Phase 6 compares actual changed files against the planned list (listed-but-unchanged → fix or justify; changed-but-not-listed → explain). Mitigates AI "skipped file" lapses; wired into lifecycle.policy.md, agents-md.template.md, AGENTS.md
 
 - **Review manager sub-skill (implemented)** — 8th sub-skill template in `sub-skills.md`: multi-agent deep review of a change set (5 fixed review domains: correctness, consistency, security, performance, maintainability), severity-ranked findings, review scope = the planned `git diff` change set; wired into `commands.md` (Runtime Components prompt), `SKILL.md` sub-skill list, and `architecture.md`
@@ -401,7 +459,9 @@ All notable changes to this project will be documented here.
 - **Architecture doc content gate (fix wrong-but-present)** — verify-governance.js 的 Architecture doc 检查从 isFile 升级为 hasRealArchitecture：ARCHITECTURE.md 必须存在且不是 INIT 模板骨架（无占位符残留、Component Registry 有真实数据行），否则默认模式校验失败。堵住「架构文档存在但内容仍是空模板」的漏洞（缺陷 A/B 的机械部分）。sync-rules.template.md 默认组 watch 扩展至常见源码目录（src/lib/app/apps/services/packages/modules），防止非默认布局下架构联动不触发（缺陷 C）。
 
 - **INIT scripted generator** — `scripts/generate-governance.js` (zero-dependency, deterministic): Phase A static skeleton (5 rules, AGENTS.md with resolved placeholders, CHANGELOG, README bootstrap, features/plans/ARCHITECTURE skeletons) + Phase B config/state/scripts (.gitignore, .env.example, .gitmessage, .governance/ state files with valid JSON, 5 scripts); reads `references/init-spec.json` (single source of truth); `--dry-run`/`--json`/`--phase A|B|C`; existing files skipped never overwritten; manifest generated last listing only artifacts that exist on disk, release field omitted for fresh INIT; e2e-tested (Phase B output passes verify-governance.js, byte-identical determinism on full trees)
+
 ### Changed
+
 - **Scope-tiered lifecycle** — small changes (single file, <50 lines, no public-interface change) run Understand → Implement → Validate → Report only (skip Plan/Synchronize); medium/large run the full six-phase lifecycle with a TASK plan. Aligns with mainstream practice (tier by size, not one-size-fits-all)
 
 - **CHANGELOG timing** — written at merge/release boundaries (per release flow), not per commit/task; small changes carry no entry
@@ -417,7 +477,9 @@ All notable changes to this project will be documented here.
 - **载荷路径口径统一：skill 主体一律按被治理项目结构** — 明确 `references/**`（含 plan-manager 子技能、release.md 发布规范）中的所有路径都按被治理项目结构书写（`docs/plans/`、`docs/plans/archive/`、`docs/rules/`、`DEVELOPMENT_PLAN.md`），载荷不承载 skill 仓库自身的目录差异；skill 仓库自身与之不同的路径映射（三语树 `docs/{lang}/plans/` → `docs/archive/` 共享单语归档、里程碑用 `docs/en/roadmap.md`）收口在 AGENTS.md（仓库基础设施，不随安装复制）。避免发布时按错路径归档。
 
 ## [0.8.0] - 2026-08-16
+
 ### Added
+
 - **Governance score** — `verify-governance.js --json` outputs `score` (passed/total, unweighted v1); CI produces a shields.io `governance-badge.json` endpoint artifact (green ≥100% / yellow ≥80% / red otherwise)
 
 - **Doc freshness check** — `scripts/check-doc-freshness.js` flags stale governance docs via `git log` commit dates (30d stale / 90d very stale, code-activity-aware; advisory only, exit 0 always); drift-check sub-skill template gains the `freshness` mode; results appended to `.governance/drift-report.json`
@@ -431,147 +493,284 @@ All notable changes to this project will be documented here.
 - **Roadmap decoupled from version numbers** — roadmap/README use time horizons only (near/mid/long-term), no `Target: vX.Y.Z` fields; versions are decided by actual delivery at release time (SemVer), not by plan commitments
 
 - **5 new plan docs** — review-manager (8th sub-skill, multi-agent deep review), tiered-review-gate (risk-tiered release review), governed-project sync groups (L1 declarative + L2 mechanical check); commands.md prompt coverage completed (all 23 sub-skill triggers documented)
+
 ### Fixed
+
 - Stale version examples in `SKILL.md` (0.5.1 → 0.7.1), missing `check-secrets.js` in anti-regression and agents-md.template protected-file lists — caught by the new consistency check during development
+
 - INIT copy list now includes the advisory scripts (`check-doc-freshness.js`, `check-doc-consistency.js`; `check-doc-parity.js` on multi-language trees); drift-check template consistency mode no longer references scripts the governed project lacks
+
 - `check-doc-consistency.js`: semantic version compare for roadmap targets (string compare misjudged v0.10.0 < v0.9.0); manifest `release.version` included in version-example scan; parity delegated check reports "unavailable"/"error" instead of falsely claiming pass; validator filename fallback (`verify-governance.js`)
+
 - `check-doc-freshness.js`: ghost paths (in git history but not on disk) are skipped
+
 ## [0.7.1] - 2026-08-14
+
 ### Fixed
+
 - `scripts/package-skill.sh` - builds the release payload tarball (`dist/ai-agent-governance-skill.tar.gz`, version-stable name) containing only `SKILL.md` + `references/` + `scripts/` + `LICENSE`; `.gitignore` ignores `dist/`
+
 - Install payload defined in `SKILL.md` (the file every installing agent must read); README install sections rewritten with tarball-first flow; release flow gains step 10 (package + upload the payload asset with content verification)
+
 ## [0.7.0] - 2026-08-14
+
 ### Added
+
 - `docs/glossary.md` - trilingual terminology table (single source of truth for term renderings)
+
 - ADR-0005: trilingual split documentation (supersedes ADR-0003's single-file bilingual layout for developer-facing files)
+
 - `scripts/check-doc-parity.js` - read-only structural parity check for the three language trees (heading/code-block/table/list signatures); wired into CI, `npm run docs:parity`, and the release precondition `docs.parity_passed`; covered by 3 tests
+
 - Install payload defined - the skill is `SKILL.md` + `references/` + `scripts/` + `LICENSE` only; docs/tests/package.json/.github/README/CONTRIBUTING/CHANGELOG/AGENTS.md are repo infrastructure and must not be copied into skill installations (README, skill-discovery, AGENTS.md)
+
 ### Changed
+
 - **Trilingual documentation split (ADR-0005)** - developer-facing docs split into three language trees (`docs/en/` + `docs/zh-CN/` canonical + `docs/zh-TW/` Taiwan usage); the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`), translations live in their trees; ADR decision history (`docs/design-decisions/`) and completed-plan archives (`docs/archive/`) moved to a shared single-language (简体中文) space; three trees are fully parallel
 
 - **Governed-project language policy** - INIT now generates a split README by default (root `README.md` English landing + `docs/README.zh-CN.md` translation); language-variant files never pile up in the project root; multi-language doc trees only on explicit project convention; historical records (archives, ADRs) are never translated; glossary optional for multilingual projects; draft-exception rule (stable docs sync same-commit, in-flight drafts may defer until push/release)
+
 ### Fixed
+
 - Archive files converted to single-language 简体中文 (were bilingual frozen copies); zh-TW code-block/comment translations completed; architecture/roadmap stale path references fixed; glossary expanded with high-frequency terms
+
 - `check-doc-parity.js` boundary fixes - table signatures flush correctly after headings/code fences; missing trees/entry files reported gracefully instead of crashing
+
 ## [0.6.0] - 2026-08-13
+
 ### Added
+
 - **Agent activity audit** — `.governance/activity.jsonl` append-only per-task audit trail (written by state-manager; `action` vocabulary v1; secret redaction mandatory); drift-check gains `activity-report` mode (per agent / per action / failed only)
 
 - **Secret scanning gate** — `scripts/check-secrets.js` read-only staged-diff scanner (AWS/GitHub/OpenAI-style/private-key/credential-assignment patterns; reports `file:line` + pattern class, never the secret); validator default checks 19 → 20; mandatory pre-commit step in git policy
+
 ### Changed
+
 - `activity.jsonl` declared as git-ignored runtime output; `scripts/check-secrets.js` added to the protected-files list
+
 ### Tests
+
 - Test suite 23 → 26 (secret hit exit 1 without leaking token, clean diff exit 0, missing check-secrets validator failure)
+
 ## [0.5.2] - 2026-08-13
+
 ### Added
+
 - SKILL.md frontmatter gains `version` (synced with releases) and update-check triggers (`check skill update` / `update this skill`): the agent reads the local version, compares against the latest GitHub release, and reports the CHANGELOG delta — never auto-updates
+
 - Version consistency rule extended to five places: package.json · CHANGELOG · manifest `governance_version` · SKILL.md frontmatter `version` · tag
+
 ## [0.5.1] - 2026-08-13
+
 ### Fixed
+
 - Synced stale version examples (0.3.3 → 0.5.1) in SKILL.md manifest example and `references/workflows/release.md`
+
 - Added 3 missing protected files (`.governance/git-policy.json`, `scripts/check-lock.js`, `scripts/check-git-policy.js`) to 4 summary lists (SKILL.md governance protection, docs/anti-regression.md, agents-md.template.md, git.policy.md)
+
 - Fixed stale ADR-0004 status (`Accepted (Unreleased)` → `Accepted (v0.4.0)`) and expired skill-lifecycle target version (v0.5.0 → v0.6.0)
+
 ### Docs
+
 - Added 6 feature plan docs (agent-activity-audit / secret-scanning-gate / knowledge-freshness / governance-score / init-scripted-generator / content-consistency), reordered roadmap with time horizons (near/mid/long/very-long-term) and added the rolling re-baseline maintenance rule
+
 ## [0.5.0] - 2026-08-12
+
 ### Added
+
 - **Git Workflow Governance** — INIT generates `.governance/git-policy.json` (protected branches, no direct push, require review, no force push) and `scripts/check-git-policy.js` (read-only gate: blocked on protected branch when `directPush=false`); branch-based development (`feature/agent-<date>-<summary>`) with small-change exemption
+
 - `references/templates/git-policy.template.md` — git policy template + field semantics + generation rules
+
 - Validator default checks 17 → 19: adds Git policy (JSON valid + field types) and `scripts/check-git-policy.js`; manifest mode adds the Git policy check (12 total)
+
 - `git-policy.json` / `check-git-policy.js` added to the protected-files list and tracked `.governance` state
+
 ### Changed
+
 - `references/policies/git.policy.md` gains the Branch Workflow section; `references/templates/agents-md.template.md` gains the Git Workflow Governance summary
+
 - New 7th generated sub-skill `plan-manager` (TASK creation, milestone check-off, completion marking; archiving stays in release-manager) — sub-skills template, SKILL.md Phase 1, commands.md runtime components
+
 - MIGRATE flow: explicit upgrade path for governed projects whose `governance_version` lags (migration list = validator missing artifacts + CHANGELOG entries; user-confirmed, never auto-upgrade; verified by validator exit 0) — SKILL.md AUDIT section, governance-model.md
+
 ### Tests
+
 - Test suite 20 → 23: invalid git-policy exits 1, protected branch blocked exits 1, feature branch passes exits 0
+
 ## [0.4.1] - 2026-08-12
+
 ### Added
+
 - `references/templates/env-example.template.md` and `references/templates/gitmessage.template.md` — INIT now generates `.env.example` / `.gitmessage.txt` from concrete templates instead of ad-hoc
+
 - CI templates: full GitLab CI pipeline (format / lint / test / build / governance), docs-only project pipeline (markdownlint + link check), `dependabot.yml` template in `references/workflows/ci.md`
+
 - `scripts/release-manager.js plan --file <path>` — read JSON input from a file (avoids shell quoting issues)
+
 - `scripts/check-lock.js` — read-only multi-agent lock check for `.governance/state.json` (exit 1 = another agent holds a lock); INIT now copies it next to the validator, and the validator checks for it
+
 ### Fixed
+
 - `state.json` example in SKILL.md used `phase: "CI_SETUP"`, inconsistent with the six-phase state machine — corrected to a valid lifecycle phase
+
 - Roadmap targets updated: Skill lifecycle management moved to v0.5.0 (v0.4.0 shipped without it)
+
 ### Changed
+
 - Validator default checks 15 → 17: adds CHANGELOG format (Keep a Changelog version section) and `scripts/check-lock.js`; manifest mode adds CHANGELOG format and manifest `artifacts[].kind` validity
+
 - Lifecycle Phase 5 archive rule (two-phase): completion checks off milestones in `DEVELOPMENT_PLAN.md` and marks the TASK `Status` as Completed; RELEASE archives the version's completed milestones (aggregated into `docs/plans/archive/vX.Y.Z.md`) and completed `TASK_<name>.md` files (moved as individual files); original entries preserved, never deleted; unfinished items stay in `docs/plans/`
+
 - Fixed release flow ordering: version sync + plan archival now precede the release commit; the annotated tag is created AFTER the commit (tag points to a HEAD containing version and archive changes); proposal `headSha` is refreshed before execute
+
 - Refined SemVer Minor rule: Minor requires a **user-perceivable** new capability; internal tooling/mechanism improvements (lock checks, content validation, template additions, flow ordering, internal flags) are Patch
+
 - Roadmap gains two planned items: multi-agent lock enforcement, validator content checks
+
 - Test suite extended 15 → 20 (lock check ×3, CHANGELOG format, `--file` plan input)
+
 ## [0.4.0] - 2026-08-12
+
 ### Added
+
 - Human-in-the-loop release flow: Analyze → Release Proposal → Developer Approval → Create Git Tag → Create Release (proposal + approval gate formalized in `references/workflows/release.md`)
+
 - `scripts/release-manager.js` — zero-dependency release tool: `plan` (read-only SemVer 2.0.0 classification + Release Proposal) and `execute` (approval-gated annotated tag creation with pre-execution re-verification of clean tree and HEAD)
+
 - SemVer 2.0.0 version-decision rules: Major only for real breaking changes (external/API/CLI/protocol impact), Minor only for backward-compatible capabilities, Patch otherwise; forbidden heuristics (diff size / commit count / file count / code volume)
+
 - 0.x rule: breaking changes never auto-bump to 1.0.0 — only an explicit developer request
+
 - `release.proposal_approved` precondition; `release-proposal.json` recorded as git-ignored runtime approval evidence (ADR-0004)
+
 ### Changed
+
 - `release-manager` sub-skill template rewritten around the approval-gated flow; `git tag` moved to the confirmation-required list in `references/policies/git.policy.md`
+
 - Lifecycle Phase 5 (Synchronize) now mandates updating `docs/plans/DEVELOPMENT_PLAN.md` (milestone check-off / status / acceptance) when a corresponding milestone exists (`references/policies/lifecycle.policy.md`, `references/templates/agents-md.template.md`)
+
 ### Tests
+
 - Test suite extended 8 → 15: SemVer classification (docs → patch, refactor → patch, CLI command → minor, deleted API → major), clarification request (exit 2), unapproved execute creates no tag, approved execute creates annotated tag
+
 ## [0.3.3] - 2026-08-10
+
 ### Added
+
 - INIT generates a basic bilingual `README.md` (English first, then 简体中文, anchor-switched via `[English](#english) · [简体中文](#chinese)`) when the project has none; existing READMEs are only merged with the index/badge, never overwritten
+
 - CI templates expanded to Node/TS, Python, Rust, Go, Java (Maven), and C++ (CMake/CTest), each with an explicit format step (Prettier / ruff format / cargo fmt / gofmt / spotless:check / clang-format)
+
 - C++ INIT generates a `.clang-format` style baseline (Attach braces, 4-space indent, 120-col) consumed by CI's `clang-format --dry-run`
+
 - Java CI requires spotless in `pom.xml` (google-java-format) — INIT writes the plugin; Node/TS and Python documented as optional-config (Prettier default / ruff default)
+
 ## [0.3.2] - 2026-08-10
+
 ### Fixed
+
 - Validator no longer requires `.governance/validation.json`: it is a git-ignored runtime output, so fresh-checkout CI passes without it (default checks 16 → 15)
+
 - Restored separation between tracked governance state (`manifest.json` / `state.json` / `preflight.json` / `generated/`) and runtime outputs (`validation.json` / `drift-report.json`)
+
 - Updated documentation and tests to reflect runtime output semantics (absent → OK, present → OK)
+
 ## [0.3.1] - 2026-08-10
+
 ### Fixed
+
 - Aligned manifest version examples with the v0.3.1 release.
+
 - Removed remaining runtime ambiguity around legacy `.agent` paths.
+
 - Added regression test ensuring the governance runtime only uses `.governance`.
+
 ### Tests
+
 - All tests passing (7/7).
+
 ## [0.3.0] - 2026-08-10
+
 ### Added
+
 - RELEASE governance mode, completing the lifecycle: INIT → Runtime → AUDIT → RELEASE
+
 - Generated `release-manager` sub-skill (enforces preconditions, version-synced, transactional release)
+
 - Centralized release policy (`references/workflows/release.md`): release requirements, version consistency rules, release workflow, transactional guarantee
+
 - Optional `release` metadata in `manifest.json` (`version` / `tag` / `validated`)
+
 ### Changed
+
 - Validator validates release metadata when declared (Release metadata check in manifest mode)
+
 - Updated documentation: Governance Flow, architecture diagrams, feature overview, Roadmap
+
 ### Lifecycle
+
 AI Agent Governance now supports:
 ```
 INIT → Runtime → AUDIT → RELEASE
 ```
 ## [0.2.0] - 2026-08-10
+
 ### Changed
+
 - Rename governance state directory from `.agent/` to `.governance/` to avoid confusion with the `.agents/` skill installation directory
+
 - Move generated agent modules to `.governance/generated/skills/` (clear separation from the `.agents/skills` install layer)
+
 - Rename `reference/` → `references/`, `test/` → `tests/` for ecosystem consistency
+
 - Strengthen `manifest.json` as the single desired-state index: artifacts gain a semantic `type` (policy / documentation / script / ci / state) alongside the filesystem `kind`; `type` is documentation metadata and does not affect filesystem validation
+
 - Add `schema_version` to `manifest.json` (data-format version) distinct from `governance_version` (framework version)
+
 - Track `.governance/manifest.json`, `state.json`, `generated/` in git (Governance as Code); ignore only runtime outputs (`validation.json`, `drift-report.json`)
+
 - Add `references/policies/governance-files.policy.md` as the single source for protected files and `.governance/` git-tracking policy
+
 - Align SKILL.md Phase 2 check list with the validator's default checks (validator is the source of truth)
+
 - Add `--help` to `verify-governance.js`; INIT now generates `.governance/README.md`
+
 - Test suite now covers `--help` (6 tests)
+
 ### Migration
+
 - Existing `.governance/skills` directories should migrate to `.governance/generated/skills`.
+
 - Existing `.agent/` state directories should migrate to `.governance/` (manifest keeps `governance_version`; add `schema_version: "1.0"`).
+
 ## [0.1.0] - 2026-08-10
+
 ### Added
+
 - AI Agent governance framework (SKILL.md-based, tool-agnostic)
+
 - One-instruction INIT workflow: Inspect → Build → Validate → Report
+
 - AGENTS.md generation with `@`-referenced rule files
+
 - Rule system templates: lifecycle / git-policy / security / coding / testing
+
 - Architecture doc + ADR + component registry template
+
 - Feature registry with anti-fabrication placeholder strategy
+
 - Git permission model (push forbidden, delete/dependency/commit require confirmation)
+
 - Zero-dependency governance validator (`scripts/verify-governance.js`, manifest-driven paths)
+
 - Audit workflow: health check + drift detection + minimal fixes
+
 - Machine-readable `.agent/` state (manifest / state / validation / preflight)
+
 - Capability-detected CI templates with graceful degradation
+
 - Generated agent modules (repository-inspection / ci-generator / governance-validator / state-manager / drift-check)
+
 - Test suite (6 tests: empty / default / custom-manifest / missing version / json output / help)
+
