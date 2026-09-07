@@ -1,6 +1,6 @@
 # 载荷治理教训迁移：声明-机制差距与验证反馈闭环（TASK 计划）
 
-> **Status: Active.**（进行中，创建时的初始状态。）
+> **Status: implemented.**（已实现，待 Release 归档。）
 
 **Target：both** —— `payload`：`references/policies/*.md`（lifecycle / testing / coding）、`references/workflows/ci.md`、`references/templates/agents-md.template.md`（经裁定—见下）；`repo-infra`：`CHANGELOG.md` [Unreleased] 条目、三语计划文件、目标链路断言测试（若新增，见 §验证方法 第 4 条）。
 

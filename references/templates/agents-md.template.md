@@ -66,6 +66,10 @@ SemVer: MAJOR.MINOR.PATCH — breaking → MAJOR, feature → MINOR, fix → PAT
 ## Definition of Done
 Code + tests + all quality gates + CHANGELOG + docs sync. Anything missing = not done.
 
+Every "✓ passed" carries an evidence tier: **mechanical** (marker/structure/path/regex/existence — means "condition satisfied", NOT "behavior correct"), **human-attested** (a person judged it: release approval, translation review, root-cause adequacy), or **unverified** (self-reported only — not a verification result). Never promote a tier: a green gate is mechanical evidence, not proof of correct behavior.
+
+**Declaration vs mechanism**: a rule declares a SET (sync points, scanned dirs, CI gates, protected files, checklists); the mechanism must cover the same set. "Declared 5, verified 2" and "declared all trees, enumeration missed one" are the same defect class — they pass green while letting the real breach through. Fix by completing the mechanism or narrowing the declaration; editing the doc alone is not a fix. After any move/rename/split, re-check every hardcoded enumeration and path constant. Full rules: @docs/rules/lifecycle.md § 声明与机制的差距, @docs/rules/testing.md § 测试活性.
+
 ## Dependency Management Rules
 Add dependencies only via the project package manager and state the purpose. Heavy dependencies need user confirmation.
 

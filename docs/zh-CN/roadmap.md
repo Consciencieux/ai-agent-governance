@@ -6,6 +6,7 @@
 
 ### 已完成
 
+- **载荷治理教训** —— 声明与机制的差距、证据等级（机械 / 人工背书 / 未验证）、测试活性（空洞测试、事实源）、移动后枚举复查、CI 门禁完整性现已成为 INSTALLED 规则，不再只是本仓库的内部记忆。设计：[plans/payload-governance-lessons.md](plans/payload-governance-lessons.md)
 - AGENTS.md 治理引导
 - Feature 登记
 - 治理校验器

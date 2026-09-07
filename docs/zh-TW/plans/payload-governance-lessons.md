@@ -1,6 +1,6 @@
 # 載荷治理教訓遷移：宣告-機制差距與驗證回饋閉環（TASK 計畫）
 
-> **Status: Active.**（進行中，建立時的初始狀態。）
+> **Status: implemented.**（已實現，待 Release 歸檔。）
 
 **Target：both** —— `payload`：`references/policies/*.md`（lifecycle / testing / coding）、`references/workflows/ci.md`、`references/templates/agents-md.template.md`（經裁定—見下）；`repo-infra`：`CHANGELOG.md` [Unreleased] 條目、三語計畫檔案、目標鏈路斷言測試（若新增，見 §驗證方法 第 4 條）。
 

@@ -136,4 +136,26 @@ module.exports = (test) => {
     const o = JSON.parse(r.stdout);
     return r.status === 0 && o.applicable === false && o.gatePass === true;
   });
+
+  // A truncated action SHA is accepted by YAML and by every local gate, but GitHub
+  // rejects it at workflow start ("the provided ref is the shortened version of a
+  // commit SHA"). v0.14.1+ shipped a 39-char upload-artifact pin and CI failed on the
+  // first run after the push. Full-length (40 hex) is the decidable invariant.
+  test("ci workflow: every pinned action SHA is full length (40 hex)", () => {
+    const wf = path.join(repo, ".github", "workflows", "ci.yml");
+    if (!fs.existsSync(wf)) return true; // governed project without this workflow
+    const lines = fs.readFileSync(wf, "utf8").split(/\r?\n/);
+    let pinned = 0;
+    for (const line of lines) {
+      const m = line.match(/uses:\s*[\w.\-]+\/[\w.\-]+@([0-9a-f]+)/i);
+      if (!m) continue;
+      pinned++;
+      if (m[1].length !== 40) {
+        console.error("  truncated SHA (" + m[1].length + " chars, need 40): " + line.trim());
+        return false;
+      }
+    }
+    // liveness: the repo pins actions by SHA, so a passing run must have seen some
+    return pinned >= 3;
+  });
 };

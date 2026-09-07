@@ -4,6 +4,11 @@
 
 按项目实际能力裁剪：项目脚本缺失时对应步骤只保留 `echo "No <tool> configured yet"`（黄字警告），**不得强行编写无法执行的命令**（见 SKILL.md「CI 降级策略」）。
 
+**CI 门禁完整性**（证据等级：人工背书。本节是判断标准，没有脚本自动检测——写在这里不等于已被机械强制）：
+- 若项目维护 CI，CI 必须运行与 AGENTS.md 声明的门禁集合等价的命令，**不能只运行子集**（例如只 `npm test` 但声称「fails CI」）。
+- 判定链：无 CI 维护 → 不适用；有 CI 但某门禁不可用（脚本缺失、平台限制）→ 必须明确标记为 `not applicable` 或 `deferred`，不得伪装成通过；`echo "No <tool> configured yet"` 是警告占位，不是已执行。
+- 本条目与 SKILL.md「CI 降级策略」一致：可以降级（项目缺工具时保警告占位），但必须**声明降级**，不能静默缩小门禁范围。
+
 ## GitHub Actions — Node.js / TypeScript + pnpm（Prettier + ESLint）
 
 ```yaml

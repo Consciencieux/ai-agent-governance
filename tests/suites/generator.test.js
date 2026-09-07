@@ -196,4 +196,31 @@ test("phase markers: nesting restores the enclosing block's state", () => {
   });
 });
 
+test("payload: generated rules carry the governance lessons (declaration-mechanism gap, evidence tiers, test activity, enumeration re-check)", () => {
+  const dir = tmp("gen-payload-lessons");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "PayloadLessons", "--phase", "C"], { encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const required = [
+    ["docs/rules/lifecycle.md", "声明与机制的差距"],
+    ["docs/rules/lifecycle.md", "必须挂三级之一"],
+    ["docs/rules/lifecycle.md", "人工背书（human-attested）"],
+    ["docs/rules/lifecycle.md", "枚举复查"],
+    ["docs/rules/testing.md", "测试活性"],
+    ["docs/rules/testing.md", "事实源规定"],
+    ["docs/rules/testing.md", "空洞测试定义"],
+    ["docs/rules/coding.md", "移动/重命名后复查硬编码枚举"],
+    ["AGENTS.md", "Declaration vs mechanism"],
+    ["AGENTS.md", "evidence tier"],
+  ];
+  let checked = 0;
+  for (const [file, needle] of required) {
+    const p = path.join(dir, file);
+    if (!fs.existsSync(p)) { console.error("  missing generated file: " + file); return false; }
+    if (!fs.readFileSync(p, "utf8").includes(needle)) { console.error("  " + file + " lacks: " + needle); return false; }
+    checked++;
+  }
+  // liveness: a passing run must have read every declared pair
+  return checked === required.length;
+});
+
 };

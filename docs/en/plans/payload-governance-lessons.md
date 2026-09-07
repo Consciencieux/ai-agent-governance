@@ -1,6 +1,6 @@
 # Payload Governance Lessons Migration: Declaration-Mechanism Gap & Verification Feedback Loop (TASK plan)
 
-> **Status: Active.** (In progress, initial state at creation.)
+> **Status: implemented.** (Implemented, pending release archive.)
 
 **Target: both** — `payload`: `references/policies/*.md` (lifecycle / testing / coding), `references/workflows/ci.md`, `references/templates/agents-md.template.md` (adjudicated — see below); `repo-infra`: `CHANGELOG.md` [Unreleased] entry, trilingual plan files, target-chain assertion tests (if added, see §Validation §4).
 

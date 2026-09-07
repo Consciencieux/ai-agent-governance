@@ -6,6 +6,7 @@
 
 ### 已完成
 
+- **載荷治理教訓** —— 宣告與機制的差距、證據等級（機械 / 人工背書 / 未驗證）、測試活性（空洞測試、事實源）、移動後列舉複查、CI 閘門完整性現已成為 INSTALLED 規則，不再只是本倉庫的內部記憶。設計：[plans/payload-governance-lessons.md](plans/payload-governance-lessons.md)
 - AGENTS.md 治理引導
 - Feature 登記
 - 治理校驗器
