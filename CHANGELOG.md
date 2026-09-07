@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented here.
 
-## [Unreleased]
+## [0.14.1] - 2026-09-06
 ### Fixed
 
 - **Deletion/rename hygiene check (consent-and-change-hygiene §2 delivered)** — `check-coding-hygiene.js` now reads `.governance/change-hygiene.json` when present, reconciles declared deletions/renames against `git diff --name-status --find-renames`, and reports undeclared changes. Advisory only, matching the plan's own risk warning about false positives. Three scenarios verified: no declaration file → no-op, all declared → clean, missing declaration → flagged.

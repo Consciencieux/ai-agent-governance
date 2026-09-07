@@ -47,7 +47,7 @@
 
 #### Payload
 
-- `scripts/check-consent.js` —— 校验绑定变更集的确认凭证
+- `references/templates/githooks-template.md` —— 校验绑定变更集的确认凭证
 - `repo-tools/check-coding-hygiene.js` —— 将删除/重命名/迁移声明与 Git 状态对账
 - `references/init-spec.json` —— 复制并声明新的独立脚本与确认凭证格式
 - `references/templates/githooks-template.md` —— 写操作前强制确认校验
