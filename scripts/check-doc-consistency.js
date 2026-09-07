@@ -251,8 +251,12 @@ function changelogCoverage(releaseGate) {
       formatIssues.push(`list items not separated by a blank line (lines ${i} and ${i + 1})`);
     }
   }
+  // Empty-section diagnosis: at release time an [Unreleased] section with no category is
+  // almost always the "rebuilt the empty section too early" mistake (v0.15.0 and v1.0.1
+  // both hit it). Surface a hint so the operator rebuilds after the gate, not before.
+  const emptyUnreleased = /^##\s+\[Unreleased\]/m.test(head) && !/###\s+/.test(sec);
   const ok = /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) && duplicateCategories.length === 0 && formatIssues.length === 0;
-  return { applicable: true, duplicateCategories, formatIssues, ok };
+  return { applicable: true, duplicateCategories, formatIssues, emptyUnreleased, ok };
 }
 
 // #12 terminology gate: docs/glossary.md is the term authority. Its optional
@@ -351,10 +355,16 @@ function main() {
     const fmt = (changelog.formatIssues || []).length > 0
       ? " (format: " + changelog.formatIssues.join("; ") + ")"
       : "";
-    const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)" + dup + fmt;
+    const emptyHint = changelog.emptyUnreleased
+      ? " — the [Unreleased] section is empty: if this is a release, the empty section was likely rebuilt too early (rebuild it AFTER the release gates pass, per skill-release.md step 2)"
+      : "";
+    const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)" + dup + fmt + emptyHint;
     issues.changelog_coverage.push(item);
     // Structure defects fail CLOSED in both modes; "no record yet" only blocks at release.
-    if (releaseGate || (changelog.duplicateCategories || []).length > 0 || (changelog.formatIssues || []).length > 0) gateIssues.push({ kind: "changelog_coverage", item });
+    // emptyUnreleased is the exception: a freshly rebuilt empty [Unreleased] is the NORMAL
+    // post-release state, so it only blocks at release (when the empty section means the
+    // rebuild happened too early), never in daily --gate mode.
+    if (releaseGate || (changelog.duplicateCategories || []).length > 0 || (changelog.formatIssues || []).length > 0 || (releaseGate && changelog.emptyUnreleased)) gateIssues.push({ kind: "changelog_coverage", item });
   }
 
   // ---- 1. version-example sync ----
@@ -363,7 +373,7 @@ function main() {
     for (const f of files) {
       const c = readFile(path.join(ROOT, f));
       if (!c) continue;
-      const re = /(?:governance_version|"version")["']?\s*[:=]\s*["']?(\d+\.\d+\.\d+)/g;
+      const re = /\{[^{}]*?(?:governance_version|"version")["']?\s*[:=]\s*["']?(\d+\.\d+\.\d+)[^{}]*\}/g;
       let m;
       while ((m = re.exec(c))) {
         if (m[1] !== version) issues.version_examples.push(`${f}:${m[1]} != ${version}`);

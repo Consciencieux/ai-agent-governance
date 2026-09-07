@@ -87,14 +87,14 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 1. **再次检查仓库状态**：`git status`、`git rev-parse HEAD`。工作区干净且 HEAD 与 Proposal 中 `headSha` 一致；若变化 → 重新分析。
 2. **版本同步**（技能仓库五个同步点 + tag，无 manifest）：
    - 更新 `package.json` 的 `version`
-   - 更新 CHANGELOG（`[Unreleased]` → `[X.Y.Z]`，并在顶部重建空 `[Unreleased]` 节）
+   - 更新 CHANGELOG：`[Unreleased]` → `[X.Y.Z]`（**只改名，不在此步重建空节**——重建见下条红线）
    - 更新 `SKILL.md` frontmatter 的 `version`
    - 更新 `references/init-spec.json` 的 `inputs.governance_version.default`
    - 更新 `scripts/generate-governance.js` 的兜底哨兵（与上一条共同决定新 INIT 给被治理项目打上的版本号）
 
    **另外必须更新文档里的版本示例值**（不是同步点，但同一个 `version_examples` 簇会 fail-closed 拦下它们）：任何 `.md` 里形如 `"version": "X.Y.Z"` / `"governance_version": "X.Y.Z"` 的示例——目前分布在 `SKILL.md` 与被治理项目发布流程文档的 manifest 示例块中。它们不是发布状态的一部分，但门禁不区分「示例」与「事实」，一处未改就红。判定方式不靠记忆：`node scripts/check-doc-consistency.js --gate` 会逐条列出 `<file>:<旧版本> != <新版本>`。
 
-   **空 `[Unreleased]` 节的重建时机**：必须在第 3 步发布门禁**通过之后**（通常与 release commit 一起，或紧随其后单独提交）。`changelog_coverage` 在发布形态读"最顶部的版本节"，提前重建会让它读到空节而失败——v0.15.0 发布时踩过一次。
+   **空 `[Unreleased]` 节的重建时机**：必须在第 3 步发布门禁**通过之后**（通常与 release commit 一起，或紧随其后单独提交），**不在本步**。`changelog_coverage` 在发布形态读"最顶部的版本节"，提前重建会让它读到空节而失败——v0.15.0 与 v1.0.1 发布各踩过一次。顺序：改名 → 门禁 → 重建。若门禁报 changelog_coverage 失败，先检查是否已提前重建了空节，删除空节重跑门禁。
 3. **计划交付对账 + 发布门禁（全部在 release commit 之前）**：
    - `node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
    - `npm run check:skill-release`（exit 0；含 `check-doc-consistency.js --release-gate` 与 `check-doc-freshness.js --release-gate`）。**在归档与提交之前运行**：pending-archive（implemented 计划未归档）与 changelog 覆盖在此阶段失败还来得及补救——版本节推进有 `version_examples` 簇机械验证（CHANGELOG 最新版本节必须等于 package.json version，v0.13.1 发布曾因无此检查而漏改 CHANGELOG）。
@@ -109,7 +109,7 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 6. **提交 release commit**：`git add`（版本同步、归档与 roadmap 相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 7. **复跑轻量门禁**（release commit 之后、tag 之前）：`npm run check`（exit 0）——确认归档与版本同步的提交内容本身没有破坏任何门禁。
 8. **校验（本仓库以 `npm test` 为准）**：技能仓库的校验义务由第 7 步的 `npm test` + 发布门禁承担。`scripts/verify_governance.js` 在本仓库**预期退出码 1**（无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败——ADR-0006，本仓库不 dogfood 自身框架）。它不是本流程的门禁：**不得为了让它通过而伪造 `.governance/`**，也不得因其非零退出码而中止发布。
-9. **生成/更新 Proposal**：`headSha` 更新为新 HEAD
+9. **生成/更新 Proposal**：**重新运行 `release-manager plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha` 与 `provenance` 都随 plan 重建。**不得手工编辑 `.governance/release-proposal.json` 只改 `headSha`**：`execute` 会重算 provenance 并拒绝任何被编辑的 proposal（v1.0.1 发布时曾手改 headSha 触发 "proposal provenance does not match" 拒绝）。provenance 绑定的是 plan 当时的 risk/review/version/headSha 字段，release commit 之后必须先 plan 再 execute。
 10. **创建 annotated tag**：
 
     ```bash

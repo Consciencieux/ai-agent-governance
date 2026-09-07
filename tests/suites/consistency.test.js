@@ -251,7 +251,7 @@ test("doc consistency: clean repo exits 0 with no issues", () => {
 test("doc consistency: stale version example in SKILL.md-style doc is flagged", () => {
   const dir = tmp("consistency-version");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "2.0.0" }));
-  write(path.join(dir, "SKILL.md"), 'governance_version": "1.0.0"');
+  write(path.join(dir, "SKILL.md"), '{"governance_version": "1.0.0"}');
   const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
   return r.status === 0 && out.issues.version_examples.some((i) => i.includes("1.0.0"));
@@ -1713,6 +1713,37 @@ test("consistency --gate: properly formatted changelog section passes", () => {
   if (r.status !== 0) return false;
   const out = JSON.parse(r.stdout);
   return !out.gateIssues.some((g) => g.kind === "changelog_coverage" && /format/.test(g.item));
+});
+
+test("consistency --release-gate: empty [Unreleased] rebuilt too early is diagnosed", () => {
+  const dir = tmp("clfmt-emptyrb");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.1" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n## [1.0.1] - 2026-09-08\n\n### Fixed\n\n- x\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.gateIssues.some((g) => g.kind === "changelog_coverage" && /rebuilt too early/.test(g.item));
+});
+
+test("consistency --gate: post-release empty [Unreleased] does not fail daily gate", () => {
+  const dir = tmp("clfmt-postrel");
+  gitInit(dir);
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.1" }));
+  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n## [1.0.1] - 2026-09-08\n\n### Fixed\n\n- x\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return !out.gateIssues.some((g) => g.kind === "changelog_coverage");
+});
+
+test("doc consistency: narrative version quotes in prose are not scanned as examples", () => {
+  const dir = tmp("clfmt-narr");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.1" }));
+  write(path.join(dir, "references", "workflows", "release.md"), 'history: the release kept "version": "1.0.0" with tag v0.15.0\n');
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 0 && !out.issues.version_examples.some((i) => i.includes("release.md"));
 });
 
 };

@@ -261,12 +261,12 @@ Wait for explicit confirmation. Write the approved proposal to `.governance/rele
 Only after explicit approval:
 
 1. Re-verify: `git status` clean AND `git rev-parse HEAD` equals the proposal `headSha`; any change → abort and re-run Analyze.
-2. Sync versions: `package.json` → CHANGELOG (move `[Unreleased]` into `[X.Y.Z]`) → `.governance/manifest.json` (`governance_version` + `release` field).
+2. Sync versions: `package.json` → CHANGELOG (move `[Unreleased]` into `[X.Y.Z]`; **rename only — do NOT rebuild the empty `[Unreleased]` here**, that must happen AFTER step 3's release gates pass) → `.governance/manifest.json` (`governance_version` + `release` field).
 3. Run the release-only gates, all exit 0 before anything is written: `node scripts/check-doc-consistency.js --release-gate && node scripts/check-plan-sync.js --release-gate` (adds pending-archive + CHANGELOG coverage) and, for multi-language doc trees, `node scripts/check-doc-freshness.js --release-gate` (stale or draft translations block). Also reconcile each completed plan's Affected Files against what was actually delivered before archiving it. Any failure → stop and re-plan; never continue with a partial fix.
 4. Archive completed milestones (aggregated into `docs/plans/archive/vX.Y.Z.md`, one file per version) and completed `TASK_<name>.md` files (moved as individual files, original names). Keep the original entries, never delete. Unfinished milestones stay in `docs/plans/`. An archived plan's Status line must say `archived` — the archive is the completed state.
 5. Commit: `git add` (version sync + archive files only) → `git commit -m "release: vX.Y.Z - <summary>"`. Version changes and the archive MUST be in the same commit — the tag must point to a HEAD that contains them.
 6. Run `node scripts/verify-governance.js`; exit code must be 0.
-7. Refresh the proposal: update `headSha` to the new HEAD, write `.governance/release-proposal.json`.
+7. Refresh the proposal: **re-run `node scripts/release-manager.js plan`** (HEAD has advanced to the release commit) so `headSha`, `recommended` and `provenance` are rebuilt together into `.governance/release-proposal.json`. NEVER hand-edit that JSON to change `headSha`/`recommended`: `execute` recomputes `provenance` (bound to current/recommended/releaseType/riskLevel/reviewRecommendation/reviewStatus/headSha) and rejects any edited proposal. Run plan first, then execute.
 8. `node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes` (creates the annotated tag; `--yes` is the recorded approval — without it the tool refuses all writes; it re-verifies clean tree + `headSha`).
 9. `git push origin main` → `git push origin vX.Y.Z` — write operations, user confirmation required.
 10. `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`. gh missing/unauthenticated → ⚠️ Blocked with reason.

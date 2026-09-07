@@ -210,6 +210,59 @@ test("payload: INIT installs the protected-files list the installed check reads"
     return true;
   });
 
+  test("payload: generated release-manager sub-skill carries the re-run-plan provenance rule", () => {
+    // v1.0.1 taught this repo that hand-editing the proposal's headSha trips the execute
+    // provenance check. The fix lives in references/templates/sub-skills.md step 7; this
+    // test proves the generated sub-skill (what a governed project's agent actually reads)
+    // carries it — sub-skills.md → generate-governance.js → SKILL.md propagation.
+    const dir = tmp("payload-release-manager-provenance");
+    const gen = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", "C"], { encoding: "utf8" });
+    if (gen.status !== 0) return false;
+    const skill = path.join(dir, ".governance/generated/skills/release-manager/SKILL.md");
+    if (!fs.existsSync(skill)) return false;
+    const body = fs.readFileSync(skill, "utf8");
+    return !/update\s*`?headSha`?\s*to the new HEAD/.test(body) &&
+      /re-run\s+`?(node\s+)?scripts\/release-manager\.js plan`?/.test(body) &&
+      /NEVER hand-edit/.test(body);
+  });
+
+  test("payload: provenance prose in release docs must not regress to hand-editing the proposal", () => {
+    // The governed-project release flow (references/workflows/release.md step 7) and the
+    // generated sub-skill template (sub-skills.md step 7) must both say "re-run plan",
+    // never "update headSha by hand". execute rejects edited proposals (provenance), so
+    // the docs telling an operator to edit are a trap (v1.0.1 hit it in this repo).
+    const releaseMd = fs.readFileSync("references/workflows/release.md", "utf8");
+    if (/update\s*`?headSha`?\s*to the new HEAD/.test(releaseMd)) return false;
+    const subSkills = fs.readFileSync("references/templates/sub-skills.md", "utf8");
+    if (/Refresh the proposal:\s*update\s*`?headSha`?/.test(subSkills)) return false;
+    const releaseOk = /re-run\s+`?(node\s+)?scripts\/release-manager\.js plan`?/.test(releaseMd) ||
+      /重新运行\s*`?(node\s+)?scripts\/release-manager\.js plan`?/.test(releaseMd) ||
+      /重新運行\s*`?(node\s+)?scripts\/release-manager\.js plan`?/.test(releaseMd);
+    const subSkillsOk = /re-run\s+`?(node\s+)?scripts\/release-manager\.js plan`?/.test(subSkills);
+    return releaseOk && subSkillsOk;
+  });
+
+  test("payload: governed release flow carries the empty-[Unreleased] rebuild-timing red line", () => {
+    // v0.15.0 and this repo's v1.0.1 both rebuilt the empty [Unreleased] before the
+    // release gates passed; changelogCoverage reads the topmost section and fails. The
+    // governed-project flow must state "rename only here, rebuild AFTER the gates".
+    const releaseMd = fs.readFileSync("references/workflows/release.md", "utf8");
+    if (!/只改名|do NOT rebuild|不在本步重建/.test(releaseMd)) return false;
+    const subSkills = fs.readFileSync("references/templates/sub-skills.md", "utf8");
+    return /do NOT rebuild the empty `?\[Unreleased\]`? here/.test(subSkills) &&
+      /AFTER step 3.s release gates pass/.test(subSkills);
+  });
+
+  test("payload: generated release sub-skill carries the rebuild-timing red line", () => {
+    const dir = tmp("payload-release-sub-rebuild");
+    const gen = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", "C"], { encoding: "utf8" });
+    if (gen.status !== 0) return false;
+    const skill = path.join(dir, ".governance/generated/skills/release-manager/SKILL.md");
+    if (!fs.existsSync(skill)) return false;
+    const body = fs.readFileSync(skill, "utf8");
+    return /do NOT rebuild the empty `?\[Unreleased\]`? here/.test(body);
+  });
+
   test("payload: the installed release executor runs standalone and refuses to write", () => {
     const dir = tmp("payload-release-manager-run");
     const gen = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "demo", "--phase", "C"], { encoding: "utf8" });

@@ -183,12 +183,12 @@ Proceed with release?
 开发者确认后，AI 执行：
 
 1. **再次检查仓库状态**：`git status`、`git rev-parse HEAD`。要求工作区干净、HEAD 与 Proposal 中 `headSha` 一致；若检测到变化 → **停止执行并重新分析版本**（重新走 Phase 1-3）。
-2. **版本同步**：更新 `package.json` → CHANGELOG（`[Unreleased]` 移入 `[X.Y.Z]`）→ `.governance/manifest.json` 的 `governance_version` 与 `release` 字段。
+2. **版本同步**：更新 `package.json` → CHANGELOG（`[Unreleased]` 移入 `[X.Y.Z]`，**只改名，不在此步重建空 `[Unreleased]` 节**——重建必须在第 3 步发布门禁通过之后）→ `.governance/manifest.json` 的 `governance_version` 与 `release` 字段。
 3. **计划交付对账 + 待归档门禁（gate）**：归档前必须确认两件事，任一不通过即停止发布。①**交付对账**——待归档计划声明的 Affected Files / 标识符是否已实际交付；**声明未交付不得归档**，要么补齐交付，要么修正过时的计划声明；纯设计计划（顶部显式标注 `Status: design plan, not implemented`）跳过对账，也不得归档。②**待归档状态**——任何状态为 implemented/Completed 却仍留在 `docs/plans/` 或 `docs/*/plans/` 下的计划都必须先归档。已安装 `scripts/check-doc-consistency.js` 的项目运行 `node scripts/check-doc-consistency.js --release-gate`（退出码必须 0）机械执行第 ② 项；未安装交付对账检查器的项目（该脚本不随 INIT 安装）逐项人工核对第 ① 项，逐字枚举计划状态行核对第 ② 项。**有 `docs/plans/DEVELOPMENT_PLAN.md` 的项目**追加运行 `node scripts/check-plan-sync.js --release-gate`（退出码必须 0）：已实现的 TASK 计划必须有对应里程碑、归档计划不得被未勾选的里程碑指向、里程碑指名的计划文件必须存在；无该索引文件的项目该检查自然 no-op。**多语言文档树的项目**追加运行 `node scripts/check-doc-freshness.js --release-gate`（退出码必须 0）：译文落后于源文档（或仍标注 draft）即阻断发布；单语项目该检查自然 no-op。
 4. **归档计划**：本版本已完成的里程碑条目（含勾选状态与验收结果）聚合写入 `docs/plans/archive/vX.Y.Z.md`（一个版本一个文件）；已完成的 `TASK_<name>.md` 以独立文件原样移入 `docs/plans/archive/`（保留原文件名）。**保留原文，绝不删除**。未完成的里程碑继续留在 `docs/plans/`。归档运行的先决条件：不存在任何状态为 implemented/Completed 而未归档的计划（第 3 步的 release-gate 已强制）。
 5. **提交 release commit**：`git add`（仅版本同步与归档相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 6. **校验**：运行 `scripts/verify-governance.js`，退出码必须为 0。
-7. **生成/更新 Proposal**：把 Proposal 的 `headSha` 更新为新 HEAD、`recommended` 为 `X.Y.Z`，写入 `.governance/release-proposal.json`（execute 依此做发布前重新验证）。
+7. **生成/更新 Proposal**：**重新运行 `scripts/release-manager.js plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha`、`recommended` 与 `provenance` 都随 plan 重建，写入 `.governance/release-proposal.json`。**不得手工编辑该 JSON 只改 `headSha` 或 `recommended`**：`execute` 会重算 provenance（绑定 current/recommended/releaseType/riskLevel/reviewRecommendation/reviewStatus/headSha）并拒绝任何被编辑的 proposal（v1.0.1 与本流程都曾踩过"手改 headSha 触发 provenance does not match"）。release commit 之后必须先 plan 再 execute。
 8. **创建 annotated tag**：
 
    ```bash
