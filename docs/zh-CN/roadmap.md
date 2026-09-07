@@ -1,5 +1,3 @@
-
-- **同意证据 + 变更卫生** —— `stagedDigest` 字段绑定批准到暂存内容。删除/重命名卫生通过 `.governance/change-hygiene.json` 与 git diff 对账。风险分级(advisory/gate/human-required)写入 `coding.policy.md`。C6 评审证据绑定: `plan --review-evidence` 生成摘要, `execute` 拒绝无 digest 的 completed。计划全部三节交付。实现: [../archive/consent-and-change-hygiene.md](../archive/consent-and-change-hygiene.md)
 # Roadmap
 
 [English](../en/roadmap.md) · [简体中文](roadmap.md) · [繁體中文](../zh-TW/roadmap.md)
@@ -29,18 +27,19 @@
 - **计划归档门禁** —— 规范计划状态关键词（design/active/implemented/completed/archived）+ release 作用域的待归档门禁（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修复（`####` 子节不再截断）
 - **安装载荷完整性门禁** —— 3 项测试证明复制的门禁脚本自包含（无兄弟 `require`）且 `init-spec.json` 的复制清单与 INIT 实际写入一致
 - **确认政策重写** —— 跨五个同步点提交前一次确认；计划批准降为意图对齐（`consent-policy-hardening` 计划）
-- **治理原则索引** —— 18 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
+- **治理原则索引** —— 25 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
 - **规则捕获** —— 不让口头要求只活在对话上下文里：Agent 对每条要求预分类（持久 / 一次性 / 模糊），开发者在 Phase 6 裁定，确认的规则写入 `AGENTS.md` / `docs/rules/**`，未确认的在行为轨迹里留 `rules_pending` 痕迹。设计：[../archive/rule-capture.md](../archive/rule-capture.md)
 - **术语门禁** —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
 - **翻译新鲜度** —— Git 派生的逐对状态（stale / draft / reviewed 标记），`--release-gate` 阻断落后译文；无手写 manifest。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
 - **工程克制（机制测试）** —— 未经批准的新增机制必须自证；已批准需求优先；语义接缝合法。设计：[../archive/engineering-restraint.md](../archive/engineering-restraint.md)
 - **根因修复协议 + 失败预算** —— 复现优先的计划字段、`repairSessionId` 绑定、第一/二/三次失败升级。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **测试架构拆分 + 编码卫生门禁** —— 单一发现入口 + 八个领域套件（集合对账），并对单体回归与空套件设门禁。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
+- **范围分级验证 + 证据层级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 条目与 AGENTS.md 范围表一致；`--release-gate` 仅用于发布阻断。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **分发角色完备门禁** —— `references/` 与 `scripts/` 下每个文件都携带唯一声明角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 验证（无未分类文件、无重叠、无陈旧声明、打包边界一致）。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
-- **门禁分级 + 证据等级** —— 
+- **门禁分级 + 证据等级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口按变更范围匹配，每个门禁的产出标注为机械 / 人工背书 / 未验证，使绿色结果不被读成超出其实际证明力的结论。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **物理分发边界** —— 仓库维护内容不再随 tarball 发给技能用户：7 个 repo-only 文件（skill 发布流程、打包脚本、五个仓库专属门禁）从 `references/` 与 `scripts/` 移入打包步骤无法触达的 `repo-tools/` 与 `repo-workflows/`。角色门禁反向检查 + 完整 tarball 清单相等性测试保证「声明」与「打包」是同一事实。设计：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
 - **发布流程按受众拆分** —— `release.md` 仅覆盖被治理项目发布；本仓库自身的流程在内聚自足的 `repo-workflows/skill-release.md`（SemVer 判定、分级审核、事务性条款内联承载）。设计：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
-- **INSTALLED 内容项目可移植化** —— 载荷规则正文不再混用受众：没有 package.json 的项目不再出现 `npm run` 命令、无技能仓库 docs 路径、无无条件三语义务、无悬空指针。设计：[../archive/content-audience-portability.md](../archive/content-audience-portability.md)`check:docs` / `check:payload` / `check:tests` / `check:full` 各入口按变更范围匹配，每个门禁的产出标注为机械 / 人工背书 / 未验证，使绿色结果不被读成超出其实际证明力的结论。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **INSTALLED 内容项目可移植化** —— 载荷规则正文不再混用受众：没有 package.json 的项目不再出现 `npm run` 命令、无技能仓库 docs 路径、无无条件三语义务、无悬空指针。设计：[../archive/content-audience-portability.md](../archive/content-audience-portability.md)
 
 ### 近期
 
@@ -53,10 +52,7 @@
 已裁定、已记录、有意未实现。执行任何发布相关任务前先看这一节：它们是"门禁绿灯"实际
 证明范围内的已知缺口。
 
-- **评审证据绑定** —— 状态：延后。当前行为：`reviewStatus` 是自证声明（提案中由调用
-  方提供的字符串）；`headSha` 是机械校验的。`execute` 会打印该值为自证声明，因此签名
-  标签并不意味着评审发生过。重新评估条件：发布批准需要证明评审者身份，或评审证据必须
-  绑定到具体 commit。参见：[../archive/gate-repair-and-ssot-alignment.md](../archive/gate-repair-and-ssot-alignment.md) § C6
+- **评审证据绑定** —— 状态：**已解决**（v0.14.1+）。`plan --review-evidence` 生成评审工件摘要（SHA-256），`execute` 拒绝 `reviewStatus: completed` 时无 digest（格式校验为 64 位 hex）。`explicitly-approved` 路径保留（人工承担风险）。自证缺口已关闭——签名 tag 现在意味着提案时刻存在摘要绑定的评审工件。
 
 ### 中期
 

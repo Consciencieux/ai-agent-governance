@@ -1,5 +1,3 @@
-
-- **同意證據 + 變更衛生** —— `stagedDigest` 字段將批准綁定到暫存內容。刪除/重新命名衛生通過 `.governance/change-hygiene.json` 與 git diff 對帳。風險分級(advisory/gate/human-required)寫入 `coding.policy.md`。C6 評審證據綁定: `plan --review-evidence` 產生摘要, `execute` 拒絕無 digest 的 completed。計劃全部三節交付。實現: [../archive/consent-and-change-hygiene.md](../archive/consent-and-change-hygiene.md)
 # Roadmap
 
 [English](../en/roadmap.md) · [简体中文](../zh-CN/roadmap.md) · [繁體中文](roadmap.md)
@@ -29,18 +27,19 @@
 - **計劃歸檔閘門** —— 規範計劃狀態關鍵詞（design/active/implemented/completed/archived）+ release 作用域的待歸檔閘門（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修復（`####` 子節不再截斷）
 - **安裝載荷完整性閘門** —— 3 項測試證明複製的閘門腳本自包含（無兄弟 `require`）且 `init-spec.json` 的複製清單與 INIT 實際寫入一致
 - **確認政策重寫** —— 跨五個同步點提交前一次確認；計劃批准降為意圖對齊（`consent-policy-hardening` 計劃）
-- **治理原則索引** —— 18 條原則的純指標索引 + 一個 `--gate` 檢查保持每條來源可解析
+- **治理原則索引** —— 25 條原則的純指標索引 + 一個 `--gate` 檢查保持每條來源可解析
 - **規則捕獲** —— 不讓口頭要求只活在對話上下文裡：Agent 對每條要求預分類（持久 / 一次性 / 模糊），開發者在 Phase 6 裁定，確認的規則寫入 `AGENTS.md` / `docs/rules/**`，未確認的在行為軌跡裡留 `rules_pending` 痕跡。設計：[../archive/rule-capture.md](../archive/rule-capture.md)
 - **術語門禁** —— 術語表 `Forbidden zh-CN`/`Forbidden zh-TW` 欄在三語樹強制執行（`--gate` fail-closed、行級豁免、無術語表則 no-op）。設計：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
 - **翻譯新鮮度** —— Git 派生的逐對狀態（stale / draft / reviewed 標記），`--release-gate` 阻斷落後譯文；無手寫 manifest。設計：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
 - **工程克制（機制測試）** —— 未經批准的新增機制必須自證；已批准需求優先；語義接縫合法。設計：[../archive/engineering-restraint.md](../archive/engineering-restraint.md)
 - **根因修復協定 + 失敗預算** —— 重現優先的計劃欄位、`repairSessionId` 綁定、第一/二/三次失敗升級。設計：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
 - **測試架構拆分 + 編碼衛生閘門** —— 單一發現入口 + 八個領域套件（集合對帳），並對單體回歸與空套件設閘門。設計：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
+- **範圍分級驗證 + 證據層級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 條目與 AGENTS.md 範圍表一致；`--release-gate` 僅用於發佈阻斷。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **分發角色完備閘門** —— `references/` 與 `scripts/` 下每個檔案都攜帶唯一宣告角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 驗證（無未分類檔案、無重疊、無陳舊宣告、打包邊界一致）。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
-- **閘門分級 + 證據等級** —— 
+- **閘門分級 + 證據等級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口依變更範圍匹配，每個閘門的產出標註為機械 / 人工背書 / 未驗證，使綠色結果不被讀成超出其實際證明力的結論。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
 - **物理分發邊界** —— 倉庫維護內容不再隨 tarball 發給技能用戶：7 個 repo-only 檔案（skill 發佈流程、打包腳本、五個倉庫專屬閘門）從 `references/` 與 `scripts/` 移入打包步驟無法觸達的 `repo-tools/` 與 `repo-workflows/`。角色閘門反向檢查 + 完整 tarball 清單相等性測試保證「宣告」與「打包」是同一事實。設計：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
 - **發佈流程按受眾拆分** —— `release.md` 僅覆蓋被治理專案發佈；本倉庫自身的流程在內聚自足的 `repo-workflows/skill-release.md`（SemVer 判定、分級審核、事務性條款內聯承載）。設計：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
-- **INSTALLED 內容專案可移植化** —— 載荷規則正文不再混用受眾：沒有 package.json 的專案不再出現 `npm run` 命令、無技能倉庫 docs 路徑、無無條件三語義務、無懸空指標。設計：[../archive/content-audience-portability.md](../archive/content-audience-portability.md)`check:docs` / `check:payload` / `check:tests` / `check:full` 各入口依變更範圍匹配，每個閘門的產出標註為機械 / 人工背書 / 未驗證，使綠色結果不被讀成超出其實際證明力的結論。設計：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
+- **INSTALLED 內容專案可移植化** —— 載荷規則正文不再混用受眾：沒有 package.json 的專案不再出現 `npm run` 命令、無技能倉庫 docs 路徑、無無條件三語義務、無懸空指標。設計：[../archive/content-audience-portability.md](../archive/content-audience-portability.md)
 
 ### 近期
 
@@ -53,10 +52,7 @@
 已裁定、已記錄、有意未實作。執行任何發佈相關任務前先看這一節：它們是「閘門綠燈」實際
 證明範圍內的已知缺口。
 
-- **評審證據綁定** —— 狀態：延後。當前行為：`reviewStatus` 是自證聲明（提案中由呼叫
-  方提供的字串）；`headSha` 是機械校驗的。`execute` 會列印該值為自證聲明，因此簽名
-  標籤並不意味著評審發生過。重新評估條件：發佈批准需要證明評審者身分，或評審證據必須
-  綁定到具體 commit。參見：[../archive/gate-repair-and-ssot-alignment.md](../archive/gate-repair-and-ssot-alignment.md) § C6
+- **評審證據綁定** —— 狀態：**已解決**（v0.14.1+）。`plan --review-evidence` 生成評審工件摘要（SHA-256），`execute` 拒絕 `reviewStatus: completed` 時無 digest（格式校驗為 64 位 hex）。`explicitly-approved` 路徑保留（人工承擔風險）。自證缺口已關閉——簽名 tag 現在意味著提案時刻存在摘要綁定的評審工件。
 
 ### 中期
 

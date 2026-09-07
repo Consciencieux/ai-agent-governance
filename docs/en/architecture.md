@@ -40,8 +40,7 @@ Two rules follow, and both were violated before this table existed:
    project** (it is not there). Sub-skill and generated-AGENTS text may only point at
    INSTALLED paths — `docs/rules/*`, the governed project's own `AGENTS.md`, or copied
    `scripts/*`.
-2. **A SKILL-INTERNAL script must no-op outside this repo's shape**, because packaging
-   still ships it. `check-coding-hygiene.js` does this by reporting `applicable: false`
+2. **A SKILL-INTERNAL script must no-op outside this repo's shape** (now REPO-ONLY under repo-tools/, never shipped). `check-coding-hygiene.js` does this by reporting `applicable: false`
    when the suite layout is absent.
 
 ### The second axis: portability (where a file GOES vs whether its content HOLDS there)
@@ -87,7 +86,7 @@ Three rules follow:
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill entry point / product spec | agents (skill users) | single |
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
-| `scripts/` | Skill runtime scripts. Mixed too: 7 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
+| `scripts/` | Skill runtime scripts. Mixed too: 9 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
 | `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), roadmap, glossary. | developers + agents | trilingual |
 | `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `CONTRIBUTING.md`, `README.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |

@@ -59,7 +59,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill 入口 / 產品規範 | agent（skill 使用者） | 單語 |
 | `references/` | **Skill 主體——skill 行為唯一存放處。** INSTALLED 與 SKILL-INTERNAL 混裝（見角色表）。 | agent（skill 使用者） | 單語 |
-| `scripts/` | Skill 執行時腳本。同樣混裝：7 個是 INSTALLED（複製進被治理專案），其餘是只在本倉庫執行的 SKILL-INTERNAL 工具。 | agent/CI | 程式碼 |
+| `scripts/` | Skill 執行時腳本。同樣混裝：9 個是 INSTALLED（複製進被治理專案），其餘是只在本倉庫執行的 SKILL-INTERNAL 工具。 | agent/CI | 程式碼 |
 | `LICENSE` | MIT 授權條款——隨 tarball 分發 | 安裝者 | — |
 | `docs/` | **專案知識。REPO-ONLY。** 開發者維護，供開發者與在本倉庫工作的 Agent 讀取：如何使用 skill（`commands.md` 觸發詞）、設計計劃（`plans/`）、路線圖、術語表。 | 開發者 + Agent | 三語 |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`CONTRIBUTING.md`、`README.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基礎設施：CI、發佈流程、變更日誌、貢獻指南 | 倉庫維護者 | 按檔案 |
@@ -115,6 +115,7 @@ ai-agent-governance/
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發
 │   └── skill-release.md        # 技能倉庫發佈流程（版本五個同步點 + tag、tarball 建置）
 │
+├── docs/                       # 專案知識——開發者維護，開發者與 Agent 共享讀取（觸發詞、計劃、路線圖）
 │   ├── glossary.md             # 三語術語對照表（共享）
 │   ├── design-decisions/       # 架構決策記錄（共享，簡體單語）
 │   ├── archive/                # 已完成計劃歸檔（共享，單語）
