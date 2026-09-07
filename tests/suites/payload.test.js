@@ -105,6 +105,29 @@ test("payload: INIT installs the protected-files list the installed check reads"
     return JSON.parse(run.stdout).issues.protected_lists.some((i) => i.includes("source missing"));
   });
 
+  // G2: completeness must judge the ENUMERATION BLOCK, not the whole file. A path still
+  // mentioned in operational prose (a gate clause on a later line) used to satisfy the
+  // completeness check, so deleting its entry from the protected enumeration went
+  // unnoticed while the pipeline stayed green (audit 2026-09-07).
+  test("payload: deleting a protected-list entry is caught even when prose still mentions the path", () => {
+    const dir = tmp("payload-protected-mention");
+    spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "Mention", "--phase", "C"], { encoding: "utf8" });
+    const ag = path.join(dir, "AGENTS.md");
+    const orig = fs.readFileSync(ag, "utf8");
+    // the generated AGENTS.md states scripts in prose too (gate section), so a file-wide
+    // includes() would see the path even after its enumeration entry is deleted
+    const entry = "- `scripts/check-secrets.js`\n";
+    if (!orig.includes(entry)) return false;
+    fs.writeFileSync(ag, orig.replace(entry, ""));
+    const r = spawnSync(process.execPath, [path.join(dir, "scripts", "check-doc-consistency.js"), "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+    if (r.status !== 1) {
+      console.error("  enumeration deletion passed --gate despite the path being mentioned elsewhere in the file");
+      return false;
+    }
+    const out = JSON.parse(r.stdout);
+    return out.gateIssues.some((g) => g.kind === "protected_lists" && /missing (?:scripts\/)?check-secrets/.test(g.item));
+  });
+
   test("payload: INIT installs the feature-doc template SKILL.md tells agents to copy", () => {
     const dir = tmp("payload-feature-template");
     const g = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "FeatTpl", "--phase", "C"], { encoding: "utf8" });
@@ -576,6 +599,40 @@ test("plan delivery: an identifier wired into repo-tools/ verifies as delivered"
   const flagged = JSON.stringify(j).includes("zzz_delivered_flag");
   if (flagged) console.error("  a wired repo-tools identifier was reported undelivered: " + JSON.stringify(j).slice(0, 300));
   return !flagged;
+});
+
+// The name-scrape pin at the test above asserts the set; this one proves each root FILE
+// actually contributes, not just that it is listed. The repo's own lesson: a rule that
+// declares a set and a mechanism that covers a subset. Wires one identifier per root and
+// expects each to verify as delivered. A root that stopped being searched would flag it.
+// CHANGELOG.md is deliberately NOT probed: the checker excludes it by design (a mention in
+// a CHANGELOG entry is narration, not a wiring).
+test("plan delivery: an identifier wired into EVERY root file verifies as delivered", () => {
+  const dir = tmp("delivery-root-files");
+  const planDir = path.join(dir, "docs", "en", "plans");
+  fs.mkdirSync(planDir, { recursive: true });
+  fs.mkdirSync(path.join(dir, "references"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
+  const roots = [
+    ["AGENTS.md", "# AGENTS\n\nzzz_root_flag_agents\n"],
+    ["SKILL.md", "# SKILL\n\nzzz_root_flag_skill\n"],
+    ["package.json", JSON.stringify({ name: "probe", version: "0.0.0", flag: "zzz_root_flag_pkg" })],
+  ];
+  const flags = roots.map(([, content]) => (content.match(/zzz_root_flag_\w+/) || ["zzz_root_flag_unknown"])[0]);
+  for (const [file, content] of roots) fs.writeFileSync(path.join(dir, file), content, "utf8");
+  fs.writeFileSync(path.join(planDir, "probe.md"), [
+    "# Probe (TASK plan)", "", "> **Status: implemented.**", "", "**Target: repo-infra**", "",
+    "### Affected Files", "", ...flags.map((f) => "- `" + f + "` (root file probe)")
+  ].join("\n"), "utf8");
+  const run = spawnSync(process.execPath, [PLAN_DELIVERY, "--json"], { cwd: dir, encoding: "utf8" });
+  let j;
+  try { j = JSON.parse(run.stdout); } catch { return false; }
+  const bad = flags.filter((f) => JSON.stringify(j).includes(f));
+  if (bad.length) {
+    console.error("  root-file identifiers reported undelivered: " + bad.join(", "));
+    return false;
+  }
+  return run.status === 0;
 });
 // ---------------------------------------------------------------------------
 // Plan sync (scripts/check-plan-sync.js) — INSTALLED. The lifecycle policy says "tick the

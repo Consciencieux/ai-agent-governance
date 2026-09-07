@@ -28,7 +28,7 @@
 - **计划归档门禁** —— 规范计划状态关键词（design/active/implemented/completed/archived）+ release 作用域的待归档门禁（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修复（`####` 子节不再截断）
 - **安装载荷完整性门禁** —— 3 项测试证明复制的门禁脚本自包含（无兄弟 `require`）且 `init-spec.json` 的复制清单与 INIT 实际写入一致
 - **确认政策重写** —— 跨五个同步点提交前一次确认；计划批准降为意图对齐（`consent-policy-hardening` 计划）
-- **治理原则索引** —— 25 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
+- **治理原则索引** —— 26 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
 - **规则捕获** —— 不让口头要求只活在对话上下文里：Agent 对每条要求预分类（持久 / 一次性 / 模糊），开发者在 Phase 6 裁定，确认的规则写入 `AGENTS.md` / `docs/rules/**`，未确认的在行为轨迹里留 `rules_pending` 痕迹。设计：[../archive/rule-capture.md](../archive/rule-capture.md)
 - **术语门禁** —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
 - **翻译新鲜度** —— Git 派生的逐对状态（stale / draft / reviewed 标记），`--release-gate` 阻断落后译文；无手写 manifest。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)

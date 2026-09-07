@@ -39,15 +39,22 @@ function readSafe(rel) {
   try { return fs.readFileSync(path.join(ROOT, rel), "utf8"); } catch { return null; }
 }
 
-// Canonical status vocabulary from the lifecycle policy. Order matters: the design form
-// "design plan, not implemented" CONTAINS the substring "implemented".
+// Canonical status vocabulary from the lifecycle policy, on the canonical status LINE
+// (`> **Status: ...**` blockquote-bold within the first 12 lines). A loose substring
+// search ("Status:" anywhere) classified a colon-outside-bold or plain-line form as
+// implemented here while check-doc-consistency read the same file as unknown — four
+// classifiers disagreeing on one plan is the divergence class this vocabulary exists
+// to prevent. Order matters: the design form CONTAINS the substring "implemented".
 function planStatus(content) {
-  const line = content.split(/\r?\n/).find((l) => /Status[:：]/i.test(l) || /状态[:：]/.test(l) || /狀態[:：]/.test(l));
+  const head = content.split(/\r?\n/).slice(0, 12).join("\n");
+  const line = head.match(/^>\s*\*\*\s*(?:Status|状态|狀態)\s*[:：]\s*([^*\n]+)/im);
   if (!line) return "unknown";
-  if (/archived|已归档|已歸檔/i.test(line)) return "archived";
-  if (/not implemented|未实现|未實現|未實作|design plan|设计计划|設計計劃/i.test(line)) return "design";
-  if (/implemented|已实现|已實現|已實作|completed|已完成/i.test(line)) return "implemented";
-  if (/active|进行中|進行中/i.test(line)) return "active";
+  const value = line[1].trim();
+  if (/^(?:archived|已归档|已歸檔)/i.test(value)) return "archived";
+  if (/^(?:design plan, not implemented|设计计划，未实现|設計計劃，未實作)/i.test(value)) return "design";
+  if (/^(?:implemented|已实现|已實作)/i.test(value)) return "implemented";
+  if (/^(?:completed|已完成)/i.test(value)) return "implemented";
+  if (/^active/i.test(value)) return "active";
   return "unknown";
 }
 

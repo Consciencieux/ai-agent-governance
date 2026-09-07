@@ -6,6 +6,26 @@ const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
+// `execute` refuses a proposal that `plan` did not produce (provenance binding, audit
+// 2026-09-07). Tests that construct a proposal to exercise execute's OTHER guards must
+// therefore stamp the same value. This mirrors release-manager.js provenanceOf() — the
+// duplication is deliberate: if the derivation changes without this being updated, these
+// tests fail, which is the signal we want.
+function stampProvenance(p) {
+  const material = [
+    "ai-agent-governance/release-proposal/v1",
+    String(p.current || ""),
+    String(p.recommended || ""),
+    String(p.releaseType || ""),
+    String(p.riskLevel || ""),
+    String(p.reviewRecommendation || ""),
+    String(p.reviewStatus || ""),
+    String(p.headSha || ""),
+  ].join("\n");
+  p.provenance = require("crypto").createHash("sha256").update(material).digest("hex");
+  return p;
+}
+
 module.exports = (test) => {
 
 
@@ -82,7 +102,7 @@ test("release execute: unapproved release creates no tag", () => {
     reviewStatus: "not-required",
   };
   const proposalPath = path.join(dir, ".governance", "release-proposal.json");
-  write(proposalPath, JSON.stringify(proposal));
+  write(proposalPath, JSON.stringify(stampProvenance(proposal)));
   const r = runRelease(dir, ["execute", "--proposal", proposalPath]);
   return r.status !== 0 && gitTags(dir) === "";
 });
@@ -102,7 +122,7 @@ test("release execute: approved release creates annotated tag", () => {
     reviewStatus: "not-required",
   };
   const proposalPath = path.join(dir, ".governance", "release-proposal.json");
-  write(proposalPath, JSON.stringify(proposal));
+  write(proposalPath, JSON.stringify(stampProvenance(proposal)));
   const r = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
   if (r.status !== 0) return false;
   const type = spawnSync("git", ["cat-file", "-t", "v1.0.1"], { cwd: dir, encoding: "utf8" });
@@ -124,7 +144,7 @@ test("release execute: proposal without headSha is rejected (identity binding)",
     reviewStatus: "not-required",
   };
   const proposalPath = path.join(dir, ".governance", "release-proposal.json");
-  write(proposalPath, JSON.stringify(proposal));
+  write(proposalPath, JSON.stringify(stampProvenance(proposal)));
   const r = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
   return r.status !== 0 && gitTags(dir) === "" && /headSha/.test(r.stdout + r.stderr);
 });
@@ -144,14 +164,14 @@ test("release execute: high-risk proposal requires review evidence", () => {
     reviewStatus: "required",
   };
   const proposalPath = path.join(dir, ".governance", "release-proposal.json");
-  write(proposalPath, JSON.stringify(proposal));
+  write(proposalPath, JSON.stringify(stampProvenance(proposal)));
   const blocked = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
   if (blocked.status !== 4 || gitTags(dir) !== "" || !/requires completed review/.test(blocked.stderr)) return false;
   // C6: setting reviewStatus to "completed" is NOT enough — without a reviewDigest
   // the review evidence is unbound (a review that never ran is not a review), so
   // execute must refuse and create no tag.
   proposal.reviewStatus = "completed";
-  write(proposalPath, JSON.stringify(proposal));
+  write(proposalPath, JSON.stringify(stampProvenance(proposal)));
   const c6blocked = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
   return c6blocked.status !== 0 && /reviewDigest/i.test(c6blocked.stderr + c6blocked.stdout) && gitTags(dir) === "";
 });
@@ -230,7 +250,7 @@ test("release execute: completed review without a digest is rejected (C6)", () =
   const proposal = { current: "1.0.0", recommended: "1.0.1", releaseType: "patch", headSha: head, summary: "x",
     riskLevel: "high", reviewRecommendation: "required", reviewStatus: "completed" };
   const p = path.join(dir, ".governance", "release-proposal.json");
-  write(p, JSON.stringify(proposal));
+  write(p, JSON.stringify(stampProvenance(proposal)));
   const r = spawnSync(process.execPath, [RELEASE_TOOL, "execute", "--proposal", p, "--yes"], { cwd: dir, encoding: "utf8" });
   return r.status !== 0 && /reviewDigest/i.test(String(r.stderr || "") + String(r.stdout || ""));
 });
@@ -251,7 +271,7 @@ test("release execute: completed review WITH digest passes C6", () => {
   proposal.headSha = gitHead(dir);
   proposal.reviewStatus = "completed";
   const p = path.join(dir, ".governance", "release-proposal.json");
-  write(p, JSON.stringify(proposal));
+  write(p, JSON.stringify(stampProvenance(proposal)));
   const r = spawnSync(process.execPath, [RELEASE_TOOL, "execute", "--proposal", p, "--yes"], { cwd: dir, encoding: "utf8" });
   if (r.status !== 0) { console.error("  execute failed: " + String(r.stderr || "").trim().slice(0, 200)); return false; }
   return true;
@@ -267,7 +287,7 @@ test("release execute: explicitly-approved without digest still allowed (human o
   const proposal = { current: "1.0.0", recommended: "1.0.1", releaseType: "patch", headSha: head, summary: "x",
     riskLevel: "high", reviewRecommendation: "required", reviewStatus: "explicitly-approved" };
   const p = path.join(dir, ".governance", "release-proposal.json");
-  write(p, JSON.stringify(proposal));
+  write(p, JSON.stringify(stampProvenance(proposal)));
   const r = spawnSync(process.execPath, [RELEASE_TOOL, "execute", "--proposal", p, "--yes"], { cwd: dir, encoding: "utf8" });
   return r.status === 0;
 });

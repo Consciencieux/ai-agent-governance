@@ -347,15 +347,30 @@ test("package.json scope tiers match the AGENTS.md scope table", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
   const s = pkg.scripts || {};
   const required = {
+    // `check` is the most load-bearing entry: CI runs it, and check:full / check:all /
+    // check:skill-release all resolve through it. It was UNPINNED — removing a single
+    // fail-closed gate from it left the whole suite green while CI silently stopped
+    // enforcing that gate (audit 2026-09-07). Every gate AGENTS.md lists for check:full
+    // is enumerated here; adding a gate to the scope table without adding it to `check`
+    // (or vice versa) must fail.
+    check: ["npm test", "docs:parity", "docs:layout", "check-doc-consistency.js --gate", "check-coding-hygiene.js --gate", "check-role-completeness.js --gate", "check-roadmap-sync.js --gate"],
     "check:docs": ["npm test", "docs:parity", "check-doc-consistency.js --gate", "docs:layout"],
     "check:payload": ["npm test", "docs:layout", "check-doc-consistency.js --gate", "check-coding-hygiene.js --gate", "check-role-completeness.js --gate"],
     "check:tests": ["npm test", "check-coding-hygiene.js --gate"],
-
-};
+  };
   for (const [entry, parts] of Object.entries(required)) {
     const cmd = s[entry] || "";
-    for (const p of parts) if (!cmd.includes(p)) return false;
+    for (const p of parts) {
+      if (!cmd.includes(p)) {
+        console.error("  " + entry + " is missing: " + p);
+        return false;
+      }
+    }
   }
+  // check:full is an alias of check; check:all must build on it. Pinning the alias keeps a
+  // future edit from quietly pointing check:full at a narrower set.
+  if (!/npm run check\b/.test(s["check:full"] || "")) return false;
+  if (!/npm run check\b/.test(s["check:all"] || "")) return false;
   // Delivery must be gated, otherwise check:all reports success on a broken plan.
   if (!/check-plan-delivery\.js\s+--gate/.test(s["plans:delivery"] || "")) return false;
   return /plans:delivery/.test(s["check:all"] || "");

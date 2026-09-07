@@ -36,17 +36,24 @@ function readFileSafe(rel) {
   try { return fs.readFileSync(path.join(ROOT, rel), "utf8"); } catch { return null; }
 }
 
-// Canonical status keywords (same vocabulary the plan-status cluster uses).
+// Canonical status keywords (same vocabulary the plan-status cluster uses). The status
+// LINE must be the canonical blockquote-bold form used in the payload classifier —
+// `> **Status: ...**` — within the first 12 lines; a bare `Status: ...` elsewhere was
+// accepted here but read as "unknown" by check-doc-consistency, and vice versa (an
+// audit found the four classifiers disagreeing on the same file).
 function planStatus(content) {
-  const line = content.split(/\r?\n/).find((l) => /Status:/i.test(l) || /状态[:：]/.test(l) || /狀態[:：]/.test(l));
+  const head = content.split(/\r?\n/).slice(0, 12).join("\n");
+  const line = head.match(/^>\s*\*\*\s*(?:Status|状态|狀態)\s*[:：]\s*([^*\n]+)/im);
   if (!line) return "unknown";
+  const value = line[1].trim();
   // Order matters: "design plan, not implemented" CONTAINS "implemented". Checking the
   // negative/design form first is what keeps a design plan from being read as delivered
   // (this classifier reported exactly that bug on its first run).
-  if (/archived|已归档|已歸檔/i.test(line)) return "archived";
-  if (/not implemented|未实现|未實現|未實作|design plan|设计计划|設計計劃/i.test(line)) return "design";
-  if (/implemented|已实现|已實現|已實作|completed|已完成/i.test(line)) return "implemented";
-  if (/active|进行中|進行中/i.test(line)) return "active";
+  if (/^(?:archived|已归档|已歸檔)/i.test(value)) return "archived";
+  if (/^(?:design plan, not implemented|设计计划，未实现|設計計劃，未實作)/i.test(value)) return "design";
+  if (/^(?:implemented|已实现|已實作)/i.test(value)) return "implemented";
+  if (/^(?:completed|已完成)/i.test(value)) return "implemented";
+  if (/^active/i.test(value)) return "active";
   return "unknown";
 }
 

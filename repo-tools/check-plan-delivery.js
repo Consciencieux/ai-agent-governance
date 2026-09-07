@@ -285,10 +285,15 @@ function extractSection(content, names) {
 function isDesignOnly(relPath, content) {
   // Archived plans are always in scope: archiving asserts completion.
   if (relPath.replace(/\\/g, "/").includes("docs/archive/")) return false;
-  // Otherwise rely on an EXPLICIT status marker near the top of the plan
-  // (`Status: design plan, not implemented` / `状态：设计计划，未实现` / `狀態：設計計劃，未實作`).
+  // Same canonical status line the other classifiers use: `> **Status: design plan,
+  // not implemented**` (bold blockquote, first 12 lines), or the zh variants. The strict
+  // literal form below was divorceable from the payload classifier — a plan with the
+  // COLON OUTSIDE the bold (Status: design... vs Status:inside bold) was classified
+  // design-only here and unknown in check-doc-consistency, and vice versa for a plain
+  // line. The regex is the canonical PLAN_STATUS_LINE form, duplicated verbatim because
+  // this is REPO-ONLY and cannot share the payload module.
   const head = content.split(/\r?\n/).slice(0, 12).join("\n");
-  return /Status:\s*design plan, not implemented|状态：设计计划，未实现|狀態：設計計劃，未實作/i.test(head);
+  return /^>\s*\*\*\s*(?:Status|状态|狀態)\s*[:：]\s*design plan, not implemented/im.test(head);
 }
 
 function auditPlan(relPath) {

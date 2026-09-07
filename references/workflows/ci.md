@@ -35,6 +35,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+      - run: node scripts/verify-governance.js
       - uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -68,6 +69,7 @@ jobs:
       - run: mypy .
       - run: pytest -q
       - run: python -m build
+      - run: node scripts/verify-governance.js
       - uses: actions/upload-artifact@v4
         with:
           name: dist-${{ matrix.python-version }}
@@ -97,6 +99,7 @@ jobs:
       - run: cargo clippy -- -D warnings
       - run: cargo test
       - run: cargo build --release
+      - run: node scripts/verify-governance.js
 ```
 
 ## GitHub Actions — Go（gofmt + go vet）
@@ -120,6 +123,7 @@ jobs:
       - run: go vet ./...
       - run: go test ./...
       - run: go build ./...
+      - run: node scripts/verify-governance.js
 ```
 
 ## GitHub Actions — Java（Maven + Spotless）
@@ -143,6 +147,7 @@ jobs:
       - run: mvn -B spotless:check
       - run: mvn -B test
       - run: mvn -B package -DskipTests
+      - run: node scripts/verify-governance.js
       - uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -185,6 +190,7 @@ jobs:
       - run: cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
       - run: cmake --build build
       - run: ctest --test-dir build --output-on-failure
+      - run: node scripts/verify-governance.js
 ```
 
 > 按检测到的构建系统选择：CMake 用上例；Makefile 项目把 build 步骤替换为 `make` / `make test`。`clang-tidy` 需 `compile_commands.json`（CMake 加 `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`），可选。
@@ -326,6 +332,44 @@ governance:
 ```
 
 > 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
+
+## GitLab CI (rust)
+
+```yaml
+stages: [format, lint, test, build]
+
+format:
+  stage: format
+  image: rust:1.75
+  script:
+    - cargo fmt --check
+
+lint:
+  stage: lint
+  image: rust:1.75
+  script:
+    - cargo clippy -- -D warnings
+
+test:
+  stage: test
+  image: rust:1.75
+  script:
+    - cargo test
+
+build:
+  stage: build
+  image: rust:1.75
+  script:
+    - cargo build --release
+
+governance:
+  stage: test
+  image: node:20
+  script:
+    - node scripts/verify-governance.js
+```
+
+> 治理门禁 job 使用 node image（校验器是 Node 脚本），其余 job 用栈镜像；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 管线降级」）。
 
 ## GitLab CI (java)
 

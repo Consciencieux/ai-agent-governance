@@ -275,6 +275,7 @@ const CI_SECTIONS = {
   "docs-only": /## 纯文档项目/,
   "gitlab-node": /## GitLab CI \(node\)/,
   "gitlab-python": /## GitLab CI \(python\)/,
+  "gitlab-rust": /## GitLab CI \(rust\)/,
   "gitlab-go": /## GitLab CI \(go\)/,
   "gitlab-java": /## GitLab CI \(java\)/,
   "gitlab-cpp": /## GitLab CI \(cpp\)/i,
@@ -305,7 +306,17 @@ function generateCi(inputs, skillDir) {
   const ciMd = fs.readFileSync(path.join(skillDir, "references", "workflows", "ci.md"), "utf8");
   const key = platform === "gitlab" ? "gitlab-" + (inputs.stack || "docs-only") : (inputs.stack || "docs-only");
   const tpl = extractCiTemplate(ciMd, key);
-  if (!tpl) return null;
+  if (!tpl) {
+    // A requested platform+stack combination with no template is a GAP, not a "skip".
+    // Returning null here made it indistinguishable from ci_platform=none: the artifact
+    // was dropped from the manifest too, so the project was declared fully governed with
+    // no CI at all and the validator reported a full pass (audit 2026-09-07: gitlab+rust).
+    // Fail loudly so the missing template is fixed instead of silently shipping no CI.
+    throw new Error(
+      "no CI template for platform '" + platform + "' + stack '" + (inputs.stack || "docs-only") + "' (looked for section key '" + key + "' in references/workflows/ci.md). " +
+      "Add the template, choose a supported stack, or pass --ci-platform none to deliberately skip CI."
+    );
+  }
   return tpl.endsWith("\n") ? tpl : tpl + "\n";
 }
 
@@ -605,7 +616,8 @@ inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effecti
         else if (art.generator === "ci") {
           const ci = generateCi(inputs, SKILL_DIR);
           if (ci === null) {
-            result = { path: artPath, action: "skipped", note: "ci_platform=none or no template for stack '" + (inputs.stack || "") + "'" };
+            // Only reachable for ci_platform=none now; a missing template throws.
+            result = { path: artPath, action: "skipped", note: "ci_platform=none (CI deliberately not generated)" };
             results.push(result);
             continue;
           }

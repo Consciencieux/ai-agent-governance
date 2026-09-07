@@ -34,6 +34,7 @@ for (const s of SUITES) require(s)(test);
 
 // ---------- runner (must stay after ALL test registrations) ----------
 let failed = 0;
+let skipped = 0;
 for (const t of tests) {
   let ok;
   try {
@@ -41,6 +42,14 @@ for (const t of tests) {
   } catch (e) {
     ok = false;
     console.error(`  threw: ${e.message}`);
+  }
+  // A test may return a string starting with "skip:" — a platform limitation, not a
+  // pass. Without this channel a skip printed `(skipped: ...)` and returned true, so the
+  // 294/294 summary counted it as covered while nothing was asserted (audit 2026-09-07).
+  if (typeof ok === "string" && ok.startsWith("skip:")) {
+    console.log(`△ ${t.name} — ${ok.slice(5)}`);
+    skipped += 1;
+    continue;
   }
   if (ok) {
     console.log(`✓ ${t.name}`);
@@ -52,6 +61,6 @@ for (const t of tests) {
 
 H.cleanup();
 
-console.log(`\n${tests.length - failed}/${tests.length} tests passed.`);
+console.log(`\n${tests.length - failed - skipped}/${tests.length} tests passed, ${skipped} skipped.`);
 process.exit(failed === 0 ? 0 : 1);
 

@@ -143,7 +143,7 @@ module.exports = (test) => {
   // first run after the push. Full-length (40 hex) is the decidable invariant.
   test("ci workflow: every pinned action SHA is full length (40 hex)", () => {
     const wf = path.join(repo, ".github", "workflows", "ci.yml");
-    if (!fs.existsSync(wf)) return true; // governed project without this workflow
+    if (!fs.existsSync(wf)) return "skip: no .github/workflows/ci.yml in this repo";
     const lines = fs.readFileSync(wf, "utf8").split(/\r?\n/);
     let pinned = 0;
     for (const line of lines) {

@@ -139,14 +139,14 @@ test("check-sync: --advisory reports unsynced groups but exits 0", () => {
   return out.clean === false && out.unsynced.some((u) => u.group === "api-architecture");
 });
 
-test("check-secrets: github_pat_ form hits github-pat pattern", () => {
+test("check-secrets: github_pat_ form hits github-token pattern", () => {
   const dir = tmp("secrets-pat2");
   gitInit(dir);
   const value = assemble("github_pat_", "Q0ABCDEFGHIJKLMNOPQRSTUV1234567890");
   write(path.join(dir, "ci.yml"), assemble("token: ", value));
   spawnSync("git", ["add", "ci.yml"], { cwd: dir });
   const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
-  return r.status === 1 && r.stderr.includes("github-pat") && !r.stderr.includes(value);
+  return r.status === 1 && r.stderr.includes("github-token") && !r.stderr.includes(value);
 });
 
 test("check-secrets: generic connection string hits generic-connection-string pattern", () => {
@@ -349,6 +349,24 @@ test("check-plan-delivery: design-only plan is skipped", () => {
   fs.writeFileSync(path.join(dir, "docs/en/plans/future.md"), "# F\n\n> **Status: design plan, not implemented.**\n\n### Affected Files\n\n- `references/templates/not-yet.md` — new\n", "utf8");
   const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
   return r.status === 0;
+});
+
+// The four plan-status classifiers diverged: a Status line whose colon sits OUTSIDE the
+// bold (`**Status:** design…` vs `**Status: design…**`) was design-only here and
+// "unknown" in the payload classifier, and the same plan got different verdicts per
+// script. The canonical form is `> **Status: <keyword>**` (colon inside the bold);
+// anything else is NOT the canonical status line and must not be read as a verdict
+// (audit 2026-09-07). A plan with the off-canonical spelling must be AUDITED, not
+// silently skipped as design-only.
+test("check-plan-delivery: a non-canonical Status line is NOT treated as design-only", () => {
+  const dir = tmp("plandel-noncanon");
+  fs.mkdirSync(path.join(dir, "docs/en/plans"), { recursive: true });
+  // colon outside the bold + no blockquote: the loose old regex matched this; the
+  // canonical regex must not
+  fs.writeFileSync(path.join(dir, "docs/en/plans/future.md"), "# F\n\n> Status: **design plan, not implemented**\n\n### Affected Files\n\n- `references/templates/not-yet.md` — new\n", "utf8");
+  const r = spawnSync(process.execPath, [PLAN_DELIVERY, "--gate"], { cwd: dir, encoding: "utf8" });
+  // The plan is not design-only, so the undelivered declaration must be reported
+  return r.status === 1 && /not found|undelivered/.test(r.stdout);
 });
 
 test("check-plan-delivery: behavioural declaration is verified (writes: X in Y)", () => {
@@ -641,8 +659,7 @@ test("payload: generated hooks are POSIX sh (static scan, no shell required)", (
 test("payload: hooks pass sh -n and real git commit matrix", () => {
   const shell = findPosixShell();
   if (!shell) {
-    console.error("  sh unavailable; hook EXECUTION test skipped (static POSIX scan runs separately)");
-    return true;
+    return "skip: sh unavailable; hook EXECUTION test skipped (static POSIX scan runs separately)";
   }
   const dir = tmp("hook-commit-matrix");
   const generated = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "HookMatrix", "--phase", "C"], { encoding: "utf8" });
@@ -1281,6 +1298,44 @@ test("consistency: implemented plan is pending-archive — advisory in --gate, f
   return relOut.gateIssues.some((g) => g.kind === "plans_pending_archive" && g.item.includes("done.md"));
 });
 
+// Governed projects use ONE docs/plans/ tree (no languages). The trilingual scan no-ops
+// there, so an implemented plan used to sail through --release-gate with planStatuses
+// empty — a declared mechanical enforcement covering zero plans (audit 2026-09-07).
+test("consistency --release-gate: governed-project single-tree plan is scanned", () => {
+  const dir = tmp("plans-gov-single");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs/plans"), { recursive: true });
+  write(path.join(dir, "docs/plans/TASK_leftover.md"), "# X\n\n> **Status: implemented**\n");
+  const rel = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(rel.stdout || "{}");
+  // the plan must have been seen, and pending-archive must fire with the single-tree path
+  if (!(out.planStatuses || []).some((p) => p.plan === "docs/plans/TASK_leftover.md") || !(out.pendingArchive >= 1)) {
+    console.error("  governed single-tree plan was not scanned or not flagged");
+    return false;
+  }
+  if (rel.status !== 1) {
+    console.error("  --release-gate exited " + rel.status + " despite pending archive");
+    return false;
+  }
+  return out.gateIssues.some((g) => g.kind === "plans_pending_archive" && g.item.includes("TASK_leftover.md"));
+});
+
+// Governed-project archives live at docs/plans/archive/ (single language), not the
+// trilingual docs/archive/. An archived plan still claiming implemented there must fail.
+test("consistency --release-gate: governed-project archive status is checked", () => {
+  const dir = tmp("plans-gov-archive");
+  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
+  fs.mkdirSync(path.join(dir, "docs/plans/archive"), { recursive: true });
+  write(path.join(dir, "docs/plans/archive/TASK_old.md"), "# X\n\n> **Status: implemented**\n");
+  const rel = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(rel.stdout || "{}");
+  if (rel.status !== 1) {
+    console.error("  governed archive carrying implemented exited " + rel.status);
+    return false;
+  }
+  return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("archive/TASK_old.md"));
+});
+
 test("consistency --gate: unknown plan status exits 1 (fixable on the spot)", () => {
   const dir = tmp("plans-unknown");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -1462,8 +1517,7 @@ test("validator: a project reached through a symlinked root still validates", ()
   fs.writeFileSync(path.join(dir, ".governance/manifest.json"), JSON.stringify(m));
   const link = path.join(path.dirname(dir), path.basename(dir) + "-link");
   if (!linkDir(dir, link)) {
-    console.log("  (skipped: directory links not permitted on this platform)");
-    return true;
+    return "skip: directory links not permitted on this platform";
   }
   const direct = run(dir, ["--json"]);
   const viaLink = spawnSync(process.execPath, [VALIDATOR, "--json"], { cwd: link, encoding: "utf8" });
@@ -1485,8 +1539,7 @@ test("validator: a skill directory symlinked out of the tree is rejected", () =>
   fs.writeFileSync(path.join(outside, "SKILL.md"), "# Evil\n");
   fs.mkdirSync(path.join(dir, ".governance/generated/skills"), { recursive: true });
   if (!linkDir(outside, path.join(dir, ".governance/generated/skills/evil"))) {
-    console.log("  (skipped: directory links not permitted on this platform)");
-    return true;
+    return "skip: directory links not permitted on this platform";
   }
   const r = run(dir, ["--json"]);
   if (r.status !== 1) return false;
@@ -1505,8 +1558,7 @@ test("validator: symlinked generated SKILL.md is rejected (real file required)",
   try {
     fs.symlinkSync(path.join(dir, "outside.txt"), path.join(sk, "SKILL.md"), "file");
   } catch (e) {
-    console.log("  (skipped: symlink creation not permitted — " + e.code + ")");
-    return true;
+    return "skip: symlink creation not permitted — " + e.code;
   }
   return run(dir).status === 1;
 });

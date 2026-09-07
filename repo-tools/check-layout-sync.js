@@ -23,6 +23,8 @@ const HEADING = /###\s+(Repository Layout|仓库布局|倉庫佈局)/;
 // unscanned would let repo tooling accumulate undocumented (boundary-split plan §4).
 const DIRS = ["references", "scripts", "repo-tools", "repo-workflows"];
 
+function pairFrom(dir, name) { return dir + "/" + name; }
+
 function listFiles(dir) {
   let entries;
   try {
@@ -50,19 +52,64 @@ function extractTreeFileTokens(architectureMd) {
   }
   if (fence < 0) return null;
   const tokens = new Set();
+  // Scanned-dir file pairs for the reverse stale check: path (references/policies/x.md)
+  // where the file is documented under one of the four scanned roots. A flattened
+  // basename set cannot tell "scripts/check-sync.js" from a root-level entry of the same
+  // name, so the stale check in main() needs these pairs alongside the forward tokens.
+  const scannedPairs = new Set();
+  // Box-drawing tree. Depth is inferred from the number of `│`/`├`/`└` segments in the
+  // line's box prefix. The tree's first line is the root slot (name only, e.g.
+  // `ai-agent-governance/`) — it is depth 0 and must NOT become an ancestor dir for the
+  // references/ subtree, or every pair accumulates a spurious prefix and nothing matches
+  // DIRS (audit 2026-09-07). A file whose parent chain's FIRST dir is a scanned root
+  // contributes "<firstdir>/<name>"; deeper ancestors are ignored for the pair key, since
+  // listFiles() flattens to basenames anyway.
+  const stack = [];
   for (let i = fence + 1; i < lines.length; i++) {
     const line = lines[i];
     if (/^```/.test(line.trim())) break;
-    const m = /^.*[├└]──\s+(.*)$/.exec(line);
-    if (!m) continue;
-    let name = m[1].split("#")[0].trim(); // strip the inline comment
-    if (!name || name.endsWith("/")) continue; // skip dirs
-    for (const tok of name.split("/")) {
-      const t = tok.trim();
-      if (t) tokens.add(t);
+    const branch = /^.*[├└]──\s+(.*)$/.exec(line);
+    if (!branch) continue;
+    const raw = line.match(/^(\s*(?:[│├└]\s*)+)/);
+    const depth = raw ? raw[1].match(/(?:[│├└]\s*)/g).length : 0;
+    let name = branch[1].split("#")[0].trim();
+    if (!name) continue;
+    // A tree line may list several files separated by " / " (the policies/ line renders
+    // five .policy.md files on one branch). Each is its own entry.
+    const names = name.includes(" / ") ? name.split(/\s*\/\s*/).filter(Boolean) : [name];
+    for (const n of names) {
+      name = n;
+      // A box entry at prefix-depth D belongs under the dir listed at depth D-1. Entries
+      // below that (a sibling or a return to a shallower level) escape the previous
+      // subtree: truncate the ancestor stack to D-1 first, then either push (dir) or
+      // classify (file). This is what makes `LICENSE` (depth 1, after `scripts/`) root
+      // again instead of being attributed to scripts/.
+      if (stack.length > depth - 1) stack.length = depth - 1;
+      if (name.endsWith("/")) {
+        stack.push(name.slice(0, -1));
+        continue;
+      }
+      const dir = stack[0] || "";
+      if (dir && DIRS.includes(dir)) {
+        const pair = dir + "/" + name;
+        tokens.add(name);
+        scannedPairs.add(pair);
+      } else if (name.includes("/")) {
+        // Flat fixture spelling (a tree that renders "references/foo.js" on one line with
+        // no intermediate dir entry): the first segment is the parent dir, the rest is the
+        // basename. A name whose first segment is a scanned root contributes a pair.
+        const segs = name.split("/");
+        const head = segs[0];
+        const tail = segs[segs.length - 1];
+        const primary = segs[1] && DIRS.includes(head) ? pairFrom(head, tail) : null;
+        for (const s of segs) tokens.add(s);
+        if (primary) scannedPairs.add(primary);
+      } else {
+        tokens.add(name);
+      }
     }
   }
-  return tokens;
+  return { tokens, scannedPairs };
 }
 
 function main() {
@@ -104,13 +151,28 @@ function main() {
       missingByTree[lang] = ["architecture.md missing"];
       continue;
     }
-    const tokens = extractTreeFileTokens(fs.readFileSync(file, "utf8"));
-    if (!tokens) {
+    const extracted = extractTreeFileTokens(fs.readFileSync(file, "utf8"));
+    if (!extracted) {
       missingByTree[lang] = ["Repository Layout section not found"];
       continue;
     }
+    const { tokens, scannedPairs } = extracted;
     const missing = [...actual].filter((f) => !tokens.has(f));
     if (missing.length > 0) missingByTree[lang] = missing;
+    // Reverse check: a file documented under a scanned root whose name no longer exists
+    // in that root is a stale entry — "moving a file does not move its readers'
+    // assumptions". Without this half, deleting/renaming a file left its old path
+    // documented in all three trees forever while the gate stayed green (audit 2026-09-07).
+    // listFiles flattens to basenames (no collisions across the four roots per the comment
+    // at line 37), so the comparison is basename vs basename.
+    const stale = [...scannedPairs].filter((pair) => {
+      const name = pair.split("/").pop();
+      return !actual.has(name);
+    });
+    if (stale.length > 0) {
+      const item = `stale layout entries (documented under a scanned root but gone): ${stale.join(", ")}`;
+      missingByTree[lang] = [...(missingByTree[lang] || []), item];
+    }
   }
 
   const pass = Object.keys(missingByTree).length === 0;
@@ -118,7 +180,7 @@ function main() {
     process.stdout.write(JSON.stringify({ pass, actual: [...actual], missing: missingByTree }, null, 2) + "\n");
   } else {
     if (pass) {
-      console.log(`✓ repository layout in sync (${actual.size} files under references/ + scripts/ all present in all ${TREES.length} trees)`);
+      console.log(`✓ repository layout in sync (${actual.size} files under ${DIRS.join(", ")} all present in all ${TREES.length} trees)`);
     } else {
       for (const [lang, missing] of Object.entries(missingByTree)) {
         console.log(`✗ docs/${lang}/architecture.md Repository Layout missing: ${missing.join(", ")}`);

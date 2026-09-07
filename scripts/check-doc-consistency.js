@@ -25,8 +25,10 @@
 //      always-on gate failure (fixable on the spot); an implemented/completed plan still
 //      sitting in plans/ is pending-archive — advisory in default/--gate (the documented
 //      lifecycle lets a completed plan wait for the release commit), fail-closed only in
-//      --release-gate. The scan no-ops when the trilingual trees are absent (governed
-//      projects). --json also reports the per-plan classification (progress view).
+//      --release-gate. The trilingual scans no-op when absent (governed projects use a
+//      single docs/plans/ tree, which is scanned in its own pass — an implemented plan in
+//      a governed project now fails --release-gate rather than sailing through). --json
+//      also reports the per-plan classification (progress view).
 //   11. changelog coverage — release-gate reports changed governance/payload surfaces
 //      without an Unreleased entry in CHANGELOG.md.
 //   12. terminology gate — docs/glossary.md's Forbidden zh-CN / Forbidden zh-TW columns
@@ -583,7 +585,11 @@ function main() {
       // it must be complete.
       if (defersToSource) continue;
       for (const p of protectedPaths) {
-        if (!c.includes(p)) {
+        // Scope to the ENUMERATION BLOCK, not the whole file. A path mentioned elsewhere
+        // in the document — an operational sentence, a gate clause on a later line — must
+        // not satisfy the completeness claim; deleting the enumeration entry while the
+        // path remains in prose used to pass green (audit 2026-09-07).
+        if (!claimSection.includes(p)) {
           const item = `${f}: missing ${p}`;
           issues.protected_lists.push(item);
           if (anyGate) gateIssues.push({ kind: "protected_lists", item });
@@ -672,6 +678,37 @@ function main() {
       }
     }
   }
+  // Governed projects use a single docs/plans/ tree (no languages). The trilingual loop
+  // above no-ops there, so pending-archive and unknown-status were silently unchecked —
+  // an implemented plan left unsynced in a governed project sailed through --release-gate
+  // (audit 2026-09-07). Scan the single tree too; a project that has both layouts gets
+  // both scans, so no plan slips through.
+  {
+    const dir = path.join(ROOT, "docs", "plans");
+    if (fs.existsSync(dir) && !fs.existsSync(path.join(DOCS, "en", "plans"))) {
+      for (const rel of walk(dir)) {
+        // A governed project's single docs/plans/ tree mixes the milestone index
+        // (DEVELOPMENT_PLAN.md) with TASK_*.md plans. The index is not a plan: it has no
+        // Status line by design, and treating it as one made --gate fail on a fresh INIT
+        // (audit 2026-09-07).
+        if (/(?:^|\/)DEVELOPMENT_PLAN\.md$/i.test(rel)) continue;
+        const planRel = (path.join("docs", "plans", rel)).replace(/\\/g, "/");
+        const c = readFile(path.join(ROOT, planRel));
+        if (!c) continue;
+        const status = classifyPlanStatus(c);
+        planStatuses.push({ plan: planRel, status });
+        if (status === "unknown") {
+          const item = `${planRel}: no canonical status keyword (design/implemented/completed/archived)`;
+          issues.plans_status_unknown.push(item);
+          gateIssues.push({ kind: "plans_status_unknown", item });
+        } else if (status === "implemented" || status === "completed") {
+          const item = `${planRel}: ${status} but not yet archived (archive at release)`;
+          if (releaseGate) gateIssues.push({ kind: "plans_pending_archive", item });
+          else issues.plans_pending_archive.push(item);
+        }
+      }
+    }
+  }
 
   // Archived plans are held to a different rule than plans/: the archive IS the completed
   // state, so "archiving asserts completion" — a file sitting in docs/archive/ must SAY
@@ -696,6 +733,29 @@ function main() {
           : `${planRel}: archived plan still claims "${status}" (the archive is the completed state)`;
       issues.plans_status_unknown.push(item);
       if (releaseGate) gateIssues.push({ kind: "plans_status_unknown", item });
+    }
+  }
+  // Governed projects archive to docs/plans/archive/ (single language), not the
+  // trilingual docs/archive/. The scan above no-ops there, so an archived plan in a
+  // governed project carrying "implemented" was never checked (audit 2026-09-07).
+  {
+    const govArchive = path.join(ROOT, "docs", "plans", "archive");
+    if (fs.existsSync(govArchive) && !fs.existsSync(archiveDir)) {
+      for (const rel of walk(govArchive)) {
+        if (!rel.endsWith(".md") || /^README\.md$/i.test(rel)) continue;
+        const planRel = path.join("docs", "plans", "archive", rel).replace(/\\/g, "/");
+        const c = readFile(path.join(ROOT, planRel));
+        if (!c) continue;
+        const status = classifyPlanStatus(c);
+        planStatuses.push({ plan: planRel, status });
+        if (status === "archived") continue;
+        const item =
+          status === "unknown"
+            ? `${planRel}: archived plan has no canonical Status line (archiving asserts completion — say archived)`
+            : `${planRel}: archived plan still claims "${status}" (the archive is the completed state)`;
+        issues.plans_status_unknown.push(item);
+        if (releaseGate) gateIssues.push({ kind: "plans_status_unknown", item });
+      }
     }
   }
 

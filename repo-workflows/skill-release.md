@@ -83,11 +83,12 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 开发者确认后，AI 执行：
 
 1. **再次检查仓库状态**：`git status`、`git rev-parse HEAD`。工作区干净且 HEAD 与 Proposal 中 `headSha` 一致；若变化 → 重新分析。
-2. **版本同步**（技能仓库三处 + tag，无 manifest）：
+2. **版本同步**（技能仓库五个同步点 + tag，无 manifest）：
    - 更新 `package.json` 的 `version`
    - 更新 CHANGELOG（`[Unreleased]` → `[X.Y.Z]`，并在顶部重建空 `[Unreleased]` 节）
    - 更新 `SKILL.md` frontmatter 的 `version`
-   - 同步更新 `references/init-spec.json` 的 `inputs.governance_version.default` 与 `scripts/generate-governance.js` 的兜底哨兵（决定新 INIT 给被治理项目打上的版本号）
+   - 更新 `references/init-spec.json` 的 `inputs.governance_version.default`
+   - 更新 `scripts/generate-governance.js` 的兜底哨兵（与上一条共同决定新 INIT 给被治理项目打上的版本号）
 3. **计划交付对账 + 发布门禁（全部在 release commit 之前）**：
    - `node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
    - `npm run check:skill-release`（exit 0；含 `check-doc-consistency.js --release-gate` 与 `check-doc-freshness.js --release-gate`）。**在归档与提交之前运行**：pending-archive（implemented 计划未归档）与 changelog 覆盖在此阶段失败还来得及补救——版本节推进有 `version_examples` 簇机械验证（CHANGELOG 最新版本节必须等于 package.json version，v0.13.1 发布曾因无此检查而漏改 CHANGELOG）。

@@ -158,6 +158,33 @@ function decide(input) {
   };
 }
 
+// Provenance binding. `plan` derives this over the fields `execute` trusts for its risk
+// and review decisions; `execute` recomputes it and refuses a proposal that does not
+// carry a matching value. A hand-written proposal declaring `riskLevel: "low"` +
+// `reviewStatus: "not-required"` used to create an arbitrary tag with no review at all
+// (audit 2026-09-07) — the risk assessment is `plan`'s output, so `execute` must be able
+// to tell whether it is reading that output or something an agent typed.
+//
+// This is anti-forgery within one repo+workspace, NOT cryptographic authentication: the
+// derivation is deterministic and readable in this file, so anyone who can run the script
+// can also produce a valid signature. It closes the "typed a proposal by hand" hole and
+// makes tampering with a real proposal detectable; it does not establish identity. The
+// human `--yes` gate remains the actual authorisation.
+const PROVENANCE_LABEL = "ai-agent-governance/release-proposal/v1";
+function provenanceOf(p) {
+  const material = [
+    PROVENANCE_LABEL,
+    String(p.current || ""),
+    String(p.recommended || ""),
+    String(p.releaseType || ""),
+    String(p.riskLevel || ""),
+    String(p.reviewRecommendation || ""),
+    String(p.reviewStatus || ""),
+    String(p.headSha || ""),
+  ].join("\n");
+  return require("crypto").createHash("sha256").update(material).digest("hex");
+}
+
 function plan(argv) {
   let raw = argValue(argv, "--json");
   const filePath = argValue(argv, "--file");
@@ -197,6 +224,7 @@ function plan(argv) {
       fail("plan: cannot read --review-evidence at " + evidencePath + ": " + e.message, 1);
     }
   }
+  proposal.provenance = provenanceOf(proposal);
   process.stdout.write(JSON.stringify(proposal, null, 2) + "\n");
   process.exit(proposal.needsClarification ? 2 : 0);
 }
@@ -226,6 +254,18 @@ function execute(argv) {
   const validRecommendation = { low: "none", medium: "suggested", high: "required" }[proposal.riskLevel];
   if (!validRisk || proposal.reviewRecommendation !== validRecommendation || typeof proposal.reviewStatus !== "string") {
     fail("execute: proposal is missing valid risk/review metadata", 3);
+  }
+  // Provenance: the risk assessment and review status are `plan`'s output, so a proposal
+  // that does not carry a matching provenance value was not produced by `plan`. Without
+  // this, a hand-written file declaring low risk + not-required review created an
+  // arbitrary tag with no assessment at all (audit 2026-09-07). See provenanceOf() for
+  // what this does and does not establish — it detects forgery and tampering, not identity.
+  if (!proposal.provenance || typeof proposal.provenance !== "string") {
+    fail("execute: proposal has no provenance — it was not produced by `plan`; re-run plan", 4);
+  }
+  if (proposal.provenance !== provenanceOf(proposal)) {
+    fail("execute: proposal provenance does not match its risk/review/version fields — "
+      + "the proposal was edited after plan produced it; re-run plan", 4);
   }
   if (proposal.riskLevel === "high" && !["completed", "explicitly-approved"].includes(proposal.reviewStatus)) {
     fail("execute: high-risk proposal requires completed review or explicit risk approval", 4);
