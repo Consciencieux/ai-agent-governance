@@ -5,6 +5,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- **The generator's fallback-sentinel sync point had a vacuous backstop** — the `version_examples` cluster matched `fallback: "X.Y.Z"`, but the sentinel is the else-branch of a ternary (`? fallback : "X.Y.Z"`), so the pattern could never match it. The check has claimed to cover this sync point since v0.13.2 while covering nothing; a release could ship a stale sentinel — the version stamped into every future INIT — with every gate green. Found during the v0.15.0 release itself. The pattern now anchors on the ternary, and a mutation setting the sentinel to a different version turns the gate red.
+
+- **The release flow did not say that documentation version EXAMPLES also block the gate** — `skill-release.md` listed the five sync points, but the same `version_examples` cluster fail-closes on any `"version": "X.Y.Z"` example in a `.md` file (currently the manifest examples in `SKILL.md` and `references/workflows/release.md`). The v0.15.0 release hit this mid-sequence. The step now names them separately from the sync points, and points at `check-doc-consistency.js --gate` as the way to enumerate them instead of relying on memory. The same step now also records that the empty `[Unreleased]` section must be rebuilt AFTER the release gates pass, not during version sync — rebuilding early makes `changelog_coverage` read the empty section and fail.
+
 ## [0.15.0] - 2026-09-07
 
 ### Changed

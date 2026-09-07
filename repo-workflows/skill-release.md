@@ -89,6 +89,10 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
    - 更新 `SKILL.md` frontmatter 的 `version`
    - 更新 `references/init-spec.json` 的 `inputs.governance_version.default`
    - 更新 `scripts/generate-governance.js` 的兜底哨兵（与上一条共同决定新 INIT 给被治理项目打上的版本号）
+
+   **另外必须更新文档里的版本示例值**（不是同步点，但同一个 `version_examples` 簇会 fail-closed 拦下它们）：任何 `.md` 里形如 `"version": "X.Y.Z"` / `"governance_version": "X.Y.Z"` 的示例——目前分布在 `SKILL.md` 与被治理项目发布流程文档的 manifest 示例块中。它们不是发布状态的一部分，但门禁不区分「示例」与「事实」，一处未改就红。判定方式不靠记忆：`node scripts/check-doc-consistency.js --gate` 会逐条列出 `<file>:<旧版本> != <新版本>`。
+
+   **空 `[Unreleased]` 节的重建时机**：必须在第 3 步发布门禁**通过之后**（通常与 release commit 一起，或紧随其后单独提交）。`changelog_coverage` 在发布形态读"最顶部的版本节"，提前重建会让它读到空节而失败——v0.15.0 发布时踩过一次。
 3. **计划交付对账 + 发布门禁（全部在 release commit 之前）**：
    - `node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
    - `npm run check:skill-release`（exit 0；含 `check-doc-consistency.js --release-gate` 与 `check-doc-freshness.js --release-gate`）。**在归档与提交之前运行**：pending-archive（implemented 计划未归档）与 changelog 覆盖在此阶段失败还来得及补救——版本节推进有 `version_examples` 簇机械验证（CHANGELOG 最新版本节必须等于 package.json version，v0.13.1 发布曾因无此检查而漏改 CHANGELOG）。

@@ -391,9 +391,16 @@ function main() {
     if (fs.existsSync(genPath)) {
       const gen = readFile(genPath);
       if (gen) {
-        const sv = /fallback\s*:\s*"(\d+\.\d+\.\d+)"/.exec(gen);
-        if (sv && sv[1] !== version) {
-          const item = `scripts/generate-governance.js: fallback sentinel ${sv[1]} != ${version} (release sync point — last-resort default when package.json is unavailable)`;
+        // The sentinel is the else-branch of a ternary (`? fallback : "X.Y.Z"`), not a
+        // `fallback:` property. The old pattern (`fallback\s*:\s*"..."`) could never match
+        // it, so this sync point's "mechanical backstop" was vacuous from the day it was
+        // added — v0.15.0 found it while the release itself was in flight (audit
+        // 2026-09-07). Anchor on the ternary that returns it, so an unrelated `: "1.2.3"`
+        // elsewhere in the file cannot be mistaken for the sentinel.
+        const sv = /\?\s*fallback\s*:\s*"(\d+\.\d+\.\d+)"|fallback\s*:\s*"(\d+\.\d+\.\d+)"/.exec(gen);
+        const svVal = sv && (sv[1] || sv[2]);
+        if (svVal && svVal !== version) {
+          const item = `scripts/generate-governance.js: fallback sentinel ${svVal} != ${version} (release sync point — last-resort default when package.json is unavailable)`;
           issues.version_examples.push(item);
           if (anyGate) gateIssues.push({ kind: "version_examples", item });
         }
