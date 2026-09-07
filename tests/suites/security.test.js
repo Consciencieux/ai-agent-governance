@@ -450,4 +450,45 @@ test("ci templates: every platform+stack template runs the governance validator"
   return checked === combos.length;
 });
 
+test("check-secrets: github_pat_ form hits github-token pattern", () => {
+  const dir = tmp("secrets-pat2");
+  gitInit(dir);
+  const value = assemble("github_pat_", "Q0ABCDEFGHIJKLMNOPQRSTUV1234567890");
+  write(path.join(dir, "ci.yml"), assemble("token: ", value));
+  spawnSync("git", ["add", "ci.yml"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stderr.includes("github-token") && !r.stderr.includes(value);
+});
+
+
+test("check-secrets: generic connection string hits generic-connection-string pattern", () => {
+  const dir = tmp("secrets-connstr");
+  gitInit(dir);
+  const value = assemble("mongodb://", "appuser:supersecretpass", "@db.internal:27017/app");
+  write(path.join(dir, "config.js"), assemble("const db = '", value, "';"));
+  spawnSync("git", ["add", "config.js"], { cwd: dir });
+  const r = spawnSync(process.execPath, [SECRET_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stderr.includes("generic-connection-string") && !r.stderr.includes("supersecretpass");
+});
+
+
+test("check-secrets: modified-file hunk reports the correct line number", () => {
+  const dir = tmp("secrets-modified");
+  gitInit(dir);
+  // COMMIT the baseline first: only then is the staged diff a real modification hunk
+  // (@@ -1,3 +1,4 @@ with context lines), which is what exercises the line counter.
+  write(path.join(dir, "app.js"), "const a = 1;\nconst b = 2;\nconst c = 3;\n");
+  spawnSync("git", ["add", "app.js"], { cwd: dir });
+  spawnSync("git", ["-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "-m", "baseline"], { cwd: dir });
+  const secretLine = assemble("const to", "ken = 'abcdefgh", "12345678';");
+  write(path.join(dir, "app.js"), "const a = 1;\nconst b = 2;\nconst c = 3;\n" + secretLine + "\n");
+  spawnSync("git", ["add", "app.js"], { cwd: dir });
+  const raw = spawnSync("git", ["diff", "--cached", "-U0"], { cwd: dir, encoding: "utf8" });
+  if (!/^@@ -\d+(,\d+)? \+\d+/m.test(String(raw.stdout)) || /@@ -0,0/.test(String(raw.stdout))) return false;
+  const r = spawnSync(process.execPath, [SECRET_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  return out.hits.length === 1 && out.hits[0].pattern === "credential-assignment" && out.hits[0].line === 4;
+});
+
 };

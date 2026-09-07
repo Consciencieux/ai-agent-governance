@@ -2,6 +2,7 @@
 // Verbatim region move (marker-to-marker); helper consolidation into tests/support/ is batch 2.
 
 
+const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -251,6 +252,127 @@ test("validator: manifest release tag matching its version passes", () => {
   buildReleaseMetaFixture(dir, { version: "1.0.0", tag: "v1.0.0", validated: false });
   const r = run(dir);
   return r.status === 0 && !r.stdout.includes("Release metadata ✗");
+});
+
+test("validator: missing check-sync.js exits 1", () => {
+  const dir = tmp("nosync");
+  buildFullDefault(dir);
+  fs.rmSync(path.join(dir, "scripts/check-sync.js"));
+  const r = run(dir);
+  return r.status === 1 && r.stdout.includes("Sync groups check");
+});
+
+
+test("validator: manifest sync check keeps an explicit false ok field", () => {
+  const dir = tmp("nosync-json");
+  buildFullDefault(dir);
+  fs.rmSync(path.join(dir, "scripts/check-sync.js"));
+  const r = run(dir, ["--json"]);
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  const check = out.results.find((x) => x.name === "Sync groups check");
+  return check && check.ok === false;
+});
+
+
+test("validator: generated skill missing SKILL.md exits 1 (no longer masked by dir entry)", () => {
+  const dir = tmp("noskill-file");
+  buildFullDefault(dir);
+  fs.mkdirSync(path.join(dir, ".governance/generated/skills/review-manager"), { recursive: true });
+  const r = run(dir);
+  return r.status === 1 && r.stdout.includes("Generated skill") && r.stdout.includes("review-manager/SKILL.md");
+});
+
+
+test("validator: manifest artifact path escaping ROOT fails (containment)", () => {
+  const dir = tmp("escape-artifact");
+  buildFullDefault(dir);
+  // The escape target must EXIST outside ROOT, otherwise the assertion passes for the
+  // trivial reason that the file is missing and containment is never exercised.
+  fs.writeFileSync(path.join(path.dirname(dir), "escape-sentinel.txt"), "x");
+  const m = JSON.parse(fs.readFileSync(path.join(dir, ".governance/manifest.json"), "utf8"));
+  m.artifacts.push({ name: "escape", path: "../escape-sentinel.txt", kind: "file" });
+  fs.writeFileSync(path.join(dir, ".governance/manifest.json"), JSON.stringify(m));
+  const r = run(dir, ["--json"]);
+  if (r.status !== 1) return false;
+  const out = JSON.parse(r.stdout);
+  const check = out.results.find((x) => x.name === "escape");
+  return check !== undefined && check.ok === false;
+});
+
+
+test("validator: a project reached through a symlinked root still validates", () => {
+  const dir = tmp("symlink-root");
+  buildFullDefault(dir);
+  // Manifest mode is where the containment comparison runs, so the fixture needs real
+  // artifacts declared; with an empty array the validator falls back to defaults mode
+  // and the symlinked-root path is never exercised.
+  const artifacts = ["AGENTS.md", "CHANGELOG.md", ".gitignore", ".env.example"].map((p) => ({ name: p, path: p, kind: "file" }));
+  const m = JSON.parse(fs.readFileSync(path.join(dir, ".governance/manifest.json"), "utf8"));
+  m.schema_version = "1";
+  m.artifacts = artifacts;
+  fs.writeFileSync(path.join(dir, ".governance/manifest.json"), JSON.stringify(m));
+  const link = path.join(path.dirname(dir), path.basename(dir) + "-link");
+  if (!linkDir(dir, link)) {
+    return "skip: directory links not permitted on this platform";
+  }
+  const direct = run(dir, ["--json"]);
+  const viaLink = spawnSync(process.execPath, [VALIDATOR, "--json"], { cwd: link, encoding: "utf8" });
+  const a = JSON.parse(direct.stdout);
+  const b = JSON.parse(viaLink.stdout);
+  // Same tree, same verdict: the containment check must not treat the canonical path as
+  // out-of-tree just because the cwd was reached through a link.
+  return a.mode === "manifest" && b.mode === "manifest" &&
+    a.passed === b.passed && a.total === b.total && direct.status === viaLink.status;
+});
+
+
+// Windows blocks file symlinks without developer mode but allows directory junctions;
+// POSIX allows both. Returns false when the platform refuses, so a test can skip openly.
+test("validator: a skill directory symlinked out of the tree is rejected", () => {
+  const dir = tmp("symlink-skilldir");
+  buildFullDefault(dir);
+  const outside = path.join(path.dirname(dir), path.basename(dir) + "-outside");
+  fs.mkdirSync(outside, { recursive: true });
+  fs.writeFileSync(path.join(outside, "SKILL.md"), "# Evil\n");
+  fs.mkdirSync(path.join(dir, ".governance/generated/skills"), { recursive: true });
+  if (!linkDir(outside, path.join(dir, ".governance/generated/skills/evil"))) {
+    return "skip: directory links not permitted on this platform";
+  }
+  const r = run(dir, ["--json"]);
+  if (r.status !== 1) return false;
+  const check = JSON.parse(r.stdout).results.find((x) => x.name === "Generated skill: evil/SKILL.md");
+  // The out-of-tree junction must be enumerated AND rejected — not silently accepted
+  // because lstat only guards the final path component.
+  return check !== undefined && check.ok === false;
+});
+
+
+test("validator: symlinked generated SKILL.md is rejected (real file required)", () => {
+  const dir = tmp("symlink-skill");
+  buildFullDefault(dir);
+  const sk = path.join(dir, ".governance/generated/skills/review-manager");
+  fs.mkdirSync(sk, { recursive: true });
+  fs.writeFileSync(path.join(dir, "outside.txt"), "x");
+  try {
+    fs.symlinkSync(path.join(dir, "outside.txt"), path.join(sk, "SKILL.md"), "file");
+  } catch (e) {
+    return "skip: symlink creation not permitted — " + e.code;
+  }
+  return run(dir).status === 1;
+});
+
+
+test("validator: complete generated skills pass and the check is reported", () => {
+  const dir = tmp("skill-ok");
+  buildFullDefault(dir);
+  const sk = path.join(dir, ".governance/generated/skills/drift-check");
+  fs.mkdirSync(sk, { recursive: true });
+  write(path.join(sk, "SKILL.md"), "# Drift Check\n");
+  const r = run(dir, ["--json"]);
+  if (r.status !== 0) return false;
+  const out = JSON.parse(r.stdout);
+  return out.results.some((x) => x.name === "Generated skill: drift-check/SKILL.md" && x.ok === true);
 });
 
 };

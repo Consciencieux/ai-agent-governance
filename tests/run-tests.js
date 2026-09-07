@@ -29,6 +29,8 @@ const SUITES = [
   "./suites/payload.test.js",
   "./suites/hygiene.test.js",
   "./suites/narration.test.js",
+  "./suites/sync.test.js",
+  "./suites/plan-delivery.test.js",
 ];
 for (const s of SUITES) require(s)(test);
 

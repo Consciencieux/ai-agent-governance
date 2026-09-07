@@ -783,4 +783,97 @@ test("plan sync: INIT installs it and it runs standalone in the generated projec
   const j = JSON.parse(r.stdout);
   return j.applicable === true && j.gatePass === true;
 });
+
+test("payload: generated agent and sub-skills carry change-hygiene and rule-capture contracts", () => {
+  const dir = tmp("gen-change-contract");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "ChangeContract", "--phase", "C"], { encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const agents = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
+  const stateSkill = fs.readFileSync(path.join(dir, ".governance/generated/skills/state-manager/SKILL.md"), "utf8");
+  const driftSkill = fs.readFileSync(path.join(dir, ".governance/generated/skills/drift-check/SKILL.md"), "utf8");
+  return /Change hygiene/i.test(agents) && /Rule Capture/i.test(agents) &&
+    /rule_capture/.test(stateSkill) && /rules_captured/.test(stateSkill) &&
+    /rules_pending/.test(stateSkill) && /rules_resolved/.test(stateSkill) &&
+    /current unresolved candidates/.test(driftSkill);
+});
+
+
+// POSIX purity is decided statically, in its own test: it needs no shell, so it must not
+// sit behind the sh gate below. On Windows sh.exe IS bash — it accepts every bashism, so
+// `sh -n` would pass vacuously there anyway; and where sh is absent the gated test returns
+// early, which used to skip this scan entirely (the local-green / CI-red pattern).
+test("payload: generated hooks are POSIX sh (static scan, no shell required)", () => {
+  const dir = tmp("hook-posix-scan");
+  const generated = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "HookPosix", "--phase", "C"], { encoding: "utf8" });
+  if (generated.status !== 0) {
+    console.error("  generator failed: " + (generated.stderr || "").split("\n")[0]);
+    return false;
+  }
+  const BASHISMS = [
+    [/\[\[/, "[[ ]] test"],
+    [/\bset\s+-o\s+pipefail\b/, "set -o pipefail"],
+    [/<<</, "here-string"],
+    [/\$\{[A-Za-z_][A-Za-z0-9_]*\[[@*]\]\}/, "array expansion"],
+    [/\bfunction\s+\w+\s*\(\)/, "function keyword form"],
+    [/\becho\s+-e\b/, "echo -e"],
+    [/\bsource\s/, "source (use . instead)"]
+  ];
+  let scanned = 0;
+  for (const rel of [".githooks/pre-commit", ".githooks/commit-msg"]) {
+    const hookPath = path.join(dir, rel);
+    const body = fs.readFileSync(hookPath, "utf8");
+    const shebang = body.split("\n")[0];
+    if (!/^#!.*\bsh\b/.test(shebang) || /bash/.test(shebang)) {
+      console.error("  " + rel + ": expected a POSIX sh shebang, got " + JSON.stringify(shebang));
+      return false;
+    }
+    for (const [re, label] of BASHISMS) {
+      if (re.test(body)) {
+        console.error("  " + rel + " declares #!/bin/sh but uses " + label);
+        return false;
+      }
+    }
+    scanned++;
+  }
+  // liveness: a passing scan must have actually read both hooks
+  return scanned === 2;
+});
+
+
+test("payload: hooks pass sh -n and real git commit matrix", () => {
+  const shell = findPosixShell();
+  if (!shell) {
+    return "skip: sh unavailable; hook EXECUTION test skipped (static POSIX scan runs separately)";
+  }
+  const dir = tmp("hook-commit-matrix");
+  const generated = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "HookMatrix", "--phase", "C"], { encoding: "utf8" });
+  if (generated.status !== 0) return false;
+  const pre = path.join(dir, ".githooks/pre-commit");
+  const msg = path.join(dir, ".githooks/commit-msg");
+  if (spawnSync(shell, ["-n", pre], { encoding: "utf8" }).status !== 0 || spawnSync(shell, ["-n", msg], { encoding: "utf8" }).status !== 0) return false;
+
+  gitInit(dir);
+  spawnSync("git", ["config", "core.hooksPath", ".githooks"], { cwd: dir });
+  const first = "文档/带 空格.md";
+  write(path.join(dir, first), "first\n");
+  spawnSync("git", ["add", "--", first], { cwd: dir });
+  write(path.join(dir, ".governance/consent.json"), JSON.stringify({ staged: [first], message: ["fix: approved"] }));
+  const matching = spawnSync("git", ["commit", "-q", "-m", "fix: approved"], { cwd: dir, encoding: "utf8" });
+  if (matching.status !== 0) return false;
+
+  const second = "second file.txt";
+  write(path.join(dir, second), "second\n");
+  spawnSync("git", ["add", "--", second], { cwd: dir });
+  write(path.join(dir, ".governance/consent.json"), JSON.stringify({ staged: [second], message: ["fix: approved"] }));
+  const mismatchedMessage = spawnSync("git", ["commit", "-q", "-m", "feat: unapproved"], { cwd: dir, encoding: "utf8" });
+  if (mismatchedMessage.status !== 1) return false;
+
+  const third = "third.txt";
+  write(path.join(dir, third), "third\n");
+  spawnSync("git", ["add", "--", third], { cwd: dir });
+  fs.rmSync(path.join(dir, ".governance/consent.json"));
+  const missingConsent = spawnSync("git", ["commit", "-q", "-m", "fix: missing consent"], { cwd: dir, encoding: "utf8" });
+  return missingConsent.status === 1;
+});
+
 };
