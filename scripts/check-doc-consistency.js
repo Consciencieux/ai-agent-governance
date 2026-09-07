@@ -165,7 +165,7 @@ function currentVersion() {
 }
 
 function changedPaths() {
-  const r = spawnSync("git", ["status", "--porcelain=v1", "-uall"], { cwd: ROOT, encoding: "utf8" });
+  const r = spawnSync("git", ["status", "--porcelain=v1", "-uall"], { cwd: ROOT, encoding: "utf8", timeout: 30000 });
   if (r.status !== 0) return null;
   return String(r.stdout || "").split(/\r?\n/).filter(Boolean).map((line) => {
     const raw = line.slice(3).trim();
@@ -210,7 +210,18 @@ function changelogCoverage(releaseGate) {
   const rest = c.slice(start);
   const next = rest.match(/\n##\s+\[[^\]]+\]/);
   const sec = next ? rest.slice(0, next.index) : rest;
-  return { applicable: true, ok: /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) };
+  // A category existing is coverage; a category repeated is a broken record. The
+  // v0.14.1 CHANGELOG carried three ### Fixed headings in one section after several
+  // sessions each inserted their own block - the single-regex check above stayed green
+  // because it only proves some category is present. A section that repeats the same
+  // category heading more than once is reported, so the structure is verifiable too.
+  const CATEGORY_RE = /^###\s+(Added|Changed|Fixed|Removed|Security|Deprecated)\s*$/gim;
+  const seen = new Map();
+  for (const m of sec.matchAll(CATEGORY_RE)) {
+    seen.set(m[1], (seen.get(m[1]) || 0) + 1);
+  }
+  const duplicateCategories = [...seen].filter(([, n]) => n > 1).map(([name]) => name);
+  return { applicable: true, duplicateCategories, ok: /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) && duplicateCategories.length === 0 };
 }
 
 // #12 terminology gate: docs/glossary.md is the term authority. Its optional
@@ -303,9 +314,13 @@ function main() {
   // ---- 11. CHANGELOG coverage ----
   const changelog = changelogCoverage(releaseGate);
   if (changelog.applicable && !changelog.ok) {
-    const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)";
+    const dup = (changelog.duplicateCategories || []).length > 0
+      ? " (duplicate category heading(s): " + (changelog.duplicateCategories || []).join(", ") + ")"
+      : "";
+    const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)" + dup;
     issues.changelog_coverage.push(item);
-    if (releaseGate) gateIssues.push({ kind: "changelog_coverage", item });
+    // Structure defects fail CLOSED in both modes; "no record yet" only blocks at release.
+    if (releaseGate || (changelog.duplicateCategories || []).length > 0) gateIssues.push({ kind: "changelog_coverage", item });
   }
 
   // ---- 1. version-example sync ----

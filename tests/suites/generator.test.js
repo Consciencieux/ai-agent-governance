@@ -116,8 +116,8 @@ test("generate-governance: existing files are skipped, not overwritten", () => {
 
 test("generate-governance: --dry-run creates nothing", () => {
   const dir = tmp("gen-dryrun");
-  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "Dry", "--phase", "A", "--dry-run"], { encoding: "utf8" });
-  return r.status === 0 && !fs.existsSync(dir + "/AGENTS.md");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "Dry", "--phase", "A", "--dry-run", "--json"], { encoding: "utf8" });
+  return r.status === 0 && !fs.existsSync(dir + "/AGENTS.md") && JSON.parse(r.stdout).results.some((a) => a.action === "would-create");
 });
 
 test("generate-governance: --json outputs structured result", () => {
@@ -149,6 +149,9 @@ function withTemplate(body, fn) {
     return fn();
   } finally {
     fs.writeFileSync(T, original, "utf8");
+    // G11: verify the template was restored — the real template must not be left mutated
+    const restored = fs.readFileSync(T, "utf8");
+    if (restored !== original) console.error("  withTemplate: FAILED to restore the original template");
   }
 }
 function genInto(phase) {

@@ -46,13 +46,13 @@
 
 ## 变更卫生声明的风险分级
 
-变更卫生声明（`.governance/change-hygiene.json` 或 TASK 计划中的声明）按以下三级执行：
+变更卫生声明（`.governance/change-hygiene.json（可选，项目按需创建）` 或 TASK 计划中的声明）按以下三级执行：
 
 - **advisory（建议级）**：内部变更，无公开 API/config/数据格式信号。报告未声明的删除/重命名，不阻断。本域默认等级。
 - **gate（门禁级）**：影响公开 API/config/数据格式、安全、权限或破坏性变更。未声明的删除/重命名在发布时被 `check-plan-sync.js --release-gate` 阻断。
 - **human-required（人工判定）**：语义迁移充分性、不可逆数据变更、有歧义的兼容性决策。机械检查报告证据状态和缺失声明，但最终语义判定留给开发者，不得由门禁代为决定。
 
-检查器（`check-coding-hygiene.js`、`check-plan-sync.js`）在被治理项目形态下仅报告发现，不阻断——阻断仅在 `--release-gate` 时生效。该分级不取代发布流程的风险等级（`riskLevel`），后者覆盖整个发布行为。
+检查器（`check-coding-hygiene.js（REPO-ONLY，不随载荷分发）`、`check-plan-sync.js`）在被治理项目形态下仅报告发现，不阻断——阻断仅在 `--release-gate` 时生效。该分级不取代发布流程的风险等级（`riskLevel`），后者覆盖整个发布行为。
 
 ## 禁止
 

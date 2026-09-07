@@ -242,6 +242,10 @@ function execute(argv) {
     // The digest itself is trusted by construction (it was computed by `plan` from the
     // evidence file provided). A human reading the release notes can verify the evidence
     // file independently; the digest proves the evidence existed at proposal time.
+        // S9: validate digest FORMAT — must be 64-char hex. Any truthy string passes presence alone.
+    if (!/^[0-9a-f]{64}$/i.test(proposal.reviewDigest)) {
+      fail("execute: reviewDigest must be a 64-character hex string (SHA-256), got " + JSON.stringify(proposal.reviewDigest), 4);
+    }
     console.error("note: review evidence bound by digest " + proposal.reviewDigest.slice(0, 16) + "...");
   }
   // HONESTY BOUNDARY: the `explicitly-approved` path still exists because a human may

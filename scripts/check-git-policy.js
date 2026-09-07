@@ -63,7 +63,7 @@ const branch = currentBranch();
 const policyShapeValid =
   policyResult.missing ||
   (policy &&
-    Array.isArray(policy.protectedBranches) &&
+    Array.isArray(policy.protectedBranches) && policy.protectedBranches.length > 0 &&
     typeof policy.directPush === "boolean" &&
     typeof policy.requireReview === "boolean" &&
     typeof policy.allowForcePush === "boolean");

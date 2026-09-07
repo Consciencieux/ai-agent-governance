@@ -162,7 +162,7 @@ scripts/check-git-policy.js
 scripts/check-secrets.js
 scripts/check-sync.js
 scripts/check-doc-consistency.js
-scripts/check-doc-freshness.js
+scripts/check-doc-freshness.js, check-plan-sync.js, release-manager.js
 .githooks/pre-commit
 .githooks/commit-msg
 opencode.json / .github/workflows/**

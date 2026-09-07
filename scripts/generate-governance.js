@@ -273,7 +273,12 @@ const CI_SECTIONS = {
   java: /## GitHub Actions[^\n]*Java/i,
   cpp: /## GitHub Actions[^\n]*C\+\+/i,
   "docs-only": /## 纯文档项目/,
-  gitlab: /## GitLab CI/,
+  "gitlab-node": /## GitLab CI \(node\)/,
+  "gitlab-python": /## GitLab CI \(python\)/,
+  "gitlab-go": /## GitLab CI \(go\)/,
+  "gitlab-java": /## GitLab CI \(java\)/,
+  "gitlab-cpp": /## GitLab CI \(cpp\)/i,
+  "gitlab-docs-only": /## GitLab CI \(docs-only\)/,
 };
 
 function extractCiTemplate(ciMd, key) {
@@ -298,7 +303,7 @@ function generateCi(inputs, skillDir) {
   const platform = inputs.ci_platform || "github";
   if (platform === "none") return null; // nothing to write
   const ciMd = fs.readFileSync(path.join(skillDir, "references", "workflows", "ci.md"), "utf8");
-  const key = platform === "gitlab" ? "gitlab" : (inputs.stack || "docs-only");
+  const key = platform === "gitlab" ? "gitlab-" + (inputs.stack || "docs-only") : (inputs.stack || "docs-only");
   const tpl = extractCiTemplate(ciMd, key);
   if (!tpl) return null;
   return tpl.endsWith("\n") ? tpl : tpl + "\n";
@@ -382,8 +387,14 @@ function generateSubSkills(inputs, skillDir, targetAbs, dirRel) {
   const skills = parseSubSkills(md);
   const written = [];
   for (const sk of skills) {
-    const filePath = path.join(targetAbs, dirRel.replace(/\/+$/, ""), sk.name, "SKILL.md");
-    const r = writeIfAbsent(filePath, sk.body);
+    const rawPath = path.join(targetAbs, dirRel.replace(/\/+$/, ""), sk.name, "SKILL.md");
+    // S12: containment guard — sk.name comes from sub-skills.md (§N. title) and can
+    // contain "../" sequences that escape the target directory. Reject if resolved.
+    if (!path.resolve(rawPath).startsWith(path.resolve(targetAbs) + path.sep)) {
+      console.error("generateSubSkills: sk.name '" + sk.name + "' escapes target directory — skipping");
+      continue;
+    }
+    const r = writeIfAbsent(rawPath, (inputs.doc_root || "docs").replace(/\/+$/, "") !== "docs" ? sk.body.replace(/\bdocs\//g, (inputs.doc_root || "docs").replace(/\/+$/, "") + "/") : sk.body);
     written.push({ name: sk.name, action: r.action });
   }
   return written;
@@ -539,7 +550,14 @@ inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effecti
           // made the comparison miss, so an A->B->C upgrade kept a stale Phase B body.
           const renderAt = (ph) => {
             const scoped = { ...inputs, generated_skill_registry: generateSkillRegistry(subSkillsSource, ph, path.resolve(target)) };
-            return resolvePlaceholders(prunePhaseBlocks(codeBlock, ph), art.placeholders, scoped);
+            let body = resolvePlaceholders(prunePhaseBlocks(codeBlock, ph), art.placeholders, scoped);
+            // S10: when --doc-root is set, remap docs/ paths in template bodies too
+            // (the existing remap() only handles artifact paths, not template body content).
+            // Match docs/ anywhere (not just line-start), avoiding paths like "docs/"
+            // that are already remapped by the artifact path remap().
+            const dr = (inputs.doc_root || "docs").replace(/\/+$/, "");
+            if (dr !== "docs") body = body.replace(/\bdocs\//g, dr + "/");
+            return body;
           };
           const executable = artPath === ".githooks/pre-commit" || artPath === ".githooks/commit-msg";
           const staged = /<!--\s*phase:/.test(codeBlock);

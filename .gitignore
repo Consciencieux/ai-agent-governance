@@ -18,3 +18,8 @@ secrets.*
 .DS_Store
 Thumbs.db
 dist/
+
+id_ed25519
+.npmrc
+*.p8
+*.jks

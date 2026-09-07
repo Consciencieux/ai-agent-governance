@@ -202,7 +202,7 @@ SpacesInAngles: Never
 Standard: Latest
 ```
 
-## GitLab CI
+## GitLab CI (node)
 
 ```yaml
 stages: [format, lint, test, build]
@@ -236,6 +236,206 @@ build:
 governance:
   stage: test
   image: node:20
+  script:
+    - node scripts/verify-governance.js
+```
+
+> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
+
+## GitLab CI (python)
+
+```yaml
+stages: [format, lint, test, build]
+
+format:
+  stage: format
+  image: python:3.11
+  script:
+    - npx prettier --check .
+  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+
+lint:
+  stage: lint
+  image: python:3.11
+  script:
+    - npm run lint
+  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+
+test:
+  stage: test
+  image: python:3.11
+  script:
+    - npm test
+
+build:
+  stage: build
+  image: python:3.11
+  script:
+    - npm run build
+
+governance:
+  stage: test
+  image: python:3.11
+  script:
+    - node scripts/verify-governance.js
+```
+
+> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
+
+## GitLab CI (go)
+
+```yaml
+stages: [format, lint, test, build]
+
+format:
+  stage: format
+  image: golang:1.21
+  script:
+    - npx prettier --check .
+  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+
+lint:
+  stage: lint
+  image: golang:1.21
+  script:
+    - npm run lint
+  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+
+test:
+  stage: test
+  image: golang:1.21
+  script:
+    - npm test
+
+build:
+  stage: build
+  image: golang:1.21
+  script:
+    - npm run build
+
+governance:
+  stage: test
+  image: golang:1.21
+  script:
+    - node scripts/verify-governance.js
+```
+
+> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
+
+## GitLab CI (java)
+
+```yaml
+stages: [format, lint, test, build]
+
+format:
+  stage: format
+  image: maven:3.9-eclipse-temurin-17
+  script:
+    - npx prettier --check .
+  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+
+lint:
+  stage: lint
+  image: maven:3.9-eclipse-temurin-17
+  script:
+    - npm run lint
+  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+
+test:
+  stage: test
+  image: maven:3.9-eclipse-temurin-17
+  script:
+    - npm test
+
+build:
+  stage: build
+  image: maven:3.9-eclipse-temurin-17
+  script:
+    - npm run build
+
+governance:
+  stage: test
+  image: maven:3.9-eclipse-temurin-17
+  script:
+    - node scripts/verify-governance.js
+```
+
+> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
+
+## GitLab CI (cpp)
+
+```yaml
+stages: [format, lint, test, build]
+
+format:
+  stage: format
+  image: ubuntu:22.04
+  script:
+    - npx prettier --check .
+  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+
+lint:
+  stage: lint
+  image: ubuntu:22.04
+  script:
+    - npm run lint
+  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+
+test:
+  stage: test
+  image: ubuntu:22.04
+  script:
+    - npm test
+
+build:
+  stage: build
+  image: ubuntu:22.04
+  script:
+    - npm run build
+
+governance:
+  stage: test
+  image: ubuntu:22.04
+  script:
+    - node scripts/verify-governance.js
+```
+
+> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
+
+## GitLab CI (docs-only)
+
+```yaml
+stages: [format, lint, test, build]
+
+format:
+  stage: format
+  image: ubuntu:22.04
+  script:
+    - npx prettier --check .
+  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+
+lint:
+  stage: lint
+  image: ubuntu:22.04
+  script:
+    - npm run lint
+  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+
+test:
+  stage: test
+  image: ubuntu:22.04
+  script:
+    - npm test
+
+build:
+  stage: build
+  image: ubuntu:22.04
+  script:
+    - npm run build
+
+governance:
+  stage: test
+  image: ubuntu:22.04
   script:
     - node scripts/verify-governance.js
 ```

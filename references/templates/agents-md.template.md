@@ -51,6 +51,13 @@ All agents MUST follow this lifecycle for every dev task. Scope tiers: small (si
 Plans go in `docs/plans/`; completed changes go in `CHANGELOG.md`. No overlap. On release, move entries into a version section and bump the version.
 Change classification: doc-only → no entry; bug fix → Fixed; new capability → Added; architecture/behavior/breaking → Changed.
 
+Structure contract (CHANGELOG.md):
+- One category heading (`### Fixed` / `### Added` / `### Changed`) at most per version section (`[Unreleased]` or `[X.Y.Z]`); append new entries INSIDE the existing category block, never create a second heading of the same name.
+- Never append to an already-versioned (published) section.
+- No empty category heading: create one only when the first entry of that category is written.
+- On release: rename `[Unreleased]` to `[X.Y.Z]` WITH the date, then rebuild an empty `[Unreleased]` (section title only, no category heading) at the top.
+- Category names are the canonical set (Added/Changed/Fixed/Removed/Security/Deprecated) — the mechanical check recognizes only these.
+
 ## Versioning
 SemVer: MAJOR.MINOR.PATCH — breaking → MAJOR, feature → MINOR, fix → PATCH.
 

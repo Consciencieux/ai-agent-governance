@@ -245,7 +245,7 @@ test("doc consistency: clean repo exits 0 with no issues", () => {
   write(path.join(dir, "README.md"), "# R\n\n## S\n");
   const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
-  return r.status === 0 && Object.values(out.issues).every((v) => (Array.isArray(v) ? v.length === 0 : true));
+  return r.status === 0 && Object.values(out.issues).every((v) => (Array.isArray(v) ? v.length === 0 : true)) && out.gatePass === true;
 });
 
 test("doc consistency: stale version example in SKILL.md-style doc is flagged", () => {
@@ -597,22 +597,17 @@ test("generate-governance: hook artifacts use the first complete fence and are t
     fs.readFileSync(path.join(dir, ".gitignore"), "utf8").includes(".governance/consent.json") && modeOk;
 });
 
-test("payload: hooks pass sh -n and real git commit matrix", () => {
-  const shell = findPosixShell();
-  if (!shell) {
-    console.error("  sh unavailable; hook execution test skipped in this environment");
-    return true;
+// POSIX purity is decided statically, in its own test: it needs no shell, so it must not
+// sit behind the sh gate below. On Windows sh.exe IS bash — it accepts every bashism, so
+// `sh -n` would pass vacuously there anyway; and where sh is absent the gated test returns
+// early, which used to skip this scan entirely (the local-green / CI-red pattern).
+test("payload: generated hooks are POSIX sh (static scan, no shell required)", () => {
+  const dir = tmp("hook-posix-scan");
+  const generated = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "HookPosix", "--phase", "C"], { encoding: "utf8" });
+  if (generated.status !== 0) {
+    console.error("  generator failed: " + (generated.stderr || "").split("\n")[0]);
+    return false;
   }
-  const dir = tmp("hook-commit-matrix");
-  const generated = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "HookMatrix", "--phase", "C"], { encoding: "utf8" });
-  if (generated.status !== 0) return false;
-  const pre = path.join(dir, ".githooks/pre-commit");
-  const msg = path.join(dir, ".githooks/commit-msg");
-  if (spawnSync(shell, ["-n", pre], { encoding: "utf8" }).status !== 0 || spawnSync(shell, ["-n", msg], { encoding: "utf8" }).status !== 0) return false;
-
-  // POSIX purity cannot be proven with the local shell: on Windows, sh.exe IS bash, so it
-  // accepts every bashism and this check would pass vacuously (verified: $BASH_VERSION is
-  // set, `[[ ]]` and pipefail both work). Scan statically instead — decidable everywhere.
   const BASHISMS = [
     [/\[\[/, "[[ ]] test"],
     [/\bset\s+-o\s+pipefail\b/, "set -o pipefail"],
@@ -622,20 +617,39 @@ test("payload: hooks pass sh -n and real git commit matrix", () => {
     [/\becho\s+-e\b/, "echo -e"],
     [/\bsource\s/, "source (use . instead)"]
   ];
-  for (const hookPath of [pre, msg]) {
+  let scanned = 0;
+  for (const rel of [".githooks/pre-commit", ".githooks/commit-msg"]) {
+    const hookPath = path.join(dir, rel);
     const body = fs.readFileSync(hookPath, "utf8");
     const shebang = body.split("\n")[0];
     if (!/^#!.*\bsh\b/.test(shebang) || /bash/.test(shebang)) {
-      console.error("  " + path.basename(hookPath) + ": expected a POSIX sh shebang, got " + JSON.stringify(shebang));
+      console.error("  " + rel + ": expected a POSIX sh shebang, got " + JSON.stringify(shebang));
       return false;
     }
     for (const [re, label] of BASHISMS) {
       if (re.test(body)) {
-        console.error("  " + path.basename(hookPath) + " declares #!/bin/sh but uses " + label);
+        console.error("  " + rel + " declares #!/bin/sh but uses " + label);
         return false;
       }
     }
+    scanned++;
   }
+  // liveness: a passing scan must have actually read both hooks
+  return scanned === 2;
+});
+
+test("payload: hooks pass sh -n and real git commit matrix", () => {
+  const shell = findPosixShell();
+  if (!shell) {
+    console.error("  sh unavailable; hook EXECUTION test skipped (static POSIX scan runs separately)");
+    return true;
+  }
+  const dir = tmp("hook-commit-matrix");
+  const generated = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "HookMatrix", "--phase", "C"], { encoding: "utf8" });
+  if (generated.status !== 0) return false;
+  const pre = path.join(dir, ".githooks/pre-commit");
+  const msg = path.join(dir, ".githooks/commit-msg");
+  if (spawnSync(shell, ["-n", pre], { encoding: "utf8" }).status !== 0 || spawnSync(shell, ["-n", msg], { encoding: "utf8" }).status !== 0) return false;
 
   gitInit(dir);
   spawnSync("git", ["config", "core.hooksPath", ".githooks"], { cwd: dir });

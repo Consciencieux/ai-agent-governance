@@ -203,7 +203,7 @@ function checkReleaseMeta() {
 function loadManifestChecks() {
   try {
     const m = JSON.parse(fs.readFileSync(MANIFEST, "utf8"));
-    if (!Array.isArray(m.artifacts) || m.artifacts.length === 0) return null;
+    if (!Array.isArray(m.artifacts) || m.artifacts.length === 0) throw new Error("manifest has no artifacts array (empty or missing) - refusing to fall back to defaults");
     return m.artifacts.map((a) => {
       const rel = path.normalize(String(a.path || ""));
       // Containment: a crafted manifest ("../../etc/passwd") or an in-tree symlink pointing
