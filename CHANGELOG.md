@@ -3,7 +3,11 @@
 All notable changes to this project will be documented here.
 
 
-## [Unreleased]
+## [1.0.0] - 2026-09-07
+
+### Changed
+
+- **1.0.0 freezes the public interface surface.** From this version on, the following are stable and change only under SemVer: the 38 sub-skill trigger words across 8 generated sub-skills; the 9 INSTALLED script CLIs and their flags; the `references/init-spec.json` contract (15 inputs, 38 artifacts across phases A/B/C); the six `docs/rules/*.md` paths written into governed projects; and the `.governance/` runtime contract (`manifest.json`, `state.json`, `preflight.json`, `git-policy.json`, `sync-rules.json`, `generated/skills/`). Authority for each surface stays in its source file — this entry records the commitment, not a second copy of the definitions.
 
 ### Fixed
 
