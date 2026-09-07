@@ -2,7 +2,9 @@
 
 > **Status: Active.** (In progress, initial state at creation.)
 
-**Target: payload** — edits only to rule/template text under `references/`, giving governed projects lessons of the same kind this repo has proven; no new gate scripts, no test-architecture changes (`repo-infra` stays untouched). If implementation surfaces a new decidable rule needing mechanical enforcement (requiring a new script/test), this plan is split into `both` and revised.
+**Target: both** — `payload`: `references/policies/*.md` (lifecycle / testing / coding), `references/workflows/ci.md`, `references/templates/agents-md.template.md` (adjudicated — see below); `repo-infra`: `CHANGELOG.md` [Unreleased] entry, trilingual plan files, target-chain assertion tests (if added, see §Validation §4).
+
+**agents-md.template.md adjudication: modify directly.** This template writes the CHANGELOG content boundary and structure contract into a generated project's AGENTS.md; the adjacent change-classification / test-protection pointers should carry the declaration-mechanism consistency point too, or the generated AGENTS.md drifts from docs/rules/*.md. **Not written as "skip if not needed".**
 
 ### Task Purpose
 
@@ -23,7 +25,7 @@ Governed projects already have the corresponding infrastructure (`lifecycle.poli
 
 #### 1. Declaration-mechanism consistency (D1 + D2 + D3 merged into one section)
 
-Write into `references/lifecycle.policy.md` after Phase 4 (verification sequence) as a section "declaration vs mechanism gap"; also add one item to "change placement & residue cleanup" in `references/coding.policy.md`.
+Write into `references/policies/lifecycle.policy.md` after Phase 4 (verification sequence) as a section "declaration vs mechanism gap"; also add one item to "change placement & residue cleanup" in `references/policies/coding.policy.md`.
 
 Key points:
 - What a rule declares is a set (sync points, scan targets, CI gates, checklists); the mechanism must cover the same scope. "Declared 5 places, verified 2" and "declared coverage of all source trees but the enumeration missed one tree" are the same defect class; fixing must complete the declaration or narrow the mechanism, never just change the doc.
@@ -32,31 +34,39 @@ Key points:
 
 #### 2. Test activity (D4 + D5 merged into one item)
 
-Write after "test protection" in `references/testing.policy.md`.
-- Vacuous test: a test staying green after the tested feature is removed = the test does not cover the feature; assertions must target the COMPLETE target set, not a subset (enumeration assertions and subset assertions are both vacuous).
-- When a change touches a gate/guard/checklist enumeration, the test must prove the condition is non-vacuous (e.g. inject a real marker/identifier proving the check actually runs), not merely assert an exit code or empty output.
+Write after "test protection" in `references/policies/testing.policy.md`.
+- **Fact-source rule**: the "declared set" must have an origin; an agent must not judge "this is the complete set" by feel. Candidate fact sources for the declared set: `init-spec.json` artifact list, `check-doc-consistency.js` cluster registry, `AGENTS.md` gate table, `sub-skills.md` sub-skill list; mechanism set = actually scanned directories / actually registered tests / actual CI jobs. Both must be comparable.
+- **Priority rule**: for gates, enumerations, registries and critical-path tests, negative fixture or mutation evidence is mandatory to prove the test covers the target; ordinary business tests are not required to do individual deletion mutations — avoid turning mutation testing into a new formalism.
+- Vacuous test definition: a test staying green after the tested feature is removed = the test does not cover the feature; assertions must target the COMPLETE target set, not a subset (enumeration assertions and subset assertions are both vacuous).
+- **Non-mechanized statement**: this plan adds human-attested / unverified judgement standards only; it does not claim mechanical enforcement — after writing they are rule text, they do not automatically stop errors.
 
 #### 3. Evidence tiers (D6)
 
-Write into the "evidence requirement" part of `references/lifecycle.policy.md` Phase 4.
+Write into the "evidence requirement" part of `references/policies/lifecycle.policy.md` Phase 4.
 - Three tiers: mechanical (marker/structure/path/regex/file existence → "mechanical condition satisfied", not "behavior correct"); human-attested (requires user involvement, e.g. release approval, translation review); unverified claim (self-administered only, no independent verification). A "✓ passed" must carry one of these tiers, otherwise verification cannot be claimed.
+- **No new mechanical gate**: this step only sets the textual evidence-tier standard; upgrading to mechanical enforcement is a later decision, not claimed in advance by this plan.
 
 #### 4. CI gate completeness (D7)
 
 Write into `references/workflows/ci.md` (the CI template file distributed to governed projects).
-- If the project maintains CI, CI must run commands equivalent to the gate set AGENTS.md declares, not a subset (e.g. only `npm test` while claiming "fails CI").
+- **Qualified**: only gates the project actually enables and applies. Judgement chain: no CI maintenance → not applicable; CI exists but the gate is unavailable (missing script / platform limit) → must be explicitly marked `not applicable` or `deferred`, **never faked as passed**; `echo "No <tool> configured yet"` is a warning placeholder, not an executed step.
+- **Consistent with existing degradation policy**: does not override SKILL.md "CI degradation strategy"; this item only adds "degradation is allowed, but must be declared" as a judgement standard.
 
 ### Affected Files
 
-- `references/policies/lifecycle.policy.md` — new "declaration vs mechanism gap" section (after Phase 4) + Phase 4 evidence-tier three-way distinction
-- `references/policies/testing.policy.md` — test-protection section adds vacuous-test/assert-complete-set
-- `references/policies/coding.policy.md` — change placement adds the enumeration re-check item
-- `references/workflows/ci.md` — CI gate completeness note
-- `references/templates/agents-md.template.md` — sync only if the AGENTS.md template carries a corresponding summary (change classification/test-protection pointers); otherwise skip
-- `docs/{en,zh-CN,zh-TW}/plans/` — this plan's trilingual presence (becomes single-language on archive)
-- `docs/en/architecture.md`, `docs/zh-CN/architecture.md`, `docs/zh-TW/architecture.md` — layout tree if new files (expected none)
+**payload**
+- `references/policies/lifecycle.policy.md` — new "declaration vs mechanism gap" section (after Phase 4) + Phase 4 evidence-tier three-way distinction (written)
+- `references/policies/testing.policy.md` — test-protection section adds vacuous-test/complete-set/fact-source rule (written)
+- `references/policies/coding.policy.md` — change placement adds the enumeration re-check item (written)
+- `references/workflows/ci.md` — CI gate completeness note (written, incl. degradation convention)
+- `references/templates/agents-md.template.md` — adjudicated as modified: generated AGENTS.md's change-classification/test-protection pointers carry the declaration-mechanism consistency point (written)
 
-> Note: payload changes must carry a `CHANGELOG.md` [Unreleased] entry (governance/mechanism change → `Changed`).
+**repo-infra**
+- `CHANGELOG.md` — [Unreleased] entry (governance/mechanism change → `Changed`)
+- `docs/{en,zh-CN,zh-TW}/plans/payload-governance-lessons.md` — this plan's trilingual presence (single-language on archive)
+- `tests/suites/` existing target-project tests — **adjudicated: no separate test file; ** reuse existing INIT tests in the target-chain assertion (§Validation §4), adding assertions only. If existing tests cannot carry it (assertion location outside an existing suite), split a new test file and update this plan's Affected Files then.
+
+> Path convention: policy files under `references/` are always `references/policies/<name>.policy.md`; workflows are `references/workflows/`; templates are `references/templates/`. There is no `references/<name>.policy.md` form.
 
 ### Risks
 
@@ -71,10 +81,13 @@ Write into `references/workflows/ci.md` (the CI template file distributed to gov
 1. `npm test` (full regression)
 2. `npm run check` (parity/layout/consistency/hygiene/role gates)
 3. `npm run check:payload` (payload scope)
-4. Clean-target INIT a throwaway project (`--phase C`), verify:
-   - generated `docs/rules/lifecycle.md` contains "declaration vs mechanism gap" and "evidence tiers";
+4. Clean-target INIT a throwaway project (`--phase C`), with **mechanical assertions** (not manual verification):
+   - generated `docs/rules/lifecycle.md` contains "declaration vs mechanism gap" and "evidence tiers" — via `fs.readFileSync` + `.includes()` assertions, added into the existing target-project test suite (reuse, not a new file);
    - generated `docs/rules/testing.policy.md` contains "vacuous test";
    - generated `docs/rules/coding.policy.md` contains "enumeration re-check";
-   - generated `.github/workflows/` or `ci` template contains "gate completeness";
-   - generated `AGENTS.md` (if the template carries a corresponding summary) contains the pointer.
+   - generated `ci` template contains "gate completeness";
+   - generated `AGENTS.md` contains the declaration-mechanism consistency pointer.
 5. Boundary check: `references/` has no `repo-tools/`, `repo-workflows/`, `npm run` or other repo-specific paths; `check-role-completeness --gate` green.
+6. Evidence-tier self-check: every written rule item marks its applicable evidence tier (mechanical / human-attested / unverified); nobody can claim this pass already "mechanically enforced".
+
+> Writing the plan is verification: every `references/` reference in this plan must resolve via `Test-Path`; any missing one is a declaration-mechanism inconsistency of the plan itself and must be fixed in the plan first.

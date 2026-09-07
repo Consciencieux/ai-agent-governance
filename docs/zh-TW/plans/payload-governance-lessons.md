@@ -2,7 +2,9 @@
 
 > **Status: Active.**（進行中，建立時的初始狀態。）
 
-**Target：payload** —— 僅修改 `references/` 下的規則/範本正文，讓被治理專案獲得與本倉庫已證實的防線同類的教訓；不新增閘門腳本、不修改測試架構（`repo-infra` 部分零改動）。若實現中出現新的可判定規則且需要機械執行（需新增腳本/測試），將拆分為 `both` 並重新對本計畫修訂。
+**Target：both** —— `payload`：`references/policies/*.md`（lifecycle / testing / coding）、`references/workflows/ci.md`、`references/templates/agents-md.template.md`（經裁定—見下）；`repo-infra`：`CHANGELOG.md` [Unreleased] 條目、三語計畫檔案、目標鏈路斷言測試（若新增，見 §驗證方法 第 4 條）。
+
+**agents-md.template.md 裁定：直接修改。** 該範本把 CHANGELOG 內容邊界與結構契約寫入生成專案的 AGENTS.md；與之相鄰的「結論/測試要點」歸納（變更歸類、測試保護指標）同樣應帶上本次的宣告-機制一致性要點，避免生成專案 AGENTS.md 與 docs/rules/*.md 脫節。**不寫「如需要則跳過」。**
 
 ### 任務目的
 
@@ -23,7 +25,7 @@
 
 #### 1. 宣告-機制一致性（D1 + D2 + D3 合併為一節）
 
-寫入 `references/lifecycle.policy.md` Phase 4（驗證序列）之後，作為一節「宣告與機制的差距」；同時在 `references/coding.policy.md` 的「變更歸位與殘留清理」加入一條。
+寫入 `references/policies/lifecycle.policy.md` Phase 4（驗證序列）之後，作為一節「宣告與機制的差距」；同時在 `references/policies/coding.policy.md` 的「變更歸位與殘留清理」加入一條。
 
 要點：
 - 規則宣告的是集合（同步點、掃描目錄、CI 閘門、檢查清單），機制必須覆蓋同等範圍；「宣告了 5 處、機制驗 2 處」與「宣告覆蓋所有原始碼樹但列舉漏了 1 棵」屬於同一缺陷類，修復時必須補齊宣告或縮小機制，不能只改文件。
@@ -32,31 +34,39 @@
 
 #### 2. 測試活性（D4 + D5 合併為一條）
 
-寫入 `references/testing.policy.md` 的「測試保護」之後。
-- 空洞測試：移除被測功能後測試仍綠 = 測試未覆蓋功能；斷言必須針對**完整**目標集合，而不是子集（列舉斷言、子集斷言都是空洞）。
-- 變更涉及閘門/守衛/清單列舉時，測試必須證明條件非空洞（例如注入一個真實 marker/識別碼，證明檢查真的在跑），不能只斷言退出碼或空輸出。
+寫入 `references/policies/testing.policy.md` 的「測試保護」之後。
+- **事實源規定**：「宣告集合」必須有出處，Agent 不得憑感覺判定「這就是完整集合」。宣告集合的候選事實源：`init-spec.json` 的 artifacts 清單、`check-doc-consistency.js` 的簇註冊表、`AGENTS.md` 閘門表、`sub-skills.md` 的子技能清單；機制集合 = 實際掃描目錄 / 實際註冊測試 / 實際 CI job。兩者必須可對照。
+- **優先級規定**：對閘門、列舉、註冊表、關鍵路徑測試，必須提供負向 fixture 或 mutation evidence，證明測試確實覆蓋目標；一般業務測試不強制逐個做刪除變異——避免把 mutation testing 變成新的形式主義。
+- 空洞測試定義：移除被測功能後測試仍綠 = 測試未覆蓋功能；斷言必須針對完整目標集合，而不是子集（列舉斷言、子集斷言都是空洞）。
+- **未機械化聲明**：本計畫新增的是 human-attested / unverified judgement standards，不聲稱它們已獲得 mechanical enforcement——寫入後它們是規則文字，不自動阻止錯誤。
 
 #### 3. 證據等級（D6）
 
-寫入 `references/lifecycle.policy.md` Phase 4 的「證據要求」段。
+寫入 `references/policies/lifecycle.policy.md` Phase 4 的「證據要求」段。
 - 區分三級：機械（marker/結構/路徑/正則/檔案存在 → 「機械條件滿足」，非「行為正確」）；人工背書（需要使用者參與，如發布批准、翻譯審查）；未驗證宣告（僅自述，無獨立驗證）。「✓ 通過」必須掛這三級之一，否則不能聲稱驗證完成。
+- **不新增機械閘門**：本次只設立證據等級的文字標準；是否升級為 mechanical enforcement 由後續觀察決定，本計畫不預先聲稱。
 
 #### 4. CI 閘門完整性（D7）
 
 寫入 `references/workflows/ci.md`（分發到被治理專案的 CI 範本檔案）。
-- 若專案維護 CI，CI 必須運行與 AGENTS.md 宣告的閘門集合等價的命令，不能只運行子集（例如只 `npm test` 但聲稱「fails CI」）。
+- **限定條件**：僅檢查專案實際啟用且適用的閘門。判定鏈為：若專案無 CI 維護 → 不適用；有 CI 但該閘門不可用（腳本缺失/平台限制）→ 必須明確標記 `not applicable` 或 `deferred`，**不得偽裝成通過**；`echo "No <tool> configured yet"` 是警告佔位，不是已執行。
+- **與現有降級策略一致**：不推翻 `SKILL.md`「CI 降級策略」（專案腳本缺失時保留警告佔位）；本條目只補充「可以降級，但必須聲明降級」的判定標準。
 
 ### Affected Files
 
-- `references/policies/lifecycle.policy.md` —— 新增「宣告與機制的差距」節（Phase 4 後）+ Phase 4 證據等級三級區分
-- `references/policies/testing.policy.md` —— 測試保護節新增空洞測試/斷言完整集合
-- `references/policies/coding.policy.md` —— 變更歸位新增列舉複查條目
-- `references/workflows/ci.md` —— CI 閘門完整性說明
-- `references/templates/agents-md.template.md` —— 若上述規則在 AGENTS.md 範本有對應歸納（變更歸類/測試保護指標）則同步；無則跳過
-- `docs/{en,zh-CN,zh-TW}/plans/` —— 本計畫的三語存在（實現後歸檔為單語）
-- `docs/en/architecture.md`、`docs/zh-CN/architecture.md`、`docs/zh-TW/architecture.md` —— 佈局樹若新增檔案（預計無）
+**payload**
+- `references/policies/lifecycle.policy.md` —— 新增「宣告與機制的差距」節（Phase 4 後）+ Phase 4 證據等級三級區分（有寫）
+- `references/policies/testing.policy.md` —— 測試保護節新增空洞測試/斷言完整集合/事實源規定（有寫）
+- `references/policies/coding.policy.md` —— 變更歸位新增列舉複查條目（有寫）
+- `references/workflows/ci.md` —— CI 閘門完整性說明（有寫，含降級策略約定）
+- `references/templates/agents-md.template.md` —— 裁定為修改：生成專案 AGENTS.md 的變更歸類/測試保護指標帶上宣告-機制一致性要點（有寫）
 
-> 註：載荷變更必須附帶 `CHANGELOG.md` [Unreleased] 條目（治理/機制變更 → `Changed`）。
+**repo-infra**
+- `CHANGELOG.md` —— [Unreleased] 補條目（治理/機制變更 → `Changed`）
+- `docs/{en,zh-CN,zh-TW}/plans/payload-governance-lessons.md` —— 本計畫三語（實現後歸檔為單語）
+- `tests/suites/` 現有目標專案測試 —— **裁定：不新增專門測試檔案；** 在目標鏈路斷言（§驗證方法第 4 條）中複用既有 INIT 測試，只增加斷言。若發現既有測試無法承載（例如斷言位置不在現有 suite 內），再拆分新測試檔案，屆時更新本計畫 Affected Files。
+
+> 路徑慣例：`references/` 下的 policy 檔案一律是 `references/policies/<name>.policy.md`；工作流是 `references/workflows/`；範本是 `references/templates/`。無 `references/<name>.policy.md` 這種寫法。
 
 ### 風險
 
@@ -71,10 +81,13 @@
 1. `npm test`（全套回歸）
 2. `npm run check`（parity/佈局/一致性/衛生/角色閘門）
 3. `npm run check:payload`（載荷範圍）
-4. 乾淨目標 INIT 一個 throwaway 專案（`--phase C`），核對：
-   - 生成的 `docs/rules/lifecycle.md` 含「宣告與機制的差距」「證據等級」；
+4. 乾淨目標 INIT 一個 throwaway 專案（`--phase C`），並做**機械斷言**（非人工核驗）：
+   - 生成的 `docs/rules/lifecycle.md` 含「宣告與機制的差距」與「證據等級」——用 `fs.readFileSync` + `.includes()` 斷言，納入現有目標專案測試 suite（複用而非新增）；
    - 生成的 `docs/rules/testing.policy.md` 含「空洞測試」；
    - 生成的 `docs/rules/coding.policy.md` 含「列舉複查」；
-   - 生成的 `.github/workflows/` 或 `ci` 範本含「閘門完整性」；
-   - 生成的 `AGENTS.md`（若範本有對應歸納）含對應指標。
+   - 生成的 `ci` 範本含「閘門完整性」；
+   - 生成的 `AGENTS.md` 含宣告-機制一致性指標。
 5. 邊界體檢：`references/` 無 `repo-tools/`、`repo-workflows/`、`npm run` 等本倉庫特有路徑；`check-role-completeness --gate` 綠。
+6. 證據等級自檢：每個寫出的規則條目標註適用證據等級（機械 / 人工背書 / 未驗證）；無人能聲稱本次已「機械強制」。
+
+> 寫計畫即驗證：本計畫所有 `references/` 引用必須逐一 `Test-Path` 通過；不存在者即為計畫自身的宣告-機制不一致，必須本計畫先改。

@@ -2,7 +2,9 @@
 
 > **Status: Active.**（进行中，创建时的初始状态。）
 
-**Target：payload** —— 仅修改 `references/` 下的规则/模板正文，让治理项目获得与本仓库已证实的防线同类的教训；不新增门禁脚本、不修改测试架构（`repo-infra` 部分零改动）。若实现中出现新的可判定规则且需要机械执行（需新增脚本/测试），将拆分为 `both` 并重新对本计划修订。
+**Target：both** —— `payload`：`references/policies/*.md`（lifecycle / testing / coding）、`references/workflows/ci.md`、`references/templates/agents-md.template.md`（经裁定—见下）；`repo-infra`：`CHANGELOG.md` [Unreleased] 条目、三语计划文件、目标链路断言测试（若新增，见 §验证方法 第 4 条）。
+
+**agents-md.template.md 裁定：直接修改。** 该模板把 CHANGELOG 内容边界与结构契约写入生成项目的 AGENTS.md；与之相邻的"结论/测试要点"归纳（变更归类、测试保护指针）同样应带上本次的声明-机制一致性要点，避免生成项目 AGENTS.md 与 docs/rules/*.md 脱节。**不写"如需要则跳过"。**
 
 ### 任务目的
 
@@ -23,7 +25,7 @@
 
 #### 1. 声明-机制一致性（D1 + D2 + D3 合并为一节）
 
-写入 `references/lifecycle.policy.md` Phase 4（验证序列）之后，作为一节「声明与机制的差距」；同时在 `references/coding.policy.md` 的「变更归位与残留清理」加入一条。
+写入 `references/policies/lifecycle.policy.md` Phase 4（验证序列）之后，作为一节「声明与机制的差距」；同时在 `references/policies/coding.policy.md` 的「变更归位与残留清理」加入一条。
 
 要点：
 - 规则声明的是集合（同步点、扫描目、CI 门禁、检查清单），机制必须覆盖同等范围；「声明了 5 处、机制验 2 处」与「声明覆盖所有源码树但枚举漏了 1 棵」属于同一缺陷类，修复时必须补齐声明或缩小机制，不能只改文档。
@@ -32,31 +34,39 @@
 
 #### 2. 测试活性（D4 + D5 合并为一条）
 
-写入 `references/testing.policy.md` 的「测试保护」之后。
-- 空洞测试：移除被测功能后测试仍绿 = 测试未覆盖功能；断言必须针对**完整**目标集合，而不是子集（枚举断言、子集断言都是空洞）。
-- 变更涉及门禁/守卫/清单枚举时，测试必须证明条件非空洞（例如注入一个真实 marker/标识符，证明检查真的在跑），不能只断言退出码或空输出。
+写入 `references/policies/testing.policy.md` 的「测试保护」之后。
+- **事实源规定**：「声明集合」必须有出处，Agent 不得凭感觉判定"这就是完整集合"。声明集合的候选事实源：`init-spec.json` 的 artifacts 清单、`check-doc-consistency.js` 的簇注册表、`AGENTS.md` 门禁表、`sub-skills.md` 的子技能清单；机制集合 = 实际扫描目录 / 实际注册测试 / 实际 CI job。两者必须可对照。
+- **优先级规定**：对门禁、枚举、注册表、关键路径测试，必须提供负向 fixture 或 mutation evidence，证明测试确实覆盖目标；普通业务测试不强制逐个做删除变异——避免把 mutation testing 变成新的形式主义。
+- 空洞测试定义：移除被测功能后测试仍绿 = 测试未覆盖功能；断言必须针对完整目标集合，而不是子集（枚举断言、子集断言都是空洞）。
+- **未机械化声明**：本计划新增的是 human-attested / unverified judgement standards，不声称它们已获得 mechanical enforcement——写入后它们是规则文字，不自动阻止错误。
 
 #### 3. 证据等级（D6）
 
-写入 `references/lifecycle.policy.md` Phase 4 的「证据要求」段。
-- 区分三级：机械（marker/结构/路径/正则/文件存在 → 「机械条件满足」，非「行为正确」）；人工背书（需要用户参与，如发布批准、翻译审查）；未验证声明（仅自述，无独立证据）。「✓ 通过」必须挂这三级之一，否则不能声称验证完成。
+写入 `references/policies/lifecycle.policy.md` Phase 4 的「证据要求」段。
+- 区分三级：机械（marker/结构/路径/正则/文件存在 → 「机械条件满足」，非「行为正确」）；人工背书（需要用户参与，如发布批准、翻译审查）；未验证声明（仅自述，无独立验证）。「✓ 通过」必须挂这三级之一，否则不能声称验证完成。
+- **不新增机械门禁**：本次只设立证据等级的文字标准；是否升级为 mechanical enforcement 由后续观察决定，本计划不预先声称。
 
 #### 4. CI 门禁完整性（D7）
 
 写入 `references/workflows/ci.md`（分发到治理项目的 CI 模板文件）。
-- 若项目维护 CI，CI 必须运行与 AGENTS.md 声明的门禁集合等价的命令，不能只运行子集（例如只 `npm test` 但声称「fails CI」）。
+- **限定条件**：仅检查项目实际启用且适用的门禁。判定链为：若项目无 CI 维护 → 不适用；有 CI 但该门禁不可用（脚本缺失/平台限制）→ 必须明确标记 `not applicable` 或 `deferred`，**不得伪装成通过**；`echo "No <tool> configured yet"` 是警告占位，不是已执行。
+- **与现有降级策略一致**：不推翻 `SKILL.md`「CI 降级策略」（项目脚本缺失时保留警告占位）；本条目只补充"可以降级，但必须声明降级"的判定标准。
 
 ### Affected Files
 
-- `references/policies/lifecycle.policy.md` —— 新增「声明与机制的差距」节（Phase 4 后）+ Phase 4 证据等级三级区分
-- `references/policies/testing.policy.md` —— 测试保护节新增空洞测试/断言完整集合
-- `references/policies/coding.policy.md` —— 变更归位新增枚举复查条目
-- `references/workflows/ci.md` —— CI 门禁完整性说明
-- `references/templates/agents-md.template.md` —— 若上述规则在 AGENTS.md 模板有对应归纳（变更归类/测试保护指针）则同步；无则跳过
-- `docs/{en,zh-CN,zh-TW}/plans/` —— 本计划的三语存在（实现后归档为单语）
-- `docs/en/architecture.md`、`docs/zh-CN/architecture.md`、`docs/zh-TW/architecture.md` —— 布局树若新增文件（预计无）
+**payload**
+- `references/policies/lifecycle.policy.md` —— 新增「声明与机制的差距」节（Phase 4 后）+ Phase 4 证据等级三级区分（有写）
+- `references/policies/testing.policy.md` —— 测试保护节新增空洞测试/断言完整集合/事实源规定（有写）
+- `references/policies/coding.policy.md` —— 变更归位新增枚举复查条目（有写）
+- `references/workflows/ci.md` —— CI 门禁完整性说明（有写，含降级策略约定）
+- `references/templates/agents-md.template.md` —— 裁定为修改：生成项目 AGENTS.md 的变更归类/测试保护指针带上声明-机制一致性要点（有写）
 
-> 注：载荷变更必须附带 `CHANGELOG.md` [Unreleased] 条目（治理/机制变更 → `Changed`）。
+**repo-infra**
+- `CHANGELOG.md` —— [Unreleased] 补条目（治理/机制变更 → `Changed`）
+- `docs/{en,zh-CN,zh-TW}/plans/payload-governance-lessons.md` —— 本计划三语（实现后归档为单语）
+- `tests/suites/` 现有目标项目测试 —— **裁定：不新增专门测试文件；** 在目标链路断言（§验证方法第 4 条）中复用已有 INIT 测试，只增加断言。若发现已有测试无法承载（例如断言位置不在现有 suite 内），再拆分新测试文件，届时更新本计划 Affected Files。
+
+> 路径惯例：`references/` 下的 policy 文件一律是 `references/policies/<name>.policy.md`；工作流是 `references/workflows/`；模板是 `references/templates/`。无 `references/<name>.policy.md` 这种写法。
 
 ### 风险
 
@@ -71,10 +81,13 @@
 1. `npm test`（全套回归）
 2. `npm run check`（parity/布局/一致性/卫生/角色门禁）
 3. `npm run check:payload`（载荷范围）
-4. 干净目标 INIT 一个 throwaway 项目（`--phase C`），核对：
-   - 生成的 `docs/rules/lifecycle.md` 含「声明与机制的差距」「证据等级」；
+4. 干净目标 INIT 一个 throwaway 项目（`--phase C`），并做**机械断言**（非人工核验）：
+   - 生成的 `docs/rules/lifecycle.md` 含「声明与机制的差距」与「证据等级」——用 `fs.readFileSync` + `.includes()` 断言，纳入现有目标项目测试 suite（复用而非新增）；
    - 生成的 `docs/rules/testing.policy.md` 含「空洞测试」；
    - 生成的 `docs/rules/coding.policy.md` 含「枚举复查」；
-   - 生成的 `.github/workflows/` 或 `ci` 模板含「门禁完整性」；
-   - 生成的 `AGENTS.md`（若模板有对应归纳）含对应指针。
+   - 生成的 `ci` 模板含「门禁完整性」；
+   - 生成的 `AGENTS.md` 含声明-机制一致性指针。
 5. 边界体检：`references/` 无 `repo-tools/`、`repo-workflows/`、`npm run` 等本仓库特有路径；`check-role-completeness --gate` 绿。
+6. 证据等级自检：每个写出的规则条目标注适用证据等级（机械 / 人工背书 / 未验证）；无人可以声称本次已"机械强制"。
+
+> 写 plan 即验证：本计划所有 `references/` 引用必须逐一 `Test-Path` 通过；不存在者即为计划自身的声明-机制不一致，必须本计划先改。
