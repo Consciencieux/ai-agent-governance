@@ -1,8 +1,8 @@
 # 确认凭证与变更卫生自动化（TASK 计划）
 
-[English](../../en/plans/consent-and-change-hygiene.md) · [简体中文](consent-and-change-hygiene.md) · [繁體中文](../../zh-TW/plans/consent-and-change-hygiene.md)
+归档共享单语原文(简体中文为准)。原三语版本已随归档移除;本文件随 v0.14.0+ 归档于 2026-09-06。
 
-> **状态：设计计划，未实现。** 本计划定义用户确认、删除、重命名与迁移的可验证证据，不推断人的真实意图。
+> **Status: archived.**（已归档。归档即断言完成。）
 
 **Target：both** —— `payload` 增加运行时校验与被治理项目生成契约；`repo-infra` 增加测试、文档和发布接线。两个域分别列在“受影响文件”中。
 
@@ -60,7 +60,7 @@
 
 #### 仓库基础设施
 
-- `tests/suites/*.test.js` —— 覆盖摘要绑定、范围不匹配、删除、重命名、迁移与兜底(归属对应领域的 suite;`tests/run-tests.js` 现在只是发现入口,不得注册测试——卫生门禁会因此失败)
+- `tests/suites/consistency.test.js` — hook digest test coverage —— 覆盖摘要绑定、范围不匹配、删除、重命名、迁移与兜底(归属对应领域的 suite;`tests/run-tests.js` 现在只是发现入口,不得注册测试——卫生门禁会因此失败)
 - `scripts/check-doc-consistency.js` —— 验证同步文档标记
 - `docs/{en,zh-CN,zh-TW}/commands.md` —— 记录用户触发词
 - `CHANGELOG.md` —— 在发布边界记录行为变化

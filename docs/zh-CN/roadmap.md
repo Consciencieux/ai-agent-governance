@@ -1,3 +1,5 @@
+
+- **同意证据 + 变更卫生** —— `stagedDigest` 字段绑定批准到暂存内容。删除/重命名卫生通过 `.governance/change-hygiene.json` 与 git diff 对账。风险分级(advisory/gate/human-required)写入 `coding.policy.md`。C6 评审证据绑定: `plan --review-evidence` 生成摘要, `execute` 拒绝无 digest 的 completed。计划全部三节交付。实现: [../archive/consent-and-change-hygiene.md](../archive/consent-and-change-hygiene.md)
 # Roadmap
 
 [English](../en/roadmap.md) · [简体中文](roadmap.md) · [繁體中文](../zh-TW/roadmap.md)
@@ -42,7 +44,6 @@
 
 ### 近期
 
-- **同意证据 + 变更卫生** —— 将评审/同意状态绑定到摘要；对账删除/重命名声明与 git diff。设计：[plans/consent-and-change-hygiene.md](plans/consent-and-change-hygiene.md)
 - **多 Agent 协调协议** —— 并发 Agent 之间的标准化协调（锁检查已交付；review-manager 的并行子代理是其第一个真实用例）。*尚无设计计划*
 - **远程治理看板** —— 被治理仓库的可观测性（依赖：审计轨迹 + 健康分，均已交付）
 - **monorepo 多治理域** —— 校验器多根解析 + 多 manifest（出现真实 monorepo 需求时再做）

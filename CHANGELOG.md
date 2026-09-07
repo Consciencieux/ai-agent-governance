@@ -3,6 +3,16 @@
 All notable changes to this project will be documented here.
 
 ## [Unreleased]
+### Fixed
+
+- **Deletion/rename hygiene check (consent-and-change-hygiene §2 delivered)** — `check-coding-hygiene.js` now reads `.governance/change-hygiene.json` when present, reconciles declared deletions/renames against `git diff --name-status --find-renames`, and reports undeclared changes. Advisory only, matching the plan's own risk warning about false positives. Three scenarios verified: no declaration file → no-op, all declared → clean, missing declaration → flagged.
+
+- **Risk-tiered enforcement documented (consent-and-change-hygiene §3 delivered)** — `coding.policy.md` now carries the advisory/gate/human-required tiering for change-hygiene declarations. The tiers do not replace the release-flow riskLevel; they apply to the hygiene declaration system only, and are fail-closed only under `--release-gate`.
+
+### Fixed
+
+- **Consent.json bound file names only, not content** — proven: approve `app.js` with content `SAFE`, swap to `MALICIOUS` after approval, commit went through with the same filename. The hook now accepts an optional `stagedDigest` field (SHA-256 of the staged diff); when present, any post-approval content change invalidates the record. Backward-compatible: records without a digest keep the old (weaker) semantics. Three scenarios verified: digest mismatch → blocked, correct digest → passes, no digest → passes.
+
 
 ### Fixed
 

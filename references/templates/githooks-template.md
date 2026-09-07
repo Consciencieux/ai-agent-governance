@@ -94,6 +94,25 @@ if (JSON.stringify(normalizePaths(consent.staged)) !== JSON.stringify(normalizeP
   fail("staged files differ from the confirmed command sequence; re-confirm and update consent.json");
 }
 
+// Content binding. The file list alone does not prove the approved CONTENT is what gets
+// committed: approve app.js, then rewrite app.js before committing, and the list still
+// matches (verified — the commit went through with swapped content). When consent.json
+// carries a stagedDigest it must equal the hash of the staged diff, so any post-approval
+// edit invalidates the record. The field is OPTIONAL: consent records written before this
+// check have no digest, and making it mandatory would break every governed project on
+// upgrade. Absent digest keeps the old, weaker guarantee; present digest is fail-closed.
+if (Object.prototype.hasOwnProperty.call(consent, "stagedDigest")) {
+  if (typeof consent.stagedDigest !== "string" || !consent.stagedDigest) {
+    fail(`${consentFile} stagedDigest must be a non-empty string`);
+  }
+  const diff = spawnSync("git", ["-c", "core.quotePath=false", "diff", "--cached"], { encoding: "buffer" });
+  if (diff.status !== 0) fail("cannot inspect the staged diff for digest verification");
+  const actualDigest = require("crypto").createHash("sha256").update(diff.stdout).digest("hex");
+  if (actualDigest !== consent.stagedDigest) {
+    fail("staged content changed after confirmation (digest mismatch); re-confirm and update consent.json");
+  }
+}
+
 if (mode === "commit-msg") {
   if (!messageFile) fail("commit-msg did not receive a message file");
   let actual;

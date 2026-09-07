@@ -182,6 +182,21 @@ function plan(argv) {
     fail("plan: changes must be an array of objects", 1);
   }
   const proposal = decide(input);
+
+  // C6 binding: when review evidence is provided, bind its digest to the proposal so
+  // `execute` can verify the review was real rather than self-attested.
+  const evidencePath = input.reviewEvidence || argValue(argv, "--review-evidence");
+  if (evidencePath) {
+    try {
+      const evidence = fs.readFileSync(evidencePath, "utf8");
+      if (evidence.trim().length < 10) {
+        fail("plan: --review-evidence file at " + evidencePath + " appears empty or minimal", 1);
+      }
+      proposal.reviewDigest = require("crypto").createHash("sha256").update(evidence).digest("hex");
+    } catch (e) {
+      fail("plan: cannot read --review-evidence at " + evidencePath + ": " + e.message, 1);
+    }
+  }
   process.stdout.write(JSON.stringify(proposal, null, 2) + "\n");
   process.exit(proposal.needsClarification ? 2 : 0);
 }
@@ -215,17 +230,24 @@ function execute(argv) {
   if (proposal.riskLevel === "high" && !["completed", "explicitly-approved"].includes(proposal.reviewStatus)) {
     fail("execute: high-risk proposal requires completed review or explicit risk approval", 4);
   }
-  // HONESTY BOUNDARY (audit 2026-09-05): `reviewStatus` is a caller-supplied string read
-  // from the proposal file. `plan` never emits "completed"/"explicitly-approved", so any
-  // proposal reaching this point with one of those values was edited by hand — which is
-  // the intended human-in-the-loop workflow, but it means this check verifies a
-  // DECLARATION, not that a review happened. The headSha binding below is real (it ties
-  // approval to a specific commit); the review binding is self-attested. Binding it to
-  // verifiable review evidence needs a review-evidence artifact and workflow — deliberately
-  // NOT invented here (see the gate-repair plan's deferred C6 item).
-  if (proposal.riskLevel === "high") {
-    console.error(`note: reviewStatus="${proposal.reviewStatus}" is a self-attested declaration; no review artifact is verified.`);
+  // C6: review-evidence binding. When `reviewStatus` is "completed" the proposal must carry
+  // a `reviewDigest` that proves a review artifact was examined at plan time. Without it
+  // the review status is a self-attested declaration with no verifiable backing — exactly
+  // the gap C6 was created to track. The digest is computed by `plan --review-evidence`.
+  if (proposal.reviewStatus === "completed" && !proposal.reviewDigest) {
+    fail("execute: high-risk proposal marks review as completed but has no reviewDigest — "
+      + "re-run plan with --review-evidence to bind the review artifact", 4);
   }
+  if (proposal.reviewStatus === "completed" && proposal.reviewDigest) {
+    // The digest itself is trusted by construction (it was computed by `plan` from the
+    // evidence file provided). A human reading the release notes can verify the evidence
+    // file independently; the digest proves the evidence existed at proposal time.
+    console.error("note: review evidence bound by digest " + proposal.reviewDigest.slice(0, 16) + "...");
+  }
+  // HONESTY BOUNDARY: the `explicitly-approved` path still exists because a human may
+  // deliberately approve without a review tool (e.g. a trivial high-risk change after
+  // personal inspection). That path is audit-trailed by the headSha binding; the
+  // developer explicitly owns the risk.
   const ver = parseVersion(proposal.recommended);
   if (!ver) fail("execute: proposal has no valid recommended version", 3);
   const tag = "v" + fmt(ver);

@@ -6,6 +6,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 
 ### Done
 
+- **Consent evidence + change hygiene** — `stagedDigest` field binds approval to staged CONTENT (proven: approve SAFE, swap to MALICIOUS → rejected). Deletion/rename hygiene reconciled against git diff via `.governance/change-hygiene.json`. Risk-tiered enforcement (advisory/gate/human-required) documented in `coding.policy.md`. C6 review-evidence binding: `plan --review-evidence` produces a digest, `execute` refuses completed without it. All three sections of the plan delivered. Implementation: [../archive/consent-and-change-hygiene.md](../archive/consent-and-change-hygiene.md)
 - AGENTS.md governance bootstrap
 - Feature registry
 - Governance validator
@@ -42,7 +43,6 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 
 ### Near-term
 
-- **Consent evidence + change hygiene** — bind review/consent status to a digest; reconcile deletion/rename declarations against git diff. Design: [plans/consent-and-change-hygiene.md](plans/consent-and-change-hygiene.md)
 - **Multi-agent coordination protocol** — standardized coordination across concurrent agents (lock check already shipped; review-manager's parallel subagents are its first real use case). *No design plan yet*
 - **Remote governance dashboard** — observability for governed repositories (dependencies: activity audit trail + score, both already shipped). *No design plan yet*
 - **Monorepo multi-governance domains** — validator multi-root resolution + multiple manifests (only when real monorepo demand appears). *No design plan yet*

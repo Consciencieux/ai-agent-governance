@@ -147,10 +147,13 @@ test("release execute: high-risk proposal requires review evidence", () => {
   write(proposalPath, JSON.stringify(proposal));
   const blocked = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
   if (blocked.status !== 4 || gitTags(dir) !== "" || !/requires completed review/.test(blocked.stderr)) return false;
+  // C6: setting reviewStatus to "completed" is NOT enough — without a reviewDigest
+  // the review evidence is unbound (a review that never ran is not a review), so
+  // execute must refuse and create no tag.
   proposal.reviewStatus = "completed";
   write(proposalPath, JSON.stringify(proposal));
-  const allowed = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
-  return allowed.status === 0 && gitTags(dir) === "v1.0.1";
+  const c6blocked = runRelease(dir, ["execute", "--proposal", proposalPath, "--yes"]);
+  return c6blocked.status !== 0 && /reviewDigest/i.test(c6blocked.stderr + c6blocked.stdout) && gitTags(dir) === "";
 });
 
 test("release execute: null proposal is rejected cleanly", () => {
@@ -191,4 +194,81 @@ test("skill-release.md: release.md mentions stay usage-boundary pointers, not ru
   return releaseMdRuleCitations(mutated).length > 0;
 });
 
+
+// ---------------------------------------------------------------------------
+// C6: review-evidence binding. The old "reviewStatus: completed" was a self-attested
+// string - the tag implied a review happened without a verifiable artifact behind it.
+// plan --review-evidence now binds a SHA-256 of the review artifact into the proposal;
+// execute refuses "completed" without that digest. The "explicitly-approved" path stays
+// digest-free by design: a human explicitly owns the risk, headSha still binds approval
+// to a specific commit.
+// ---------------------------------------------------------------------------
+
+test("release plan: --review-evidence binds a digest into the proposal", () => {
+  const dir = tmp("c6-plan");
+  const evidence = path.join(dir, "review-report.json");
+  write(evidence, JSON.stringify({ findings: [{ severity: "general", evidence: "x" }], verdict: "fix" }));
+  const r = spawnSync(process.execPath, [RELEASE_TOOL, "plan", "--json", JSON.stringify({ current: "0.9.9", changes: [{ type: "fix", description: "c6" }] }), "--review-evidence", evidence], { cwd: SKILL_ROOT, encoding: "utf8" });
+  if (r.status !== 0) return false;
+  const j = JSON.parse(r.stdout);
+  if (!/^[0-9a-f]{64}$/.test(j.reviewDigest || "")) { console.error("  no valid reviewDigest in proposal"); return false; }
+  return true;
+});
+
+test("release plan: --review-evidence on a missing file fails cleanly", () => {
+  const r = spawnSync(process.execPath, [RELEASE_TOOL, "plan", "--json", JSON.stringify({ current: "0.9.9", changes: [{ type: "fix", description: "x" }] }), "--review-evidence", "zzz-missing.json"], { cwd: SKILL_ROOT, encoding: "utf8" });
+  return r.status === 1;
+});
+
+test("release execute: completed review without a digest is rejected (C6)", () => {
+  const dir = tmp("c6-no-digest");
+  gitInit(dir);
+  write(path.join(dir, "seed.txt"), "seed\n");
+  spawnSync("git", ["add", "-A"], { cwd: dir, encoding: "utf8" });
+  spawnSync("git", ["commit", "-q", "-m", "seed"], { cwd: dir, encoding: "utf8" });
+  const head = gitHead(dir);
+  const proposal = { current: "1.0.0", recommended: "1.0.1", releaseType: "patch", headSha: head, summary: "x",
+    riskLevel: "high", reviewRecommendation: "required", reviewStatus: "completed" };
+  const p = path.join(dir, ".governance", "release-proposal.json");
+  write(p, JSON.stringify(proposal));
+  const r = spawnSync(process.execPath, [RELEASE_TOOL, "execute", "--proposal", p, "--yes"], { cwd: dir, encoding: "utf8" });
+  return r.status !== 0 && /reviewDigest/i.test(String(r.stderr || "") + String(r.stdout || ""));
+});
+
+test("release execute: completed review WITH digest passes C6", () => {
+  const dir = tmp("c6-with-digest");
+  gitInit(dir);
+  const evidence = path.join(dir, "review.json");
+  write(evidence, JSON.stringify({ verdict: "ok" }));
+  const plan = spawnSync(process.execPath, [RELEASE_TOOL, "plan", "--json", JSON.stringify({ current: "1.0.0", changes: [{ type: "fix", description: "x" }] }), "--review-evidence", evidence], { cwd: SKILL_ROOT, encoding: "utf8" });
+  const proposal = JSON.parse(plan.stdout);
+  // seed FIRST so HEAD is stable, THEN capture headSha and write the proposal
+  const gitignore = path.join(dir, ".gitignore");
+  write(gitignore, ".governance/\n");
+  write(path.join(dir, "seed.txt"), "seed\n");
+  spawnSync("git", ["add", "-A"], { cwd: dir, encoding: "utf8" });
+  spawnSync("git", ["commit", "-q", "-m", "seed"], { cwd: dir, encoding: "utf8" });
+  proposal.headSha = gitHead(dir);
+  proposal.reviewStatus = "completed";
+  const p = path.join(dir, ".governance", "release-proposal.json");
+  write(p, JSON.stringify(proposal));
+  const r = spawnSync(process.execPath, [RELEASE_TOOL, "execute", "--proposal", p, "--yes"], { cwd: dir, encoding: "utf8" });
+  if (r.status !== 0) { console.error("  execute failed: " + String(r.stderr || "").trim().slice(0, 200)); return false; }
+  return true;
+});
+
+test("release execute: explicitly-approved without digest still allowed (human owns risk)", () => {
+  const dir = tmp("c6-explicit");
+  gitInit(dir);
+  write(path.join(dir, "seed.txt"), "seed\n");
+  spawnSync("git", ["add", "-A"], { cwd: dir, encoding: "utf8" });
+  spawnSync("git", ["commit", "-q", "-m", "seed"], { cwd: dir, encoding: "utf8" });
+  const head = gitHead(dir);
+  const proposal = { current: "1.0.0", recommended: "1.0.1", releaseType: "patch", headSha: head, summary: "x",
+    riskLevel: "high", reviewRecommendation: "required", reviewStatus: "explicitly-approved" };
+  const p = path.join(dir, ".governance", "release-proposal.json");
+  write(p, JSON.stringify(proposal));
+  const r = spawnSync(process.execPath, [RELEASE_TOOL, "execute", "--proposal", p, "--yes"], { cwd: dir, encoding: "utf8" });
+  return r.status === 0;
+});
 };

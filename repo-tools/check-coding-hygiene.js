@@ -127,6 +127,63 @@ function main() {
     }
   }
 
+  // 4. deletion/rename hygiene (consent-and-change-hygiene plan §2). When a
+  // .governance/change-hygiene.json exists, reconcile declared deletions/renames
+  // against the actual git diff. Advisory only — the plan's own Risks section
+  // warns that requiring migration files for every internal rename creates false
+  // positives, so this check is intentionally narrow: it only reports when a
+  // declaration is missing for a deletion/rename that actually happened, or when
+  // a declared migration file does not exist. It does NOT require declarations
+  // for every change — that would be the false-positive risk the plan flagged.
+  const HYGIENE_FILE = path.join(ROOT, ".governance", "change-hygiene.json");
+  if (fs.existsSync(HYGIENE_FILE)) {
+    let hygiene;
+    try { hygiene = JSON.parse(fs.readFileSync(HYGIENE_FILE, "utf8")); } catch { hygiene = null; }
+    if (hygiene) {
+      const { spawnSync } = require("child_process");
+      const deletions = Array.isArray(hygiene.deletions) ? hygiene.deletions : [];
+      const renames = Array.isArray(hygiene.renames) ? hygiene.renames : [];
+      const declaredDeletions = new Set(deletions.map((d) => d.path));
+      const declaredRenames = new Set(renames.map((r) => r.from));
+
+      // Check each declared migration file exists
+      for (const d of deletions) {
+        if (d.migration && !fs.existsSync(path.join(ROOT, d.migration))) {
+          issues.unresolved_marker.push(`change-hygiene: declared migration for ${d.path} (${d.migration}) not found`);
+        }
+      }
+
+      // Check declared references exist
+      for (const d of [...deletions, ...renames]) {
+        for (const ref of (d.references || [])) {
+          if (!fs.existsSync(path.join(ROOT, ref))) {
+            issues.unresolved_marker.push(`change-hygiene: ${d.path} references ${ref} which does not exist`);
+          }
+        }
+      }
+
+      // Run git diff to find undeclared deletions/renames
+      const diff = spawnSync("git", ["diff", "--name-status", "--find-renames", "HEAD"], { cwd: ROOT, encoding: "utf8" });
+      if (diff.status === 0 && diff.stdout) {
+        for (const line of diff.stdout.split("\n").filter(Boolean)) {
+          const parts = line.split("\t");
+          const status = parts[0] || "";
+          const oldPath = parts[1];
+          const newPath = parts[2]; // only present for renames
+          if (!oldPath) continue;
+          // Status: D=deletion, R<number>=rename (e.g. R100), A=addition, M=modification
+          const isDeletion = status === "D" || status.startsWith("R");
+          if (isDeletion && !declaredDeletions.has(oldPath) && !declaredRenames.has(oldPath)) {
+            const renamesMatch = renames.some((r) => r.from === oldPath || r.to === oldPath || r.to === newPath);
+            if (!renamesMatch) {
+              issues.unresolved_marker.push(`change-hygiene: undeclared deletion/rename: ${oldPath} (${status}) — add to change-hygiene.json`);
+            }
+          }
+        }
+      }
+    }
+  }
+
   const report = { timestamp: new Date().toISOString(), applicable: true, issues, gate, gatePass: gateIssues.length === 0, gateIssues, unresolvedMarkerCount: issues.unresolved_marker.length };
   if (json) {
     process.stdout.write(JSON.stringify(report, null, 2) + "\n");
