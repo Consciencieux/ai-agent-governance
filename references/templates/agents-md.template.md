@@ -51,12 +51,14 @@ All agents MUST follow this lifecycle for every dev task. Scope tiers: small (si
 Plans go in `docs/plans/`; completed changes go in `CHANGELOG.md`. No overlap. On release, move entries into a version section and bump the version.
 Change classification: doc-only → no entry; bug fix → Fixed; new capability → Added; architecture/behavior/breaking → Changed.
 
-Structure contract (CHANGELOG.md):
-- One category heading (`### Fixed` / `### Added` / `### Changed`) at most per version section (`[Unreleased]` or `[X.Y.Z]`); append new entries INSIDE the existing category block, never create a second heading of the same name.
-- Never append to an already-versioned (published) section.
-- No empty category heading: create one only when the first entry of that category is written.
-- On release: rename `[Unreleased]` to `[X.Y.Z]` WITH the date, then rebuild an empty `[Unreleased]` (section title only, no category heading) at the top.
-- Category names are the canonical set (Added/Changed/Fixed/Removed/Security/Deprecated) — the mechanical check recognizes only these.
+Structure contract (CHANGELOG.md, [mechanical] = enforced by check-doc-consistency.js; unmarked items rely on rules/human judgment). Two preconditions apply to every [mechanical] item: the cluster only runs when the change touches a governance/mechanism surface, and it only scans the NEWEST version section.
+- [mechanical] One category heading (`### Fixed` / `### Added` / `### Changed`) at most per version section (`[Unreleased]` or `[X.Y.Z]`); append new entries INSIDE the existing category block, never create a second heading of the same name. A repeated category heading blocks the gate.
+- Never append to an already-versioned (published) section. (PARTIAL: the version-section sync point checks that the topmost published section matches the current version under both `--gate` and `--release-gate`, so the version header is mechanically witnessed. Appending content to a published section is not detected — it looks like a normal release.)
+- No empty category heading: create one only when the first entry of that category is written. (NOT detected: an empty heading is structurally equivalent to a valid one.)
+- On release: rename `[Unreleased]` to `[X.Y.Z]` WITH the date, then rebuild an empty `[Unreleased]` (section title only, no category heading) at the top. (PARTIAL: the version-section sync point checks that the topmost published section matches the current version, so the rename itself is mechanically witnessed; the empty-section rebuild is not verified.)
+- Category names are the canonical set (Added/Changed/Fixed/Removed/Security/Deprecated). (PARTIAL: the check only counts canonical names, so an invalid heading next to a valid one silently passes.)
+
+Content boundary (what belongs in an entry): record what changed → what impact it has on users/maintainers → migration guidance if needed. Do NOT record: test commands, gate output, mutation-verification, INIT internals, audit narration, or evidence logs — those belong in plan acceptance, review reports, or release proposals, not in the change record.
 
 ## Versioning
 SemVer: MAJOR.MINOR.PATCH — breaking → MAJOR, feature → MINOR, fix → PATCH.
@@ -153,5 +155,5 @@ The protected files list is:
 Modifying any of them requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
 
 ## Mandatory Pre-commit Checklist
-CHANGELOG must be updated before push/PR. No CHANGELOG update → no push.
+Changes that require a CHANGELOG entry per the change-classification rules (bug fix → Fixed, new capability → Added, architecture/behavior/breaking → Changed) must be recorded before push/PR. Doc-only edits need no entry, and small changes (per the scope tier: single file, <50 lines, no public-interface change) are collected by the release flow instead. No CHANGELOG update for a required change → no push.
 ```

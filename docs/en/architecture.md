@@ -138,6 +138,7 @@ ai-agent-governance/
 │   ├── check-roadmap-sync.js   # roadmap index vs plan lifecycle state (implemented→Done, archived∉active, entries linked)
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
+│   ├── check-changelog-narration.js # CHANGELOG [Unreleased] verification-narration advisor (repo-only, advisory)
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
 │   └── skill-release.md        # skill repo release flow (five version sync points + tag, tarball build)
