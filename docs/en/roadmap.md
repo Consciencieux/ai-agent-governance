@@ -6,7 +6,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 
 ### Done
 
-- **Governance lessons in the payload** — declaration-vs-mechanism gap, evidence tiers (mechanical / human-attested / unverified), test activity (vacuous tests, fact sources), enumeration re-check after moves, and CI gate completeness are now INSTALLED rules, not repo-only memory. Design: [plans/payload-governance-lessons.md](plans/payload-governance-lessons.md)
+- **Governance lessons in the payload** — declaration-vs-mechanism gap, evidence tiers (mechanical / human-attested / unverified), test activity (vacuous tests, fact sources), enumeration re-check after moves, and CI gate completeness are now INSTALLED rules, not repo-only memory. Design: [../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
 - **Consent evidence + change hygiene** — `stagedDigest` field binds approval to staged CONTENT (proven: approve SAFE, swap to MALICIOUS → rejected). Deletion/rename hygiene reconciled against git diff via `.governance/change-hygiene.json`. Risk-tiered enforcement (advisory/gate/human-required) documented in `coding.policy.md`. C6 review-evidence binding: `plan --review-evidence` produces a digest, `execute` refuses completed without it. All three sections of the plan delivered. Implementation: [../archive/consent-and-change-hygiene.md](../archive/consent-and-change-hygiene.md)
 - AGENTS.md governance bootstrap
 - Feature registry
