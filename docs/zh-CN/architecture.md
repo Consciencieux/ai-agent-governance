@@ -61,7 +61,7 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 | `references/` | **Skill 主体——skill 行为唯一存放处。** INSTALLED 与 SKILL-INTERNAL 混装（见角色表）。 | agent（skill 使用者） | 单语 |
 | `scripts/` | Skill 运行时脚本。同样混装：9 个是 INSTALLED（复制进被治理项目），其余是只在本仓库运行的 SKILL-INTERNAL 工具。 | agent/CI | 代码 |
 | `LICENSE` | MIT 许可证——随 tarball 分发 | 安装者 | — |
-| `docs/` | **项目知识。REPO-ONLY。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、路线图、术语表。 | 开发者 + Agent | 三语 |
+| `docs/` | **项目知识。REPO-ONLY。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、findings 档案（`findings/`）、研究知识库（`research/`）、路线图、术语表。 | 开发者 + Agent | 三语 |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`CONTRIBUTING.md`、`README.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
 
 ### 仓库布局
@@ -119,6 +119,8 @@ ai-agent-governance/
 │
 ├── docs/                       # 项目知识——开发者维护，开发者与 Agent 共享读取（触发词、计划、路线图）
 │   ├── glossary.md             # 三语术语对照表（共享）
+│   ├── findings/               # Issue/Finding 档案（共享，简体单语；状态就地更新，不设 active/archive 子目录）
+│   ├── research/               # 研究知识库——系统模型、机制分类、评价框架（共享，简体单语；版本化/supersede 演进）
 │   ├── design-decisions/       # 架构决策记录（共享，简体单语）
 │   ├── archive/                # 已完成计划归档（共享，单语）
 │   ├── en/                     # 英文树

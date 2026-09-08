@@ -88,7 +88,7 @@ Three rules follow:
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
 | `scripts/` | Skill runtime scripts. Mixed too: 9 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
-| `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), roadmap, glossary. | developers + agents | trilingual |
+| `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | trilingual |
 | `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `CONTRIBUTING.md`, `README.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
 
 ### Repository Layout
@@ -146,6 +146,8 @@ ai-agent-governance/
 │
 ├── docs/                       # project knowledge — developer-maintained, read by developers & agents (trigger words, plans, roadmap)
 │   ├── glossary.md             # trilingual terminology table (shared)
+│   ├── findings/               # Issue/Finding archive (shared, single-language 简体中文; status change in place, no active/archive split)
+│   ├── research/               # research knowledge base — system model, mechanism taxonomy, evaluation framework (shared, single-language 简体中文, versioned/superseded)
 │   ├── design-decisions/       # architecture decision records (shared, single-language 简体中文)
 │   ├── archive/                # completed plan archives (shared, single-language)
 │   ├── en/                     # English tree

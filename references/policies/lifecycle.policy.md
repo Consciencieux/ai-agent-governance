@@ -207,7 +207,7 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 
 ```text
 - **新增能力**（`scripts/check-sync.js`，INSTALLED）—— 新增一个只读的同步组检查；被治理项目可据此核对同步声明，失败时退出码非零。
-- **修复缺陷**（plan: sync-groups-mechanical-check）—— 修复 `check-sync.js` 把 `"locked": false` 误判为持锁的问题；之前会错误阻塞本可放行的操作。
+- **修复缺陷**（plan: PLAN-0010）—— 修复 `check-sync.js` 把 `"locked": false` 误判为持锁的问题；之前会错误阻塞本可放行的操作。
 - **规则变更**（`lifecycle.policy.md`，INSTALLED）—— 根因修复协议新增双域对称要求；修复治理缺陷时须检查另一域的对应实现（详见规则文件）。
 ```
 

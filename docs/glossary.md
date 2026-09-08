@@ -75,6 +75,15 @@
 | environment variable | 环境变量 | 環境變數 |  |  |
 | implementation | 实现 | 實作 |  |  |
 | validation | 验证 | 驗證 | 驗證 | 验证 |
+| finding | 发现 | 發現 |  |  |
+| research | 研究 | 研究 |  |  |
+| system model | 系统模型 | 系統模型 |  |  |
+| mechanism taxonomy | 机制分类 | 機制分類 |  |  |
+| supersede | 取代 | 取代 |  |  |
+| baseline | 基线 | 基線 |  |  |
+| evidence | 证据 | 證據 |  |  |
+| migration mode | 迁移模式 | 遷移模式 |  |  |
+| checkpoint | 架构里程碑验证点 | 架構里程碑驗證點 |  |  |
 | report | 报告 | 報告 |  |  |
 | notification | 通知 | 通知 |  |  |
 | dashboard | 看板 | 看板 |  |  |

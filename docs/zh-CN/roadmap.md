@@ -6,9 +6,9 @@
 
 ### 已完成
 
-- **治理缺陷闭包** —— 已确认治理缺陷后，在有界同类表面搜索，并跨 repo-infra 与被治理项目检查相关规则/模板/生成器/门禁/测试/发布链。设计：[plans/governance-defect-closure.md](../archive/governance-defect-closure.md)
-- **领域级测试入口** —— `node tests/run-tests.js --suite <name>` / `--list` 开发循环快速入口；`npm test` 与所有门禁保持全量（[计划](../archive/run-tests-suite-entry.md)）
-- **载荷治理教训** —— 声明与机制的差距、证据等级（机械 / 人工背书 / 未验证）、测试活性（空洞测试、事实源）、移动后枚举复查、CI 门禁完整性现已成为 INSTALLED 规则，不再只是本仓库的内部记忆。设计：[../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
+- **治理缺陷闭包** —— 已确认治理缺陷后，在有界同类表面搜索，并跨 repo-infra 与被治理项目检查相关规则/模板/生成器/门禁/测试/发布链。设计：[plans/governance-defect-closure.md](../archive/PLAN-0029-governance-defect-closure.md)
+- **领域级测试入口** —— `node tests/run-tests.js --suite <name>` / `--list` 开发循环快速入口；`npm test` 与所有门禁保持全量（[计划](../archive/PLAN-0030-run-tests-suite-entry.md)）
+- **载荷治理教训** —— 声明与机制的差距、证据等级（机械 / 人工背书 / 未验证）、测试活性（空洞测试、事实源）、移动后枚举复查、CI 门禁完整性现已成为 INSTALLED 规则，不再只是本仓库的内部记忆。设计：[../archive/PLAN-0028-payload-governance-lessons.md](../archive/PLAN-0028-payload-governance-lessons.md)
 - AGENTS.md 治理引导
 - Feature 登记
 - 治理校验器
@@ -22,27 +22,27 @@
 - 治理健康分 —— 校验器 `--json` 输出综合 `score`（v1 等权）+ CI 产出 shields.io 徽章 endpoint 工件
 - 知识新鲜度 —— `scripts/check-doc-freshness.js` 经 `git log` 提交日期标记过时治理文档，并按源/译文对派生译文新鲜度（建议性；`--release-gate` 阻断过时或 draft 译文）
 - 内容一致性 —— `scripts/check-doc-consistency.js` 标记文档间交叉矛盾（版本示例/受保护清单/ADR 状态/roadmap 目标/链接/数值声明；默认建议性；consent/受保护清单/原则索引/计划状态/术语簇在 `--gate`/`--release-gate` 下 fail-closed，changelog 覆盖仅 `--release-gate` 下 fail-closed）
-- **审核管理器** —— 第 8 个子技能：多智能体深度审查工作流（固定 5 领域、严重度排序报告、修复 + 门禁验证）。设计：[../archive/review-manager.md](../archive/review-manager.md)
-- **分级审核门禁** —— release/push 风险分级（低 = 仅轻量级；中 = 批准时建议深度审查；高 = 必须 review-manager）；轻量级脚本总是自动跑。设计：[../archive/tiered-review-gate.md](../archive/tiered-review-gate.md)
-- **被治理项目同步组** —— 两层：（L1）声明式 `.governance/sync-rules.json`（watch/require）+ 清单驱动 Phase 5；（L2）`scripts/check-sync.js` 对照实际改动集机械验证。设计：[../archive/governed-project-sync-groups.md](../archive/governed-project-sync-groups.md) + [../archive/sync-groups-mechanical-check.md](../archive/sync-groups-mechanical-check.md)
-- **INIT 生成器脚本化** —— 确定性、可快照测试的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期。设计：[../archive/init-scripted-generator.md](../archive/init-scripted-generator.md)
-- **计划交付门禁** —— `repo-tools/check-plan-delivery.js`：计划与实际交付的机械对账（归档前 fail-closed）；锚点语法（`— anchor: `snippet``）对已存在文件的声明按**内容**验证，而非仅存在性。设计：[../archive/plan-delivery-anchors.md](../archive/plan-delivery-anchors.md)
+- **审核管理器** —— 第 8 个子技能：多智能体深度审查工作流（固定 5 领域、严重度排序报告、修复 + 门禁验证）。设计：[../archive/PLAN-0007-review-manager.md](../archive/PLAN-0007-review-manager.md)
+- **分级审核门禁** —— release/push 风险分级（低 = 仅轻量级；中 = 批准时建议深度审查；高 = 必须 review-manager）；轻量级脚本总是自动跑。设计：[../archive/PLAN-0009-tiered-review-gate.md](../archive/PLAN-0009-tiered-review-gate.md)
+- **被治理项目同步组** —— 两层：（L1）声明式 `.governance/sync-rules.json`（watch/require）+ 清单驱动 Phase 5；（L2）`scripts/check-sync.js` 对照实际改动集机械验证。设计：[../archive/PLAN-0008-governed-project-sync-groups.md](../archive/PLAN-0008-governed-project-sync-groups.md) + [../archive/PLAN-0010-sync-groups-mechanical-check.md](../archive/PLAN-0010-sync-groups-mechanical-check.md)
+- **INIT 生成器脚本化** —— 确定性、可快照测试的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期。设计：[../archive/PLAN-0012-init-scripted-generator.md](../archive/PLAN-0012-init-scripted-generator.md)
+- **计划交付门禁** —— `repo-tools/check-plan-delivery.js`：计划与实际交付的机械对账（归档前 fail-closed）；锚点语法（`— anchor: `snippet``）对已存在文件的声明按**内容**验证，而非仅存在性。设计：[../archive/PLAN-0026-plan-delivery-anchors.md](../archive/PLAN-0026-plan-delivery-anchors.md)
 - **计划归档门禁** —— 规范计划状态关键词（design/active/implemented/completed/archived）+ release 作用域的待归档门禁（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修复（`####` 子节不再截断）
 - **安装载荷完整性门禁** —— 测试证明复制的门禁脚本自包含（无兄弟 `require`）且 `init-spec.json` 的复制清单与 INIT 实际写入一致
 - **确认政策重写** —— 跨五个同步点提交前一次确认；计划批准降为意图对齐（`consent-policy-hardening` 计划）
 - **治理原则索引** —— 27 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
-- **规则捕获** —— 不让口头要求只活在对话上下文里：Agent 对每条要求预分类（持久 / 一次性 / 模糊），开发者在 Phase 6 裁定，确认的规则写入 `AGENTS.md` / `docs/rules/**`，未确认的在行为轨迹里留 `rules_pending` 痕迹。设计：[../archive/rule-capture.md](../archive/rule-capture.md)
-- **术语门禁** —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
-- **翻译新鲜度** —— Git 派生的逐对状态（stale / draft / reviewed 标记），`--release-gate` 阻断落后译文；无手写 manifest。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
-- **工程克制（机制测试）** —— 未经批准的新增机制必须自证；已批准需求优先；语义接缝合法。设计：[../archive/engineering-restraint.md](../archive/engineering-restraint.md)
-- **根因修复协议 + 失败预算** —— 复现优先的计划字段、`repairSessionId` 绑定、第一/二/三次失败升级。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
-- **测试架构拆分 + 编码卫生门禁** —— 单一发现入口 + 八个领域套件（集合对账），并对单体回归与空套件设门禁。设计：[../archive/anti-patch-development.md](../archive/anti-patch-development.md)
-- **范围分级验证 + 证据层级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 条目与 AGENTS.md 范围表一致；`--release-gate` 仅用于发布阻断。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
-- **分发角色完备门禁** —— `references/` 与 `scripts/` 下每个文件都携带唯一声明角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 验证（无未分类文件、无重叠、无陈旧声明、打包边界一致）。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
-- **门禁分级 + 证据等级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口按变更范围匹配，每个门禁的产出标注为机械 / 人工背书 / 未验证，使绿色结果不被读成超出其实际证明力的结论。设计：[../archive/gate-tiering-evidence-boundary.md](../archive/gate-tiering-evidence-boundary.md)
-- **物理分发边界** —— 仓库维护内容不再随 tarball 发给技能用户：repo-only 文件（skill 发布流程、打包脚本、仓库专属门禁）从 `references/` 与 `scripts/` 移入打包步骤无法触达的 `repo-tools/` 与 `repo-workflows/`。角色门禁反向检查 + 完整 tarball 清单相等性测试保证「声明」与「打包」是同一事实。设计：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
-- **发布流程按受众拆分** —— `release.md` 仅覆盖被治理项目发布；本仓库自身的流程在内聚自足的 `repo-workflows/skill-release.md`（SemVer 判定、分级审核、事务性条款内联承载）。设计：[../archive/repository-boundary-split.md](../archive/repository-boundary-split.md)
-- **INSTALLED 内容项目可移植化** —— 载荷规则正文不再混用受众：没有 package.json 的项目不再出现 `npm run` 命令、无技能仓库 docs 路径、无无条件三语义务、无悬空指针。设计：[../archive/content-audience-portability.md](../archive/content-audience-portability.md)
+- **规则捕获** —— 不让口头要求只活在对话上下文里：Agent 对每条要求预分类（持久 / 一次性 / 模糊），开发者在 Phase 6 裁定，确认的规则写入 `AGENTS.md` / `docs/rules/**`，未确认的在行为轨迹里留 `rules_pending` 痕迹。设计：[../archive/PLAN-0016-rule-capture.md](../archive/PLAN-0016-rule-capture.md)
+- **术语门禁** —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。设计：[../archive/PLAN-0020-doc-translation-governance.md](../archive/PLAN-0020-doc-translation-governance.md)
+- **翻译新鲜度** —— Git 派生的逐对状态（stale / draft / reviewed 标记），`--release-gate` 阻断落后译文；无手写 manifest。设计：[../archive/PLAN-0020-doc-translation-governance.md](../archive/PLAN-0020-doc-translation-governance.md)
+- **工程克制（机制测试）** —— 未经批准的新增机制必须自证；已批准需求优先；语义接缝合法。设计：[../archive/PLAN-0019-engineering-restraint.md](../archive/PLAN-0019-engineering-restraint.md)
+- **根因修复协议 + 失败预算** —— 复现优先的计划字段、`repairSessionId` 绑定、第一/二/三次失败升级。设计：[../archive/PLAN-0018-anti-patch-development.md](../archive/PLAN-0018-anti-patch-development.md)
+- **测试架构拆分 + 编码卫生门禁** —— 单一发现入口 + 八个领域套件（集合对账），并对单体回归与空套件设门禁。设计：[../archive/PLAN-0018-anti-patch-development.md](../archive/PLAN-0018-anti-patch-development.md)
+- **范围分级验证 + 证据层级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 条目与 AGENTS.md 范围表一致；`--release-gate` 仅用于发布阻断。设计：[../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
+- **分发角色完备门禁** —— `references/` 与 `scripts/` 下每个文件都携带唯一声明角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 验证（无未分类文件、无重叠、无陈旧声明、打包边界一致）。设计：[../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
+- **门禁分级 + 证据等级** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口按变更范围匹配，每个门禁的产出标注为机械 / 人工背书 / 未验证，使绿色结果不被读成超出其实际证明力的结论。设计：[../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
+- **物理分发边界** —— 仓库维护内容不再随 tarball 发给技能用户：repo-only 文件（skill 发布流程、打包脚本、仓库专属门禁）从 `references/` 与 `scripts/` 移入打包步骤无法触达的 `repo-tools/` 与 `repo-workflows/`。角色门禁反向检查 + 完整 tarball 清单相等性测试保证「声明」与「打包」是同一事实。设计：[../archive/PLAN-0024-repository-boundary-split.md](../archive/PLAN-0024-repository-boundary-split.md)
+- **发布流程按受众拆分** —— `release.md` 仅覆盖被治理项目发布；本仓库自身的流程在内聚自足的 `repo-workflows/skill-release.md`（SemVer 判定、分级审核、事务性条款内联承载）。设计：[../archive/PLAN-0024-repository-boundary-split.md](../archive/PLAN-0024-repository-boundary-split.md)
+- **INSTALLED 内容项目可移植化** —— 载荷规则正文不再混用受众：没有 package.json 的项目不再出现 `npm run` 命令、无技能仓库 docs 路径、无无条件三语义务、无悬空指针。设计：[../archive/PLAN-0022-content-audience-portability.md](../archive/PLAN-0022-content-audience-portability.md)
 
 ### 近期
 

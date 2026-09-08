@@ -17,5 +17,10 @@
 | [ADR-0010: 文档分层与入口层边界](adr-0010-entry-layer-boundary.md) | README/CONTRIBUTING 是入口层，不承担事实库职责；稳定契约可写但链接权威源 | Accepted |
 | [ADR-0011: 1.0.0 冻结公开接口面](adr-0011-public-interface-freeze.md) | 五类接口受 SemVer 约束；成员清单留在各自事实源，破坏性变更走 MAJOR + 迁移 | Accepted（v1.0.0） |
 | [ADR-0012: 变更记录与其他载体的职责边界](adr-0012-record-responsibility-boundary.md) | CHANGELOG 记变更事实；根因与决策进 ADR/计划，验证进测试证据；历史逐步迁移 | Accepted |
+| [ADR-0013: Issue/Finding Archive 与知识对象五分类](adr-0013-findings-archive.md) | 第五类载体 `docs/findings/`；repo 内 canonical、GitHub Issue 是 projection；状态就地更新不归档；简中单语；review 先分类再修复 | Accepted |
+| [ADR-0014: Architecture Migration Mode](adr-0014-architecture-migration-mode.md) | 2.0 重构期间旧 gate 降级为观测；保留 Refactor Safety Kernel；checkpoint 验证；禁止 release；冻结规则演进 | Accepted |
+| [ADR-0015: Roadmap 重新定位](adr-0015-roadmap-repositioning.md) | roadmap 从功能清单变为架构演进视图；已完成能力迁往 research/；维护触发从每次发布改为架构事件；加入 Non-goals | Accepted |
+| [ADR-0016: 文档结构用途优先](adr-0016-doc-structure-purpose-first.md) | 语言不是第一层分类；user-facing 才三语；product/plans/findings/research/ADR/archive 按用途分层；Migration Mode 分阶段实施 | Accepted |
+| [ADR-0017: 2.0 迁移分支策略](adr-0017-migration-branch-strategy.md) | 长期 migration/2.0 分支 + 阶段里程碑合并；main 保持 1.x 稳定 baseline；不发布 1.1/1.2 过渡；2.0 RC 后合入 | Accepted |
 
 状态：Proposed / Accepted / Superseded / Deprecated。
