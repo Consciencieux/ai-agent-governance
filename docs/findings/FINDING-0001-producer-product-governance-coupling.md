@@ -10,9 +10,11 @@ affected:
   - skill
 github_issue: 7
 opened: 2026-09-08
+updated: 2026-09-09
 resolved:
 related:
-  plans: []
+  plans:
+    - PLAN-0031
   adrs:
     - ADR-0006
 ---
@@ -50,7 +52,7 @@ related:
 
 ## 解决 Resolution
 
-（待填。R5 应优先于 R1–R4 处理。）
+（进行中，状态保持 `Confirmed`。2026-09-09：boundary defined / remediation underway——Phase 1（PLAN-0031）定义 Producer/Product 边界与 ownership inventory，确立「共享语义只有一个 authoritative owner」原则；正式 cross-profile closure contract 与 CONTROL-X 落地在 Phase 3+，届时才将本 Finding 置为 `Resolved`。R5 应优先于 R1–R4 处理。）
 
 ## 回归保护 Regression protection
 
