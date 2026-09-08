@@ -2,70 +2,816 @@
 
 [English](en.md) · [简体中文](zh-CN.md) · [繁體中文](zh-TW.md)
 
-Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
+## Vision
 
-### Done
+The goal of AI Agent Governance is not to pile more prompts, rule documents and check scripts onto AI coding agents, but to build a governance framework that is:
 
-- **Governance defect closure** — after a confirmed governance defect, search bounded sibling surfaces and inspect the relevant rule/template/generator/gate/test/release chain across repo-infra and governed-project domains. [Plan](../archive/PLAN-0029-governance-defect-closure.md)
-- **Domain-level test entry** — `node tests/run-tests.js --suite <name>` / `--list` for the dev loop; `npm test` and every gate stay full ([plan](../archive/PLAN-0030-run-tests-suite-entry.md))
-- **Governance lessons in the payload** — declaration-vs-mechanism gap, evidence tiers (mechanical / human-attested / unverified), test activity (vacuous tests, fact sources), enumeration re-check after moves, and CI gate completeness are now INSTALLED rules, not repo-only memory. Design: [../archive/PLAN-0028-payload-governance-lessons.md](../archive/PLAN-0028-payload-governance-lessons.md)
-- **Consent evidence + change hygiene** — `stagedDigest` field binds approval to staged CONTENT (proven: approve SAFE, swap to MALICIOUS → rejected). Deletion/rename hygiene reconciled against git diff via `.governance/change-hygiene.json`. Risk-tiered enforcement (advisory/gate/human-required) documented in `coding.policy.md`. C6 review-evidence binding: `plan --review-evidence` produces a digest, `execute` refuses completed without it. All three sections of the plan delivered. Implementation: [../archive/PLAN-0027-consent-and-change-hygiene.md](../archive/PLAN-0027-consent-and-change-hygiene.md)
-- AGENTS.md governance bootstrap
-- Feature registry
-- Governance validator
-- Release workflow
-- Multi-language CI templates
-- Multi-agent lock enforcement — `scripts/check-lock.js` (read-only lock check, INIT copies it, validator requires it)
-- Validator content checks — CHANGELOG format + manifest `artifacts[].kind` validity
-- Git workflow governance — `.governance/git-policy.json` + `scripts/check-git-policy.js` (protected branches, branch-based development, no direct push)
-- Agent activity audit — append-only `.governance/activity.jsonl` per-task audit trail + drift-check `activity-report` mode
-- Secret scanning gate — `scripts/check-secrets.js` blocks secret-like staged content (validator gates)
-- Governance score — validator `--json` outputs composite `score` (unweighted v1) + CI shields.io badge endpoint artifact
-- Doc freshness — `scripts/check-doc-freshness.js` flags stale governance docs via `git log` commit dates, and derives translation freshness per source/translation pair (advisory; `--release-gate` blocks stale or draft translations)
-- Doc consistency — `scripts/check-doc-consistency.js` flags cross-document contradictions (version examples, protected lists, ADR statuses, roadmap targets, links, numeric claims; advisory default; consent/protected-list/principles-index/plan-status/terminology clusters fail-closed under `--gate`/`--release-gate`, changelog coverage only under `--release-gate`)
-- **Review manager** — 8th sub-skill: multi-agent deep review workflow (5 fixed domains, severity-sorted report, fix + gate verification). Design: [../archive/PLAN-0007-review-manager.md](../archive/PLAN-0007-review-manager.md)
-- **Tiered review gate** — release/push risk tiering (low = lightweight only; medium = suggested deep review at approval; high = review-manager required); lightweight scripts always run. Design: [../archive/PLAN-0009-tiered-review-gate.md](../archive/PLAN-0009-tiered-review-gate.md)
-- **Governed-project sync groups** — two layers: (L1) declarative `.governance/sync-rules.json` (watch/require) + checklist-driven Phase 5; (L2) `scripts/check-sync.js` mechanical verification against the actual change set. Designs: [../archive/PLAN-0008-governed-project-sync-groups.md](../archive/PLAN-0008-governed-project-sync-groups.md) + [../archive/PLAN-0010-sync-groups-mechanical-check.md](../archive/PLAN-0010-sync-groups-mechanical-check.md)
-- **INIT scripted generator** — deterministic, snapshot-testable INIT generation (`scripts/generate-governance.js`); phased A → B → C. Design: [../archive/PLAN-0012-init-scripted-generator.md](../archive/PLAN-0012-init-scripted-generator.md)
-- **Plan delivery gate** — `repo-tools/check-plan-delivery.js`: mechanical plan-vs-delivery reconciliation (fail-closed before archiving); anchor clauses (`— anchor: `snippet``) verify CONTENT for existing declared files, not just existence. Design: [../archive/PLAN-0026-plan-delivery-anchors.md](../archive/PLAN-0026-plan-delivery-anchors.md)
-- **Plan archive gate** — canonical plan-status keywords (design/active/implemented/completed/archived) + release-scoped pending-archive gate (`--release-gate` in check-doc-consistency.js) + delivery extraction fix (`####` subsections no longer truncated)
-- **Install-payload integrity gate** — tests proving copied gate scripts are self-contained (no sibling `require`) and that `init-spec.json`'s copy list matches what INIT writes
-- **Consent policy rewrite** — one confirmation per change set across five sync points; plan approval demoted to intent alignment (`consent-policy-hardening` plan)
-- **Governance principles index** — pointers-only index of 27 principles + a `--gate` check that keeps every row's source resolvable
-- **Rule capture** — stop stated requirements from living only in chat context: the agent pre-classifies each requirement (persistent / one-off / unclear), the developer adjudicates at Phase 6, confirmed rules are written into `AGENTS.md` / `docs/rules/**`, unconfirmed ones leave a `rules_pending` trace in the activity trail. Design: [../archive/PLAN-0016-rule-capture.md](../archive/PLAN-0016-rule-capture.md)
-- **Terminology gate** — glossary `Forbidden zh-CN`/`Forbidden zh-TW` columns enforced across the language trees (fail-closed in `--gate`, per-line exemptions, no-op without a glossary). Design: [../archive/PLAN-0020-doc-translation-governance.md](../archive/PLAN-0020-doc-translation-governance.md)
-- **Translation freshness** — git-derived per-pair status (stale / draft / reviewed markers), `--release-gate` blocks lagging translations; no handwritten manifest. Design: [../archive/PLAN-0020-doc-translation-governance.md](../archive/PLAN-0020-doc-translation-governance.md)
-- **Engineering restraint (machinery test)** — unapproved machinery must justify itself; approved requirements win; semantic seams stay legal. Design: [../archive/PLAN-0019-engineering-restraint.md](../archive/PLAN-0019-engineering-restraint.md)
-- **Root-cause repair protocol + failure budget** — reproduction-first plan fields, `repairSessionId` binding, 1st/2nd/3rd failure escalation. Design: [../archive/PLAN-0018-anti-patch-development.md](../archive/PLAN-0018-anti-patch-development.md)
-- **Test architecture split + coding hygiene gate** — single discovery entry plus eight domain suites (set-reconciled), gated against monolith regression and empty suites. Design: [../archive/PLAN-0018-anti-patch-development.md](../archive/PLAN-0018-anti-patch-development.md)
-- **Distribution-role completeness gate** — every file under `references/` + `scripts/` carries exactly one declared role (INSTALLED / SKILL-INTERNAL), verified by `repo-tools/check-role-completeness.js` (no unclassified file, no overlap, no stale declaration, packaging boundary matches). Design: [../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
-- **Scope-tiered verification + evidence tiers** — `check:docs` / `check:payload` / `check:tests` / `check:full` entries matched to change scope, with each gate's output classified as mechanical / human-attested / unverified so a green run is never read as more proof than it is. Design: [../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
-- **Physical distribution boundary** — repo maintenance content can no longer ship to tarball users: repo-only files (skill-release flow, packaging script, repo-only gates) moved out of `references/` and `scripts/` into `repo-tools/` and `repo-workflows/`, which the packaging step cannot reach. Role gate reverse check + complete tarball-manifest equality test keep declarations and packaging the same fact. Design: [../archive/PLAN-0024-repository-boundary-split.md](../archive/PLAN-0024-repository-boundary-split.md)
-- **Release flows split by audience** — `release.md` is governed-project-release only; this repo's own flow lives in the self-contained `repo-workflows/skill-release.md` (SemVer judging, tiered review and transactionality carried inline). Design: [../archive/PLAN-0024-repository-boundary-split.md](../archive/PLAN-0024-repository-boundary-split.md)
-- **INSTALLED content made project-portable** — rule text in the shipped payload no longer mixes audiences: no `npm run` commands in projects without package.json, no skill-repo docs paths, no unconditional trilingual obligations, no dangling pointers. Design: [../archive/PLAN-0022-content-audience-portability.md](../archive/PLAN-0022-content-audience-portability.md)
+- repository-native
+- tool-neutral
+- verifiable
+- traceable
+- incrementally adoptable
+- extensible to different agent runtimes
 
-### Near-term
+The long-term goal is to move governance from:
 
-- **Multi-agent coordination protocol** — standardized coordination across concurrent agents (lock check already shipped; review-manager's parallel subagents are its first real use case). *No design plan yet*
-- **Remote governance dashboard** — observability for governed repositories (dependencies: activity audit trail + score, both already shipped). *No design plan yet*
-- **Monorepo multi-governance domains** — validator multi-root resolution + multiple manifests (only when real monorepo demand appears). *No design plan yet*
+```text
+Documented declarations
+    ↓
+Agent reads and remembers
+    ↓
+Agent decides which rules apply
+    ↓
+Agent chooses the check commands
+    ↓
+Scripts return exit code
+```
 
-### Deferred release-safety decisions
+to:
 
-Adjudicated, recorded, and deliberately not implemented. Check this list before any
-release-related task: these are known gaps in what a green gate actually proves.
+```text
+Machine-readable Controls
+        ↓
+Context Detection
+        ↓
+Applicability Resolution
+        ↓
+Dispatcher
+        ↓
+Evaluator / Mechanism
+        ↓
+Evidence
+        ↓
+Decision
+        ↓
+Explicit Enforcement Boundary
+```
 
-- **Review-evidence binding** — Status: **resolved** (v0.14.1+). `plan --review-evidence <file>` binds a SHA-256 digest of the review artifact into the proposal; `execute` refuses `reviewStatus: completed` without that digest (format-validated as 64-char hex). The `explicitly-approved` path stays digest-free by design (human explicitly owns the risk). The self-attested gap that this item tracked is closed — a signed tag now implies a digest-backed review artifact existed at proposal time. Reference: [../archive/PLAN-0023-gate-repair-and-ssot-alignment.md](../archive/PLAN-0023-gate-repair-and-ssot-alignment.md) § C6
+The governance system should minimize its dependence on agent attention, memory and conscientiousness.
 
-### Mid-term
+## Current State: Generation 1
 
-- **Demo repository** — a real governed example project showing the governance artifacts in action (mid-term; until then this repo serves as a *lightweight-governance* reference: release flow + plans/archive + ADRs + tests, but NOT a full governed software project — its validator runs in default mode fail by design). *No design plan yet*
-- **Ecosystem polish** — IDE extension (governance-aware editor integration; trigger on real user demand) + Cursor compatibility field testing (verify the documented .cursor/rules compatibility; trigger on mechanism changes or reported issues). *No design plan yet*
+The current stable version is **Generation-1 Document-Centric Governance**.
 
-Note: design plans for unimplemented features live in `docs/plans/`; completed TASK plans are archived into `docs/plans/archive/` at release. Governed projects track their own development plans in `docs/plans/DEVELOPMENT_PLAN.md` (generated by INIT).
+It already provides a fairly complete set of governance capabilities, including:
 
-**Maintenance rule (rolling re-baseline, at each release):**
+- INIT / AUDIT / RELEASE lifecycle
+- deterministic governance generator
+- governance file and state management
+- Git / release policy
+- secret scanning
+- sync checking
+- documentation consistency
+- release management
+- plan delivery verification
+- review-manager
+- multilingual product documentation
+- regression test suites
+- physical repo / payload distribution boundary
 
-1. **On completion** — move the item to `Done` (done items carry no horizon label). Archive its design doc to `docs/plans/archive/` (shared, single-language).
-2. **Horizons are relative** — after removing completed items, promote the remainder: Mid-term → Near-term, Long-term → Mid-term (as demand warrants).
-3. **Trigger** — the re-ordering is part of the release flow (the `release-manager` step that archives plans also re-baselines this roadmap), not an ad-hoc edit; otherwise labels go stale.
+Generation 1 has demonstrated that:
+
+> AI coding governance can achieve stronger constraint through in-repository documents, scripts, tests, CI and release workflows than through pure prompts alone.
+
+But the current architecture still uses:
+
+```text
+Markdown / SKILL / AGENTS
+        +
+npm scripts
+        +
+independent checkers
+```
+
+as its primary control mechanism.
+
+Its mechanical capability has already grown beyond what the original design model can clearly express and dispatch.
+
+## Generation 1 Key Limitations
+
+Specific evidence, defects and research records live in `docs/findings/` and `docs/research/`; the Roadmap keeps only the conclusions that affect the long-term direction.
+
+### 1. The Producer/Product Governance Boundary Is Unclear
+
+This repository's own governance and the Skill Governance distributed to users are already separated at the physical distribution layer, but they remain implicitly coupled in governance semantics, checker ownership and shared rules.
+
+Some rules still take the form:
+
+```text
+repo
+skill
+both
+```
+
+This model cannot clearly answer:
+
+- who owns the rule semantics
+- who is responsible for enforcement
+- which implementations must stay in sync
+- which controls belong only to the repo
+- which controls belong to governed projects
+
+This is the primary architectural problem of Generation 2.
+
+### 2. Policy Declaration and Enforcement Are Separated
+
+Many rules still live mostly in Markdown, SKILL, AGENTS or policy documents.
+
+The system usually relies on the agent to:
+
+1. read the rule
+2. decide whether the rule applies
+3. remember what must be done
+4. choose the correct gate
+5. interpret the result correctly
+
+As a result:
+
+```text
+MUST
+```
+
+does not natively imply:
+
+```text
+deny
+```
+
+Declaration strength and actual enforcement strength have not yet formed a unified model.
+
+### 3. Triggers Depend on Agent Attention
+
+Local governance usually still works as:
+
+```text
+Agent
+  ↓
+decides whether to run the check
+```
+
+rather than:
+
+```text
+Context
+  ↓
+system automatically resolves applicable controls
+```
+
+This means part of the governance guarantee depends on agent attention and context completeness.
+
+### 4. Validation Routing Is Not Precise Enough
+
+Different gate scopes already exist, but the overall system is still centered on npm scripts / suites.
+
+The system cannot yet reliably derive:
+
+```text
+minimal required controls
+```
+
+from:
+
+```text
+change impact
+```
+
+So it is possible to see:
+
+- simple changes run too much validation
+- complex changes miss the controls that actually matter
+- CI runs too coarse a scope
+- local validation scope depends on agent judgment
+
+### 5. Checkers and Tests Still Grow Incident-Driven
+
+Much of Generation 1's reliability comes from:
+
+```text
+incident
+→ patch
+→ checker
+→ regression test
+```
+
+This approach is excellent at protecting known defects, but over time it tends to produce:
+
+- checker proliferation
+- accumulation of regex / structural heuristics
+- increasing complexity of the governance machinery itself
+- decoupling between green test counts and real control maturity
+
+Generation 2 needs to move from checker-centric to control / invariant-centric.
+
+### 6. The Enforcement Boundary Is Not Yet Unified
+
+Governance strength is currently distributed across:
+
+```text
+Prompt
+Git hooks
+local scripts
+CI
+release workflow
+human approval
+```
+
+These mechanisms block with different strength, but have not yet been described uniformly.
+
+In particular:
+
+- Git hooks can be bypassed
+- CI can only block after a commit
+- prompts are only guidance
+- runtime interception depends on the specific agent tooling
+
+So the future must make explicit:
+
+```text
+At which boundary does a rule take effect?
+```
+
+## Generation 2 Target Architecture
+
+The goal of Generation 2 is not to rewrite every existing mechanism, but to build a unified control plane around the capabilities that already work.
+
+Target model:
+
+```text
+Governance Core
+│
+├── Control / Rule Model
+├── Applicability Model
+├── Evidence Model
+├── Decision Semantics
+├── Shared Primitives
+└── Contracts
+        │
+        ├───────────────┐
+        ▼               ▼
+Repo Governance      Skill Governance
+Profile              Profile
+        │               │
+        └───────┬───────┘
+                ▼
+          Context Detector
+                ↓
+            Dispatcher
+                ↓
+      ┌─────────┼──────────┐
+      ▼         ▼          ▼
+ Mechanical  Heuristic   Review
+ Evaluator   Evaluator   Evaluator
+      └─────────┬──────────┘
+                ↓
+             Evidence
+                ↓
+             Decision
+                ↓
+ allow / deny / warn / require-review
+```
+
+## Generation 2 Development Phases
+
+### Phase 0 — Architecture Migration Mode
+
+Purpose:
+
+> Establish a development environment for the Generation-1 → Generation-2 architecture migration that is safe without over-blocking the refactor.
+
+During migration:
+
+- most Generation-1 gates are demoted to observational evidence
+- the legacy checker / policy system is no longer extended, except for security, data-loss or release-corruption issues
+- targeted validation and architecture checkpoints are used
+- a minimal Refactor Safety Kernel is kept
+- publishing an incomplete 2.0 architecture is forbidden
+- `main` stays a stable 1.x baseline
+- breaking refactors proceed on `migration/2.0-governance-architecture`
+
+Exit conditions:
+
+- the new control architecture has an executable baseline
+- critical Generation-1 regressions have been migrated
+- the new release path can independently prove completeness
+
+### Phase 1 — Producer / Product Governance Separation
+
+This is the first core architectural task of Generation 2.
+
+Goal:
+
+```text
+Governance Core
+      │
+ ┌────┴────┐
+ ▼         ▼
+Repo       Skill
+Profile    Profile
+```
+
+Focus areas:
+
+- repo governance vs skill governance ownership
+- eliminating the ambiguous `scope = both`
+- separating shared semantics from concrete implementation
+- making shared controls' consumers explicit
+- keeping repo-only and skill-only controls independent
+- cross-profile contract tests
+
+Principle:
+
+> Shared semantics does not imply shared implementation.
+
+Product code can be a test target, but this repository's critical governance must not fully depend on the working-tree product implementation that is itself being modified.
+
+### Phase 2 — Governance Core
+
+Build a neutral Governance Core.
+
+The Core owns:
+
+- control identity
+- control schema
+- evaluator contracts
+- evidence semantics
+- decision semantics
+- shared primitives
+- profile contracts
+
+The Core does not itself decide whether a rule belongs to repo or skill.
+
+The Profile decides:
+
+- applicability
+- implementation
+- enforcement boundary
+- runtime adapter
+- profile-specific policy
+
+### Phase 3 — Rule / Control Registry
+
+Extract governance execution semantics out of Markdown into machine-readable controls.
+
+The minimal control model must explicitly distinguish:
+
+```text
+Applicability
+Evaluator Type
+Mechanism
+Effect
+Enforcement Boundary
+```
+
+Evaluator types include:
+
+```text
+mechanical
+heuristic
+review
+guidance
+```
+
+Decision effects include:
+
+```text
+allow
+deny
+warn
+require-review
+observe
+```
+
+The two must not be conflated into a single dimension.
+
+Markdown keeps doing:
+
+- rationale
+- explanation
+- examples
+- human-readable policy
+
+but is no longer the only source of execution truth.
+
+### Phase 4 — Checker Primitives and Evidence Model
+
+Do not delete mature checkers; reposition them instead.
+
+The stable, reliable capabilities in existing checkers should gradually be abstracted into reusable primitives, for example:
+
+```text
+required-file
+forbidden-pattern
+structured-value
+cross-file-equality
+projection-sync
+command-result
+negative-oracle
+package-boundary
+```
+
+Every execution result should produce structured Evidence, instead of only:
+
+```text
+exit 0
+exit 1
+```
+
+Evidence should be able to answer:
+
+- which control was executed
+- why it applied
+- which mechanism was used
+- which object was checked
+- what result was obtained
+- which boundary consumed the result
+
+### Phase 5 — Context Detector and Dispatcher
+
+This is the core execution layer of the Generation 2 control plane.
+
+Goal:
+
+```text
+Event / Change Context
+        ↓
+Context Detector
+        ↓
+Applicable Controls
+        ↓
+Dispatcher
+        ↓
+Minimal Required Mechanisms
+```
+
+The system should gradually move from:
+
+```text
+Agent chooses npm command
+```
+
+to:
+
+```text
+System resolves required controls
+```
+
+The Dispatcher should support:
+
+- file / path impact
+- control ownership
+- profile
+- lifecycle event
+- release context
+- explicit task context
+
+and aim for minimal sufficient validation rather than full execution by default.
+
+### Phase 6 — Invariant-Centric Testing
+
+The test system shifts from suite counts to control protection.
+
+Important mechanical controls should have:
+
+```text
+positive oracle
++
+negative oracle
+```
+
+Core metrics gradually shift toward:
+
+- declared control count
+- executable carrier coverage
+- negative oracle coverage
+- trigger coverage
+- blocking boundary coverage
+- false positive rate
+- false negative rate
+
+Test counts themselves are no longer a proxy for governance maturity.
+
+### Phase 7 — Review Architecture
+
+The existing review-manager is kept and repositioned as:
+
+**Implementation Review**, focusing on:
+
+- logic bugs
+- test weakness
+- security
+- regression
+- fixture realism
+- checker correctness
+- documentation inconsistency
+
+Also added:
+
+**System Review**, focusing on:
+
+- responsibility boundaries
+- control topology
+- duplication
+- architecture coherence
+- trigger / enforcement gaps
+- governance complexity
+- producer / product coupling
+
+And:
+
+**Research Review**, focusing on:
+
+- hypotheses
+- measurements
+- experimental validity
+- false positive / false negative
+- attention dependence
+- long-term effectiveness
+
+Systematic review defaults to:
+
+```text
+Find
+→ Collect Evidence
+→ Classify
+→ Search Siblings
+→ Determine Root Cause
+→ THEN Remediate
+```
+
+to avoid degrading every problem into a local patch.
+
+### Phase 8 — Runtime Adapters
+
+Repository-level governance core must stay tool-neutral.
+
+Runtime hard enforcement is implemented through an adapter layer:
+
+```text
+Portable Governance Core
+        ↓
+Adapter Protocol
+        ↓
+Codex
+Claude Code
+Cursor
+opencode
+Other runtimes
+```
+
+Possible hooks:
+
+```text
+before_write
+before_shell
+before_commit
+before_release
+```
+
+But runtime-specific enforcement must not pollute the portable core.
+
+Different runtimes may provide different guarantee levels.
+
+## Guarantee Levels
+
+Generation 2 progressively makes governance guarantee levels explicit:
+
+```text
+L0 — Guidance
+     Agent-readable instruction
+
+L1 — Repository Mechanical
+     Repository checker can independently verify
+
+L2 — Workflow Blocking
+     CI / Git / release workflow can block progression
+
+L3 — Runtime Interception
+     Agent runtime can intercept the action before execution
+```
+
+No governance capability should be described merely as "supported / not supported"; its guarantee level must be explicit.
+
+## Research Direction
+
+The project will evaluate not only "how many features were implemented", but also whether governance mechanisms actually work.
+
+Key research questions include:
+
+### Zero-Attention Governance
+
+If the agent completely forgets the governance rules:
+
+> Which guarantees still hold?
+
+Any capability called a mechanical guarantee should be able to answer this question.
+
+### Static Prompt vs Dynamic Policy Injection
+
+Research the impact of:
+
+```text
+static in-context rules
+vs
+dynamic injection at decision points
+```
+
+on the following metrics:
+
+- attention failure
+- token burden
+- compliance
+- task quality
+
+### Full Validation vs Impact-Driven Validation
+
+Compare:
+
+```text
+full suite
+vs
+dispatcher-selected controls
+```
+
+across:
+
+- runtime
+- detection rate
+- false negative
+- developer latency
+
+### Enforcement Strength
+
+Study the actual guarantee strength provided by different boundaries:
+
+```text
+Prompt
+Hook
+CI
+Release
+Runtime
+```
+
+in real agent workflows.
+
+### Governance Operating Cost
+
+Governance maturity must be measured together with cost.
+
+Long-term metrics include:
+
+```text
+Runtime cost
+Token burden
+Human review cost
+Maintenance cost
+False positive rate
+False negative rate
+Attention failure rate
+```
+
+## Non-goals
+
+Generation 2 explicitly does not pursue:
+
+- solving every governance problem by adding unlimited Markdown policy
+- creating a new permanent checker for every incident
+- forcing every judgment rule to be mechanized
+- assuming a green gate equals semantic correctness
+- making all agent runtimes identical
+- writing tool-specific runtime capabilities into the portable core
+- adding mechanisms of no practical value for formal symmetry of directories, rules or abstractions
+- measuring maturity by test count, checker count or rule count
+- making growth in the governance framework's own complexity the default direction
+- maintaining two architectures long-term just to stay Generation-1 compatible
+
+## Success Criteria
+
+Generation 2 success is not primarily measured by "how many capabilities were added".
+
+What matters more:
+
+```text
+Policy can be mechanically located.
+Applicability can be systematically resolved.
+Execution can be dispatched without relying on Agent memory.
+Evidence can be independently inspected.
+Enforcement strength can be explicitly stated.
+Critical controls have negative oracles.
+Repo and Skill governance ownership is explicit.
+Validation cost scales with change impact.
+Runtime-specific enforcement remains outside the portable core.
+```
+
+The long-term goal is:
+
+> Stronger, more explainable and more verifiable governance guarantees, with less agent attention, fewer governance mechanisms and clearer enforcement boundaries.
+
+## Roadmap's Relationship with Other Knowledge Objects
+
+The Roadmap expresses only the long-term direction; it does not carry detailed issue records or execution plans.
+
+```text
+Research
+   ↓ provides model
+
+Findings
+   ↓ identify observed gaps
+
+ADR
+   ↓ records architectural decisions
+
+Roadmap
+   ↓ defines long-term direction
+
+Plan
+   ↓ executes a bounded phase
+
+Implementation
+   ↓
+
+Measurement / Regression
+```
+
+Specific issues go into:
+
+```text
+docs/findings/
+```
+
+System models, experiments and evaluation frameworks go into:
+
+```text
+docs/research/
+```
+
+Long-term design decisions go into:
+
+```text
+docs/design-decisions/
+```
+
+Concrete execution work goes into:
+
+```text
+docs/plans/
+```
+
+Completed execution plans go into:
+
+```text
+docs/plans/archive/
+```
+
+## Roadmap Maintenance Rules
+
+The Roadmap is a statement of the current long-term direction, not an immutable commitment.
+
+Re-evaluate it when any of the following happens:
+
+- an architecture generation transition
+- a major architecture finding
+- a major phase completion
+- research evidence overturns an existing assumption
+- the target architecture changes substantially
+
+Ordinary patches, bug fixes or releases do not require automatically re-baselining the Roadmap.
+
+Major direction changes must be traceable to:
+
+```text
+Finding
+Research
+ADR
+```
+
+The Roadmap does not keep detailed historical execution records, and is not used as a CHANGELOG.
+
+If an old direction still has research value, preserve it through Git history or an explicit roadmap history snapshot, rather than letting the current Roadmap accumulate "completed items" without bound.
+
+## Current Long-term Direction
+
+```text
+Generation 1
+Document-Centric Governance
+        ↓
+Architecture Migration
+        ↓
+Producer / Product Separation
+        ↓
+Governance Core
+        ↓
+Control Registry
+        ↓
+Evidence + Primitives
+        ↓
+Context Detector + Dispatcher
+        ↓
+Invariant-Centric Validation
+        ↓
+Review Architecture
+        ↓
+Runtime Adapters
+        ↓
+Generation 2
+Policy-Driven Governance Control Plane
+```

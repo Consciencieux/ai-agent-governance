@@ -2,70 +2,818 @@
 
 [English](en.md) · [简体中文](zh-CN.md) · [繁體中文](zh-TW.md)
 
-時間尺度：**已完成** / **近期** / **中期** / **遠期**
+## 願景
 
-### 已完成
+AI Agent Governance 的目標不是為 AI 編碼 Agent 堆疊更多提示詞、規則文件和檢查腳本，而是建立一套：
 
-- **治理缺陷閉環** —— 已確認治理缺陷後，在有界同類表面搜尋，並跨 repo-infra 與被治理專案檢查相關規則/範本/產生器/閘門/測試/發佈鏈。計畫：[../archive/PLAN-0029-governance-defect-closure.md](../archive/PLAN-0029-governance-defect-closure.md)
-- **領域級測試入口** —— `node tests/run-tests.js --suite <name>` / `--list` 開發迴圈快速入口；`npm test` 與所有閘門保持全量（[計劃](../archive/PLAN-0030-run-tests-suite-entry.md)）
-- **載荷治理教訓** —— 宣告與機制的差距、證據等級（機械 / 人工背書 / 未驗證）、測試活性（空洞測試、事實源）、移動後列舉複查、CI 閘門完整性現已成為 INSTALLED 規則，不再只是本倉庫的內部記憶。設計：[../archive/PLAN-0028-payload-governance-lessons.md](../archive/PLAN-0028-payload-governance-lessons.md)
-- AGENTS.md 治理引導
-- Feature 登記
-- 治理校驗器
-- 發佈工作流程
-- 多語言 CI 範本
-- 多 Agent 鎖強制 —— `scripts/check-lock.js`（唯讀鎖檢查；INIT 複製、校驗器必查）
-- 校驗器內容檢查 —— CHANGELOG 格式 + manifest `artifacts[].kind` 有效性
-- Git 工作流程治理 —— `.governance/git-policy.json` + `scripts/check-git-policy.js`（受保護分支、分支開發、禁止直推）
-- Agent 行為稽核 —— 追加式 .governance/activity.jsonl 逐任務稽核軌跡 + drift-check `activity-report` 模式
-- 密鑰掃描閘門 —— scripts/check-secrets.js 阻止暫存區密鑰類內容（校驗器閘門）
-- 治理健康分 —— 校驗器 `--json` 輸出綜合 `score`（v1 等權）+ CI 產出 shields.io 徽章 endpoint 工件
-- 知識新鮮度 —— `scripts/check-doc-freshness.js` 經 `git log` 提交日期標記過時治理文件，並按來源/譯文對派生譯文新鮮度（建議性；`--release-gate` 阻斷過時或 draft 譯文）
-- 內容一致性 —— `scripts/check-doc-consistency.js` 標記文件間交叉矛盾（版本示例/受保護清單/ADR 狀態/roadmap 目標/連結/數值聲明；預設建議性；consent/受保護清單/原則索引/計劃狀態/術語簇在 `--gate`/`--release-gate` 下 fail-closed，changelog 覆蓋僅 `--release-gate` 下 fail-closed）
-- **審核管理器** —— 第 8 個子技能：多智能體深度審查工作流程（固定 5 領域、嚴重度排序報告、修復 + 閘門驗證）。設計：[../archive/PLAN-0007-review-manager.md](../archive/PLAN-0007-review-manager.md)
-- **分級審核閘門** —— release/push 風險分級（低 = 僅輕量級；中 = 批准時建議深度審查；高 = 必須 review-manager）；輕量級腳本總是自動跑。設計：[../archive/PLAN-0009-tiered-review-gate.md](../archive/PLAN-0009-tiered-review-gate.md)
-- **被治理專案同步組** —— 兩層：（L1）聲明式 `.governance/sync-rules.json`（watch/require）+ 清單驅動 Phase 5；（L2）`scripts/check-sync.js` 對照實際改動集機械驗證。設計：[../archive/PLAN-0008-governed-project-sync-groups.md](../archive/PLAN-0008-governed-project-sync-groups.md) + [../archive/PLAN-0010-sync-groups-mechanical-check.md](../archive/PLAN-0010-sync-groups-mechanical-check.md)
-- **INIT 生成器腳本化** —— 確定性、可快照測試的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期。設計：[../archive/PLAN-0012-init-scripted-generator.md](../archive/PLAN-0012-init-scripted-generator.md)
-- **計劃交付閘門** —— `repo-tools/check-plan-delivery.js`：計劃與實際交付的機械對帳（歸檔前 fail-closed）；錨點語法（`— anchor: `snippet``）對已存在文件的宣告按**內容**驗證，而非僅存在性。設計：[../archive/PLAN-0026-plan-delivery-anchors.md](../archive/PLAN-0026-plan-delivery-anchors.md)
-- **計劃歸檔閘門** —— 規範計劃狀態關鍵詞（design/active/implemented/completed/archived）+ release 作用域的待歸檔閘門（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修復（`####` 子節不再截斷）
-- **安裝載荷完整性閘門** —— 測試證明複製的閘門腳本自包含（無兄弟 `require`）且 `init-spec.json` 的複製清單與 INIT 實際寫入一致
-- **確認政策重寫** —— 跨五個同步點提交前一次確認；計劃批准降為意圖對齊（`consent-policy-hardening` 計劃）
-- **治理原則索引** —— 27 條原則的純指標索引 + 一個 `--gate` 檢查保持每條來源可解析
-- **規則捕獲** —— 不讓口頭要求只活在對話上下文裡：Agent 對每條要求預分類（持久 / 一次性 / 模糊），開發者在 Phase 6 裁定，確認的規則寫入 `AGENTS.md` / `docs/rules/**`，未確認的在行為軌跡裡留 `rules_pending` 痕跡。設計：[../archive/PLAN-0016-rule-capture.md](../archive/PLAN-0016-rule-capture.md)
-- **術語門禁** —— 術語表 `Forbidden zh-CN`/`Forbidden zh-TW` 欄在三語樹強制執行（`--gate` fail-closed、行級豁免、無術語表則 no-op）。設計：[../archive/PLAN-0020-doc-translation-governance.md](../archive/PLAN-0020-doc-translation-governance.md)
-- **翻譯新鮮度** —— Git 派生的逐對狀態（stale / draft / reviewed 標記），`--release-gate` 阻斷落後譯文；無手寫 manifest。設計：[../archive/PLAN-0020-doc-translation-governance.md](../archive/PLAN-0020-doc-translation-governance.md)
-- **工程克制（機制測試）** —— 未經批准的新增機制必須自證；已批准需求優先；語義接縫合法。設計：[../archive/PLAN-0019-engineering-restraint.md](../archive/PLAN-0019-engineering-restraint.md)
-- **根因修復協定 + 失敗預算** —— 重現優先的計劃欄位、`repairSessionId` 綁定、第一/二/三次失敗升級。設計：[../archive/PLAN-0018-anti-patch-development.md](../archive/PLAN-0018-anti-patch-development.md)
-- **測試架構拆分 + 編碼衛生閘門** —— 單一發現入口 + 八個領域套件（集合對帳），並對單體回歸與空套件設閘門。設計：[../archive/PLAN-0018-anti-patch-development.md](../archive/PLAN-0018-anti-patch-development.md)
-- **範圍分級驗證 + 證據層級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 條目與 AGENTS.md 範圍表一致；`--release-gate` 僅用於發佈阻斷。設計：[../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
-- **分發角色完備閘門** —— `references/` 與 `scripts/` 下每個檔案都攜帶唯一宣告角色（INSTALLED / SKILL-INTERNAL），由 `repo-tools/check-role-completeness.js` 驗證（無未分類檔案、無重疊、無陳舊宣告、打包邊界一致）。設計：[../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
-- **閘門分級 + 證據等級** —— `check:docs` / `check:payload` / `check:tests` / `check:full` 各入口依變更範圍匹配，每個閘門的產出標註為機械 / 人工背書 / 未驗證，使綠色結果不被讀成超出其實際證明力的結論。設計：[../archive/PLAN-0021-gate-tiering-evidence-boundary.md](../archive/PLAN-0021-gate-tiering-evidence-boundary.md)
-- **物理分發邊界** —— 倉庫維護內容不再隨 tarball 發給技能用戶：repo-only 檔案（skill 發佈流程、打包腳本、倉庫專屬閘門）從 `references/` 與 `scripts/` 移入打包步驟無法觸達的 `repo-tools/` 與 `repo-workflows/`。角色閘門反向檢查 + 完整 tarball 清單相等性測試保證「宣告」與「打包」是同一事實。設計：[../archive/PLAN-0024-repository-boundary-split.md](../archive/PLAN-0024-repository-boundary-split.md)
-- **發佈流程按受眾拆分** —— `release.md` 僅覆蓋被治理專案發佈；本倉庫自身的流程在內聚自足的 `repo-workflows/skill-release.md`（SemVer 判定、分級審核、事務性條款內聯承載）。設計：[../archive/PLAN-0024-repository-boundary-split.md](../archive/PLAN-0024-repository-boundary-split.md)
-- **INSTALLED 內容專案可移植化** —— 載荷規則正文不再混用受眾：沒有 package.json 的專案不再出現 `npm run` 命令、無技能倉庫 docs 路徑、無無條件三語義務、無懸空指標。設計：[../archive/PLAN-0022-content-audience-portability.md](../archive/PLAN-0022-content-audience-portability.md)
+- 倉庫原生
+- 工具中立
+- 可驗證
+- 可追蹤
+- 可漸進採用
+- 可擴展到不同 Agent runtime
 
-### 近期
+的治理框架。
 
-- **多 Agent 協調協定** —— 並發 Agent 之間的標準化協調（鎖檢查已交付；review-manager 的並行子代理是其第一個真實用例）。*尚無設計計劃*
-- **遠端治理看板** —— 被治理倉庫的可觀測性（依賴：稽核軌跡 + 健康分，均已交付）
-- **monorepo 多治理域** —— 校驗器多根解析 + 多 manifest（出現真實 monorepo 需求時再做）
+長期目標是讓治理從：
 
-### 已裁定延後的發佈安全事項
+```text
+文件聲明
+    ↓
+Agent 閱讀並記住
+    ↓
+Agent 自行判斷適用規則
+    ↓
+Agent 自行選擇檢查命令
+    ↓
+腳本回傳 exit code
+```
 
-已裁定、已記錄、有意未實作。執行任何發佈相關任務前先看這一節：它們是「閘門綠燈」實際
-證明範圍內的已知缺口。
+演進為：
 
-- **評審證據綁定** —— 狀態：**已解決**（v0.14.1+）。`plan --review-evidence` 生成評審工件摘要（SHA-256），`execute` 拒絕 `reviewStatus: completed` 時無 digest（格式校驗為 64 位 hex）。`explicitly-approved` 路徑保留（人工承擔風險）。自證缺口已關閉——簽名 tag 現在意味著提案時刻存在摘要綁定的評審工件。
+```text
+Machine-readable Controls
+        ↓
+Context Detection
+        ↓
+Applicability Resolution
+        ↓
+Dispatcher
+        ↓
+Evaluator / Mechanism
+        ↓
+Evidence
+        ↓
+Decision
+        ↓
+Explicit Enforcement Boundary
+```
 
-### 中期
+治理系統應盡可能減少對 Agent 注意力、記憶和自覺性的依賴。
 
-- **demo 示例倉庫** —— 展示治理產物實際效果的真實示例專案（中期；在此之前本倉庫僅作為*輕量治理*參考：發佈流程 + plans/archive + ADR + 測試，**不是**完整的被治理軟體專案——其 validator 預設模式必然失敗屬設計使然）
-- **生態完善** —— IDE 擴充（治理感知的編輯器整合；真實使用者需求出現時觸發）+ Cursor 相容實測（驗證文件聲明的 `.cursor/rules` 相容性；機制變化或問題報告時觸發）
+## 當前狀態：Generation 1
 
-說明：未實現功能的設計計劃在 `docs/plans/`；已完成的 TASK 計劃在發佈時歸檔到 `docs/plans/archive/`。被治理專案自身的開發計劃由 INIT 生成在 `docs/plans/DEVELOPMENT_PLAN.md`。
+當前穩定版本屬於 **Generation-1 Document-Centric Governance**。
 
-**維護規則（每次發佈滾動重排）：**
+它已經具備較完整的治理能力，包括：
 
-1. **完成時** —— 移到「已完成」（已完成項不帶時間尺度）。其設計文件歸檔到 `docs/plans/archive/`（共享區，單語）。
-2. **時間尺度是相對的** —— 移出已完成項後，剩餘項整體前移：中期 → 近期、遠期 → 中期（視需求）。
-3. **觸發時機** —— 重排是發佈流程的一部分（`release-manager` 歸檔計劃時一併重排本 roadmap），不是隨手改；否則時間標註會過期失真。
+- INIT / AUDIT / RELEASE 生命週期
+- 確定性治理生成器
+- 治理檔案與狀態管理
+- Git / release policy
+- secret scanning
+- sync checking
+- documentation consistency
+- release management
+- plan delivery verification
+- review-manager
+- 多語言產品文件
+- regression test suites
+- repo / payload 物理分發邊界
+
+Generation 1 已證明：
+
+> AI 編碼治理可以透過倉庫內文件、腳本、測試、CI 與 release workflow 獲得比純 Prompt 更強的約束能力。
+
+但當前架構仍以：
+
+```text
+Markdown / SKILL / AGENTS
+        +
+npm scripts
+        +
+independent checkers
+```
+
+為主要控制方式。
+
+其機械能力已經明顯超過最初設計模型能夠清楚表達和調度的範圍。
+
+## Generation 1 的主要限制
+
+具體證據、缺陷和研究記錄由 `docs/findings/` 與 `docs/research/` 管理；Roadmap 只保留影響長期方向的結論。
+
+### 1. Producer Governance 與 Product Governance 邊界不清
+
+本倉庫自身的治理與分發給使用者的 Skill Governance 已經在物理分發層面分離，但在治理語意、checker ownership 和 shared rules 上仍存在隱式耦合。
+
+當前部分規則仍表現為：
+
+```text
+repo
+skill
+both
+```
+
+這種模型無法清楚回答：
+
+- 誰擁有規則語意
+- 誰負責執行
+- 哪些實作必須同步
+- 哪些控制只屬於倉庫
+- 哪些控制屬於被治理專案
+
+這是 Generation 2 的首要架構問題。
+
+### 2. Policy Declaration 與 Enforcement 分離
+
+大量規則仍主要存在於 Markdown、SKILL、AGENTS 或 policy 文件中。
+
+系統通常依賴 Agent：
+
+1. 閱讀規則
+2. 判斷規則是否適用
+3. 記住需要執行什麼
+4. 選擇正確 gate
+5. 正確解讀結果
+
+因此：
+
+```text
+MUST
+```
+
+並不天然意味著：
+
+```text
+deny
+```
+
+聲明強度與實際 enforcement strength 尚未形成統一模型。
+
+### 3. Trigger 依賴 Agent 注意力
+
+本地治理通常仍是：
+
+```text
+Agent
+  ↓
+決定是否執行檢查
+```
+
+而不是：
+
+```text
+Context
+  ↓
+系統自動確定 applicable controls
+```
+
+這意味著部分治理保證依賴 Agent 的注意力與上下文完整性。
+
+### 4. Validation Routing 不夠精確
+
+當前已經存在不同 gate scope，但整體仍以 npm script / suite 為中心。
+
+系統尚不能穩定從：
+
+```text
+change impact
+```
+
+推導：
+
+```text
+minimal required controls
+```
+
+因此可能出現：
+
+- 簡單變更執行過多驗證
+- 複雜變更遺漏真正相關的控制
+- CI 執行範圍過粗
+- 本地驗證範圍依賴 Agent 判斷
+
+### 5. Checker 與測試仍以歷史缺陷驅動增長
+
+Generation 1 中大量可靠性來自：
+
+```text
+incident
+→ patch
+→ checker
+→ regression test
+```
+
+這種方式非常適合保護已知缺陷，但長期容易造成：
+
+- checker 增殖
+- regex / structural heuristic 堆積
+- governance machinery 自身複雜化
+- 綠色測試數量與真實控制成熟度脫節
+
+Generation 2 需要從 checker-centric 轉向 control / invariant-centric。
+
+### 6. Enforcement Boundary 尚未統一
+
+當前治理強度分佈在：
+
+```text
+Prompt
+Git hooks
+local scripts
+CI
+release workflow
+human approval
+```
+
+這些機制的阻斷能力不同，但尚未被統一描述。
+
+尤其：
+
+- Git hook 可繞過
+- CI 只能在提交後阻斷
+- Prompt 只是 guidance
+- runtime interception 依賴具體 Agent 工具
+
+因此未來必須明確：
+
+```text
+規則在哪個 boundary 上生效？
+```
+
+## Generation 2 目標架構
+
+Generation 2 的目標不是重寫所有現有機制，而是給現有成熟能力建立統一控制平面。
+
+目標模型：
+
+```text
+Governance Core
+│
+├── Control / Rule Model
+├── Applicability Model
+├── Evidence Model
+├── Decision Semantics
+├── Shared Primitives
+└── Contracts
+        │
+        ├───────────────┐
+        ▼               ▼
+Repo Governance      Skill Governance
+Profile              Profile
+        │               │
+        └───────┬───────┘
+                ▼
+          Context Detector
+                ↓
+            Dispatcher
+                ↓
+      ┌─────────┼──────────┐
+      ▼         ▼          ▼
+ Mechanical  Heuristic   Review
+ Evaluator   Evaluator   Evaluator
+      └─────────┬──────────┘
+                ↓
+             Evidence
+                ↓
+             Decision
+                ↓
+ allow / deny / warn / require-review
+```
+
+## Generation 2 開發階段
+
+### Phase 0 — Architecture Migration Mode
+
+目的：
+
+> 為 Generation-1 → Generation-2 的架構遷移建立安全但不至於過度阻礙重構的開發環境。
+
+遷移期間：
+
+- Generation-1 大部分 gate 降級為觀察性證據
+- 不再擴展舊 checker / policy 體系，除非涉及安全、資料損失或 release corruption
+- 使用 targeted validation 與 architecture checkpoint
+- 保留最小 Refactor Safety Kernel
+- 禁止正式發佈不完整的 2.0 架構
+- `main` 保持 1.x stable baseline
+- 破壞性重構在 `migration/2.0-governance-architecture` 上進行
+
+退出條件：
+
+- 新控制架構具備可執行基線
+- 關鍵 Generation-1 regressions 已遷移
+- 新 release path 可以獨立證明完整性
+
+### Phase 1 — Producer / Product Governance Separation
+
+這是 Generation 2 的第一項核心架構工作。
+
+目標：
+
+```text
+Governance Core
+      │
+ ┌────┴────┐
+ ▼         ▼
+Repo       Skill
+Profile    Profile
+```
+
+重點解決：
+
+- repo governance 與 skill governance ownership
+- 清理模糊的 `scope = both`
+- 共享語意與具體實作分離
+- shared control 明確消費者
+- repo-only 與 skill-only control 獨立
+- cross-profile contract tests
+
+原則：
+
+> Shared semantics does not imply shared implementation.
+
+產品程式碼可以成為測試對象，但本倉庫關鍵治理不能完全依賴正在被修改的 working-tree 產品實作。
+
+### Phase 2 — Governance Core
+
+建立中立的 Governance Core。
+
+Core 負責：
+
+- control identity
+- control schema
+- evaluator contracts
+- evidence semantics
+- decision semantics
+- shared primitives
+- profile contracts
+
+Core 不直接決定某個規則是否屬於 repo 或 skill。
+
+Profile 決定：
+
+- applicability
+- implementation
+- enforcement boundary
+- runtime adapter
+- profile-specific policy
+
+### Phase 3 — Rule / Control Registry
+
+把治理執行語意從 Markdown 中抽離為 machine-readable controls。
+
+最小控制模型需要明確區分：
+
+```text
+Applicability
+Evaluator Type
+Mechanism
+Effect
+Enforcement Boundary
+```
+
+Evaluator 類型包括：
+
+```text
+mechanical
+heuristic
+review
+guidance
+```
+
+Decision effect 包括：
+
+```text
+allow
+deny
+warn
+require-review
+observe
+```
+
+二者不能混為同一維度。
+
+Markdown 繼續承擔：
+
+- rationale
+- explanation
+- examples
+- human-readable policy
+
+但不再作為唯一執行事實來源。
+
+### Phase 4 — Checker Primitives 與 Evidence Model
+
+不刪除成熟 checker，而是重新定位。
+
+現有 checker 中穩定、可靠的能力應逐漸抽象為 reusable primitives，例如：
+
+```text
+required-file
+forbidden-pattern
+structured-value
+cross-file-equality
+projection-sync
+command-result
+negative-oracle
+package-boundary
+```
+
+每個執行結果產生結構化 Evidence，而不是僅剩：
+
+```text
+exit 0
+exit 1
+```
+
+Evidence 應能夠回答：
+
+- 哪個 control 被執行
+- 為什麼適用
+- 使用了什麼 mechanism
+- 檢查了什麼對象
+- 得到什麼結果
+- 哪個 boundary 使用了該結果
+
+### Phase 5 — Context Detector 與 Dispatcher
+
+這是 Generation 2 控制平面的核心執行層。
+
+目標：
+
+```text
+Event / Change Context
+        ↓
+Context Detector
+        ↓
+Applicable Controls
+        ↓
+Dispatcher
+        ↓
+Minimal Required Mechanisms
+```
+
+系統應逐漸從：
+
+```text
+Agent chooses npm command
+```
+
+遷移到：
+
+```text
+System resolves required controls
+```
+
+Dispatcher 應支援：
+
+- file / path impact
+- control ownership
+- profile
+- lifecycle event
+- release context
+- explicit task context
+
+並以最小充分驗證為目標，而不是預設全量執行。
+
+### Phase 6 — Invariant-Centric Testing
+
+測試體系從 suite 數量轉向 control protection。
+
+重要 mechanical control 應具備：
+
+```text
+positive oracle
++
+negative oracle
+```
+
+核心指標逐步轉向：
+
+- declared control count
+- executable carrier coverage
+- negative oracle coverage
+- trigger coverage
+- blocking boundary coverage
+- false positive rate
+- false negative rate
+
+測試數量本身不再作為治理成熟度代理指標。
+
+### Phase 7 — Review Architecture
+
+現有 review-manager 保留並重新定位為：
+
+**Implementation Review**，關注：
+
+- logic bug
+- test weakness
+- security
+- regression
+- fixture realism
+- checker correctness
+- documentation inconsistency
+
+同時增加：
+
+**System Review**，關注：
+
+- responsibility boundaries
+- control topology
+- duplication
+- architecture coherence
+- trigger / enforcement gaps
+- governance complexity
+- producer / product coupling
+
+以及：
+
+**Research Review**，關注：
+
+- hypotheses
+- measurements
+- experimental validity
+- false positive / false negative
+- attention dependence
+- long-term effectiveness
+
+系統性 review 預設：
+
+```text
+Find
+→ Collect Evidence
+→ Classify
+→ Search Siblings
+→ Determine Root Cause
+→ THEN Remediate
+```
+
+避免直接把所有問題降級為局部 patch。
+
+### Phase 8 — Runtime Adapters
+
+Repository-level governance core 必須保持工具中立。
+
+執行時 hard enforcement 透過 adapter 層實現：
+
+```text
+Portable Governance Core
+        ↓
+Adapter Protocol
+        ↓
+Codex
+Claude Code
+Cursor
+opencode
+Other runtimes
+```
+
+可能支援：
+
+```text
+before_write
+before_shell
+before_commit
+before_release
+```
+
+但 runtime-specific enforcement 不得污染 portable core。
+
+不同執行時可以提供不同 guarantee level。
+
+## Guarantee Levels
+
+Generation 2 逐步明確治理保證等級：
+
+```text
+L0 — Guidance
+     Agent-readable instruction
+
+L1 — Repository Mechanical
+     Repository checker can independently verify
+
+L2 — Workflow Blocking
+     CI / Git / release workflow can block progression
+
+L3 — Runtime Interception
+     Agent runtime can intercept the action before execution
+```
+
+任何治理能力都不應僅用「支援 / 不支援」描述，而應明確其 guarantee level。
+
+## Research Direction
+
+專案後續不僅評價「實現了多少功能」，還要研究治理機制是否真正有效。
+
+重點研究問題包括：
+
+### Zero-Attention Governance
+
+如果 Agent 完全忘記治理規則：
+
+> 哪些保證仍然成立？
+
+任何被稱為 mechanical guarantee 的能力都應該能回答這個問題。
+
+### Static Prompt vs Dynamic Policy Injection
+
+研究：
+
+```text
+靜態上下文規則
+vs
+決策點動態注入
+```
+
+對以下指標的影響：
+
+- attention failure
+- token burden
+- compliance
+- task quality
+
+### Full Validation vs Impact-Driven Validation
+
+比較：
+
+```text
+full suite
+vs
+dispatcher-selected controls
+```
+
+在以下指標上的差異：
+
+- runtime
+- detection rate
+- false negative
+- developer latency
+
+### Enforcement Strength
+
+研究不同 boundary：
+
+```text
+Prompt
+Hook
+CI
+Release
+Runtime
+```
+
+在真實 Agent workflow 中提供的實際保證強度。
+
+### Governance Operating Cost
+
+治理成熟度必須同時衡量成本。
+
+長期指標包括：
+
+```text
+Runtime cost
+Token burden
+Human review cost
+Maintenance cost
+False positive rate
+False negative rate
+Attention failure rate
+```
+
+## Non-goals
+
+Generation 2 明確不追求：
+
+- 不繼續透過無限增加 Markdown policy 解決所有治理問題
+- 不為每一個 incident 建立新的永久 checker
+- 不把所有 judgment rule 強制機械化
+- 不假設 green gate 等於語意正確
+- 不追求所有 Agent runtime 完全相同
+- 不把 tool-specific runtime 能力寫入 portable core
+- 不為目錄、規則或抽象的形式對稱性增加無實際價值的機制
+- 不以測試數量、checker 數量或規則數量衡量成熟度
+- 不讓治理框架自身的複雜度增長成為預設方向
+- 不為了保持 Generation-1 相容而長期維護兩套架構
+
+## Success Criteria
+
+Generation 2 成功不以「新增多少能力」為主要標準。
+
+更重要的是：
+
+```text
+Policy can be mechanically located.
+Applicability can be systematically resolved.
+Execution can be dispatched without relying on Agent memory.
+Evidence can be independently inspected.
+Enforcement strength can be explicitly stated.
+Critical controls have negative oracles.
+Repo and Skill governance ownership is explicit.
+Validation cost scales with change impact.
+Runtime-specific enforcement remains outside the portable core.
+```
+
+長期目標是：
+
+> 用更少的 Agent 注意力、更少的治理機制和更清晰的執行邊界，獲得更強、更可解釋、更可驗證的治理保證。
+
+## Roadmap 與其他知識對象的關係
+
+Roadmap 只表達長期方向，不承擔詳細問題記錄或執行計畫。
+
+```text
+Research
+   ↓ provides model
+
+Findings
+   ↓ identify observed gaps
+
+ADR
+   ↓ records architectural decisions
+
+Roadmap
+   ↓ defines long-term direction
+
+Plan
+   ↓ executes a bounded phase
+
+Implementation
+   ↓
+
+Measurement / Regression
+```
+
+具體問題進入：
+
+```text
+docs/findings/
+```
+
+系統模型、實驗和評價框架進入：
+
+```text
+docs/research/
+```
+
+長期設計決策進入：
+
+```text
+docs/design-decisions/
+```
+
+具體執行工作進入：
+
+```text
+docs/plans/
+```
+
+已完成執行計畫進入：
+
+```text
+docs/plans/archive/
+```
+
+## Roadmap 維護規則
+
+Roadmap 是當前長期方向的聲明，不是不可修改的承諾。
+
+在以下事件發生時重新評估：
+
+- architecture generation transition
+- major architecture finding
+- major phase completion
+- research evidence 推翻現有假設
+- target architecture 發生實質變化
+
+普通 patch、bug fix 或 release 不要求自動重排 Roadmap。
+
+重大方向變化必須能夠追溯到：
+
+```text
+Finding
+Research
+ADR
+```
+
+Roadmap 不保存詳細歷史執行記錄，也不作為 CHANGELOG 使用。
+
+舊路線如果具有研究價值，透過 Git history 或明確的 roadmap history snapshot 保留，而不是讓當前 Roadmap 無限累積「已完成事項」。
+
+## 當前長期方向
+
+```text
+Generation 1
+Document-Centric Governance
+        ↓
+Architecture Migration
+        ↓
+Producer / Product Separation
+        ↓
+Governance Core
+        ↓
+Control Registry
+        ↓
+Evidence + Primitives
+        ↓
+Context Detector + Dispatcher
+        ↓
+Invariant-Centric Validation
+        ↓
+Review Architecture
+        ↓
+Runtime Adapters
+        ↓
+Generation 2
+Policy-Driven Governance Control Plane
+```
