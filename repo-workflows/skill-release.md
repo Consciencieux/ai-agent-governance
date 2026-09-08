@@ -106,6 +106,8 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
    维护规则重置 horizon——roadmap 是索引而非事实源（设计计划是单一事实源）。**对账义务**：逐项检查自上次发布以来所有计划事件（新建、归档、implemented、withdrawn）是否同步反映到 roadmap：implemented 计划移入 Done 并链接归档（未归档的链接自
    `plans/`，发布时改为
    `archive/`）；新建计划在对应 horizon 加链接；已归档/撤回计划从活跃 horizon 移除；无设计计划的条目显式标注。**遗漏即治理缺陷**，不因门禁绿而豁免。
+
+   **计划链接迁移（roadmap 与 CHANGELOG 两个表面）**：归档把计划从 `docs/*/plans/` 移到 `docs/archive/`，因此指向 `plans/` 的相对路径在归档后全部变成死链。roadmap 按上述规则改写链接；CHANGELOG 的做法不同——**条目引用计划时只写计划名称，不写路径**（如 `(plan: governance-defect-closure)`），这样归档不会使历史记录断链，也不需要在每次发布时回改已发布的版本节。ADR 编号稳定，可以直接引用（如 `(ADR-0012)`）。归档后检查：`rg 'plans/<slug>' CHANGELOG.md` 应无命中。
 6. **提交 release commit**：`git add`（版本同步、归档与 roadmap 相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 7. **复跑轻量门禁**（release commit 之后、tag 之前）：`npm run check`（exit 0）——确认归档与版本同步的提交内容本身没有破坏任何门禁。
 8. **校验（本仓库以 `npm test` 为准）**：技能仓库的校验义务由第 7 步的 `npm test` + 发布门禁承担。`scripts/verify_governance.js` 在本仓库**预期退出码 1**（无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败——ADR-0006，本仓库不 dogfood 自身框架）。它不是本流程的门禁：**不得为了让它通过而伪造 `.governance/`**，也不得因其非零退出码而中止发布。

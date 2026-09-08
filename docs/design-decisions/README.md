@@ -15,5 +15,7 @@
 | [ADR-0008](adr-0008-trigger-inventory-commands-md-exception.md) | 触发词清单复制的规则冲突裁定（commands.md 例外） | Accepted |
 | [ADR-0009: 索引与事实源的边界](adr-0009-index-vs-fact-source.md) | roadmap/里程碑是索引、计划是事实源；本仓库机械验证、被治理项目仅文档约束 | Accepted |
 | [ADR-0010: 文档分层与入口层边界](adr-0010-entry-layer-boundary.md) | README/CONTRIBUTING 是入口层，不承担事实库职责；稳定契约可写但链接权威源 | Accepted |
+| [ADR-0011: 1.0.0 冻结公开接口面](adr-0011-public-interface-freeze.md) | 五类接口受 SemVer 约束；成员清单留在各自事实源，破坏性变更走 MAJOR + 迁移 | Accepted（v1.0.0） |
+| [ADR-0012: 变更记录与其他载体的职责边界](adr-0012-record-responsibility-boundary.md) | CHANGELOG 记变更事实；根因与决策进 ADR/计划，验证进测试证据；历史逐步迁移 | Accepted |
 
 状态：Proposed / Accepted / Superseded / Deprecated。
