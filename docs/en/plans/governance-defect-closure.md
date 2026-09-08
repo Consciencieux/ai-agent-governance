@@ -16,7 +16,7 @@ The plan must require an explicit, bounded search of the relevant sibling surfac
 
 ### Problem 2 — output repair without control-plane closure
 
-An agent may fix the visible output, such as a CHANGELOG entry or generated `AGENTS.md`, without checking the rule, template, generator, gate, test oracle, release flow, or target projection that produced or failed to catch it. The visible fix can therefore recur or be overwritten.
+An agent may fix only the visible output or projection of a defect without checking the rule, template, generator, gate, test oracle, release flow, or target projection that produced or failed to catch it. The visible fix can therefore recur or be overwritten.
 
 The plan must require inspection of the relevant control-plane chain, including both the source-to-output path and the output-to-consumer path.
 
@@ -34,7 +34,7 @@ A governance defect usually lives in two domains at once — the side that autho
 
 - Defect in the project's own rules/scripts/gates → check its source and projection: the template or generator that produced the file, the corresponding checker, and whether the rule text itself carries the same error.
 - Defect in a generated or distributed artifact → check the source file and the distribution chain; fixing only the artifact is undone by the next generation.
-- When the corresponding domain does not exist or does not apply, the reason must be stated (e.g. "this rule has no template source, it is hand-written"); never assume correctness, never skip silently.
+- When the corresponding domain does not exist or does not apply, the concrete reason must be stated; never assume correctness, never skip silently.
 
 ### 2. Sibling-instance closure
 
@@ -58,7 +58,7 @@ authoritative rule → template/generator → output
 
 For a payload defect, the chain must also include tarball → INIT → clean target project. For a repo-only defect, the target consumer may be the repository's release or development workflow. Each relevant layer is either repaired, shown correct with evidence, or explicitly blocked/not applicable.
 
-Example: a CHANGELOG format defect is not closed by editing CHANGELOG alone; the format rule, writer guidance, checker, test, and release boundary must be checked.
+No visible output defect is closed by editing the output alone. The applicable authoritative rule, production path, enforcement path, evidence path, and release or target-consumer boundary must be identified and checked; layers that do not apply must be explicitly justified.
 
 ### 4. Bounded negative verification
 
@@ -104,7 +104,7 @@ The agent may stop when the relevant sibling surfaces have an evidenced result, 
 
 1. Trilingual parity and plan-status gates pass.
 2. A fixture demonstrates that a defect in one sibling instance causes the sibling search to report the other relevant instance; no new similarity engine is used.
-3. A CHANGELOG or generated-guidance fixture demonstrates that the report checks its rule, writer/template path, checker, test, and release/target consumer rather than only the output.
+3. An output/projection fixture demonstrates that the report checks the applicable authoritative rule, production path, enforcement path, evidence path, and release/target-consumer boundary rather than only the output.
 4. Payload changes are validated through tarball → INIT → clean target project.
 5. Where a gate claims to catch the defect, `mutation-probe.js` or an equivalent bounded existing check fails on reinjection and passes after restoration.
 6. `npm run check` is fully green.
