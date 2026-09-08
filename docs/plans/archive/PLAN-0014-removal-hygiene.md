@@ -1,5 +1,6 @@
 ---
 id: PLAN-0014
+generation: gen1
 ---
 
 # 变更归位与残留清理（TASK 计划）

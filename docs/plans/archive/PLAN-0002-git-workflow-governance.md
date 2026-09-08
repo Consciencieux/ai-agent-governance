@@ -1,5 +1,6 @@
 ---
 id: PLAN-0002
+generation: gen1
 ---
 
 # Git Workflow Governance（TASK 计划）

@@ -20,6 +20,8 @@ All notable changes to this project will be documented here.
 
 - **2.0 migration branch strategy** (ADR-0017) — long-lived `migration/2.0-governance-architecture` branch with milestone merges instead of committing breaking refactors directly to main; main stays a reproducible 1.x baseline; no 1.1/1.2 transitional releases; breaking work (docs restructure, Rule Registry, gate rewrite) stays on the migration branch, non-breaking governance knowledge (findings/research/ADR/PLAN IDs) may merge to main per item; merge to main only after v2.0.0-rc.
 
+- **Knowledge-object generation metadata** (ADR-0019) — architecture-era tagging via metadata, not directories or renumbering. `generation` (`gen1`/`gen2`/`cross-generation`) is an orthogonal dimension to lifecycle `status`; the three concepts Plan-archived / feature-deprecated / control-obsolete are explicitly separated. Applied: all 30 archived plans tagged `generation: gen1`; 18 ADRs classified (2 gen1 / 5 gen2 / 11 cross-generation); Finding uses `observed_in`/`resolved_in`, Research uses `subject_generation`. New `docs/research/RESEARCH-0006-generation-1-capability-baseline.md` distills a capability-preservation matrix (8 subsystems, 6 dispositions) from PLAN-0001..0030 as baseline evidence for the 1.0 → 2.0 migration; each Gen-1 capability requires an explicit 2.0 disposition.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

@@ -1,6 +1,7 @@
 # ADR-0018: Generation-2 开发路径——8 阶段执行顺序与跨 profile 契约保证
 
 - 状态：Accepted
+- 代际：gen2
 - 日期：2026-09-08
 
 ## 背景

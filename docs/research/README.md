@@ -58,6 +58,7 @@ docs/research/
 ├── RESEARCH-0003-evaluation-framework.md          # 评价体系
 ├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3）
 ├── RESEARCH-0005-current-capabilities.md          # 当前能力清单（Generation-1 baseline）
+├── RESEARCH-0006-generation-1-capability-baseline.md # Generation-1 能力保存矩阵（2.0 迁移 baseline evidence）
 └── experiments/                     # 实验记录
 ```
 
@@ -73,6 +74,7 @@ docs/research/
 | D. Architecture Evolution | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
 | E. Current Capabilities | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
 | F. Experiments | `experiments/` | 每实验一文件 |
+| G. Capability Baseline | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + 2.0 处置（迁移 baseline evidence） |
 
 ## 编号规则
 

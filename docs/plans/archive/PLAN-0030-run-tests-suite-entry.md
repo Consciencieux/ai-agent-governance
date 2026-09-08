@@ -1,5 +1,6 @@
 ---
 id: PLAN-0030
+generation: gen1
 ---
 
 # 领域级测试入口（run-tests.js --suite）（TASK 计划）

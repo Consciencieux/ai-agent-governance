@@ -1,5 +1,6 @@
 ---
 id: PLAN-0010
+generation: gen1
 ---
 
 # Sync Groups Mechanical Check（TASK 计划）

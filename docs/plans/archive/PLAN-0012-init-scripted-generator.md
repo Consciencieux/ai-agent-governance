@@ -1,5 +1,6 @@
 ---
 id: PLAN-0012
+generation: gen1
 ---
 
 # INIT Scripted Generator（TASK 计划）

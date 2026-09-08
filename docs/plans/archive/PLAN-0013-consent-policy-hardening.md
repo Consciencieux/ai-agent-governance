@@ -1,5 +1,6 @@
 ---
 id: PLAN-0013
+generation: gen1
 ---
 
 # Consent 政策重写：提交前一次确认（TASK 计划）

@@ -1,5 +1,6 @@
 ---
 id: PLAN-0023
+generation: gen1
 ---
 
 # 门禁修复与单一事实源对齐（TASK 计划）

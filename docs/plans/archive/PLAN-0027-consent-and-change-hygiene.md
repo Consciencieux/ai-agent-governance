@@ -1,5 +1,6 @@
 ---
 id: PLAN-0027
+generation: gen1
 ---
 
 # 确认凭证与变更卫生自动化（TASK 计划）

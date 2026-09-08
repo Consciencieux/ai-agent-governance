@@ -1,5 +1,6 @@
 ---
 id: PLAN-0011
+generation: gen1
 ---
 
 # 治理规则同步与元治理（TASK 计划）

@@ -1,5 +1,6 @@
 ---
 id: PLAN-0017
+generation: gen1
 ---
 
 # 计划归档门禁（TASK 计划）

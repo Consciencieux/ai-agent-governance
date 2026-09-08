@@ -1,5 +1,6 @@
 ---
 id: PLAN-0007
+generation: gen1
 ---
 
 # Review Manager（TASK 计划）

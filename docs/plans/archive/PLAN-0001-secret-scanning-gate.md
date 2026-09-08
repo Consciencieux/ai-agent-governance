@@ -1,5 +1,6 @@
 ---
 id: PLAN-0001
+generation: gen1
 ---
 
 # Secret Scanning Gate（TASK 计划）

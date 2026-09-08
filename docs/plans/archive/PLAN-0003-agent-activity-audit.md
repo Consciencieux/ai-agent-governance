@@ -1,5 +1,6 @@
 ---
 id: PLAN-0003
+generation: gen1
 ---
 
 # Agent Activity Audit（TASK 计划）

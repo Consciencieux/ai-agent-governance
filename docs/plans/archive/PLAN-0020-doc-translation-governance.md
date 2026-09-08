@@ -1,5 +1,6 @@
 ---
 id: PLAN-0020
+generation: gen1
 ---
 
 # 文档翻译治理升级：术语门禁与翻译新鲜度（TASK 计划）

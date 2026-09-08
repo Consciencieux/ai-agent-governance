@@ -1,5 +1,6 @@
 ---
 id: PLAN-0009
+generation: gen1
 ---
 
 # Tiered Review Gate（TASK 计划）

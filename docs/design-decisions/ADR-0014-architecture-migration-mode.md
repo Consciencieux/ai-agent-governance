@@ -1,6 +1,7 @@
 # ADR-0014: Architecture Migration Mode——2.0 重构期间旧 gate 的降级策略
 
 - 状态：Accepted
+- 代际：gen2
 - 日期：2026-09-08
 
 ## 背景

@@ -1,5 +1,6 @@
 ---
 id: PLAN-0005
+generation: gen1
 ---
 
 # Knowledge Freshness Detection（TASK 计划）

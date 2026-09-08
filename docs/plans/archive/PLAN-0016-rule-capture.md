@@ -1,5 +1,6 @@
 ---
 id: PLAN-0016
+generation: gen1
 ---
 
 # Rule Capture（TASK 计划）

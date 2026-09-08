@@ -1,6 +1,7 @@
 # ADR-0011: 1.0.0 冻结公开接口面，破坏性变更走 SemVer 与迁移
 
 - 状态：Accepted
+- 代际：cross-generation
 - 日期：2026-09-08
 
 ## 背景

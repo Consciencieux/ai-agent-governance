@@ -1,5 +1,6 @@
 ---
 id: PLAN-0022
+generation: gen1
 ---
 
 # 内容受众与可移植性边界（TASK 计划）

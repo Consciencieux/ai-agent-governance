@@ -1,5 +1,6 @@
 ---
 id: PLAN-0006
+generation: gen1
 ---
 
 # Content Consistency Check（TASK 计划）

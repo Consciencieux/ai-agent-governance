@@ -1,5 +1,6 @@
 ---
 id: PLAN-0019
+generation: gen1
 ---
 
 # 工程克制：反过度工程（对现有规则层的增补，TASK 计划）

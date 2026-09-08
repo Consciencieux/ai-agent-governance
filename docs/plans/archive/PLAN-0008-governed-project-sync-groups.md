@@ -1,5 +1,6 @@
 ---
 id: PLAN-0008
+generation: gen1
 ---
 
 # Governed-Project Sync Groups（TASK 计划）

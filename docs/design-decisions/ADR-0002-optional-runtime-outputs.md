@@ -2,6 +2,7 @@
 
 
 - 状态：Accepted（v0.3.2）
+- 代际：cross-generation
 - 日期：2026
 
 ## 背景

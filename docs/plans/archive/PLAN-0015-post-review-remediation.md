@@ -1,5 +1,6 @@
 ---
 id: PLAN-0015
+generation: gen1
 ---
 
 # 审查后备积压（TASK 计划）

@@ -1,5 +1,6 @@
 ---
 id: PLAN-0026
+generation: gen1
 ---
 
 # 交付锚点（TASK 计划）

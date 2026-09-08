@@ -1,5 +1,6 @@
 ---
 id: PLAN-0021
+generation: gen1
 ---
 
 # 验证门禁分层与机械证据边界（TASK 计划）

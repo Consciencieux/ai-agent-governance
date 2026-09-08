@@ -1,5 +1,6 @@
 ---
 id: PLAN-0025
+generation: gen1
 ---
 
 # Skill Lifecycle Management（TASK 計劃）

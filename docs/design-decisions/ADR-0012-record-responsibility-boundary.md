@@ -1,6 +1,7 @@
 # ADR-0012: 变更记录、计划、ADR 与测试证据的职责边界
 
 - 状态：Accepted
+- 代际：cross-generation
 - 日期：2026-09-08
 
 ## 背景

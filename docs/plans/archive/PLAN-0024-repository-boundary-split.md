@@ -1,5 +1,6 @@
 ---
 id: PLAN-0024
+generation: gen1
 ---
 
 # 仓库边界拆分 —— 载荷目录 vs 仓库工具(TASK 计划)

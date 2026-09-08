@@ -1,6 +1,7 @@
 # ADR-0008: 触发词清单复制的规则冲突裁定（commands.md 例外）
 
 状态：Accepted（2026-09-05）
+- 代际：cross-generation
 
 ## 背景
 

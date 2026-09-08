@@ -1,6 +1,7 @@
 # ADR-0013: Issue / Finding Archive 与知识对象五分类
 
 - 状态：Accepted
+- 代际：cross-generation
 - 日期：2026-09-08
 
 ## 背景

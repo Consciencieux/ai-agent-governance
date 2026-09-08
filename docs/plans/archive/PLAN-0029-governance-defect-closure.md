@@ -1,5 +1,6 @@
 ---
 id: PLAN-0029
+generation: gen1
 ---
 
 # 治理缺陷闭包——同类实例与控制面追查（TASK 计划）

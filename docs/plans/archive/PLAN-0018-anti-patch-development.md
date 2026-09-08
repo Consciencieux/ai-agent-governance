@@ -1,5 +1,6 @@
 ---
 id: PLAN-0018
+generation: gen1
 ---
 
 # 反补丁式开发与测试架构治理（TASK 计划）

@@ -1,5 +1,6 @@
 ---
 id: PLAN-0004
+generation: gen1
 ---
 
 # Governance Score & Badge（TASK 计划）
