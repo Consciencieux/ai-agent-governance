@@ -6,8 +6,8 @@
 
 ### 已完成
 
-- **治理缺陷闭包** —— 已确认治理缺陷后，在有界同类表面搜索，并跨 repo-infra 与被治理项目检查相关规则/模板/生成器/门禁/测试/发布链。设计：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
-- **领域级测试入口** —— `node tests/run-tests.js --suite <name>` / `--list` 开发循环快速入口；`npm test` 与所有门禁保持全量（[计划](plans/run-tests-suite-entry.md)）
+- **治理缺陷闭包** —— 已确认治理缺陷后，在有界同类表面搜索，并跨 repo-infra 与被治理项目检查相关规则/模板/生成器/门禁/测试/发布链。设计：[plans/governance-defect-closure.md](../archive/governance-defect-closure.md)
+- **领域级测试入口** —— `node tests/run-tests.js --suite <name>` / `--list` 开发循环快速入口；`npm test` 与所有门禁保持全量（[计划](../archive/run-tests-suite-entry.md)）
 - **载荷治理教训** —— 声明与机制的差距、证据等级（机械 / 人工背书 / 未验证）、测试活性（空洞测试、事实源）、移动后枚举复查、CI 门禁完整性现已成为 INSTALLED 规则，不再只是本仓库的内部记忆。设计：[../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
 - AGENTS.md 治理引导
 - Feature 登记

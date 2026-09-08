@@ -6,8 +6,8 @@
 
 ### 已完成
 
-- **治理缺陷閉環** —— 已確認治理缺陷後，在有界同類表面搜尋，並跨 repo-infra 與被治理專案檢查相關規則/範本/產生器/閘門/測試/發佈鏈。計畫：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
-- **領域級測試入口** —— `node tests/run-tests.js --suite <name>` / `--list` 開發迴圈快速入口；`npm test` 與所有閘門保持全量（[計劃](plans/run-tests-suite-entry.md)）
+- **治理缺陷閉環** —— 已確認治理缺陷後，在有界同類表面搜尋，並跨 repo-infra 與被治理專案檢查相關規則/範本/產生器/閘門/測試/發佈鏈。計畫：[../archive/governance-defect-closure.md](../archive/governance-defect-closure.md)
+- **領域級測試入口** —— `node tests/run-tests.js --suite <name>` / `--list` 開發迴圈快速入口；`npm test` 與所有閘門保持全量（[計劃](../archive/run-tests-suite-entry.md)）
 - **載荷治理教訓** —— 宣告與機制的差距、證據等級（機械 / 人工背書 / 未驗證）、測試活性（空洞測試、事實源）、移動後列舉複查、CI 閘門完整性現已成為 INSTALLED 規則，不再只是本倉庫的內部記憶。設計：[../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
 - AGENTS.md 治理引導
 - Feature 登記
