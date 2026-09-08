@@ -158,4 +158,63 @@ module.exports = (test) => {
     // liveness: the repo pins actions by SHA, so a passing run must have seen some
     return pinned >= 3;
   });
+
+  // mutation-probe.js is the assurance tool for the ASSERTIONS themselves, so it is exactly
+  // the file where a silent failure is most costly: a probe that reports "all killed" while
+  // actually failing to run would certify a broken suite. Its own defects must be loud.
+  const PROBE = path.join(repo, "repo-tools", "mutation-probe.js");
+
+  test("mutation-probe: resolves the repo from CWD, not from its own location", () => {
+    // Deriving ROOT from __filename broke the moment the file was copied elsewhere (the
+    // clone source became the temp dir and every mutation reported a clone failure). The
+    // probe must locate the repo via git/CWD so a copy still targets the real repository.
+    const src = fs.readFileSync(PROBE, "utf8");
+    if (/const ROOT = path\.dirname\(path\.dirname\(__filename\)\);/.test(src)) {
+      console.error("  ROOT is derived from __filename — a copied probe targets the wrong tree");
+      return false;
+    }
+    return /rev-parse["']?,\s*["']--show-toplevel/.test(src) && /tests["'],\s*["']run-tests\.js/.test(src);
+  });
+
+  test("mutation-probe: an unanchored mutation fails instead of counting as a pass", () => {
+    // A mutation whose target moved must be reported, never silently skipped: a matrix that
+    // matches nothing would otherwise report a perfect score against code it never touched.
+    // Scope the search to the unanchored BRANCH (up to its `continue;`) — a fixed-size
+    // window reaches the later `if (!killed) exitCode = 1;` and passes even when this
+    // branch's own exit is removed (that vacuous form was caught by mutating it).
+    const src = fs.readFileSync(PROBE, "utf8");
+    const at = src.indexOf('status: "unanchored"');
+    if (at < 0) {
+      console.error("  no unanchored result branch found");
+      return false;
+    }
+    const stop = src.indexOf("continue;", at);
+    if (stop < 0) {
+      console.error("  unanchored branch has no continue — cannot scope the assertion");
+      return false;
+    }
+    return /exitCode = 1;/.test(src.slice(at, stop));
+  });
+
+  test("mutation-probe: every mutation is reverted and the revert is verified", () => {
+    // A probe that leaves a mutated clone behind would poison every later result in the
+    // same run. The restore must be in a finally block AND byte-verified.
+    const src = fs.readFileSync(PROBE, "utf8");
+    const hasFinally = /finally\s*\{[\s\S]{0,400}?writeFileSync\(target, orig\)/.test(src);
+    const verifies = /restore verification failed/.test(src);
+    return hasFinally && verifies;
+  });
+
+  test("mutation-probe: refuses to report results when the baseline is not green", () => {
+    // Mutation results are meaningless against a already-failing suite: every mutation
+    // would look "killed" by the pre-existing failures.
+    const src = fs.readFileSync(PROBE, "utf8");
+    return /baseline is not green/.test(src) && /base\.exit !== 0/.test(src);
+  });
+
+  test("mutation-probe: --only with no label errors instead of running everything", () => {
+    const r = spawnSync(process.execPath, [PROBE, "--only"], { cwd: repo, encoding: "utf8", timeout: 60000 });
+    return r.status === 1 && /--only requires a label prefix/.test(String(r.stderr || ""));
+  });
+
 };

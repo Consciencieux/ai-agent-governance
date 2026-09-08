@@ -17,7 +17,8 @@
     "check:repo-release": "npm test && node repo-tools/check-coding-hygiene.js --gate && node repo-tools/check-plan-delivery.js --gate && node scripts/check-doc-freshness.js",
     "check:release": "npm run check:skill-release",
     "plans:delivery": "node repo-tools/check-plan-delivery.js --gate",
-    "docs:roadmap": "node repo-tools/check-roadmap-sync.js"
+    "docs:roadmap": "node repo-tools/check-roadmap-sync.js",
+    "mutation:probe": "node repo-tools/mutation-probe.js"
   },
   "engines": {
     "node": ">=18"

@@ -112,6 +112,7 @@ ai-agent-governance/
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）
 │   ├── check-coding-hygiene.js # 编码卫生（测试归属 + 残留标记）
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] 验证叙事提醒（repo-only，advisory）
+│   ├── mutation-probe.js      # 按需验证测试断言是否活着（临时克隆内的抽样变异）
 │   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发
 │   └── skill-release.md        # 技能仓库发布流程（版本五个同步点 + tag、tarball 构建）

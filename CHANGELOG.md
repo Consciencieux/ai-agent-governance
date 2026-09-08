@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Added
+
+- **Mutation probe for on-demand assertion assurance** (`repo-tools/mutation-probe.js`, `npm run mutation:probe`) — the gate group proves mechanical conditions (registration, paths, markers); none of it proves a test would go red if the covered code broke. The probe clones the repo to a temp dir, breaks one behaviour of a target script at a time, runs the suite and reports whether anything noticed. A mutation nothing notices is a survivor — a hole in the assertions. Deliberately kept out of `check`/`check:all`: it is a post-refactor verification, not a per-change gate. Sampled by design, and the output says so — a clean run means no survivor among the sampled mutations, never full coverage. Fail-closed on survivors and on an unanchored pattern (a mutation whose target moved reports as unanchored instead of passing silently).
+
 ### Fixed
 
 - **The `version_examples` cluster scanned prose as if it were manifest examples** — the version-consistency regex matched any `"version": "X.Y.Z"` anywhere in a `.md` file, including narrative history quotes (a release.md sentence describing the v1.0.0 tag/version contradiction tripped the gate mid-release and forced a rewording that reduced a real fact to vagueness). The tag-pairing check in the same cluster already restricted itself to `{ ... }` object blocks; the version-consistency check now does the same, so narrative version quotes in prose are no longer scanned as examples while real manifest blocks still are (mutation-verified, regression test added).
