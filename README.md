@@ -130,17 +130,7 @@ Complete annotated initialization output: [docs/en/bootstrap-output.md](docs/en/
 
 ## Generated Environment
 
-The v1.0.0 contract surface:
-
-| Contract surface | v1.0.0 | Source |
-| --- | ---: | --- |
-| INIT inputs | 15 | [references/init-spec.json](references/init-spec.json) |
-| Generated artifacts | 38 | [references/init-spec.json](references/init-spec.json) |
-| Installed scripts | 9 | [references/init-spec.json](references/init-spec.json) |
-| `docs/rules/` policies | 6 | [references/init-spec.json](references/init-spec.json) |
-| Generated sub-skills | 8 | [references/templates/sub-skills.md](references/templates/sub-skills.md) |
-
-These figures summarize the v1.0.0 contract. The linked source files are authoritative; this table is a summary only.
+INIT generates a governance skeleton whose exact contract — inputs, artifacts, installed scripts, rule files and generated sub-skills — is defined in [references/init-spec.json](references/init-spec.json) and [references/templates/sub-skills.md](references/templates/sub-skills.md).
 
 ## Documentation
 

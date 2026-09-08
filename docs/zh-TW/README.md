@@ -130,17 +130,7 @@ my-project/
 
 ## 產生的環境
 
-v1.0.0 契約摘要：
-
-| 契約摘要 | v1.0.0 | 來源 |
-| --- | ---: | --- |
-| INIT 輸入 | 15 | [references/init-spec.json](../../references/init-spec.json) |
-| 產生的工件 | 38 | [references/init-spec.json](../../references/init-spec.json) |
-| 安裝的腳本 | 9 | [references/init-spec.json](../../references/init-spec.json) |
-| `docs/rules/` 策略 | 6 | [references/init-spec.json](../../references/init-spec.json) |
-| 產生的子技能 | 8 | [references/templates/sub-skills.md](../../references/templates/sub-skills.md) |
-
-這些數字概述 v1.0.0 契約。連結的來源檔案為權威定義；本表僅作摘要。
+INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](../../references/init-spec.json) 與 [references/templates/sub-skills.md](../../references/templates/sub-skills.md) 定義。
 
 ## 文件
 

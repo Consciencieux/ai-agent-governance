@@ -17,6 +17,20 @@ const SKILL_DIR = path.resolve(__dirname, "..");
 const SPEC_PATH = path.join(SKILL_DIR, "references", "init-spec.json");
 const PHASE_ORDER = ["A", "B", "C"];
 
+// Command defaults per stack — used when the caller does not provide explicit
+// test_cmd / lint_cmd / build_cmd. The CI templates (references/workflows/ci.md)
+// were already stack-aware and chose the right runner; the AGENTS.md defaults were
+// hardcoded to npm, which produced broken commands for non-Node projects.
+const STACK_COMMANDS = {
+  "node": { test: "npm test", lint: "npm run lint", build: "npm run build", governance: "npm run governance-check" },
+  "python": { test: "pytest", lint: "ruff check", build: "", governance: "npm run governance-check" },
+  "rust": { test: "cargo test", lint: "cargo clippy", build: "cargo build", governance: "npm run governance-check" },
+  "go": { test: "go test ./...", lint: "go vet", build: "go build ./...", governance: "npm run governance-check" },
+  "java": { test: "mvn test", lint: "mvn checkstyle:check", build: "mvn package", governance: "npm run governance-check" },
+  "cpp": { test: "make test", lint: "", build: "make", governance: "npm run governance-check" },
+  "docs-only": { test: "markdownlint-cli2 **/*.md", lint: "", build: "", governance: "npm run governance-check" },
+};
+
 function usage() {
   console.log(`Usage:
   generate-governance.js --target <dir> --project-name <name> [--phase A|B|C] [--dry-run] [--json]
@@ -82,6 +96,10 @@ function resolvePlaceholders(content, placeholders, inputs) {
     const val = inputs[inputKey] || "";
     result = result.split("{{" + key + "}}").join(val);
   }
+  // A stack without a given step (python has no build, docs-only has no lint) leaves an
+  // empty command, which rendered as an empty inline-code pair — an agent reading
+  // "- Build: ``" receives an instruction with no command. Drop the whole line instead.
+  result = result.replace(/^- [^:\n]+: ``\s*$\n?/gm, "");
   return result;
 }
 
@@ -478,10 +496,6 @@ function main() {
   inputs.governance_version = inputs.governance_version || defaultGovernanceVersion(spec);
   inputs.description = inputs.description || "";
   inputs.project_name = inputs.project_name || projectName || "";
-  inputs.test_cmd = inputs.test_cmd || "npm test";
-  inputs.lint_cmd = inputs.lint_cmd || "npm run lint";
-  inputs.build_cmd = inputs.build_cmd || "npm run build";
-  inputs.governance_cmd = inputs.governance_cmd || "npm run governance-check";
   inputs.convention = inputs.convention || "Conventional Commits";
   inputs.doc_root = inputs.doc_root || "docs";
   if (stackArg) inputs.stack = stackArg;
@@ -490,6 +504,15 @@ function main() {
   if (ciPlatformArg) inputs.ci_platform = ciPlatformArg;
   inputs.stack = inputs.stack || "docs-only";
   inputs.ci_platform = inputs.ci_platform || "github";
+  // Command defaults are stack-derived, not hardcoded to npm: a Python or Rust project
+  // whose generated AGENTS.md ordered `npm run lint` gave its agent a command that does
+  // not exist there (the CI templates were already stack-aware; these defaults were not).
+  // An explicit test_cmd/lint_cmd/build_cmd from --file always wins over the default.
+  const cmdDefaults = STACK_COMMANDS[inputs.stack] || STACK_COMMANDS["docs-only"];
+  inputs.test_cmd = inputs.test_cmd || cmdDefaults.test;
+  inputs.lint_cmd = inputs.lint_cmd || cmdDefaults.lint;
+  inputs.build_cmd = inputs.build_cmd || cmdDefaults.build;
+  inputs.governance_cmd = inputs.governance_cmd || cmdDefaults.governance;
 inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effectivePhase, path.resolve(target));
 
   const maxPhaseIdx = PHASE_ORDER.indexOf(effectivePhase);

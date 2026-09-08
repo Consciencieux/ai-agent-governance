@@ -130,17 +130,7 @@ my-project/
 
 ## 生成的环境
 
-v1.0.0 契约摘要：
-
-| 契约摘要 | v1.0.0 | 来源 |
-| --- | ---: | --- |
-| INIT 输入 | 15 | [references/init-spec.json](../../references/init-spec.json) |
-| 生成的工件 | 38 | [references/init-spec.json](../../references/init-spec.json) |
-| 安装的脚本 | 9 | [references/init-spec.json](../../references/init-spec.json) |
-| `docs/rules/` 策略 | 6 | [references/init-spec.json](../../references/init-spec.json) |
-| 生成的子技能 | 8 | [references/templates/sub-skills.md](../../references/templates/sub-skills.md) |
-
-这些数字概述 v1.0.0 契约。链接的源文件为权威定义；本表仅作摘要。
+INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚本、规则文件与生成的子技能）由 [references/init-spec.json](../../references/init-spec.json) 与 [references/templates/sub-skills.md](../../references/templates/sub-skills.md) 定义。
 
 ## 文档
 
