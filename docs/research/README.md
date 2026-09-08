@@ -8,7 +8,7 @@
 | `findings/` | 记录发现的问题 | trigger coverage 缺失 |
 | `design-decisions/` | 记录已接受决策 | 引入 Rule Registry |
 | `plans/` | 描述执行方案 | 实现 Rule Registry MVP |
-| `archive/plans/` | 保存完成计划 | 已完成迁移计划 |
+| `plans/archive/` | 保存完成计划 | 已完成迁移计划 |
 
 ## 为什么单独一类
 

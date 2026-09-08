@@ -97,7 +97,7 @@ regression evidence
 
 2.0 重构时每一个 1.0 能力都必须得到明确处置；处置不确定的显式标 `Unknown / requires investigation`，不允许空白。
 
-**6. 迁移计划自身的代际标记。** 迁移工作计划不引入 `migration-gen1-to-gen2` 这种新枚举；用 `generation: gen2` + `migration_from: gen1` 表达，保持枚举简单。
+**6. 迁移计划自身的代际标记。** 迁移工作计划不引入 `migration-gen1-to-gen2` 这种新枚举；用 `generation: gen2` 表达（该计划本身属于 Generation 2），迁移来源（如「从 Generation-1 的 repo/skill 混杂迁移」）在正文背景说明，**不单独设字段**。`migration_from` 字段是可选元数据，仅当未来需要机械查询「哪些 Gen2 计划是迁移计划」时才加，默认不加以保持元数据克制。
 
 ## 后果
 

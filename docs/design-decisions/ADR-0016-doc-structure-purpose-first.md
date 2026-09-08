@@ -82,6 +82,27 @@ docs/
 
 每个 Phase 是一个独立 checkpoint（ADR-0014），gate 在 Migration Mode 下为观测性。
 
+## 后续修正（2026-09-09）：archive 只保留 `plans/`，且位置在 `docs/plans/archive/`
+
+本 ADR 原决策的 archive 子树（`plans/` / `findings/` / `research/` / `adr/` 四类）与后来确定的生命周期语义冲突，予以部分修正：
+
+- **只有 Plan 物理归档**，位置为 `docs/plans/archive/`（不是 `docs/archive/`）。
+- **Finding / Research / ADR 永不物理归档**：`Resolved` / `Superseded` / `Deprecated` 都只在原目录内更新状态（ADR-0013 已确立 Finding 不归档；ADR-0019 确认 `docs/plans/archive/` 是 archived Plans 的永久位置）。
+- 原「Phase 4：archive 按类型分子目录（plans / findings / research / adr）」修正为：**archive 仅含 `plans/` 一个子目录，位于 `docs/plans/archive/`**；不再创建 `archive/findings/`、`archive/research/`、`archive/adr/`。
+
+目标结构修正如下（archive 部分）：
+
+```text
+docs/plans/
+├── README.md                  # plans 目录管理规则
+├── roadmap/                   # 三语，持续维护，不归档
+├── PLAN-xxxx-*.md             # 当前执行计划
+└── archive/                   # 已完成计划（只有 Plan 物理归档到此处）
+    └── PLAN-xxxx-*.md
+```
+
+原正文（含 archive 四类子目录的树与 Phase 4 条文）保留作为历史决策记录；本修正以明确的接受日期 supersede 其中冲突的部分。
+
 ## 参考
 
 - Migration Mode（重构期间 gate 观测化、checkpoint 验证）：ADR-0014

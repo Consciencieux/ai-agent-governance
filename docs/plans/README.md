@@ -50,4 +50,4 @@ Plan archived    ≠   Feature deprecated    ≠   Control obsolete
 3. **归档即冻结**：`archive/` 中的 Plan 不再作为 active plan 修改，除非修正文档性错误；其内容作为历史证据与能力溯源保留。
 4. **只归档 Plan**：Finding / Research / ADR **不进入本目录**——它们不因状态变化（Resolved / Superseded）而物理归档，永久留在 `docs/findings/`、`docs/research/`、`docs/design-decisions/` 原位。
 5. **不要在 `roadmap/` 与 `archive/` 之间互相移动**：roadmap 是持续维护的方向文档，不是任务；只有 `PLAN-xxxx` 对象才走 active → archive。
-6. **每个 Plan 声明 `generation`**：`gen1`（Generation-1 历史执行记录）/ `gen2`（Generation-2 计划）/ 迁移计划可用 `gen2` + `migration_from: gen1`。归档不等于能力过时。
+6. **每个 Plan 声明 `generation`**：`gen1`（Generation-1 历史执行记录）/ `gen2`（Generation-2 计划）。迁移工作（如 2.0 迁移）用 `gen2`，迁移来源在正文背景说明；`migration_from` 是可选项，仅在需要机械查询迁移计划时加。归档不等于能力过时。
