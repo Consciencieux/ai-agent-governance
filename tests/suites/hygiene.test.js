@@ -217,4 +217,63 @@ module.exports = (test) => {
     return r.status === 1 && /--only requires a label prefix/.test(String(r.stderr || ""));
   });
 
+// run-tests.js --suite / --list — the domain-level runnable entry promised by anti-patch
+  // plan §3. RECURSION CONSTRAINT: these tests run INSIDE the hygiene suite, so they must
+  // never spawn a form that reloads hygiene — no bare invocation and no `--suite all`
+  // (both start the whole runner and would re-enter this suite). Spawn only `--list`,
+  // an unknown name, or a suite that excludes this one (`narration`). The no-arg/`all`
+  // equivalence is asserted against the source instead of by execution.
+  const RUNNER = path.join(repo, "tests", "run-tests.js");
+
+  test("run-tests --list: canonical names in SUITES declaration order", () => {
+    const r = spawnSync(process.execPath, [RUNNER, "--list"], { cwd: repo, encoding: "utf8", timeout: 60000 });
+    if (r.status !== 0) { console.error("  --list exited " + r.status); return false; }
+    const printed = String(r.stdout || "").trim().split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+    const src = fs.readFileSync(RUNNER, "utf8");
+    const block = /const SUITES = \[([\s\S]*?)\];/.exec(src);
+    if (!block) { console.error("  SUITES array not found"); return false; }
+    const declared = [...block[1].matchAll(/"\.\/suites\/([\w.-]+)\.test\.js"/g)].map((m) => m[1]);
+    if (declared.length === 0) { console.error("  parsed 0 suites from SUITES"); return false; }
+    // Order matters: --list doubles as the visible registration order, so a sorted or
+    // reordered output is a regression, not a cosmetic difference.
+    return printed.length === declared.length && printed.every((n, i) => n === declared[i]);
+  });
+
+  test("run-tests --suite: an unknown name exits 1 and lists what is available", () => {
+    const r = spawnSync(process.execPath, [RUNNER, "--suite", "no-such-suite"], { cwd: repo, encoding: "utf8", timeout: 60000 });
+    const err = String(r.stderr || "");
+    return r.status === 1 && /unknown suite: no-such-suite/.test(err) && /available:.*validator/.test(err);
+  });
+
+  test("run-tests --suite: a file-name alias is rejected (single naming rule)", () => {
+    // Accepting `docs.test.js` alongside `docs` would create a second naming rule.
+    const r = spawnSync(process.execPath, [RUNNER, "--suite", "docs.test.js"], { cwd: repo, encoding: "utf8", timeout: 60000 });
+    return r.status === 1 && /unknown suite: docs\.test\.js/.test(String(r.stderr || ""));
+  });
+
+  test("run-tests --suite: runs only the named suite (narration, not this one)", () => {
+    const r = spawnSync(process.execPath, [RUNNER, "--suite", "narration"], { cwd: repo, encoding: "utf8", timeout: 120000 });
+    const out = String(r.stdout || "");
+    if (r.status !== 0) { console.error("  --suite narration exited " + r.status); return false; }
+    // Positive: narration's own tests ran. Negative: no hygiene/validator test leaked in,
+    // which is what proves the selection actually narrowed the run.
+    const ranNarration = /narration advisory/.test(out);
+    const leaked = /coding hygiene:|validator:/.test(out);
+    if (!ranNarration || leaked) {
+      console.error("  ranNarration=" + ranNarration + " leaked=" + leaked);
+      return false;
+    }
+    return true;
+  });
+
+  test("run-tests: \`all\` reuses the no-arg full path instead of a second one", () => {
+    // Source assertion by design — executing either form here would recurse into hygiene.
+    const src = fs.readFileSync(RUNNER, "utf8");
+    const declaresDefault = /let selected = SUITES;/.test(src);
+    // `all` must leave `selected` untouched; a separate list/loop for it would be the
+    // second full path this assertion exists to forbid.
+    const allKeepsDefault = /if \(want !== "all"\)/.test(src);
+    const singleLoop = (src.match(/for \(const s of selected\) require\(s\)\(test\);/g) || []).length === 1;
+    return declaresDefault && allKeepsDefault && singleLoop;
+  });
 };
