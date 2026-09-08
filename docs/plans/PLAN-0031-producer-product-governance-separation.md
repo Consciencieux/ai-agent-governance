@@ -5,7 +5,7 @@ generation: gen2
 
 # Producer / Product Governance Separation（TASK 计划）
 
-> **Status: design plan, not implemented.**
+> **Status: Active.**（进行中。2026-09-09：完成 Profile 术语、separation invariants（ADR-0020）、cross-profile closure 契约与 ownership inventory 初稿；inventory 正在接受架构复核返工——修复混合 owner 值、补 consumers 列、拆分复合行。完成条件尚未全部达成，见「完成条件」。）
 
 **Target: repo-infra** —— 本计划分析 repo 与 skill 两个治理域，但实际交付仅修改 repo-infra；payload migration 在 ownership model 稳定后由后续 Plan 承担。
 

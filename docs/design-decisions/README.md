@@ -24,6 +24,7 @@
 | [ADR-0017: 2.0 迁移分支策略](ADR-0017-migration-branch-strategy.md) | 长期 migration/2.0 分支 + 阶段里程碑合并；main 保持 1.x 稳定 baseline；不发布 1.1/1.2 过渡；2.0 RC 后合入 | gen2 | Accepted |
 | [ADR-0018: Generation-2 开发路径](ADR-0018-generation-2-dev-path.md) | 8 阶段执行顺序（Migration Mode → Producer/Product 分离 → Core/Rule Model → Dispatcher → Invariant Testing → Review 三分）；统一 ID 编号规则；CONTROL-X 跨 profile 契约测试；测试指标转向 | gen2 | Accepted |
 | [ADR-0019: 知识对象代际元数据](ADR-0019-generation-metadata.md) | 用 metadata 不用目录：`generation`/`observed_in`/`subject_generation` 标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete；30 个归档 Plan 标 gen1，18 个 ADR 分类；RESEARCH-0006 能力基线 | cross-generation | Accepted |
+| [ADR-0020: Producer/Product Governance Separation](ADR-0020-producer-product-governance-separation.md) | Phase 1 产物：Profile 术语（repo/skill/shared semantic owner/consumer/implementation/dependency）；SSOT「共享语义单一权威 owner」；4 条 separation invariants；cross-profile closure contract（CONTROL-X 契约定义，不实现）；`owner: core` 仅为分类词汇 | gen2 | Accepted |
 
 ## 生命周期与代际
 

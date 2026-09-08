@@ -17,6 +17,7 @@ related:
     - PLAN-0031
   adrs:
     - ADR-0006
+    - ADR-0020
 ---
 
 # Producer / Product 治理耦合：物理边界已分开，语义与执行仍混杂
