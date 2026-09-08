@@ -25,12 +25,14 @@ ADR = 决策（对长期架构做出了什么决定）
 ```text
 docs/findings/
 ├── README.md                     # 本页：taxonomy、schema、生命周期、语言政策
-└── finding-xxxx-<slug>.md        # 每条一个文件，按状态变化更新，不移动路径
+└── FINDING-xxxx-<slug>.md        # 每条一个文件，按状态变化更新，不移动路径
 ```
 
-文件名用英文 ASCII slug（`finding-0001-producer-product-governance-coupling.md`），正文用简体中文；代码、命令、错误日志和专有术语保持原文。
+文件名用英文 ASCII slug（`FINDING-0001-producer-product-governance-coupling.md`），正文用简体中文；代码、命令、错误日志和专有术语保持原文。
 
-**不建立 `active/` / `archive/` 子目录，也不归档到 `docs/archive/`。** Finding 本身就是长期 evidence record，即使问题修复后仍留在原处，只更新状态字段。
+**编号规则**：`FINDING-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
+
+**不建立 `active/` / `archive/` 子目录，也不归档到 `docs/plans/archive/`。** Finding 本身就是长期 evidence record，即使问题修复后仍留在原处，只更新状态字段。
 
 ## Taxonomy：研究方向（7 方向）
 
@@ -139,7 +141,7 @@ related:
 具体缺陷（bug / false positive / typo）有两种归属，避免 `findings/` 退化成「一个 bug 一个 finding」：
 
 1. **作为 Evidence**：如果只是支撑某个更大的研究结论，就作为一级 finding 的证据子项，不单独建文件。
-2. **单独建文件**：如果问题本身值得长期独立追踪（明确产品 bug、独立生命周期），则单独建 `finding-xxxx-<slug>.md`。
+2. **单独建文件**：如果问题本身值得长期独立追踪（明确产品 bug、独立生命周期），则单独建 `FINDING-xxxx-<slug>.md`。
 
 判断标准：`这个问题独立追踪比挂在一个大 finding 下更有价值吗？` 是 → 单独建；否 → 作为 Evidence。
 

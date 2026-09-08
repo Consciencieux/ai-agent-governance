@@ -44,7 +44,7 @@ plan
 
 ## 语言规则
 
-**简体中文 canonical 单语**，与 `findings/` 一致。属于长期知识 / 方法论记录 / 项目内部研究资产，不是用户产品文档。不进入 `docs/en/` / `docs/zh-CN/` / `docs/zh-TW/`，不要求 translation parity / freshness check / 三语同步。代码、命令、错误日志、专有术语保持原文。
+**简体中文 canonical 单语**，与 `findings/` 一致。属于长期知识 / 方法论记录 / 项目内部研究资产，不是用户产品文档。不进入 `docs/product/en/` / `docs/product/zh-CN/` / `docs/product/zh-TW/`，不要求 translation parity / freshness check / 三语同步。代码、命令、错误日志、专有术语保持原文。
 
 ## 文件命名规则
 
@@ -73,6 +73,10 @@ docs/research/
 | D. Architecture Evolution | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
 | E. Current Capabilities | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
 | F. Experiments | `experiments/` | 每实验一文件 |
+
+## 编号规则
+
+`RESEARCH-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
 
 ## Frontmatter metadata
 
