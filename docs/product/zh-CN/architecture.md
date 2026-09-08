@@ -4,7 +4,7 @@
 
 本页是仓库布局——本 skill 仓库各目录用途的开发者地图。
 
-skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计原则）定义在 skill 本体里，不在本页：见 [SKILL.md](../../SKILL.md) 与 `references/`。本页只记录文件都放在哪里。
+skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计原则）定义在 skill 本体里，不在本页：见 [SKILL.md](../../../SKILL.md) 与 `references/`。本页只记录文件都放在哪里。
 
 ### 三种分发角色（给任何文件归类前先读这里）
 
@@ -119,25 +119,19 @@ ai-agent-governance/
 │
 ├── docs/                       # 项目知识——开发者维护，开发者与 Agent 共享读取（触发词、计划、路线图）
 │   ├── glossary.md             # 三语术语对照表（共享）
-│   ├── findings/               # Issue/Finding 档案（共享，简体单语；状态就地更新，不设 active/archive 子目录）
+│   ├── product/                # 用户向文档——三语
+│   │   ├── en/                 # 英文树（architecture.md = 本页）
+│   │   ├── zh-CN/              # 简体中文树（源语言；含 README.md、CONTRIBUTING.md）
+│   │   └── zh-TW/              # 繁體中文树（台湾；含 README.md、CONTRIBUTING.md）
+│   ├── plans/                  # 执行计划（简体单语 canonical）
+│   │   ├── roadmap/            # 路线图——三语边界对象（{en,zh-CN,zh-TW}.md）
+│   │   ├── PLAN-xxxx-*.md      # 进行中的设计计划
+│   │   └── archive/            # 已完成计划归档（共享，单语）
+│   ├── findings/               # Issue/Finding 档案（共享，简体单语；状态就地更新，永不归档）
 │   ├── research/               # 研究知识库——系统模型、机制分类、评价框架（共享，简体单语；版本化/supersede 演进）
-│   ├── design-decisions/       # 架构决策记录（共享，简体单语）
-│   ├── archive/                # 已完成计划归档（共享，单语）
-│   ├── en/                     # 英文树
-│   │   ├── architecture.md     # 本页
-│   │   ├── governance-model.md # Spec / Status / Health 概念摘要
-│   │   ├── anti-regression.md  # 防乱改机制开发者地图
-│   │   ├── lifecycle.md        # 六阶段生命周期开发者摘要
-│   │   ├── validator.md        # 校验器用法手册
-│   │   ├── skill-discovery.md  # Agent 如何发现并触发 skill
-│   │   ├── commands.md         # 完整提示词参考（用户入口命令）
-│   │   ├── bootstrap-output.md # 完整带注释的初始化产物
-│   │   ├── roadmap.md          # 待开发功能与状态
-│   │   └── plans/              # 设计计划（TASK 格式）
-│   ├── zh-CN/                  # 简体中文树（源语言）
-│   └── zh-TW/                  # 繁體中文树（台湾）
-├── README.md                   # 英文主页（翻译：docs/zh-CN/README.md、docs/zh-TW/README.md）
-├── CONTRIBUTING.md             # 开发指南（翻译：docs/zh-CN/CONTRIBUTING.md、docs/zh-TW/CONTRIBUTING.md）
+│   └── design-decisions/       # 架构决策记录（共享，简体单语）
+├── README.md                   # 英文主页（翻译：docs/product/zh-CN/README.md、docs/product/zh-TW/README.md）
+├── CONTRIBUTING.md             # 开发指南（翻译：docs/product/zh-CN/CONTRIBUTING.md、docs/product/zh-TW/CONTRIBUTING.md）
 ├── AGENTS.md                   # 本仓库的 Agent 工作指南
 ├── CHANGELOG.md                # 发布历史
 ├── package.json                # npm 脚本（test、check）

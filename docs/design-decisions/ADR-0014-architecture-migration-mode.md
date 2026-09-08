@@ -58,7 +58,7 @@ Release Candidate → 完整 regression + security + packaging + release gates
 
 ## 参考
 
-- 科研测量缺口：FINDING-0008（`docs/findings/finding-0008-governance-measurement-gap.md`）
-- review 层级错位：FINDING-0014（`docs/findings/finding-0014-review-manager-layer-mismatch.md`）
+- 科研测量缺口：FINDING-0008（`docs/findings/FINDING-0008-governance-measurement-gap.md`）
+- review 层级错位：FINDING-0014（`docs/findings/FINDING-0014-review-manager-layer-mismatch.md`）
 - Finding 档案与知识对象五分类：ADR-0013
 - Finding schema / taxonomy / 生命周期：`docs/findings/README.md`

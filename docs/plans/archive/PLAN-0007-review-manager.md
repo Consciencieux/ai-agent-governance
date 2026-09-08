@@ -4,7 +4,7 @@ id: PLAN-0007
 
 # Review Manager（TASK 计划）
 
-> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-08-29）。 本页保留路线图条目 `Review manager` 的设计记录；实现位于 `references/templates/sub-skills.md` 第 8 节（见 [roadmap.md](../zh-CN/roadmap.md)）。）
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-08-29）。 本页保留路线图条目 `Review manager` 的设计记录；实现位于 `references/templates/sub-skills.md` 第 8 节（见 [roadmap.md(../roadmap/zh-CN.md)）。）
 
 ### 任务目的
 

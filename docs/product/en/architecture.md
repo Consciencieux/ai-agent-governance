@@ -4,7 +4,7 @@
 
 This page is the repository layout — a developer-facing map of what each directory is FOR in this skill repo.
 
-The skill's behavior (operating modes INIT/AUDIT/RELEASE, lifecycle pipeline, design principles) is defined in the skill body, not here: see [SKILL.md](../../SKILL.md) and `references/`. This page only records where things live.
+The skill's behavior (operating modes INIT/AUDIT/RELEASE, lifecycle pipeline, design principles) is defined in the skill body, not here: see [SKILL.md](../../../SKILL.md) and `references/`. This page only records where things live.
 
 ### Three distribution roles (read this before classifying any file)
 
@@ -146,25 +146,19 @@ ai-agent-governance/
 │
 ├── docs/                       # project knowledge — developer-maintained, read by developers & agents (trigger words, plans, roadmap)
 │   ├── glossary.md             # trilingual terminology table (shared)
-│   ├── findings/               # Issue/Finding archive (shared, single-language 简体中文; status change in place, no active/archive split)
+│   ├── product/                # user-facing docs — trilingual
+│   │   ├── en/                 # English tree (architecture.md = this page)
+│   │   ├── zh-CN/              # 简体中文 tree (canonical source; incl. README.md, CONTRIBUTING.md)
+│   │   └── zh-TW/              # 繁體中文 tree (Taiwan; incl. README.md, CONTRIBUTING.md)
+│   ├── plans/                  # execution plans (single-language zh-CN canonical)
+│   │   ├── roadmap/            # roadmap — trilingual boundary object ({en,zh-CN,zh-TW}.md)
+│   │   ├── PLAN-xxxx-*.md      # active design plans
+│   │   └── archive/            # completed plan archives (shared, single-language)
+│   ├── findings/               # Issue/Finding archive (shared, single-language 简体中文; status change in place, never archived)
 │   ├── research/               # research knowledge base — system model, mechanism taxonomy, evaluation framework (shared, single-language 简体中文, versioned/superseded)
-│   ├── design-decisions/       # architecture decision records (shared, single-language 简体中文)
-│   ├── archive/                # completed plan archives (shared, single-language)
-│   ├── en/                     # English tree
-│   │   ├── architecture.md     # this page
-│   │   ├── governance-model.md # Spec / Status / Health concept summary
-│   │   ├── anti-regression.md  # developer map of anti-regression mechanisms
-│   │   ├── lifecycle.md        # 6-phase lifecycle developer summary
-│   │   ├── validator.md        # validator usage manual
-│   │   ├── skill-discovery.md  # how agents discover and trigger the skill
-│   │   ├── commands.md         # full prompt reference (user-facing commands)
-│   │   ├── bootstrap-output.md # complete annotated initialization output
-│   │   ├── roadmap.md          # planned features and status
-│   │   └── plans/              # design plans (TASK format)
-│   ├── zh-CN/                  # 简体中文 tree (canonical source)
-│   └── zh-TW/                  # 繁體中文 tree (Taiwan)
-├── README.md                   # English landing (translations: docs/zh-CN/README.md, docs/zh-TW/README.md)
-├── CONTRIBUTING.md             # development guide (translations: docs/zh-CN/CONTRIBUTING.md, docs/zh-TW/CONTRIBUTING.md)
+│   └── design-decisions/       # architecture decision records (shared, single-language 简体中文)
+├── README.md                   # English landing (translations: docs/product/zh-CN/README.md, docs/product/zh-TW/README.md)
+├── CONTRIBUTING.md             # development guide (translations: docs/product/zh-CN/CONTRIBUTING.md, docs/product/zh-TW/CONTRIBUTING.md)
 ├── AGENTS.md                   # agent guidelines for working on this repo
 ├── CHANGELOG.md                # release history
 ├── package.json                # npm scripts (test, check)

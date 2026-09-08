@@ -1,6 +1,6 @@
 # Contributing
 
-[English](CONTRIBUTING.md) · [简体中文](docs/zh-CN/CONTRIBUTING.md) · [繁體中文](docs/zh-TW/CONTRIBUTING.md)
+[English](CONTRIBUTING.md) · [简体中文](docs/product/zh-CN/CONTRIBUTING.md) · [繁體中文](docs/product/zh-TW/CONTRIBUTING.md)
 
 ## Development
 
@@ -12,20 +12,20 @@ CI runs it on every push/PR.
 
 ## Where Things Live
 
-The full repository layout — every directory and its role, down to individual scripts — is documented in [docs/en/architecture.md](docs/en/architecture.md) (Repository Layout, single source of truth). Pointers only:
+The full repository layout — every directory and its role, down to individual scripts — is documented in [docs/product/en/architecture.md](docs/product/en/architecture.md) (Repository Layout, single source of truth). Pointers only:
 
 | Path | Where documented |
 | --- | --- |
-| `SKILL.md` · `references/` · `scripts/` | `docs/en/architecture.md` § Repository Layout |
+| `SKILL.md` · `references/` · `scripts/` | `docs/product/en/architecture.md` § Repository Layout |
 | `tests/run-tests.js` | test harness — run with `npm test` |
-| `docs/` trees · `docs/glossary.md` · `docs/design-decisions/` · `docs/archive/` | per-language docs, glossary, ADRs, archives |
+| `docs/` trees · `docs/glossary.md` · `docs/design-decisions/` · `docs/plans/archive/` | per-language docs, glossary, ADRs, archives |
 
-**Where does a new file go?** If the file defines governance behavior or generation mechanisms that agents must follow → `references/`. If it is project knowledge — how to use, maintain or contribute, read by developers AND agents working in this repo — → `docs/<language>/`. Test, CI and other development infrastructure go in their respective directories (`tests/`, `.github/`, ...).
+**Where does a new file go?** If the file defines governance behavior or generation mechanisms that agents must follow → `references/`. If it is project knowledge — how to use, maintain or contribute, read by developers AND agents working in this repo — → `docs/product/<language>/`. Test, CI and other development infrastructure go in their respective directories (`tests/`, `.github/`, ...).
 
 ## Language Policy (by audience)
 
 - **Agent-facing files are single-language** — `SKILL.md`, `AGENTS.md`, `references/**`, and the bodies of generated artifacts (AGENTS.md, rules, sub-skills) never carry a second language section. Convention: this skill's own execution docs (`SKILL.md`, `references/policies`, `references/workflows`) are 中文; auto-loaded agent guidance (`AGENTS.md`, template bodies) is English.
-- **Developer-facing files are trilingual and split** - the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`); the 简体中文/繁體中文 translations live inside their trees (`docs/zh-CN/README.md`, `docs/zh-TW/README.md`, ...). **简体中文 (zh-CN) is the canonical source** - edits originate there, then propagate to English and 繁體中文 (Taiwan usage). Editing one language requires updating the other two in the same change (stable docs). In-flight drafts may defer translation until they stabilize, but the parity gate must pass before push/release. Parity mapping: the English entry files are the root `README.md`/`CONTRIBUTING.md` (not duplicated under `docs/en/`). Structural parity is enforced by `repo-tools/check-doc-parity.js` (CI + release precondition `docs.parity_passed`).
+- **Developer-facing files are trilingual and split** - the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`); the 简体中文/繁體中文 translations live inside their trees (`docs/product/zh-CN/README.md`, `docs/product/zh-TW/README.md`, ...). **简体中文 (zh-CN) is the canonical source** - edits originate there, then propagate to English and 繁體中文 (Taiwan usage). Editing one language requires updating the other two in the same change (stable docs). In-flight drafts may defer translation until they stabilize, but the parity gate must pass before push/release. Parity mapping: the English entry files are the root `README.md`/`CONTRIBUTING.md` (not duplicated under `docs/product/en/`). Structural parity is enforced by `repo-tools/check-doc-parity.js` (CI + release precondition `docs.parity_passed`).
 - **Terminology** — before introducing a term, check `docs/glossary.md` and add the trilingual entry if missing; keep renderings consistent across all files.
 
 ## Changing Governance Artifacts

@@ -3,7 +3,7 @@ id: PLAN-0002
 ---
 
 # Git Workflow Governance（TASK 计划）
-> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（v0.5.0，已归档）。 本页是路线图条目 `Git workflow governance` 的 TASK 计划（见 [roadmap.md](../zh-CN/roadmap.md)）；按归档规则随 v0.5.0 发布归档于此。）
+> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（v0.5.0，已归档）。 本页是路线图条目 `Git workflow governance` 的 TASK 计划（见 [roadmap.md(../roadmap/zh-CN.md)）；按归档规则随 v0.5.0 发布归档于此。）
 
 ### 任务目的
 

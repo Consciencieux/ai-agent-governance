@@ -4,7 +4,7 @@
 
 The three-state model behind "Governance as Code": desired / current / observed state, tracked as version-controlled files inside the repository.
 
-**The full machine-state specification lives in the skill body** — [SKILL.md](../../SKILL.md) (".governance/ 机器可读状态" section). This page is a developer summary of the concept.
+**The full machine-state specification lives in the skill body** — [SKILL.md](../../../SKILL.md) (".governance/ 机器可读状态" section). This page is a developer summary of the concept.
 
 ### Spec / Status / Health
 
@@ -28,6 +28,6 @@ They are separate. Bumping the framework does not require a schema change.
 
 ### Where the rest lives
 
-MIGRATE flow, path resolution, runtime outputs and the activity audit trail are skill behavior — see [SKILL.md](../../SKILL.md) and `references/` (the generated state-manager sub-skill writes `.governance/activity.jsonl`).
+MIGRATE flow, path resolution, runtime outputs and the activity audit trail are skill behavior — see [SKILL.md](../../../SKILL.md) and `references/` (the generated state-manager sub-skill writes `.governance/activity.jsonl`).
 
 ---

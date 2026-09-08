@@ -4,7 +4,7 @@
 
 "治理即代码"背后的三层状态模型：期望态 / 当前态 / 观测态，以可版本控制的文件存在于仓库内。
 
-**完整机器状态规范在 skill 本体里** —— [SKILL.md](../../SKILL.md)（".governance/ 机器可读状态"一节）。本页只是开发者概念摘要。
+**完整机器状态规范在 skill 本体里** —— [SKILL.md](../../../SKILL.md)（".governance/ 机器可读状态"一节）。本页只是开发者概念摘要。
 
 ### Spec / Status / Health
 
@@ -28,6 +28,6 @@
 
 ### 其余内容在哪
 
-MIGRATE 流程、路径解析、运行时输出与行为审计轨迹都是 skill 行为 —— 见 [SKILL.md](../../SKILL.md) 与 `references/`（生成的 state-manager 子技能写入 `.governance/activity.jsonl`）。
+MIGRATE 流程、路径解析、运行时输出与行为审计轨迹都是 skill 行为 —— 见 [SKILL.md](../../../SKILL.md) 与 `references/`（生成的 state-manager 子技能写入 `.governance/activity.jsonl`）。
 
 ---

@@ -42,7 +42,7 @@ AI 分析当前仓库状态：
 - 当前 Git tag / 当前版本号（`git tag -l`、`package.json`）
 - `git log` 与 `git diff`（自上次发布以来的变更）
 - 文件变化、API/interface 变化、用户可见功能变化
-- **已裁定延后的发布安全事项**：读 `docs/{en,zh-CN,zh-TW}/roadmap.md` 的「Deferred release-safety decisions」小节。这些条目记录了「门禁绿灯」实际证明范围之外的已知缺口——发布前必须知道自己在依赖什么、不在依赖什么。它们不阻断发布，但若某条的触发条件已经成立（例如本次发布要求证明评审者身份），应先停下另开 TASK 计划。
+- **已裁定延后的发布安全事项**：读 `docs/plans/roadmap/{en,zh-CN,zh-TW}.md` 的「Deferred release-safety decisions」小节。这些条目记录了「门禁绿灯」实际证明范围之外的已知缺口——发布前必须知道自己在依赖什么、不在依赖什么。它们不阻断发布，但若某条的触发条件已经成立（例如本次发布要求证明评审者身份），应先停下另开 TASK 计划。
 
 运行只读分析工具生成 Proposal：
 
@@ -98,16 +98,16 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 3. **计划交付对账 + 发布门禁（全部在 release commit 之前）**：
    - `node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
    - `npm run check:skill-release`（exit 0；含 `check-doc-consistency.js --release-gate` 与 `check-doc-freshness.js --release-gate`）。**在归档与提交之前运行**：pending-archive（implemented 计划未归档）与 changelog 覆盖在此阶段失败还来得及补救——版本节推进有 `version_examples` 簇机械验证（CHANGELOG 最新版本节必须等于 package.json version，v0.13.1 发布曾因无此检查而漏改 CHANGELOG）。
-4. **归档计划**：已完成的 `TASK_<name>.md` 移入 `docs/archive/`（技能仓库共享单语），**保留原文，绝不删除**。
+4. **归档计划**：已完成的 `TASK_<name>.md` 移入 `docs/plans/archive/`（技能仓库共享单语），**保留原文，绝不删除**。
    - **归档冲突规则**：一份计划在本仓库存在三份语言副本（`docs/{en,zh-CN,zh-TW}/plans/X.md`），而 `docs/archive/` 是共享单语目录。**以简体中文副本为准**；en / zh-TW 副本不是归档候选。最终 `docs/archive/` 下只有一个 `X.md`。
-   - 未完成的计划继续留在各语言树的 `plans/` 下。
+   - 未完成的计划继续留在 `docs/plans/` 下。
 5. **更新 roadmap**：按
-   `docs/en/roadmap.md`
+   `docs/plans/roadmap/en.md`
    维护规则重置 horizon——roadmap 是索引而非事实源（设计计划是单一事实源）。**对账义务**：逐项检查自上次发布以来所有计划事件（新建、归档、implemented、withdrawn）是否同步反映到 roadmap：implemented 计划移入 Done 并链接归档（未归档的链接自
    `plans/`，发布时改为
    `archive/`）；新建计划在对应 horizon 加链接；已归档/撤回计划从活跃 horizon 移除；无设计计划的条目显式标注。**遗漏即治理缺陷**，不因门禁绿而豁免。
 
-   **计划链接迁移（roadmap 与 CHANGELOG 两个表面）**：归档把计划从 `docs/*/plans/` 移到 `docs/archive/`，因此指向 `plans/` 的相对路径在归档后全部变成死链。roadmap 按上述规则改写链接；CHANGELOG 的做法不同——**条目引用计划时只写计划名称，不写路径**（如 `(plan: governance-defect-closure)`），这样归档不会使历史记录断链，也不需要在每次发布时回改已发布的版本节。ADR 编号稳定，可以直接引用（如 `(ADR-0012)`）。归档后检查：`rg 'plans/<slug>' CHANGELOG.md` 应无命中。
+   **计划链接迁移（roadmap 与 CHANGELOG 两个表面）**：归档把计划从 `docs/plans/` 移到 `docs/plans/archive/`，因此指向 `plans/` 的相对路径在归档后全部变成死链。roadmap 按上述规则改写链接；CHANGELOG 的做法不同——**条目引用计划时只写计划名称，不写路径**（如 `(plan: governance-defect-closure)`），这样归档不会使历史记录断链，也不需要在每次发布时回改已发布的版本节。ADR 编号稳定，可以直接引用（如 `(ADR-0012)`）。归档后检查：`rg 'plans/<slug>' CHANGELOG.md` 应无命中。
 6. **提交 release commit**：`git add`（版本同步、归档与 roadmap 相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 7. **复跑轻量门禁**（release commit 之后、tag 之前）：`npm run check`（exit 0）——确认归档与版本同步的提交内容本身没有破坏任何门禁。
 8. **校验（本仓库以 `npm test` 为准）**：技能仓库的校验义务由第 7 步的 `npm test` + 发布门禁承担。`scripts/verify_governance.js` 在本仓库**预期退出码 1**（无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败——ADR-0006，本仓库不 dogfood 自身框架）。它不是本流程的门禁：**不得为了让它通过而伪造 `.governance/`**，也不得因其非零退出码而中止发布。

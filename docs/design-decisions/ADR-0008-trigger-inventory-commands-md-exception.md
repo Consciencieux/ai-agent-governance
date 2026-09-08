@@ -8,7 +8,7 @@ AGENTS.md 存在两条相互矛盾的规则：第 47 行“Never restate skill c
 
 也就是说：门禁把“复制完整触发词清单”变成强制状态，而散文规则把它列为禁止。两条规则无法同时满足；且 prompt-sync 本身只是 advisory（写入 `issues.prompt_sync`，不进入 `gateIssues`），所以现状是“禁令不执行、强制不生效”——真正的失败模式是：子技能的触发词只活在 `references/templates/sub-skills.md`，用户从命令手册中无法发现新技能；或 commands.md 残留已删除的触发词，门禁只查“缺失”不查“残留”。
 
-本 ADR 记录该冲突的裁定与后续方向，来自 2026-09-05 一次只读排查（详见 `docs/archive/gate-repair-and-ssot-alignment.md` 的 B1 与 gate-repair-and-ssot-alignment 计划的 §B，以及术语/一致性门禁运维经验）。
+本 ADR 记录该冲突的裁定与后续方向，来自 2026-09-05 一次只读排查（详见 `docs/plans/archive/gate-repair-and-ssot-alignment.md` 的 B1 与 gate-repair-and-ssot-alignment 计划的 §B，以及术语/一致性门禁运维经验）。
 
 ## 决策
 

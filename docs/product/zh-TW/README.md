@@ -6,7 +6,7 @@
 [![CI](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Consciencieux/ai-agent-governance)](https://github.com/Consciencieux/ai-agent-governance/releases)
 
-[English](../../README.md) · [简体中文](../zh-CN/README.md) · [繁體中文](README.md)
+[English](../../../README.md) · [简体中文](../zh-CN/README.md) · [繁體中文](README.md)
 
 ## 它是什麼
 
@@ -130,7 +130,7 @@ my-project/
 
 ## 產生的環境
 
-INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](../../references/init-spec.json) 與 [references/templates/sub-skills.md](../../references/templates/sub-skills.md) 定義。
+INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](../../../references/init-spec.json) 與 [references/templates/sub-skills.md](../../../references/templates/sub-skills.md) 定義。
 
 ## 文件
 
@@ -142,11 +142,11 @@ INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳
 - [docs/zh-TW/anti-regression.md](anti-regression.md) — 防亂改機制完整明細
 - [docs/zh-TW/lifecycle.md](lifecycle.md) — Agent 六階段操作生命週期
 - [docs/zh-TW/validator.md](validator.md) — 校驗器用法與檢查項
-- [docs/zh-TW/roadmap.md](roadmap.md) — 帶狀態與設計文件的 roadmap
-- [docs/design-decisions/](../design-decisions/) — 架構決策記錄（ADR，簡體中文）
-- [docs/glossary.md](../glossary.md) — 三語術語對照表
+- [docs/plans/roadmap/zh-TW.md](../../plans/roadmap/zh-TW.md) — 帶狀態與設計文件的 roadmap
+- [docs/design-decisions/](../../design-decisions/) — 架構決策記錄（ADR，簡體中文）
+- [docs/glossary.md](../../glossary.md) — 三語術語對照表
 - [CONTRIBUTING.md](CONTRIBUTING.md) — 開發指南
-- [CHANGELOG.md](../../CHANGELOG.md) — 發佈歷史
+- [CHANGELOG.md](../../../CHANGELOG.md) — 發佈歷史
 
 ## 1.0 之後的方向
 
@@ -154,4 +154,4 @@ v1.0 凍結了核心治理契約。後續工作將在此基礎上繼續擴展系
 
 ## License
 
-[MIT](../../LICENSE) © 2026 Consciencieux
+[MIT](../../../LICENSE) © 2026 Consciencieux

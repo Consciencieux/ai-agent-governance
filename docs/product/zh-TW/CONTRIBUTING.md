@@ -1,6 +1,6 @@
 # 貢獻指南
 
-[English](../../CONTRIBUTING.md) · [简体中文](../zh-CN/CONTRIBUTING.md) · [繁體中文](CONTRIBUTING.md)
+[English](../../../CONTRIBUTING.md) · [简体中文](../zh-CN/CONTRIBUTING.md) · [繁體中文](CONTRIBUTING.md)
 
 ## 開發
 
@@ -18,7 +18,7 @@ CI 每次 push/PR 運行。
 | --- | --- |
 | `SKILL.md` · `references/` · `scripts/` | `docs/zh-TW/architecture.md` § Repository Layout |
 | `tests/run-tests.js` | 測試入口——`npm test` 運行 |
-| `docs/` 樹 · `docs/glossary.md` · `docs/design-decisions/` · `docs/archive/` | 各語言文件、術語表、ADR、歸檔 |
+| `docs/` 樹 · `docs/glossary.md` · `docs/design-decisions/` · `docs/plans/archive/` | 各語言文件、術語表、ADR、歸檔 |
 
 **新檔案放哪裡？** 如果檔案定義 Agent 必須遵循的治理行為或產生機制 → `references/`；如果是專案知識——開發者與在本倉庫工作的 Agent 共享讀取如何用、維護、貢獻 → `docs/<語言>/`；測試、CI 等開發基礎設施放入對應目錄（`tests/`、`.github/` 等）。
 
@@ -72,4 +72,4 @@ CI 每次 push/PR 運行。
 
 ## License
 
-[MIT](../../LICENSE) © 2026 Consciencieux
+[MIT](../../../LICENSE) © 2026 Consciencieux

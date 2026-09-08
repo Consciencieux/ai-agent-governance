@@ -27,7 +27,7 @@ GitHub Issue 提供 open/closed 生命周期与协作，但不提供：Git histo
 
 **2. repo 内 Finding 是 canonical research record；GitHub Issue 是 collaboration projection。** 两者不是双向镜像：Issue 可以有大量讨论，`docs/findings/` 只保存稳定信息（观察、证据、根因、解决、回归保护）。全文同步会制造 Declaration ↔ Projection drift，正是本项目一直要消除的缺陷。
 
-**3. Finding 生命周期用状态表达，不移动路径。** 状态枚举为 `Proposed / Confirmed / Resolved / Superseded / Invalidated`（不用 Open/Closed——Issue 问「要不要做」，Finding 问「事实是否存在」，Closed 会产生知识消失的语义），在文件内更新；**不建立 `docs/archive/findings/`**。Resolved finding ≠ archived finding——修复后它仍要回答「怎么复现、根因、哪个 regression 保护、关联哪个 ADR/Plan/Issue」。这与 Plan 的 `active → archive` 生命周期本质不同。状态机与 severity/type 分类的完整条文在 `docs/findings/README.md`。
+**3. Finding 生命周期用状态表达，不移动路径。** 状态枚举为 `Proposed / Confirmed / Resolved / Superseded / Invalidated`（不用 Open/Closed——Issue 问「要不要做」，Finding 问「事实是否存在」，Closed 会产生知识消失的语义），在文件内更新；**不建立 `docs/plans/archive/findings/`**。Resolved finding ≠ archived finding——修复后它仍要回答「怎么复现、根因、哪个 regression 保护、关联哪个 ADR/Plan/Issue」。这与 Plan 的 `active → archive` 生命周期本质不同。状态机与 severity/type 分类的完整条文在 `docs/findings/README.md`。
 
 **4. 语言政策：historical/research evidence 使用单一 canonical language（简体中文）。** 与 ADR-0005 的三语拆分不冲突——三语服务于 active operational knowledge；findings 从创建开始就是简体中文单语，不进入三语树，不参与 parity/freshness。避免重新制造 translation sync / parity / freshness / review 成本。
 
@@ -45,5 +45,5 @@ GitHub Issue 提供 open/closed 生命周期与协作，但不提供：Git histo
 
 - Finding schema / taxonomy / 生命周期：`docs/findings/README.md`
 - 四类载体职责边界：ADR-0012
-- review 层级错位：FINDING-0014（`docs/findings/finding-0014-review-manager-layer-mismatch.md`）
+- review 层级错位：FINDING-0014（`docs/findings/FINDING-0014-review-manager-layer-mismatch.md`）
 - 索引与事实源的边界：ADR-0009

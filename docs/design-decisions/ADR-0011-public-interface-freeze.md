@@ -47,5 +47,5 @@
 ## 参考
 
 - SemVer 纪律与发布流程：`references/workflows/release.md`
-- 分发角色与三类边界：`docs/en/architecture.md`
+- 分发角色与三类边界：`docs/product/en/architecture.md`
 - 破坏性变更的升级路径：`SKILL.md` § 版本迁移（MIGRATE）
