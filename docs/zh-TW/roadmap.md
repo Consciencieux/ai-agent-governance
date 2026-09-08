@@ -6,6 +6,7 @@
 
 ### 已完成
 
+- **領域級測試入口** —— `node tests/run-tests.js --suite <name>` / `--list` 開發迴圈快速入口；`npm test` 與所有閘門保持全量（[計劃](plans/run-tests-suite-entry.md)）
 - **載荷治理教訓** —— 宣告與機制的差距、證據等級（機械 / 人工背書 / 未驗證）、測試活性（空洞測試、事實源）、移動後列舉複查、CI 閘門完整性現已成為 INSTALLED 規則，不再只是本倉庫的內部記憶。設計：[../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
 - AGENTS.md 治理引導
 - Feature 登記
@@ -44,6 +45,7 @@
 
 ### 近期
 
+- **治理缺陷閉環** —— 已確認治理缺陷後，閉合同類實例並審查規則/範本/產生器/閘門/測試/發佈控制面。設計：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **多 Agent 協調協定** —— 並發 Agent 之間的標準化協調（鎖檢查已交付；review-manager 的並行子代理是其第一個真實用例）。*尚無設計計劃*
 - **遠端治理看板** —— 被治理倉庫的可觀測性（依賴：稽核軌跡 + 健康分，均已交付）
 - **monorepo 多治理域** —— 校驗器多根解析 + 多 manifest（出現真實 monorepo 需求時再做）

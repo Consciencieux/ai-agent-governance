@@ -1,6 +1,6 @@
 # Suite-level test entry (run-tests.js --suite) (TASK plan)
 
-> **Status: design plan, not implemented.** (Design plan, not implemented. Approved for planning: this plan is the **approved-commitment tail** of the anti-patch-development plan `anti-patch-development.md` §3 — "split uses a baseline-decay strategy... and retain a domain-level runnable entry after each migration" — not a new mechanism; the engineering-restraint "machinery test" is not triggered and the "approved requirements first" boundary protects it.)
+> **Status: implemented.** (Implemented, pending release archival. This plan is the **approved-commitment tail** of the anti-patch-development plan `anti-patch-development.md` §3 — "split uses a baseline-decay strategy... and retain a domain-level runnable entry after each migration" — not a new mechanism; the engineering-restraint "machinery test" is not triggered and the "approved requirements first" boundary protects it.)
 
 **Target: repo-infra** — `run-tests.js` is this repository's test runner (REPO-ONLY, not distributed by INIT); the change affects only this repository's dev loop and test architecture.
 
@@ -61,7 +61,7 @@ Measured (2026-09-08 basis): consistency(68) docs(51) generator(33) hygiene(16) 
 
 1. `node tests/run-tests.js --list` → prints 11 canonical names in `SUITES` order, exit 0.
 2. `node tests/run-tests.js --suite unknown` → exit 1, stderr lists available suites.
-3. `node tests/run-tests.js --suite hygiene` → runs only the hygiene suite (16 tests), no other suite's output.
+3. `node tests/run-tests.js --suite hygiene` → runs only the hygiene suite (21 after implementation: the original 16 plus this plan's 5 CLI assertions), no other suite's output.
 4. Full semantics of no-args and `--suite all`: **verified without recursion** (see below).
 5. `npm run check` → full gate, exit 0 (existing scripts unaffected).
 
@@ -95,13 +95,13 @@ A CLI regression test **must not** execute, inside a test body, any form that re
 
 ### Known limitations
 
-- Manual entry, limited performance gain (dev loop 42.9s → fastest single suite 0.3s hygiene).
+- Manual entry, limited performance gain (dev loop 42.9s → fastest single suite 0.4s hygiene).
 - Does not change the absolute cost of full tests.
 - CI does not use the flag (CI stays full).
 
 ### Completion conditions
 
 - `npm run check` exit 0
-- `npm test` exit 0 (326/326 or equivalent baseline)
-- All 4 CLI behaviours have regression assertions that go red on decay (mutation-verified)
+- `npm test` exit 0 — post-implementation baseline **330/331 with 0 failures**; the difference of 1 is the pre-existing honest skip (`validator: symlinked generated SKILL.md`, Windows EPERM prevents symlink creation), not introduced by this plan and not a failure
+- All 5 CLI behaviours have regression assertions that go red on decay (mutation verification: 5/5 killed)
 - Trilingual doc parity passes

@@ -1,6 +1,6 @@
 # 領域級測試入口（run-tests.js --suite）（TASK 計劃）
 
-> **Status: design plan, not implemented.**（設計計劃，未實作。已核准立案：本計劃是反補丁計劃 `anti-patch-development.md` §3「拆分採用基線遞減策略…並在每次遷移後保留領域級可執行入口」的**既核准承諾尾款**，不是新機制；工程克制「機制測試」不觸發，受「已核准需求優先」邊界保護。）
+> **Status: implemented.**（已實作，待 Release 歸檔。本計劃是反補丁計劃 `anti-patch-development.md` §3「拆分採用基線遞減策略…並在每次遷移後保留領域級可執行入口」的**既核准承諾尾款**，不是新機制；工程克制「機制測試」不觸發，受「已核准需求優先」邊界保護。）
 
 **Target：repo-infra** —— `run-tests.js` 是本倉庫測試執行器（REPO-ONLY，不隨 INIT 分發），變更只影響本倉庫的開發迴圈與測試架構。
 
@@ -61,7 +61,7 @@ plan-delivery
 
 1. `node tests/run-tests.js --list` → 按 `SUITES` 順序輸出 11 個 canonical name，exit 0。
 2. `node tests/run-tests.js --suite unknown` → exit 1，stderr 列出可用套件。
-3. `node tests/run-tests.js --suite hygiene` → 只執行 hygiene 套件（16 個），不含其他套件輸出。
+3. `node tests/run-tests.js --suite hygiene` → 只執行 hygiene 套件（實作後 21 個：原 16 + 本計劃新增 5 條 CLI 斷言），不含其他套件輸出。
 4. 無參與 `--suite all` 的全量語意：**用不遞迴的方式驗證**（見下）。
 5. `npm run check` → 全量閘門 exit 0（既有指令碼不受影響）。
 
@@ -95,13 +95,13 @@ CLI 回歸測試**不得**在測試體內執行會重新載入當前套件的形
 
 ### 已知限制
 
-- 手動入口，效能改善有限（開發迭代 42.9s → 單套件最快 0.3s hygiene）。
+- 手動入口，效能改善有限（開發迭代 42.9s → 單套件最快 0.4s hygiene）。
 - 不改變全量測試的絕對成本。
 - CI 不帶該參數（CI 繼續全量）。
 
 ### 驗證完成條件
 
 - `npm run check` exit 0
-- `npm test` exit 0（326/326 或等價基線）
-- 4 條 CLI 行為全部有回歸斷言，且斷言在退化時變紅（變異驗證）
+- `npm test` exit 0 —— 實作後基線 **330/331，失敗 0**；差值 1 是既有 honest skip（`validator: symlinked generated SKILL.md`，Windows EPERM 無法建立符號連結），非本計劃引入，非失敗
+- 5 條 CLI 行為全部有回歸斷言，且斷言在退化時變紅（變異驗證 5/5 全部被殺死）
 - 三語文件 parity 通過

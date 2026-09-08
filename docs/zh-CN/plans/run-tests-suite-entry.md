@@ -1,6 +1,6 @@
 # 领域级测试入口（run-tests.js --suite）（TASK 计划）
 
-> **Status: design plan, not implemented.**（设计计划，未实现。已批准立项：本计划是反补丁计划 `anti-patch-development.md` §3「拆分采用基线递减策略…并在每次迁移后保留领域级可运行入口」的**既批准承诺尾款**，不是新机制；工程克制「机制测试」不触发，受「已批准需求优先」边界保护。）
+> **Status: implemented.**（已实现，待 Release 归档。本计划是反补丁计划 `anti-patch-development.md` §3「拆分采用基线递减策略…并在每次迁移后保留领域级可运行入口」的**既批准承诺尾款**，不是新机制；工程克制「机制测试」不触发，受「已批准需求优先」边界保护。）
 
 **Target：repo-infra** —— `run-tests.js` 是本仓库测试运行器（REPO-ONLY，不随 INIT 分发），改动只影响本仓库的开发循环与测试架构。
 
@@ -61,7 +61,7 @@ plan-delivery
 
 1. `node tests/run-tests.js --list` → 按 `SUITES` 顺序输出 11 个 canonical name，exit 0。
 2. `node tests/run-tests.js --suite unknown` → exit 1，stderr 列出可用套件。
-3. `node tests/run-tests.js --suite hygiene` → 只执行 hygiene 套件（16 个），不含其他套件输出。
+3. `node tests/run-tests.js --suite hygiene` → 只执行 hygiene 套件（实现后 21 个：原 16 + 本计划新增 5 条 CLI 断言），不含其他套件输出。
 4. 无参与 `--suite all` 的全量语义：**用不递归的方式验证**（见下）。
 5. `npm run check` → 全量门禁 exit 0（既有脚本不受影响）。
 
@@ -95,13 +95,13 @@ CLI 回归测试**不得**在测试体内执行会重新加载当前套件的形
 
 ### 已知限制
 
-- 手动入口，性能改善有限（开发迭代 42.9s → 单套件最快 0.3s hygiene）。
+- 手动入口，性能改善有限（开发迭代 42.9s → 单套件最快 0.4s hygiene）。
 - 不改变全量测试的绝对成本。
 - CI 不带该参数（CI 继续全量）。
 
 ### 验证完成条件
 
 - `npm run check` exit 0
-- `npm test` exit 0（326/326 或等价基线）
-- 4 条 CLI 行为全部有回归断言，且断言在退化时变红（变异验证）
+- `npm test` exit 0 —— 实现后基线 **330/331，失败 0**；差值 1 是既有 honest skip（`validator: symlinked generated SKILL.md`，Windows EPERM 无法创建符号链接），非本计划引入，非失败
+- 5 条 CLI 行为全部有回归断言，且断言在退化时变红（变异验证 5/5 全部被杀死）
 - 三语文档 parity 通过

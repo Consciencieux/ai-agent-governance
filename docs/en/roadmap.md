@@ -6,6 +6,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 
 ### Done
 
+- **Domain-level test entry** — `node tests/run-tests.js --suite <name>` / `--list` for the dev loop; `npm test` and every gate stay full ([plan](plans/run-tests-suite-entry.md))
 - **Governance lessons in the payload** — declaration-vs-mechanism gap, evidence tiers (mechanical / human-attested / unverified), test activity (vacuous tests, fact sources), enumeration re-check after moves, and CI gate completeness are now INSTALLED rules, not repo-only memory. Design: [../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
 - **Consent evidence + change hygiene** — `stagedDigest` field binds approval to staged CONTENT (proven: approve SAFE, swap to MALICIOUS → rejected). Deletion/rename hygiene reconciled against git diff via `.governance/change-hygiene.json`. Risk-tiered enforcement (advisory/gate/human-required) documented in `coding.policy.md`. C6 review-evidence binding: `plan --review-evidence` produces a digest, `execute` refuses completed without it. All three sections of the plan delivered. Implementation: [../archive/consent-and-change-hygiene.md](../archive/consent-and-change-hygiene.md)
 - AGENTS.md governance bootstrap
@@ -44,6 +45,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 
 ### Near-term
 
+- **Governance defect closure** — after a confirmed governance defect, close sibling instances and audit the rule/template/generator/gate/test/release control plane. Design: [plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **Multi-agent coordination protocol** — standardized coordination across concurrent agents (lock check already shipped; review-manager's parallel subagents are its first real use case). *No design plan yet*
 - **Remote governance dashboard** — observability for governed repositories (dependencies: activity audit trail + score, both already shipped). *No design plan yet*
 - **Monorepo multi-governance domains** — validator multi-root resolution + multiple manifests (only when real monorepo demand appears). *No design plan yet*
