@@ -2,7 +2,7 @@
 
 [English](../../en/plans/governance-defect-closure.md) · [简体中文](governance-defect-closure.md) · [繁體中文](../../zh-TW/plans/governance-defect-closure.md)
 
-> **Status: design plan, not implemented.** 窄版双域条款已经作为基础落地，但本计划只有在同时防止局部修复和只修输出后才算完成。
+> **Status: implemented.**（已实现，待 Release 归档。）同类实例闭包与控制面追查已写入根因修复协议，并经目标链路验证到达被治理项目。
 
 **Target: both** —— `payload` 修改被治理项目收到的修复协议；`repo-infra` 更新 skill 执行指针、生成指引、目标链路测试、CHANGELOG，以及本计划/路线图索引。
 

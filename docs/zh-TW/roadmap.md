@@ -6,6 +6,7 @@
 
 ### 已完成
 
+- **治理缺陷閉環** —— 已確認治理缺陷後，在有界同類表面搜尋，並跨 repo-infra 與被治理專案檢查相關規則/範本/產生器/閘門/測試/發佈鏈。計畫：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **領域級測試入口** —— `node tests/run-tests.js --suite <name>` / `--list` 開發迴圈快速入口；`npm test` 與所有閘門保持全量（[計劃](plans/run-tests-suite-entry.md)）
 - **載荷治理教訓** —— 宣告與機制的差距、證據等級（機械 / 人工背書 / 未驗證）、測試活性（空洞測試、事實源）、移動後列舉複查、CI 閘門完整性現已成為 INSTALLED 規則，不再只是本倉庫的內部記憶。設計：[../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
 - AGENTS.md 治理引導
@@ -29,7 +30,7 @@
 - **計劃歸檔閘門** —— 規範計劃狀態關鍵詞（design/active/implemented/completed/archived）+ release 作用域的待歸檔閘門（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修復（`####` 子節不再截斷）
 - **安裝載荷完整性閘門** —— 測試證明複製的閘門腳本自包含（無兄弟 `require`）且 `init-spec.json` 的複製清單與 INIT 實際寫入一致
 - **確認政策重寫** —— 跨五個同步點提交前一次確認；計劃批准降為意圖對齊（`consent-policy-hardening` 計劃）
-- **治理原則索引** —— 26 條原則的純指標索引 + 一個 `--gate` 檢查保持每條來源可解析
+- **治理原則索引** —— 27 條原則的純指標索引 + 一個 `--gate` 檢查保持每條來源可解析
 - **規則捕獲** —— 不讓口頭要求只活在對話上下文裡：Agent 對每條要求預分類（持久 / 一次性 / 模糊），開發者在 Phase 6 裁定，確認的規則寫入 `AGENTS.md` / `docs/rules/**`，未確認的在行為軌跡裡留 `rules_pending` 痕跡。設計：[../archive/rule-capture.md](../archive/rule-capture.md)
 - **術語門禁** —— 術語表 `Forbidden zh-CN`/`Forbidden zh-TW` 欄在三語樹強制執行（`--gate` fail-closed、行級豁免、無術語表則 no-op）。設計：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
 - **翻譯新鮮度** —— Git 派生的逐對狀態（stale / draft / reviewed 標記），`--release-gate` 阻斷落後譯文；無手寫 manifest。設計：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
@@ -45,7 +46,6 @@
 
 ### 近期
 
-- **治理缺陷閉環** —— 已確認治理缺陷後，在有界同類表面搜尋，並跨 repo-infra 與被治理專案檢查相關規則/範本/產生器/閘門/測試/發佈鏈。計畫：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **多 Agent 協調協定** —— 並發 Agent 之間的標準化協調（鎖檢查已交付；review-manager 的並行子代理是其第一個真實用例）。*尚無設計計劃*
 - **遠端治理看板** —— 被治理倉庫的可觀測性（依賴：稽核軌跡 + 健康分，均已交付）
 - **monorepo 多治理域** —— 校驗器多根解析 + 多 manifest（出現真實 monorepo 需求時再做）

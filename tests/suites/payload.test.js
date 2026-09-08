@@ -876,4 +876,34 @@ test("payload: hooks pass sh -n and real git commit matrix", () => {
   return missingConsent.status === 1;
 });
 
+// The closure requirements (sibling-instance enumeration + control-plane trace) are payload
+// rules: an agent working in a GOVERNED project must read them there, not here. A rule that
+// exists only in this repo's references/ is exactly the "fix the authoring side, forget the
+// executing side" defect the rule itself is about — so the delivery is asserted against a
+// freshly generated project, not against the source file.
+test("payload: closure requirements (sibling instances + control plane) reach a clean target project", () => {
+  const dir = tmp("payload-closure");
+  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "ClosureProbe", "--phase", "C"], { encoding: "utf8" });
+  if (r.status !== 0) { console.error("  generator failed: " + String(r.stderr || "").slice(0, 200)); return false; }
+  const required = [
+    // rule text, installed as docs/rules/lifecycle.md
+    ["docs/rules/lifecycle.md", "同类实例闭包"],
+    ["docs/rules/lifecycle.md", "控制面追查"],
+    ["docs/rules/lifecycle.md", "不算证据"],
+    ["docs/rules/lifecycle.md", "下次生成会覆盖"],
+    // the executing side: the generated agent contract must carry an operational summary
+    ["AGENTS.md", "enumerate sibling instances"],
+    ["AGENTS.md", "trace the control plane"],
+  ];
+  let checked = 0;
+  for (const [file, needle] of required) {
+    const p = path.join(dir, file);
+    if (!fs.existsSync(p)) { console.error("  missing generated file: " + file); return false; }
+    if (!fs.readFileSync(p, "utf8").includes(needle)) { console.error("  " + file + " lacks: " + needle); return false; }
+    checked++;
+  }
+  // liveness: a passing run must have read every declared pair
+  return checked === required.length;
+});
+
 };

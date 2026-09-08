@@ -6,6 +6,7 @@
 
 ### 已完成
 
+- **治理缺陷闭包** —— 已确认治理缺陷后，在有界同类表面搜索，并跨 repo-infra 与被治理项目检查相关规则/模板/生成器/门禁/测试/发布链。设计：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **领域级测试入口** —— `node tests/run-tests.js --suite <name>` / `--list` 开发循环快速入口；`npm test` 与所有门禁保持全量（[计划](plans/run-tests-suite-entry.md)）
 - **载荷治理教训** —— 声明与机制的差距、证据等级（机械 / 人工背书 / 未验证）、测试活性（空洞测试、事实源）、移动后枚举复查、CI 门禁完整性现已成为 INSTALLED 规则，不再只是本仓库的内部记忆。设计：[../archive/payload-governance-lessons.md](../archive/payload-governance-lessons.md)
 - AGENTS.md 治理引导
@@ -29,7 +30,7 @@
 - **计划归档门禁** —— 规范计划状态关键词（design/active/implemented/completed/archived）+ release 作用域的待归档门禁（`check-doc-consistency.js` 的 `--release-gate`）+ 交付提取修复（`####` 子节不再截断）
 - **安装载荷完整性门禁** —— 测试证明复制的门禁脚本自包含（无兄弟 `require`）且 `init-spec.json` 的复制清单与 INIT 实际写入一致
 - **确认政策重写** —— 跨五个同步点提交前一次确认；计划批准降为意图对齐（`consent-policy-hardening` 计划）
-- **治理原则索引** —— 26 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
+- **治理原则索引** —— 27 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
 - **规则捕获** —— 不让口头要求只活在对话上下文里：Agent 对每条要求预分类（持久 / 一次性 / 模糊），开发者在 Phase 6 裁定，确认的规则写入 `AGENTS.md` / `docs/rules/**`，未确认的在行为轨迹里留 `rules_pending` 痕迹。设计：[../archive/rule-capture.md](../archive/rule-capture.md)
 - **术语门禁** —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
 - **翻译新鲜度** —— Git 派生的逐对状态（stale / draft / reviewed 标记），`--release-gate` 阻断落后译文；无手写 manifest。设计：[../archive/doc-translation-governance.md](../archive/doc-translation-governance.md)
@@ -45,7 +46,6 @@
 
 ### 近期
 
-- **治理缺陷闭包** —— 已确认治理缺陷后，在有界同类表面搜索，并跨 repo-infra 与被治理项目检查相关规则/模板/生成器/门禁/测试/发布链。设计：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **多 Agent 协调协议** —— 并发 Agent 之间的标准化协调（锁检查已交付；review-manager 的并行子代理是其第一个真实用例）。*尚无设计计划*
 - **远程治理看板** —— 被治理仓库的可观测性（依赖：审计轨迹 + 健康分，均已交付）
 - **monorepo 多治理域** —— 校验器多根解析 + 多 manifest（出现真实 monorepo 需求时再做）

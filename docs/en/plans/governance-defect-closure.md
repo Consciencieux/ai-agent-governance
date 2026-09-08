@@ -2,7 +2,7 @@
 
 [English](governance-defect-closure.md) · [简体中文](../../zh-CN/plans/governance-defect-closure.md) · [繁體中文](../../zh-TW/plans/governance-defect-closure.md)
 
-> **Status: design plan, not implemented.** A narrow two-domain clause has landed as groundwork, but this plan is not complete until it also prevents local-only repair and output-only repair.
+> **Status: implemented.** (Implemented, pending release archival.) Sibling-instance closure and control-plane tracing are now in the root-cause repair protocol and have been verified reaching a clean target project through the distribution chain.
 
 **Target: both** — `payload` modifies the repair protocol received by governed projects; `repo-infra` updates the skill execution pointer, generated guidance, target-chain tests, CHANGELOG, and this plan/roadmap index.
 
