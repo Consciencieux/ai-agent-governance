@@ -45,7 +45,7 @@
 
 ### 近期
 
-- **治理缺陷閉環** —— 已確認治理缺陷後，閉合同類實例並審查規則/範本/產生器/閘門/測試/發佈控制面。設計：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
+- **治理缺陷閉環** —— 已確認治理缺陷後，在有界同類表面搜尋，並跨 repo-infra 與被治理專案檢查相關規則/範本/產生器/閘門/測試/發佈鏈。計畫：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **多 Agent 協調協定** —— 並發 Agent 之間的標準化協調（鎖檢查已交付；review-manager 的並行子代理是其第一個真實用例）。*尚無設計計劃*
 - **遠端治理看板** —— 被治理倉庫的可觀測性（依賴：稽核軌跡 + 健康分，均已交付）
 - **monorepo 多治理域** —— 校驗器多根解析 + 多 manifest（出現真實 monorepo 需求時再做）

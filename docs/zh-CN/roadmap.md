@@ -45,7 +45,7 @@
 
 ### 近期
 
-- **治理缺陷闭包** —— 已确认治理缺陷后，闭合同类实例并审查规则/模板/生成器/门禁/测试/发布控制面。设计：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
+- **治理缺陷闭包** —— 已确认治理缺陷后，在有界同类表面搜索，并跨 repo-infra 与被治理项目检查相关规则/模板/生成器/门禁/测试/发布链。设计：[plans/governance-defect-closure.md](plans/governance-defect-closure.md)
 - **多 Agent 协调协议** —— 并发 Agent 之间的标准化协调（锁检查已交付；review-manager 的并行子代理是其第一个真实用例）。*尚无设计计划*
 - **远程治理看板** —— 被治理仓库的可观测性（依赖：审计轨迹 + 健康分，均已交付）
 - **monorepo 多治理域** —— 校验器多根解析 + 多 manifest（出现真实 monorepo 需求时再做）

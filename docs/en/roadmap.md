@@ -45,7 +45,7 @@ Horizons: **Done** / **Near-term** / **Mid-term** / **Long-term**
 
 ### Near-term
 
-- **Governance defect closure** — after a confirmed governance defect, close sibling instances and audit the rule/template/generator/gate/test/release control plane. Design: [plans/governance-defect-closure.md](plans/governance-defect-closure.md)
+- **Governance defect closure** — after a confirmed governance defect, search bounded sibling surfaces and inspect the relevant rule/template/generator/gate/test/release chain across repo-infra and governed-project domains. [Plan](plans/governance-defect-closure.md)
 - **Multi-agent coordination protocol** — standardized coordination across concurrent agents (lock check already shipped; review-manager's parallel subagents are its first real use case). *No design plan yet*
 - **Remote governance dashboard** — observability for governed repositories (dependencies: activity audit trail + score, both already shipped). *No design plan yet*
 - **Monorepo multi-governance domains** — validator multi-root resolution + multiple manifests (only when real monorepo demand appears). *No design plan yet*

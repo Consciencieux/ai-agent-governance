@@ -1,189 +1,118 @@
-# Governance Defect Closure — Sibling Instances and Control-Plane Audit (TASK plan)
+# Governance defect closure — sibling instances and control-plane follow-up (TASK plan)
 
 [English](governance-defect-closure.md) · [简体中文](../../zh-CN/plans/governance-defect-closure.md) · [繁體中文](../../zh-TW/plans/governance-defect-closure.md)
 
-> **Status: design plan, not implemented.** This plan addresses a gap left by the existing root-cause repair protocol: repairing the reported instance does not yet require closing the same defect class or auditing the rule, template, generator, gate, test, and release chain that allowed it.
+> **Status: design plan, not implemented.** A narrow two-domain clause has landed as groundwork, but this plan is not complete until it also prevents local-only repair and output-only repair.
 
-**Target: both** — `payload` changes the repair protocol that governed-project agents receive; `repo-infra` updates the skill execution pointer, generated-agent summary, target-chain tests, CHANGELOG, and this trilingual plan/roadmap index. The two domains are listed separately under Affected Files.
+**Target: both** — `payload` modifies the repair protocol received by governed projects; `repo-infra` updates the skill execution pointer, generated guidance, target-chain tests, CHANGELOG, and this plan/roadmap index.
 
-## Task Purpose
+## Original problems this plan must solve
 
-Make a confirmed governance defect close at the level of its defect family, not only at the file or line where it was reported. The repair must cover both dimensions:
+### Problem 1 — local repair without sibling closure
 
-1. **Horizontal closure** — enumerate and resolve sibling instances of the same defect signature.
-2. **Control-plane closure** — inspect the chain that produced, propagated, or failed to detect the defect.
+After finding one defective rule, template, script, gate, test, release entry, generated artifact, or synchronized document, an agent often repairs only that line. It does not search the same defect pattern across the other instances that share the contract.
 
-The plan is specifically for governance behavior, rules, templates, generators, gates, tests, release records, and generated outputs. It does not turn ordinary typo fixes into repository-wide audits.
+The plan must require an explicit, bounded search of the relevant sibling surfaces. “No other issue found” is not evidence unless the search surface and command or enumeration are stated.
 
-## Applicability and Domain Symmetry
+### Problem 2 — output repair without control-plane closure
 
-This is a two-domain protocol. It applies both to this skill repository (`repo-infra`) and to governed projects receiving the payload; implementing it in only one domain is incomplete.
+An agent may fix the visible output, such as a CHANGELOG entry or generated `AGENTS.md`, without checking the rule, template, generator, gate, test oracle, release flow, or target projection that produced or failed to catch it. The visible fix can therefore recur or be overwritten.
 
-- A defect first found in `repo-infra` must inspect the corresponding payload rule, template, generator, gate, test, and target-project projection.
-- A defect first found in a governed project must inspect the corresponding source and delivery path in this repository.
-- For this repository, `AGENTS.md` and the skill execution instructions must direct the agent to perform the closure; for governed projects, the distributed lifecycle policy, `SKILL.md`, and generated `AGENTS.md` must do so.
-- The reverse check is mandatory: source-to-output and output-to-consumer paths are both inspected, including generated artifacts and release packaging.
+The plan must require inspection of the relevant control-plane chain, including both the source-to-output path and the output-to-consumer path.
 
-The completion claim is invalid if the reported instance is fixed in one domain while the corresponding domain is only assumed to be correct.
+These are one failure family: local repair stops before the defect's impact surface and production chain have been checked.
 
-## Current Problem
+## Engineering-restraint boundary
 
-The existing root-cause protocol requires reproduction, a repair session, a failure budget, and regression verification. It does not explicitly require the agent to:
+The plan deliberately does not add a generic similarity engine, a universal audit registry, a mandatory five-layer table, a new gate, or a new status taxonomy. The existing `repairSessionId`, impact-face search, change-hygiene reconciliation, and `mutation-probe.js` remain the available mechanisms.
 
-- search for all instances of the same defect pattern after one instance is found;
-- inspect the authoritative rule, template, generator, gate, test, and target-project projection together;
-- distinguish a broken output from a broken rule, propagation path, enforcement path, or evidence path;
-- re-inject the original defect to prove that a gate which should catch it actually turns red.
+## Proposed solution
 
-This creates a recurring local-repair shape:
+### 1. Two-domain symmetry (into `lifecycle.policy.md` root-cause repair protocol)
 
-```text
-reported instance → patch that instance → green command → declare complete
-```
+A governance defect usually lives in two domains at once — the side that authors the rule and the side that executes it. Fixing only the reported side and assuming the other is correct is a repeatedly-proven miss pattern.
 
-The required shape is:
+- Defect in the project's own rules/scripts/gates → check its source and projection: the template or generator that produced the file, the corresponding checker, and whether the rule text itself carries the same error.
+- Defect in a generated or distributed artifact → check the source file and the distribution chain; fixing only the artifact is undone by the next generation.
+- When the corresponding domain does not exist or does not apply, the reason must be stated (e.g. "this rule has no template source, it is hand-written"); never assume correctness, never skip silently.
 
-```text
-reported instance → defect signature → sibling enumeration
-→ control-plane audit → repair all applicable surfaces
-→ negative/mutation evidence → target-environment verification
-```
+### 2. Sibling-instance closure
 
-## Proposed Solution
+When the defect is a governance contract rather than an isolated wording typo, the agent must enumerate the relevant sibling surfaces before declaring completion. The search is bounded by the defect's observed contract and may include:
 
-### 1. Repair trigger and defect signature
-
-Extend the root-cause repair protocol with a **closure trigger**. It applies when the confirmed defect involves a rule, template, generator, gate, test, release format, generated artifact, shared enumeration, or a repeated change batch. A plain isolated wording typo remains out of scope unless it reveals a broader rule or projection problem.
-
-At the start of closure, the agent records a short `defect signature` containing:
-
-- the observable failure;
-- the violated invariant or contract;
-- the pattern that could produce another instance;
-- the affected audience and execution environment;
-- the search surfaces that must be enumerated.
-
-The signature is bound to the existing `repairSessionId`; it is not a second session or a new registry.
-
-### 2. Horizontal closure: sibling instances
-
-The agent must enumerate the same signature across the surfaces that can carry the contract:
-
-- same directory, script, branch, and hardcoded enumeration;
-- source rule, template, generator, generated projection, and compatibility layer;
-- payload and repo-infra counterparts;
-- language projections and synchronized documents;
-- lifecycle phases and execution environments;
+- the same directory, script family, hardcoded enumeration, or synchronized document set;
+- source rules, templates, generators, generated projections, and compatibility layers;
+- the repo-infra and governed-project counterparts;
 - related files changed in the same batch.
 
-Every enumerated instance receives one explicit result:
+Each surface must receive a concise result: fixed, already correct with evidence, not applicable with a reason, or blocked with the missing prerequisite. The existing `repairSessionId` records the result; no new registry is introduced.
+
+### 3. Control-plane follow-up
+
+The agent must inspect the relevant production and enforcement chain for the defect, not blindly run an unrelated checklist. For a format or output defect, this normally includes:
 
 ```text
-fixed
-already correct (with evidence)
-not applicable (with reason)
-blocked (with missing prerequisite)
+authoritative rule → template/generator → output
+→ checker/gate → test oracle → release or target consumer
 ```
 
-“No other matches found” is not sufficient by itself; the report must state the search surface and the command or enumeration used.
+For a payload defect, the chain must also include tarball → INIT → clean target project. For a repo-only defect, the target consumer may be the repository's release or development workflow. Each relevant layer is either repaired, shown correct with evidence, or explicitly blocked/not applicable.
 
-### 3. Vertical closure: control-plane audit
+Example: a CHANGELOG format defect is not closed by editing CHANGELOG alone; the format rule, writer guidance, checker, test, and release boundary must be checked.
 
-For a governance defect, inspect the full control-plane chain:
+### 4. Bounded negative verification
 
-```text
-authoritative rule
-→ template/generator
-→ implementation or generated output
-→ gate/checker
-→ test oracle
-→ release/archive workflow
-→ target execution environment
-```
+When a gate/checker claims to intercept the defect, prove it is not idling with one bounded negative check: reinject the defect into an isolated fixture → the check must fail; restore the correct form → it must pass. Required only for decidable gate behaviour, never for semantic judgement.
 
-For each layer, determine whether it is:
-
-- the source of the defect;
-- a propagation path that copied the defect;
-- an enforcement gap that should have caught it;
-- an evidence gap that allowed a vacuous green result;
-- already correct and therefore unchanged.
-
-Example: a CHANGELOG format defect is not closed by editing CHANGELOG alone. The repair must check the format rule, generated AGENTS guidance, structure checker, relevant test oracle, release flow, and the generated governed-project shape.
-
-### 4. Evidence and mutation requirement
-
-Existing evidence tiers remain authoritative. Closure reports must label each conclusion as mechanical, human-attested, or unverified.
-
-When a gate, test, or checker should have detected the defect, the repair must include a bounded negative check:
-
-```text
-reintroduce the defect in an isolated fixture → expected check fails
-restore the corrected form → expected check passes
-```
-
-This requirement applies to decidable gate behavior, not to every semantic judgement. It does not require a full mutation-testing framework or a mutation run for ordinary source changes.
+`mutation-probe.js` already carries this; no new mechanism.
 
 ### 5. Scope and stop conditions
 
-The closure scan is required only for the trigger conditions above. It must stop when:
+Applies only to governance rules, templates, generators, gates, tests, generated artifacts, synchronized governance documents, and release flow; ordinary business code and isolated wording errors do not trigger it.
 
-- the defect signature has been enumerated across the declared surfaces;
-- every applicable instance has a result;
-- each failed enforcement layer has either been repaired or explicitly marked blocked;
-- the target environment has been checked for payload changes;
-- the original regression and relevant gates pass after the negative check.
+The agent may stop when the relevant sibling surfaces have an evidenced result, the relevant control-plane layers have been checked, the corresponding domain has been checked, and applicable regression/gate evidence is recorded.
 
-The agent must not add a generic similarity engine, a universal audit registry, or a new gate merely to record the checklist. If a future defect class is frequent and mechanically decidable, it may receive a separate narrowly scoped gate under a new plan.
+### 6. Explicitly not added this round
 
-## Interaction with Existing Protocols
+- Generic similarity engine
+- Universal audit registry
+- Mandatory five-layer review table
+- New gate or audit script solely for this protocol
 
-- The existing `repairSessionId`, reproduction-first fields, and failure budget remain the session and escalation mechanism.
+## Relationship to existing protocols
+
+- The existing `repairSessionId`, reproduce-first fields and failure budget remain the session and escalation mechanism.
 - The closure requirement supplements, rather than replaces, impact-face search and change-hygiene reconciliation.
-- Review-manager escalation still applies after the existing failure budget; closure does not bypass developer decisions or consent boundaries.
-- A green gate is still only evidence at its declared tier. Closure must not upgrade mechanical evidence into a semantic correctness claim.
+- It requires sibling and control-plane conclusions to be recorded in the existing repair session; it adds no new registry or escalation step.
+- `mutation-probe.js` is an existing tool; this clause only adds a trigger condition for using it.
 
-## Affected Files
+## Affected files
 
 **payload:**
-
-- `references/policies/lifecycle.policy.md` — add the closure trigger, defect signature, horizontal sibling closure, vertical control-plane audit, and bounded negative-check requirements to the root-cause repair protocol
-- `SKILL.md` — point the AUDIT and repair orchestration at the closure protocol so the skill executor does not stop at the reported instance
-- `references/templates/agents-md.template.md` — carry the governed-project-facing repair summary if the generated AGENTS contract needs an operational pointer
+- `references/policies/lifecycle.policy.md` — add sibling-instance and control-plane closure requirements to the root-cause repair protocol
+- `SKILL.md` — point audit and repair execution at the closure requirements
+- `references/templates/agents-md.template.md` — carry the operational summary if generated guidance needs it
 
 **repo-infra:**
-
-- `tests/suites/payload.test.js` — verify the closure clauses reach a clean generated Phase C project when the payload contract is changed
-- `AGENTS.md` — add a pointers-only principle entry if the implemented rule becomes a durable governance principle for this repository
-- `CHANGELOG.md` — record the payload behavior change at the release boundary
+- `AGENTS.md` — one pointer row in the principles index
+- `tests/suites/payload.test.js` — verify the closure requirements reach a clean target project
+- `CHANGELOG.md` — `Added` section record
 - `docs/{en,zh-CN,zh-TW}/plans/governance-defect-closure.md` — this plan
-- `docs/{en,zh-CN,zh-TW}/roadmap.md` — link the active plan from the appropriate horizon
+- `docs/{en,zh-CN,zh-TW}/roadmap.md` — link the active plan
 
-No new generic defect registry, similarity engine, or universal gate is part of this plan.
+## Verification method
 
-## Risks and Decisions
+1. Trilingual parity and plan-status gates pass.
+2. A fixture demonstrates that a defect in one sibling instance causes the sibling search to report the other relevant instance; no new similarity engine is used.
+3. A CHANGELOG or generated-guidance fixture demonstrates that the report checks its rule, writer/template path, checker, test, and release/target consumer rather than only the output.
+4. Payload changes are validated through tarball → INIT → clean target project.
+5. Where a gate claims to catch the defect, `mutation-probe.js` or an equivalent bounded existing check fails on reinjection and passes after restoration.
+6. `npm run check` is fully green.
 
-- **False scope expansion:** a defect signature could be written too broadly. Mitigation: require named search surfaces and trigger conditions; ordinary doc-only edits stay out of scope.
-- **Ceremonial closure reports:** an agent could list surfaces without checking them. Mitigation: require real command output or explicit human-attested/unverified labels, plus negative checks for gates that claim to detect the defect.
-- **Over-testing:** running every possible mutation would recreate the problem of excessive machinery. Mitigation: use one bounded negative fixture per affected enforcement contract.
-- **Payload drift:** changing the protocol without checking a generated project would reproduce the authoring-vs-execution error. Mitigation: run the tarball → INIT → target closure chain for payload changes.
-- **Unresolved ownership:** if a control-plane layer belongs to a separate plan or owner, mark it `blocked` with the prerequisite; do not silently omit it.
+## Completion conditions
 
-## Validation Method
-
-1. Run the trilingual parity and plan-status gates.
-2. For the implementation, prove the closure trigger is present in the skill executor and generated governed-project guidance.
-3. Use a CHANGELOG-format fixture to verify the report distinguishes the output defect from rule, template, gate, and test layers.
-4. Mutation-check one representative sibling defect and one representative control-plane defect: the relevant check must fail when the defect is reintroduced and pass after restoration.
-5. For payload edits, package the skill, INIT a throwaway Phase C project, and verify the generated rules and AGENTS guidance contain the closure protocol without repo-only paths.
-6. Run the applicable full repository gates and record evidence tiers; do not claim that the new protocol mechanically proves semantic correctness.
-7. Run one repo-infra fixture and one clean Phase C governed-project fixture, and demonstrate the same defect signature is either closed or explicitly marked not applicable/blocked in both domains.
-
-## Completion Conditions
-
-- The protocol requires both horizontal sibling closure and vertical control-plane closure for triggered governance defects.
-- The same triggered defect has an explicit result in both `repo-infra` and the governed-project domain; fixing only the reported side does not satisfy completion.
-- The protocol has explicit scope and stop conditions.
-- At least one target-project fixture proves the rule reaches the payload correctly.
-- At least one bounded negative check proves a relevant enforcement layer is not vacuous.
-- No generic similarity engine, universal registry, or broad new gate was added without a separate decision.
+- `lifecycle.policy.md` root-cause repair protocol requires sibling-instance and relevant control-plane closure.
+- The same requirements are reachable in both repo-infra and governed-project execution paths.
+- A triggered defect cannot be declared complete after only the reported output or only one domain is repaired.
+- The AGENTS.md principle pointer resolves to that file.
+- `npm run check` exit 0.
