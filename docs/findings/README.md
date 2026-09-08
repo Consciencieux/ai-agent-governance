@@ -34,6 +34,8 @@ docs/findings/
 
 **不建立 `active/` / `archive/` 子目录，也不归档到 `docs/plans/archive/`。** Finding 本身就是长期 evidence record，即使问题修复后仍留在原处，只更新状态字段。
 
+**代际标记用 `observed_in` / `resolved_in`，不用单值 `generation`。** 一个 Finding 可能在 Gen1 被发现、Gen2 仍未解决——`generation: gen1` 容易被误读成「它只属于 Gen1」。`observed_in`（何时发现）与 `resolved_in`（何时解决，未解决留空）分别表达这两个时间点。`Resolved` / `Superseded` / `Invalidated` 都只在文件内更新状态，永久留原位。
+
 ## Taxonomy：研究方向（7 方向）
 
 Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 `docs/findings/` 退化成零散 bug 堆。
@@ -94,6 +96,8 @@ affected:
 github_issue: 7                 # 关联 GitHub issue 编号（collaboration projection）
 opened: 2026-09-08              # 创建日期
 updated: 2026-09-08             # 最近一次状态/内容更新日期
+observed_in: gen1               # 发现该 finding 的架构时代（gen1 / gen2）
+resolved_in:                    # 解决的架构时代（未解决留空）
 resolved:                       # Resolved 时填写
 related:
   plans: []                     # 关联计划（按名称，不用路径）

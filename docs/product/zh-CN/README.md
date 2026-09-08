@@ -134,6 +134,7 @@ INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚
 
 ## 文档
 
+- [docs/README.md](../../README.md) — 文档知识体系：文档类型边界、语言政策、生命周期总览
 - [docs/zh-CN/skill-discovery.md](skill-discovery.md) — Agent 如何发现并触发 skill
 - [docs/zh-CN/commands.md](commands.md) — 完整提示词清单与运行时组件
 - [docs/zh-CN/bootstrap-output.md](bootstrap-output.md) — 完整带注释的初始化输出

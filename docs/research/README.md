@@ -73,7 +73,7 @@ docs/research/
 | C. Evaluation Framework | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
 | D. Architecture Evolution | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
 | E. Current Capabilities | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
-| F. Experiments | `experiments/` | 每实验一文件 |
+| F. Experiments | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
 | G. Capability Baseline | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + 2.0 处置（迁移 baseline evidence） |
 
 ## 编号规则
@@ -92,8 +92,11 @@ created: 2026-09-08
 updated: 2026-09-08
 supersedes: []             # 本文档取代的 research id
 superseded_by: []          # 取代本文档的 research id
+subject_generation: gen1   # 该研究描述的架构时代（gen1 / gen2；如研究 1.0→2.0 迁移本身可省略或按主体时代标注）
 ---
 ```
+
+**代际标记用 `subject_generation`**：表达「这项研究描述的是哪个架构时代」，不用于表达「研究文档自身属于哪代」——research 是跨代的研究资产，随版本演进留在原位。
 
 ## 生命周期（版本演进，非状态流转）
 
@@ -106,7 +109,7 @@ Superseded 被新模型替代（不删除）
 Archived   仅表示历史参考
 ```
 
-**Research 不删除，只 supersede。** 科研价值来自演进过程：
+**Research 不删除，只 supersede，也不物理归档。** `Superseded` / `Archived` 都只是版本演进标记，文件永久留在本目录原位——科研价值来自演进过程：
 
 ```text
 Research-001

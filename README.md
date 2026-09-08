@@ -134,6 +134,7 @@ INIT generates a governance skeleton whose exact contract — inputs, artifacts,
 
 ## Documentation
 
+- [docs/README.md](docs/README.md) — documentation knowledge architecture: doc-type boundaries, language policy, lifecycle overview
 - [docs/product/en/skill-discovery.md](docs/product/en/skill-discovery.md) — how agents discover and trigger the skill
 - [docs/product/en/commands.md](docs/product/en/commands.md) — complete prompt list and runtime components
 - [docs/product/en/bootstrap-output.md](docs/product/en/bootstrap-output.md) — complete annotated initialization output

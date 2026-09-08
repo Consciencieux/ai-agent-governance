@@ -134,6 +134,7 @@ INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳
 
 ## 文件
 
+- [docs/README.md](../../README.md) — 文件知識體系：文件類型邊界、語言政策、生命週期總覽
 - [docs/zh-TW/skill-discovery.md](skill-discovery.md) — Agent 如何發現並觸發 skill
 - [docs/zh-TW/commands.md](commands.md) — 完整提示詞清單與運行時元件
 - [docs/zh-TW/bootstrap-output.md](bootstrap-output.md) — 完整帶註解的初始化輸出
