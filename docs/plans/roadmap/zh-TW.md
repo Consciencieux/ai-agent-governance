@@ -274,304 +274,22 @@ Profile              Profile
 
 ## Generation 2 開發階段
 
-### Phase 0 — Architecture Migration Mode
+階段順序的權威來源是 ADR-0018；本 Roadmap 只作索引，不複述其裁決。每個 Phase 由對應 `PLAN-xxxx` 在 Accepted ADR 約束下執行。
+
+| Phase | 名稱（ADR-0018） | 一句話成果 |
+| --- | --- | --- |
+| 0 | Architecture Migration Mode | 安全而不阻塞的重構環境（gate 觀測化、Safety Kernel 阻斷） |
+| 1 | Producer / Product Separation | repo/skill ownership 邊界明確，`scope = both` 消除 |
+| 2 | Research / Findings / Traceability | 系統模型 → 觀察到的問題 → 溯源閉環 |
+| 3 | Governance Core / Rule Model | shared semantics, separate profiles |
+| 4 | Checker / Primitive restructuring | 成熟 checker → 可重用 primitive + evidence |
+| 5 | Dispatcher | context detection → applicability → mechanical / heuristic / review |
+| 6 | Invariant-based Testing | 每個 control 有 positive + negative oracle |
+| 7 | Review System redesign | Implementation / System / Research 三類 review |
+| 8 | Rebuild mandatory gates | 在新 control plane 上重建阻斷權威 |
+
+權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-目的：
-
-> 為 Generation-1 → Generation-2 的架構遷移建立安全但不至於過度阻礙重構的開發環境。
-
-遷移期間：
-
-- Generation-1 大部分 gate 降級為觀察性證據
-- 不再擴展舊 checker / policy 體系，除非涉及安全、資料損失或 release corruption
-- 使用 targeted validation 與 architecture checkpoint
-- 保留最小 Refactor Safety Kernel
-- 禁止正式發佈不完整的 2.0 架構
-- `main` 保持 1.x stable baseline
-- 破壞性重構在 `migration/2.0-governance-architecture` 上進行
-
-退出條件：
-
-- 新控制架構具備可執行基線
-- 關鍵 Generation-1 regressions 已遷移
-- 新 release path 可以獨立證明完整性
-
-### Phase 1 — Producer / Product Governance Separation
-
-這是 Generation 2 的第一項核心架構工作。
-
-目標：
-
-```text
-Governance Core
-      │
- ┌────┴────┐
- ▼         ▼
-Repo       Skill
-Profile    Profile
-```
-
-重點解決：
-
-- repo governance 與 skill governance ownership
-- 清理模糊的 `scope = both`
-- 共享語意與具體實作分離
-- shared control 明確消費者
-- repo-only 與 skill-only control 獨立
-- cross-profile contract tests
-
-原則：
-
-> Shared semantics does not imply shared implementation.
-
-產品程式碼可以成為測試對象，但本倉庫關鍵治理不能完全依賴正在被修改的 working-tree 產品實作。
-
-### Phase 2 — Governance Core
-
-建立中立的 Governance Core。
-
-Core 負責：
-
-- control identity
-- control schema
-- evaluator contracts
-- evidence semantics
-- decision semantics
-- shared primitives
-- profile contracts
-
-Core 不直接決定某個規則是否屬於 repo 或 skill。
-
-Profile 決定：
-
-- applicability
-- implementation
-- enforcement boundary
-- runtime adapter
-- profile-specific policy
-
-### Phase 3 — Rule / Control Registry
-
-把治理執行語意從 Markdown 中抽離為 machine-readable controls。
-
-最小控制模型需要明確區分：
-
-```text
-Applicability
-Evaluator Type
-Mechanism
-Effect
-Enforcement Boundary
-```
-
-Evaluator 類型包括：
-
-```text
-mechanical
-heuristic
-review
-guidance
-```
-
-Decision effect 包括：
-
-```text
-allow
-deny
-warn
-require-review
-observe
-```
-
-二者不能混為同一維度。
-
-Markdown 繼續承擔：
-
-- rationale
-- explanation
-- examples
-- human-readable policy
-
-但不再作為唯一執行事實來源。
-
-### Phase 4 — Checker Primitives 與 Evidence Model
-
-不刪除成熟 checker，而是重新定位。
-
-現有 checker 中穩定、可靠的能力應逐漸抽象為 reusable primitives，例如：
-
-```text
-required-file
-forbidden-pattern
-structured-value
-cross-file-equality
-projection-sync
-command-result
-negative-oracle
-package-boundary
-```
-
-每個執行結果產生結構化 Evidence，而不是僅剩：
-
-```text
-exit 0
-exit 1
-```
-
-Evidence 應能夠回答：
-
-- 哪個 control 被執行
-- 為什麼適用
-- 使用了什麼 mechanism
-- 檢查了什麼對象
-- 得到什麼結果
-- 哪個 boundary 使用了該結果
-
-### Phase 5 — Context Detector 與 Dispatcher
-
-這是 Generation 2 控制平面的核心執行層。
-
-目標：
-
-```text
-Event / Change Context
-        ↓
-Context Detector
-        ↓
-Applicable Controls
-        ↓
-Dispatcher
-        ↓
-Minimal Required Mechanisms
-```
-
-系統應逐漸從：
-
-```text
-Agent chooses npm command
-```
-
-遷移到：
-
-```text
-System resolves required controls
-```
-
-Dispatcher 應支援：
-
-- file / path impact
-- control ownership
-- profile
-- lifecycle event
-- release context
-- explicit task context
-
-並以最小充分驗證為目標，而不是預設全量執行。
-
-### Phase 6 — Invariant-Centric Testing
-
-測試體系從 suite 數量轉向 control protection。
-
-重要 mechanical control 應具備：
-
-```text
-positive oracle
-+
-negative oracle
-```
-
-核心指標逐步轉向：
-
-- declared control count
-- executable carrier coverage
-- negative oracle coverage
-- trigger coverage
-- blocking boundary coverage
-- false positive rate
-- false negative rate
-
-測試數量本身不再作為治理成熟度代理指標。
-
-### Phase 7 — Review Architecture
-
-現有 review-manager 保留並重新定位為：
-
-**Implementation Review**，關注：
-
-- logic bug
-- test weakness
-- security
-- regression
-- fixture realism
-- checker correctness
-- documentation inconsistency
-
-同時增加：
-
-**System Review**，關注：
-
-- responsibility boundaries
-- control topology
-- duplication
-- architecture coherence
-- trigger / enforcement gaps
-- governance complexity
-- producer / product coupling
-
-以及：
-
-**Research Review**，關注：
-
-- hypotheses
-- measurements
-- experimental validity
-- false positive / false negative
-- attention dependence
-- long-term effectiveness
-
-系統性 review 預設：
-
-```text
-Find
-→ Collect Evidence
-→ Classify
-→ Search Siblings
-→ Determine Root Cause
-→ THEN Remediate
-```
-
-避免直接把所有問題降級為局部 patch。
-
-### Phase 8 — Runtime Adapters
-
-Repository-level governance core 必須保持工具中立。
-
-執行時 hard enforcement 透過 adapter 層實現：
-
-```text
-Portable Governance Core
-        ↓
-Adapter Protocol
-        ↓
-Codex
-Claude Code
-Cursor
-opencode
-Other runtimes
-```
-
-可能支援：
-
-```text
-before_write
-before_shell
-before_commit
-before_release
-```
-
-但 runtime-specific enforcement 不得污染 portable core。
-
-不同執行時可以提供不同 guarantee level。
 
 ## Guarantee Levels
 
@@ -793,27 +511,19 @@ Roadmap 不保存詳細歷史執行記錄，也不作為 CHANGELOG 使用。
 ## 當前長期方向
 
 ```text
-Generation 1
-Document-Centric Governance
+Generation 1 — Document-Centric Governance
         ↓
-Architecture Migration
+  Generation 2 migration（ADR-0018 Phase 0–8）
         ↓
-Producer / Product Separation
+P0 Architecture Migration Mode
+P1 Producer / Product Separation
+P2 Research / Findings / Traceability
+P3 Governance Core / Rule Model
+P4 Checker / Primitive restructuring
+P5 Dispatcher
+P6 Invariant-based Testing
+P7 Review System redesign
+P8 Rebuild mandatory gates
         ↓
-Governance Core
-        ↓
-Control Registry
-        ↓
-Evidence + Primitives
-        ↓
-Context Detector + Dispatcher
-        ↓
-Invariant-Centric Validation
-        ↓
-Review Architecture
-        ↓
-Runtime Adapters
-        ↓
-Generation 2
-Policy-Driven Governance Control Plane
+Generation 2 — Policy-Driven Governance Control Plane
 ```

@@ -272,304 +272,22 @@ Profile              Profile
 
 ## Generation 2 Development Phases
 
-### Phase 0 — Architecture Migration Mode
+The authoritative phase order is ADR-0018; this Roadmap indexes it and does not restate the ADR's rulings. Each phase executes as a `PLAN-xxxx` under Accepted ADR constraints.
+
+| Phase | Name (ADR-0018) | One-line outcome |
+| --- | --- | --- |
+| 0 | Architecture Migration Mode | safe-but-unblocked Gen1→Gen2 refactor environment (gates observational, Safety Kernel blocking) |
+| 1 | Producer / Product Separation | repo vs skill ownership boundary known; `scope = both` eliminated |
+| 2 | Research / Findings / Traceability | system model → observed gaps → traceability loop |
+| 3 | Governance Core / Rule Model | shared semantics, separate profiles |
+| 4 | Checker / Primitive restructuring | mature checkers → reusable primitives + evidence |
+| 5 | Dispatcher | context detection → applicability → mechanical / heuristic / review |
+| 6 | Invariant-based Testing | positive + negative oracle per control |
+| 7 | Review System redesign | Implementation / System / Research review |
+| 8 | Rebuild mandatory gates | blocking authority rebuilt on the new control plane |
+
+Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-Purpose:
-
-> Establish a development environment for the Generation-1 → Generation-2 architecture migration that is safe without over-blocking the refactor.
-
-During migration:
-
-- most Generation-1 gates are demoted to observational evidence
-- the legacy checker / policy system is no longer extended, except for security, data-loss or release-corruption issues
-- targeted validation and architecture checkpoints are used
-- a minimal Refactor Safety Kernel is kept
-- publishing an incomplete 2.0 architecture is forbidden
-- `main` stays a stable 1.x baseline
-- breaking refactors proceed on `migration/2.0-governance-architecture`
-
-Exit conditions:
-
-- the new control architecture has an executable baseline
-- critical Generation-1 regressions have been migrated
-- the new release path can independently prove completeness
-
-### Phase 1 — Producer / Product Governance Separation
-
-This is the first core architectural task of Generation 2.
-
-Goal:
-
-```text
-Governance Core
-      │
- ┌────┴────┐
- ▼         ▼
-Repo       Skill
-Profile    Profile
-```
-
-Focus areas:
-
-- repo governance vs skill governance ownership
-- eliminating the ambiguous `scope = both`
-- separating shared semantics from concrete implementation
-- making shared controls' consumers explicit
-- keeping repo-only and skill-only controls independent
-- cross-profile contract tests
-
-Principle:
-
-> Shared semantics does not imply shared implementation.
-
-Product code can be a test target, but this repository's critical governance must not fully depend on the working-tree product implementation that is itself being modified.
-
-### Phase 2 — Governance Core
-
-Build a neutral Governance Core.
-
-The Core owns:
-
-- control identity
-- control schema
-- evaluator contracts
-- evidence semantics
-- decision semantics
-- shared primitives
-- profile contracts
-
-The Core does not itself decide whether a rule belongs to repo or skill.
-
-The Profile decides:
-
-- applicability
-- implementation
-- enforcement boundary
-- runtime adapter
-- profile-specific policy
-
-### Phase 3 — Rule / Control Registry
-
-Extract governance execution semantics out of Markdown into machine-readable controls.
-
-The minimal control model must explicitly distinguish:
-
-```text
-Applicability
-Evaluator Type
-Mechanism
-Effect
-Enforcement Boundary
-```
-
-Evaluator types include:
-
-```text
-mechanical
-heuristic
-review
-guidance
-```
-
-Decision effects include:
-
-```text
-allow
-deny
-warn
-require-review
-observe
-```
-
-The two must not be conflated into a single dimension.
-
-Markdown keeps doing:
-
-- rationale
-- explanation
-- examples
-- human-readable policy
-
-but is no longer the only source of execution truth.
-
-### Phase 4 — Checker Primitives and Evidence Model
-
-Do not delete mature checkers; reposition them instead.
-
-The stable, reliable capabilities in existing checkers should gradually be abstracted into reusable primitives, for example:
-
-```text
-required-file
-forbidden-pattern
-structured-value
-cross-file-equality
-projection-sync
-command-result
-negative-oracle
-package-boundary
-```
-
-Every execution result should produce structured Evidence, instead of only:
-
-```text
-exit 0
-exit 1
-```
-
-Evidence should be able to answer:
-
-- which control was executed
-- why it applied
-- which mechanism was used
-- which object was checked
-- what result was obtained
-- which boundary consumed the result
-
-### Phase 5 — Context Detector and Dispatcher
-
-This is the core execution layer of the Generation 2 control plane.
-
-Goal:
-
-```text
-Event / Change Context
-        ↓
-Context Detector
-        ↓
-Applicable Controls
-        ↓
-Dispatcher
-        ↓
-Minimal Required Mechanisms
-```
-
-The system should gradually move from:
-
-```text
-Agent chooses npm command
-```
-
-to:
-
-```text
-System resolves required controls
-```
-
-The Dispatcher should support:
-
-- file / path impact
-- control ownership
-- profile
-- lifecycle event
-- release context
-- explicit task context
-
-and aim for minimal sufficient validation rather than full execution by default.
-
-### Phase 6 — Invariant-Centric Testing
-
-The test system shifts from suite counts to control protection.
-
-Important mechanical controls should have:
-
-```text
-positive oracle
-+
-negative oracle
-```
-
-Core metrics gradually shift toward:
-
-- declared control count
-- executable carrier coverage
-- negative oracle coverage
-- trigger coverage
-- blocking boundary coverage
-- false positive rate
-- false negative rate
-
-Test counts themselves are no longer a proxy for governance maturity.
-
-### Phase 7 — Review Architecture
-
-The existing review-manager is kept and repositioned as:
-
-**Implementation Review**, focusing on:
-
-- logic bugs
-- test weakness
-- security
-- regression
-- fixture realism
-- checker correctness
-- documentation inconsistency
-
-Also added:
-
-**System Review**, focusing on:
-
-- responsibility boundaries
-- control topology
-- duplication
-- architecture coherence
-- trigger / enforcement gaps
-- governance complexity
-- producer / product coupling
-
-And:
-
-**Research Review**, focusing on:
-
-- hypotheses
-- measurements
-- experimental validity
-- false positive / false negative
-- attention dependence
-- long-term effectiveness
-
-Systematic review defaults to:
-
-```text
-Find
-→ Collect Evidence
-→ Classify
-→ Search Siblings
-→ Determine Root Cause
-→ THEN Remediate
-```
-
-to avoid degrading every problem into a local patch.
-
-### Phase 8 — Runtime Adapters
-
-Repository-level governance core must stay tool-neutral.
-
-Runtime hard enforcement is implemented through an adapter layer:
-
-```text
-Portable Governance Core
-        ↓
-Adapter Protocol
-        ↓
-Codex
-Claude Code
-Cursor
-opencode
-Other runtimes
-```
-
-Possible hooks:
-
-```text
-before_write
-before_shell
-before_commit
-before_release
-```
-
-But runtime-specific enforcement must not pollute the portable core.
-
-Different runtimes may provide different guarantee levels.
 
 ## Guarantee Levels
 
@@ -791,27 +509,19 @@ If an old direction still has research value, preserve it through Git history or
 ## Current Long-term Direction
 
 ```text
-Generation 1
-Document-Centric Governance
+Generation 1 — Document-Centric Governance
         ↓
-Architecture Migration
+  Generation 2 migration (ADR-0018 Phase 0–8)
         ↓
-Producer / Product Separation
+P0 Architecture Migration Mode
+P1 Producer / Product Separation
+P2 Research / Findings / Traceability
+P3 Governance Core / Rule Model
+P4 Checker / Primitive restructuring
+P5 Dispatcher
+P6 Invariant-based Testing
+P7 Review System redesign
+P8 Rebuild mandatory gates
         ↓
-Governance Core
-        ↓
-Control Registry
-        ↓
-Evidence + Primitives
-        ↓
-Context Detector + Dispatcher
-        ↓
-Invariant-Centric Validation
-        ↓
-Review Architecture
-        ↓
-Runtime Adapters
-        ↓
-Generation 2
-Policy-Driven Governance Control Plane
+Generation 2 — Policy-Driven Governance Control Plane
 ```
