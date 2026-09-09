@@ -26,6 +26,8 @@ All notable changes to this project will be documented here.
 
 - **Governance Control is a first-class architecture object** — rule semantics, evaluator, gate, and test are distinct; shared semantics stay single-owned while repo/skill bind evaluators separately. Phase 3 delivers a serialization-agnostic slot model in ADR-0023 (CTRL-0001–0005), not a payload YAML tree. Decision effects and guarantee levels attach to profile × enforcement bindings / derived projections. Descriptive model: RESEARCH-0010.
 
+- **Phase 3 Governance Core / Rule Model closed; Phase 4 opened** — PLAN-0034 archived at lifecycle closure; Roadmap current phase is Checker / Primitive restructuring under PLAN-0035, with subordinate PLAN-0036 retrieving PLAN-0032 R24 (payload Discovery Ledger). No SemVer release (ADR-0014).
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

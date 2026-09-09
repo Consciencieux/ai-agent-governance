@@ -294,8 +294,8 @@ Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的�
 
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-当前阶段：3 — Governance Core / Rule Model
-当前阶段计划：PLAN-0034（phase checkpoint；Active）。Phase 2 已完成：PLAN-0032 / PLAN-0033 已于 lifecycle closure 归档（`docs/plans/archive/`；Plan archive ≠ Release — ADR-0016）。Phase 2 baseline：`346bb749`。
+当前阶段：4 — Checker / Primitive restructuring
+当前阶段计划：PLAN-0035（phase checkpoint；Active）。附属：PLAN-0036（R24 Discovery Ledger payload）。Phase 3 已完成：PLAN-0034 已于 lifecycle closure 归档（`docs/plans/archive/`；Plan archive ≠ Release — ADR-0016）。Phase 3 baseline：`24021c4`。
 
 
 ## Guarantee Levels

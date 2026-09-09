@@ -292,8 +292,8 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-Current Phase: 3 — Governance Core / Rule Model
-Current Phase Plan: PLAN-0034 (phase checkpoint; Active). Phase 2 complete: PLAN-0032 / PLAN-0033 archived at lifecycle closure (`docs/plans/archive/`; Plan archive ≠ Release — ADR-0016). Phase 2 baseline: `346bb749`.
+Current Phase: 4 — Checker / Primitive restructuring
+Current Phase Plan: PLAN-0035 (phase checkpoint; Active). Subordinate: PLAN-0036 (R24 Discovery Ledger payload). Phase 3 complete: PLAN-0034 archived at lifecycle closure (`docs/plans/archive/`; Plan archive ≠ Release — ADR-0016). Phase 3 baseline: `24021c4`.
 
 
 ## Guarantee Levels

@@ -6,7 +6,7 @@ generation: gen2
 
 # PLAN-0032：文档知识架构收口
 
-> （已归档。2026-09-10 Phase 2 exit；按 ADR-0016 Plan archive ≠ Release，于 lifecycle closure 移入 archive。Phase 2 baseline commit `346bb749`。checkpoint ≠ Release。）
+> （已归档。2026-09-10 Phase 2 exit；按 ADR-0016 Plan archive ≠ Release，于 lifecycle closure 移入 archive。Phase 2 baseline commit `346bb749`。checkpoint ≠ Release。R24 已于 2026-09-10 Phase 4 入口取回 → PLAN-0036。）
 
 只修改 `docs/` 知识体系、相关 ADR/Research，以及仓库入口 `CONTRIBUTING*.md` 中与知识路由冲突的贡献者指令；不涉及 payload 行为。
 
@@ -127,7 +127,7 @@ docs/README.md
 | R21 | systemic | 知识对象 authority/supporting-context 模型缺失 | repo | closed | promoted-to-finding | FINDING-0023 |
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
 | R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred→retrieved（Phase 3 入口已取回：边界写入 PLAN-0034 § Phase 3 入口；完整瘦身延后为 PLAN-0034 E1） | PLAN-0034；ADR-0022 § 后果 |
-| R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 R24，并建立 successor Plan ID） | ADR-0021 § 决策 6 |
+| R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan → **取回完成**：successor = PLAN-0036（2026-09-10 Phase 4 入口；checkpoint PLAN-0035） | ADR-0021 § 决策 6 · PLAN-0036 |
 | R25a | subtask | 表示法归一 · 人类面向呈现：中文 H1 / 章节 / 表头，机器 key/enum 保持稳定英文 | repo | closed | resolved | 管理 README 英文元话语清除；当前 Plan/ADR/Finding/Research H1 与关键章节括注清理；experiments 模板中文化 |
 | R25b | subtask | 表示法归一 · 机器元数据精简：frontmatter 只保留必要 machine semantics | repo | closed | resolved | Finding 对象与 README 一致（id/status/type/observed_in[+resolved_in]）；ADR-0016 删除内联 schema；ADR-0013 后果措辞对齐；Research/ADR/Plan schema 已精简且无强制字段待删 |
 | R26 | review | canonical 元数据被多份 index/projection 重复 → 持续 drift（ADR-0021 index、README schema 示例等） | repo | closed | promoted-to-finding | FINDING-0024 |
@@ -146,7 +146,7 @@ Resolved:     26  (R1–R20、R22、R25a、R25b、R27、R28、R29)
 Open:         0
 Deferred:     1  (R23；已由 PLAN-0034 入口取回，完整瘦身见 PLAN-0034 E1)
 Promoted to Finding:   3  (R21 → FINDING-0023；R26 projection drift → FINDING-0024；R30 → FINDING-0027)
-Promoted to next Plan: 1  (R24；Phase 4 planning checkpoint 重新取回并建立 successor Plan ID)
+Promoted to next Plan: 1  (R24；已取回 → PLAN-0036；checkpoint PLAN-0035)
 Unaccounted:  0
 ```
 
@@ -158,7 +158,7 @@ Exit review 确认：
 Unaccounted = 0
 Open = 0
 Deferred = R23（已取回 → PLAN-0034；完整瘦身 = PLAN-0034 E1）
-Promoted = FINDING-0023 / 0024 / 0027；R24 → Phase 4 planning successor
+Promoted = FINDING-0023 / 0024 / 0027；R24 → PLAN-0036（已取回）
 完成条件四条（路由确定性 / 历史隔离 / 单一归属 / 演进纪律）定性通过
 无已知 knowledge-type authority contradiction 未记账
 ```
