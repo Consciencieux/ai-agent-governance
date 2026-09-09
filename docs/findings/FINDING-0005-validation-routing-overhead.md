@@ -2,21 +2,15 @@
 id: FINDING-0005
 status: Confirmed
 type: architecture-gap
+severity: High
+affected: [repo, skill]
+observed_in: gen1
 direction: D
 root_cause: R3
-severity: High
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# Validation 调度失衡：简单规则验证过重，复杂规则验证不足
+# FINDING-0005：FINDING-0005：Validation 调度失衡：简单规则验证过重，复杂规则验证不足
 
 ## 观察 Observation
 

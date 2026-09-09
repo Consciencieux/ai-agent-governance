@@ -1,9 +1,12 @@
-# ADR-0001: 用 `.governance/` 取代旧的 `.agent/` 状态目录
+---
+id: ADR-0001
+status: Accepted
+generation: cross-generation
+---
+
+# ADR-0001：用 `.governance/` 取代旧的 `.agent/` 状态目录
 
 
-- 状态：Accepted（v0.3.1）
-- 代际：cross-generation
-- 日期：2026
 
 ## 背景
 

@@ -1,15 +1,10 @@
 ---
 id: RESEARCH-0001
-title: 当前治理系统控制模型（Generation-1 System Model）
 status: Active
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []
-superseded_by: []
 ---
 
-# 当前治理系统控制模型（System Model）
+# RESEARCH-0001：当前治理系统控制模型
 
 > **Generation-1 现状表征**：document-driven、agent-triggered 的治理架构。本文档是 2.0 重构的 baseline，不是规范。
 

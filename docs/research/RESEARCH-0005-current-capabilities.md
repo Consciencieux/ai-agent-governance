@@ -1,15 +1,10 @@
 ---
 id: RESEARCH-0005
-title: 当前能力清单（Current Capabilities，Generation-1）
 status: Active
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []
-superseded_by: []
 ---
 
-# 当前能力清单（Current Capabilities，Generation-1）
+# RESEARCH-0005：当前能力清单
 
 > 回答「当前系统有哪些能力？」。本清单由原 roadmap 的「已完成」部分迁移而来（ADR-0015），按机制分类（见 `RESEARCH-0002-governance-mechanism-taxonomy.md`）组织。它是 Generation-1 的能力基线，不是路线图。
 

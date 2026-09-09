@@ -2,21 +2,15 @@
 id: FINDING-0003
 status: Confirmed
 type: control-gap
+severity: Critical
+affected: [repo, skill]
+observed_in: gen1
 direction: C
 root_cause: R4
-severity: Critical
-affected:
-  - repo
-  - skill
 github_issue: 5
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# Declaration 与 Enforcement 强度脱节：文档 MUST ≠ mechanical deny
+# FINDING-0003：FINDING-0003：Declaration 与 Enforcement 强度脱节：文档 MUST ≠ mechanical deny
 
 ## 观察 Observation
 

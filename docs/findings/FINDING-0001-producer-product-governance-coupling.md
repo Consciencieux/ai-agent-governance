@@ -2,25 +2,18 @@
 id: FINDING-0001
 status: Confirmed
 type: architecture-gap
+severity: Critical
+affected: [repo, skill]
+observed_in: gen1
 direction: A
 root_cause: R5
-severity: Critical
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-updated: 2026-09-09
-resolved:
 related:
-  plans:
-    - PLAN-0031
-  adrs:
-    - ADR-0006
-    - ADR-0020
+  plans: [PLAN-0031]
+  adrs: [ADR-0006, ADR-0020]
 ---
 
-# Producer / Product 治理耦合：物理边界已分开，语义与执行仍混杂
+# FINDING-0001：FINDING-0001：Producer / Product 治理耦合：物理边界已分开，语义与执行仍混杂
 
 ## 观察 Observation
 

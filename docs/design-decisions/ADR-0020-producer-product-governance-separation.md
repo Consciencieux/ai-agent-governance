@@ -6,8 +6,6 @@ generation: gen2
 
 # ADR-0020：Producer / Product Governance Separation
 
-- 状态：Accepted
-- 日期：2026-09-09
 
 ## 背景
 

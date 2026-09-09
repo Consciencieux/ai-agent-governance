@@ -6,8 +6,6 @@ generation: gen2
 
 # ADR-0022：Agent 指令架构（Agent Instruction Architecture）
 
-- 状态：Accepted
-- 日期：2026-09-09
 
 ## 背景
 

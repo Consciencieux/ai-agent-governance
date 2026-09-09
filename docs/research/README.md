@@ -82,8 +82,9 @@ docs/research/
 | I. Repair / Discovery / Workset Model | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
 | J. Agent Instruction Architecture | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：薄入口/专能力/按需加载/职责单一/历史后置/路由明确/机械优先；当前与目标加载模型 |
 
-## 编号规则
+**统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 
+## 编号规则
 `RESEARCH-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
 
 ## Frontmatter metadata

@@ -2,20 +2,15 @@
 id: FINDING-0019
 status: Confirmed
 type: architecture-gap
+severity: High
+affected: [repo]
+observed_in: gen1
 direction: E
 root_cause: R1
-severity: High
-affected:
-  - repo
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# check-doc-consistency.js 正在形成巨型 Meta-checker（incident-driven checker accretion）
+# FINDING-0019：FINDING-0019：check-doc-consistency.js 正在形成巨型 Meta-checker（incident-driven checker accretion）
 
 ## 观察 Observation
 

@@ -2,21 +2,15 @@
 id: FINDING-0006
 status: Confirmed
 type: mechanism-gap
+severity: High
+affected: [repo, skill]
+observed_in: gen1
 direction: E
 root_cause: R3
-severity: High
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# Regression Oracle 缺口：Fix 正确 ≠ Fix 被保护
+# FINDING-0006：FINDING-0006：Regression Oracle 缺口：Fix 正确 ≠ Fix 被保护
 
 ## 观察 Observation
 

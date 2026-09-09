@@ -2,21 +2,17 @@
 id: FINDING-0011
 status: Confirmed
 type: defect
+severity: Low
+affected: [repo]
+observed_in: gen1
 direction: E
 root_cause: R3
-severity: Low
-affected:
-  - repo
 github_issue: 6
-opened: 2026-09-08
-resolved:
 related:
-  plans: []
-  adrs:
-    - ADR-0012
+  adrs: [ADR-0012]
 ---
 
-# check-doc-consistency 的 adr_statuses 启发式把正文里的 [Unreleased] 节名误报为「ADR 状态异常」
+# FINDING-0011：FINDING-0011：check-doc-consistency 的 adr_statuses 启发式把正文里的 [Unreleased] 节名误报为「ADR 状态异常」
 
 ## 观察 Observation
 

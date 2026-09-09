@@ -1,7 +1,11 @@
-# ADR-0007: 治理计划分层独立与正交触发（工程克制 × 反补丁）
+---
+id: ADR-0007
+status: Accepted
+generation: cross-generation
+---
 
-状态：Accepted（2026-09-04）
-- 代际：cross-generation
+# ADR-0007：治理计划分层独立与正交触发（工程克制 × 反补丁）
+
 
 ## 背景
 

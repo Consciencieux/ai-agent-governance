@@ -1,12 +1,13 @@
 ---
 id: PLAN-0018
+status: Archived
 generation: gen1
 ---
 
-# 反补丁式开发与测试架构治理（TASK 计划）
+# PLAN-0018：反补丁式开发与测试架构治理
 
 
-> **Status: archived.**（已归档。归档即断言完成。）（已实现，待归档。已交付：§1 根因修复协议、§2 失败预算（`references/policies/lifecycle.policy.md`）、§3 测试架构拆分（`tests/suites/` + 单一发现入口）、§5 的机械子集（`scripts/check-coding-hygiene.js`）。§4 快速路径、§6 补丁债务报告、§7 release-gate 接线仍为设计，按机制测试各自单独举证后再落地。）本计划治理 AI 在反复打补丁、局部修复和失败重试中的行为，不把“文件行数”本身当作质量标准。
+> （已归档。归档即断言完成。）（已实现，待归档。已交付：§1 根因修复协议、§2 失败预算（`references/policies/lifecycle.policy.md`）、§3 测试架构拆分（`tests/suites/` + 单一发现入口）、§5 的机械子集（`scripts/check-coding-hygiene.js`）。§4 快速路径、§6 补丁债务报告、§7 release-gate 接线仍为设计，按机制测试各自单独举证后再落地。）本计划治理 AI 在反复打补丁、局部修复和失败重试中的行为，不把“文件行数”本身当作质量标准。
 
 **Target：both** —— `payload` 增加根因修复、失败升级和回归证据规则；`repo-infra` 拆分测试架构、增加债务检测、记录指标并补齐测试。两个域分别列在“受影响文件”中。
 

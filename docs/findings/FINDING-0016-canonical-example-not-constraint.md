@@ -2,21 +2,15 @@
 id: FINDING-0016
 status: Confirmed
 type: mechanism-gap
+severity: Medium
+affected: [repo, skill]
+observed_in: gen1
 direction: G
 root_cause: R1
-severity: Medium
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# Canonical Example 只是参考，不是约束（reference ≠ constraint）
+# FINDING-0016：FINDING-0016：Canonical Example 只是参考，不是约束（reference ≠ constraint）
 
 ## 观察 Observation
 

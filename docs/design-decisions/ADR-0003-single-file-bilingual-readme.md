@@ -1,9 +1,13 @@
-# ADR-0003: 单文件双语 README，而非按语言拆分文件
+---
+id: ADR-0003
+status: Superseded
+generation: gen1
+superseded_by: [ADR-0005]
+---
+
+# ADR-0003：单文件双语 README，而非按语言拆分文件
 
 
-- 状态：Superseded（被 ADR-0005 取代）
-- 代际：gen1
-- 日期：2026
 
 ## 背景
 

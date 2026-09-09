@@ -6,8 +6,6 @@ generation: gen2
 
 # ADR-0015：Roadmap 重新定位
 
-- 状态：Accepted
-- 日期：2026-09-08
 
 ## 背景
 

@@ -1,15 +1,10 @@
 ---
 id: RESEARCH-0004
-title: 架构演进（Architecture Evolution）
 status: Active
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []
-superseded_by: []
 ---
 
-# 架构演进（Architecture Evolution）
+# RESEARCH-0004：架构演进
 
 > 记录 ai-agent-governance 的世代演进。每个 Generation 是独立模型，不删除旧记录——演进过程本身就是研究轨迹。
 

@@ -1,9 +1,12 @@
-# ADR-0004: Human-in-the-loop 发布流程（Analyze → Proposal → Approval → Execute）
+---
+id: ADR-0004
+status: Accepted
+generation: cross-generation
+---
+
+# ADR-0004：Human-in-the-loop 发布流程（Analyze → Proposal → Approval → Execute）
 
 
-- 状态：Accepted（v0.4.0）
-- 代际：cross-generation
-- 日期：2026
 
 ## 背景
 

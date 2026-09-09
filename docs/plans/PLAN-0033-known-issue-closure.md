@@ -1,12 +1,13 @@
 ---
 id: PLAN-0033
+status: Active
 generation: gen2
 target: repo-infra
 ---
 
 # PLAN-0033：已知问题闭包（Discovery Ledger）
 
-> **Status: Active.**（进行中。2026-09-09：建立 Known-Issue Closure 执行语义（ADR-0021）、运行模型（RESEARCH-0008）、缺口证据（FINDING-0022），并在本计划内演示第一代 **prototype / characterization** `## Discovery Ledger`——证明载体可行，不宣称机制已在所有任务落地。）
+> （进行中。2026-09-09：建立 Known-Issue Closure 执行语义（ADR-0021）、运行模型（RESEARCH-0008）、缺口证据（FINDING-0022），并在本计划内演示第一代 **prototype / characterization** `## Discovery Ledger`——证明载体可行，不宣称机制已在所有任务落地。）
 
 第一代只在 repo 侧演示（prototype）；payload（lifecycle.policy TASK 格式内嵌 ledger）留后续阶段。
 

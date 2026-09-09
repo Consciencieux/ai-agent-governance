@@ -6,8 +6,6 @@ generation: gen2
 
 # ADR-0016：文档结构从「语言树」转向「用途分层」
 
-- 状态：Accepted
-- 日期：2026-09-08
 
 ## 背景
 
@@ -132,7 +130,7 @@ docs/plans/
 
 **H1 与正文**：简中 canonical 对象 H1 = `# <ID>：<简体中文标题>`（英文 slug 留文件名）；正文章节与表格头以中文为主，技术术语首次出现允许 `术语（English）`，其后用 canonical 词。
 
-**Gen1 兼容**：Plan 的 `> **Status:**` 与 ADR 的 `- 状态：` 是 Gen1 checker 的机械解析源（已枚举：plan-status/plan-delivery/roadmap-sync、ADR-status 簇），**本阶段保留**；frontmatter 的 `status` 是 Phase 4 parser 迁移后的 canonical 源，届时删除正文兼容解析。Generation/代际无机械 consumer，可移入 frontmatter。**不迁移 archived Gen1 Plans**（历史证据不因美观重写）。
+**Representation authority moves now。** Plan / Finding / Research / ADR 的 canonical metadata 从本次迁移起统一为 YAML frontmatter；正文旧的 `> **Status:**` / `- 状态：` 一律删除。Gen1 checker 若仍解析正文旧格式，其失败属于**已知 compatibility divergence**，Migration Mode 下不反向约束新 representation（不因旧 parser 双写）。Parser migration 属 Phase 4。**不迁移 archived Gen1 Plans 的历史正文内容**（representation-only：只改 envelope/H1/章节，不改历史事实；已统一 envelope）。
 
 ## 参考
 

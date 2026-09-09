@@ -1,11 +1,12 @@
 ---
 id: PLAN-0008
+status: Archived
 generation: gen1
 ---
 
-# Governed-Project Sync Groups（TASK 计划）
+# PLAN-0008：被治理项目同步组
 
-> **Status: archived.**（已归档。归档即断言完成。）
+> （已归档。归档即断言完成。）
 
 ### 任务目的
 

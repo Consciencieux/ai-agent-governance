@@ -1,12 +1,13 @@
 ---
 id: PLAN-0005
+status: Archived
 generation: gen1
 ---
 
-# Knowledge Freshness Detection（TASK 计划）
+# PLAN-0005：知识新鲜度检测
 
 
-> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现，已归档。 实现见 `scripts/check-doc-freshness.js`（git log 提交日期，30/90 天阈值，代码活跃感知，恒 exit 0）；drift-check 子技能模板已含 freshness 模式（`references/templates/sub-skills.md`）。）
+> （已归档。归档即断言完成。）（原状态：已实现，已归档。 实现见 `scripts/check-doc-freshness.js`（git log 提交日期，30/90 天阈值，代码活跃感知，恒 exit 0）；drift-check 子技能模板已含 freshness 模式（`references/templates/sub-skills.md`）。）
 
 ### 任务目的
 

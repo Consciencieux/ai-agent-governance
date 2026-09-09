@@ -2,20 +2,15 @@
 id: FINDING-0013
 status: Confirmed
 type: defect
+severity: Low
+affected: [repo]
+observed_in: gen1
 direction: G
 root_cause: R1
-severity: Low
-affected:
-  - repo
 github_issue: 6
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# 审计方法缺陷：未加 --diff-filter=A 导致把「修改」误判为「新增」，制造假性数量冲突
+# FINDING-0013：FINDING-0013：审计方法缺陷：未加 --diff-filter=A 导致把「修改」误判为「新增」，制造假性数量冲突
 
 ## 观察 Observation
 

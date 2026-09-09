@@ -1,11 +1,12 @@
 ---
 id: PLAN-0010
+status: Archived
 generation: gen1
 ---
 
-# Sync Groups Mechanical Check（TASK 计划）
+# PLAN-0010：同步组机械校验
 
-> **Status: archived.**（已归档。归档即断言完成。）
+> （已归档。归档即断言完成。）
 
 ### 任务目的
 

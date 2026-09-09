@@ -2,20 +2,15 @@
 id: FINDING-0010
 status: Confirmed
 type: defect
+severity: High
+affected: [skill]
+observed_in: gen1
 direction: E
 root_cause: R3
-severity: High
-affected:
-  - skill
 github_issue: 6
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# GitLab 多栈 CI 模板存在真实生成缺陷：Python/Go/Java/C++/docs-only 段内仍跑 npm 命令
+# FINDING-0010：FINDING-0010：GitLab 多栈 CI 模板存在真实生成缺陷：Python/Go/Java/C++/docs-only 段内仍跑 npm 命令
 
 ## 观察 Observation
 

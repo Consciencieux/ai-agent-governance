@@ -36,6 +36,8 @@ docs/findings/
 
 **代际标记用 `observed_in` / `resolved_in`，不用单值 `generation`。** 一个 Finding 可能在 Gen1 被发现、Gen2 仍未解决——`generation: gen1` 容易被误读成「它只属于 Gen1」。`observed_in`（何时发现）与 `resolved_in`（何时解决，未解决留空）分别表达这两个时间点。`Resolved` / `Superseded` / `Invalidated` 都只在文件内更新状态，永久留原位。
 
+**统一 envelope（表示法归一，ADR-0016）**：canonical field order = `id` / `status` / `type` / `severity` / `affected` / `observed_in` / `direction` / `root_cause` /（`resolved_in`、`github_issue` 按需）/ `related`；`affected: [repo, skill]`、`related:\n  plans: [PLAN-xxxx]\n  adrs: [ADR-xxxx]\n  research: [RESEARCH-xxxx]`（compact 列表，空类别省略）；H1 = `# FINDING-xxxx：中文标题`；不保留 `opened` / `updated` / `resolved`（Git 有 provenance）与空 optional 字段。
+
 ## Taxonomy：研究方向（7 方向）
 
 Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 `docs/findings/` 退化成零散 bug 堆。

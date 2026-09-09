@@ -6,8 +6,6 @@ generation: gen2
 
 # ADR-0017：2.0 迁移分支策略
 
-- 状态：Accepted
-- 日期：2026-09-08
 
 ## 背景
 

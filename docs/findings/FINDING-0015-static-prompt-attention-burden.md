@@ -2,21 +2,15 @@
 id: FINDING-0015
 status: Confirmed
 type: mechanism-gap
+severity: Medium
+affected: [repo, skill]
+observed_in: gen1
 direction: B
 root_cause: R1
-severity: Medium
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# 静态长 Prompt 造成注意力负担：规则存在率 ↑，但正确决策点召回率 ↓
+# FINDING-0015：FINDING-0015：静态长 Prompt 造成注意力负担：规则存在率 ↑，但正确决策点召回率 ↓
 
 ## 观察 Observation
 

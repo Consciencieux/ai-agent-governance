@@ -1,11 +1,12 @@
 ---
 id: PLAN-0012
+status: Archived
 generation: gen1
 ---
 
-# INIT Scripted Generator（TASK 计划）
+# PLAN-0012：INIT 脚本化生成器
 
-> **Status: archived.**（已归档。归档即断言完成。）
+> （已归档。归档即断言完成。）
 
 ### 任务目的
 

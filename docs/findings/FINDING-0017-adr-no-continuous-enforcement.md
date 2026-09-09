@@ -2,22 +2,17 @@
 id: FINDING-0017
 status: Confirmed
 type: architecture-gap
+severity: High
+affected: [repo, skill]
+observed_in: gen1
 direction: E
 root_cause: R1
-severity: High
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
 related:
-  plans: []
-  adrs:
-    - ADR-0010
+  adrs: [ADR-0010]
 ---
 
-# ADR 无持续 enforcement：ADR Accepted ≠ future changes constrained
+# FINDING-0017：FINDING-0017：ADR 无持续 enforcement：ADR Accepted ≠ future changes constrained
 
 ## 观察 Observation
 

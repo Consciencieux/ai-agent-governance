@@ -2,24 +2,19 @@
 id: FINDING-0023
 status: Resolved
 type: architecture-gap
+severity: Medium
+affected: [repo]
+observed_in: gen1
 direction: G
 root_cause: R1
-severity: Medium
-affected:
-  - repo
-observed_in: gen1
 resolved_in: gen1
-resolved: 2026-09-09
 related:
-  plans:
-    - PLAN-0032
-  adrs:
-    - ADR-0016
-  research:
-    - RESEARCH-0007
+  plans: [PLAN-0032]
+  adrs: [ADR-0016]
+  research: [RESEARCH-0007]
 ---
 
-# FINDING-0023：知识对象模型缺失「primary authoritative responsibility + supporting context」区分
+# FINDING-0023：FINDING-0023：FINDING-0023：知识对象模型缺失「primary authoritative responsibility + supporting context」区分
 
 ## 观察
 

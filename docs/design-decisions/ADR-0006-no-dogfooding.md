@@ -1,8 +1,11 @@
-# ADR-0006: 本仓库不狗粮自身治理框架
+---
+id: ADR-0006
+status: Accepted
+generation: cross-generation
+---
 
-- 状态：Accepted
-- 代际：cross-generation
-- 日期：2026
+# ADR-0006：本仓库不狗粮自身治理框架
+
 
 ## 背景
 

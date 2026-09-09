@@ -2,21 +2,15 @@
 id: FINDING-0008
 status: Confirmed
 type: research-observation
+severity: Medium
+affected: [repo, skill]
+observed_in: gen1
 direction: G
 root_cause: R1
-severity: Medium
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# 治理测量缺口：缺少证据模型、traceability 与 Zero-Attention 成熟度标准
+# FINDING-0008：FINDING-0008：治理测量缺口：缺少证据模型、traceability 与 Zero-Attention 成熟度标准
 
 ## 观察 Observation
 

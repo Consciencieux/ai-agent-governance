@@ -1,10 +1,11 @@
 ---
 id: PLAN-0001
+status: Archived
 generation: gen1
 ---
 
-# Secret Scanning Gate（TASK 计划）
-> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（v0.6.0，已归档）。 本页是路线图条目 `Secret scanning gate` 的详细设计（见 [roadmap.md(../roadmap/zh-CN.md)），按 `docs/plans/TASK_<name>.md` 六字段模板组织。目标版本：v0.6.0（已实现）。）
+# PLAN-0001：密钥扫描门禁
+> （已归档。归档即断言完成。）（原状态：已实现（v0.6.0，已归档）。 本页是路线图条目 `Secret scanning gate` 的详细设计（见 [roadmap.md(../roadmap/zh-CN.md)），按 `docs/plans/TASK_<name>.md` 六字段模板组织。目标版本：v0.6.0（已实现）。）
 
 ### 任务目的
 

@@ -2,21 +2,17 @@
 id: FINDING-0021
 status: Confirmed
 type: control-gap
+severity: Medium
+affected: [repo]
+observed_in: gen1
 direction: E
 root_cause: R4
-severity: Medium
-affected:
-  - repo
-observed_in: gen1
 related:
-  adrs:
-    - ADR-0014
-    - ADR-0015
-  research:
-    - RESEARCH-0007
+  adrs: [ADR-0014, ADR-0015]
+  research: [RESEARCH-0007]
 ---
 
-# FINDING-0021：Roadmap 机械检查失效（check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
+# FINDING-0021：FINDING-0021：FINDING-0021：Roadmap 机械检查失效（check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
 
 ## 观察
 

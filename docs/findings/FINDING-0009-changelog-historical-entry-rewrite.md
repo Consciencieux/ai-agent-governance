@@ -2,22 +2,17 @@
 id: FINDING-0009
 status: Resolved
 type: defect
+severity: High
+affected: [repo]
+observed_in: gen1
 direction: B
 root_cause: R1
-severity: High
-affected:
-  - repo
 github_issue: 6
-opened: 2026-09-08
-resolved: 2026-09-08
 related:
-  plans: []
-  adrs:
-    - ADR-0011
-    - ADR-0012
+  adrs: [ADR-0011, ADR-0012]
 ---
 
-# 已发布的 CHANGELOG 版本条目被后续 commit 改写，并插入对当时不存在的 ADR 的引用
+# FINDING-0009：FINDING-0009：已发布的 CHANGELOG 版本条目被后续 commit 改写，并插入对当时不存在的 ADR 的引用
 
 ## 观察 Observation
 

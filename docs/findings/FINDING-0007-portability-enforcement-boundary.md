@@ -2,21 +2,15 @@
 id: FINDING-0007
 status: Confirmed
 type: architecture-gap
+severity: High
+affected: [repo, skill]
+observed_in: gen1
 direction: F
 root_cause: R4
-severity: High
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# Portability 与 Runtime Hard Enforcement 的天然冲突：enforcement boundary 未定义
+# FINDING-0007：FINDING-0007：Portability 与 Runtime Hard Enforcement 的天然冲突：enforcement boundary 未定义
 
 ## 观察 Observation
 

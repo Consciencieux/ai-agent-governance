@@ -1,15 +1,10 @@
 ---
 id: RESEARCH-0003
-title: 评价框架（Evaluation Framework）
 status: Active
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []
-superseded_by: []
 ---
 
-# 评价框架（Evaluation Framework）
+# RESEARCH-0003：评价框架
 
 > 衡量治理系统有效性的指标集。对应科研目标：从「工程经验」升级为「可重复实验的平台」（FINDING-0008 G04）。
 

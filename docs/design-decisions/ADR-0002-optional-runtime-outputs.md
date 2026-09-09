@@ -1,9 +1,12 @@
-# ADR-0002: `validation.json` / `drift-report.json` 是可选的运行时输出
+---
+id: ADR-0002
+status: Accepted
+generation: cross-generation
+---
+
+# ADR-0002：`validation.json` / `drift-report.json` 是可选的运行时输出
 
 
-- 状态：Accepted（v0.3.2）
-- 代际：cross-generation
-- 日期：2026
 
 ## 背景
 

@@ -2,21 +2,15 @@
 id: FINDING-0014
 status: Confirmed
 type: architecture-gap
+severity: Critical
+affected: [repo, skill]
+observed_in: gen1
 direction: G
 root_cause: R1
-severity: Critical
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# review-manager 审查任务定义错了层级：implementation assurance ≠ architecture quality
+# FINDING-0014：FINDING-0014：review-manager 审查任务定义错了层级：implementation assurance ≠ architecture quality
 
 ## 观察 Observation
 

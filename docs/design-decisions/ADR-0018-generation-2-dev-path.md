@@ -6,8 +6,6 @@ generation: gen2
 
 # ADR-0018：Generation-2 开发路径
 
-- 状态：Accepted
-- 日期：2026-09-08
 
 ## 背景
 

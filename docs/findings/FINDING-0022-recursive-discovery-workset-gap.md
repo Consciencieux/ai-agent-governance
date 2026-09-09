@@ -2,23 +2,18 @@
 id: FINDING-0022
 status: Confirmed
 type: control-gap
+severity: Medium
+affected: [repo, skill]
+observed_in: gen1
 direction: G
 root_cause: R4
-severity: Medium
-affected:
-  - repo
-  - skill
-observed_in: gen1
 related:
-  plans:
-    - PLAN-0033
-  adrs:
-    - ADR-0021
-  research:
-    - RESEARCH-0008
+  plans: [PLAN-0033]
+  adrs: [ADR-0021]
+  research: [RESEARCH-0008]
 ---
 
-# FINDING-0022：修复过程中已发现问题可能因 recursive discovery 丢失（缺持久 workset）
+# FINDING-0022：FINDING-0022：FINDING-0022：修复过程中已发现问题可能因 recursive discovery 丢失（缺持久 workset）
 
 ## 观察
 

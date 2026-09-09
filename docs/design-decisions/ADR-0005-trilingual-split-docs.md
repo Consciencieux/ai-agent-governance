@@ -1,8 +1,11 @@
-# ADR-0005: 三语拆分文档（docs/en/ + docs/zh-CN/ + docs/zh-TW/）
+---
+id: ADR-0005
+status: Accepted
+generation: gen1
+---
 
-- 状态：Accepted
-- 代际：gen1
-- 日期：2026
+# ADR-0005：三语拆分文档（docs/en/ + docs/zh-CN/ + docs/zh-TW/）
+
 
 ## 背景
 

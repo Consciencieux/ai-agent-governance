@@ -1,13 +1,14 @@
 ---
 id: PLAN-0025
+status: Archived
 generation: gen1
 ---
 
-# Skill Lifecycle Management（TASK 計劃）
+# PLAN-0025：Skill 生命周期管理
 
 归档共享单语原文(简体中文为准)。原三语版本已随归档移除;本文件随 v0.13.2 归档于 2026-09-06。
 
-> **Status: archived.**（已歸檔。歸檔即斷言完成。）（原狀態：設計計劃，未實作。歸檔理由：§1（SKILL.md frontmatter version）早已交付，現為五個發佈同步點之一；其餘工作依 [Issue #1](https://github.com/Consciencieux/ai-agent-governance/issues/1) 的結論**應以獨立倉庫 `ai-skill-manager` 交付，但該倉庫尚未建立**——本倉庫無可交付物。**接管條件**：建立該倉庫後按 §3 方案 (a) 實施；在此之前 Issue #1 保持 OPEN 作為規劃記錄。歸檔於 2026-09-06，v0.13.2。）
+> （已歸檔。歸檔即斷言完成。）（原狀態：設計計劃，未實作。歸檔理由：§1（SKILL.md frontmatter version）早已交付，現為五個發佈同步點之一；其餘工作依 [Issue #1](https://github.com/Consciencieux/ai-agent-governance/issues/1) 的結論**應以獨立倉庫 `ai-skill-manager` 交付，但該倉庫尚未建立**——本倉庫無可交付物。**接管條件**：建立該倉庫後按 §3 方案 (a) 實施；在此之前 Issue #1 保持 OPEN 作為規劃記錄。歸檔於 2026-09-06，v0.13.2。）
 
 ### 任務目的
 

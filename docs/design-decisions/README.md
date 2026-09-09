@@ -30,6 +30,8 @@
 
 ## 生命周期与代际
 
+- **统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `generation`（+整篇 supersede 时 `superseded_by`）；正文不再有 `- 状态：` / `- 代际：` / `- 日期：`（canonical 在 frontmatter / Git）；H1 = `# ADR-xxxx：中文标题`。
+
 - **ADR 不物理归档。** `Superseded` / `Deprecated` 只在文件内更新状态，文件永久留在本目录原位——ADR 是长期设计决策记录，被取代不等于消失。
 - **`generation` 与 `status` 是两个独立维度**（代际 = 属于哪个架构时代；状态 = 生命周期状态）。不要合并成 `status: gen1-old` 之类的混合值。
 - **`generation` 取值**：`gen1`（仅 Generation-1 有效）/ `gen2`（定义 Generation-2）/ `cross-generation`（跨代继续有效）。具体决策见 ADR-0019。

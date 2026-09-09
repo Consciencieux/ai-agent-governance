@@ -2,20 +2,15 @@
 id: FINDING-0012
 status: Confirmed
 type: defect
+severity: Medium
+affected: [skill]
+observed_in: gen1
 direction: F
 root_cause: R4
-severity: Medium
-affected:
-  - skill
 github_issue: 6
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# check-lock.js 是 read-only advisory，不是 concurrency-safe lock（TOCTOU race）
+# FINDING-0012：FINDING-0012：check-lock.js 是 read-only advisory，不是 concurrency-safe lock（TOCTOU race）
 
 ## 观察 Observation
 

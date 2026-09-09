@@ -1,8 +1,11 @@
-# ADR-0010: 文档分层与入口层边界（README/CONTRIBUTING 是入口，不是事实库）
+---
+id: ADR-0010
+status: Accepted
+generation: cross-generation
+---
 
-- 状态：Accepted
-- 代际：cross-generation
-- 日期：2026-09-08
+# ADR-0010：文档分层与入口层边界（README/CONTRIBUTING 是入口，不是事实库）
+
 
 ## 背景
 

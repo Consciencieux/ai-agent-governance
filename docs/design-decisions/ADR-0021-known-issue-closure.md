@@ -6,8 +6,6 @@ generation: gen2
 
 # ADR-0021：Known-Issue Closure（已知问题闭包）
 
-- 状态：Accepted
-- 日期：2026-09-09
 
 ## 背景
 

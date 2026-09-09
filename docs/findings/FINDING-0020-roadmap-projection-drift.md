@@ -2,24 +2,18 @@
 id: FINDING-0020
 status: Resolved
 type: defect
+severity: Medium
+affected: [repo]
+observed_in: gen1
 direction: E
 root_cause: R4
-severity: Medium
-affected:
-  - repo
-observed_in: gen1
 resolved_in: gen1
-resolved: 2026-09-09
 related:
-
-  adrs:
-    - ADR-0015
-    - ADR-0018
-  research:
-    - RESEARCH-0007
+  adrs: [ADR-0015, ADR-0018]
+  research: [RESEARCH-0007]
 ---
 
-# FINDING-0020：Roadmap 投影漂移（ADR-0018 阶段顺序 ≠ Roadmap 阶段定义）
+# FINDING-0020：FINDING-0020：FINDING-0020：Roadmap 投影漂移（ADR-0018 阶段顺序 ≠ Roadmap 阶段定义）
 
 ## 观察
 

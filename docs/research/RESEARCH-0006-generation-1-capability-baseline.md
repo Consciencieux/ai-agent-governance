@@ -1,16 +1,11 @@
 ---
 id: RESEARCH-0006
-title: Generation-1 能力基线（Capability Baseline）
 status: Active
 version: 1
-created: 2026-09-09
-updated: 2026-09-09
-supersedes: []
-superseded_by: []
 subject_generation: gen1
 ---
 
-# Generation-1 能力基线（Capability Baseline）
+# RESEARCH-0006：Generation-1 能力基线
 
 本 RESEARCH 从 `docs/plans/archive/PLAN-0001..0030`（30 份归档计划）、当前代码与测试中提炼 Generation-1 的**能力保存矩阵**，为 Generation-2 重构提供 baseline evidence。它回答「1.0 曾经保护什么、现在由什么承载、2.0 怎么处置」，不复制任何归档计划的全文。
 

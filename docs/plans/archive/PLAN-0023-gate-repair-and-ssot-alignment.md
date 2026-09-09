@@ -1,12 +1,13 @@
 ---
 id: PLAN-0023
+status: Archived
 generation: gen1
 ---
 
-# 门禁修复与单一事实源对齐（TASK 计划）
+# PLAN-0023：门禁修复与单一事实源对齐
 
 
-> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-09-05，待 Release 归档）。本计划已在当前工作树交付；发布时按仓库规则归档。）
+> （已归档。归档即断言完成。）（原状态：已实现（2026-09-05，待 Release 归档）。本计划已在当前工作树交付；发布时按仓库规则归档。）
 
 **Target: both** —— `payload` 修复 INSTALLED 脚本行为（`scripts/check-doc-consistency.js`、`scripts/generate-governance.js`）与 `references/` 内容完整性（`references/templates/sub-skills.md`、`references/policies/governance-files.policy.md`、`SKILL.md`）；`repo-infra` 修复测试夹具、npm 接线、CI、仓库文档与归档状态。两个域分别列在“受影响文件”中。
 

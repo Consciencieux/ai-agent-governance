@@ -1,12 +1,13 @@
 ---
 id: PLAN-0022
+status: Archived
 generation: gen1
 ---
 
-# 内容受众与可移植性边界（TASK 计划）
+# PLAN-0022：内容受众与可移植性边界
 
 
-> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现（2026-09-05，待 Release 归档）。本计划已在当前工作树交付；发布时按仓库规则归档。）
+> （已归档。归档即断言完成。）（原状态：已实现（2026-09-05，待 Release 归档）。本计划已在当前工作树交付；发布时按仓库规则归档。）
 
 **Target: both** —— `payload` 改写泄漏的规则文本（`references/policies/lifecycle.policy.md`、`references/templates/sub-skills.md`、`SKILL.md`、`references/workflows/release.md`、`scripts/check-layout-sync.js`）并新增 tarball→INIT 边界测试；`repo-infra` 在文档与术语表中记录双轴模型并添加可移植性检查。两个域分别列在「受影响文件」中。
 

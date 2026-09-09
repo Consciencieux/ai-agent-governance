@@ -2,22 +2,17 @@
 id: FINDING-0018
 status: Confirmed
 type: architecture-gap
+severity: High
+affected: [repo, skill]
+observed_in: gen1
 direction: B
 root_cause: R1
-severity: High
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
 related:
-  plans: []
-  adrs:
-    - ADR-0011
+  adrs: [ADR-0011]
 ---
 
-# 1.0.0 成熟度误判：冻结了 interface surface，没冻结更核心的 rule/trigger/enforcement model
+# FINDING-0018：FINDING-0018：1.0.0 成熟度误判：冻结了 interface surface，没冻结更核心的 rule/trigger/enforcement model
 
 ## 观察 Observation
 

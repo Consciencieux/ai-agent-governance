@@ -6,8 +6,6 @@ generation: cross-generation
 
 # ADR-0019：知识对象代际元数据（generation）
 
-- 状态：Accepted
-- 日期：2026-09-09
 
 ## 背景
 

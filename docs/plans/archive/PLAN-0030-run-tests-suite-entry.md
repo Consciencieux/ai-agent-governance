@@ -1,11 +1,12 @@
 ---
 id: PLAN-0030
+status: Archived
 generation: gen1
 ---
 
-# 领域级测试入口（run-tests.js --suite）（TASK 计划）
+# PLAN-0030：领域级测试入口
 
-> **Status: archived.**（已归档。归档即断言完成。）（原状态：已实现，待 Release 归档。本计划是反补丁计划 `anti-patch-development.md` §3「拆分采用基线递减策略…并在每次迁移后保留领域级可运行入口」的**既批准承诺尾款**，不是新机制；工程克制「机制测试」不触发，受「已批准需求优先」边界保护。）
+> （已归档。归档即断言完成。）（原状态：已实现，待 Release 归档。本计划是反补丁计划 `anti-patch-development.md` §3「拆分采用基线递减策略…并在每次迁移后保留领域级可运行入口」的**既批准承诺尾款**，不是新机制；工程克制「机制测试」不触发，受「已批准需求优先」边界保护。）
 
 **Target：repo-infra** —— `run-tests.js` 是本仓库测试运行器（REPO-ONLY，不随 INIT 分发），改动只影响本仓库的开发循环与测试架构。
 

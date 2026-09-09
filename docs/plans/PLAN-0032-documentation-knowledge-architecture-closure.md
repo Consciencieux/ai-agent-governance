@@ -1,12 +1,13 @@
 ---
 id: PLAN-0032
+status: Active
 generation: gen2
 target: repo-infra
 ---
 
 # PLAN-0032：文档知识架构收口
 
-> **Status: Active.**（进行中。2026-09-09：建立三层定义——RESEARCH-0007（完整知识对象模型/系统描述）、ADR-0016（规范层：路由 / must-not / 当前-历史隔离）、`docs/README.md`（日常路由索引）；完成标准为定性判定，见「完成条件」。）
+> （进行中。2026-09-09：建立三层定义——RESEARCH-0007（完整知识对象模型/系统描述）、ADR-0016（规范层：路由 / must-not / 当前-历史隔离）、`docs/README.md`（日常路由索引）；完成标准为定性判定，见「完成条件」。）
 
 只修改 `docs/` 知识体系与相关 ADR/Research；不涉及 payload 行为。
 

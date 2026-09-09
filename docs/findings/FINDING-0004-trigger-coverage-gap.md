@@ -2,21 +2,15 @@
 id: FINDING-0004
 status: Confirmed
 type: control-gap
+severity: High
+affected: [repo, skill]
+observed_in: gen1
 direction: B
 root_cause: R2
-severity: High
-affected:
-  - repo
-  - skill
 github_issue: 7
-opened: 2026-09-08
-resolved:
-related:
-  plans: []
-  adrs: []
 ---
 
-# Trigger Coverage 缺口：门禁触发依赖 Agent 注意力
+# FINDING-0004：FINDING-0004：Trigger Coverage 缺口：门禁触发依赖 Agent 注意力
 
 ## 观察 Observation
 
