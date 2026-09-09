@@ -98,7 +98,7 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 3. **计划交付对账 + 发布门禁（全部在 release commit 之前）**：
    - `node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
    - `npm run check:skill-release`（exit 0；含 `check-doc-consistency.js --release-gate` 与 `check-doc-freshness.js --release-gate`）。**在归档与提交之前运行**：pending-archive（implemented 计划未归档）与 changelog 覆盖在此阶段失败还来得及补救——版本节推进有 `version_examples` 簇机械验证（CHANGELOG 最新版本节必须等于 package.json version，v0.13.1 发布曾因无此检查而漏改 CHANGELOG）。
-4. **归档计划**：已完成的 `TASK_<name>.md` 移入 `docs/plans/archive/`（技能仓库共享单语），**保留原文，绝不删除**。
+4. **归档计划**：归档**残留**的 Completed/Implemented 计划（若有）——移入 `docs/plans/archive/`（技能仓库共享单语），**保留原文，绝不删除**。权威触发是 Plan lifecycle closure（ADR-0016），不是本 release 步骤；本步只兜底漏归档。Gen1 pending-archive 门禁仍可能假设「release 才归档」——以 ADR-0016 / `docs/plans/README.md` 为语义权威，checker 迁移属 Phase 4。
    - **归档冲突规则**：一份计划在本仓库存在三份语言副本（`docs/{en,zh-CN,zh-TW}/plans/X.md`），而 `docs/archive/` 是共享单语目录。**以简体中文副本为准**；en / zh-TW 副本不是归档候选。最终 `docs/archive/` 下只有一个 `X.md`。
    - 未完成的计划继续留在 `docs/plans/` 下。
 5. **更新 roadmap**：按

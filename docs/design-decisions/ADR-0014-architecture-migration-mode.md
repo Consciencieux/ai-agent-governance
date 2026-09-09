@@ -61,7 +61,7 @@ Release Candidate → 完整 regression + security + packaging + release gates
 **Phase / architecture checkpoint 不是 release boundary。** Phase 0–8 某一阶段完成（例如 Phase 2 Documentation Knowledge Architecture Closure）只产生：
 
 ```text
-Plan → Completed（待 Migration Mode 退出后的 release 归档）
+Plan → Completed → Archived（lifecycle closure 时物理移入 docs/plans/archive/；不等待 Release）
 Roadmap Current Phase → 下一阶段
 CHANGELOG [Unreleased] → checkpoint 对账整理
 Git commit → 历史锚点（Research / Finding 可引用该 SHA）
@@ -69,11 +69,13 @@ Git commit → 历史锚点（Research / Finding 可引用该 SHA）
 
 **不产生** SemVer 版本号、`v*` Git tag、GitHub Release、skill tarball，也不宣称产品稳定。尤其禁止用 `v1.0.x` 描述 migration 分支上的 Gen2 文档/治理工作（会误读为 1.x 稳定 patch），也禁止在未退出 Migration Mode 前发 `v2.0.0` / `v2.0.0-alpha.*` 等任何正式或 prerelease tag——当前决策未授权「migration-only prerelease」例外。
 
+**Plan archive ≠ Release。** 禁止正式发布**不**禁止把已完成 Plan 移入 `docs/plans/archive/`。归档是知识生命周期；Release 是分发生命周期（ADR-0016 / ADR-0019）。
+
 **职责分离保持干净：**
 
 ```text
 Git tag / SemVer / skill-release.md  = release boundary（distribution）
-Plan / Roadmap / checkpoint commit   = architecture milestone（migration）
+Plan archive / Roadmap / checkpoint commit   = architecture & knowledge lifecycle
 ```
 
 `repo-workflows/skill-release.md` 要求 Gen1 full gates 全绿；Migration Mode 下旧 gate 可为 observational 红——二者逻辑冲突，正是决策 6 关闭 distribution boundary 的原因。正式 release 仅在 Phase 8 完成后、本 ADR 退出条件满足、新架构关键 gates 恢复 blocking authority 时，再做 release composition。

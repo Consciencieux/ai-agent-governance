@@ -1,13 +1,12 @@
 ---
 id: PLAN-0032
-status: Completed
+status: Archived
 generation: gen2
-target: repo-infra
 ---
 
 # PLAN-0032：文档知识架构收口
 
-> （已完成，待 Migration Mode 退出后的 release 归档。2026-09-10 Phase 2 exit：知识对象模型 / 权威矩阵 / 表示法收口完成；Unaccounted=0；Open=0；Deferred 仅 R23（Phase 3 入口取回）。本 checkpoint ≠ Release——见 ADR-0014 2026-09-10 修正。）
+> （已归档。2026-09-10 Phase 2 exit；按 ADR-0016 Plan archive ≠ Release，于 lifecycle closure 移入 archive。Phase 2 baseline commit `346bb749`。checkpoint ≠ Release。）
 
 只修改 `docs/` 知识体系、相关 ADR/Research，以及仓库入口 `CONTRIBUTING*.md` 中与知识路由冲突的贡献者指令；不涉及 payload 行为。
 
@@ -127,7 +126,7 @@ docs/README.md
 | R20 | review | docs/README 变知识仓库 | repo | closed | resolved | ADR-0022 收窄为 execution-facing 入口 |
 | R21 | systemic | 知识对象 authority/supporting-context 模型缺失 | repo | closed | promoted-to-finding | FINDING-0023 |
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
-| R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（revisit: Phase 3 开始前的 entry checkpoint；该 checkpoint 必须重新取回 R23，并确认 ADR-0022 § 后果对应的 AGENTS/SKILL 入口瘦身执行计划与范围） | ADR-0022 § 后果 |
+| R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred→retrieved（Phase 3 入口已取回：边界写入 PLAN-0034 § Phase 3 入口；完整瘦身延后为 PLAN-0034 E1） | PLAN-0034；ADR-0022 § 后果 |
 | R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 R24，并建立 successor Plan ID） | ADR-0021 § 决策 6 |
 | R25a | subtask | 表示法归一 · 人类面向呈现：中文 H1 / 章节 / 表头，机器 key/enum 保持稳定英文 | repo | closed | resolved | 管理 README 英文元话语清除；当前 Plan/ADR/Finding/Research H1 与关键章节括注清理；experiments 模板中文化 |
 | R25b | subtask | 表示法归一 · 机器元数据精简：frontmatter 只保留必要 machine semantics | repo | closed | resolved | Finding 对象与 README 一致（id/status/type/observed_in[+resolved_in]）；ADR-0016 删除内联 schema；ADR-0013 后果措辞对齐；Research/ADR/Plan schema 已精简且无强制字段待删 |
@@ -145,7 +144,7 @@ docs/README.md
 Total known:  31
 Resolved:     26  (R1–R20、R22、R25a、R25b、R27、R28、R29)
 Open:         0
-Deferred:     1  (R23；Phase 3 开始前 entry checkpoint 重新取回)
+Deferred:     1  (R23；已由 PLAN-0034 入口取回，完整瘦身见 PLAN-0034 E1)
 Promoted to Finding:   3  (R21 → FINDING-0023；R26 projection drift → FINDING-0024；R30 → FINDING-0027)
 Promoted to next Plan: 1  (R24；Phase 4 planning checkpoint 重新取回并建立 successor Plan ID)
 Unaccounted:  0
@@ -158,7 +157,7 @@ Exit review 确认：
 ```text
 Unaccounted = 0
 Open = 0
-Deferred = R23（revisit: Phase 3 entry checkpoint；取回 AGENTS/SKILL 入口瘦身范围）
+Deferred = R23（已取回 → PLAN-0034；完整瘦身 = PLAN-0034 E1）
 Promoted = FINDING-0023 / 0024 / 0027；R24 → Phase 4 planning successor
 完成条件四条（路由确定性 / 历史隔离 / 单一归属 / 演进纪律）定性通过
 无已知 knowledge-type authority contradiction 未记账
@@ -166,7 +165,7 @@ Promoted = FINDING-0023 / 0024 / 0027；R24 → Phase 4 planning successor
 
 成熟度：Documentation Knowledge Architecture 的 concept / authority / routing / lifecycle / representation ≈ 完成。**不是** Generation-2 完成，也不是 release candidate（ADR-0014：checkpoint ≠ Release）。
 
-下一步：Roadmap 已进入 Phase 3；立 phase checkpoint plan 前必须先取回 R23。Migration Mode 下不打 SemVer tag、不以 skill-release 发布。
+下一步：Roadmap Phase 3 的 Active Plan 为 PLAN-0034。Migration Mode 下不打 SemVer tag、不以 skill-release 发布。
 
 ## 未决风险
 

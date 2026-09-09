@@ -22,10 +22,10 @@
 | [ADR-0013](ADR-0013-findings-archive.md) | 问题 / 发现档案与知识对象五分类 | Finding 在 repo 内 canonical、GitHub Issue 是 projection；状态就地更新不归档；简中单语；review 先分类再修复 |
 | [ADR-0014](ADR-0014-architecture-migration-mode.md) | 架构迁移模式 | 2.0 重构期间旧 gate 降级为观测；保留 Refactor Safety Kernel；checkpoint ≠ Release；禁止正式/prerelease tag |
 | [ADR-0015](ADR-0015-roadmap-repositioning.md) | 路线图重新定位 | roadmap 从功能清单变为架构演进视图；已完成能力迁往 research/；维护触发从每次发布改为架构事件；加入非目标 |
-| [ADR-0016](ADR-0016-doc-structure-purpose-first.md) | 文档结构用途优先 | 语言不是第一层分类；知识对象按用途分层；权威矩阵约束正文级可声明内容 |
+| [ADR-0016](ADR-0016-doc-structure-purpose-first.md) | 文档结构用途优先 | 语言不是第一层分类；知识对象按用途分层；权威矩阵；Plan 归档触发 = lifecycle closure（≠ Release） |
 | [ADR-0017](ADR-0017-migration-branch-strategy.md) | 2.0 迁移分支策略 | 长期 migration/2.0 分支 + 阶段里程碑合并；main 保持 1.x 稳定 baseline；不发布 1.1/1.2 过渡；2.0 RC 后合入 |
 | [ADR-0018](ADR-0018-generation-2-dev-path.md) | 第二代开发路径 | Phase 0–8 执行顺序；统一 ID 编号规则；CONTROL-X 跨 profile 契约测试；测试指标转向；Gen2 阶段须通过 Active Plan 执行 |
-| [ADR-0019](ADR-0019-generation-metadata.md) | 知识对象代际元数据 | 用 metadata 不用目录标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete |
+| [ADR-0019](ADR-0019-generation-metadata.md) | 知识对象代际元数据 | 用 metadata 不用目录标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete ≠ product released |
 | [ADR-0020](ADR-0020-producer-product-governance-separation.md) | 生产者 / 产品治理分离 | Profile 术语、共享语义单一权威 owner、separation invariants 与 CONTROL-X 契约 |
 | [ADR-0021](ADR-0021-known-issue-closure.md) | 已知问题闭包 | 已知问题持久捕获、显式处置、zero unaccounted 与 Discovery Ledger |
 | [ADR-0022](ADR-0022-agent-instruction-architecture.md) | Agent 指令架构 | 薄入口路由、叶节点单一能力、树状检索 + 图状适用 + 机械执行；机械控制不依赖入口被记住 |

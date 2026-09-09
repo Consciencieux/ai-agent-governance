@@ -108,6 +108,35 @@ docs/plans/
 
 原正文（含 archive 四类子目录的树与 Phase 4 条文）保留作为历史决策记录；本修正以明确的接受日期 supersede 其中冲突的部分。
 
+## 后续修正（2026-09-10）：Plan 归档触发 = 生命周期闭包，不是 Release
+
+本修正是对「后续修正（2026-09-09）：归档只保留 plans/」的 **Narrow amendment**，澄清**何时**物理归档。位置仍为 `docs/plans/archive/`；本条只改触发条件。
+
+**Plan archive ≠ Release。** 计划在执行生命周期结束时归档；发布在产品生命周期达到 release boundary 时发生。二者不得互相作为前置条件。
+
+```text
+Design → Active → Implemented → Completed → Archived
+         （施工中，留在 docs/plans/）
+                                    ↑
+                         exit review / closure reconciliation
+                         Unaccounted=0 且完成条件满足
+                         → 同变更移入 docs/plans/archive/
+                            status: Archived
+```
+
+`Completed` 是短暂过渡（闭包对账进行中），不是「已完成但可在当前计划库躺到下一次正式 release」的长期状态。不新建 `docs/plans/completed/`。
+
+```text
+docs/plans/          = Design / Active / Implemented（当前施工）
+docs/plans/archive/  = 已完成 closure 的历史执行证据
+```
+
+**与 Migration Mode：** ADR-0014 禁止的是正式 tag / GitHub Release / skill tarball / 稳定声明，**不**禁止知识对象生命周期正常推进。Migration 期间 Completed Plan 仍应归档；`[Unreleased]` 继续累积，不切版本节。
+
+**与 Gen1 机械层：** `skill-release.md` / pending-archive 等仍可能假设「release 时统一归档」。新语义以本 ADR + `docs/plans/README.md` 为权威；旧 gate 红属于 compatibility divergence，parser / release-step 迁移属 Phase 4（与 Representation authority moves now 同法）。Release 步骤退化为：归档**残留**的 Completed/Implemented 计划（若有），而非把归档义务推迟到 release。
+
+另见 ADR-0019：`Plan archived ≠ Product released`。
+
 ## 后续补充（2026-09-09）：知识对象模型规范（边界、路由与生命周期）
 
 将 `docs/` 固化为一套稳定的**知识对象模型**（七类：Product / Research / Finding / ADR / Roadmap / Plan / Glossary；Archive Plan 是 Plan 的生命周期状态，不是独立类型）。完整系统模型（描述层）见 `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；本条只规定**必须遵守的规范决策**：

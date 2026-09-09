@@ -295,7 +295,7 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
 當前階段：3 — Governance Core / Rule Model
-當前階段計劃：尚未建立（進入前須取回 PLAN-0032 R23，再立 phase checkpoint plan）。Phase 2 已完成：PLAN-0032 / PLAN-0033 均為 `Completed`（Migration Mode 下暫不物理歸檔；歸檔隨日後正式 release）。
+當前階段計劃：PLAN-0034（phase checkpoint；Active）。Phase 2 已完成：PLAN-0032 / PLAN-0033 已於 lifecycle closure 歸檔（`docs/plans/archive/`；Plan archive ≠ Release — ADR-0016）。Phase 2 baseline：`346bb749`。
 
 
 ## Guarantee Levels

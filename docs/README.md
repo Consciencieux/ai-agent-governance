@@ -90,13 +90,13 @@ Plan / Finding / Research / ADR 四类对象：
 > **归档是 Plan 的生命周期概念，不是一类通用文档。**
 
 ```text
-Plan     → physical archive（移到 plans/archive/）
+Plan     → physical archive at lifecycle closure（exit review 后移到 plans/archive/；≠ Release）
 Finding  → status transition in place（状态就地更新，永不归档）
 Research → status transition in place（Draft → Active → Superseded，就地）
 ADR      → status transition in place（Accepted → Superseded / Deprecated，就地）
 ```
 
-只有 Plan 做物理归档；Finding / Research / ADR 不因状态变化移动路径。
+只有 Plan 做物理归档；触发是执行生命周期闭包，不是 SemVer / GitHub Release（ADR-0016）。Finding / Research / ADR 不因状态变化移动路径。
 
 ADR 的修订政策（澄清 vs 语义变化；**ADR 可以演进，但不能改写历史**）见 `docs/design-decisions/README.md` § ADR 修订与演进。
 

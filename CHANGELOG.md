@@ -22,6 +22,8 @@ All notable changes to this project will be documented here.
 
 - **Repo CHANGELOG accession is impact-based; released history through `[1.0.2]` stays frozen** — eligibility is by observable audience impact, not file type; writing may defer to a checkpoint but accounting may not; legacy released sections are not restyled to today's accession rules (FINDING-0009). Execution policy: `repo-workflows/changelog-policy.md`.
 
+- **Plan archive is decoupled from product release** — Plans move to `docs/plans/archive/` at lifecycle closure (exit review), not at SemVer / GitHub Release. Migration Mode still forbids tags and skill distribution; it does not block archive. Normative: ADR-0016 amendment; `docs/plans/README.md`.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added
