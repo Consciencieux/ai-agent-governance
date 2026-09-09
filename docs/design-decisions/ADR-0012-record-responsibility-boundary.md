@@ -35,6 +35,8 @@ CHANGELOG 的内容边界规则（"记录变更、影响、迁移；不记录测
 
 CHANGELOG 的结构契约（版本节形状、分类标题唯一性、空行规则、分类名集合）与内容边界的完整条文，权威在 `references/policies/lifecycle.policy.md`。本 ADR 只记录"为什么要分流"和"分流到哪"；把格式规则复制进来会制造第二事实源，而这正是 ADR-0009 已经裁定过的问题。
 
+**（Narrow amendment，2026-09-09：本决策部分被「后续补充」supersede——结构契约的权威仍为 lifecycle.policy（repo 与 governed project 共享格式语义）；repo 自身的 accession / `[Unreleased]` / released-section 执行政策改由 Repo Profile 拥有的 repo-domain 文档承担（AGENTS.md 为指针，详细政策按 ADR-0022 下沉到 repo-domain execution doc）；shared semantics ownership 的正式建模留 Phase 3。）**
+
 **4. 历史记录逐步迁移，不批量重写。**
 
 - 最新版本节与 `[Unreleased]`：适用完整边界，这也是机械门禁唯一覆盖的范围。
@@ -43,7 +45,7 @@ CHANGELOG 的结构契约（版本节形状、分类标题唯一性、空行规�
 
 ## 后续补充（2026-09-09）：CHANGELOG 在新知识系统中的定位
 
-知识体系升级为八类知识对象（Product / Research / Finding / ADR / Roadmap / Plan / Archive Plan / Glossary，见 RESEARCH-0007）后，CHANGELOG 重新定界。本 ADR 原决策的核心判断仍然成立（CHANGELOG 记变更事实；ADR 记长期决策；Plan 记单次任务实施；验证证据在测试/审计），以下为边界细化：
+知识体系升级为七类知识对象（Product / Research / Finding / ADR / Roadmap / Plan / Archive Plan / Glossary，见 RESEARCH-0007）后，CHANGELOG 重新定界。本 ADR 原决策的核心判断仍然成立（CHANGELOG 记变更事实；ADR 记长期决策；Plan 记单次任务实施；验证证据在测试/审计），以下为边界细化：
 
 **1. CHANGELOG 是「历史变更投影」，不是 `docs/` 知识类型之一。**
 
@@ -68,7 +70,7 @@ YES → candidate；NO → normally no CHANGELOG entry
 
 **4. Released section 默认不可重写。** 允许 factual correction / broken pointer correction / 明确授权的历史整理；不允许为匹配今天架构把过去写成「当时就是这样」（与 ADR「不改写历史」原则同源）。
 
-**5. Repo CHANGELOG 政策由 Repo Profile 拥有。** 原决策把 CHANGELOG 格式与内容规则权威指向 INSTALLED `references/policies/lifecycle.policy.md`（Skill payload）。按 ADR-0020（shared semantics ≠ shared authority）：repo 与 governed project 可共享「CHANGELOG 记录已交付变更而非验证叙事」的语义，但 repo 自身 CHANGELOG 的执行政策（准入、[Unreleased]、released-section）由 Repo Profile（`AGENTS.md`）自己拥有；payload `lifecycle.policy.md` 继续权威于 governed projects 的 CHANGELOG 格式契约（repo 作为共享格式语义的 consumer 遵循）。
+**5. Repo CHANGELOG 政策由 Repo Profile 拥有。** 原决策把 CHANGELOG 格式与内容规则权威指向 INSTALLED `references/policies/lifecycle.policy.md`（Skill payload）。按 ADR-0020（shared semantics ≠ shared authority）：repo 与 governed project 可共享「CHANGELOG 记录已交付变更而非验证叙事」的语义，但 repo 自身 CHANGELOG 的执行政策（准入、[Unreleased]、released-section）由 Repo Profile 拥有，落点为 **repo-domain execution document**（`repo-workflows/changelog-policy.md`，REPO-ONLY）；`AGENTS.md` 只放路由指针（按 ADR-0022 薄入口）；payload `lifecycle.policy.md` 继续权威于 governed projects 的 CHANGELOG 格式契约（repo 作为共享格式语义的 consumer 遵循）。
 
 ## 后果
 

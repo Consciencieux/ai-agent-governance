@@ -1,8 +1,13 @@
-# ADR-0020: Producer / Product Governance Separation——边界、不变量与 cross-profile closure 契约
+---
+id: ADR-0020
+status: Accepted
+generation: gen2
+---
+
+# ADR-0020：Producer / Product Governance Separation
 
 - 状态：Accepted
 - 日期：2026-09-09
-- 代际：gen2
 
 ## 背景
 
@@ -37,7 +42,7 @@ implementation owner(s)
 dependency boundary
 ```
 
-为止。evaluator / evidence / decision / applicability 的建模、adapter 设计、primitive 抽象分别留给 Phase 3/8/4。
+为止。evaluator / evidence / decision / applicability 的建模留给 Phase 3/4（Rule Model / Checker-Primitive）；adapter 设计不在 ADR-0018 Phase 0–8 的固定阶段内（对应 Guarantee Levels L3 Runtime Interception，属后续研究/实现，见 Roadmap Research Goals）。
 
 **2. SSOT 原则。**
 

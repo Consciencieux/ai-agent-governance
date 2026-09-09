@@ -1,8 +1,13 @@
-# ADR-0019: 知识对象代际元数据（generation）——用 metadata，不用目录
+---
+id: ADR-0019
+status: Accepted
+generation: cross-generation
+---
+
+# ADR-0019：知识对象代际元数据（generation）
 
 - 状态：Accepted
 - 日期：2026-09-09
-- 代际：cross-generation
 
 ## 背景
 

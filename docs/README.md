@@ -17,7 +17,7 @@ docs/
 
 ## 东西放哪里（知识对象路由）
 
-**内容路由测试**——按主问题判定归属：
+**内容路由测试**——按对象的 **primary authoritative responsibility** 判定归属：
 
 ```text
 这是在描述系统？            → Research
@@ -28,9 +28,9 @@ docs/
 这是给产品用户看的当前事实？ → Product
 ```
 
-一个内容同时回答两个问题 → **拆开成多个知识对象并互相引用**，不选一个目录硬塞。
+对象可包含必要的 supporting context（如 ADR 的 Background/Consequences、Finding 的 Resolution）；**只有 forming 独立长期知识时才拆出并互相引用**，不是「两问同答就必须拆」。
 
-**八类对象（唯一主问题 + 禁止承担）**：
+**七类对象（唯一主问题 + 禁止承担）**：
 
 | 类型 | 唯一主问题 | 禁止承担 |
 | --- | --- | --- |
@@ -38,10 +38,11 @@ docs/
 | Research | 这个系统现在是什么、怎么工作、如何理解？ | 宣布必须采用某方案 |
 | Finding | 实际发现了什么问题？ | 详细施工方案 |
 | ADR | 我们接受了什么长期决策，为什么？ | 任务状态、implementation checklist、bug inventory、roadmap scheduling |
-| Roadmap | 未来往哪里走、当前在哪个阶段？ | 详细设计、完整历史、事实复制 |
+| Roadmap | 未来往哪里走、当前在哪个阶段？ | 详细设计、完整历史、事实复制；**裁决阶段顺序**（归 ADR-0018） |
 | Plan | 当前这项工作怎么做、怎么验收？ | 重新定义长期架构 |
-| Archive Plan | 当时最终做成了什么？ | 当前执行规则 |
 | Glossary | 术语到底叫什么？ | 业务规则和架构决策 |
+
+**Archive Plan 是 Plan 的生命周期状态，不是独立类型**：`docs/plans/archive/` 中的 Plan 是 Archived 状态（历史执行证据），类型仍为 Plan（目录决定类型，状态决定生命周期）。
 
 **当前 vs 历史（隔离）**：
 
@@ -53,6 +54,22 @@ Historical evidence: Superseded Research / Resolved·Invalidated Findings / Supe
 历史记录可被读来理解 provenance，**不得直接成为当前执行指令**。
 
 完整系统模型（描述层）→ `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；规范层（routing / must-not / 当前-历史隔离）→ ADR-0016。
+
+## 统一表示法（Representation Normalization）
+
+Plan / Finding / Research / ADR 四类对象：
+
+```text
+- YAML frontmatter 统一
+- 公共必填仅 id/status
+- 空 optional 字段省略（sparse）
+- 机器字段/enum 用稳定英文
+- 简中 canonical 正文：H1/章节/表格头以中文为主
+- 类型专属 schema → 对应目录 README
+- 生命周期语义本阶段不改（Gen1 正文 Status 解析保留至 Phase 4）
+```
+
+规范：ADR-0016 § 后续补充；各类型专属字段/status enum/章节 → `plans/README.md`、`findings/README.md`、`research/README.md`、`design-decisions/README.md`。
 
 ## 类型边界、语言与生命周期
 

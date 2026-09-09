@@ -272,7 +272,7 @@ Profile              Profile
 
 ## Generation 2 Development Phases
 
-The authoritative phase order is ADR-0018; this Roadmap indexes it and does not restate the ADR's rulings. Each phase executes as a `PLAN-xxxx` under Accepted ADR constraints.
+The Roadmap does not independently define or adjudicate phase order; it only mirrors/indexes ADR-0018.s current projection (the list below is that projection, not a fresh ruling). Each phase executes as a `PLAN-xxxx` under Accepted ADR constraints.
 
 | Phase | Name (ADR-0018) | One-line outcome |
 | --- | --- | --- |
@@ -287,6 +287,9 @@ The authoritative phase order is ADR-0018; this Roadmap indexes it and does not 
 | 8 | Rebuild mandatory gates | blocking authority rebuilt on the new control plane |
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
+
+Current Phase: 2 — Research / Findings / Traceability
+Current Phase Plan: PLAN-0032 (phase checkpoint) · PLAN-0033 (subordinate)
 
 
 ## Guarantee Levels

@@ -1,7 +1,12 @@
-# ADR-0015: Roadmap 重新定位——从功能清单到架构演进视图
+---
+id: ADR-0015
+status: Accepted
+generation: gen2
+---
+
+# ADR-0015：Roadmap 重新定位
 
 - 状态：Accepted
-- 代际：gen2
 - 日期：2026-09-08
 
 ## 背景
@@ -33,6 +38,7 @@
 ## Target Architecture       Generation 2（Rule Registry → Context Detector → Dispatcher → Mechanism → Evidence）
 
 ## Migration Phases          Phase 1 Producer/Product Separation → Phase 2 Governance Core → Phase 3 Policy Model → Phase 4 Dispatcher → Phase 5 Runtime Adapter
+                           （**Historical proposal — superseded by ADR-0018 Phase 0–8. Not an operative phase definition.**）
 
 ## Research Goals            dynamic policy injection / incremental validation / enforcement coverage
 

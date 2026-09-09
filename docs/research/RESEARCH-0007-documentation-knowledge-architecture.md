@@ -1,22 +1,16 @@
 ---
 id: RESEARCH-0007
-title: 文档知识架构 / 知识对象模型（Documentation Knowledge Architecture / Knowledge Object Model）
 status: Active
 version: 2
-created: 2026-09-09
-updated: 2026-09-09
-supersedes: []
-superseded_by: []
-subject_generation: gen1
 ---
 
-# 文档知识架构 / 知识对象模型（Documentation Knowledge Architecture / Knowledge Object Model）
+# RESEARCH-0007：文档知识架构 / 知识对象模型
 
-本 RESEARCH 是 **System Model**：完整描述 `docs/` 作为一套**知识对象模型**如何运作——八类知识对象各是什么、每个对象的唯一主问题与「必须承担 / 禁止承担」、内容如何路由、当前知识与历史知识如何隔离、对象之间如何通过链接关联。它回答「这个知识系统现在是怎么工作的」。
+本 RESEARCH 是 **System Model**：完整描述 `docs/` 作为一套**知识对象模型**如何运作——七类知识对象各是什么、每个对象的唯一主问题与「必须承担 / 禁止承担」、内容如何路由、当前知识与历史知识如何隔离、对象之间如何通过链接关联。它回答「这个知识系统现在是怎么工作的」。
 
 它是**描述层**；「必须遵守的规范决策」是**规范层**，归各域 ADR（ADR-0016 目的优先分类、ADR-0015 Roadmap 权威、ADR-0018 阶段执行、ADR-0019 归档/代际）。它也是**中立系统描述**；已观察到的失效由 `docs/findings/` 记录（FINDING-0020 / 0021）。
 
-## 八类知识对象
+## 七类知识对象
 
 | 类型 | 位置 | 唯一主问题 | Authoritative for | 可以包含 | 不应该承担 |
 | --- | --- | --- | --- | --- | --- |
@@ -24,12 +18,19 @@ subject_generation: gen1
 | **Research** | `docs/research/` | 这个系统现在是什么、怎么工作、如何理解？ | 系统模型、机制分类、评价框架 | 模型、机制、分类、测量、实验 | 宣布必须采用某方案（那是 ADR 的职责） |
 | **Finding** | `docs/findings/` | 实际发现了什么问题？ | 观察到的缺陷、失败模式、治理缺口 | 观察、证据、根因、影响、关闭条件 | 详细施工方案（那是 Plan 的职责） |
 | **ADR** | `docs/design-decisions/` | 我们接受了什么长期决策，为什么？ | 已接受的架构约束 | decision、rationale、alternatives、consequences | 任务状态、implementation checklist、bug inventory、roadmap scheduling |
-| **Roadmap** | `docs/plans/roadmap/` | 项目未来往哪里走、当前在哪个阶段？ | 长期方向与阶段顺序（索引） | milestones、phases、outcomes、当前阶段 | 详细设计、完整历史、事实复制 |
+| **Roadmap** | `docs/plans/roadmap/` | 项目未来往哪里走、当前在哪个阶段？ | 当前战略投影与里程碑投影（索引） | milestones、phases（投影）、outcomes、当前阶段 | 详细设计、完整历史、事实复制；**裁决阶段顺序**（权威归 ADR-0018） |
 | **Plan** | `docs/plans/` | 当前这项工作怎么做、怎么验收？ | 当前任务的执行合同 | scope、steps、risks、validation、completion criteria | 重新定义长期架构（那是 ADR 的职责） |
-| **Archive Plan** | `docs/plans/archive/` | 这项工作当时最终做成了什么？ | 历史执行证据 | 最终执行证据、历史 | 当前执行规则 |
 | **Glossary** | `docs/glossary.md` | 术语到底叫什么？ | canonical terminology | 术语定义（三语对照） | 业务规则和架构决策 |
 
-**每个对象的主问题是唯一分类维度**：一个内容如果同时回答两个问题，就**拆开并互相引用**，而不是选一个目录硬塞进去。
+**Archive Plan 不是独立知识类型，是 Plan 的生命周期状态。** `docs/plans/archive/` 中的 Plan 回答「这项工作当时最终做成了什么」，是 Plan 的 Archived 状态（历史执行证据），类型仍为 Plan（目录决定类型，状态决定生命周期，R2）。同理，Active Plan / Archived Plan 是同一类型的两个生命周期阶段，不是 type A / type B。
+
+**每个对象有且只有一个 primary authoritative responsibility，它决定对象类型。** 对象允许包含必要的 supporting context（如 ADR 的 Background/Consequences、Finding 的 Resolution、Plan 的 Proposed Solution）。只有当一个 supporting 内容本身形成**独立、长期维护的事实或决策**时，才拆成独立对象并引用——而不是「同时回答两个问题就必须拆」。
+
+```text
+Primary authoritative claim  → 决定对象类型
+Supporting context           → 可在对象内简述
+Independent authoritative knowledge → 必须拆出并引用
+```
 
 ## 内容路由测试（routing test）
 
@@ -42,7 +43,7 @@ subject_generation: gen1
 这是给产品用户看的当前事实？ → Product
 ```
 
-一个内容同时回答两个问题 → 拆开成多个知识对象，互相引用。
+路由按对象的 **primary authoritative responsibility** 判定；对象内的 supporting context 不触发拆分，只有形成独立长期知识时才拆出并互相引用（见上）。
 
 示例（"修 bug 时问题会被忘掉"）：
 
@@ -56,7 +57,7 @@ Product  → 若成为分发 Skill 的用户可见能力，再写使用说明
 
 ## 四条规则
 
-**R1 · 内容路由。** 用上面的 routing test 判定归属；两问同答必须拆开互引。
+**R1 · 内容路由。** 用上面的 routing test 按对象的 primary authoritative responsibility 判定归属；对象可含 supporting context，只有形成独立长期知识时才拆出并引用（不是「两问同答就必须拆」）。
 
 **R2 · 目录决定知识类型，不决定重要程度；状态决定生命周期，引用决定关系。**
 
@@ -102,13 +103,16 @@ Research / Finding
 ## Agent 如何导航
 
 ```text
-1. 读取 Roadmap            → 确认 current phase
+1. 读取 Roadmap            → 确认 current phase（Roadmap 标记 Current Phase + Current Phase Plan）
 2. 读取约束该 phase 的 Accepted ADR → 确认不能违反的边界
-3. 找到当前唯一 Active Plan → 确认当前具体执行范围
+3. 找到当前 phase 的 Active Plan   → 确认当前具体执行范围
+                                 （phase checkpoint plan；同 phase 可含 subordinate plans，按 execution order 执行）
 4. 执行 Plan               → 修改真实仓库 + 验证
 5. 达到 completion criteria → Completed / archive
 6. 再进入下一 phase
 ```
+
+**当前 phase 可有一个 phase checkpoint plan + 若干 subordinate plans**（例如 Phase 2 的 checkpoint plan PLAN-0032 与 subordinate PLAN-0033），不是字面上「全仓只有一个 Active Plan」；「唯一 Active Plan」指**每个 phase 有且只有一个执行主体指向的 plan set**，subordinate plans 在 checkpoint plan 之下按其 execution order 执行。
 
 ## 机械 carrier
 

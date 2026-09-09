@@ -1,7 +1,12 @@
-# ADR-0016: 文档结构从「语言树」转向「用途分层」——语言不是第一层分类维度
+---
+id: ADR-0016
+status: Accepted
+generation: gen2
+---
+
+# ADR-0016：文档结构从「语言树」转向「用途分层」
 
 - 状态：Accepted
-- 代际：gen2
 - 日期：2026-09-08
 
 ## 背景
@@ -74,13 +79,15 @@ docs/
 
 ## 实施阶段（Migration Mode 内）
 
-1. **Phase 1**：把 product 文档（9 个：architecture / governance-model / commands / validator / lifecycle / anti-regression / skill-discovery / bootstrap-output）从 `docs/{en,zh-CN,zh-TW}/` 移到 `docs/product/{en,zh-CN,zh-TW}/`，更新 gate 脚本路径。
-2. **Phase 2**：roadmap 移到 `docs/plans/roadmap/`（保留三语），适配 `check-roadmap-sync.js`。
-3. **Phase 3**：plans 从三语树合并为单语 `docs/plans/`。
-4. **Phase 4**：archive 按类型分子目录（plans / findings / research / adr）。
-5. **Phase 5**：清理旧路径引用、gate 脚本、测试 fixture。
+**以下 D1–D5 是 ADR-0016 当时的局部文档迁移实施序列，不属于 Gen2 phase numbering（全局 Phase 0–8 以 ADR-0018 为准）；已由后续文档迁移与相关 Plan 执行，历史保留。**
 
-每个 Phase 是一个独立 checkpoint（ADR-0014），gate 在 Migration Mode 下为观测性。
+1. **D1**：把 product 文档（9 个：architecture / governance-model / commands / validator / lifecycle / anti-regression / skill-discovery / bootstrap-output）从 `docs/{en,zh-CN,zh-TW}/` 移到 `docs/product/{en,zh-CN,zh-TW}/`，更新 gate 脚本路径。
+2. **D2**：roadmap 移到 `docs/plans/roadmap/`（保留三语），适配 `check-roadmap-sync.js`。
+3. **D3**：plans 从三语树合并为单语 `docs/plans/`。
+4. **D4**：archive 按类型分子目录（plans / findings / research / adr）。
+5. **D5**：清理旧路径引用、gate 脚本、测试 fixture。
+
+每个 D 步骤是一个独立 checkpoint（ADR-0014），gate 在 Migration Mode 下为观测性。
 
 ## 后续修正（2026-09-09）：archive 只保留 `plans/`，且位置在 `docs/plans/archive/`
 
@@ -105,15 +112,27 @@ docs/plans/
 
 ## 后续补充（2026-09-09）：知识对象模型规范（边界、路由与生命周期）
 
-将 `docs/` 固化为一套稳定的**知识对象模型**（八类：Product / Research / Finding / ADR / Roadmap / Plan / Archive Plan / Glossary）。完整系统模型（描述层）见 `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；本条只规定**必须遵守的规范决策**：
+将 `docs/` 固化为一套稳定的**知识对象模型**（七类：Product / Research / Finding / ADR / Roadmap / Plan / Glossary；Archive Plan 是 Plan 的生命周期状态，不是独立类型）。完整系统模型（描述层）见 `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；本条只规定**必须遵守的规范决策**：
 
-**1. 内容路由测试。** 每个新知识内容按主问题判定归属（描述系统→Research / 记录问题→Finding / 长期选择→ADR / 长期未来→Roadmap / 当前施工→Plan / 用户当前事实→Product）。**一个内容同时回答两个问题 → 必须拆开成多个知识对象并互相引用**，不得选一个目录硬塞。
+**1. 内容路由测试。** 每个知识对象按 **primary authoritative responsibility** 判定归属（描述系统→Research / 记录问题→Finding / 长期选择→ADR / 长期未来→Roadmap / 当前施工→Plan / 用户当前事实→Product）。对象允许包含必要的 supporting context（如 ADR 的 Background/Consequences、Finding 的 Resolution）；**只有 forming 独立、长期维护的知识时才拆成独立对象并引用**，不是「同时回答两个问题就必须拆」。
 
 **2. 目录决定知识类型，不决定重要程度；状态决定生命周期，引用决定关系。** 不得因对象「重要 / 影响未来 / 已完成」而跨目录复制内容；关系通过链接表达（Research→informs→Finding→motivates→ADR→constrains→Roadmap→sequences→Plan→implements→Code/Tests），不通过复制。
 
-**3. "must not" 是权威。** 每种知识类型有禁止内容（ADR 禁止 implementation checklist / bug inventory / roadmap scheduling；Roadmap 禁止 completed feature inventory 与事实复制；Finding 禁止详细施工方案；Research 禁止宣布必须采用某方案；Plan 禁止重新定义长期架构）。边界靠禁止项锚定，不靠描述。
+**3. "must not" 是权威。** 每种知识类型有禁止内容（ADR 禁止 implementation checklist / bug inventory / roadmap scheduling；Roadmap 禁止 completed feature inventory、事实复制与**裁决阶段顺序**（归 ADR-0018）；Finding 禁止详细施工方案；Research 禁止宣布必须采用某方案；Plan 禁止重新定义长期架构）。边界靠禁止项锚定，不靠描述。
 
 **4. 当前知识与历史知识隔离。** Current truth（Product / Active Research / Active Findings / Accepted ADR / Current Roadmap / Active Plan）与 Historical evidence（Superseded Research / Resolved+Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG）不得混用；历史可被读来理解 provenance，**不得直接成为当前执行指令**。
+
+## 后续补充（2026-09-09）：知识对象表示法归一（Representation Normalization）
+
+统一 Plan / Finding / Research / ADR 四类对象的**表示层**（YAML envelope、字段命名与排列、空字段处理、H1 格式、中文章节/表头），**不改变生命周期语义、不强制四类业务字段相同**。
+
+**公共外壳**：四类对象 YAML frontmatter 统一、公共必填仅 `id` + `status`；不得添加 `kind`（ID/路径已知）、`title`（H1 已有）、`created`/`updated`（Git 已有 provenance）。**Sparse metadata**：没有真实机械消费需求或确实发生时才写入字段；空 optional 字段一律省略（禁止 `resolved_in:` / `github_issue:` / `supersedes: []` / `related:` 等空值占位）。frontmatter 通常 4–8 行，超 10–12 行为 smell。
+
+**类型专属字段**（各目录 README 定义 status enum 与专属字段；此处不复制 schema）：Plan `generation`+`target`；Finding `type`+`severity`+`affected`+`observed_in`（+按需 `direction`/`root_cause`/`resolved_in`/`github_issue`）；Research `version`（+按需 `subject_generation`/`supersedes`/`superseded_by`）；ADR `generation`（+整篇 supersede 时 `supersedes`/`superseded_by`）。
+
+**H1 与正文**：简中 canonical 对象 H1 = `# <ID>：<简体中文标题>`（英文 slug 留文件名）；正文章节与表格头以中文为主，技术术语首次出现允许 `术语（English）`，其后用 canonical 词。
+
+**Gen1 兼容**：Plan 的 `> **Status:**` 与 ADR 的 `- 状态：` 是 Gen1 checker 的机械解析源（已枚举：plan-status/plan-delivery/roadmap-sync、ADR-status 簇），**本阶段保留**；frontmatter 的 `status` 是 Phase 4 parser 迁移后的 canonical 源，届时删除正文兼容解析。Generation/代际无机械 consumer，可移入 frontmatter。**不迁移 archived Gen1 Plans**（历史证据不因美观重写）。
 
 ## 参考
 
@@ -121,4 +140,4 @@ docs/plans/
 - 知识对象五分类（findings/research/ADR/plan/archive 边界）：ADR-0013
 - Roadmap 重新定位（架构演进视图）：ADR-0015
 - 三语拆分原决策（将被本 ADR 的 product 子集延续）：ADR-0005
-- 知识对象模型系统描述（八类、四字段、路由、当前/历史）：`docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`
+- 知识对象模型系统描述（七类、四字段、路由、当前/历史）：`docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`

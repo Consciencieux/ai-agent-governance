@@ -1,13 +1,14 @@
 ---
 id: PLAN-0031
 generation: gen2
+target: repo-infra
 ---
 
-# Producer / Product Governance Separation（TASK 计划）
+# PLAN-0031：Producer / Product 治理分离
 
 > **Status: Completed.**（已完成，待 Release 归档。2026-09-09：Deliverable A–D 全部交付并复核——Profile 术语（ADR-0020）、4 条 separation invariants、cross-profile closure 契约（CONTROL-X 7 项，判据 + 排除说明）、ownership inventory 四正交轴收口（35 条 concern 全量分类，枚举经机械校验，各实现载体与 policy 章节逐项对照真实仓库验证）。本计划只完成 ownership/boundary 分类；**后续 physical execution separation 迁移（首项：术语门禁 extraction，见 ADR-0020 § 实施说明）不在本计划原始完成范围内**，不改变本计划历史目标。归档随 release 发生；Migration Mode 下暂不 release。）
 
-**Target: repo-infra** —— 本计划分析 repo 与 skill 两个治理域，但实际交付仅修改 repo-infra；payload migration 在 ownership model 稳定后由后续 Plan 承担。
+本计划分析 repo 与 skill 两个治理域，但实际交付仅修改 repo-infra；payload migration 在 ownership model 稳定后由后续 Plan 承担。
 
 ## 背景
 
@@ -32,7 +33,7 @@ Phase 1 **不回答**：
 
 ```text
 control / evaluator / evidence / decision / applicability 怎么建模？   ← Phase 3
-adapter 怎么设计？                                                   ← Phase 8
+adapter 怎么设计？                                                   ← 不在 Phase 0–8 内（L3 Runtime Interception，后续研究/实现）
 primitive 怎么抽象？                                                 ← Phase 4
 ```
 

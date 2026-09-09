@@ -1,8 +1,13 @@
-# ADR-0021: Known-Issue Closure（已知问题闭包）——discovery admission、disposition 与 closure reconciliation
+---
+id: ADR-0021
+status: Accepted
+generation: gen2
+---
+
+# ADR-0021：Known-Issue Closure（已知问题闭包）
 
 - 状态：Accepted
 - 日期：2026-09-09
-- 代际：cross-generation
 
 ## 背景
 
@@ -39,23 +44,27 @@ capture B
 完成不要求所有问题都修完，但要求每个 in-scope discovered item 有**显式 terminal disposition**：
 
 ```text
-resolved / deferred / duplicate / not-applicable / blocked
-/ promoted-to-finding / promoted-to-next-plan
+resolved（含 fixed-now） / deferred / duplicate / not-applicable / blocked
+/ promoted-to-finding / promoted-to-adr / promoted-to-research / promoted-to-next-plan
 ```
 
 完成时做 closure reconciliation，**Unaccounted discovered items = 0** 是任务级成熟度指标（取代「bugs fixed = N」）。
 
+**Status 与 Disposition 是两个轴。** `Status` = 条目的跟踪状态（`open` 仍被跟踪 / `closed` 已由 disposition 终结）；`Disposition` = terminal outcome（上表枚举）。一条目一旦获得 terminal disposition，`Status` 应标 `closed`；`open` 表示尚未处置。`fixed-now` 是 `resolved` 的口语别名，不单独成为枚举值。
+
 **4. 第一代载体：TASK Plan 内 append-only `## Discovery Ledger` 表。**
 
-不设计重型 Issue Registry。第一代 = 当前任务 Plan 内一张表：
+不设计重型 Issue Registry。第一代 = 当前任务 Plan 内一张表（**append-only membership**：条目一经登记不得删除；`Status` / `Disposition` 字段允许更新）：
 
 ```text
 | ID | Origin | Problem | Scope | Status | Disposition | Evidence |
 ```
 
-规则：发现→先登记；登记→不得删除；修复→更新状态；新问题→不自动抢占当前任务；结束→所有条目必须有 disposition。正式纳入 TASK Plan 格式（lifecycle.policy Phase 2）与 machine-readable task state 留待后续 Phase（3/5）决定。
+规则：发现→先登记；登记→不得删除（membership append-only）；处置→更新 Status/Disposition 字段；新问题→不自动抢占当前任务；结束→所有条目必须有 terminal disposition 且 Status=closed。
 
 **5. 分层：普通执行期发现 → task workset；系统性 → Finding；跨任务协作 → GitHub Issue。** 普通修复中新发现的局部 bug 不建 Finding（`docs/findings/` 不退化回 bug tracker）。
+
+**6. 本 ADR 是 Gen2 执行语义（`generation: gen2`）。** Migration Mode（ADR-0014）冻结 Gen1 规则演进；PLAN-0033 是对该语义的 **first-generation prototype / characterization**（演示载体可行），不宣称 Gen1 lifecycle 已被改变；正式纳入 TASK Plan 格式与 machine-readable task state 留待后续阶段。
 
 ## 后果
 
@@ -68,5 +77,5 @@ resolved / deferred / duplicate / not-applicable / blocked
 
 - 运行模型（描述层）：`docs/research/RESEARCH-0008-repair-discovery-workset-model.md`
 - 缺口证据：FINDING-0022（`docs/findings/FINDING-0022-recursive-discovery-workset-gap.md`）
-- 第一代实现：PLAN-0033
+- 第一代 prototype：PLAN-0033
 - 纵向修复控制（现状）：lifecycle.policy § 根因修复协议与失败预算

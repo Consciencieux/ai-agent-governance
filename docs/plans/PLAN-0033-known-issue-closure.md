@@ -1,13 +1,14 @@
 ---
 id: PLAN-0033
 generation: gen2
+target: repo-infra
 ---
 
-# Known-Issue Closure：Discovery Ledger（TASK 计划）
+# PLAN-0033：已知问题闭包（Discovery Ledger）
 
-> **Status: Active.**（进行中。2026-09-09：建立 Known-Issue Closure 执行语义（ADR-0021）、运行模型（RESEARCH-0008）、缺口证据（FINDING-0022），并在本计划内演示第一代 append-only `## Discovery Ledger`。）
+> **Status: Active.**（进行中。2026-09-09：建立 Known-Issue Closure 执行语义（ADR-0021）、运行模型（RESEARCH-0008）、缺口证据（FINDING-0022），并在本计划内演示第一代 **prototype / characterization** `## Discovery Ledger`——证明载体可行，不宣称机制已在所有任务落地。）
 
-**Target: repo-infra** —— 第一代只在 repo 侧演示；payload（lifecycle.policy TASK 格式内嵌 ledger）留后续阶段。
+第一代只在 repo 侧演示（prototype）；payload（lifecycle.policy TASK 格式内嵌 ledger）留后续阶段。
 
 ## 背景
 
@@ -27,30 +28,29 @@ generation: gen2
 
 1. **Once discovered → must remain represented → until explicit disposition。**
 2. **New discovery ≠ automatic priority switch**（capture → classify → decide，不弃当前 item）。
-3. **Task completion requires zero unaccounted**（允许 resolved / deferred / duplicate / not-applicable / blocked / promoted-to-finding / promoted-to-next-plan）。
+3. **Task completion requires zero unaccounted**（terminal disposition：resolved / deferred / duplicate / not-applicable / blocked / promoted-to-finding / promoted-to-adr / promoted-to-research / promoted-to-next-plan；`Status` 与 `Disposition` 是两个轴——terminal disposition 后 `Status` 置 `closed`）。
 
-## 第一代载体（append-only 表）
+## 第一代载体（append-only membership 表）
 
-本计划即演示载体。执行期间任何新发现问题必须先追加到这里，任务结束时所有条目必须有 disposition 并做 closure reconciliation。
+本计划即演示载体。执行期间任何新发现问题必须先追加到这里（**append-only membership**：条目不得删除，`Status` / `Disposition` 字段允许更新），任务结束时所有条目必须有 terminal disposition 且 `Status=closed`，并做 closure reconciliation。
 
 ## Discovery Ledger
 
 | ID | Origin | Problem | Scope | Status | Disposition | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| K1 | initial | 修复任务无持久已知问题集合（recursive discovery 丢失风险） | repo+skill | open | promoted-to-finding | FINDING-0022 |
-| K2 | K1 | 需要 Accepted 执行语义（capture / disposition / zero-unaccounted） | repo+skill | open | promoted-to-adr | ADR-0021 |
-| K3 | K1 | 需要系统模型描述（vertical vs horizontal 两维度） | repo | open | promoted-to-research | RESEARCH-0008 |
-| K4 | K1 | 第一代载体 = TASK Plan 内 append-only 表（不重型 Registry） | repo | open | fixed-now | 本计划 § 第一代载体 |
-| K5 | K2 | payload 内嵌（lifecycle.policy TASK 格式）留后续阶段 | skill | open | deferred | ADR-0021 § 后果 |
+| K1 | initial | 修复任务无持久已知问题集合（recursive discovery 丢失风险） | repo+skill | closed | promoted-to-finding | FINDING-0022 |
+| K2 | K1 | 需要 Accepted 执行语义（capture / disposition / zero-unaccounted） | repo+skill | closed | promoted-to-adr | ADR-0021 |
+| K3 | K1 | 需要系统模型描述（vertical vs horizontal 两维度） | repo | closed | promoted-to-research | RESEARCH-0008 |
+| K4 | K1 | 第一代载体 = TASK Plan 内 append-only 表（不重型 Registry） | repo | closed | resolved | 本计划 § 第一代载体 |
+| K5 | K2 | payload 内嵌（lifecycle.policy TASK 格式）留后续阶段 | skill | closed | deferred | ADR-0021 § 后果 |
 
 ## Closure reconciliation（本计划结束时的目标状态）
 
 ```text
 Total known:  5
-Resolved:     0
+Resolved:     1  (K4)
 Deferred:     1  (K5)
 Promoted:     3  (K1→finding, K2→adr, K3→research)
-Fixed-now:    1  (K4)
 Unaccounted:  0  ← 必须为零
 ```
 

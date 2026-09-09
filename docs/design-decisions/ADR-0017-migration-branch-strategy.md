@@ -1,7 +1,12 @@
-# ADR-0017: 2.0 迁移分支策略——阶段里程碑合并，不直接污染 main
+---
+id: ADR-0017
+status: Accepted
+generation: gen2
+---
+
+# ADR-0017：2.0 迁移分支策略
 
 - 状态：Accepted
-- 代际：gen2
 - 日期：2026-09-08
 
 ## 背景

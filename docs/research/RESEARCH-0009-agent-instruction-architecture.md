@@ -1,81 +1,97 @@
 ---
 id: RESEARCH-0009
-title: Agent 指令架构（Agent Instruction Architecture）
 status: Active
-version: 1
-created: 2026-09-09
-updated: 2026-09-09
-supersedes: []
-superseded_by: []
-subject_generation: gen1
+version: 2
 ---
 
-# Agent 指令架构（Agent Instruction Architecture）
+# RESEARCH-0009：Agent 指令架构
 
-本 RESEARCH 是 **System Model**：描述「Agent 指令如何组织、加载与执行」的运行模型——入口文档、子技能、知识对象、执行工作流如何分层，当前如何加载，目标架构是什么。它回答「Agent instruction architecture 现在是怎么工作的、应该按什么原则演进」。
+本 RESEARCH 是 **System Model**：描述「Agent 指令如何组织、加载与执行」的当前拓扑、注意力负担的产生机制、当前加载模型、当前失效模式、目标拓扑的形态与可评价维度。它回答「Agent instruction architecture 现在是怎么工作的、为什么会产生注意力负担、目标形态长什么样」。
 
-它是**描述层**；「必须遵守的规范决策」是**规范层**，归 ADR-0022；已观察到的失效由 `docs/findings/` 记录（如 FINDING-0015 静态 prompt 注意力负担）。
+它是**描述层**，不规定「必须怎么做」。规范决策（薄入口、路由必须明确、机械优先等九条）在 ADR-0022。已观察到的失效由 `docs/findings/` 记录（FINDING-0015 静态 prompt 注意力负担）。
 
-## 总原则
-
-> **Use thin execution entrypoints to route task context into specialized skills; load only applicable instructions progressively, keep knowledge and history on demand, and move critical guarantees out of Agent attention into mechanical enforcement.**
-
-> **薄入口、专能力、按需加载、职责单一、历史后置、路由明确、机械优先。**
-
-## 九条原则（目标架构）
-
-**1. Thin Entrypoint（入口要薄）。** `AGENTS.md` / `SKILL.md` / README 这类入口文档只承担：身份与作用域、少量 always-on invariants、优先级与冲突规则、任务分类、子技能/工作流入口、必要的 fallback。它们**不是**完整知识库，**不是**完整政策仓库。
-
-**2. Specialized Execution（能力分层）。** 具体任务进入具体能力：bug fix → repair workflow；release → release workflow；git write → git policy；review → review skill；documentation change → documentation knowledge policy。一个子技能只负责一个相对明确的执行领域。
-
-**3. Progressive Disclosure（渐进披露）。** 信息按层次加载：
+## 当前指令拓扑（Generation-1）
 
 ```text
-L1 Entry      短：告诉 Agent 去哪里
-L2 Execution  中：告诉 Agent 怎么做
-L3 Reference  长：edge cases / rationale / examples / taxonomy
+入口文档（SKILL.md / AGENTS.md / README）
+    ↓ 同时承载
+子技能 / 领域 policy·workflow
+知识对象（Research / Finding / ADR / Plan / Roadmap）
+历史对象（CHANGELOG / Archived Plan / Superseded ADR）
 ```
 
-普通任务只加载 L1 + 相关 L2；复杂情况才进入 L3。
+入口文档承担了较多职责，知识型与执行型内容并存于同一加载面；子技能按领域划分，但路由仍以「Agent 读入口文档并记忆」为主。
 
-**4. Contextual Loading（上下文按需加载）。** 不让 Agent「把所有规则都读完」，而是：
+## 注意力负担的产生机制
+
+Generation 1 的主要问题不是缺少规则，而是**大量不同职责的指令长期聚集在入口层或同时进入 Agent 上下文**。随规则、工作流、治理机制增长，Agent 需要在一次任务中阅读、判断和记忆越来越多并非全部适用的内容，导致：
+
+```text
+attention burden     单次上下文内无关指令比例上升
+applicability ambiguity   哪条规则适用不确定
+execution omission  适用规则被漏读/漏执行
+```
+
+关键保证因此仍可能依赖「Agent 是否读到、记住并正确选择了某条 Markdown」（FINDING-0015）。
+
+## 当前加载模型
+
+```text
+Task
+  ↓
+Agent 读入口文档（SKILL / AGENTS）
+  ↓
+Agent 自行判断适用规则并记忆
+  ↓
+执行
+```
+
+信息不是按需加载，而是「入口层先全量进入上下文，再由 Agent 自行筛选」。
+
+## 当前失效模式
+
+- **入口过厚**：大量无关指令同时进入上下文 → attention dilution。
+- **无路由的文件拆分（潜在次生风险）**：将领域拆成多个文件、但拆分后仍由 Agent 自行搜索和判断应读取哪些文件、缺少显式 task → capability routing → 负担从「记住大量规则」转变为「寻找正确规则」。
+
+文件拆分本身是解决方案的一部分，不是问题来源；真正的问题是**无路由的文件拆分**。
+
+## 目标拓扑（描述其形态；规范在 ADR-0022）
 
 ```text
 Task Context
-→ Applicability Resolution
-→ Required Skill / Policy
-→ Load Relevant Instructions
-→ Execute
+    ↓
+Explicit Routing / Applicability
+    ↓
+Relevant Skill / Workflow / Policy
+    ↓
+Progressive Loading
+    ↓
+Execution
 ```
 
-只把当前任务真正需要的信息放进执行上下文。
-
-**5. Single Responsibility（职责单一）。** 每个文档和子技能有清晰职责。一个文件若同时负责 Git / release / bug repair / docs taxonomy / testing / planning / review，就已经过载。
-
-**6. Knowledge ≠ Always-on Execution（知识≠常驻执行）。** 知识型（Research / Finding / ADR，用于理解、决策、追溯）与执行型（Workflow / Policy / Skill，用于当前执行）分开。Research / Finding / ADR **不作为 always-on instruction**；只有当当前任务、Active Plan 或 routing 明确引用其约束时才按需加载（受当前 Active Plan 约束的 Accepted ADR 属明确引用）。不要为做一次 commit 默认加载全部 Research 和 ADR。
-
-**7. History is On-demand（历史后置）。** Archived Plan / Superseded ADR / old Research / CHANGELOG 默认不进入执行上下文；需要 provenance 时再查。
-
-**8. Routing Must Be Explicit（路由明确）。** 不能只是「拆成很多文件」。入口必须明确告诉 Agent：什么时候读哪个文件、多个规则同时适用时谁优先、判断不清时怎么办。否则文件拆开了，attention burden 只是从「记规则」变成「找规则」。
-
-**9. Zero-Attention First（机械优先）。** 真正重要的控制不应依赖「Agent 是否记得读某条 Markdown」：
+入口层只承担少量 always-on invariants 与路由职责；详细执行规则按任务加载；知识与历史对象按需查询；对关键保证减少对 Agent 注意力的依赖，逐步迁移到机械 control：
 
 ```text
 现在:      Task → routing table → skill
 未来:      Task Context → Context Detector → Applicable Controls → Dispatcher → Mechanism
 ```
 
-越重要的规则，越应从 Markdown guidance 升级为机械 control。
+九条原则（薄入口 / 专能力 / 渐进披露 / 按需加载 / 知识≠常驻执行 / 历史后置 / 路由明确 / 机械优先 / 总原则）是 Accepted 规范，规定于 ADR-0022。
 
-## 当前状态（Generation-1）
+## 可评价维度
 
-入口文档（`SKILL.md` / `AGENTS.md` / README）承担了较多职责，知识对象（Research / Finding / ADR）与执行规则并存于同一加载面；子技能按领域划分但路由仍以「Agent 读入口文档并记忆」为主。`[Unreleased]`/CHANGELOG/archived plans 等历史对象存在被当作现行指令读取的风险（见 RESEARCH-0007 知识对象模型的当前/历史隔离）。
+```text
+单次任务进入执行上下文的相关指令比例
+applicability 判定是否由系统路由而非 Agent 记忆
+关键保证是否依赖「Agent 记得读某条 Markdown」
+执行遗漏 / 误读规则的发生率
+```
 
 ## 与零注意力的关系
 
-九条原则共同指向：减少对 Agent 注意力与记忆的依赖（FINDING-0015 静态 prompt 注意力负担、FINDING-0022 recursive-discovery、ADR-0021 Known-Issue Closure）。指令架构的演进方向与 Roadmap Phase 5（Context Detector + Dispatcher）一致。
+指令架构的目标与零注意力方向一致（FINDING-0015、FINDING-0022、ADR-0021），演进方向对应 Roadmap Phase 5（Context Detector + Dispatcher）。
 
 ## 维护规则
 
-- 本模型是活文档：随指令架构落地（子技能拆分、入口瘦身、机械 control）更新当前状态。
+- 本模型是活文档：随指令架构落地（入口瘦身、子技能拆分、机械 control）更新当前拓扑与失效模式。
 - 只描述系统（规范进 ADR-0022，失效进 Finding）。

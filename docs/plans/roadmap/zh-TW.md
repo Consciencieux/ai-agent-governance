@@ -274,7 +274,7 @@ Profile              Profile
 
 ## Generation 2 開發階段
 
-階段順序的權威來源是 ADR-0018；本 Roadmap 只作索引，不複述其裁決。每個 Phase 由對應 `PLAN-xxxx` 在 Accepted ADR 約束下執行。
+Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的當前 projection（下表即該 projection，非新裁決）。每個 Phase 由對應 `PLAN-xxxx` 在 Accepted ADR 約束下執行。
 
 | Phase | 名稱（ADR-0018） | 一句話成果 |
 | --- | --- | --- |
@@ -289,6 +289,9 @@ Profile              Profile
 | 8 | Rebuild mandatory gates | 在新 control plane 上重建阻斷權威 |
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
+
+當前階段：2 — Research / Findings / Traceability
+當前階段計劃：PLAN-0032（phase checkpoint）· PLAN-0033（subordinate）
 
 
 ## Guarantee Levels

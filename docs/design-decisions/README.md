@@ -22,7 +22,7 @@
 | [ADR-0015: Roadmap 重新定位](ADR-0015-roadmap-repositioning.md) | roadmap 从功能清单变为架构演进视图；已完成能力迁往 research/；维护触发从每次发布改为架构事件；加入 Non-goals | gen2 | Accepted |
 | [ADR-0016: 文档结构用途优先](ADR-0016-doc-structure-purpose-first.md) | 语言不是第一层分类；user-facing 才三语；product/plans/findings/research/ADR/archive 按用途分层；Migration Mode 分阶段实施 | gen2 | Accepted |
 | [ADR-0017: 2.0 迁移分支策略](ADR-0017-migration-branch-strategy.md) | 长期 migration/2.0 分支 + 阶段里程碑合并；main 保持 1.x 稳定 baseline；不发布 1.1/1.2 过渡；2.0 RC 后合入 | gen2 | Accepted |
-| [ADR-0018: Generation-2 开发路径](ADR-0018-generation-2-dev-path.md) | 8 阶段执行顺序（Migration Mode → Producer/Product 分离 → Core/Rule Model → Dispatcher → Invariant Testing → Review 三分）；统一 ID 编号规则；CONTROL-X 跨 profile 契约测试；测试指标转向 | gen2 | Accepted |
+| [ADR-0018: Generation-2 开发路径](ADR-0018-generation-2-dev-path.md) | Phase 0–8 执行顺序（Phase 0 = Migration Mode 前置；Phase 1–8 = 执行阶段）；统一 ID 编号规则；CONTROL-X 跨 profile 契约测试；测试指标转向；Gen2 阶段须通过 Active Plan 执行 | gen2 | Accepted |
 | [ADR-0019: 知识对象代际元数据](ADR-0019-generation-metadata.md) | 用 metadata 不用目录：`generation`/`observed_in`/`subject_generation` 标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete；30 个归档 Plan 标 gen1，18 个 ADR 分类；RESEARCH-0006 能力基线 | cross-generation | Accepted |
 | [ADR-0020: Producer/Product Governance Separation](ADR-0020-producer-product-governance-separation.md) | Phase 1 产物：Profile 术语（repo/skill/shared semantic owner/consumer/implementation/dependency）；SSOT「共享语义单一权威 owner」；4 条 separation invariants；cross-profile closure contract（CONTROL-X 契约定义，不实现）；`owner: core` 仅为分类词汇 | gen2 | Accepted |
 | [ADR-0021: Known-Issue Closure](ADR-0021-known-issue-closure.md) | 已知问题闭包执行语义：discovery 必须持久捕获（Once discovered → represented until disposition）；新发现 ≠ 自动抢占当前任务；完成要求 zero unaccounted（disposition 枚举）；第一代载体 = TASK Plan 内 append-only Discovery Ledger；分层（workset / Finding / GitHub Issue） | cross-generation | Accepted |
@@ -37,7 +37,7 @@
 
 ## ADR 修订与演进（不能改写历史）
 
-ADR 生命周期支持 `Proposed / Accepted / Superseded / Deprecated`，被取代后永久保留。修订一个 Accepted ADR 时按以下判定：
+ADR 生命周期支持 `Proposed / Accepted / Superseded / Deprecated`，被取代后永久保留。修订一个 Accepted ADR 分两类：
 
 ```text
 Accepted ADR
@@ -46,23 +46,26 @@ Accepted ADR
   ↓
 只是说明不清（typo / 措辞澄清 / 补充例子 / 补引用）？
   ├─ 是 → 直接修改原 ADR（不改变原决策语义）
-  └─ 否
-      ↓
-   决策语义发生变化（约束 / 方向 / 边界 / 行为）
-      ↓
-   新建 ADR，或在原 ADR 中明确追加「后续修正」
-      ↓
-   原 ADR → Superseded（完全取代）或 Deprecated（不再推荐 / 逐步退出）
+  └─ 否 → 决策语义发生变化，按变化范围二选一：
+      ├─ Major replacement（决策整体被取代）
+      │   → 新建 ADR
+      │   → 旧 ADR 整篇标记 Superseded（完全取代）或 Deprecated（不再推荐 / 逐步退出）
+      │
+      └─ Narrow amendment（同一 ADR 内局部修正）
+          → 原 ADR 保持 Accepted
+          → 在原 ADR 内追加带日期的「后续修正」，明确标记「旧 clause 被 YYYY-MM-DD amendment supersede」
+          → 保留旧 clause 作为历史
       ↓
    Roadmap / Plan / Research projections 跟随更新
 ```
 
 - **澄清**（typo、措辞、例子、引用，不改变决策语义）→ 可直接修改原 ADR。
-- **语义变化**（改变约束 / 方向 / 边界 / 行为）→ 不得静默重写原 ADR；走新 ADR 或原 ADR 内显式「后续修正」，并把旧决策标记为 `Superseded` 或 `Deprecated`。
+- **Major replacement** → 新 ADR + 旧 ADR 整篇 `Superseded` / `Deprecated`。
+- **Narrow amendment** → 原 ADR 保持 `Accepted`，内部追加带日期「后续修正」并标记被取代的旧 clause（`Deprecated` 不代表发生语义修改，只表示不再推荐 / 逐步退出）。
 - **历史原文与「当时为什么这么决定」必须保留**，以便追溯决策演进。
 
 > **ADR 可以演进，但不能改写历史。**
 
-规范示例：ADR-0016 原设计多类 archive，后因生命周期语义冲突追加「后续修正（2026-09-09）」，明确只有 Plan 物理归档，原正文保留为历史记录——这是「显式后续修正」的正确形态。
+规范示例：ADR-0016 原设计多类 archive，后因生命周期语义冲突追加「后续修正（2026-09-09）」，明确只有 Plan 物理归档，原正文保留为历史记录——这是 **Narrow amendment** 的正确形态（原 ADR 保持 Accepted）。
 
 状态：Proposed / Accepted / Superseded / Deprecated。

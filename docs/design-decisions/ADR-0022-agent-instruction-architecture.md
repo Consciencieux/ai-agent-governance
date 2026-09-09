@@ -1,8 +1,13 @@
-# ADR-0022: Agent 指令架构（Agent Instruction Architecture）——入口要薄、路由要明、关键保证机械优先
+---
+id: ADR-0022
+status: Accepted
+generation: gen2
+---
+
+# ADR-0022：Agent 指令架构（Agent Instruction Architecture）
 
 - 状态：Accepted
 - 日期：2026-09-09
-- 代际：gen2
 
 ## 背景
 
@@ -32,7 +37,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 ## 决策
 
-**1. Thin Entrypoint（入口要薄）。** 入口文档（`AGENTS.md` / `SKILL.md` / README）只承担：身份与作用域、少量 always-on invariants、优先级与冲突规则、任务分类、子技能/工作流入口、必要的 fallback。**不得**退化为完整知识库或完整政策仓库；详细规则由被指向的领域文件承担。
+**1. Thin Entrypoint（入口要薄）。** **always-on / execution-facing 入口**（`SKILL.md`、`AGENTS.md`、根 `README.md`）只承担：身份与作用域、少量 always-on invariants、优先级与冲突规则、任务分类、子技能/工作流入口、必要的 fallback。**不得**退化为完整知识库或完整政策仓库；详细规则由被指向的领域文件承担。**本原则不适用于按需加载的知识目录 README**（`docs/research/README.md`、`docs/findings/README.md` 等可承载详细 taxonomy / schema——它们是 on-demand reference，不是 execution entrypoint）。
 
 **2. Specialized Execution（能力分层）。** 每个子技能 / 工作流文档只负责一个相对明确的执行领域（bug fix→repair；release→release workflow；git write→git policy；review→review skill；documentation change→knowledge policy）。一个文件同时承担多个领域即视为过载，应拆分。
 
