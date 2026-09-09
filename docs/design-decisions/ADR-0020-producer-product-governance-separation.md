@@ -83,7 +83,7 @@ shared control
 - 同一个 canonical fixture 同时喂给 repo 与 skill 实现；两侧必须都失败（否则规则在一个域空转）。
 - fixture reuse 是强制要求：禁止为 repo 与 skill 各写一套语义不同的 fixture。
 
-**5. `owner: core` 仅是 Phase 1 分类词汇。** `core` 在此处是 **conceptual shared semantic authority**，不是 Phase 3 Governance Core 的物理实现或 schema 承诺。正式 machine-readable schema（`owner` / `consumers` / `applies_when` / `evaluator` / `effect` / `boundary`）留待 Phase 3 决定。
+**5. `owner: core` 仅是 Phase 1 分类词汇。** `core` 在此处是 **conceptual shared semantic authority**，不是 Phase 3 Governance Core 的物理实现或 schema 承诺。正式 Control / slot 规范由 ADR-0023 决定（本条原承诺「Phase 3 再定 schema」由该 ADR 履行）。括号内预告字段名（`owner` / `consumers` / `applies_when` / `evaluator` / `effect` / `boundary`）不再视为未来机器键。
 
 ## 后果
 
@@ -114,3 +114,4 @@ shared control
 - ADR-0019（元数据而非目录原则）
 - RESEARCH-0006（Generation-1 能力基线 + ownership classification）
 - PLAN-0031（Phase 1 交付物 A–D）
+- Control Model（Phase 3）：ADR-0023

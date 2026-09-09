@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0034：Governance Core / Rule Model（Phase 3 checkpoint）
 
-> （进行中。2026-09-10 Phase 3 入口：已取回 PLAN-0032 R23；本计划为 Phase 3 phase checkpoint。Architecture checkpoint ≠ Release——见 ADR-0014。）
+> （进行中。2026-09-10：RESEARCH-0010 + ADR-0023 Accepted；CTRL-0001–0005 vertical slice 已登记。E2 关闭。Phase 3 未 exit。）
 
 Phase 3 的执行主体。回答「Control / Rule 如何建模」；**不**拆 Gen1 checker、**不**建 Dispatcher、**不**移动 `references/` 政策单体。
 
@@ -103,8 +103,13 @@ Invariant testing 体系 / Review 三类拆分           → Phase 6 / 7
 - `docs/plans/PLAN-0034-governance-core-rule-model.md` —— 本计划
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md` —— Current Phase Plan → 本计划
 - `docs/plans/archive/PLAN-0032-documentation-knowledge-architecture-closure.md` —— R23 取回注记（已归档）
-- 后续由本计划产生的 ADR / Research（编号执行时分配；写入时更新本表）
-- 经 ADR 授权后可能触及：`AGENTS.md`、`SKILL.md`（仅指针）、schema 权威文件路径（届时写入）
+- `docs/research/RESEARCH-0010-governance-control-model.md` —— Control 系统模型（描述层）
+- `docs/design-decisions/ADR-0023-governance-control-model.md` —— Control / slot / identity 规范；Phase 3 schema 草案落点
+- `docs/design-decisions/ADR-0018-generation-2-dev-path.md` —— Phase 3 schema 权威指针
+- `docs/design-decisions/ADR-0020-producer-product-governance-separation.md` —— 预告字段名退役
+- `docs/research/README.md` · `docs/design-decisions/README.md` · `docs/glossary.md` · `AGENTS.md` —— 索引 / 术语 / 入口指针
+- 经 ADR 授权后可能触及：`SKILL.md`（仅指针；**禁止**指向本仓库 `docs/`，reference-closure）
+- 独立机器 schema 文件、`references/` 政策单体、`scripts/*.js` —— **本阶段不改**
 
 ## 验证方法
 
@@ -118,25 +123,40 @@ Invariant testing 体系 / Review 三类拆分           → Phase 6 / 7
 | 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
 | E0 | PLAN-0032 R23 | Phase 3 入口须确认 AGENTS/SKILL 瘦身边界 | repo+skill | closed | resolved | 本计划 § Phase 3 入口 |
-| E1 | E0 | 完整入口瘦身尚无路由目标，不能在 Phase 3 开头执行 | repo+skill | closed | deferred（revisit: Control Model 权威载体 Accepted 之后；列出可下沉清单并决定当场执行或交后续 Plan） | ADR-0022 § 后果 |
-| E2 | ADR-0020 | 正式 schema 字段与物理家未定 | both | open | in-progress | 本计划目标交付物 1–2 |
+| E1 | E0 | 完整入口瘦身尚无路由目标，不能在 Phase 3 开头执行 | repo+skill | closed | deferred（revisit: 出现可路由的 Control 叶节点或 Dispatcher 之前，不拆厚入口；清单见本计划 § E1 取回） | ADR-0022 § 后果 · ADR-0023 § 决策 10 |
+| E2 | ADR-0020 | 正式 schema 字段与物理家未定 | both | closed | resolved | ADR-0023：slot 最小集 + 草案落点=该 ADR；独立机器文件未授权 |
 | E3 | user review | Completed Plan 曾错误绑定 Release 才归档，破坏 current/history 隔离 | repo | closed | resolved | ADR-0016 2026-09-10 归档触发修正；PLAN-0031/0032/0033 → archive |
+| E4 | ADR-0023 | 独立 machine-readable schema 文件尚未授权 | both | closed | deferred（revisit: 第二个真实机器 consumer——Dispatcher / CONTROL-X runner / 生成器——出现时） | ADR-0023 § 决策 6 |
 
 ## 闭包对账（进行中）
 
 ```text
-Total known:  4
-Resolved:     2  (E0, E3)
-Deferred:     1  (E1；Control Model Accepted 后取回)
-Open:         1  (E2 schema in-progress)
+Total known:  5
+Resolved:     3  (E0, E2, E3)
+Deferred:     2  (E1 厚入口不拆；E4 独立 schema 文件)
+Open:         0
 Unaccounted:  0
 ```
 
+Phase 3 **尚未** exit：E1 清单已取回但瘦身未执行；vertical slice 已登记 CTRL-0001–0005；缺的是「可路由叶节点」而非更多文档整理。
+
+## E1 取回：AGENTS / SKILL 可下沉清单（不执行）
+
+Control Model 已有 Accepted 规范（ADR-0023），但**还不是** Agent 可按任务加载的叶节点。当场执行完整瘦身会重演 FINDING-0015。决定：**本阶段只允许指针；正文下沉延后。**
+
+| 入口段落 | 与 Control 的关系 | 现在 | 何时可下沉 |
+| --- | --- | --- | --- |
+| AGENTS 原则索引 | 路由 | 已加 ADR-0023 一行 | 保持指针 |
+| AGENTS § Git Operation Safety Protocol | CTRL-0002 投影 | 保留（语义家已定为 git.policy；合并正文属消除 duplicated authority，非入口瘦身） | 与 FINDING-0001 修复同期，须保留可执行摘要或更强机械 |
+| AGENTS 预提交 `check-secrets` | CTRL-0001 调用 | 保留调用句 | 有 hook / 门禁接线后可缩短为指针 |
+| SKILL 政策层大段 | 多条未建模 Control | **不得**改为指向本仓库 `docs/design-decisions/`（被治理项目没有该树） | payload 内出现 INSTALLED Control 投影之后 |
+| `lifecycle.policy.md` / `sub-skills.md` | 政策单体 | 不拆 | Phase 4+ 且有横切 capability 文件 |
+
 ## 未决风险
 
-- 过早锁定字段名会把 Phase 1 的概念词汇（`owner: core`）误当成物理 schema。
-- 入口「先瘦身再建模」会重演 FINDING-0015：拆文件而无路由。
-- Vertical slice 若只选单域玩具例，无法验证 shared semantic authority。
+- 过早物化 YAML 会把 slot token 当成序列化键（E4 就是为挡住这件事）。
+- 入口「有 ADR 了所以可以拆文件」仍无任务→叶节点路由。
+- CTRL-0003/0004 共享脚本，Phase 4 inventory 若按文件归类会再次压扁 identity。
 
 ## 参考
 
@@ -147,3 +167,4 @@ Unaccounted:  0
 - 知识权威矩阵：ADR-0016
 - Phase 2 baseline commit：`346bb749098445bf44a84e21b5ce6c736db754ec`
 - 取回项：PLAN-0032 R23
+- Control 模型：RESEARCH-0010 · ADR-0023

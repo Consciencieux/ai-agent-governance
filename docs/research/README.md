@@ -61,6 +61,7 @@ docs/research/
 ├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：七类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
 ├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
 ├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）
+├── RESEARCH-0010-governance-control-model.md      # Governance Control 系统模型（semantics ≠ evaluator ≠ gate ≠ test；Gen1 散落面；设计问题矩阵）
 └── experiments/                     # 实验记录
 ```
 
@@ -80,6 +81,7 @@ docs/research/
 | H. 规划/知识控制模型 | `RESEARCH-0007-documentation-knowledge-architecture.md` | 七类对象、路由、当前/历史隔离；正文级权威矩阵的规范在 ADR-0016 |
 | I. 修复/发现/工作集模型 | `RESEARCH-0008-repair-discovery-workset-model.md` | 纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
 | J. Agent 指令架构 | `RESEARCH-0009-agent-instruction-architecture.md` | Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
+| K. Governance Control 模型 | `RESEARCH-0010-governance-control-model.md` | Control 作为中间对象；与 evaluator/gate/test 分层；profile 消费共享语义；Gen1 散落与 identity 动机；规范在 ADR-0023 |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 

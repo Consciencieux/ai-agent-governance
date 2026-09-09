@@ -24,6 +24,8 @@ All notable changes to this project will be documented here.
 
 - **Plan archive is decoupled from product release** — Plans move to `docs/plans/archive/` at lifecycle closure (exit review), not at SemVer / GitHub Release. Migration Mode still forbids tags and skill distribution; it does not block archive. Normative: ADR-0016 amendment; `docs/plans/README.md`.
 
+- **Governance Control is a first-class architecture object** — rule semantics, evaluator, gate, and test are distinct; shared semantics stay single-owned while repo/skill bind evaluators separately. Phase 3 schema draft lives in ADR-0023 (slots + CTRL-0001–0005), not as a payload YAML tree. Descriptive model: RESEARCH-0010.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

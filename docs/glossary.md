@@ -137,6 +137,13 @@
 | code | 代码 | 程式碼 |  |  |
 | execute | 执行 | 執行 |  |  |
 | gate | 门禁 | 閘門 |  |  |
+| control | 治理控制 | 治理控制 |  |  |
+| control identity | 控制标识 | 控制識別 |  |  |
+| rule semantics | 规则语义 | 規則語義 |  |  |
+| evaluator | 求值器 | 求值器 |  |  |
+| decision semantics | 决策语义 | 決策語義 |  |  |
+| applicability | 适用性 | 適用性 |  |  |
+| shared semantic authority | 共享语义权威 | 共享語義權威 |  |  |
 | entry file | 入口文件 | 入口檔案 |  |  |
 | split | 拆分 | 拆分 |  |  |
 | canonical source | 源语言 | 源語言 |  |  |

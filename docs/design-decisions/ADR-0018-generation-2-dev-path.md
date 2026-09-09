@@ -108,6 +108,10 @@ Runtime / token cost / human burden   运维成本观测
 
 自本修正起，`scope = both` 的架构语义在 Phase 3 起由「单一 shared semantic authority + explicit consumer profiles」承接。`owner: core`、`consumers: [repo, skill]` 只作为当前阶段的概念词汇，不是预先锁定的 machine schema；具体字段、schema，以及 `applicability` / `implementation` / `boundary` / `adapter` 的归属，留给 Phase 3 决定。该边界与 ADR-0020 的 Phase-boundary 纪律一致。
 
+## 后续修正（2026-09-10）：Phase 3 schema 权威 = ADR-0023
+
+本修正是对「后续修正（2026-09-09）：第三阶段 schema 边界」的 **Narrow amendment**。2026-09-09 条文保留为「当时尚未定稿」的历史；自本修正起，Phase 3 Control / Rule 规范由 ADR-0023 承担。独立机器文件与 Dispatcher 仍未授权。
+
 ## 参考
 
 - Migration Mode（gate 观测化、checkpoint 验证）：ADR-0014
@@ -117,3 +121,4 @@ Runtime / token cost / human burden   运维成本观测
 - Producer/product 耦合（CONTROL-X 的动机）：FINDING-0001
 - review-manager 层级错配（Review 三分的动机）：FINDING-0014
 - 知识对象五分类与 findings 永久库：ADR-0013
+- Governance Control Model：ADR-0023
