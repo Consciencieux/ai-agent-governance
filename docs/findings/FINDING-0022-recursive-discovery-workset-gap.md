@@ -42,11 +42,11 @@ R4（Enforcement Boundary）：任务的**完成边界**不要求「每个已知
 1. 任务级已知问题有持久 workset 载体（第一代：TASK Plan 内 append-only `## Discovery Ledger`）。
 2. discovery admission 规则：发现 → 先登记，登记 → 不得删除。
 3. 完成闸门：每个 in-scope 条目有显式 terminal disposition；unaccounted = 0。
-4. **非 resolved 的 terminal disposition 必须携带后继**（`successor` 指针或 revisit 触发条件）——否则 `deferred` / `promoted-to-next-plan` 而无后继，仍会在未来丢失（ADR-0021 § 决策 3 已补充）。
+4. **非 resolved 的 terminal disposition 必须携带后继**（`successor` 指针或 revisit 触发条件）——否则 `deferred` / `promoted-to-next-plan` 而无后继，仍会在未来丢失（ADR-0021 § 后续修正）。
 
 ## 解决情况
 
-（未解决，remediation underway。）ADR-0021（Known-Issue Closure 执行语义，含 successor 要求）与 PLAN-0033（第一代 Discovery Ledger 实现）已建立；正式纳入 TASK Plan 格式与 lifecycle.policy 留待后续阶段。现存实例（PLAN-0032 R24 / PLAN-0033 K5 的 `deferred` / `promoted-to-next-plan`）已标注后继。
+（未解决，remediation underway。）ADR-0021（Known-Issue Closure 执行语义，含后继指针/显式 revisit 触发条件要求）与 PLAN-0033（第一代 Discovery Ledger 实现）已建立；正式纳入 TASK Plan 格式与 lifecycle.policy 留待后续阶段。现存实例（PLAN-0032 R24 / PLAN-0033 K5 的 `deferred` / `promoted-to-next-plan`）已标注明确的 Phase 4 planning checkpoint 取回触发条件。
 
 ## 回归保护
 

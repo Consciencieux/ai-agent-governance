@@ -72,13 +72,7 @@ Research → informs → Finding → motivates → ADR → constrains → Roadma
 
 **R4 · 当前知识与历史知识隔离。**
 
-```text
-Current truth:
-  Product / Active Research / Proposed / Confirmed Findings / Accepted ADR（gen2/cross 适用） / Current Roadmap / Active Plan
-
-Historical evidence:
-  Superseded Research / Resolved / Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG
-```
+当前/历史对象的分类清单以 `docs/README.md` §「当前 vs 历史（隔离）」为唯一说明；本研究只描述隔离原则，不复制清单。对象是否当前仍须结合其 canonical `status` 与 generation/applicability metadata 判断。
 
 历史记录可被读来理解 provenance，**不能直接成为当前执行指令**（与 Archived Plan 政策一致：Archive ≠ 当前能力 ≠ 当前规则）。
 

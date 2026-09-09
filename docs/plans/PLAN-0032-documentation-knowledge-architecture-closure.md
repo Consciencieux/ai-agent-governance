@@ -87,7 +87,7 @@ docs/README.md
 
 ## Discovery Ledger（closure review workset）
 
-本计划 closure review 发现的 20 个语义/一致性点 + 1 个系统性根因，按 Known-Issue Closure（ADR-0021）登记并逐项结算；**全部 `closed`，Unaccounted = 0**。
+本计划 closure review 发现的 26 个语义/一致性点，按 Known-Issue Closure（ADR-0021）登记并逐项结算。当前 snapshot 明确区分已终结条目、带后继触发条件的非 `resolved` 条目，以及本 checkpoint 中重新审查后再次闭合的条目。
 
 | ID | Origin | Problem | Scope | Status | Disposition | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -113,8 +113,8 @@ docs/README.md
 | R20 | review | docs/README 变知识仓库 | repo | closed | resolved | ADR-0022 收窄为 execution-facing 入口 |
 | R21 | systemic | 知识对象 authority/supporting-context 模型缺失 | repo | closed | promoted-to-finding | FINDING-0023 |
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
-| R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（successor: 待建 AGENTS 瘦身执行任务；revisit: ADR-0022 § 后果） | ADR-0022 § 后果 |
-| R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（successor: 待建 payload 集成计划；revisit: ADR-0021 § 后果） | ADR-0021 §6 |
+| R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（revisit: Phase 3 开始前的 entry checkpoint；该 checkpoint 必须重新取回 R23，并确认 ADR-0022 § 后果对应的 AGENTS/SKILL 入口瘦身执行计划与范围） | ADR-0022 § 后果 |
+| R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 R24，并建立 successor Plan ID） | ADR-0021 § 决策 6 |
 | R25 | subtask | 知识对象表示法归一（Representation Normalization）：统一 YAML envelope / sparse / 中文 H1 章节表头 | repo | closed | resolved | ADR-0016 § 后续补充；四类当前对象 |
 | R26 | review | canonical 元数据被多份 index/projection 重复 → 持续 drift（ADR-0021 index、README schema 示例等） | repo | closed | promoted-to-finding | FINDING-0024 |
 
@@ -123,16 +123,15 @@ docs/README.md
 ## Closure reconciliation（2026-09-09 二次 checkpoint：workset reopened）
 
 ```text
-Total known:  25
-Resolved:     22
-Deferred:     1  (R23，successor/revisit 已标)
+Total known:  26
+Resolved:     22  (R1–R20、R22、R25；R2/R4/R14/R19/R25 曾在 checkpoint 2 重开，复核后再次 closed)
+Deferred:     1  (R23；Phase 3 开始前 entry checkpoint 重新取回)
 Promoted to Finding:   2  (R21 → FINDING-0023；R26 projection drift → FINDING-0024)
-Promoted to next Plan: 1  (R24，successor/revisit 已标)
-Reopened:     R2/R4/R14/R19/R25 —— 二次审查发现仓库存在反例，重新打开
-Unaccounted:  先 reconciliation 后判定，不预先写 0
+Promoted to next Plan: 1  (R24；Phase 4 planning checkpoint 重新取回并建立 successor Plan ID)
+Unaccounted:  0
 ```
 
-**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 README/schema projection 未收干净。本次已修复这些实例，并新增 FINDING-0024（canonical 元数据被多份投影重复）。完成判据升级为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。
+**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 README/schema projection 未收干净。本 checkpoint 已重新核验这些条目并再次闭合；R23/R24 则保留明确的未来取回触发条件，R26 已提升为 FINDING-0024。完成判据保持为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。
 
 
 ## 未决风险

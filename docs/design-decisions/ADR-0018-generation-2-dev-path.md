@@ -96,11 +96,17 @@ Runtime / token cost / human burden   运维成本观测
 ## 后果
 
 - Phase 0–8 顺序成为 2.0 migration 分支（ADR-0017）的 phase 划分依据；每个执行阶段（Phase 1–8）一个 `PLAN-xxxx` 计划 + checkpoint 验证。
-- `scope = both` 在 Phase 3 起被 `owner: core` + `consumers: [repo, skill]` 替代；**正式 schema（含 applicability / implementation / boundary / adapter 的归属）由 Phase 3 决定**——本 ADR 只在 Phase 3 前定顺序，不预先固定 Phase 3 schema 或 applicability 归属（Phase-boundary 纪律，见 ADR-0020）。
+- `scope = both` 在 Phase 3 起被 `owner: core` + `consumers: [repo, skill]` 替代；repo / skill 各自拥有 applicability / implementation / boundary / adapter。（本条是本 ADR 的原始 Accepted 表述；其对 Phase 3 schema 的含义由下方后续修正 supersede。）
 - CONTROL-X 契约测试在 Phase 3 后逐步加入，成为「跨 profile 同步」的机械保证。
 - Review 三类拆分在 Phase 7 落地；现有 review-manager 保留为 Implementation Review。
 - 测试指标转向不要求立即重写全部测试，而是新 control 一律 invariant-centric，存量渐进迁移。
 - ID 编号规则统一后，各 README 的隐含约定收敛为一条可引用规则。
+
+## 后续修正（2026-09-09）：Phase 3 schema 边界
+
+本修正是对上方原始 Consequences clause 的 **Narrow amendment**。原文字保留为 Phase 1 期间的历史概念表述；它不再被解释为 Phase 3 的正式字段或 ownership schema。
+
+自本修正起，`scope = both` 的架构语义在 Phase 3 起由「单一 shared semantic authority + explicit consumer profiles」承接。`owner: core`、`consumers: [repo, skill]` 只作为当前阶段的概念词汇，不是预先锁定的 machine schema；具体字段、schema，以及 `applicability` / `implementation` / `boundary` / `adapter` 的归属，留给 Phase 3 决定。该边界与 ADR-0020 的 Phase-boundary 纪律一致。
 
 ## 参考
 

@@ -88,7 +88,7 @@ Three rules follow:
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
 | `scripts/` | Skill runtime scripts. Mixed too: 9 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
-| `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | trilingual |
+| `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | mixed by knowledge type: product/roadmap trilingual; plans/findings/research/ADR canonical Chinese |
 | `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `CONTRIBUTING.md`, `README.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
 
 ### Repository Layout

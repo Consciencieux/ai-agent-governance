@@ -2,20 +2,17 @@
 id: FINDING-0024
 status: Confirmed
 type: mechanism-gap
+severity: Medium
+affected: [repo]
+observed_in: gen2
 direction: E
 root_cause: R1
-severity: Medium
-affected:
-  - repo
-observed_in: gen2
 related:
-  research:
-    - RESEARCH-0007
-  adrs:
-    - ADR-0021
+  adrs: [ADR-0009, ADR-0016]
+  research: [RESEARCH-0007]
 ---
 
-# canonical metadata 被多份 index / projection 重复 → 持续 drift
+# FINDING-0024：canonical 元数据被多份索引/投影重复，持续漂移
 
 ## 观察
 
@@ -35,7 +32,7 @@ related:
 
 ## 根因
 
-R1（Policy Structure）：canonical 元数据没有单一事实源——对象 frontmatter 与 README/index 投影并存，投影未声明「read-only / 从 frontmatter 生成」，人工同步必然 drift。与「Roadmap 是 projection/index，不重述事实源」（ADR-0009 / ADR-0021）同族。
+R1（Policy Structure）：canonical source 已存在于对象 frontmatter，但重复 projection 缺少明确的 derivation / reconciliation contract，人工维护导致 projection drift。问题不是 projection 的存在，而是 projection 没有明确声明为 read-only、没有稳定的生成/对账纪律。它属于「Roadmap 是 projection/index，不重述事实源」（ADR-0009）与用途优先结构规范（ADR-0016）所约束的同类边界问题。
 
 ## 影响
 
@@ -55,4 +52,4 @@ R1（Policy Structure）：canonical 元数据没有单一事实源——对象 
 ## 回归保护
 
 - 描述层：`docs/research/RESEARCH-0007`（索引 vs 事实源）。
-- 规范层：ADR-0009、ADR-0021（投影不重述事实源）。
+- 规范层：ADR-0009、ADR-0016（投影不重述事实源；对象 frontmatter 是 canonical source）。

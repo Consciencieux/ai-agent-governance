@@ -48,10 +48,6 @@ resolved（含 fixed-now） / deferred / duplicate / not-applicable / blocked
 
 完成时做 closure reconciliation，**Unaccounted discovered items = 0** 是任务级成熟度指标（取代「bugs fixed = N」）。
 
-**Status 与 Disposition 是两个轴。** `Status` = 条目的跟踪状态（`open` 仍被跟踪 / `closed` 已由 disposition 终结）；`Disposition` = terminal outcome（上表枚举）。一条目一旦获得 terminal disposition，`Status` 应标 `closed`；`open` 表示尚未处置。`fixed-now` 是 `resolved` 的口语别名，不单独成为枚举值。
-
-**非 resolved 的 terminal disposition 必须携带后继。** `deferred` / `blocked` / `promoted-to-finding` / `promoted-to-adr` / `promoted-to-research` / `promoted-to-next-plan` 意味着工作并未在本任务内完成——它们必须附一个**后继指针**（`successor`：新 Finding / ADR / Research / Plan 的 ID）或显式 **revisit 触发条件**（何时会被重新取回）。否则 `unaccounted=0` 会掩盖「deferred 但没有后继」的未来工作丢失。`duplicate` / `not-applicable` 不需要后继（它们真的关闭了）。
-
 **4. 第一代载体：TASK Plan 内 append-only `## Discovery Ledger` 表。**
 
 不设计重型 Issue Registry。第一代 = 当前任务 Plan 内一张表（**append-only membership**：条目一经登记不得删除；`Status` / `Disposition` 字段允许更新）：
@@ -65,6 +61,13 @@ resolved（含 fixed-now） / deferred / duplicate / not-applicable / blocked
 **5. 分层：普通执行期发现 → task workset；系统性 → Finding；跨任务协作 → GitHub Issue。** 普通修复中新发现的局部 bug 不建 Finding（`docs/findings/` 不退化回 bug tracker）。
 
 **6. 本 ADR 是 Gen2 执行语义（`generation: gen2`）。** Migration Mode（ADR-0014）冻结 Gen1 规则演进；PLAN-0033 是对该语义的 **first-generation prototype / characterization**（演示载体可行），不宣称 Gen1 lifecycle 已被改变；正式纳入 TASK Plan 格式与 machine-readable task state 留待后续阶段。
+
+## 后续修正（2026-09-09）：terminal disposition 的跟踪与后继约束
+
+本修正是对「决策 3」的 **Narrow amendment**。原有关于 terminal disposition 枚举与 `Unaccounted discovered items = 0` 的文字保留为历史；自本修正起，以下约束补充并 supersede 原 clause 中未覆盖的部分：
+
+1. **Status 与 Disposition 是两个轴。** `Status` 是条目的跟踪状态（`open` 仍被跟踪 / `closed` 已由 disposition 终结）；`Disposition` 是 terminal outcome（决策 3 的枚举）。条目一旦获得 terminal disposition，`Status` 必须标为 `closed`；`open` 表示尚未处置。`fixed-now` 是 `resolved` 的口语别名，不单独成为枚举值。
+2. **非 `resolved` 的 terminal disposition 必须携带后继。** `deferred` / `blocked` / `promoted-to-finding` / `promoted-to-adr` / `promoted-to-research` / `promoted-to-next-plan` 意味着工作并未在本任务内完成，必须附一个**后继指针**（`successor`：新 Finding / ADR / Research / Plan 的 ID）或显式 **revisit 触发条件**（何时会被重新取回）。否则 `unaccounted = 0` 仍可能掩盖「deferred 但没有后继」的未来工作丢失。`duplicate` / `not-applicable` 不需要后继，因为它们表示该条目本身已经终结。
 
 ## 后果
 

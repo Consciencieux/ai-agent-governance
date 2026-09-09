@@ -51,6 +51,8 @@ Current truth:      Product / Active Research / Proposed / Confirmed Findings / 
 Historical evidence: Superseded Research / Resolved·Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG
 ```
 
+对象是否属于当前真相，必须同时依据 canonical `status` 与该类型定义的 generation/applicability 语义判断；不能只看 `status`。
+
 历史记录可被读来理解 provenance，**不得直接成为当前执行指令**。
 
 完整系统模型（描述层）→ `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；规范层（routing / must-not / 当前-历史隔离）→ ADR-0016。
@@ -102,10 +104,7 @@ ADR 的修订政策（澄清 vs 语义变化；**ADR 可以演进，但不能改
 
 `CHANGELOG.md` 在仓库根（不在 `docs/`），但属于知识架构的**历史 / 变更记录投影**载体：
 
-```text
-Current truth:      Product / Research / Finding / Accepted ADR / Roadmap / Active Plan
-Historical / change: CHANGELOG / Archived Plan / Superseded ADR·Research / Git history
-```
+当前/历史划分以上方「当前 vs 历史（隔离）」为唯一说明；本节只规定 CHANGELOG 的历史变更投影职责。
 
 **唯一主问题**：从上一个发布边界到这个发布边界，项目发生了哪些值得读者知道的实际变化？
 

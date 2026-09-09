@@ -52,10 +52,7 @@ CHANGELOG 的结构契约（版本节形状、分类标题唯一性、空行规�
 
 **1. CHANGELOG 是「历史变更投影」，不是 `docs/` 知识类型之一。**
 
-```text
-Current truth:      Product / Research / Finding / Accepted ADR / Roadmap / Active Plan
-Historical / change: CHANGELOG / Archived Plan / Superseded ADR·Research / Git history
-```
+当前/历史分类以 `docs/README.md` §「当前 vs 历史（隔离）」为唯一说明；本 ADR 只规定 CHANGELOG 属于历史变更投影，不复制该分类清单。
 
 唯一主问题：从上一个发布边界到这个发布边界，项目发生了哪些值得读者知道的实际变化？它不回答：为什么这么设计（ADR）、发现了什么问题（Finding）、系统现在怎么工作（Research）、准备怎么做（Plan）、测试跑了多少（Evidence）、未来准备做什么（Roadmap）。
 

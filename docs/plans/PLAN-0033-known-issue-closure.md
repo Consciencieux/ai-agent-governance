@@ -43,7 +43,7 @@ target: repo-infra
 | K2 | K1 | 需要 Accepted 执行语义（capture / disposition / zero-unaccounted） | repo+skill | closed | promoted-to-adr | ADR-0021 |
 | K3 | K1 | 需要系统模型描述（vertical vs horizontal 两维度） | repo | closed | promoted-to-research | RESEARCH-0008 |
 | K4 | K1 | 第一代载体 = TASK Plan 内 append-only 表（不重型 Registry） | repo | closed | resolved | 本计划 § 第一代载体 |
-| K5 | K2 | payload 内嵌（lifecycle.policy TASK 格式）留后续阶段 | skill | closed | deferred（successor: 待建 payload 集成计划；revisit: ADR-0021 § 决策 3） | ADR-0021 § 后果 |
+| K5 | K2 | payload 内嵌（lifecycle.policy TASK 格式）留后续阶段 | skill | closed | deferred（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 K5，并建立 successor Plan ID） | ADR-0021 § 后续修正 |
 
 ## Closure reconciliation（本计划结束时的目标状态）
 

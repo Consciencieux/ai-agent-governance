@@ -71,16 +71,16 @@ docs/research/
 
 | 类型 | 文件 | 内容 |
 | --- | --- | --- |
-| A. System Model | `RESEARCH-0001-system-model.md` | 当前架构、数据流、执行流程、组件关系 |
-| B. Mechanism Taxonomy | `RESEARCH-0002-governance-mechanism-taxonomy.md` | Existence / Text / Structure / Consistency / Behavior / LLM Review / Human Review / Runtime |
-| C. Evaluation Framework | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
-| D. Architecture Evolution | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
-| E. Current Capabilities | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
-| F. Experiments | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
-| G. Capability Baseline | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + 2.0 处置（迁移 baseline evidence） |
-| H. Planning / Knowledge Control Model | `RESEARCH-0007-documentation-knowledge-architecture.md` | System Model：知识对象（七类）唯一主问题、Allowed/Forbidden、路由测试、当前/历史隔离、Agent 导航、机械 carrier |
-| I. Repair / Discovery / Workset Model | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
-| J. Agent Instruction Architecture | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：薄入口/专能力/按需加载/职责单一/历史后置/路由明确/机械优先；当前与目标加载模型 |
+| A. 系统模型（System Model） | `RESEARCH-0001-system-model.md` | 当前架构、数据流、执行流程、组件关系 |
+| B. 机制分类（Mechanism Taxonomy） | `RESEARCH-0002-governance-mechanism-taxonomy.md` | Existence / Text / Structure / Consistency / Behavior / LLM Review / Human Review / Runtime |
+| C. 评价框架（Evaluation Framework） | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
+| D. 架构演进（Architecture Evolution） | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
+| E. 当前能力（Current Capabilities） | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
+| F. 实验记录（Experiments） | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
+| G. 能力基线（Capability Baseline） | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + 2.0 处置（迁移 baseline evidence） |
+| H. 规划/知识控制模型（Planning / Knowledge Control Model） | `RESEARCH-0007-documentation-knowledge-architecture.md` | System Model：知识对象（七类）唯一主问题、Allowed/Forbidden、路由测试、当前/历史隔离、Agent 导航、机械 carrier |
+| I. 修复/发现/Workset 模型（Repair / Discovery / Workset Model） | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
+| J. Agent 指令架构（Agent Instruction Architecture） | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：薄入口/专能力/按需加载/职责单一/历史后置/路由明确/机械优先；当前与目标加载模型 |
 
 **统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 
