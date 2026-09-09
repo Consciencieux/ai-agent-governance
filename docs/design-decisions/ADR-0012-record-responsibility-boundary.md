@@ -41,6 +41,35 @@ CHANGELOG 的结构契约（版本节形状、分类标题唯一性、空行规�
 - 近期已发布版本：按内容边界抽查——明显含根因分析、方案争论、验证日志的单独处理，不设字符数硬阈值。
 - 更早历史：只在存在明显错误或确有维护价值时迁移。大规模改写已发布记录制造 churn，而这些内容往往已在对应的归档计划里留有副本。
 
+## 后续补充（2026-09-09）：CHANGELOG 在新知识系统中的定位
+
+知识体系升级为八类知识对象（Product / Research / Finding / ADR / Roadmap / Plan / Archive Plan / Glossary，见 RESEARCH-0007）后，CHANGELOG 重新定界。本 ADR 原决策的核心判断仍然成立（CHANGELOG 记变更事实；ADR 记长期决策；Plan 记单次任务实施；验证证据在测试/审计），以下为边界细化：
+
+**1. CHANGELOG 是「历史变更投影」，不是 `docs/` 知识类型之一。**
+
+```text
+Current truth:      Product / Research / Finding / Accepted ADR / Roadmap / Active Plan
+Historical / change: CHANGELOG / Archived Plan / Superseded ADR·Research / Git history
+```
+
+唯一主问题：从上一个发布边界到这个发布边界，项目发生了哪些值得读者知道的实际变化？它不回答：为什么这么设计（ADR）、发现了什么问题（Finding）、系统现在怎么工作（Research）、准备怎么做（Plan）、测试跑了多少（Evidence）、未来准备做什么（Roadmap）。
+
+**2. decision ≠ delivered change。** ADR Accepted、Finding 新增、Research 新增、Plan 创建本身不产生 CHANGELOG 条目。准入测试：
+
+```text
+Did observable project behavior / public interface / contributor workflow /
+release behavior / or supported capability actually change?
+YES → candidate；NO → normally no CHANGELOG entry
+```
+
+`ADR Accepted` 而仓库行为未变，通常不自动生成 CHANGELOG；合理顺序是 Finding → ADR → Plan → Implementation → verification → **CHANGELOG 记录 implemented change**。
+
+**3. `[Unreleased]` 语义。** = 已实现、准备进入下一个正式 release 的 change projection；不是所有正在讨论的工作、所有 Accepted ADR、所有 Active Plan。Migration Mode 禁发布（ADR-0014）时，`[Unreleased]` 不应是每个 migration commit 的流水账，在 checkpoint / merge / release composition 时统一整理。
+
+**4. Released section 默认不可重写。** 允许 factual correction / broken pointer correction / 明确授权的历史整理；不允许为匹配今天架构把过去写成「当时就是这样」（与 ADR「不改写历史」原则同源）。
+
+**5. Repo CHANGELOG 政策由 Repo Profile 拥有。** 原决策把 CHANGELOG 格式与内容规则权威指向 INSTALLED `references/policies/lifecycle.policy.md`（Skill payload）。按 ADR-0020（shared semantics ≠ shared authority）：repo 与 governed project 可共享「CHANGELOG 记录已交付变更而非验证叙事」的语义，但 repo 自身 CHANGELOG 的执行政策（准入、[Unreleased]、released-section）由 Repo Profile（`AGENTS.md`）自己拥有；payload `lifecycle.policy.md` 继续权威于 governed projects 的 CHANGELOG 格式契约（repo 作为共享格式语义的 consumer 遵循）。
+
 ## 后果
 
 - 正面：禁令有了去处，遵守成本下降；变更记录回到可快速扫读的密度；根因与决策各归其位，需要时找得到。

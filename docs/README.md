@@ -81,6 +81,33 @@ ADR      → status transition in place（Accepted → Superseded / Deprecated�
 
 ADR 的修订政策（澄清 vs 语义变化；**ADR 可以演进，但不能改写历史**）见 `docs/design-decisions/README.md` § ADR 修订与演进。
 
+## CHANGELOG（历史变更投影载体）
+
+`CHANGELOG.md` 在仓库根（不在 `docs/`），但属于知识架构的**历史 / 变更记录投影**载体：
+
+```text
+Current truth:      Product / Research / Finding / Accepted ADR / Roadmap / Active Plan
+Historical / change: CHANGELOG / Archived Plan / Superseded ADR·Research / Git history
+```
+
+**唯一主问题**：从上一个发布边界到这个发布边界，项目发生了哪些值得读者知道的实际变化？
+
+**准入测试（decision ≠ delivered change）**：
+
+```text
+Did observable project behavior / public interface / contributor workflow /
+release behavior / or supported capability actually change?
+YES → candidate；NO → normally no CHANGELOG entry
+```
+
+**不应包含**：根因分析、架构 rationale、未来计划、research model、raw findings、测试计数 / exit code / 验证叙事、实现日志、每个 commit、每个文档对象。
+
+**`[Unreleased]`** = 已实现、准备进入下一个正式 release 的 change projection；**不是**所有正在讨论的工作 / 所有 Accepted ADR / 所有 Active Plan。Migration Mode 禁发布时，`[Unreleased]` 不是每个 migration commit 的流水账——在 checkpoint / merge / release composition 时统一整理。
+
+**Released section** = 历史记录，默认不可重写；允许 factual correction / broken pointer correction / 明确授权的历史整理，不允许为匹配今天架构改写历史（与 ADR「不改写历史」同源）。
+
+规范层：ADR-0012 § 后续补充；repo 自身 CHANGELOG 政策由 Repo Profile（`AGENTS.md`）拥有，格式契约共享自 payload（`references/policies/lifecycle.policy.md`）。
+
 ## 代际政策（总原则）
 
 > **Knowledge objects may carry generation metadata to distinguish Generation 1, Generation 2, or cross-generation applicability. Generation does not change object identity or directory placement.**

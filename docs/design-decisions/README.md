@@ -26,6 +26,7 @@
 | [ADR-0019: 知识对象代际元数据](ADR-0019-generation-metadata.md) | 用 metadata 不用目录：`generation`/`observed_in`/`subject_generation` 标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete；30 个归档 Plan 标 gen1，18 个 ADR 分类；RESEARCH-0006 能力基线 | cross-generation | Accepted |
 | [ADR-0020: Producer/Product Governance Separation](ADR-0020-producer-product-governance-separation.md) | Phase 1 产物：Profile 术语（repo/skill/shared semantic owner/consumer/implementation/dependency）；SSOT「共享语义单一权威 owner」；4 条 separation invariants；cross-profile closure contract（CONTROL-X 契约定义，不实现）；`owner: core` 仅为分类词汇 | gen2 | Accepted |
 | [ADR-0021: Known-Issue Closure](ADR-0021-known-issue-closure.md) | 已知问题闭包执行语义：discovery 必须持久捕获（Once discovered → represented until disposition）；新发现 ≠ 自动抢占当前任务；完成要求 zero unaccounted（disposition 枚举）；第一代载体 = TASK Plan 内 append-only Discovery Ledger；分层（workset / Finding / GitHub Issue） | cross-generation | Accepted |
+| [ADR-0022: Agent Instruction Architecture](ADR-0022-agent-instruction-architecture.md) | 指令架构总原则：薄入口（入口文档只承担身份/invariants/优先级/分类/入口/fallback）、专能力、渐进披露、按需加载、知识≠执行、历史后置、路由必须明确、机械优先（零注意力）；总原则「薄入口、专能力、按需加载、职责单一、历史后置、路由明确、机械优先」 | gen2 | Accepted |
 
 ## 生命周期与代际
 
