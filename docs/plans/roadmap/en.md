@@ -89,6 +89,8 @@ Its mechanical capability has already grown beyond what the original design mode
 
 ## Generation 1 Key Limitations
 
+Known limitations are referenced from `docs/findings/` (FINDING-0001..0019), not restated here; the Roadmap keeps only the long-term conclusions.
+
 Specific evidence, defects and research records live in `docs/findings/` and `docs/research/`; the Roadmap keeps only the conclusions that affect the long-term direction.
 
 ### 1. The Producer/Product Governance Boundary Is Unclear
@@ -267,8 +269,10 @@ Profile              Profile
                 ↓
              Decision
                 ↓
- allow / deny / warn / require-review
+  allow / deny / warn / require-review
 ```
+
+> Note: the Governance Core composition above (Control / Rule Model, Applicability Model, Evidence Model, Decision Semantics, Shared Primitives, Contracts) is an **illustrative target architecture**, not a Phase-3 schema decision. Exact ownership (Core vs profile) and machine-readable schema are decided in Phase 3 (ADR-0018 Phase-boundary discipline; ADR-0020).
 
 ## Generation 2 Development Phases
 
@@ -277,7 +281,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 | Phase | Name (ADR-0018) | One-line outcome |
 | --- | --- | --- |
 | 0 | Architecture Migration Mode | safe-but-unblocked Gen1→Gen2 refactor environment (gates observational, Safety Kernel blocking) |
-| 1 | Producer / Product Separation | repo vs skill ownership boundary known; `scope = both` eliminated |
+| 1 | Producer / Product Separation | repo vs skill ownership boundary known; `scope = both` architecturally retired (residue remains, FINDING-0001) |
 | 2 | Research / Findings / Traceability | system model → observed gaps → traceability loop |
 | 3 | Governance Core / Rule Model | shared semantics, separate profiles |
 | 4 | Checker / Primitive restructuring | mature checkers → reusable primitives + evidence |

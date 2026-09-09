@@ -4,7 +4,7 @@ status: Confirmed
 type: control-gap
 severity: Medium
 affected: [repo]
-observed_in: gen1
+observed_in: gen2
 direction: E
 root_cause: R4
 related:

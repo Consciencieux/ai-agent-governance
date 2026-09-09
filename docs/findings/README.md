@@ -48,7 +48,7 @@ Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 
 | **B. Policy / Control Plane** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher |
 | **C. Enforcement Gap** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 |
 | **D. Validation / Dispatch Efficiency** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
-| **E. Checker Correctness / Regression** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021） |
+| **E. Checker Correctness / Regression** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 canonical 元数据被多份投影重复（FINDING-0024） |
 | **F. Portability / Runtime Boundary** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
 | **G. Evidence / Research Methodology** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023） |
 
@@ -82,62 +82,59 @@ R5 Producer/Product Isolation producer 与 product 治理缺乏显式隔离与�
 
 后续具体 findings 都挂到这五棵树下；每条 Finding 在 frontmatter 用 `root_cause` 声明归属。**R5 应优先处理**：producer/product ownership 未分清前，设计 Rule Registry / Dispatcher 时容易把当前 `repo / skill / both` 的混乱直接编码进新架构。
 
-## Frontmatter schema
+## Frontmatter schema（canonical，sparse——空 optional 一律省略）
 
 ```yaml
 ---
 id: FINDING-0001
 status: Confirmed               # Proposed / Confirmed / Resolved / Superseded / Invalidated
 type: architecture-gap          # L0–L4：defect / mechanism-gap / control-gap / architecture-gap / research-observation
-direction: A                    # A–G（见 taxonomy）
-root_cause: R5                  # R1–R5（见根因树）
-severity: Critical              # Critical / High / Medium / Low（与 status 分离：曾是 Critical 问题，现已 Resolved 完全合理）
-affected:
-  - repo                        # 影响域：repo（本仓库治理） / skill（载荷/被治理项目）
-  - skill
-github_issue: 7                 # 关联 GitHub issue 编号（collaboration projection）
-opened: 2026-09-08              # 创建日期
-updated: 2026-09-08             # 最近一次状态/内容更新日期
+severity: Critical              # Critical / High / Medium / Low
+affected: [repo, skill]         # compact 列表
 observed_in: gen1               # 发现该 finding 的架构时代（gen1 / gen2）
-resolved_in:                    # 解决的架构时代（未解决留空）
-resolved:                       # Resolved 时填写
-related:
-  plans: []                     # 关联计划（按名称，不用路径）
-  adrs: []                      # 关联 ADR（如 ADR-0015）
-  issues: []                    # 关联 GitHub issue（如 "#123"）
+direction: A                    # A–G（见 taxonomy）；按需
+root_cause: R5                  # R1–R5（见根因树）；按需
+resolved_in: gen1               # Resolved 时填写（未解决省略）
+github_issue: 7                 # 有协作追踪时填写（否则省略）
+related:                        # 按需；空类别省略
+  plans: [PLAN-0031]
+  adrs: [ADR-0006]
+  research: [RESEARCH-0007]
 ---
 ```
+
+**不保留**：`opened` / `updated` / `resolved`（Git 有 provenance）、空 `resolved_in` / `github_issue`、空 related 类别。
 
 ## 正文结构
 
 ```markdown
 # 标题
 
-## 观察 Observation
+## 观察
 
 发生了什么。
 
-## 证据 Evidence
+## 证据
 
 怎么证明（命令输出、gate 结果、测量数据）。层级发现可在此列证据子项。
 
-## 根因 Root cause
+## 根因
 
 当前已知根因。
 
-## 影响 Impact
+## 影响
 
 影响哪些 control / profile / release。
 
-## 关闭条件 Resolution criteria
+## 关闭条件
 
 满足什么条件才允许标记 Resolved。
 
-## 解决 Resolution
+## 解决情况
 
 解决后填写（关联 plan / ADR / release）。
 
-## 回归保护 Regression protection
+## 回归保护
 
 哪个 negative oracle / contract test 防止再次发生。
 ```

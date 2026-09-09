@@ -74,7 +74,7 @@ Research → informs → Finding → motivates → ADR → constrains → Roadma
 
 ```text
 Current truth:
-  Product / Active Research / Active Findings / Accepted ADR / Current Roadmap / Active Plan
+  Product / Active Research / Proposed / Confirmed Findings / Accepted ADR（gen2/cross 适用） / Current Roadmap / Active Plan
 
 Historical evidence:
   Superseded Research / Resolved / Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG
@@ -89,7 +89,7 @@ Research / Finding
         ↓
       ADR          → 决定约束
         ↓
-    Roadmap        → 排阶段顺序
+    Roadmap        → 投影/呈现阶段顺序（裁决归 ADR-0018）
         ↓
       Plan         → 当前执行任务
         ↓

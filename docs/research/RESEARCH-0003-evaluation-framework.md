@@ -2,6 +2,7 @@
 id: RESEARCH-0003
 status: Active
 version: 1
+subject_generation: gen1
 ---
 
 # RESEARCH-0003：评价框架

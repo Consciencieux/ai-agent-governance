@@ -47,7 +47,7 @@ docs/
 **当前 vs 历史（隔离）**：
 
 ```text
-Current truth:      Product / Active Research / Active Findings / Accepted ADR / Current Roadmap / Active Plan
+Current truth:      Product / Active Research / Proposed / Confirmed Findings / Accepted ADR（gen2/cross 适用） / Current Roadmap / Active Plan
 Historical evidence: Superseded Research / Resolved·Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG
 ```
 
@@ -66,7 +66,7 @@ Plan / Finding / Research / ADR 四类对象：
 - 机器字段/enum 用稳定英文
 - 简中 canonical 正文：H1/章节/表格头以中文为主
 - 类型专属 schema → 对应目录 README
-- 生命周期语义本阶段不改（Gen1 正文 Status 解析保留至 Phase 4）
+- 生命周期语义本阶段不改（Representation authority moves now：正文 Status 已删除，旧 parser 失败为已知 compatibility divergence，parser 迁移属 Phase 4）
 ```
 
 规范：ADR-0016 § 后续补充；各类型专属字段/status enum/章节 → `plans/README.md`、`findings/README.md`、`research/README.md`、`design-decisions/README.md`。
@@ -123,7 +123,7 @@ YES → candidate；NO → normally no CHANGELOG entry
 
 **Released section** = 历史记录，默认不可重写；允许 factual correction / broken pointer correction / 明确授权的历史整理，不允许为匹配今天架构改写历史（与 ADR「不改写历史」同源）。
 
-规范层：ADR-0012 § 后续补充；repo 自身 CHANGELOG 政策由 Repo Profile（`AGENTS.md`）拥有，格式契约共享自 payload（`references/policies/lifecycle.policy.md`）。
+规范层：ADR-0012 § 后续补充；repo 自身 CHANGELOG 政策由 Repo Profile 拥有（`repo-workflows/changelog-policy.md`；AGENTS 只放指针），格式契约共享自 payload（`references/policies/lifecycle.policy.md`）。
 
 ## 代际政策（总原则）
 
@@ -153,14 +153,14 @@ YES → candidate；NO → normally no CHANGELOG entry
 | 对象 | 核心职责 | 回答的问题 | 是否事实源 |
 | --- | --- | --- | --- |
 | ADR | 架构决策与约束 | 为什么这样设计？哪些约束已经成立？ | 是 |
-| Roadmap | 长期方向与阶段顺序 | 未来往哪里走？当前在哪个阶段？ | 否，索引/演进视图 |
+| Roadmap | 长期方向（投影/呈现顺序） | 未来往哪里走？当前在哪个阶段？ | 否，索引/演进视图（阶段顺序裁决归 ADR-0018） |
 | Plan | 当前具体执行合同 | 这个阶段现在具体怎么做、怎么验收？ | 是，针对当前任务 |
 
 ```text
 Accepted ADR  >  Roadmap  >  Active Plan
 ```
 
-ADR 定约束，Roadmap 排顺序，Plan 负责施工；阶段顺序权威 = ADR-0018。
+ADR 定约束，Roadmap 投影/呈现顺序，Plan 负责施工；阶段顺序由 ADR-0018 裁决（Roadmap 只镜像/索引，不裁决）。
 
 ## 总设计原则
 

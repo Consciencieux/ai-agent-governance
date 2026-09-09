@@ -47,7 +47,7 @@ GitHub Issue 提供 open/closed 生命周期与协作，但不提供：Git histo
 
 ## 后续注记（2026-09-09）
 
-本 ADR 的「知识对象五分类」（Finding / ADR / Plan / Archive + 决策载体）部分被 ADR-0016 § 后续补充的**七类模型**（Product / Research / Finding / ADR / Roadmap / Plan / Glossary）局部 supersede——「五分类」这一 clause 仅作历史保留；本 ADR 的 `cross-generation` 依据是其核心语义（Finding 长期 evidence record、状态就地演进、review 先分类再修复）明确延续到 Gen2。Generation 模型暂不支持 clause 级拆分，本条作为注记保留。
+本 ADR 的「五类载体」表（CHANGELOG / ADR / Plan / Finding / verification evidence）部分被 ADR-0016 § 后续补充的**七类知识对象模型**（Product / Research / Finding / ADR / Roadmap / Plan / Glossary）局部 supersede——「五类载体」这一 clause 仅作历史保留；本 ADR 的 `cross-generation` 依据是其核心语义（Finding 长期 evidence record、状态就地演进、review 先分类再修复）明确延续到 Gen2。Generation 模型暂不支持 clause 级拆分，本条作为注记保留。
 
 ## 参考
 

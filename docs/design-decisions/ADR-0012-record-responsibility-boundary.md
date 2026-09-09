@@ -48,7 +48,7 @@ CHANGELOG 的结构契约（版本节形状、分类标题唯一性、空行规�
 
 ## 后续补充（2026-09-09）：CHANGELOG 在新知识系统中的定位
 
-知识体系升级为七类知识对象（Product / Research / Finding / ADR / Roadmap / Plan / Archive Plan / Glossary，见 RESEARCH-0007）后，CHANGELOG 重新定界。本 ADR 原决策的核心判断仍然成立（CHANGELOG 记变更事实；ADR 记长期决策；Plan 记单次任务实施；验证证据在测试/审计），以下为边界细化：
+知识体系升级为七类知识对象（Product / Research / Finding / ADR / Roadmap / Plan / Glossary；Archive Plan 是 Plan 的生命周期状态，非独立类型，见 RESEARCH-0007）后，CHANGELOG 重新定界。本 ADR 原决策的核心判断仍然成立（CHANGELOG 记变更事实；ADR 记长期决策；Plan 记单次任务实施；验证证据在测试/审计），以下为边界细化：
 
 **1. CHANGELOG 是「历史变更投影」，不是 `docs/` 知识类型之一。**
 

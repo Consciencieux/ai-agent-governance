@@ -2,6 +2,7 @@
 id: RESEARCH-0001
 status: Active
 version: 1
+subject_generation: gen1
 ---
 
 # RESEARCH-0001：当前治理系统控制模型

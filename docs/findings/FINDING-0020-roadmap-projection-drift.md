@@ -4,10 +4,10 @@ status: Resolved
 type: defect
 severity: Medium
 affected: [repo]
-observed_in: gen1
+observed_in: gen2
 direction: E
 root_cause: R4
-resolved_in: gen1
+resolved_in: gen2
 related:
   adrs: [ADR-0015, ADR-0018]
   research: [RESEARCH-0007]

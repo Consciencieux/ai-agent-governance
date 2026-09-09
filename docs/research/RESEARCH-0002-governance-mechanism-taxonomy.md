@@ -2,6 +2,7 @@
 id: RESEARCH-0002
 status: Active
 version: 1
+subject_generation: gen1
 ---
 
 # RESEARCH-0002：治理机制分类

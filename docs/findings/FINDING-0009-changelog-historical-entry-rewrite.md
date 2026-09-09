@@ -5,6 +5,7 @@ type: defect
 severity: High
 affected: [repo]
 observed_in: gen1
+resolved_in: gen1
 direction: B
 root_cause: R1
 github_issue: 6

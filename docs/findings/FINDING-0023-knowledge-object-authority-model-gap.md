@@ -4,10 +4,10 @@ status: Resolved
 type: architecture-gap
 severity: Medium
 affected: [repo]
-observed_in: gen1
+observed_in: gen2
 direction: G
 root_cause: R1
-resolved_in: gen1
+resolved_in: gen2
 related:
   plans: [PLAN-0032]
   adrs: [ADR-0016]

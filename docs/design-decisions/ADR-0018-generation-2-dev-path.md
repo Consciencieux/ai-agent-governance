@@ -96,7 +96,7 @@ Runtime / token cost / human burden   运维成本观测
 ## 后果
 
 - Phase 0–8 顺序成为 2.0 migration 分支（ADR-0017）的 phase 划分依据；每个执行阶段（Phase 1–8）一个 `PLAN-xxxx` 计划 + checkpoint 验证。
-- `scope = both` 在 Phase 3 起被 `owner: core` + `consumers: [repo, skill]` 替代；repo / skill 各自拥有 applicability / implementation / boundary / adapter。
+- `scope = both` 在 Phase 3 起被 `owner: core` + `consumers: [repo, skill]` 替代；**正式 schema（含 applicability / implementation / boundary / adapter 的归属）由 Phase 3 决定**——本 ADR 只在 Phase 3 前定顺序，不预先固定 Phase 3 schema 或 applicability 归属（Phase-boundary 纪律，见 ADR-0020）。
 - CONTROL-X 契约测试在 Phase 3 后逐步加入，成为「跨 profile 同步」的机械保证。
 - Review 三类拆分在 Phase 7 落地；现有 review-manager 保留为 Implementation Review。
 - 测试指标转向不要求立即重写全部测试，而是新 control 一律 invariant-centric，存量渐进迁移。

@@ -2,6 +2,7 @@
 id: RESEARCH-0004
 status: Active
 version: 1
+subject_generation: gen1
 ---
 
 # RESEARCH-0004：架构演进

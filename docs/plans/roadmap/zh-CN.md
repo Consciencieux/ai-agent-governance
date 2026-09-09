@@ -91,6 +91,8 @@ independent checkers
 
 ## Generation 1 的主要限制
 
+已知限制引用自 `docs/findings/`（FINDING-0001..0019），此处不复述；Roadmap 只保留影响长期方向的结论。
+
 具体证据、缺陷和研究记录由 `docs/findings/` 与 `docs/research/` 管理；Roadmap 只保留影响长期方向的结论。
 
 ### 1. Producer Governance 与 Product Governance 边界不清
@@ -272,6 +274,8 @@ Profile              Profile
  allow / deny / warn / require-review
 ```
 
+> 注：上图 Governance Core 组成（Control / Rule Model、Applicability Model、Evidence Model、Decision Semantics、Shared Primitives、Contracts）是**目标架构示意**，不是 Phase 3 schema 决策；确切归属（Core vs profile）与 machine-readable schema 由 Phase 3 决定（ADR-0018 Phase 边界纪律；ADR-0020）。
+
 ## Generation 2 开发阶段
 
 Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的当前 projection（下表即该 projection，非新裁决）。每个 Phase 由对应 `PLAN-xxxx` 在 Accepted ADR 约束下执行。
@@ -279,7 +283,7 @@ Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的�
 | Phase | 名称（ADR-0018） | 一句话成果 |
 | --- | --- | --- |
 | 0 | Architecture Migration Mode | 安全而不阻塞的重构环境（gate 观测化、Safety Kernel 阻断） |
-| 1 | Producer / Product Separation | repo/skill ownership 边界明确，`scope = both` 消除 |
+| 1 | Producer / Product Separation | repo/skill ownership 边界明确，`scope = both` 架构性退役（残留保留，FINDING-0001） |
 | 2 | Research / Findings / Traceability | 系统模型 → 观察到的问题 → 溯源闭环 |
 | 3 | Governance Core / Rule Model | shared semantics, separate profiles |
 | 4 | Checker / Primitive restructuring | 成熟 checker → 可复用 primitive + evidence |

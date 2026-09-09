@@ -2,6 +2,7 @@
 id: RESEARCH-0005
 status: Active
 version: 1
+subject_generation: gen1
 ---
 
 # RESEARCH-0005：当前能力清单

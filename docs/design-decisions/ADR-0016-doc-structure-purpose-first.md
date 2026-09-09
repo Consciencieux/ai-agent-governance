@@ -118,7 +118,7 @@ docs/plans/
 
 **3. "must not" 是权威。** 每种知识类型有禁止内容（ADR 禁止 implementation checklist / bug inventory / roadmap scheduling；Roadmap 禁止 completed feature inventory、事实复制与**裁决阶段顺序**（归 ADR-0018）；Finding 禁止详细施工方案；Research 禁止宣布必须采用某方案；Plan 禁止重新定义长期架构）。边界靠禁止项锚定，不靠描述。
 
-**4. 当前知识与历史知识隔离。** Current truth（Product / Active Research / Active Findings / Accepted ADR / Current Roadmap / Active Plan）与 Historical evidence（Superseded Research / Resolved+Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG）不得混用；历史可被读来理解 provenance，**不得直接成为当前执行指令**。
+**4. 当前知识与历史知识隔离。** Current truth（Product / Active Research / Proposed / Confirmed Findings / Accepted ADR（gen2/cross 适用） / Current Roadmap / Active Plan）与 Historical evidence（Superseded Research / Resolved+Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG）不得混用；历史可被读来理解 provenance，**不得直接成为当前执行指令**。
 
 ## 后续补充（2026-09-09）：知识对象表示法归一（Representation Normalization）
 

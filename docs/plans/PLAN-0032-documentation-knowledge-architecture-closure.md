@@ -57,7 +57,7 @@ docs/README.md
 
 ## 四条规则
 
-1. **R1 内容路由**：六问路由测试；两问同答必须拆开互引。
+1. **R1 内容路由**：按对象的 primary authoritative responsibility 判定归属（六问路由测试）；对象可含 supporting context，只有形成独立长期知识时才拆出并引用（不是「两问同答就必须拆」）。
 2. **R2 目录决定知识类型，不决定重要程度；状态决定生命周期；引用决定关系**（关系靠链接不靠复制）。
 3. **R3 "must not" 比 "is" 更重要**：每种类型有 Forbidden 列，边界靠禁止项锚定。
 4. **R4 当前知识与历史知识隔离**：历史可读作 provenance，不作当前执行指令。
@@ -113,22 +113,26 @@ docs/README.md
 | R20 | review | docs/README 变知识仓库 | repo | closed | resolved | ADR-0022 收窄为 execution-facing 入口 |
 | R21 | systemic | 知识对象 authority/supporting-context 模型缺失 | repo | closed | promoted-to-finding | FINDING-0023 |
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
-| R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | open | deferred | ADR-0022 § 后果，后续执行任务 |
-| R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | open | promoted-to-next-plan | ADR-0021 §6 |
+| R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（successor: 待建 AGENTS 瘦身执行任务；revisit: ADR-0022 § 后果） | ADR-0022 § 后果 |
+| R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（successor: 待建 payload 集成计划；revisit: ADR-0021 § 后果） | ADR-0021 §6 |
 | R25 | subtask | 知识对象表示法归一（Representation Normalization）：统一 YAML envelope / sparse / 中文 H1 章节表头 | repo | closed | resolved | ADR-0016 § 后续补充；四类当前对象 |
+| R26 | review | canonical 元数据被多份 index/projection 重复 → 持续 drift（ADR-0021 index、README schema 示例等） | repo | closed | promoted-to-finding | FINDING-0024 |
 
-**Metadata consumer enumeration（表示法归一前必须）：** Plan Status 由正文 `> **Status:**` 解析（plan-status / plan-delivery / roadmap-sync）；ADR Status 由正文 `- 状态：` 解析（ADR-status 簇）；generation / Finding / Research 元数据**无机械 consumer**。因此正文 Status 保留至 Phase 4 parser 迁移；generation 可移入 frontmatter。
+**Metadata consumer enumeration（表示法归一前必须，2026-09-09 更新）：** Plan/ADR 状态原由正文解析（plan-status / plan-delivery / roadmap-sync / ADR-status 簇），但 **Representation authority moves now（ADR-0016）**——canonical 已迁入 frontmatter，正文 Status 已删除；旧 parser 的失败属已知 compatibility divergence，parser migration 属 Phase 4。generation / Finding / Research 元数据无机械 consumer。
 
-## Closure reconciliation
+## Closure reconciliation（2026-09-09 二次 checkpoint：workset reopened）
 
 ```text
 Total known:  25
 Resolved:     22
-Deferred:     1  (R23)
-Promoted to Finding:   1  (R21 → FINDING-0023)
-Promoted to next Plan: 1  (R24)
-Unaccounted:  0
+Deferred:     1  (R23，successor/revisit 已标)
+Promoted to Finding:   2  (R21 → FINDING-0023；R26 projection drift → FINDING-0024)
+Promoted to next Plan: 1  (R24，successor/revisit 已标)
+Reopened:     R2/R4/R14/R19/R25 —— 二次审查发现仓库存在反例，重新打开
+Unaccounted:  先 reconciliation 后判定，不预先写 0
 ```
+
+**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 README/schema projection 未收干净。本次已修复这些实例，并新增 FINDING-0024（canonical 元数据被多份投影重复）。完成判据升级为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。
 
 
 ## 未决风险

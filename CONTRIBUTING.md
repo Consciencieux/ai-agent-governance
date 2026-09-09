@@ -8,7 +8,7 @@
 npm test        # or node tests/run-tests.js
 ```
 
-CI runs it on every push/PR.
+CI is dual-mode (ADR-0014): on `main` / 1.x it runs the full gate group (`npm run check`); on `migration/2.0-governance-architecture` only the Refactor Safety Kernel blocks (JS syntax + `--suite security/generator/payload`), and Gen1 `npm run check` is observational.
 
 ## Where Things Live
 
@@ -25,7 +25,7 @@ The full repository layout — every directory and its role, down to individual 
 ## Language Policy (by audience)
 
 - **Agent-facing files are single-language** — `SKILL.md`, `AGENTS.md`, `references/**`, and the bodies of generated artifacts (AGENTS.md, rules, sub-skills) never carry a second language section. Convention: this skill's own execution docs (`SKILL.md`, `references/policies`, `references/workflows`) are 中文; auto-loaded agent guidance (`AGENTS.md`, template bodies) is English.
-- **Within `docs/`, language follows knowledge type, not the whole tree.** **User-facing product docs** are trilingual and split — the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`); the 简体中文/繁體中文 translations live inside their trees (`docs/product/zh-CN/README.md`, `docs/product/zh-TW/README.md`, ...). **简体中文 (zh-CN) is the canonical source** — edits originate there, then propagate to English and 繁體中文 (Taiwan usage). Editing one language requires updating the other two in the same change (stable docs). In-flight drafts may defer translation until they stabilize, but the parity gate must pass before push/release. Parity mapping: the English entry files are the root `README.md`/`CONTRIBUTING.md` (not duplicated under `docs/product/en/`). Structural parity is enforced by `repo-tools/check-doc-parity.js` (CI + release precondition `docs.parity_passed`). **Roadmap** (`docs/plans/roadmap/`) is trilingual. **Plans / findings / research / ADR** are 简体中文 canonical single-language and are not part of the trilingual parity check.
+- **Within `docs/`, language follows knowledge type, not the whole tree.** **User-facing product docs** are trilingual and split — the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`); the 简体中文/繁體中文 translations live inside their trees (`docs/product/zh-CN/README.md`, `docs/product/zh-TW/README.md`, ...). **简体中文 (zh-CN) is the canonical source** — edits originate there, then propagate to English and 繁體中文 (Taiwan usage). Editing one language requires updating the other two in the same change (stable docs). In-flight drafts may defer translation until they stabilize, but the parity gate must pass before push/release (on `main`; on the migration branch it is observational under Migration Mode). Parity mapping: the English entry files are the root `README.md`/`CONTRIBUTING.md` (not duplicated under `docs/product/en/`). Structural parity is enforced by `repo-tools/check-doc-parity.js` (CI + release precondition `docs.parity_passed`). **Roadmap** (`docs/plans/roadmap/`) is trilingual. **Plans / findings / research / ADR** are 简体中文 canonical single-language and are not part of the trilingual parity check.
 - **Terminology** — before introducing a term, check `docs/glossary.md` and add the trilingual entry if missing; keep renderings consistent across all files.
 
 ## Changing Governance Artifacts
@@ -40,10 +40,10 @@ The full repository layout — every directory and its role, down to individual 
 
 ## Development Workflow
 
-1. Create a branch from `main` (short-lived, one logical change per branch)
+1. Branch off the current work branch: `main` for 1.x stable work, `migration/2.0-governance-architecture` for the 2.0 migration (short-lived, one logical change per branch; Migration Mode — ADR-0014)
 2. Inspect the affected surface: read the files the change touches and their references; classify the change (documentation / governance mechanism / script-validator / tests / CI-release) — the classification decides the validation scope
 3. Make the change, keeping the language and parity rules above
-4. Run the checks that match the change scope (see Validation Requirements)
+4. Run the checks that match the change scope (see Validation Requirements); on the migration branch the Safety Kernel is blocking, Gen1 gates are observational
 5. Review your own diff before committing: staged files, no generated outputs, no unrelated edits
 6. Commit with a Conventional Commit message (see Commit Conventions), push the branch, open a PR
 

@@ -87,21 +87,20 @@ docs/research/
 ## 编号规则
 `RESEARCH-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
 
-## Frontmatter metadata
+## Frontmatter metadata（canonical，sparse——空 optional 一律省略）
 
 ```yaml
 ---
 id: RESEARCH-0001
-title: Current Governance System Model
-status: active             # Draft / Active / Superseded / Archived
+status: Active              # Draft / Active / Superseded / Archived
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []             # 本文档取代的 research id
-superseded_by: []          # 取代本文档的 research id
-subject_generation: gen1   # 该研究描述的架构时代（gen1 / gen2；如研究 1.0→2.0 迁移本身可省略或按主体时代标注）
+subject_generation: gen1    # 该研究描述的架构时代；迁移型（跨代描述）省略
+supersedes: [RESEARCH-0000] # 按需；无则省略
+superseded_by: [RESEARCH-0007] # 按需；无则省略
 ---
 ```
+
+**不保留**：`title`（H1 已有）、`created` / `updated`（Git 有 provenance）、空 `supersedes` / `superseded_by`。
 
 **代际标记用 `subject_generation`**：表达「这项研究描述的是哪个架构时代」，不用于表达「研究文档自身属于哪代」——research 是跨代的研究资产，随版本演进留在原位。
 

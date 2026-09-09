@@ -41,7 +41,7 @@ Plan archived    ≠   Feature deprecated    ≠   Control obsolete
 
 一个 Plan 归档，只回答「任务是否完成」，不回答「这个能力现在是否仍然存在、是否仍然有效」。归档计划记录了「为什么加入这个机制、当时解决什么问题、涉及哪些文件、边界条件、同步点、最终交付了什么」——它是最完整的 Generation-1 功能演进记录，也是 1.0 → 2.0 capability audit 的证据来源。
 
-每个知识对象用 `generation` 元数据标记所属架构时代（`gen1` / `gen2` / `cross-generation`），不通过目录、文件前缀或重新编号来表达代际。当前 30 个归档 Plan 均标记 `generation: gen1`。跨代能力的处置矩阵见 `docs/research/RESEARCH-0006-generation-1-capability-baseline.md`。
+每个 Plan 用 `generation` 元数据标记所属架构时代（`gen1` / `gen2`，不通过目录、文件前缀或重新编号表达代际；Finding/Research/ADR 的代际字段见各自 README）。当前 30 个归档 Plan 均标记 `generation: gen1`。跨代能力的处置矩阵见 `docs/research/RESEARCH-0006-generation-1-capability-baseline.md`。
 
 ## 规则
 
@@ -51,4 +51,4 @@ Plan archived    ≠   Feature deprecated    ≠   Control obsolete
 4. **只归档 Plan**：Finding / Research / ADR **不进入本目录**——它们不因状态变化（Resolved / Superseded）而物理归档，永久留在 `docs/findings/`、`docs/research/`、`docs/design-decisions/` 原位。
 5. **不要在 `roadmap/` 与 `archive/` 之间互相移动**：roadmap 是持续维护的方向文档，不是任务；只有 `PLAN-xxxx` 对象才走 active → archive。
 6. **每个 Plan 声明 `generation`**：`gen1`（Generation-1 历史执行记录）/ `gen2`（Generation-2 计划）。迁移工作（如 2.0 迁移）用 `gen2`，迁移来源在正文背景说明；`migration_from` 是可选项，仅在需要机械查询迁移计划时加。归档不等于能力过时。
-7. **统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `generation` / `target`；`status` 取值 `Design` / `Active` / `Implemented` / `Completed` / `Archived`（canonical 在 frontmatter，正文不再有 `> **Status:**`）；H1 = `# PLAN-xxxx：中文标题`；空 optional 字段省略。
+7. **统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `generation`（+ 当前 Plan 的 `target`）；`status` 取值 `Design` / `Active` / `Implemented` / `Completed` / `Archived`（canonical 在 frontmatter，正文不再有 `> **Status:**`）；H1 = `# PLAN-xxxx：中文标题`；空 optional 字段省略。**历史归档 Plan 的 required fields = `id` / `status: Archived` / `generation`（不含 `target`）**——current Plan 与 historical Plan 的必填字段分开定义。
