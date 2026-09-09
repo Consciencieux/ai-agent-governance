@@ -78,16 +78,18 @@ function buildFullDefault(dir) {
 }
 
 function buildParityTrees(dir) {
-  // minimal three-tree fixture with one parallel doc + root entry files
-  write(path.join(dir, "README.md"), "# AI Agent Governance\n\n[English](README.md) · [简体中文](docs/zh-CN/README.md) · [繁體中文](docs/zh-TW/README.md)\n\n## Intro\n\n- Hello\n");
-  write(path.join(dir, "CONTRIBUTING.md"), "# Contributing\n\n## Development\n");
-  for (const lang of ["en", "zh-CN", "zh-TW"]) {
-    write(path.join(dir, "docs", lang, "README.md"), `# 标题\n\n## 章节\n\n- 项目\n`);
-    write(path.join(dir, "docs", lang, "doc.md"), `# Doc\n\n## Section\n\n- one\n\n## Table\n\n| a | b |\n| --- | --- |\n| 1 | 2 |\n`);
+  // minimal three-tree fixture with one parallel doc + six root entry files
+  const entry = "# AI Agent Governance\n\n## Intro\n\n- Hello\n";
+  const contributing = "# Contributing\n\n## Development\n";
+  for (const file of ["README.md", "README.zh-CN.md", "README.zh-TW.md"]) {
+    write(path.join(dir, file), entry);
   }
-  // zh-CN/zh-TW in-tree CONTRIBUTING.md must also exist for entry checks
-  write(path.join(dir, "docs", "zh-CN", "CONTRIBUTING.md"), "# 贡献\n\n## 开发\n");
-  write(path.join(dir, "docs", "zh-TW", "CONTRIBUTING.md"), "# 貢獻\n\n## 開發\n");
+  for (const file of ["CONTRIBUTING.md", "CONTRIBUTING.zh-CN.md", "CONTRIBUTING.zh-TW.md"]) {
+    write(path.join(dir, file), contributing);
+  }
+  for (const lang of ["en", "zh-CN", "zh-TW"]) {
+    write(path.join(dir, "docs", "product", lang, "doc.md"), `# Doc\n\n## Section\n\n- one\n\n## Table\n\n| a | b |\n| --- | --- |\n| 1 | 2 |\n`);
+  }
 }
 
 function gitCommitAt(dir, files, dateIso, msg) {

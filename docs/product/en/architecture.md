@@ -89,7 +89,7 @@ Three rules follow:
 | `scripts/` | Skill runtime scripts. Mixed too: 9 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
 | `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | mixed by knowledge type: product/roadmap trilingual; plans/findings/research/ADR canonical Chinese |
-| `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `CONTRIBUTING.md`, `README.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
+| `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `README*.md`, `CONTRIBUTING*.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
 
 ### Repository Layout
 
@@ -159,8 +159,12 @@ ai-agent-governance/
 │   ├── findings/               # Issue/Finding archive (shared, single-language 简体中文; status change in place, never archived)
 │   ├── research/               # research knowledge base — system model, mechanism taxonomy, evaluation framework (shared, single-language 简体中文, versioned/superseded)
 │   └── design-decisions/       # architecture decision records (shared, single-language 简体中文)
-├── README.md                   # English landing (translations: docs/product/zh-CN/README.md, docs/product/zh-TW/README.md)
-├── CONTRIBUTING.md             # development guide (translations: docs/product/zh-CN/CONTRIBUTING.md, docs/product/zh-TW/CONTRIBUTING.md)
+├── README.md                   # English landing
+├── README.zh-CN.md             # 简体中文 landing
+├── README.zh-TW.md             # 繁體中文 landing
+├── CONTRIBUTING.md             # English development guide
+├── CONTRIBUTING.zh-CN.md       # 简体中文 development guide
+├── CONTRIBUTING.zh-TW.md       # 繁體中文 development guide
 ├── AGENTS.md                   # agent guidelines for working on this repo
 ├── CHANGELOG.md                # release history
 ├── package.json                # npm scripts (test, check)

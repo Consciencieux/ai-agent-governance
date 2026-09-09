@@ -6,7 +6,7 @@
 [![CI](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Consciencieux/ai-agent-governance)](https://github.com/Consciencieux/ai-agent-governance/releases)
 
-[English](../../../README.md) · [简体中文](README.md) · [繁體中文](../zh-TW/README.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 ## 它是什么
 
@@ -39,9 +39,9 @@ agent 修改代码
 | AUDIT | 巡检汇总活动记录并验证全部治理事实——从文档一致性到规则捕获。 |
 | RELEASE | 人在环流程分析变更历史、提出 SemVer 版本并发布——基于证据，而非虚构。 |
 
-这些阶段背后的 Spec / Status / Health 状态模型记录在 [docs/zh-CN/governance-model.md](governance-model.md)。
+这些阶段背后的 Spec / Status / Health 状态模型记录在 [docs/product/zh-CN/governance-model.md](docs/product/zh-CN/governance-model.md)。
 
-这是仓库级治理生命周期。Agent 单次任务的六阶段操作生命周期单独记录在 [docs/zh-CN/lifecycle.md](lifecycle.md)。
+这是仓库级治理生命周期。Agent 单次任务的六阶段操作生命周期单独记录在 [docs/product/zh-CN/lifecycle.md](docs/product/zh-CN/lifecycle.md)。
 
 ```
    AI Agent
@@ -86,7 +86,7 @@ agent 修改代码
 initialize project governance
 ```
 
-完整可用提示词清单见 [docs/zh-CN/commands.md](commands.md)。
+完整可用提示词清单见 [docs/product/zh-CN/commands.md](docs/product/zh-CN/commands.md)。
 
 ## 快速开始
 
@@ -126,28 +126,28 @@ my-project/
 └── .github/workflows/
 ```
 
-完整带注释的初始化输出：[docs/zh-CN/bootstrap-output.md](bootstrap-output.md)。
+完整带注释的初始化输出：[docs/product/zh-CN/bootstrap-output.md](docs/product/zh-CN/bootstrap-output.md)。
 
 ## 生成的环境
 
-INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚本、规则文件与生成的子技能）由 [references/init-spec.json](../../../references/init-spec.json) 与 [references/templates/sub-skills.md](../../../references/templates/sub-skills.md) 定义。
+INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚本、规则文件与生成的子技能）由 [references/init-spec.json](references/init-spec.json) 与 [references/templates/sub-skills.md](references/templates/sub-skills.md) 定义。
 
 ## 文档
 
-- [docs/README.md](../../README.md) — 文档知识体系：文档类型边界、语言政策、生命周期总览
-- [docs/zh-CN/skill-discovery.md](skill-discovery.md) — Agent 如何发现并触发 skill
-- [docs/zh-CN/commands.md](commands.md) — 完整提示词清单与运行时组件
-- [docs/zh-CN/bootstrap-output.md](bootstrap-output.md) — 完整带注释的初始化输出
-- [docs/zh-CN/governance-model.md](governance-model.md) — Spec / Status / Health 状态模型
-- [docs/zh-CN/architecture.md](architecture.md) — 仓库布局与三种分发角色
-- [docs/zh-CN/anti-regression.md](anti-regression.md) — 防乱改机制完整明细
-- [docs/zh-CN/lifecycle.md](lifecycle.md) — Agent 六阶段操作生命周期
-- [docs/zh-CN/validator.md](validator.md) — 校验器用法与检查项
-- [docs/plans/roadmap/zh-CN.md](../../plans/roadmap/zh-CN.md) — 带状态与设计文档的路线图
-- [docs/design-decisions/](../../design-decisions/) — 架构决策记录（ADR，简体中文）
-- [docs/glossary.md](../../glossary.md) — 三语术语对照表
-- [CONTRIBUTING.md](CONTRIBUTING.md) — 开发指南
-- [CHANGELOG.md](../../../CHANGELOG.md) — 发布历史
+- [docs/README.md](docs/README.md) — 文档知识体系：文档类型边界、语言政策、生命周期总览
+- [docs/product/zh-CN/skill-discovery.md](docs/product/zh-CN/skill-discovery.md) — Agent 如何发现并触发 skill
+- [docs/product/zh-CN/commands.md](docs/product/zh-CN/commands.md) — 完整提示词清单与运行时组件
+- [docs/product/zh-CN/bootstrap-output.md](docs/product/zh-CN/bootstrap-output.md) — 完整带注释的初始化输出
+- [docs/product/zh-CN/governance-model.md](docs/product/zh-CN/governance-model.md) — Spec / Status / Health 状态模型
+- [docs/product/zh-CN/architecture.md](docs/product/zh-CN/architecture.md) — 仓库布局与三种分发角色
+- [docs/product/zh-CN/anti-regression.md](docs/product/zh-CN/anti-regression.md) — 防乱改机制完整明细
+- [docs/product/zh-CN/lifecycle.md](docs/product/zh-CN/lifecycle.md) — Agent 六阶段操作生命周期
+- [docs/product/zh-CN/validator.md](docs/product/zh-CN/validator.md) — 校验器用法与检查项
+- [docs/plans/roadmap/zh-CN.md](docs/plans/roadmap/zh-CN.md) — 带状态与设计文档的路线图
+- [docs/design-decisions/](docs/design-decisions/) — 架构决策记录（ADR，简体中文）
+- [docs/glossary.md](docs/glossary.md) — 三语术语对照表
+- [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md) — 开发指南
+- [CHANGELOG.md](CHANGELOG.md) — 发布历史
 
 ## 1.0 之后的方向
 
@@ -155,4 +155,4 @@ v1.0 冻结了核心治理契约。后续工作将在此基础上继续扩展系
 
 ## License
 
-[MIT](../../../LICENSE) © 2026 Consciencieux
+[MIT](LICENSE) © 2026 Consciencieux

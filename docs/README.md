@@ -169,7 +169,7 @@ ADR 定约束，Roadmap 投影/呈现顺序，Plan 负责施工；阶段顺序�
 
 ## 入口导航
 
-- 用户产品文档 → `docs/product/{en,zh-CN,zh-TW}/`（根 `README.md` 是英文入口）
+- 用户产品文档 → 根目录六个 `README*.md` / `CONTRIBUTING*.md` 入口文件 + `docs/product/{en,zh-CN,zh-TW}/` 产品文档树
 - 长期路线图 → `docs/plans/roadmap/`
 - 执行计划 → `docs/plans/`（管理规则：`docs/plans/README.md`）
 - 归档计划 → `docs/plans/archive/`

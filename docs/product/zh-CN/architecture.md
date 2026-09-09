@@ -62,7 +62,7 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 | `scripts/` | Skill 运行时脚本。同样混装：9 个是 INSTALLED（复制进被治理项目），其余是只在本仓库运行的 SKILL-INTERNAL 工具。 | agent/CI | 代码 |
 | `LICENSE` | MIT 许可证——随 tarball 分发 | 安装者 | — |
 | `docs/` | **项目知识。REPO-ONLY。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、findings 档案（`findings/`）、研究知识库（`research/`）、路线图、术语表。 | 开发者 + Agent | 按知识类型：Product/Roadmap 三语；Plan/Finding/Research/ADR 简中 canonical |
-| `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`CONTRIBUTING.md`、`README.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
+| `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`README*.md`、`CONTRIBUTING*.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
 
 ### 仓库布局
 
@@ -131,8 +131,12 @@ ai-agent-governance/
 │   ├── findings/               # Issue/Finding 档案（共享，简体单语；状态就地更新，永不归档）
 │   ├── research/               # 研究知识库——系统模型、机制分类、评价框架（共享，简体单语；版本化/supersede 演进）
 │   └── design-decisions/       # 架构决策记录（共享，简体单语）
-├── README.md                   # 英文主页（翻译：docs/product/zh-CN/README.md、docs/product/zh-TW/README.md）
-├── CONTRIBUTING.md             # 开发指南（翻译：docs/product/zh-CN/CONTRIBUTING.md、docs/product/zh-TW/CONTRIBUTING.md）
+├── README.md                   # 英文主页
+├── README.zh-CN.md             # 简体中文主页
+├── README.zh-TW.md             # 繁體中文主页
+├── CONTRIBUTING.md             # 英文开发指南
+├── CONTRIBUTING.zh-CN.md       # 简体中文开发指南
+├── CONTRIBUTING.zh-TW.md       # 繁體中文开发指南
 ├── AGENTS.md                   # 本仓库的 Agent 工作指南
 ├── CHANGELOG.md                # 发布历史
 ├── package.json                # npm 脚本（test、check）

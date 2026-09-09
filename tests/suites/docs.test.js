@@ -18,7 +18,7 @@ test("doc parity: parallel trees exit 0", () => {
 test("doc parity: heading drift in one tree exits 1", () => {
   const dir = tmp("parity-drift");
   buildParityTrees(dir);
-  fs.appendFileSync(path.join(dir, "docs", "zh-TW", "doc.md"), "\n## 额外章节\n");
+  fs.appendFileSync(path.join(dir, "docs", "product", "zh-TW", "doc.md"), "\n## 额外章节\n");
   const r = spawnSync(process.execPath, [PARITY_CHECK], { cwd: dir, encoding: "utf8" });
   return r.status === 1 && r.stdout.includes("structure drift");
 });
@@ -26,9 +26,17 @@ test("doc parity: heading drift in one tree exits 1", () => {
 test("doc parity: missing file in one tree exits 1", () => {
   const dir = tmp("parity-missing");
   buildParityTrees(dir);
-  fs.rmSync(path.join(dir, "docs", "en", "doc.md"));
+  fs.rmSync(path.join(dir, "docs", "product", "en", "doc.md"));
   const r = spawnSync(process.execPath, [PARITY_CHECK], { cwd: dir, encoding: "utf8" });
-  return r.status === 1 && r.stdout.includes("missing in docs/en/");
+  return r.status === 1 && r.stdout.includes("missing in docs/product/en/");
+});
+
+test("doc parity: missing root language entry exits 1", () => {
+  const dir = tmp("parity-root-entry-missing");
+  buildParityTrees(dir);
+  fs.rmSync(path.join(dir, "README.zh-CN.md"));
+  const r = spawnSync(process.execPath, [PARITY_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stdout.includes("missing root entry: README.zh-CN.md");
 });
 
 

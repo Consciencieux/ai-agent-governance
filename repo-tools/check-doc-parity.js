@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-// Doc Parity Check — read-only. Verifies the three developer-facing language trees
-// (docs/en/, docs/zh-CN/, docs/zh-TW/) are structurally parallel: the same-named file
-// must exist in each tree with the same heading hierarchy, code-block count, table
-// dimensions and list-item count. Also verifies the root English landing files
-// (README.md, CONTRIBUTING.md) exist. Structural parity is NOT semantic parity.
+// Doc Parity Check — read-only. Verifies the three developer-facing product trees
+// (docs/product/en/, docs/product/zh-CN/, docs/product/zh-TW/) are structurally
+// parallel: the same-named file must exist in each tree with the same heading
+// hierarchy, code-block count, table dimensions and list-item count. The six
+// language entry files live at the repository root and are checked separately.
+// Structural parity is NOT semantic parity.
 // Usage: node repo-tools/check-doc-parity.js [--json]
 // Exit 0: trees are parallel. Exit 1: drift found.
 
@@ -12,12 +13,15 @@ const path = require("path");
 
 const ROOT = process.cwd();
 const DOCS = path.join(ROOT, "docs");
-const TREES = ["en", "zh-CN", "zh-TW"];
-const ENTRY_MAP = {
-  en: ["README.md", "CONTRIBUTING.md"], // root English landing
-  "zh-CN": ["README.md", "CONTRIBUTING.md"], // in-tree translations
-  "zh-TW": ["README.md", "CONTRIBUTING.md"],
-};
+const TREES = ["product/en", "product/zh-CN", "product/zh-TW"];
+const ROOT_ENTRIES = [
+  "README.md",
+  "README.zh-CN.md",
+  "README.zh-TW.md",
+  "CONTRIBUTING.md",
+  "CONTRIBUTING.zh-CN.md",
+  "CONTRIBUTING.zh-TW.md",
+];
 
 function walk(dir, base = dir) {
   const out = [];
@@ -85,26 +89,17 @@ function readTree(lang) {
   return sigs;
 }
 
-function entryFile(lang) {
-  // English entry files live at the repo root (GitHub landing); zh-CN/zh-TW at tree root.
-  const base = lang === "en" ? ROOT : path.join(DOCS, lang);
-  return ENTRY_MAP[lang].map((f) => ({ rel: f, file: path.join(base, f) }));
-}
-
-// Structural signature for entry files living outside the tree (root README/CONTRIBUTING
-// for en). Compare the zh-CN/zh-TW in-tree copies against the corresponding tree files.
-// Missing tree dirs/files report issues instead of crashing.
+// Structural signature for the six root entry files. The English, Simplified Chinese
+// and Traditional Chinese variants of each entry must remain structurally parallel.
 function readEntrySigs(issues) {
   const sigs = {};
-  for (const lang of ["zh-CN", "zh-TW"]) {
-    sigs[lang] = {};
-    for (const { rel, file } of entryFile(lang)) {
-      if (!fs.existsSync(file)) {
-        issues.push(`missing entry in docs/${lang}/: ${rel}`);
-        continue;
-      }
-      sigs[lang][rel] = signature(file);
+  for (const rel of ROOT_ENTRIES) {
+    const file = path.join(ROOT, rel);
+    if (!fs.existsSync(file)) {
+      issues.push(`missing root entry: ${rel}`);
+      continue;
     }
+    sigs[rel] = signature(file);
   }
   return sigs;
 }
@@ -123,39 +118,25 @@ function main() {
     treeFiles[lang] = sigs;
   }
 
-  // Entry files: root README.md / CONTRIBUTING.md must exist (en landing);
-  // zh-CN/zh-TW in-tree README.md / CONTRIBUTING.md must be structurally parallel.
-  for (const { rel, file } of entryFile("en")) {
-    if (!fs.existsSync(file)) issues.push(`English entry missing: ${file}`);
-  }
   const entrySigs = readEntrySigs(issues);
-  const baseEntry = entrySigs["zh-CN"];
-  for (const rel of Object.keys(baseEntry)) {
-    for (const lang of ["en", "zh-TW"]) {
-      const enFile = path.join(ROOT, rel);
-      if (lang === "en") {
-        if (!fs.existsSync(enFile)) {
-          issues.push(`English entry missing: ${enFile}`);
-          continue;
-        }
-      } else if (!entrySigs[lang][rel]) {
-        issues.push(`missing entry in docs/zh-TW/: ${rel}`);
-        continue;
-      }
-      const theirs = lang === "en" ? signature(enFile) : entrySigs[lang][rel];
-      if (JSON.stringify(theirs) !== JSON.stringify(baseEntry[rel])) {
-        issues.push(`structure drift in entry ${rel} (${lang}): ` +
-          `${JSON.stringify(theirs)} != ${JSON.stringify(baseEntry[rel])}`);
+  for (const [base, variants] of [
+    ["README.md", ["README.zh-CN.md", "README.zh-TW.md"]],
+    ["CONTRIBUTING.md", ["CONTRIBUTING.zh-CN.md", "CONTRIBUTING.zh-TW.md"]],
+  ]) {
+    if (!entrySigs[base]) continue;
+    for (const variant of variants) {
+      if (!entrySigs[variant]) continue;
+      if (JSON.stringify(entrySigs[variant]) !== JSON.stringify(entrySigs[base])) {
+        issues.push(`structure drift in root entry ${variant}: ` +
+          `${JSON.stringify(entrySigs[variant])} != ${JSON.stringify(entrySigs[base])}`);
       }
     }
   }
 
   if (Object.keys(treeFiles).length === TREES.length) {
-    const base = treeFiles["zh-CN"];
-    const entryRels = new Set(ENTRY_MAP["zh-CN"]); // README.md, CONTRIBUTING.md
+    const base = treeFiles["product/zh-CN"];
     for (const rel of Object.keys(base)) {
-      if (entryRels.has(rel)) continue; // checked by the entry-file pass
-      for (const lang of ["en", "zh-TW"]) {
+      for (const lang of ["product/en", "product/zh-TW"]) {
         if (!treeFiles[lang][rel]) {
           issues.push(`missing in docs/${lang}/: ${rel}`);
         } else if (JSON.stringify(treeFiles[lang][rel]) !== JSON.stringify(base[rel])) {
@@ -164,9 +145,9 @@ function main() {
         }
       }
     }
-    for (const lang of ["en", "zh-TW"]) {
+    for (const lang of ["product/en", "product/zh-TW"]) {
       for (const rel of Object.keys(treeFiles[lang])) {
-        if (!base[rel] && !entryRels.has(rel)) issues.push(`extra in docs/${lang}/: ${rel}`);
+        if (!base[rel]) issues.push(`extra in docs/${lang}/: ${rel}`);
       }
     }
   }

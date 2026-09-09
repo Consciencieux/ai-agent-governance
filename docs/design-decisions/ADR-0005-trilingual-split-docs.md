@@ -28,3 +28,16 @@ generation: gen1
 - EN / zh-CN / zh-TW 之间的翻译漂移可结构检测：内容一致性检查（v0.7.0）由"两段比对"改为"三树比对"。
 - GitHub 访客看到英文主页；简体/繁体用户经顶部链接到达各自的 README。
 - 对开发者面向文件取代 ADR-0003 的单文件双语布局（ADR-0003 的历史理由仍然成立）。
+
+## 后续修正（2026-09-10）：三语入口文件移至仓库根目录
+
+本修正是对上方「根目录只保留英文主页、翻译下沉语言树」这一**仓库自身入口布局**的 Narrow amendment；原始决策保留为历史记录。
+
+自本修正起，本仓库的六个开发者入口文件统一位于根目录：
+
+```text
+README.md              README.zh-CN.md              README.zh-TW.md
+CONTRIBUTING.md        CONTRIBUTING.zh-CN.md        CONTRIBUTING.zh-TW.md
+```
+
+其余用户产品文档继续位于 `docs/product/{en,zh-CN,zh-TW}/`，三语入口文件不再作为 product tree 内的 `README.md` / `CONTRIBUTING.md` 参与树内扫描；`repo-tools/check-doc-parity.js` 单独比较根目录六个入口文件的结构，并比较三棵 product 文档树的其余文件。被治理项目的默认语言布局不因本仓库入口移动而改变。

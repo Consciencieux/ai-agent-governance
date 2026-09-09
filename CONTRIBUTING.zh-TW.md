@@ -1,6 +1,6 @@
 # 貢獻指南
 
-[English](../../../CONTRIBUTING.md) · [简体中文](../zh-CN/CONTRIBUTING.md) · [繁體中文](CONTRIBUTING.md)
+[English](CONTRIBUTING.md) · [简体中文](CONTRIBUTING.zh-CN.md) · [繁體中文](CONTRIBUTING.zh-TW.md)
 
 ## 開發
 
@@ -12,11 +12,11 @@ CI 每次 push/PR 運行。
 
 ## 各目錄用途
 
-完整倉庫佈局——每個目錄及其角色、直到單一腳本——記錄在 [docs/zh-TW/architecture.md](architecture.md)（Repository Layout，單一事實源）。此處僅保留指標：
+完整倉庫佈局——每個目錄及其角色、直到單一腳本——記錄在 [docs/product/zh-TW/architecture.md](docs/product/zh-TW/architecture.md)（Repository Layout，單一事實源）。此處僅保留指標：
 
 | 路徑 | 記錄於 |
 | --- | --- |
-| `SKILL.md` · `references/` · `scripts/` | `docs/zh-TW/architecture.md` § Repository Layout |
+| `SKILL.md` · `references/` · `scripts/` | `docs/product/zh-TW/architecture.md` § Repository Layout |
 | `tests/run-tests.js` | 測試入口——`npm test` 運行 |
 | `docs/` 樹 · `docs/glossary.md` · `docs/design-decisions/` · `docs/plans/archive/` | 各語言文件、術語表、ADR、歸檔 |
 
@@ -25,7 +25,7 @@ CI 每次 push/PR 運行。
 ## 語言政策（按受眾）
 
 - **Agent 面向的檔案一律單語** —— `SKILL.md`、`AGENTS.md`、`references/**` 以及產生產物的正文（AGENTS.md、rules、子技能）絕不攜帶第二語言段落。慣例：本 skill 自身的執行文件（`SKILL.md`、`references/policies`、`references/workflows`）用中文；自動載入的 Agent 指引（`AGENTS.md`、範本正文）用英文。
-- **開發者面向的檔案三語且拆分** -- 根目錄只保留英文首頁（`README.md`、`CONTRIBUTING.md`）；簡體/繁體翻譯下沉到各自語言樹（`docs/zh-CN/README.md`、`docs/zh-TW/README.md`…）。**簡體中文（zh-CN）是源語言** -- 修改從簡體發起，再同步到英文與繁體中文（台灣用語）。改一種語言必須**在同一次改動裡同步另兩種**（穩定文件）；活躍草稿可延遲翻譯至內容穩定，但 push/release 前必須補齊（parity 閘門兜底）。一致性映射：英文入口檔案即根目錄 `README.md`/`CONTRIBUTING.md`（不在 `docs/en/` 下重複）。結構一致性由 `repo-tools/check-doc-parity.js` 強制（CI + 發佈前置 `docs.parity_passed`）。
+- **開發者面向的檔案三語且拆分** -- 根目錄保留英文首頁與三語入口檔案（`README.md`、`README.zh-CN.md`、`README.zh-TW.md`、`CONTRIBUTING.md`、`CONTRIBUTING.zh-CN.md`、`CONTRIBUTING.zh-TW.md`）；其他使用者向文件位於 `docs/product/{en,zh-CN,zh-TW}/`。**簡體中文（zh-CN）是源語言** -- 修改從簡體發起，再同步到英文與繁體中文（台灣用語）。改一種語言必須**在同一次改動裡同步另兩種**（穩定文件）；活躍草稿可延遲翻譯至內容穩定，但 push/release 前必須補齊（parity 閘門兜底）。結構一致性由 `repo-tools/check-doc-parity.js` 強制（CI + 發佈前置 `docs.parity_passed`）。
 - **術語** —— 引入新術語前先查 `docs/glossary.md`，缺失則補三語條目；所有檔案保持同一譯法。
 
 ## 修改治理工件
@@ -72,4 +72,4 @@ CI 每次 push/PR 運行。
 
 ## License
 
-[MIT](../../../LICENSE) © 2026 Consciencieux
+[MIT](LICENSE) © 2026 Consciencieux

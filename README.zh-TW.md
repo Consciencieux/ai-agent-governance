@@ -6,7 +6,7 @@
 [![CI](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Consciencieux/ai-agent-governance)](https://github.com/Consciencieux/ai-agent-governance/releases)
 
-[English](../../../README.md) · [简体中文](../zh-CN/README.md) · [繁體中文](README.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 ## 它是什麼
 
@@ -39,9 +39,9 @@ agent 修改程式碼
 | AUDIT | 巡檢彙總活動記錄並驗證全部治理事實——從文件一致性到規則捕獲。 |
 | RELEASE | 人在環流程分析變更歷史、提出 SemVer 版本並發佈——基於證據，而非虛構。 |
 
-這些階段背後的 Spec / Status / Health 狀態模型記錄在 [docs/zh-TW/governance-model.md](governance-model.md)。
+這些階段背後的 Spec / Status / Health 狀態模型記錄在 [docs/product/zh-TW/governance-model.md](docs/product/zh-TW/governance-model.md)。
 
-這是倉庫級治理生命週期。Agent 單次任務的六階段操作生命週期單獨記錄在 [docs/zh-TW/lifecycle.md](lifecycle.md)。
+這是倉庫級治理生命週期。Agent 單次任務的六階段操作生命週期單獨記錄在 [docs/product/zh-TW/lifecycle.md](docs/product/zh-TW/lifecycle.md)。
 
 ```
    AI Agent
@@ -86,7 +86,7 @@ agent 修改程式碼
 initialize project governance
 ```
 
-完整可用提示詞清單見 [docs/zh-TW/commands.md](commands.md)。
+完整可用提示詞清單見 [docs/product/zh-TW/commands.md](docs/product/zh-TW/commands.md)。
 
 ## 快速開始
 
@@ -126,28 +126,28 @@ my-project/
 └── .github/workflows/
 ```
 
-完整帶註解的初始化輸出：[docs/zh-TW/bootstrap-output.md](bootstrap-output.md)。
+完整帶註解的初始化輸出：[docs/product/zh-TW/bootstrap-output.md](docs/product/zh-TW/bootstrap-output.md)。
 
 ## 產生的環境
 
-INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](../../../references/init-spec.json) 與 [references/templates/sub-skills.md](../../../references/templates/sub-skills.md) 定義。
+INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](references/init-spec.json) 與 [references/templates/sub-skills.md](references/templates/sub-skills.md) 定義。
 
 ## 文件
 
-- [docs/README.md](../../README.md) — 文件知識體系：文件類型邊界、語言政策、生命週期總覽
-- [docs/zh-TW/skill-discovery.md](skill-discovery.md) — Agent 如何發現並觸發 skill
-- [docs/zh-TW/commands.md](commands.md) — 完整提示詞清單與運行時元件
-- [docs/zh-TW/bootstrap-output.md](bootstrap-output.md) — 完整帶註解的初始化輸出
-- [docs/zh-TW/governance-model.md](governance-model.md) — Spec / Status / Health 狀態模型
-- [docs/zh-TW/architecture.md](architecture.md) — 倉庫佈局與三種分發角色
-- [docs/zh-TW/anti-regression.md](anti-regression.md) — 防亂改機制完整明細
-- [docs/zh-TW/lifecycle.md](lifecycle.md) — Agent 六階段操作生命週期
-- [docs/zh-TW/validator.md](validator.md) — 校驗器用法與檢查項
-- [docs/plans/roadmap/zh-TW.md](../../plans/roadmap/zh-TW.md) — 帶狀態與設計文件的 roadmap
-- [docs/design-decisions/](../../design-decisions/) — 架構決策記錄（ADR，簡體中文）
-- [docs/glossary.md](../../glossary.md) — 三語術語對照表
-- [CONTRIBUTING.md](CONTRIBUTING.md) — 開發指南
-- [CHANGELOG.md](../../../CHANGELOG.md) — 發佈歷史
+- [docs/README.md](docs/README.md) — 文件知識體系：文件類型邊界、語言政策、生命週期總覽
+- [docs/product/zh-TW/skill-discovery.md](docs/product/zh-TW/skill-discovery.md) — Agent 如何發現並觸發 skill
+- [docs/product/zh-TW/commands.md](docs/product/zh-TW/commands.md) — 完整提示詞清單與運行時元件
+- [docs/product/zh-TW/bootstrap-output.md](docs/product/zh-TW/bootstrap-output.md) — 完整帶註解的初始化輸出
+- [docs/product/zh-TW/governance-model.md](docs/product/zh-TW/governance-model.md) — Spec / Status / Health 狀態模型
+- [docs/product/zh-TW/architecture.md](docs/product/zh-TW/architecture.md) — 倉庫佈局與三種分發角色
+- [docs/product/zh-TW/anti-regression.md](docs/product/zh-TW/anti-regression.md) — 防亂改機制完整明細
+- [docs/product/zh-TW/lifecycle.md](docs/product/zh-TW/lifecycle.md) — Agent 六階段操作生命週期
+- [docs/product/zh-TW/validator.md](docs/product/zh-TW/validator.md) — 校驗器用法與檢查項
+- [docs/plans/roadmap/zh-TW.md](docs/plans/roadmap/zh-TW.md) — 帶狀態與設計文件的路線圖
+- [docs/design-decisions/](docs/design-decisions/) — 架構決策記錄（ADR，簡體中文）
+- [docs/glossary.md](docs/glossary.md) — 三語術語對照表
+- [CONTRIBUTING.zh-TW.md](CONTRIBUTING.zh-TW.md) — 開發指南
+- [CHANGELOG.md](CHANGELOG.md) — 發佈歷史
 
 ## 1.0 之後的方向
 
@@ -155,4 +155,4 @@ v1.0 凍結了核心治理契約。後續工作將在此基礎上繼續擴展系
 
 ## License
 
-[MIT](../../../LICENSE) © 2026 Consciencieux
+[MIT](LICENSE) © 2026 Consciencieux

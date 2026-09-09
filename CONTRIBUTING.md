@@ -1,6 +1,6 @@
 # Contributing
 
-[English](CONTRIBUTING.md) · [简体中文](docs/product/zh-CN/CONTRIBUTING.md) · [繁體中文](docs/product/zh-TW/CONTRIBUTING.md)
+[English](CONTRIBUTING.md) · [简体中文](CONTRIBUTING.zh-CN.md) · [繁體中文](CONTRIBUTING.zh-TW.md)
 
 ## Development
 
@@ -25,7 +25,7 @@ The full repository layout — every directory and its role, down to individual 
 ## Language Policy (by audience)
 
 - **Agent-facing files are single-language** — `SKILL.md`, `AGENTS.md`, `references/**`, and the bodies of generated artifacts (AGENTS.md, rules, sub-skills) never carry a second language section. Convention: this skill's own execution docs (`SKILL.md`, `references/policies`, `references/workflows`) are 中文; auto-loaded agent guidance (`AGENTS.md`, template bodies) is English.
-- **Within `docs/`, language follows knowledge type, not the whole tree.** **User-facing product docs** are trilingual and split — the root keeps only the English landing files (`README.md`, `CONTRIBUTING.md`); the 简体中文/繁體中文 translations live inside their trees (`docs/product/zh-CN/README.md`, `docs/product/zh-TW/README.md`, ...). **简体中文 (zh-CN) is the canonical source** — edits originate there, then propagate to English and 繁體中文 (Taiwan usage). Editing one language requires updating the other two in the same change (stable docs). In-flight drafts may defer translation until they stabilize, but the parity gate must pass before push/release (on `main`; on the migration branch it is observational under Migration Mode). Parity mapping: the English entry files are the root `README.md`/`CONTRIBUTING.md` (not duplicated under `docs/product/en/`). Structural parity is enforced by `repo-tools/check-doc-parity.js` (CI + release precondition `docs.parity_passed`). **Roadmap** (`docs/plans/roadmap/`) is trilingual. **Plans / findings / research / ADR** are 简体中文 canonical single-language and are not part of the trilingual parity check.
+- **Within `docs/`, language follows knowledge type, not the whole tree.** **User-facing product docs** are trilingual and split — the six README/CONTRIBUTING entry files live at the repository root (`README.md`, `README.zh-CN.md`, `README.zh-TW.md`, `CONTRIBUTING.md`, `CONTRIBUTING.zh-CN.md`, `CONTRIBUTING.zh-TW.md`); the remaining product documentation lives in `docs/product/{en,zh-CN,zh-TW}/`. **简体中文 (zh-CN) is the canonical source** — edits originate there, then propagate to English and 繁體中文 (Taiwan usage). Editing one language requires updating the other two in the same change (stable docs). In-flight drafts may defer translation until they stabilize, but the parity gate must pass before push/release (on `main`; on the migration branch it is observational under Migration Mode). Structural parity is enforced by `repo-tools/check-doc-parity.js` (CI + release precondition `docs.parity_passed`). **Roadmap** (`docs/plans/roadmap/`) is trilingual. **Plans / findings / research / ADR** are 简体中文 canonical single-language and are not part of the trilingual parity check.
 - **Terminology** — before introducing a term, check `docs/glossary.md` and add the trilingual entry if missing; keep renderings consistent across all files.
 
 ## Changing Governance Artifacts

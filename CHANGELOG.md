@@ -10,6 +10,10 @@ All notable changes to this project will be documented here.
 
 - **First Producer/Product execution separation: repo-owned terminology gate (ADR-0020)** — the terminology gate (repo-only data source `docs/glossary.md`) was extracted from the INSTALLED `scripts/check-doc-consistency.js` into repo-owned `repo-tools/check-terminology.js`; `npm run check` / `check:docs` now run it directly. The INSTALLED checker's responsibility surface is intentionally narrowed (terminology cluster removed; its `--json` no longer emits `terminology_usage` / `termsRegistered`, no external consumer). Governed-project behavior unchanged (no glossary → the cluster was a no-op there). Fail-closed: a missing or malformed glossary exits 1.
 
+### Changed
+
+- **Repository language entry files moved to the root** — `README.md` / `README.zh-CN.md` / `README.zh-TW.md` and `CONTRIBUTING.md` / `CONTRIBUTING.zh-CN.md` / `CONTRIBUTING.zh-TW.md` are now the six repository entry files; `repo-tools/check-doc-parity.js` compares them directly and keeps `docs/product/{en,zh-CN,zh-TW}/` for the remaining product documentation.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added
