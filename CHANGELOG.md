@@ -28,6 +28,10 @@ All notable changes to this project will be documented here.
 
 - **Phase 3 Governance Core / Rule Model closed; Phase 4 opened** — PLAN-0034 archived at lifecycle closure; Roadmap current phase is Checker / Primitive restructuring under PLAN-0035, with subordinate PLAN-0036 retrieving PLAN-0032 R24 (payload Discovery Ledger). No SemVer release (ADR-0014).
 
+- **Phase 4 mechanical inventory is CTRL-centric** — Generation-1 evaluators, gates, tests, and profile coupling are catalogued by Control identity (CTRL-0001–0005 plus consistency clusters), not by script filename. Fact source: RESEARCH-0011; dispositions remain PLAN-0035 work.
+
+- **Gen1→Gen2 migration is described as progressive capability absorption** — semantic skeleton first (Phases 1–3), then Control-unit strangler migration with phased authority transfer; Gen1 Safety Kernel remains the protected baseline until Phase 8 blocking handover. Descriptive model: RESEARCH-0004 v3.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

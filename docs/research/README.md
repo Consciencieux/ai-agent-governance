@@ -6,22 +6,22 @@
 | --- | --- | --- |
 | 研究（`research/`） | 描述和研究系统 | 当前 gate 模型、治理机制分类 |
 | 发现（`findings/`） | 记录发现的问题 | trigger coverage 缺失 |
-| 架构决策（`design-decisions/`） | 记录已接受决策 | 引入 Rule Registry |
-| 计划（`plans/`） | 当前施工；已归档计划是其历史生命周期状态，不是独立知识类型 | 实现 Rule Registry MVP；完成后移入 `plans/archive/` |
+| 架构决策（`design-decisions/`） | 记录已接受决策 | 接受 Control Model（ADR-0023） |
+| 计划（`plans/`） | 当前施工；已归档计划是其历史生命周期状态，不是独立知识类型 | 按 CTRL 拆解 Gen1 checker（PLAN-0035） |
 
 ## 为什么单独一类
 
 常见讨论经常混淆三个层次。例如：
 
-> 「当前 gate 靠文本匹配，所以应该改成 Rule Registry。」
+> 「当前 gate 靠文本匹配，所以应该改成统一的 Control / evaluator 模型。」
 
 实际包含三种知识：
 
 ```text
 Research：当前 gate 主要是文本/结构检查。          ← 中性描述
 Finding：  文本检查无法覆盖 semantic invariant。    ← 问题判断
-ADR：      采用 Rule Registry 作为下一代模型。      ← 决策
-Plan：     实现 registry schema。                  ← 工作设计
+ADR：      采用 Control identity + profile binding。 ← 决策
+Plan：     按 CTRL inventory 做 disposition。       ← 工作设计
 ```
 
 过去这些混在 issue / plan / AGENTS / 讨论里导致重复与歧义。本目录把「对系统的科学描述」独立出来，作为 2.0 重构的 baseline 与科研实验的事实源。
@@ -55,13 +55,14 @@ docs/research/
 ├── RESEARCH-0001-system-model.md                  # 当前治理系统控制模型
 ├── RESEARCH-0002-governance-mechanism-taxonomy.md # 治理机制分类
 ├── RESEARCH-0003-evaluation-framework.md          # 评价体系
-├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3）
+├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3；Gen1→Gen2 strangler 迁移模型）
 ├── RESEARCH-0005-current-capabilities.md          # 当前能力清单（Generation-1 baseline）
 ├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵（2.0 迁移基线证据）
 ├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：七类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
 ├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
 ├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）
 ├── RESEARCH-0010-governance-control-model.md      # Governance Control 系统模型（semantics ≠ evaluator ≠ gate ≠ test；Gen1 散落面；设计问题矩阵）
+├── RESEARCH-0011-gen1-mechanical-control-inventory.md # Gen1 机械控制库存（CTRL-centric；Phase 4 inventory；不裁决 disposition）
 └── experiments/                     # 实验记录
 ```
 
@@ -74,7 +75,7 @@ docs/research/
 | A. 系统模型 | `RESEARCH-0001-system-model.md` | 当前架构、数据流、执行流程、组件关系 |
 | B. 机制分类 | `RESEARCH-0002-governance-mechanism-taxonomy.md` | Existence / Text / Structure / Consistency / Behavior / LLM Review / Human Review / Runtime |
 | C. 评价框架 | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
-| D. 架构演进 | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
+| D. 架构演进 | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3；Gen1→Gen2 渐进式旁路迁移 / authority 分阶段转移；吸收能力不复制结构 |
 | E. 当前能力 | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
 | F. 实验记录 | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
 | G. 能力基线 | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵；第四列是待决问题，不裁决 2.0 处置 |
@@ -82,6 +83,7 @@ docs/research/
 | I. 修复/发现/工作集模型 | `RESEARCH-0008-repair-discovery-workset-model.md` | 纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
 | J. Agent 指令架构 | `RESEARCH-0009-agent-instruction-architecture.md` | Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
 | K. Governance Control 模型 | `RESEARCH-0010-governance-control-model.md` | Control 作为中间对象；与 evaluator/gate/test 分层；profile 消费共享语义；Gen1 散落与 identity 动机；规范在 ADR-0023 |
+| L. Gen1 机械控制库存 | `RESEARCH-0011-gen1-mechanical-control-inventory.md` | CTRL→evaluator→gate→tests→profile 事实表；monolith 集群行；Safety Kernel 锚点；disposition 归 PLAN-0035 |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 

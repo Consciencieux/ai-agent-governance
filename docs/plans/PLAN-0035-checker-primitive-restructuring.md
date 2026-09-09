@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10 Phase 4 入口：PLAN-0034 已归档；已取回 PLAN-0032 R24 → successor PLAN-0036。Architecture checkpoint ≠ Release——见 ADR-0014。）
+> （进行中。2026-09-10：A inventory + B Safety Kernel 基线已冻结（RESEARCH-0011）；下一步 C disposition。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -64,25 +64,32 @@ Review 三类拆分                                 → Phase 7
 
 ## 工作项
 
-### 1. Gen1 mechanical inventory（CTRL-centric）
+### 1. Gen1 mechanical inventory（CTRL-centric）— **A 完成**
 
-行形态：
+权威事实库存：`docs/research/RESEARCH-0011-gen1-mechanical-control-inventory.md`（描述层；不裁决 disposition）。
+
+行形态已落地：
 
 ```text
-Control → current evaluator(s) → gate(s) → test(s) → profile → characterization → disposition
+Control → evaluator(s) → gate/boundary → tests → profile → characterization → notes
 ```
 
-种子（来自 ADR-0023 slices；继续扩展时只覆盖有机械面的能力）：
+种子 CTRL-0001–0005 全表 + `check-doc-consistency.js` 集群行（未批量发 CTRL）+ Safety Kernel 锚点 + repo→skill 调用面。
 
-| Control | 当前 evaluator | 已知问题 |
-| --- | --- | --- |
-| CTRL-0001 Secret protection | `scripts/check-secrets.js` | semantics + evaluator 混合；repo/skill 同文件 = accidental coupling |
-| CTRL-0002 Git consent | policy + consent cluster + release-manager | 大量 L0 + 部分 mechanical |
-| CTRL-0003 Governance doc freshness | `check-doc-freshness.js` | 与 0004 共文件 |
-| CTRL-0004 Translation freshness | 同一 `check-doc-freshness.js` | 不同 applicability / boundary |
-| CTRL-0005 Plan delivery | `repo-tools/check-plan-delivery.js` | repo-only |
+**施工顺序（本计划冻结）：**
 
-新增 CTRL identity **仅为机械 inventory** 服务，不做 Rule Registry 大爆炸。
+```text
+A Inventory          ← 完成（RESEARCH-0011）
+B Characterization   ← 完成（Safety Kernel 基线快照）
+C Disposition        ← 下一步：KEEP/WRAP/EXTRACT/REWRITE/RETIRE（按能力/cluster，非整文件）
+D Primitive extract
+E Evaluator rebuild（CTRL × profile；稳定结果接口；无 Dispatcher）
+F Producer/Product decoupling（P3）
+G PLAN-0036 Discovery Ledger
+H Exit review
+```
+
+新增 CTRL 仅在 EXTRACT 独立机械能力时分配；禁止为全部 Markdown 规则编号。
 
 ### 2. Disposition（能力 / primitive / evaluator，不是整文件一句）
 
@@ -141,6 +148,7 @@ evidence
 ## 受影响文件
 
 - `docs/plans/PLAN-0035-checker-primitive-restructuring.md` —— 本计划
+- `docs/research/RESEARCH-0011-gen1-mechanical-control-inventory.md` —— CTRL-centric 事实库存
 - `docs/plans/PLAN-0036-payload-discovery-ledger.md` —— R24 subordinate
 - `docs/plans/archive/PLAN-0034-governance-core-rule-model.md` —— Phase 3 归档
 - `docs/plans/archive/PLAN-0032-…` —— R24 取回注记
@@ -159,20 +167,23 @@ evidence
 | 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
 | P0 | PLAN-0032 R24 | payload Discovery Ledger 须有 successor | skill | closed | resolved | PLAN-0036 Active |
-| P1 | ADR-0023 | CTRL-centric mechanical inventory 未建 | both | open | in-progress | 本计划 § 工作项 1 |
-| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | 本计划 § 工作项 2–3 |
-| P3 | FINDING-0001 | accidental repo→skill script 依赖残留 | both | open | in-progress | 本计划 § 工作项 5；CTRL-0001 已标 |
-| P4 | ADR-0023 E4 | 独立 machine-readable Control 文件 | both | closed | deferred（revisit: 第二个真实机器 consumer；Phase 4 可产生 consumer 候选但不强求物化） | ADR-0023 决策 6 |
+| P1 | ADR-0023 | CTRL-centric mechanical inventory 未建 | both | closed | resolved | RESEARCH-0011 v1 |
+| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | RESEARCH-0011 集群表；待 C disposition → D/E |
+| P3 | FINDING-0001 | accidental repo→skill script 依赖残留 | both | open | in-progress | RESEARCH-0011 § repo→skill；CTRL-0001 已标 |
+| P4 | ADR-0023 E4 | 独立 machine-readable Control 文件 | both | closed | deferred（revisit: 第二个真实机器 consumer） | ADR-0023 决策 6 |
+| P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
 
 ## 闭包对账（进行中）
 
 ```text
-Total known:  5
-Resolved:     1  (P0)
+Total known:  6
+Resolved:     3  (P0, P1, P5)
 Deferred:     1  (P4)
-Open:         3  (P1, P2, P3)
+Open:         2  (P2, P3)
 Unaccounted:  0
 ```
+
+下一步：**C Disposition**（按 CTRL / cluster，非整文件），再进入 D/E；P3 与 F 并行跟踪。
 
 ## 参考
 
@@ -183,3 +194,5 @@ Unaccounted:  0
 - Known-Issue Closure：ADR-0021 · PLAN-0036
 - Phase 3 archive：PLAN-0034；baseline `24021c4`
 - R24 来源：PLAN-0032
+- 机械库存：RESEARCH-0011
+- 迁移演化模型：RESEARCH-0004 v3
