@@ -113,15 +113,14 @@ test("terminology gate: clean trees register terms and report nothing (positive 
   return r.status === 0 && out.termsRegistered > 0 && out.issues.terminology_usage.length === 0;
 });
 
-test("terminology gate: no glossary (governed project shape) no-ops with zero registered terms", () => {
-  const dir = tmp("term-noglossary");
+test("terminology gate: missing glossary fails closed (repo-owned source is authoritative)", () => {
+  const dir = tmp("term-missing");
   gitInit(dir);
   write(path.join(dir, "docs", "zh-TW", "guide.md"), "# 指南\n\n使用協議。\n");
   const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(r.stdout);
-  // applicable === false proves the no-op branch (not a silently dead feature — the hit test
-  // above already proves "glossary present ⇒ enforces", bracketing this side).
-  return r.status === 0 && out.applicable === false && out.issues.terminology_usage.length === 0 && out.termsRegistered === 0;
+  // The REPO-owned gate treats its authoritative data source (docs/glossary.md) as
+  // mandatory: absence is a governance data defect, never a vacuous pass.
+  return r.status === 1 && JSON.parse(r.stdout).issues.terminology_usage.some((i) => i.includes("missing"));
 });
 
 test("terminology gate: malformed glossary (no parseable header) fails closed", () => {
@@ -170,6 +169,24 @@ test("terminology gate: scans the post-migration docs/product/{lang} trees", () 
   const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
   return r.status === 1 && out.issues.terminology_usage.some((i) => i.includes("docs/product/zh-TW") && i.includes("協議"));
+});
+
+test("terminology gate: when the product tree exists, the legacy tree is NOT scanned", () => {
+  const dir = tmp("term-legacy-ignored");
+  gitInit(dir);
+  write(path.join(dir, "docs", "glossary.md"),
+    "# Glossary\n\n| English | 简体中文 | 繁體中文 | Forbidden zh-CN | Forbidden zh-TW |\n" +
+    "| --- | --- | --- | --- | --- |\n" +
+    "| protocol | 协议 | 協定 | 協定 | 協議 |\n");
+  // Authoritative post-migration tree is CLEAN...
+  write(path.join(dir, "docs", "product", "zh-TW", "guide.md"), "# 指南\n\n使用協定。\n");
+  // ...but a legacy tree also exists and deliberately carries a forbidden rendering.
+  write(path.join(dir, "docs", "zh-TW", "guide.md"), "# 指南\n\n使用協議。\n"); // must NOT be scanned
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  // True fallback = scan only the first existing authoritative tree; a transient state
+  // where old and new trees coexist must not fail the gate on legacy paths.
+  return r.status === 0 && out.issues.terminology_usage.length === 0;
 });
 
 // Separation proof (Producer/Product): the INSTALLED product checker no longer carries the

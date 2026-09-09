@@ -2,23 +2,26 @@
 // Repo-OWNED terminology gate (REPO-ONLY — lives under repo-tools/, never ships).
 //
 // Extracted from scripts/check-doc-consistency.js (INSTALLED) as the first
-// Producer/Product execution separation (PLAN-0031 Deliverable B / ADR-0020):
-// the terminology gate's data source (docs/glossary.md) is repo-only, and governed
-// projects have no glossary, so the cluster no-oped there and never belonged in the
-// shipped checker. Repo execution now runs THIS checker instead of the product carrier.
+// Producer/Product execution separation (ADR-0020): the terminology gate's data source
+// (docs/glossary.md) is repo-only, and governed projects have no glossary, so the cluster
+// no-oped there and never belonged in the shipped checker. Repo execution now runs THIS
+// checker instead of the product carrier.
 //
 // Data source: docs/glossary.md — the Forbidden zh-CN / Forbidden zh-TW columns register
 // renderings that must NOT appear in that language tree. Semicolon-separated variants;
 // empty cell = no constraint. A line carrying `<!-- i18n: allow <term> -->` (or the line
 // above it — an inline comment would split a Markdown table) is exempt.
-// Fail-closed parsing: a glossary that exists but yields no parseable header is reported
-// as malformed rather than silently disabling the gate.
+// FAIL-CLOSED: a missing glossary is the authoritative source vanishing — reported as a
+// governance data defect, never a vacuous pass. A glossary that yields no parseable header
+// is likewise reported rather than silently disabling the gate.
 //
-// Scans docs/product/{zh-CN,zh-TW} (post-migration repo trees), with docs/{zh-CN,zh-TW}
-// as a legacy fallback.
+// Scans the first EXISTING authoritative tree per language: docs/product/{zh-CN,zh-TW}
+// (post-migration), falling back to docs/{zh-CN,zh-TW} only when the product tree is absent.
+// Only ONE tree per language is ever scanned — never both.
 //
 // Usage: node repo-tools/check-terminology.js [--json]
-// Exit 0: no forbidden renderings (or no glossary). Exit 1: violation found or malformed.
+// Exit 0: glossary present, valid, no forbidden renderings.
+// Exit 1: glossary missing or malformed, or a forbidden rendering found.
 
 const fs = require("fs");
 const path = require("path");
@@ -83,44 +86,47 @@ function main() {
   let termsRegistered = 0;
 
   const forbidden = glossaryForbidden();
-  if (forbidden && forbidden.malformed) {
+  if (forbidden === null) {
+    // Fail-closed: the authoritative term source is absent. A vacuous pass here would
+    // mean the repo's terminology gate silently stopped guarding.
+    issues.terminology_usage.push("docs/glossary.md is missing — the repo-owned terminology gate's authoritative term source is absent; create or restore it");
+  } else if (forbidden.malformed) {
     issues.terminology_usage.push("docs/glossary.md exists but has no parseable header table — terminology gate cannot run; fix the glossary");
-  } else if (forbidden) {
+  } else {
     termsRegistered = forbidden.cols["zh-CN"].size + forbidden.cols["zh-TW"].size;
     for (const lang of ["zh-CN", "zh-TW"]) {
       const table = forbidden.cols[lang];
       if (!table || table.size === 0) continue;
-      const seen = new Set();
-      for (const dir of LANG_DIRS[lang]) {
-        if (!fs.existsSync(dir)) continue;
-        for (const rel of walk(dir)) {
-          const relPath = path.join(path.relative(ROOT, dir), rel).split(path.sep).join("/");
-          if (seen.has(relPath)) continue;
-          seen.add(relPath);
-          const content = readFile(path.join(dir, rel));
-          if (!content) continue;
-          const lines = content.split(/\r?\n/);
-          lines.forEach((line, i) => {
-            for (const [variant, concept] of table) {
-              if (!line.includes(variant)) continue;
-              const esc = variant.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-              const allowRe = new RegExp("<!--\\s*i18n:\\s*allow\\b[^>]*" + esc);
-              if (allowRe.test(line) || (i > 0 && allowRe.test(lines[i - 1]))) continue;
-              issues.terminology_usage.push(`${relPath}:${i + 1}: forbidden ${lang} rendering "${variant}" (concept: ${concept})`);
-            }
-          });
-        }
+      // True fallback: scan only the FIRST existing authoritative tree per language.
+      // Never both — a transient migration state where old and new trees coexist must
+      // not make the gate fail on legacy paths that are no longer authoritative.
+      const dir = LANG_DIRS[lang].find((p) => fs.existsSync(p));
+      if (!dir) continue;
+      for (const rel of walk(dir)) {
+        const relPath = path.join(path.relative(ROOT, dir), rel).split(path.sep).join("/");
+        const content = readFile(path.join(dir, rel));
+        if (!content) continue;
+        const lines = content.split(/\r?\n/);
+        lines.forEach((line, i) => {
+          for (const [variant, concept] of table) {
+            if (!line.includes(variant)) continue;
+            const esc = variant.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const allowRe = new RegExp("<!--\\s*i18n:\\s*allow\\b[^>]*" + esc);
+            if (allowRe.test(line) || (i > 0 && allowRe.test(lines[i - 1]))) continue;
+            issues.terminology_usage.push(`${relPath}:${i + 1}: forbidden ${lang} rendering "${variant}" (concept: ${concept})`);
+          }
+        });
       }
     }
   }
 
   const pass = issues.terminology_usage.length === 0;
-  const out = { applicable: forbidden !== null, termsRegistered, issues, pass };
+  const out = { termsRegistered, issues, pass };
   if (json) {
     process.stdout.write(JSON.stringify(out, null, 2) + "\n");
   } else {
     for (const i of issues.terminology_usage) console.log("✗ " + i);
-    if (pass) console.log("✓ terminology gate: no forbidden renderings");
+    if (pass) console.log("✓ terminology gate: glossary present, valid, no forbidden renderings");
   }
   process.exit(pass ? 0 : 1);
 }
