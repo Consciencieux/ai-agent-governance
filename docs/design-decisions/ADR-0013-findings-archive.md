@@ -4,7 +4,7 @@ status: Accepted
 generation: cross-generation
 ---
 
-# ADR-0013：问题 / 发现档案与知识对象五分类（Issue / Finding Archive）
+# ADR-0013：问题 / 发现档案与知识对象五分类
 
 
 ## 背景
@@ -31,7 +31,7 @@ GitHub Issue 提供 open/closed 生命周期与协作，但不提供：Git histo
 
 **2. repo 内 Finding 是 canonical research record；GitHub Issue 是 collaboration projection。** 两者不是双向镜像：Issue 可以有大量讨论，`docs/findings/` 只保存稳定信息（观察、证据、根因、解决、回归保护）。全文同步会制造 Declaration ↔ Projection drift，正是本项目一直要消除的缺陷。
 
-**3. Finding 生命周期用状态表达，不移动路径。** 状态枚举为 `Proposed / Confirmed / Resolved / Superseded / Invalidated`（不用 Open/Closed——Issue 问「要不要做」，Finding 问「事实是否存在」，Closed 会产生知识消失的语义），在文件内更新；**不建立 `docs/plans/archive/findings/`**。Resolved finding ≠ archived finding——修复后它仍要回答「怎么复现、根因、哪个 regression 保护、关联哪个 ADR/Plan/Issue」。这与 Plan 的 `active → archive` 生命周期本质不同。状态机与 severity/type 分类的完整条文在 `docs/findings/README.md`。
+**3. Finding 生命周期用状态表达，不移动路径。** 状态枚举为 `Proposed / Confirmed / Resolved / Superseded / Invalidated`（不用 Open/Closed——Issue 问「要不要做」，Finding 问「事实是否存在」，Closed 会产生知识消失的语义），在文件内更新；**不建立 `docs/plans/archive/findings/`**。Resolved finding ≠ archived finding——修复后它仍要回答「怎么复现、根因、哪个 regression 保护、关联哪个 ADR/Plan/Issue」。这与 Plan 的 `active → archive` 生命周期本质不同。状态机与 `type` 分类的完整条文在 `docs/findings/README.md`。
 
 **4. 语言政策：historical/research evidence 使用单一 canonical language（简体中文）。** 与 ADR-0005 的三语拆分不冲突——三语服务于 active operational knowledge；findings 从创建开始就是简体中文单语，不进入三语树，不参与 parity/freshness。避免重新制造 translation sync / parity / freshness / review 成本。
 
@@ -41,13 +41,17 @@ GitHub Issue 提供 open/closed 生命周期与协作，但不提供：Git histo
 
 ## 后果
 
-- 正面：研究观察、失败模式、治理缺口有了可版本控制、可追踪的归宿；review 的架构性结论可以提升为 Finding → ADR/Plan，而不只是修完关闭；`affected: [repo, skill]` 字段为 cross-profile closure 提供第一代机制。
+- 正面：研究观察、失败模式、治理缺口有了可版本控制、可追踪的归宿；review 的架构性结论可以提升为 Finding → ADR/Plan，而不只是修完关闭；跨 profile 影响范围（repo / skill）写在 Finding 正文分类中，为 cross-profile closure 提供第一代机制。
 - 代价：review 写一次问题可能要多动一个文件（GitHub Issue + findings/）。这是刻意的——分类本身决定 remediation 层级。
-- 遗留风险：finding 分类（L0–L4、direction、root_cause）是人工判断，无机械门禁（首版纯结构，不加 gate，符合 engineering restraint）。与 ADR-0012 的「分流判断是人工的」同一性质。
+- 遗留风险：finding 分类（L0–L4、研究方向、根因）是人工判断，无机械门禁（首版纯结构，不加 gate，符合 engineering restraint）。与 ADR-0012 的「分流判断是人工的」同一性质。
 
 ## 后续注记（2026-09-09）
 
 本 ADR 的「五类载体」表（CHANGELOG / ADR / Plan / Finding / verification evidence）部分被 ADR-0016 § 后续补充的**七类知识对象模型**（Product / Research / Finding / ADR / Roadmap / Plan / Glossary）局部 supersede——「五类载体」这一 clause 仅作历史保留；本 ADR 的 `cross-generation` 依据是其核心语义（Finding 长期 evidence record、状态就地演进、review 先分类再修复）明确延续到 Gen2。Generation 模型暂不支持 clause 级拆分，本条作为注记保留。
+
+## 后续注记（2026-09-10）：Finding frontmatter 精简
+
+Finding 的权威 frontmatter 以 `docs/findings/README.md` 为准（metadata minimization：`id` / `status` / `type` / `observed_in`，Resolved 时加 `resolved_in`）。严重度、影响范围、研究方向、根因写在正文，不进入 YAML。上文「后果」中曾把 `affected: [repo, skill]` 说成字段——现改为正文分类表达（FINDING-0024 / R25b）。
 
 ## 参考
 

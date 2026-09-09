@@ -294,8 +294,8 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-當前階段：2 — Research / Findings / Traceability
-當前階段計劃：PLAN-0032（phase checkpoint）· PLAN-0033（subordinate）
+當前階段：3 — Governance Core / Rule Model
+當前階段計劃：尚未建立（進入前須取回 PLAN-0032 R23，再立 phase checkpoint plan）。Phase 2 已完成：PLAN-0032 / PLAN-0033 均為 `Completed`（Migration Mode 下暫不物理歸檔；歸檔隨日後正式 release）。
 
 
 ## Guarantee Levels
@@ -410,6 +410,7 @@ Generation 2 明確不追求：
 - 不以測試數量、checker 數量或規則數量衡量成熟度
 - 不讓治理框架自身的複雜度增長成為預設方向
 - 不為了保持 Generation-1 相容而長期維護兩套架構
+- Migration Mode 期間不以正式 Release（SemVer / tag / skill-release）標記 Phase 完成（見 ADR-0014）
 
 ## Success Criteria
 

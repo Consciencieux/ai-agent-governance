@@ -120,7 +120,7 @@ docs/plans/
 
 **4. 当前知识与历史知识隔离。** 当前/历史对象的分类清单统一维护在 `docs/README.md` §「当前 vs 历史（隔离）」；本 ADR 只规定两者不得混用：历史可被读来理解 provenance，**不得直接成为当前执行指令**。对象是否当前仍须结合其 canonical `status` 与 generation/applicability metadata 判断。
 
-## 后续修正（2026-09-10）：知识对象权威矩阵（authoritative / supporting / forbidden）
+## 后续修正（2026-09-10）：知识对象权威矩阵
 
 本修正是对「后续补充」决策 3 的 **Narrow amendment**。高层分类（Research = 描述系统，Finding = 记录问题，ADR = 长期决策，Plan = 当前施工）保留；自本修正起，**正文级权威**以本矩阵为准。FINDING-0023 区分了 primary vs supporting；本条把 supporting 从「可以出现」收紧为「不得变成第二种权威」。完整因果描述见 RESEARCH-0007；本条只规定必须遵守的合同。
 
@@ -171,13 +171,13 @@ Plan 能不能复述长期 invariant？
 
 四条答不出或第 4 问为是且第 5 问为空 → 先改文档，再继续施工。
 
-## 后续补充（2026-09-09）：知识对象表示法归一（Representation Normalization）
+## 后续补充（2026-09-09）：知识对象表示法归一
 
 统一 Plan / Finding / Research / ADR 四类对象的**表示层**（YAML envelope、字段命名与排列、空字段处理、H1 格式、中文章节/表头），**不改变生命周期语义、不强制四类业务字段相同**。
 
 **公共外壳**：四类对象 YAML frontmatter 统一、公共必填仅 `id` + `status`；不得添加 `kind`（ID/路径已知）、`title`（H1 已有）、`created`/`updated`（Git 已有 provenance）。**Sparse metadata**：没有真实机械消费需求或确实发生时才写入字段；空 optional 字段一律省略（禁止 `resolved_in:` / `github_issue:` / `supersedes: []` / `related:` 等空值占位）。frontmatter 通常 4–8 行，超 10–12 行为 smell。
 
-**类型专属字段**（各目录 README 定义 status enum 与专属字段；此处不复制 schema）：Plan `generation`+`target`；Finding `type`+`severity`+`affected`+`observed_in`（+按需 `direction`/`root_cause`/`resolved_in`/`github_issue`）；Research `version`（+按需 `subject_generation`/`supersedes`/`superseded_by`）；ADR `generation`（+整篇 supersede 时 `supersedes`/`superseded_by`）。
+**类型专属字段**：各目录 README 定义 status enum 与专属字段；本 ADR **不复制 schema**。曾在本段内联列举 Finding `type`+`severity`+`affected`… 等字段，与 `docs/findings/README.md` 的 metadata minimization（`id`/`status`/`type`/`observed_in`，Resolved 时加 `resolved_in`）冲突，属 FINDING-0024 projection drift；2026-09-10 删除内联清单。权威分别在：`docs/plans/README.md`、`docs/findings/README.md`、`docs/research/README.md`、`docs/design-decisions/README.md`。
 
 **H1 与正文**：简中 canonical 对象 H1 = `# <ID>：<简体中文标题>`（英文 slug 留文件名）；正文章节与表格头以中文为主，技术术语首次出现允许 `术语（English）`，其后用 canonical 词。
 

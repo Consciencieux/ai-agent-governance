@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# FINDING-0014：review-manager 审查任务定义错了层级：实现保证（implementation assurance）≠ 架构质量（architecture quality）
+# FINDING-0014：review-manager 审查任务定义错了层级：实现保证 ≠ 架构质量
 
 ## 分类
 

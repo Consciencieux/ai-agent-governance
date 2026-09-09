@@ -5,7 +5,7 @@ type: control-gap
 observed_in: gen2
 ---
 
-# FINDING-0021：路线图机械检查失效（Roadmap；check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
+# FINDING-0021：路线图机械检查失效（check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
 
 ## 分类
 

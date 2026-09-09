@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# FINDING-0007：可移植性与运行时强制执行的天然冲突（Portability / Runtime Hard Enforcement）：执行边界（enforcement boundary）未定义
+# FINDING-0007：可移植性与运行时强制执行的天然冲突：执行边界未定义
 
 ## 分类
 

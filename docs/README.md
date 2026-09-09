@@ -57,7 +57,7 @@ docs/
 
 完整系统模型（描述层）→ `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；规范层（routing / 权威矩阵 / 当前-历史隔离）→ ADR-0016。正文级「可权威声明 / 仅支持上下文 / 不得权威声明」以 ADR-0016 2026-09-10 修正为准，本页不复制该表。
 
-## 统一表示法（Representation Normalization）
+## 统一表示法
 
 Plan / Finding / Research / ADR 四类对象：
 

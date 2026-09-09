@@ -1,13 +1,13 @@
 ---
 id: PLAN-0033
-status: Active
+status: Completed
 generation: gen2
 target: repo-infra
 ---
 
 # PLAN-0033：已知问题闭包（Discovery Ledger）
 
-> （进行中。2026-09-09：建立 Known-Issue Closure 执行语义（ADR-0021）、运行模型（RESEARCH-0008）、缺口证据（FINDING-0022），并在本计划内演示第一代 **prototype / characterization** `## Discovery Ledger`——证明载体可行，不宣称机制已在所有任务落地。）
+> （已完成，待 Release 归档。2026-09-09：建立 Known-Issue Closure 执行语义（ADR-0021）、运行模型（RESEARCH-0008）、缺口证据（FINDING-0022），并在本计划内演示第一代 prototype Discovery Ledger——证明载体可行，不宣称机制已在所有任务落地。2026-09-10：完成条件复核通过，Unaccounted=0；payload 内嵌留 K5/R24 后继。）
 
 第一代只在 repo 侧演示（prototype）；payload（lifecycle.policy TASK 格式内嵌 ledger）留后续阶段。
 
@@ -31,7 +31,7 @@ target: repo-infra
 2. **New discovery ≠ automatic priority switch**（capture → classify → decide，不弃当前 item）。
 3. **Task completion requires zero unaccounted**（terminal disposition：resolved / deferred / duplicate / not-applicable / blocked / promoted-to-finding / promoted-to-adr / promoted-to-research / promoted-to-next-plan；`Status` 与 `Disposition` 是两个轴——terminal disposition 后 `Status` 置 `closed`）。
 
-## 第一代载体（append-only membership 表）
+## 第一代载体（append-only 成员表）
 
 本计划即演示载体。执行期间任何新发现问题必须先追加到这里（**append-only membership**：条目不得删除，`Status` / `Disposition` 字段允许更新），任务结束时所有条目必须有 terminal disposition 且 `Status=closed`，并做 closure reconciliation。
 
@@ -45,7 +45,7 @@ target: repo-infra
 | K4 | K1 | 第一代载体 = TASK Plan 内 append-only 表（不重型 Registry） | repo | closed | resolved | 本计划 § 第一代载体 |
 | K5 | K2 | payload 内嵌（lifecycle.policy TASK 格式）留后续阶段 | skill | closed | deferred（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 K5，并建立 successor Plan ID） | ADR-0021 § 后续修正 |
 
-## 闭包对账（Closure reconciliation；本计划结束时的目标状态）
+## 闭包对账（本计划结束时的目标状态）
 
 ```text
 Total known:  5

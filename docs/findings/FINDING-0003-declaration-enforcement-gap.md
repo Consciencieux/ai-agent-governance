@@ -5,7 +5,7 @@ type: control-gap
 observed_in: gen1
 ---
 
-# FINDING-0003：声明与执行强度脱节（Declaration / Enforcement）：文档 MUST ≠ 机械拒绝
+# FINDING-0003：声明与执行强度脱节：文档 MUST ≠ 机械拒绝
 
 ## 分类
 

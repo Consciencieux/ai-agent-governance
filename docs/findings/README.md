@@ -37,21 +37,21 @@ docs/findings/
 
 **统一 envelope（表示法归一，ADR-0016；metadata subtraction 后）**：frontmatter 只保留 `id` / `status` / `type` / `observed_in`（+ Resolved 时 `resolved_in`）。`severity` / `affected` / `direction` / `root_cause` / `related` / `github_issue` 一律回正文（`## 分类` / `## 根因` / `## 关联`），避免 metadata/正文双写。H1 = `# FINDING-xxxx：中文标题`；machine keys / enums 用稳定英文，不本地化（`status: Confirmed` 不写 `状态: 已确认`）。
 
-## 研究方向分类（Taxonomy，7 个方向）
+## 研究方向分类（7 个方向）
 
 Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 `docs/findings/` 退化成零散 bug 堆。**本分类只作 README 研究导航视角，不进入 frontmatter**（`direction` 已从 frontmatter 移出；研究角度由正文标题/内容判断）。
 
 | 方向 | 主题 | 核心 Finding |
 | --- | --- | --- |
-| **A. 生产者 / 产品分离（Producer / Product Separation）** | 仓库治理与 Skill 产品治理的隔离 | A01 逻辑耦合 · A02 ADR-0006 只解决 artifact-level · A03 control-level 隐性狗粮 · A04 repo 修复不传播到 skill · A05 `scope = both` 模糊 ownership |
-| **B. 政策 / 控制平面（Policy / Control Plane）** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger（FINDING-0015） · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher · B06 语义-机械执行缺显式控制身份（FINDING-0025） · B07 `templates/` 混置指令源与物化模板（FINDING-0026） |
-| **C. 执行缺口（Enforcement Gap）** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 |
-| **D. 验证 / 调度效率（Validation / Dispatch Efficiency）** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
-| **E. 检查器正确性 / 回归（Checker Correctness / Regression）** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 权威元数据被多份投影重复（FINDING-0024） |
-| **F. 可移植性 / 运行时边界（Portability / Runtime Boundary）** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
-| **G. 证据 / 研究方法（Evidence / Research Methodology）** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023）· G08 正文级权威矩阵缺失（FINDING-0027） |
+| **A. 生产者 / 产品分离** | 仓库治理与 Skill 产品治理的隔离 | A01 逻辑耦合 · A02 ADR-0006 只解决 artifact-level · A03 control-level 隐性狗粮 · A04 repo 修复不传播到 skill · A05 `scope = both` 模糊 ownership |
+| **B. 政策 / 控制平面** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger（FINDING-0015） · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher · B06 语义-机械执行缺显式控制身份（FINDING-0025） · B07 `templates/` 混置指令源与物化模板（FINDING-0026） |
+| **C. 执行缺口** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 |
+| **D. 验证 / 调度效率** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
+| **E. 检查器正确性 / 回归** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 权威元数据被多份投影重复（FINDING-0024） |
+| **F. 可移植性 / 运行时边界** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
+| **G. 证据 / 研究方法** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023）· G08 正文级权威矩阵缺失（FINDING-0027） |
 
-## 分层与 Finding 类型（Taxonomy，L0–L4）
+## 分层与 Finding 类型（L0–L4）
 
 Finding 用 `type` 字段绑定抽象层级（这也是 review 时的分类轴；`type` 是唯一保留在 frontmatter 的分类字段）。3 层模型是粗粒度视角，L0–L4 是精细分类；`type` 直接取 L0–L4 的枚举值。
 
@@ -72,11 +72,11 @@ L4 — research-observation 关于治理有效性的可实验假设 例：static
 ## 根因树（R1–R5）
 
 ```text
-R1 Policy Structure          policy 未充分结构化
-R2 Trigger                   trigger 非系统控制
-R3 Validation Routing        validation 非 invariant/impact 驱动
-R4 Enforcement Boundary      enforcement boundary 不明确
-R5 Producer/Product Isolation producer 与 product 治理缺乏显式隔离与共享契约所有权
+R1 政策结构          policy 未充分结构化
+R2 触发              trigger 非系统控制
+R3 验证路由          validation 非 invariant/impact 驱动
+R4 执行边界          enforcement boundary 不明确
+R5 生产者/产品隔离   producer 与 product 治理缺乏显式隔离与共享契约所有权
 ```
 
 后续具体 findings 都挂到这五棵树下；**根因树只作 README 导航视角，不进入 frontmatter**——`root_cause` 已移出，根因写在正文 `## 根因`（避免 metadata/正文双写）。**R5 应优先处理**：producer/product ownership 未分清前，设计 Rule Registry / Dispatcher 时容易把当前 `repo / skill / both` 的混乱直接编码进新架构。
@@ -135,7 +135,7 @@ resolved_in: gen1               # Resolved 时填写（未解决省略）
 哪个 negative oracle / contract test 防止再次发生。
 ```
 
-## 缺陷（Defect）的两种处理方式
+## 缺陷的两种处理方式
 
 具体缺陷（bug / false positive / typo）有两种归属，避免 `findings/` 退化成「一个 bug 一个 finding」：
 
@@ -213,13 +213,13 @@ Plan 侧写 `Related Findings: [FINDING-0012, FINDING-0015]`。不要在两处�
 从本目录可自动统计：
 
 ```text
-Total governance findings
-Mechanical gaps
-Trigger gaps
-False positives / False negatives
-Cross-profile defects (affected 含 repo+skill)
-Vacuous passes
-Attention failures
-Median time-to-resolution
-Regression-protected %
+治理 Finding 总数
+机械缺口数
+触发缺口数
+假阳性 / 假阴性
+跨 profile 缺陷（范围含 repo+skill）
+空洞通过（vacuous pass）
+注意力失败
+中位解决时间
+受回归保护比例
 ```

@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# FINDING-0005：验证调度失衡（Validation）：简单规则验证过重，复杂规则验证不足
+# FINDING-0005：验证调度失衡：简单规则验证过重，复杂规则验证不足
 
 ## 分类
 

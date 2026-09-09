@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0022：Agent 指令架构（Agent Instruction Architecture）
+# ADR-0022：Agent 指令架构
 
 
 ## 背景

@@ -5,7 +5,7 @@ type: control-gap
 observed_in: gen2
 ---
 
-# FINDING-0022：修复过程中已发现问题可能因递归发现丢失（缺持久工作集；recursive discovery / workset）
+# FINDING-0022：修复过程中已发现问题可能因递归发现丢失（缺持久工作集）
 
 ## 分类
 

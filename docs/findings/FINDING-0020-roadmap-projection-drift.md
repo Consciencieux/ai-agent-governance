@@ -6,7 +6,7 @@ observed_in: gen2
 resolved_in: gen2
 ---
 
-# FINDING-0020：路线图投影漂移（Roadmap；ADR-0018 阶段顺序 ≠ 路线图阶段定义）
+# FINDING-0020：路线图投影漂移（ADR-0018 阶段顺序 ≠ 路线图阶段定义）
 
 ## 分类
 

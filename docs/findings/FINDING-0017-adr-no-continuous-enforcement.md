@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# FINDING-0017：ADR 无持续强制执行（enforcement）：ADR Accepted ≠ 未来变更受约束
+# FINDING-0017：ADR 无持续强制执行：ADR Accepted ≠ 未来变更受约束
 
 ## 分类
 

@@ -1,13 +1,13 @@
 ---
 id: PLAN-0032
-status: Active
+status: Completed
 generation: gen2
 target: repo-infra
 ---
 
 # PLAN-0032：文档知识架构收口
 
-> （进行中。2026-09-09：建立三层定义——RESEARCH-0007（完整知识对象模型/系统描述）、ADR-0016（规范层：路由 / must-not / 当前-历史隔离）、`docs/README.md`（日常路由索引）；完成标准为定性判定，见「完成条件」。）
+> （已完成，待 Migration Mode 退出后的 release 归档。2026-09-10 Phase 2 exit：知识对象模型 / 权威矩阵 / 表示法收口完成；Unaccounted=0；Open=0；Deferred 仅 R23（Phase 3 入口取回）。本 checkpoint ≠ Release——见 ADR-0014 2026-09-10 修正。）
 
 只修改 `docs/` 知识体系、相关 ADR/Research，以及仓库入口 `CONTRIBUTING*.md` 中与知识路由冲突的贡献者指令；不涉及 payload 行为。
 
@@ -99,7 +99,7 @@ docs/README.md
 5. 完成条件的四条为定性判定，由 review checkpoint 确认，不强行机械门禁化（与 Phase 1 分类人工判断同一性质）。
 6. 新增或大改本计划触及的知识对象时，按 ADR-0016 五问做结构化 review（primary authority / supporting / 是否第二种权威 / 新 MUST 或架构选择 / 权威落点）。
 
-## 发现台账（Discovery Ledger；closure review workset）
+## 发现台账（Discovery Ledger）
 
 本计划闭包审查（closure review）发现的语义/一致性点，按已知问题闭包（Known-Issue Closure；ADR-0021）登记并逐项结算。条目一经登记不得删除；`R25` 拆为 `R25a` / `R25b` 后，当前已知集合以台账行数为准。当前快照明确区分已终结条目、仍开放条目、以及带后继触发条件的非 `resolved` 条目。R25a 曾声明 closed，已被 FINDING-0025 H1 等当前反例打回。
 
@@ -129,8 +129,8 @@ docs/README.md
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
 | R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（revisit: Phase 3 开始前的 entry checkpoint；该 checkpoint 必须重新取回 R23，并确认 ADR-0022 § 后果对应的 AGENTS/SKILL 入口瘦身执行计划与范围） | ADR-0022 § 后果 |
 | R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 R24，并建立 successor Plan ID） | ADR-0021 § 决策 6 |
-| R25a | subtask | 表示法归一 · 人类面向呈现（presentation normalization）：中文 H1 / 章节 / 表头，机器 key/enum 保持稳定英文 | repo | open | in-progress（reopened：已声明 resolved 后出现当前反例——FINDING-0025 H1 缺 ID 前缀、Research README 把归档计划列成独立类型、docs README 整句英文规范；本 checkpoint 已修这三处，但仍有管理 README 人类标题中的英文元话语，不得再次 closed） | FINDING-0025 H1；`docs/research/README.md`；`docs/README.md` |
-| R25b | subtask | 表示法归一 · 机器元数据精简（metadata minimization）：frontmatter 只保留必要 machine semantics | repo | open | in-progress（Finding schema 减至 id/status/type/observed_in(+resolved_in)；severity/affected/direction/root_cause/related 移入正文。继续审 Research / ADR / Plan 的 metadata 必要性） | ADR-0016 § 表示法归一；FINDING-0024 |
+| R25a | subtask | 表示法归一 · 人类面向呈现：中文 H1 / 章节 / 表头，机器 key/enum 保持稳定英文 | repo | closed | resolved | 管理 README 英文元话语清除；当前 Plan/ADR/Finding/Research H1 与关键章节括注清理；experiments 模板中文化 |
+| R25b | subtask | 表示法归一 · 机器元数据精简：frontmatter 只保留必要 machine semantics | repo | closed | resolved | Finding 对象与 README 一致（id/status/type/observed_in[+resolved_in]）；ADR-0016 删除内联 schema；ADR-0013 后果措辞对齐；Research/ADR/Plan schema 已精简且无强制字段待删 |
 | R26 | review | canonical 元数据被多份 index/projection 重复 → 持续 drift（ADR-0021 index、README schema 示例等） | repo | closed | promoted-to-finding | FINDING-0024 |
 | R27 | review | CONTRIBUTING 仍传播旧文件路由（生成机制 → `references/`；项目知识 → `docs/<语言>/`）且未区分 1.x / 2.0 迁移工作流 | repo | closed | resolved | 三语 CONTRIBUTING：先按知识类型路由；技能产物按分发角色；稳定 1.x vs 迁移双模式 |
 | R28 | review | FINDING-0015 `type: mechanism-gap` 与正文「L4 级」冲突 | repo | closed | resolved | 正文回归保护改为 supporting evidence，保留 `mechanism-gap` |
@@ -139,26 +139,43 @@ docs/README.md
 
 **Metadata consumer enumeration（表示法归一前必须，2026-09-09 更新）：** Plan/ADR 状态原由正文解析（plan-status / plan-delivery / roadmap-sync / ADR-status 簇），但 **Representation authority moves now（ADR-0016）**——canonical 已迁入 frontmatter，正文 Status 已删除；旧 parser 的失败属已知 compatibility divergence，parser migration 属 Phase 4。generation / Finding / Research 元数据无机械 consumer。
 
-## 闭包对账（Closure reconciliation；2026-09-10 三次 checkpoint）
+## 闭包对账（2026-09-10）
 
 ```text
 Total known:  31
-Resolved:     24  (R1–R20、R22、R27、R28、R29)
-Open:         2   (R25a 人类呈现 — 已 reopen；R25b 机器元数据精简)
+Resolved:     26  (R1–R20、R22、R25a、R25b、R27、R28、R29)
+Open:         0
 Deferred:     1  (R23；Phase 3 开始前 entry checkpoint 重新取回)
 Promoted to Finding:   3  (R21 → FINDING-0023；R26 projection drift → FINDING-0024；R30 → FINDING-0027)
 Promoted to next Plan: 1  (R24；Phase 4 planning checkpoint 重新取回并建立 successor Plan ID)
 Unaccounted:  0
 ```
 
-**状态：Active。** R30 把正文渗漏的根因记为：权威边界不够操作化（优先）+ 缺少持续 review。已落地 ADR-0016 权威矩阵与五问 review；未写 JS gate。R25a / R25b 仍 open。PLAN-0032 不得在 R25a / R25b 仍开放时宣布收口。
+**状态：Completed（2026-09-10 Phase 2 exit review）。**
 
+Exit review 确认：
+
+```text
+Unaccounted = 0
+Open = 0
+Deferred = R23（revisit: Phase 3 entry checkpoint；取回 AGENTS/SKILL 入口瘦身范围）
+Promoted = FINDING-0023 / 0024 / 0027；R24 → Phase 4 planning successor
+完成条件四条（路由确定性 / 历史隔离 / 单一归属 / 演进纪律）定性通过
+无已知 knowledge-type authority contradiction 未记账
+```
+
+成熟度：Documentation Knowledge Architecture 的 concept / authority / routing / lifecycle / representation ≈ 完成。**不是** Generation-2 完成，也不是 release candidate（ADR-0014：checkpoint ≠ Release）。
+
+下一步：Roadmap 已进入 Phase 3；立 phase checkpoint plan 前必须先取回 R23。Migration Mode 下不打 SemVer tag、不以 skill-release 发布。
 
 ## 未决风险
 
 - 路由与权威判断本质是语义分类，无法完全机械化；矩阵 + 五问降低歧义，最终仍有人工/Agent 判断。
 - 不要用词级 JS gate 假装已关闭 FINDING-0027；机械化是否引入留给 Phase 4/5 的 ADR / Plan。
+- ADR / README 投影再复制 schema 会复发 FINDING-0024；表示法条款只允许指针。
+- 个别对象正文仍可能残留英文括注；本轮收口以管理 README、H1、关键章节标题为准，不追求正文全量去英文化。
 - 机械 carrier 的修复（如 check-roadmap-sync 对新结构适配）留后续执行层迁移，不在本计划完成范围内。
+- Phase 3 入口前不得跳过 R23；不得开始 Phase 4 JS disposition；不得对 migration 分支做正式/prerelease tag。
 
 ## 参考
 

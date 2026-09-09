@@ -4,7 +4,7 @@ status: Accepted
 generation: cross-generation
 ---
 
-# ADR-0019：知识对象代际元数据（generation）
+# ADR-0019：知识对象代际元数据
 
 
 ## 背景

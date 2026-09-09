@@ -22,7 +22,7 @@ docs/plans/
 | 归档计划 | `docs/plans/archive/PLAN-xxxx-*.md` | 这个任务最终做成了什么？ | 冻结历史 |
 
 - **`PLAN-xxxx-<slug>.md`**：当前执行中的计划，状态为 design plan / Active / implemented（等归档）。
-- **`roadmap/`**：长期架构演进视图（愿景 / 当前状态 / 已知限制 / 目标架构 / 迁移阶段 / 研究目标 / 非目标；Vision / Current State / Known Limitations / Target Architecture / Migration Phases / Research Goals / Non-goals），三语边界对象。它的修订触发是架构事件，**不按普通 Plan 走 active → archive**。
+- **`roadmap/`**：长期架构演进视图（愿景 / 当前状态 / 已知限制 / 目标架构 / 迁移阶段 / 研究目标 / 非目标），三语边界对象。它的修订触发是架构事件，**不按普通 Plan 走 active → archive**。
 - **`archive/`**：已完成计划的最终归属。Plan 完成后从 `docs/plans/` 移入 `docs/plans/archive/`，此移动发生在 release 归档点。
 
 ## 归档计划 = 历史执行证据与能力溯源

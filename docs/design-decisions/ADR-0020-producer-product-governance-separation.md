@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0020：生产者 / 产品治理分离（Producer / Product Governance Separation）
+# ADR-0020：生产者 / 产品治理分离
 
 
 ## 背景

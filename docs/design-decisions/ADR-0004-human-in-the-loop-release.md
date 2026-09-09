@@ -4,7 +4,7 @@ status: Accepted
 generation: cross-generation
 ---
 
-# ADR-0004：人类参与的发布流程（Human-in-the-loop）
+# ADR-0004：人类参与的发布流程
 
 
 

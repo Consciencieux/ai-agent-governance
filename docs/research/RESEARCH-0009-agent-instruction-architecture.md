@@ -398,7 +398,7 @@ Report      → evidence aggregation
 
 Root Cause Repair、Rule Capture、Git Write、Evidence、Release、Security、CHANGELOG、Review 在该目标形态下是独立 capability，而不是 lifecycle Phase 的内嵌章节。把 lifecycle 拆成许多文件、却仍要求 Agent 自己记得何时读取，只是换了一种单体（FINDING-0015）。
 
-## ADR-0022 下目标 topology 的一种可描述形态
+## ADR-0022 下目标拓扑的一种可描述形态
 
 下列目录树是 **Accepted 目标形态的一种模型描述**，不是目录授权，也不是 Phase 2 执行计划。当前物理树仍以 `init-spec.json` 为准。
 

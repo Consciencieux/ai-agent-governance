@@ -5,7 +5,7 @@ generation: gen2
 target: repo-infra
 ---
 
-# PLAN-0031：生产者 / 产品治理分离（Producer / Product）
+# PLAN-0031：生产者 / 产品治理分离
 
 > （已完成，待 Release 归档。2026-09-09：Deliverable A–D 全部交付并复核——Profile 术语（ADR-0020）、4 条 separation invariants、cross-profile closure 契约（CONTROL-X 7 项，判据 + 排除说明）、ownership inventory 四正交轴收口（35 条 concern 全量分类，枚举经机械校验，各实现载体与 policy 章节逐项对照真实仓库验证）。本计划只完成 ownership/boundary 分类；**后续 physical execution separation 迁移（首项：术语门禁 extraction，见 ADR-0020 § 实施说明）不在本计划原始完成范围内**，不改变本计划历史目标。归档随 release 发生；Migration Mode 下暂不 release。）
 
@@ -56,7 +56,7 @@ Phase 1 不一定要决定 canonical Core 最终物理放在哪里，但必须�
 
 ## 提议方案（四个交付物）
 
-### Deliverable A — Profile boundary
+### 交付物 A — Profile 边界
 
 定义术语与边界，不定义 schema：
 
@@ -71,7 +71,7 @@ dependency               一个 profile 对另一个 profile 实现的依赖
 
 到「Governance concern → semantic owner → consumer profiles → implementation owner(s) → dependency boundary」为止，不再往下设计。
 
-### Deliverable B — Gen1 ownership inventory
+### 交付物 B — Gen1 ownership 清单
 
 基于 RESEARCH-0006 中记录的全部 Generation-1 capability entries，逐条做出 ownership 分类。**四个正交轴，每个轴只表达一件事**：
 
@@ -114,7 +114,7 @@ Phase 3 才决定这些概念最终是否进入正式 machine-readable schema（
 
 先把 `what exists / who owns it / who consumes it / where implementation lives / where accidental dependency exists / target disposition` 盘清楚，之后才能安全设计 Core。
 
-### Deliverable C — Separation invariants
+### 交付物 C — 分离不变量
 
 形成长期边界，进入 Accepted ADR：
 
@@ -126,7 +126,7 @@ Phase 3 才决定这些概念最终是否进入正式 machine-readable schema（
 4. Product packaging MUST NOT contain repo-only governance.
 ```
 
-### Deliverable D — Cross-profile closure specification
+### 交付物 D — 跨 profile 闭包规范
 
 定义未来 CONTROL-X 必须满足的契约，**不在本阶段全面实现**：
 

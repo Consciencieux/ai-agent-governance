@@ -173,6 +173,8 @@ YES → keep
 NO, migration-only scaffolding → normally omit from the released section
 ```
 
+**Migration Mode 下不做 release composition。** Phase checkpoint 只更新 `[Unreleased]` 并对账；禁止把 checkpoint 切成 `[x.y.z]` 版本节、打 `v*` tag 或走 `skill-release.md`（ADR-0014：checkpoint ≠ Release）。真正的 2.0 composition 发生在退出 Migration Mode 之后。
+
 例如 Dual-mode migration CI 在迁移期间是真实 contributor behavior，应进入 checkpoint 的 `[Unreleased]`；若 2.0 merge 后该机制消失，最终 released 节可以省略——这不是改写历史，因为它从未进入 Released section。
 
 ## Released section

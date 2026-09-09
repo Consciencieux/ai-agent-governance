@@ -9,7 +9,7 @@ subject_generation: gen1
 
 > 记录 ai-agent-governance 的世代演进。每个 Generation 是独立模型，不删除旧记录——演进过程本身就是研究轨迹。
 
-## 第 0 代（Generation 0）— 仅提示词治理（Prompt-only governance）
+## 第 0 代（Generation 0）— 仅提示词治理
 
 ```text
 规则写在 prompt / README
@@ -42,7 +42,7 @@ exit 0/1
 - 指令拓扑、`references/` 六类作用、lifecycle / sub-skills 单体与文件级演进证据见 RESEARCH-0009；注意力负担见 FINDING-0015
 - CHANGELOG 在 1.0.2 及以前与 verbose commit、Archived Plan 高度语义重叠，是旧知识体系缺少 responsibility boundary 的历史证据（见下节）；1.0.0 宣称冻结接口后 1.0.1/1.0.2 连续暴露缺陷，是 FINDING-0018 的 release-level 证据
 
-## Generation-1 的三重历史投影
+## 第一代（Generation-1）的三重历史投影
 
 Generation-1 后期（尤其 0.13.x → 1.0.2）同一事实常同时出现在：
 
@@ -99,7 +99,7 @@ CHANGELOG            = 当时发布边界对外宣称交付了什么
 - 统一 Evidence Model：`rule / tool / query / exitCode / timestamp / resultHash`
 - 进入路径由 ADR-0014（Architecture Migration Mode）管控
 
-## 第三代（Generation 3）— 运行时适配器（Runtime adapters；远期）
+## 第三代（Generation 3）— 运行时适配器（远期）
 
 ```text
 Portable Governance Core

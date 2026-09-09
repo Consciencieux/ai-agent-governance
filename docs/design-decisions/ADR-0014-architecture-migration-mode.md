@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0014：架构迁移模式（Architecture Migration Mode）
+# ADR-0014：架构迁移模式
 
 
 ## 背景
@@ -54,7 +54,31 @@ Release Candidate → 完整 regression + security + packaging + release gates
 
 **8. 发现的问题按既有链路由：** 系统性/重复出现的 issue → `docs/findings/`（FINDING，L0–L4 分类）；架构决策 → ADR；具体任务 → Plan。不立即 `改 policy → 加 regex → 加 checker → 加 test → 加三语 docs`。
 
-## 后续修正（2026-09-09）：第一代机械层冻结（Generation-1 Mechanical Freeze）
+## 后续修正（2026-09-10）：架构 checkpoint ≠ Release
+
+本修正是对决策 5、6 的 **Narrow amendment**，澄清阶段完成的标记方式。
+
+**Phase / architecture checkpoint 不是 release boundary。** Phase 0–8 某一阶段完成（例如 Phase 2 Documentation Knowledge Architecture Closure）只产生：
+
+```text
+Plan → Completed（待 Migration Mode 退出后的 release 归档）
+Roadmap Current Phase → 下一阶段
+CHANGELOG [Unreleased] → checkpoint 对账整理
+Git commit → 历史锚点（Research / Finding 可引用该 SHA）
+```
+
+**不产生** SemVer 版本号、`v*` Git tag、GitHub Release、skill tarball，也不宣称产品稳定。尤其禁止用 `v1.0.x` 描述 migration 分支上的 Gen2 文档/治理工作（会误读为 1.x 稳定 patch），也禁止在未退出 Migration Mode 前发 `v2.0.0` / `v2.0.0-alpha.*` 等任何正式或 prerelease tag——当前决策未授权「migration-only prerelease」例外。
+
+**职责分离保持干净：**
+
+```text
+Git tag / SemVer / skill-release.md  = release boundary（distribution）
+Plan / Roadmap / checkpoint commit   = architecture milestone（migration）
+```
+
+`repo-workflows/skill-release.md` 要求 Gen1 full gates 全绿；Migration Mode 下旧 gate 可为 observational 红——二者逻辑冲突，正是决策 6 关闭 distribution boundary 的原因。正式 release 仅在 Phase 8 完成后、本 ADR 退出条件满足、新架构关键 gates 恢复 blocking authority 时，再做 release composition。
+
+## 后续修正（2026-09-09）：第一代机械层冻结
 
 本修正是对决策 1、3、4、7 的 **Narrow amendment**，用于明确迁移边界；它不删除或重定义现有 Gen1 capability。
 

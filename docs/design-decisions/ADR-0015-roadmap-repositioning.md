@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0015：路线图重新定位（Roadmap）
+# ADR-0015：路线图重新定位
 
 
 ## 背景

@@ -5,7 +5,7 @@ type: control-gap
 observed_in: gen1
 ---
 
-# FINDING-0004：触发覆盖率缺口（Trigger Coverage）：门禁触发依赖 Agent 注意力
+# FINDING-0004：触发覆盖率缺口：门禁触发依赖 Agent 注意力
 
 ## 分类
 

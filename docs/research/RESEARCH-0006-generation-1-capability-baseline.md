@@ -5,7 +5,7 @@ version: 4
 subject_generation: gen1
 ---
 
-# RESEARCH-0006：第一代能力基线（Generation-1）
+# RESEARCH-0006：第一代能力基线
 
 本 RESEARCH 从 `docs/plans/archive/PLAN-0001..0030`（30 份归档计划）、当前代码与测试中提炼 Generation-1 的**能力保存矩阵**，为 Generation-2 重构提供 baseline evidence。它回答「1.0 曾经保护什么、现在由什么承载、Phase 4 还需要问什么」，不复制任何归档计划的全文，**不裁决** 2.0 处置。
 

@@ -5,7 +5,7 @@ type: mechanism-gap
 observed_in: gen1
 ---
 
-# FINDING-0016：规范示例仅供参考，不是约束（Canonical Example；reference ≠ constraint）
+# FINDING-0016：规范示例仅供参考，不是约束
 
 ## 分类
 

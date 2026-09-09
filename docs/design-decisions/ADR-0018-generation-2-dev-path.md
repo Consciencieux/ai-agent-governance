@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0018：第二代开发路径（Generation-2）
+# ADR-0018：第二代开发路径
 
 
 ## 背景

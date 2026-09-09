@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# FINDING-0001：生产者 / 产品治理耦合（Producer / Product）：物理边界已分开，语义与执行仍混杂
+# FINDING-0001：生产者 / 产品治理耦合：物理边界已分开，语义与执行仍混杂
 
 ## 分类
 

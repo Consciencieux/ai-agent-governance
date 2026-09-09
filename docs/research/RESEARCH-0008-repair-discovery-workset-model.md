@@ -5,7 +5,7 @@ version: 2
 subject_generation: gen1
 ---
 
-# RESEARCH-0008：修复 / 发现 / 工作集运行模型（Workset）
+# RESEARCH-0008：修复 / 发现 / 工作集运行模型
 
 本 RESEARCH 是 **System Model**：描述「修复一个系统问题」的运行模型——已有协议控制什么、缺少什么、问题集合如何随修复过程增长、目标架构的形态。它回答「repair / discovery / workset 这个系统现在是怎么工作的、缺口在哪、可测量的维度是什么」。
 
@@ -30,7 +30,7 @@ Horizontal issue closure  多个问题横向不丢失
 
 > **当前协议控制了「修复尝试的深度」，但没有控制「问题集合的宽度」**（FINDING-0022）。
 
-## 失效机制：递归发现 / 注意力漂移（recursive discovery / focus drift）
+## 失效机制：递归发现 / 注意力漂移
 
 ```text
 初始发现：B1 B2 B3 B4 B5

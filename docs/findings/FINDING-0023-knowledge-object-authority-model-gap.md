@@ -6,7 +6,7 @@ observed_in: gen2
 resolved_in: gen2
 ---
 
-# FINDING-0023：知识对象模型缺失「首要权威职责 + 支持性上下文」区分（primary authoritative responsibility + supporting context）
+# FINDING-0023：知识对象模型缺失「首要权威职责 + 支持性上下文」区分
 
 ## 分类
 

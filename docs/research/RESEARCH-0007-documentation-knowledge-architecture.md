@@ -34,7 +34,7 @@ Supporting context           → 可在对象内简述
 Independent authoritative knowledge → 必须拆出并引用
 ```
 
-## 内容路由测试（routing test）
+## 内容路由测试
 
 ```text
 这是在描述系统？            → Research
@@ -156,7 +156,7 @@ Research / Finding
 
 **当前 phase 可有一个 phase checkpoint plan + 若干 subordinate plans**（例如 Phase 2 的 checkpoint plan PLAN-0032 与 subordinate PLAN-0033），不是字面上「全仓只有一个 Active Plan」；「唯一 Active Plan」指**每个 phase 有且只有一个执行主体指向的 plan set**，subordinate plans 在 checkpoint plan 之下按其 execution order 执行。
 
-## 机械 carrier
+## 机械载体
 
 | 关系 | 机械载体 | 状态 |
 | --- | --- | --- |

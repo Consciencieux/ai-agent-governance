@@ -292,8 +292,8 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-Current Phase: 2 — Research / Findings / Traceability
-Current Phase Plan: PLAN-0032 (phase checkpoint) · PLAN-0033 (subordinate)
+Current Phase: 3 — Governance Core / Rule Model
+Current Phase Plan: not created yet (retrieve PLAN-0032 R23 first, then open the phase checkpoint plan). Phase 2 complete: PLAN-0032 / PLAN-0033 are `Completed` (no physical archive under Migration Mode; archive follows a later formal release).
 
 
 ## Guarantee Levels
@@ -408,6 +408,7 @@ Generation 2 explicitly does not pursue:
 - measuring maturity by test count, checker count or rule count
 - making growth in the governance framework's own complexity the default direction
 - maintaining two architectures long-term just to stay Generation-1 compatible
+- marking Phase completion with a formal Release (SemVer / tag / skill-release) while Migration Mode is active (see ADR-0014)
 
 ## Success Criteria
 

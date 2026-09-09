@@ -1,4 +1,4 @@
-# 实验记录（Experiments）
+# 实验记录
 
 本目录保存研究实验记录。每个实验一个文件：
 
@@ -30,17 +30,17 @@ updated: ...
 
 # 实验标题
 
-## 假设（Hypothesis）
+## 假设
 
-## 方法（Method）
+## 方法
 
-## 测量（Measurements）
+## 测量
 
-## 结果（Results）
+## 结果
 
-## 结论（Conclusion）
+## 结论
 
-## 复现（Replication）
+## 复现
 ```
 
 ## 待办实验（见 RESEARCH-0003-evaluation-framework.md）

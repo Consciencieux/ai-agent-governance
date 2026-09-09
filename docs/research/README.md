@@ -70,16 +70,16 @@ docs/research/
 
 | 类型 | 文件 | 内容 |
 | --- | --- | --- |
-| A. 系统模型（System Model） | `RESEARCH-0001-system-model.md` | 当前架构、数据流、执行流程、组件关系 |
-| B. 机制分类（Mechanism Taxonomy） | `RESEARCH-0002-governance-mechanism-taxonomy.md` | Existence / Text / Structure / Consistency / Behavior / LLM Review / Human Review / Runtime |
-| C. 评价框架（Evaluation Framework） | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
-| D. 架构演进（Architecture Evolution） | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
-| E. 当前能力（Current Capabilities） | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
-| F. 实验记录（Experiments） | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
-| G. 能力基线（Capability Baseline） | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵；第四列是待决问题，不裁决 2.0 处置 |
-| H. 规划/知识控制模型（Planning / Knowledge Control Model） | `RESEARCH-0007-documentation-knowledge-architecture.md` | System Model：七类对象、路由、当前/历史隔离；正文级权威矩阵的规范在 ADR-0016 |
-| I. 修复/发现/Workset 模型（Repair / Discovery / Workset Model） | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
-| J. Agent 指令架构（Agent Instruction Architecture） | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
+| A. 系统模型 | `RESEARCH-0001-system-model.md` | 当前架构、数据流、执行流程、组件关系 |
+| B. 机制分类 | `RESEARCH-0002-governance-mechanism-taxonomy.md` | Existence / Text / Structure / Consistency / Behavior / LLM Review / Human Review / Runtime |
+| C. 评价框架 | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
+| D. 架构演进 | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
+| E. 当前能力 | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
+| F. 实验记录 | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
+| G. 能力基线 | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵；第四列是待决问题，不裁决 2.0 处置 |
+| H. 规划/知识控制模型 | `RESEARCH-0007-documentation-knowledge-architecture.md` | 七类对象、路由、当前/历史隔离；正文级权威矩阵的规范在 ADR-0016 |
+| I. 修复/发现/工作集模型 | `RESEARCH-0008-repair-discovery-workset-model.md` | 纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
+| J. Agent 指令架构 | `RESEARCH-0009-agent-instruction-architecture.md` | Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 
@@ -127,22 +127,22 @@ Superseded by: Research-007
 
 这本身就是研究轨迹。第一版只保留 `Draft / Active / Superseded / Archived` 四个状态，**不建议**建过度复杂状态机（Hypothesis / Reviewed / Validated / Published / Deprecated / Retired 会让 research 本身变成治理对象）。
 
-## 审阅规则（Review）
+## 审阅规则
 
 新增或修改 research 文档**不需要跑全部 gate**：
 
-- **必须**：Markdown 格式、链接有效性（link validity）、元数据格式；大改时按 ADR-0016 五问做结构化 review
+- **必须**：Markdown 格式、链接有效性、元数据格式；大改时按 ADR-0016 五问做结构化 review
 - **不需要**：三语 parity、changelog、product docs freshness（它不是产品文档）；**不**用词级 JS gate 判定是否跨权威边界
 
 ## 质量标准
 
 好的 research 文档应回答：
 
-- **研究对象（What）**：研究对象是什么？
-- **研究动机（Why）**：为什么研究？（连接到 finding / 动机）
-- **模型（Model）**：抽象模型是什么？
-- **证据（Evidence）**：有什么证据？（实验、代码位置、测量数据）
-- **影响（Implication）**：对未来设计有什么影响？
+- **研究对象**：研究对象是什么？
+- **研究动机**：为什么研究？（连接到 finding / 动机）
+- **模型**：抽象模型是什么？
+- **证据**：有什么证据？（实验、代码位置、测量数据）
+- **影响**：对未来设计有什么影响？
 
 ## 关联规则
 

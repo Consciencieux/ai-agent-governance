@@ -16,6 +16,12 @@ All notable changes to this project will be documented here.
 
 - **Repository language entry files moved to the root** — `README.md` / `README.zh-CN.md` / `README.zh-TW.md` and `CONTRIBUTING.md` / `CONTRIBUTING.zh-CN.md` / `CONTRIBUTING.zh-TW.md` are the repository entry files; documentation parity now follows those root projections, and remaining product docs stay under `docs/product/{en,zh-CN,zh-TW}/`.
 
+- **Knowledge-object writing follows an authoritative / supporting / forbidden matrix** — contributors and agents must keep Research descriptive, Finding closures outcome-based, and Plans from re-deciding Accepted ADR constraints; new or major edits answer a five-question authority review. Normative matrix: ADR-0016.
+
+- **Knowledge-object representation normalized for Plan / Finding / Research / ADR** — sparse YAML frontmatter; Finding metadata minimized to `id` / `status` / `type` / `observed_in` (+ `resolved_in` when Resolved); human-facing H1 / section / table presentation is Chinese-first while machine keys and enums stay English.
+
+- **Repo CHANGELOG accession is impact-based; released history through `[1.0.2]` stays frozen** — eligibility is by observable audience impact, not file type; writing may defer to a checkpoint but accounting may not; legacy released sections are not restyled to today's accession rules (FINDING-0009). Execution policy: `repo-workflows/changelog-policy.md`.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

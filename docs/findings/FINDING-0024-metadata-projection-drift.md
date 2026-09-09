@@ -5,7 +5,7 @@ type: mechanism-gap
 observed_in: gen2
 ---
 
-# FINDING-0024：权威元数据（canonical metadata）被多份索引/投影重复，持续漂移
+# FINDING-0024：权威元数据被多份索引/投影重复，持续漂移
 
 ## 分类
 
@@ -28,6 +28,7 @@ observed_in: gen2
 - ADR-0021 index drift（index `cross-generation` vs frontmatter `gen2`）。
 - docs README「repo CHANGELOG 政策由 AGENTS.md 拥有」vs 实际 `repo-workflows/changelog-policy.md`。
 - README schema 示例出现旧字段（opened/updated/title）vs canonical sparse envelope。
+- 2026-09-10：ADR-0016 § 表示法归一写「各目录 README 定义…此处不复制 schema」，同段却内联 Finding `type`+`severity`+`affected`+…，与 `docs/findings/README.md` 已收缩的 frontmatter（`id`/`status`/`type`/`observed_in`[+`resolved_in`]）冲突——R25b 当前反例；ADR 侧已改为只保留指针。
 
 ## 根因
 
@@ -46,13 +47,14 @@ R1（Policy Structure）：权威事实源（canonical source）已存在于对�
 
 ## 解决情况
 
-（未解决。）本次 reconciliation 修复了已发现的 drift 实例并让 schema 示例对齐权威事实源；「投影 read-only 纪律」的正式机制留待后续（可作为 Gen2 control plane 的 SSOT 约束）。
+（未解决。）表示法归一过程中持续出现投影漂移实例：ADR-0021 index、docs README CHANGELOG 权威指针、ADR-0016 内联 Finding schema（2026-09-10 已删）。实例可修；「投影只读 / 不对账就不得复制 schema」的正式机制仍缺，故本 Finding 保持 Confirmed。
 
 ## 关联
 
 - ADR-0009
 - ADR-0016
 - RESEARCH-0007
+- PLAN-0032 R25b / R26
 
 ## 回归保护
 

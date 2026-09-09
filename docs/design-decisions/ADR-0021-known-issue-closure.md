@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0021：已知问题闭包（Known-Issue Closure）
+# ADR-0021：已知问题闭包
 
 
 ## 背景
@@ -62,7 +62,7 @@ resolved（含 fixed-now） / deferred / duplicate / not-applicable / blocked
 
 **6. 本 ADR 是 Gen2 执行语义（`generation: gen2`）。** Migration Mode（ADR-0014）冻结 Gen1 规则演进；PLAN-0033 是对该语义的 **first-generation prototype / characterization**（演示载体可行），不宣称 Gen1 lifecycle 已被改变；正式纳入 TASK Plan 格式与 machine-readable task state 留待后续阶段。
 
-## 后续修正（2026-09-09）：终结处置（terminal disposition）的跟踪与后继约束
+## 后续修正（2026-09-09）：终结处置的跟踪与后继约束
 
 本修正是对「决策 3」的 **Narrow amendment**。原有关于 terminal disposition 枚举与 `Unaccounted discovered items = 0` 的文字保留为历史；自本修正起，以下约束补充并 supersede 原 clause 中未覆盖的部分：
 

@@ -5,7 +5,7 @@ type: mechanism-gap
 observed_in: gen1
 ---
 
-# FINDING-0006：回归判定预言机缺口（Regression Oracle）：修复正确 ≠ 修复受保护
+# FINDING-0006：回归判定预言机缺口：修复正确 ≠ 修复受保护
 
 ## 分类
 

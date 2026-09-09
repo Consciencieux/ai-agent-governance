@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# FINDING-0019：check-doc-consistency.js 正在形成巨型元检查器（Meta-checker；incident-driven checker accretion）
+# FINDING-0019：check-doc-consistency.js 正在形成巨型元检查器
 
 ## 分类
 

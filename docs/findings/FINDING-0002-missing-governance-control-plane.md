@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# FINDING-0002：缺少统一的治理执行架构（Missing Governance Control Plane）
+# FINDING-0002：缺少统一的治理执行架构
 
 ## 分类
 
