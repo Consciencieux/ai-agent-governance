@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：A inventory + B Safety Kernel 基线已冻结（RESEARCH-0011）；下一步 C disposition。Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：C Disposition 表已裁定；第一刀 vertical = CTRL-0003/0004。**未改 JS。** Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -81,8 +81,8 @@ Control → evaluator(s) → gate/boundary → tests → profile → characteriz
 ```text
 A Inventory          ← 完成（RESEARCH-0011）
 B Characterization   ← 完成（Safety Kernel 基线快照）
-C Disposition        ← 下一步：KEEP/WRAP/EXTRACT/REWRITE/RETIRE（按能力/cluster，非整文件）
-D Primitive extract
+C Disposition        ← 完成（本计划 § Disposition 表；主体 = capability/cluster/evaluator）
+D Primitive extract  ← 下一步：第一条 vertical = CTRL-0003/0004
 E Evaluator rebuild（CTRL × profile；稳定结果接口；无 Dispatcher）
 F Producer/Product decoupling（P3）
 G PLAN-0036 Discovery Ledger
@@ -91,15 +91,86 @@ H Exit review
 
 新增 CTRL 仅在 EXTRACT 独立机械能力时分配；禁止为全部 Markdown 规则编号。
 
-### 2. Disposition（能力 / primitive / evaluator，不是整文件一句）
+### 2. Disposition（能力 / cluster / evaluator）— **C 完成**
 
-对每个纳入范围的机械能力正式使用：
+**Disposition 主体不是整份旧 JS 文件**，而是文件内部的 capability / cluster / evaluator 面。禁止：
 
 ```text
-KEEP | WRAP | EXTRACT | REWRITE | RETIRE
+check-doc-freshness.js → REWRITE
+check-doc-consistency.js → REWRITE
 ```
 
-`check-doc-consistency.js` 等 monolith 预期拆成多 disposition（cluster → EXTRACT / RETIRE / repo-only / skill / wrapper），禁止 `REWRITE whole file` 变成下一个 mega-checker。
+正式取值：`KEEP | WRAP | EXTRACT | REWRITE | RETIRE`。
+
+#### 2.1 种子 Control
+
+| 能力面 | 归属 | Disposition | 说明 |
+| --- | --- | --- | --- |
+| 凭证模式表（语义） | CTRL-0001 | EXTRACT | 迁出 JS；长期 semantics_ref 不得住在 evaluator |
+| staged diff / blob 扫描 | CTRL-0001 | EXTRACT | primitive：`scanStagedDiff` / 可读 blob |
+| 禁模式匹配 + 不回显 | CTRL-0001 | EXTRACT | primitive：`matchForbiddenPattern` |
+| CLI / exit / `--json` 壳 | CTRL-0001 | WRAP → REWRITE | 先 WRAP 保 Safety Kernel；再定 evaluator contract |
+| repo 与 skill 同跑一文件 | CTRL-0001 / P3 | WRAP（过渡） | accidental coupling；primitive 共享后 profile 可分 evaluator——**不**把同文件当目标 KEEP |
+| consent marker 同步（cluster #8） | CTRL-0002 | EXTRACT | 机械部分；与 L0 协议分开 |
+| release-manager consent 绑定 | CTRL-0002 | WRAP | 暂不拆 release-manager 本体 |
+| Agent 协议路径（无 evaluator） | CTRL-0002 | KEEP | `evaluation_binding: none`；语义家仍是 git.policy |
+| 文档相对代码新鲜度判断 | CTRL-0003 | EXTRACT | primitive：`compareDocFreshness`（git 日期） |
+| CTRL-0003 默认 advisory 求值 | CTRL-0003 | REWRITE | **第一条 vertical**：独立 evaluator |
+| 译文相对源新鲜度判断 | CTRL-0004 | EXTRACT | 可共享底层 git-date / pair 解析；**独立** translation 规则 |
+| CTRL-0004 `--release-gate` deny | CTRL-0004 | REWRITE | 与 0003 分 evaluator；同文件仅过渡 WRAP |
+| `check-doc-freshness.js` 文件壳 | 0003+0004 共文件 | WRAP | 拆出 primitive/evaluator 前保持 characterization；成功后 RETIRE 厚壳或薄 WRAP |
+| Affected Files / 声明解析 | CTRL-0005 | EXTRACT | 稍后；不阻塞第一刀 |
+| 路径规范化 / SEARCH_ROOTS | CTRL-0005 | EXTRACT | 同上 |
+| plan-delivery CLI / gate 壳 | CTRL-0005 | WRAP | repo-only，边界清晰；第二批再动 |
+
+#### 2.2 `check-doc-consistency.js` 集群（非整文件）
+
+| Cluster | Disposition | 说明 |
+| --- | --- | --- |
+| #1 version / release sync | EXTRACT | shared-value sync primitive 候选 |
+| #2 protected-files | EXTRACT | 枚举 vs 权威表 |
+| #3 ADR status | WRAP → EXTRACT | 先保行为 |
+| #4 broken links | EXTRACT | 可独立；非第一刀 |
+| #5 numeric claims | WRAP | 脆性高；暂不优先 REWRITE |
+| #6 prompt sync | EXTRACT | ADR-0008；双向 |
+| #7 trilingual parity | KEEP（委托） | 已委托 `check-doc-parity.js`；consistency 仅 WRAP 入口 |
+| #8 consent-cluster | EXTRACT | → CTRL-0002（见上） |
+| #9 principles-index | EXTRACT | 指针存在性 |
+| #10 plan-status / pending-archive | WRAP | Gen1 release-archive 语义 vs ADR-0016 已知 divergence；parser 迁移另案 |
+| #11 changelog coverage | WRAP → EXTRACT | release-gate 相关 |
+| #12 terminology | KEEP | **已 EXTRACT** → `repo-tools/check-terminology.js`（先例） |
+
+**第一刀不做 consistency monolith。** 集群表只定方向；实施排在 CTRL-0003/0004 vertical 之后。
+
+#### 2.3 第一条真实 vertical refactor（授权下一步 D/E）
+
+```text
+Gen1: scripts/check-doc-freshness.js
+        ↓ characterization（已有 docs.test.js）
+shared lower primitives（git date / path pairs / …）
+      ↙                         ↘
+CTRL-0003 evaluator           CTRL-0004 evaluator
+（default advisory）           （--release-gate deny）
+        ↓
+旧文件壳 WRAP → 验证等价 → 再薄化 / RETIRE 厚逻辑
+```
+
+成功标准（本 vertical，非整 Phase 4 exit）：
+
+1. 两个 Control 可分别描述/调用（至少文档级 contract + 可测入口；无 Dispatcher）。
+2. 共享下层 primitive，禁止复制两份 git-date 逻辑。
+3. `docs.test.js` freshness / translation 例旧红旧绿不变；Safety Kernel 不退化。
+4. 不顺便拆 `check-doc-consistency.js`。
+
+#### 2.4 明确延后
+
+```text
+consistency 集群落地 EXTRACT     → 0003/0004 vertical 之后
+CTRL-0001 语义迁出 + P3 解耦     → 第二批（Security Kernel 敏感）
+CTRL-0005 深拆                   → 第三批
+PLAN-0036 lifecycle Ledger       → G（可并行文档，不挡第一刀）
+machine-readable Control 文件    → P4 deferred
+```
 
 ### 3. Primitive → Evaluator
 
@@ -168,22 +239,24 @@ evidence
 | --- | --- | --- | --- | --- | --- | --- |
 | P0 | PLAN-0032 R24 | payload Discovery Ledger 须有 successor | skill | closed | resolved | PLAN-0036 Active |
 | P1 | ADR-0023 | CTRL-centric mechanical inventory 未建 | both | closed | resolved | RESEARCH-0011 v1 |
-| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | RESEARCH-0011 集群表；待 C disposition → D/E |
-| P3 | FINDING-0001 | accidental repo→skill script 依赖残留 | both | open | in-progress | RESEARCH-0011 § repo→skill；CTRL-0001 已标 |
+| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | C 集群 disposition 已定；**实施延后**于 CTRL-0003/0004 vertical |
+| P3 | FINDING-0001 | accidental repo→skill script 依赖残留 | both | open | in-progress | CTRL-0001 WRAP 过渡；F 批处理 |
 | P4 | ADR-0023 E4 | 独立 machine-readable Control 文件 | both | closed | deferred（revisit: 第二个真实机器 consumer） | ADR-0023 决策 6 |
 | P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
+| P6 | PLAN-0035 C | Disposition 表未裁定 | both | closed | resolved | 本计划 § 2 Disposition |
+| P7 | PLAN-0035 D/E | CTRL-0003/0004 第一条 vertical 未做 | both | open | in-progress | § 2.3 授权；**下一步改代码** |
 
 ## 闭包对账（进行中）
 
 ```text
-Total known:  6
-Resolved:     3  (P0, P1, P5)
+Total known:  8
+Resolved:     4  (P0, P1, P5, P6)
 Deferred:     1  (P4)
-Open:         2  (P2, P3)
+Open:         3  (P2 延后实施, P3, P7 第一刀)
 Unaccounted:  0
 ```
 
-下一步：**C Disposition**（按 CTRL / cluster，非整文件），再进入 D/E；P3 与 F 并行跟踪。
+下一步：**D/E — CTRL-0003 + CTRL-0004 vertical refactor**（不动 consistency monolith）。
 
 ## 参考
 

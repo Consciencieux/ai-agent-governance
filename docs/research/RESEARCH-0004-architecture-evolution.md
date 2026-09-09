@@ -149,7 +149,8 @@ scripts/check-doc-freshness.js
 CTRL-0003 → freshness primitive(s) → profile evaluator
 CTRL-0004 → translation-freshness primitive(s) → profile evaluator
         ↓
-旧文件 KEEP / WRAP / EXTRACT / REWRITE / RETIRE
+旧文件内部 capability / cluster
+→ KEEP / WRAP / EXTRACT / REWRITE / RETIRE
 ```
 
 事实库存见 RESEARCH-0011；施工见 PLAN-0035。

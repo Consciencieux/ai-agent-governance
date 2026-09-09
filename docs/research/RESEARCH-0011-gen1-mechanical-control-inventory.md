@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0011
 status: Active
-version: 1
+version: 2
 subject_generation: gen1
 ---
 
@@ -41,7 +41,8 @@ Control
 | tests | `tests/suites/security.test.js`（大量 `check-secrets:*`）；Safety Kernel **security** suite |
 | profile | skill（INSTALLED）；repo 预提交跑同一文件 → **accidental shared implementation**（ADR-0023） |
 | characterization | staged fake secret fail；binary/`-diff` 仍扫；clean exit 0；placeholder vs real；generated project passes |
-| 候选 disposition（非权威） | EXTRACT 模式表与扫描 primitive；REWRITE evaluator 边界；repo/skill 是否继续同文件待决（P3） |
+| 候选 disposition（非权威） | 见 PLAN-0035 § Disposition（权威） |
+
 
 ### CTRL-0002 Git write consent
 
@@ -54,7 +55,8 @@ Control
 | tests | `tests/suites/consistency.test.js`（consent / gate 相关）；release-manager 套件 |
 | profile | repo + skill（shared semantic；implementation 分散） |
 | characterization | 现有点必须含同一 marker 集合；缺文件点 skip；plan approval ≠ commit consent |
-| 候选 disposition | EXTRACT consent marker sync 为 primitive；语义双写消除属 FINDING-0001，不单靠拆 JS |
+| 候选 disposition | 见 PLAN-0035 § Disposition |
+
 
 ### CTRL-0003 Governance-document freshness（相对代码活动）
 
@@ -67,7 +69,8 @@ Control
 | tests | `tests/suites/docs.test.js`：`doc freshness: stale/fresh/very stale/drift-report` |
 | profile | repo 直接跑 INSTALLED 脚本（repo→skill accidental）；skill 安装同脚本给被治理项目 |
 | characterization | git 日期非 mtime；30/90 天阈值；drift-report.freshness 段 |
-| 候选 disposition | EXTRACT `compareFreshness` primitive；与 0004 **分 evaluator**，可暂 WRAP 同文件 |
+| 候选 disposition | 见 PLAN-0035 § Disposition；**第一刀 vertical** |
+
 
 ### CTRL-0004 Translation freshness
 
@@ -80,7 +83,8 @@ Control
 | tests | `tests/suites/docs.test.js`：`translation freshness:*`（含 release-gate 子例） |
 | profile | 本仓库 repo；skill 侧当目标有对等译文树 |
 | characterization | source after translation → stale；synchronized commit OK；uncommitted rules；bogus review SHA fail-closed |
-| 候选 disposition | 与 0003 同 EXTRACT；**禁止**合并为单 CTRL |
+| 候选 disposition | 见 PLAN-0035 § Disposition；与 0003 分 evaluator |
+
 
 ### CTRL-0005 Plan delivery
 
@@ -93,7 +97,8 @@ Control
 | tests | `tests/suites/plan-delivery.test.js`（整套） |
 | profile | **repo-only** |
 | characterization | Affected Files H2–H4；多 section；writes/wires；SEARCH_ROOTS 含 repo-tools；design-only skip |
-| 候选 disposition | KEEP 边界清晰时可 WRAP 输出 contract；EXTRACT 路径规范化 / 声明解析 primitive |
+| 候选 disposition | 见 PLAN-0035 § Disposition；第三批 |
+
 
 ## 共文件反例（Phase 4 纪律）
 
