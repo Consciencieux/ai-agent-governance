@@ -2,18 +2,16 @@
 id: FINDING-0001
 status: Confirmed
 type: architecture-gap
-severity: Critical
-affected: [repo, skill]
 observed_in: gen1
-direction: A
-root_cause: R5
-github_issue: 7
-related:
-  plans: [PLAN-0031]
-  adrs: [ADR-0006, ADR-0020]
 ---
 
 # FINDING-0001：生产者 / 产品治理耦合（Producer / Product）：物理边界已分开，语义与执行仍混杂
+
+## 分类
+
+- 严重度：严重
+- 影响范围：repo、skill
+- 研究方向：A. 生产者 / 产品分离
 
 ## 观察
 
@@ -47,6 +45,13 @@ related:
 ## 解决情况
 
 （进行中，状态保持 `Confirmed`。2026-09-09：boundary defined / remediation underway——Phase 1（PLAN-0031）定义 Producer/Product 边界与 ownership inventory，确立「共享语义只有一个 authoritative owner」原则；正式 cross-profile closure contract 与 CONTROL-X 落地在 Phase 3+，届时才将本 Finding 置为 `Resolved`。R5 应优先于 R1–R4 处理。）
+
+## 关联
+
+- PLAN-0031
+- ADR-0006
+- ADR-0020
+- GitHub Issue #7
 
 ## 回归保护
 

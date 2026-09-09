@@ -2,17 +2,16 @@
 id: FINDING-0018
 status: Confirmed
 type: architecture-gap
-severity: High
-affected: [repo, skill]
 observed_in: gen1
-direction: B
-root_cause: R1
-github_issue: 7
-related:
-  adrs: [ADR-0011]
 ---
 
 # FINDING-0018：1.0.0 成熟度误判：冻结了 interface surface，没冻结更核心的 rule/trigger/enforcement model
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo、skill
+- 研究方向：B. 政策 / 控制平面
 
 ## 观察
 
@@ -41,6 +40,11 @@ related:
 ## 解决情况
 
 （待填。ADR-0014 已把 2.0 重构定义为 Generation-1 → Generation-2，本 finding 提供「为什么 1.0.0 只是 baseline」的证据。）
+
+## 关联
+
+- ADR-0011
+- GitHub Issue #7
 
 ## 回归保护
 

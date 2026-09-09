@@ -2,17 +2,16 @@
 id: FINDING-0021
 status: Confirmed
 type: control-gap
-severity: Medium
-affected: [repo]
 observed_in: gen2
-direction: E
-root_cause: R4
-related:
-  adrs: [ADR-0014, ADR-0015]
-  research: [RESEARCH-0007]
 ---
 
 # FINDING-0021：路线图机械检查失效（Roadmap；check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
+
+## 分类
+
+- 严重度：中
+- 影响范围：repo
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -49,6 +48,12 @@ R4（Enforcement Boundary）：gate 的扫描路径 / section 语义与对象实
 ## 解决情况
 
 （未解决。Migration Mode 下旧 gate 为 observational（ADR-0014），不为此改 Gen1 gate 至绿灯；适配作为后续执行层迁移项。）
+
+## 关联
+
+- ADR-0014
+- ADR-0015
+- RESEARCH-0007
 
 ## 回归保护
 

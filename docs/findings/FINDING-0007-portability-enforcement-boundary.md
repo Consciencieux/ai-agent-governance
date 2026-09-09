@@ -2,15 +2,16 @@
 id: FINDING-0007
 status: Confirmed
 type: architecture-gap
-severity: High
-affected: [repo, skill]
 observed_in: gen1
-direction: F
-root_cause: R4
-github_issue: 7
 ---
 
 # FINDING-0007：可移植性与运行时强制执行的天然冲突（Portability / Runtime Hard Enforcement）：执行边界（enforcement boundary）未定义
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo、skill
+- 研究方向：F. 可移植性 / 运行时边界
 
 ## 观察
 
@@ -40,6 +41,10 @@ enforcement boundary 候选（AI task completion / git hook / pre-push / CI / re
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 

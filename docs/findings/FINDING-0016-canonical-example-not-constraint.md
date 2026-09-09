@@ -2,15 +2,16 @@
 id: FINDING-0016
 status: Confirmed
 type: mechanism-gap
-severity: Medium
-affected: [repo, skill]
 observed_in: gen1
-direction: G
-root_cause: R1
-github_issue: 7
 ---
 
 # FINDING-0016：规范示例仅供参考，不是约束（Canonical Example；reference ≠ constraint）
+
+## 分类
+
+- 严重度：中
+- 影响范围：repo、skill
+- 研究方向：G. 证据 / 研究方法论
 
 ## 观察
 
@@ -47,6 +48,10 @@ forbidden narration markers
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 

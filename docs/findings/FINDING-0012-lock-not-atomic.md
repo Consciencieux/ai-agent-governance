@@ -2,15 +2,16 @@
 id: FINDING-0012
 status: Confirmed
 type: defect
-severity: Medium
-affected: [skill]
 observed_in: gen1
-direction: F
-root_cause: R4
-github_issue: 6
 ---
 
 # FINDING-0012：check-lock.js 是只读提示（read-only advisory），不是并发安全锁（concurrency-safe lock；TOCTOU race）
+
+## 分类
+
+- 严重度：中
+- 影响范围：skill
+- 研究方向：F. 可移植性 / 运行时边界
 
 ## 观察
 
@@ -52,6 +53,10 @@ function lockedValue(state) {
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #6
 
 ## 回归保护
 

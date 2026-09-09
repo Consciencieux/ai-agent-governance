@@ -2,15 +2,16 @@
 id: FINDING-0010
 status: Confirmed
 type: defect
-severity: High
-affected: [skill]
 observed_in: gen1
-direction: E
-root_cause: R3
-github_issue: 6
 ---
 
 # FINDING-0010：GitLab 多栈 CI 模板存在真实生成缺陷：Python/Go/Java/C++/docs-only 段内仍跑 npm 命令
+
+## 分类
+
+- 严重度：高
+- 影响范围：skill
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -47,6 +48,10 @@ v0.15.0 只修了「generator 选对段」（`gitlab-<stack>` 匹配），没修
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #6
 
 ## 回归保护
 

@@ -2,15 +2,16 @@
 id: FINDING-0019
 status: Confirmed
 type: architecture-gap
-severity: High
-affected: [repo]
 observed_in: gen1
-direction: E
-root_cause: R1
-github_issue: 7
 ---
 
 # FINDING-0019：check-doc-consistency.js 正在形成巨型元检查器（Meta-checker；incident-driven checker accretion）
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -42,6 +43,10 @@ github_issue: 7
 ## 解决情况
 
 （待填。纳入 2.0 重构的 Rule Registry / Dispatcher 范围。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 

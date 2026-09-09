@@ -2,18 +2,16 @@
 id: FINDING-0022
 status: Confirmed
 type: control-gap
-severity: Medium
-affected: [repo, skill]
 observed_in: gen2
-direction: G
-root_cause: R4
-related:
-  plans: [PLAN-0033]
-  adrs: [ADR-0021]
-  research: [RESEARCH-0008]
 ---
 
 # FINDING-0022：修复过程中已发现问题可能因递归发现丢失（缺持久工作集；recursive discovery / workset）
+
+## 分类
+
+- 严重度：中
+- 影响范围：repo、skill
+- 研究方向：G. 证据 / 研究方法论
 
 ## 观察
 
@@ -47,6 +45,12 @@ R4（Enforcement Boundary）：任务的**完成边界**不要求「每个已知
 ## 解决情况
 
 （未解决，remediation underway。）ADR-0021（Known-Issue Closure 执行语义，含后继指针/显式 revisit 触发条件要求）与 PLAN-0033（第一代 Discovery Ledger 实现）已建立；正式纳入 TASK Plan 格式与 lifecycle.policy 留待后续阶段。现存实例（PLAN-0032 R24 / PLAN-0033 K5 的 `deferred` / `promoted-to-next-plan`）已标注明确的 Phase 4 planning checkpoint 取回触发条件。
+
+## 关联
+
+- PLAN-0033
+- ADR-0021
+- RESEARCH-0008
 
 ## 回归保护
 

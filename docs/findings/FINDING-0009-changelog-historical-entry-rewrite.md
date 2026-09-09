@@ -2,18 +2,17 @@
 id: FINDING-0009
 status: Resolved
 type: defect
-severity: High
-affected: [repo]
 observed_in: gen1
 resolved_in: gen1
-direction: B
-root_cause: R1
-github_issue: 6
-related:
-  adrs: [ADR-0011, ADR-0012]
 ---
 
 # FINDING-0009：已发布的 CHANGELOG 版本条目被后续 commit 改写，并插入对当时不存在的 ADR 的引用
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo
+- 研究方向：B. 政策 / 控制平面
 
 ## 观察
 
@@ -52,6 +51,12 @@ commit `60185ef` 把 v1.0.0 已发布条目压缩改写，同时创建 ADR-0011/
 - `[1.0.2]` 补录 Added（ADR-0011/0012）+ Changed（one-entry-per-change / 指针用名称 / 引用而非复述）。
 - 顶部补建空 `[Unreleased]`。
 - 门禁 `npm run check` 全绿（EXIT=0）。
+
+## 关联
+
+- ADR-0011
+- ADR-0012
+- GitHub Issue #6
 
 ## 回归保护
 

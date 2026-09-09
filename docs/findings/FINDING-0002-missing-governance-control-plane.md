@@ -2,15 +2,16 @@
 id: FINDING-0002
 status: Confirmed
 type: architecture-gap
-severity: Critical
-affected: [repo, skill]
 observed_in: gen1
-direction: B
-root_cause: R1
-github_issue: 7
 ---
 
 # FINDING-0002：缺少统一的治理执行架构（Missing Governance Control Plane）
+
+## 分类
+
+- 严重度：严重
+- 影响范围：repo、skill
+- 研究方向：B. 政策 / 控制平面
 
 ## 观察
 
@@ -60,6 +61,14 @@ Rule → applicability → mechanism → evidence → decision → boundary 这�
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #7
+- RESEARCH-0009
+- FINDING-0015
+- FINDING-0025
+- FINDING-0026
 
 ## 回归保护
 

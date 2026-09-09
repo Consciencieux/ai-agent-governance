@@ -39,6 +39,7 @@ exit 0/1
 - 判断型规则无 carrier（FINDING-0003）
 - 验证简单过重 / 复杂不足（FINDING-0005）
 - 1.0.0 冻结了 interface surface 但没冻结核心模型（FINDING-0018），定位为 Generation-1 baseline
+- 指令拓扑、`references/` 六类作用、lifecycle / sub-skills 单体与文件级演进证据见 RESEARCH-0009；注意力负担见 FINDING-0015
 
 ## 第二代（Generation 2）— Rule Registry + Dispatcher（规划中，2.0）
 

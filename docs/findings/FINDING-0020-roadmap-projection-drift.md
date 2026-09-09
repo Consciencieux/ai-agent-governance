@@ -2,18 +2,17 @@
 id: FINDING-0020
 status: Resolved
 type: defect
-severity: Medium
-affected: [repo]
 observed_in: gen2
-direction: E
-root_cause: R4
 resolved_in: gen2
-related:
-  adrs: [ADR-0015, ADR-0018]
-  research: [RESEARCH-0007]
 ---
 
 # FINDING-0020：路线图投影漂移（Roadmap；ADR-0018 阶段顺序 ≠ 路线图阶段定义）
+
+## 分类
+
+- 严重度：中
+- 影响范围：repo
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -44,6 +43,12 @@ R4（Enforcement Boundary）：Roadmap（projection）与其裁决 ADR（fact so
 ## 解决情况
 
 （Resolved，2026-09-09。）Roadmap 三段（en / zh-CN / zh-TW）的「Generation 2 开发阶段」改为 ADR-0018 精确对齐的**阶段索引**（0–8 同名同序 + 一句话成果 + `Authority: ADR-0018` 指针），不再保留与 ADR-0018 冲突的独立阶段定义；`Current Long-term Direction` 同步为 P0–P8 序列。回归保护：权威优先级写入 ADR-0015 § 决策 6；阶段顺序裁决权明确归属 ADR-0018。
+
+## 关联
+
+- ADR-0015
+- ADR-0018
+- RESEARCH-0007
 
 ## 回归保护
 

@@ -2,17 +2,16 @@
 id: FINDING-0017
 status: Confirmed
 type: architecture-gap
-severity: High
-affected: [repo, skill]
 observed_in: gen1
-direction: E
-root_cause: R1
-github_issue: 7
-related:
-  adrs: [ADR-0010]
 ---
 
 # FINDING-0017：ADR 无持续强制执行（enforcement）：ADR Accepted ≠ 未来变更受约束
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo、skill
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -40,6 +39,11 @@ ADR 是冻结的决策记录，但没有与之绑定的机械检查（谁负责�
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- ADR-0010
+- GitHub Issue #7
 
 ## 回归保护
 

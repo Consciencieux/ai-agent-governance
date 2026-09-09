@@ -85,7 +85,7 @@ docs/README.md
 ## 验证方法
 
 1. 迁移分支的 Gen1 full test / legacy gate 仅作 observational characterization；本次 doc-only change 不以旧 gate 全绿作为验收条件。
-2. 全量 presentation inventory：四类当前知识对象与四个管理 README 不存在英文主 H1、英文主章节标题或英文主表头；技术名、ID、enum、路径、CLI 和代码标识可保留英文。
+2. 全量 presentation inventory：四类当前知识对象与四个管理 README 的 H1、章节标题与表头均以中文表述；表头不残留英文主列名或英文括注；技术名、ID、enum、路径、CLI 和代码标识可保留英文。
 3. 路由表、ADR、Research 三者互相可解析（link check）。
 4. `docs/README.md` 路由判定表可作为单一判定入口（人 + Agent 均可据此路由）。
 5. 完成条件的四条为定性判定，由 review checkpoint 确认，不强行机械门禁化（与 Phase 1 分类人工判断同一性质）。
@@ -120,7 +120,8 @@ docs/README.md
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
 | R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（revisit: Phase 3 开始前的 entry checkpoint；该 checkpoint 必须重新取回 R23，并确认 ADR-0022 § 后果对应的 AGENTS/SKILL 入口瘦身执行计划与范围） | ADR-0022 § 后果 |
 | R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 R24，并建立 successor Plan ID） | ADR-0021 § 决策 6 |
-| R25 | subtask | 知识对象表示法归一（Representation Normalization）：机器表示层与人类阅读层均已完成全仓归一 | repo | closed | resolved | 四类对象与四个管理 README 的 presentation inventory；ADR-0016 § 表示法归一 |
+| R25a | subtask | 表示法归一 · 人类面向呈现（presentation normalization）：中文 H1 / 章节 / 表头，机器 key/enum 保持稳定英文 | repo | closed | resolved | 四类对象与四个管理 README 的中文主表达 |
+| R25b | subtask | 表示法归一 · 机器元数据精简（metadata minimization）：frontmatter 只保留必要 machine semantics | repo | open | in-progress（Finding schema 减至 id/status/type/observed_in(+resolved_in)；severity/affected/direction/root_cause/related 移入正文） | ADR-0016 § 表示法归一；FINDING-0024 |
 | R26 | review | canonical 元数据被多份 index/projection 重复 → 持续 drift（ADR-0021 index、README schema 示例等） | repo | closed | promoted-to-finding | FINDING-0024 |
 
 **Metadata consumer enumeration（表示法归一前必须，2026-09-09 更新）：** Plan/ADR 状态原由正文解析（plan-status / plan-delivery / roadmap-sync / ADR-status 簇），但 **Representation authority moves now（ADR-0016）**——canonical 已迁入 frontmatter，正文 Status 已删除；旧 parser 的失败属已知 compatibility divergence，parser migration 属 Phase 4。generation / Finding / Research 元数据无机械 consumer。
@@ -128,15 +129,16 @@ docs/README.md
 ## 闭包对账（Closure reconciliation；2026-09-09 二次 checkpoint：工作集已重新打开）
 
 ```text
-Total known:  26
-Resolved:     22  (R1–R20、R22、R25；R2/R4/R14/R19/R25 曾在 checkpoint 2 重开，复核后再次 closed)
+Total known:  27
+Resolved:     22  (R1–R20、R22、R25a)
+Open:         1   (R25b machine metadata minimization — 执行中，见本次 Finding subtraction)
 Deferred:     1  (R23；Phase 3 开始前 entry checkpoint 重新取回)
 Promoted to Finding:   2  (R21 → FINDING-0023；R26 projection drift → FINDING-0024)
 Promoted to next Plan: 1  (R24；Phase 4 planning checkpoint 重新取回并建立 successor Plan ID)
-Unaccounted:  0
+Unaccounted:  1   (R25b open — 完成减法 + 验证后 closed)
 ```
 
-**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 README/schema projection 未收干净。本 checkpoint 已重新核验 R2/R4/R14/R19/R25 并再次闭合；R23/R24 保留明确的未来取回触发条件，R26 已提升为 FINDING-0024。完成判据保持为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。R25 的四类当前知识对象与四个管理 README 已完成中文主标题、章节标题与表头 normalization。
+**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 机器表示层未收口。本 checkpoint 已重新核验 R2/R4/R14/R19 并再次闭合；R25 拆为 **R25a（人类面向呈现，closed）** 与 **R25b（机器元数据精简，open）**——R25b 由本次 Finding metadata subtraction 执行（Finding frontmatter 减至 id/status/type/observed_in(+resolved_in)，severity/affected/direction/root_cause/related 移入正文）。R23/R24 保留明确的未来取回触发条件，R26 已提升为 FINDING-0024。完成判据保持为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。
 
 
 ## 未决风险

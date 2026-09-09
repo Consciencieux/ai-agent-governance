@@ -2,15 +2,16 @@
 id: FINDING-0003
 status: Confirmed
 type: control-gap
-severity: Critical
-affected: [repo, skill]
 observed_in: gen1
-direction: C
-root_cause: R4
-github_issue: 5
 ---
 
 # FINDING-0003：声明与执行强度脱节（Declaration / Enforcement）：文档 MUST ≠ 机械拒绝
+
+## 分类
+
+- 严重度：严重
+- 影响范围：repo、skill
+- 研究方向：C. 执行强度缺口
 
 ## 观察
 
@@ -45,6 +46,10 @@ github_issue: 5
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #5
 
 ## 回归保护
 

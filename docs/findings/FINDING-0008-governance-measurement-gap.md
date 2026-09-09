@@ -2,15 +2,16 @@
 id: FINDING-0008
 status: Confirmed
 type: research-observation
-severity: Medium
-affected: [repo, skill]
 observed_in: gen1
-direction: G
-root_cause: R1
-github_issue: 7
 ---
 
 # FINDING-0008：治理测量缺口：缺少证据模型、traceability 与 Zero-Attention 成熟度标准
+
+## 分类
+
+- 严重度：中
+- 影响范围：repo、skill
+- 研究方向：G. 证据 / 研究方法论
 
 ## 观察
 
@@ -44,6 +45,10 @@ github_issue: 7
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 

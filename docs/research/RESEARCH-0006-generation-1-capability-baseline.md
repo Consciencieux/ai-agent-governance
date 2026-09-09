@@ -64,6 +64,59 @@ subject_generation: gen1
 
 **计划已归档（Plan archived）≠ 功能已弃用（Feature deprecated）≠ 控制已废弃（Control obsolete）。** 归档只表示任务完成，不表示能力仍然存在。每条 Generation-1 能力在 2.0 必须得到明确处置。
 
+## Generation-1 开发演化特征
+
+### Git 历史观察
+
+截至 `v1.0.0`（commit `62876cd`），主线约 94 个提交，按「是否触碰该路径」统计：
+
+| 区域 | v1.0 前触碰提交数 | 占约 94 commits |
+| --- | ---: | ---: |
+| `references/` | 55 | 59% |
+| `scripts/` | 53 | 56% |
+| `SKILL.md` | 50 | 53% |
+| `tests/` | 49 | 52% |
+| `references/policies/` | 33 | 35% |
+
+这些集合**高度重叠**——一个 commit 常同时修改 SKILL.md、references/policies、references/templates、scripts/check-*.js、tests、plan、CHANGELOG——因此不能相加解释为「56% JS + 59% Markdown」的工作量比例。
+
+指令面**单文件**触碰次数（`release.md` 26、`agents-md.template.md` 24、`lifecycle.policy.md` 19、`sub-skills.md` 18；`testing.policy.md` / `security.policy.md` 几乎不增长）见 RESEARCH-0009 § Git 演进证据。目录级共变说明「Markdown 与 JS 被一起改」；文件级分布进一步说明增长的是少数核心行为容器，不是新治理原则。
+
+历史中反复出现的典型开发链：
+
+```text
+治理问题
+→ 先写 Plan
+→ 修改 SKILL / policy / template / AGENTS（自然语言治理语义）
+→ 同步多个 Agent-facing surface
+→ 发现仅靠提示词不可靠
+→ 给 check-doc-consistency.js 增加 cluster / gate（JS enforcement）
+→ tests 增加正反例（regression）
+→ audit 又发现 checker false positive / false negative / vacuous pass
+→ 继续修改 JS + tests
+```
+
+例如 2026-08-28 先有纯 `governance rule sync & meta-governance plan`，规划给 `check-doc-consistency.js` 增加 `--gate` 与 consent / protected-files cluster；下一 commit 即实现 `--gate` 并新增 8 个 tests；再下一 commit 同时改 AGENTS 原则索引、Plan Target、ADR、checker 与 regression test。Consent policy rewrite 同样：Plan → 重写 5 个 Markdown sync points → 改 consent-cluster checker → 加 tests → release。后期 `repair inert gates and align single sources of truth` 是一次典型大规模机械层修复（protected-files parser 解析不到内容、payload gate 丢失、plan-delivery 范围不足、secret scanner 对未读内容报 clean），测试从 193 增到 223。
+
+### 分析
+
+Generation-1 不是纯提示词系统，也不是纯 checker 系统。其实际演化单位通常是一个**人工同步簇**：
+
+```text
+Plan + normative Markdown + Agent-facing instruction + JS enforcement + gate routing + regression tests
+```
+
+三层作用：
+
+```text
+Plan      = 我们打算怎么改
+Markdown  = 治理规则是什么意思
+JS        = 哪部分规则要机械 enforce
+Tests     = JS enforcement 有没有坏
+```
+
+随着 1.0 发展，维护成本越来越向 **JS enforcement + regression tests** 偏移（测试数量沿 49 → 63 → 78 → … → 193 → 223 → 300+ 增长）。这些元素之间**缺少显式 machine-readable control identity**，semantics → applicability → evaluator → evidence 无结构化关系，因此多点同步、drift、checker accretion、regression burden 依赖开发者与 Agent 人工维护——这正是「冻结 Gen1 JS、重建 Rule / Applicability / Evaluator / Evidence 显式关系」（ADR-0018 Phase 3/5）的历史依据，而非纯架构审美。系统性缺陷提炼见 FINDING-0025。
+
 ## 处置语义（Disposition Vocabulary）
 
 | 处置 | 含义 |
@@ -180,7 +233,7 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 
 **关于 `core`**：Semantic owner 判定为 `core` 的 concern（consent、分级发布审查、Rule Capture、确认凭证与变更卫生、evidence tiers、portability、SSOT）当前状态是 **owner identified: core，但 physical canonical source 尚未建立**——它们现在仍以两份语义存在（repo 实现 + skill 实现）。`core` 只是 conceptual shared semantic authority（ADR-0020 § 决策 5），物理 canonical source 由 Phase 3 Governance Core 建立。因此「owner = core」不代表「canonical source physically established: yes」。
 
-| 关注项（Concern） | 语义所有者（Semantic owner） | 消费者（Consumers） | 仓库实现（Repo implementation） | Skill 实现（Skill implementation） | 拓扑（Topology） | 语义权威状态（Semantic authority） | 实现依赖（Impl dependency） | 目标处置（Target disposition） |
+| 关注项 | 语义所有者 | 消费者 | 仓库实现 | 技能实现 | 拓扑 | 语义权威状态 | 实现依赖 | 目标处置 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | INIT 确定性生成器 | skill | skill executor | — | `generate-governance.js`（SKILL-INTERNAL） | skill-only | single | none | keep |
 | 治理文件与状态管理 | skill | skill executor | — | `references/init-spec.json`（SKILL-INTERNAL） | skill-only | single | none | keep |

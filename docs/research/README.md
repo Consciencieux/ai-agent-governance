@@ -61,7 +61,7 @@ docs/research/
 ├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵（2.0 迁移基线证据）
 ├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：七类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
 ├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
-├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：薄入口、分层加载、路由、机械优先、当前/目标模型）
+├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）
 └── experiments/                     # 实验记录
 ```
 
@@ -80,7 +80,7 @@ docs/research/
 | G. 能力基线（Capability Baseline） | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + 2.0 处置（迁移 baseline evidence） |
 | H. 规划/知识控制模型（Planning / Knowledge Control Model） | `RESEARCH-0007-documentation-knowledge-architecture.md` | System Model：知识对象（七类）唯一主问题、Allowed/Forbidden、路由测试、当前/历史隔离、Agent 导航、机械 carrier |
 | I. 修复/发现/Workset 模型（Repair / Discovery / Workset Model） | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
-| J. Agent 指令架构（Agent Instruction Architecture） | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：薄入口/专能力/按需加载/职责单一/历史后置/路由明确/机械优先；当前与目标加载模型 |
+| J. Agent 指令架构（Agent Instruction Architecture） | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 

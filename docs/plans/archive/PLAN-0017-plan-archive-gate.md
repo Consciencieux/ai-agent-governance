@@ -32,7 +32,7 @@ generation: gen1
 
 每个计划的第一行 Status/状态 行必须以一个规范关键词开头；该集合是门禁的属性，三个语言树完全一致：
 
-| 规范值 | English | 简体中文 | 繁體中文 | 门禁处理 |
+| 规范值 | 英文 | 简体中文 | 繁體中文 | 门禁处理 |
 | --- | --- | --- | --- | --- |
 | design | Status: design plan, not implemented | 状态：设计计划，未实现 | 狀態：設計計劃，未實作 | 不在交付范围；永不是待归档候选 |
 | active | Status: Active | 状态：Active | 狀態：Active | 进行中（Phase 2 创建态）；不是待归档候选 |

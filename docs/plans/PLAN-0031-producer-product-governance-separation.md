@@ -105,7 +105,7 @@ Phase 3 才决定这些概念最终是否进入正式 machine-readable schema（
 
 核心产物是 **ownership map**（每行 = 一个 concern，一个 semantic owner，明确 consumers / repo impl / skill impl / topology / semantic authority / impl dependency / target disposition，详见 RESEARCH-0006）：
 
-| 关注项（Concern） | 语义所有者（Semantic owner） | 消费者（Consumers） | 仓库实现（Repo implementation） | Skill 实现（Skill implementation） | 拓扑（Topology） | 语义权威状态（Semantic authority） | 实现依赖（Impl dependency） | 目标处置（Target disposition） |
+| 关注项 | 语义所有者 | 消费者 | 仓库实现 | 技能实现 | 拓扑 | 语义权威状态 | 实现依赖 | 目标处置 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Git 写操作确认 | core | repo；governed | AGENTS.md Git Protocol | git.policy 确认范围 | shared-semantic | duplicated | none | remove dependency（消除双重权威） |
 | 密钥扫描（Secret scanning） | skill | governed；repo(手动) | AGENTS.md 手动调用 | check-secrets.js | shared-semantic | single | repo→skill · accidental | separate later |

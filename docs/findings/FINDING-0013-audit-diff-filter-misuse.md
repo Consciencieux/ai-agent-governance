@@ -2,15 +2,16 @@
 id: FINDING-0013
 status: Confirmed
 type: defect
-severity: Low
-affected: [repo]
 observed_in: gen1
-direction: G
-root_cause: R1
-github_issue: 6
 ---
 
 # FINDING-0013：审计方法缺陷：未加 --diff-filter=A 导致把「修改」误判为「新增」，制造假性数量冲突
+
+## 分类
+
+- 严重度：低
+- 影响范围：repo
+- 研究方向：G. 证据 / 研究方法论
 
 ## 观察
 
@@ -47,6 +48,10 @@ git diff --name-only --diff-filter=A 5273488..e9a1984 | Select-String 'plans/'
 ## 解决情况
 
 （待填：确认不再复现即可标记 Resolved。）
+
+## 关联
+
+- GitHub Issue #6
 
 ## 回归保护
 

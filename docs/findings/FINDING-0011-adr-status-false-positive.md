@@ -2,17 +2,16 @@
 id: FINDING-0011
 status: Confirmed
 type: defect
-severity: Low
-affected: [repo]
 observed_in: gen1
-direction: E
-root_cause: R3
-github_issue: 6
-related:
-  adrs: [ADR-0012]
 ---
 
 # FINDING-0011：check-doc-consistency 的 adr_statuses 启发式把正文里的 [Unreleased] 节名误报为「ADR 状态异常」
+
+## 分类
+
+- 严重度：低
+- 影响范围：repo
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -51,6 +50,11 @@ ADR 状态字段为 `状态：Accepted`，无异常。误报来自正文中的�
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- ADR-0012
+- GitHub Issue #6
 
 ## 回归保护
 

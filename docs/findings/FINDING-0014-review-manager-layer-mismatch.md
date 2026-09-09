@@ -2,15 +2,16 @@
 id: FINDING-0014
 status: Confirmed
 type: architecture-gap
-severity: Critical
-affected: [repo, skill]
 observed_in: gen1
-direction: G
-root_cause: R1
-github_issue: 7
 ---
 
 # FINDING-0014：review-manager 审查任务定义错了层级：实现保证（implementation assurance）≠ 架构质量（architecture quality）
+
+## 分类
+
+- 严重度：严重
+- 影响范围：repo、skill
+- 研究方向：G. 证据 / 研究方法论
 
 ## 观察
 
@@ -46,6 +47,10 @@ review-manager 对「发现具体缺陷」有效（GitLab stack template 错误�
 ## 解决情况
 
 （待填。不通过「继续给 review-manager 堆功能」解决——那会制造第二个 check-doc-consistency.js。方向：分层 + findings 先行分类 + L0–L4 finding level。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 

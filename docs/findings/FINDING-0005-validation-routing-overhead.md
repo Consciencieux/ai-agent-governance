@@ -2,15 +2,16 @@
 id: FINDING-0005
 status: Confirmed
 type: architecture-gap
-severity: High
-affected: [repo, skill]
 observed_in: gen1
-direction: D
-root_cause: R3
-github_issue: 7
 ---
 
 # FINDING-0005：验证调度失衡（Validation）：简单规则验证过重，复杂规则验证不足
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo、skill
+- 研究方向：D. 验证 / 调度效率
 
 ## 观察
 
@@ -46,6 +47,10 @@ validation 按 suite/脚本组织，而非按 invariant/impact 驱动。项目�
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 

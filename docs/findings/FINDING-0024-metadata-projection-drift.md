@@ -2,17 +2,16 @@
 id: FINDING-0024
 status: Confirmed
 type: mechanism-gap
-severity: Medium
-affected: [repo]
 observed_in: gen2
-direction: E
-root_cause: R1
-related:
-  adrs: [ADR-0009, ADR-0016]
-  research: [RESEARCH-0007]
 ---
 
 # FINDING-0024：权威元数据（canonical metadata）被多份索引/投影重复，持续漂移
+
+## 分类
+
+- 严重度：中
+- 影响范围：repo
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -48,6 +47,12 @@ R1（Policy Structure）：权威事实源（canonical source）已存在于对�
 ## 解决情况
 
 （未解决。）本次 reconciliation 修复了已发现的 drift 实例并让 schema 示例对齐权威事实源；「投影 read-only 纪律」的正式机制留待后续（可作为 Gen2 control plane 的 SSOT 约束）。
+
+## 关联
+
+- ADR-0009
+- ADR-0016
+- RESEARCH-0007
 
 ## 回归保护
 

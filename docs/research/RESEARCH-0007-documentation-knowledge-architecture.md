@@ -12,7 +12,7 @@ version: 2
 
 ## 七类知识对象
 
-| 类型 | 位置 | 唯一主问题 | Authoritative for | 可以包含 | 不应该承担 |
+| 类型 | 位置 | 唯一主问题 | 权威内容 | 可以包含 | 不应该承担 |
 | --- | --- | --- | --- | --- | --- |
 | **Product** | `docs/product/{en,zh-CN,zh-TW}/` | 用户现在应该知道什么？ | 当前产品行为与使用方法 | 当前产品行为、使用方法、用户可见事实 | 内部研究、计划、历史决策 |
 | **Research** | `docs/research/` | 这个系统现在是什么、怎么工作、如何理解？ | 系统模型、机制分类、评价框架 | 模型、机制、分类、测量、实验 | 宣布必须采用某方案（那是 ADR 的职责） |
@@ -110,7 +110,7 @@ Research / Finding
 
 ## 机械 carrier
 
-| 关系 | 机械 carrier | 状态 |
+| 关系 | 机械载体 | 状态 |
 | --- | --- | --- |
 | 路线图索引（Roadmap）↔ 计划生命周期（Plan） | `repo-tools/check-roadmap-sync.js` | 失效中（旧路径/旧 section）→ FINDING-0021 |
 | 计划状态规范（Plan status） | `scripts/check-doc-consistency.js` plan-status 集群 | Gen1 divergence（观测项） |

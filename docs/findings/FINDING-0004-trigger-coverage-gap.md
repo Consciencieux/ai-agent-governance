@@ -2,15 +2,16 @@
 id: FINDING-0004
 status: Confirmed
 type: control-gap
-severity: High
-affected: [repo, skill]
 observed_in: gen1
-direction: B
-root_cause: R2
-github_issue: 7
 ---
 
 # FINDING-0004：触发覆盖率缺口（Trigger Coverage）：门禁触发依赖 Agent 注意力
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo、skill
+- 研究方向：B. 政策 / 控制平面
 
 ## 观察
 
@@ -41,6 +42,10 @@ github_issue: 7
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 

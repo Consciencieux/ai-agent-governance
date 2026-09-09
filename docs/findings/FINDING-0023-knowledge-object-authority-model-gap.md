@@ -2,19 +2,17 @@
 id: FINDING-0023
 status: Resolved
 type: architecture-gap
-severity: Medium
-affected: [repo]
 observed_in: gen2
-direction: G
-root_cause: R1
 resolved_in: gen2
-related:
-  plans: [PLAN-0032]
-  adrs: [ADR-0016]
-  research: [RESEARCH-0007]
 ---
 
 # FINDING-0023：知识对象模型缺失「首要权威职责 + 支持性上下文」区分（primary authoritative responsibility + supporting context）
+
+## 分类
+
+- 严重度：中
+- 影响范围：repo
+- 研究方向：G. 证据 / 研究方法论
 
 ## 观察
 
@@ -45,6 +43,12 @@ R1（Policy Structure）：知识对象模型未充分结构化——缺少「au
 ## 解决情况
 
 （Resolved，2026-09-09。）RESEARCH-0007 与 ADR-0016 § 后续补充改为：**七类知识对象 + 每个对象一个 primary authoritative responsibility（决定类型）；允许必要 supporting context；只有形成独立长期知识才拆出并引用**。同时清理 RESEARCH-0008/0009 的规范泄漏（规范归 ADR-0021/0022）。
+
+## 关联
+
+- PLAN-0032
+- ADR-0016
+- RESEARCH-0007
 
 ## 回归保护
 

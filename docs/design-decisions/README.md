@@ -28,7 +28,7 @@
 | [ADR-0019](ADR-0019-generation-metadata.md) | 知识对象代际元数据 | 用 metadata 不用目录标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete |
 | [ADR-0020](ADR-0020-producer-product-governance-separation.md) | 生产者 / 产品治理分离（Producer / Product Governance Separation） | Profile 术语、共享语义单一权威 owner、separation invariants 与 CONTROL-X 契约 |
 | [ADR-0021](ADR-0021-known-issue-closure.md) | 已知问题闭包（Known-Issue Closure） | 已知问题持久捕获、显式处置、zero unaccounted 与 Discovery Ledger |
-| [ADR-0022](ADR-0022-agent-instruction-architecture.md) | Agent 指令架构（Agent Instruction Architecture） | 薄入口、专能力、渐进披露、按需加载、知识≠执行、历史后置、路由明确、机械优先 |
+| [ADR-0022](ADR-0022-agent-instruction-architecture.md) | Agent 指令架构（Agent Instruction Architecture） | 薄入口路由、叶节点单一能力、树状检索 + 图状适用 + 机械执行；机械控制不依赖入口被记住 |
 
 ## 生命周期与代际
 

@@ -2,15 +2,16 @@
 id: FINDING-0006
 status: Confirmed
 type: mechanism-gap
-severity: High
-affected: [repo, skill]
 observed_in: gen1
-direction: E
-root_cause: R3
-github_issue: 7
 ---
 
 # FINDING-0006：回归判定预言机缺口（Regression Oracle）：修复正确 ≠ 修复受保护
+
+## 分类
+
+- 严重度：高
+- 影响范围：repo、skill
+- 研究方向：E. 检查器正确性 / 回归
 
 ## 观察
 
@@ -41,6 +42,10 @@ github_issue: 7
 ## 解决情况
 
 （待填。）
+
+## 关联
+
+- GitHub Issue #7
 
 ## 回归保护
 
