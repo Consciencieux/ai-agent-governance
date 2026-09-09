@@ -5,7 +5,7 @@ generation: gen2
 
 # Producer / Product Governance Separation（TASK 计划）
 
-> **Status: Active.**（进行中。2026-09-09：完成 Profile 术语、separation invariants（ADR-0020）、cross-profile closure 契约与 ownership inventory 初稿；inventory 正在接受架构复核返工——修复混合 owner 值、补 consumers 列、拆分复合行。完成条件尚未全部达成，见「完成条件」。）
+> **Status: Completed.**（已完成，待 Release 归档。2026-09-09：Deliverable A–D 全部交付并复核——Profile 术语（ADR-0020）、4 条 separation invariants、cross-profile closure 契约（CONTROL-X 7 项，判据 + 排除说明）、ownership inventory 四正交轴收口（35 条 concern 全量分类，枚举经机械校验，各实现载体与 policy 章节逐项对照真实仓库验证）。本计划只完成 ownership/boundary 分类；**后续 physical execution separation 迁移（首项：术语门禁 extraction，见 ADR-0020 § 实施说明）不在本计划原始完成范围内**，不改变本计划历史目标。归档随 release 发生；Migration Mode 下暂不 release。）
 
 **Target: repo-infra** —— 本计划分析 repo 与 skill 两个治理域，但实际交付仅修改 repo-infra；payload migration 在 ownership model 稳定后由后续 Plan 承担。
 
@@ -71,17 +71,25 @@ dependency               一个 profile 对另一个 profile 实现的依赖
 
 ### Deliverable B — Gen1 ownership inventory
 
-基于 RESEARCH-0006 中记录的全部 Generation-1 capability entries，逐条做出 ownership 分类：
+基于 RESEARCH-0006 中记录的全部 Generation-1 capability entries，逐条做出 ownership 分类。**四个正交轴，每个轴只表达一件事**：
 
 ```text
-repo-only
-skill-only
-shared-semantic / separate implementation
-accidental coupling
-unknown
+A. Ownership topology（语义适用范围——是否跨 profile）
+   repo-only / skill-only / shared-semantic / unknown
+
+B. Semantic authority state（语义权威是否单一——SSOT 状态）
+   single / duplicated / unknown
+
+C. Implementation dependency（实现是否依赖另一 profile 的实现）
+   方向：repo→skill / skill→repo / bidirectional / none / unknown
+
+D. Target disposition（分离目标，粗粒度 outcome，不是 Rule Model schema）
+   keep / separate later / remove dependency / investigate
 ```
 
-分类以**架构分类记录**表达（允许写入 RESEARCH-0006 或专门的 separation inventory），不是正式 rule schema：
+**I3 正确理解**：shared semantic 下 repo/skill 各有独立实现**不违反 I3**；I3 禁止的是把两个实现当作同一个实现。需要消灭的是 `duplicated semantic authority`（双重语义权威）与「repo 实现直接依赖 mutable working-tree skill 实现」，不是 separate implementations。
+
+分类以**架构分类记录**表达（已写入 RESEARCH-0006 § Ownership Classification），不是正式 rule schema：
 
 ```yaml
 semantic_owner: core          # core 此处是 conceptual shared semantic authority，
@@ -93,16 +101,16 @@ skill_implementation: <载体>
 
 Phase 3 才决定这些概念最终是否进入正式 machine-readable schema（`owner` / `consumers` / `applies_when` / `evaluator` / `effect` / `boundary`）。
 
-核心产物是 **ownership map**：
+核心产物是 **ownership map**（每行 = 一个 concern，一个 semantic owner，明确 consumers / repo impl / skill impl / topology / semantic authority / impl dependency / target disposition，详见 RESEARCH-0006）：
 
-| Concern | Semantic owner | Repo implementation | Skill implementation | Shared? | Current coupling |
-| --- | --- | --- | --- | --- | --- |
-| Git consent | core? | AGENTS/repo workflow | git.policy | yes | duplicated |
-| secret scan | skill? | repo invokes skill checker | check-secrets | maybe | implicit dogfood |
-| release approval | core? | repo-workflow | payload release workflow | yes | duplicated |
-| doc parity | repo | repo-tool | — | no | repo-only |
+| Concern | Semantic owner | Consumers | Repo implementation | Skill implementation | Topology | Semantic authority | Impl dependency | Target |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Git 写操作确认 | core | repo；governed | AGENTS.md Git Protocol | git.policy 确认范围 | shared-semantic | duplicated | none | remove dependency（消除双重权威） |
+| Secret scanning | skill | governed；repo(手动) | AGENTS.md 手动调用 | check-secrets.js | shared-semantic | single | repo→skill · accidental | separate later |
+| 分级发布审查 | core | repo；governed | skill-release.md | release.md | shared-semantic | duplicated | none | remove dependency（消除双重权威） |
+| 交付锚点 | repo | repo | check-plan-delivery.js | — | repo-only | single | none | keep |
 
-先把 `what exists / who owns it / who consumes it / where implementation lives / where accidental dependency exists` 盘清楚，之后才能安全设计 Core。
+先把 `what exists / who owns it / who consumes it / where implementation lives / where accidental dependency exists / target disposition` 盘清楚，之后才能安全设计 Core。
 
 ### Deliverable C — Separation invariants
 

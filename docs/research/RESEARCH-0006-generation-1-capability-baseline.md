@@ -73,21 +73,21 @@ regression evidence
 | --- | --- | --- | --- |
 | Secret scanning | PLAN-0001 | `scripts/check-secrets.js` | Preserve |
 | Git workflow governance | PLAN-0002 | `.governance/git-policy.json` + `scripts/check-git-policy.js` | Preserve |
-| Agent activity audit | PLAN-0003 | `.governance/activity.jsonl` + drift-check（validator） | Re-evaluate |
-| Governance score / badge | PLAN-0004 | validator `--json` score + shields badge | Re-evaluate |
+| Agent activity audit | PLAN-0003 | `.governance/activity.jsonl` + drift-check（validator） | Unknown / requires investigation |
+| Governance score / badge | PLAN-0004 | validator `--json` score + shields badge | Unknown / requires investigation |
 | Doc freshness | PLAN-0005 | `scripts/check-doc-freshness.js` | Preserve behavior, replace mechanism |
 | Content consistency | PLAN-0006 | `scripts/check-doc-consistency.js`（monolith，见 FINDING-0019） | Preserve behavior, replace mechanism |
-| 多 Agent 锁 | — | `scripts/check-lock.js`（非独立计划引入） | Replace mechanism |
-| 计划归档门禁 | PLAN-0017 | plan-status / pending-archive 集群 | Re-evaluate（plan model 随 2.0 演进） |
-| 交付锚点 | PLAN-0026 | `repo-tools/check-plan-delivery.js` | Re-evaluate |
+| 多 Agent 锁 | — | `scripts/check-lock.js`（非独立计划引入） | Preserve behavior, replace mechanism |
+| 计划归档门禁 | PLAN-0017 | plan-status / pending-archive 集群 | Unknown / requires investigation（plan model 随 2.0 演进） |
+| 交付锚点 | PLAN-0026 | `repo-tools/check-plan-delivery.js` | Unknown / requires investigation |
 | 领域级测试入口 | PLAN-0030 | `tests/run-tests.js --suite` | Preserve（配合 invariant-centric testing） |
 
 ### C. 同步与一致性
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 2.0 处置 |
 | --- | --- | --- | --- |
-| 被治理项目同步组（声明层） | PLAN-0008 | `.governance/sync-rules.json` | Re-evaluate |
-| 同步组机械校验 | PLAN-0010 | `scripts/check-sync.js` | Re-evaluate |
+| 被治理项目同步组（声明层） | PLAN-0008 | `.governance/sync-rules.json` | Unknown / requires investigation |
+| 同步组机械校验 | PLAN-0010 | `scripts/check-sync.js` | Unknown / requires investigation |
 | 治理规则同步与元治理 | PLAN-0011 | `references/` ↔ 规则文件同步 | Preserve behavior, replace mechanism（→ 2.0 Profile 同步） |
 
 ### D. 审查与人类在环
@@ -107,14 +107,14 @@ regression evidence
 | Rule Capture | PLAN-0016 | `references/policies/lifecycle.policy.md` § Rule Capture | Redesign（→ Rule Registry） |
 | 反补丁式开发 / 根因修复协议 | PLAN-0018 | lifecycle.policy § 根因修复 + 失败预算 | Preserve |
 | 工程克制（机制测试） | PLAN-0019 | coding.policy § 工程克制 | Preserve |
-| 治理缺陷闭包 | PLAN-0029 | lifecycle.policy § 缺陷闭包 + sibling 搜索 | Preserve |
+| 治理缺陷闭包 | PLAN-0029 | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）+ sibling 搜索 | Preserve |
 | 变更归位与残留清理 | PLAN-0014 | change-hygiene + 残留标记检查 | Preserve |
 
 ### F. 文档与知识治理
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 2.0 处置 |
 | --- | --- | --- | --- |
-| 术语门禁 + 翻译新鲜度 | PLAN-0020 | terminology 集群 + freshness | Preserve? |
+| 术语门禁 + 翻译新鲜度 | PLAN-0020 | `repo-tools/check-terminology.js`（术语门禁，已拆出为 repo-owned）+ freshness（翻译新鲜度，仍在 INSTALLED 检查器） | Unknown / requires investigation（翻译新鲜度待查；术语门禁已 repo-owned） |
 | 验证门禁分层与证据边界 | PLAN-0021 | evidence tiers（mechanical / human-attested / unverified） | Preserve（喂入 2.0 evidence model） |
 | 内容受众与可移植性 | PLAN-0022 | 四受众 portability 规则 | Preserve（喂入 2.0 core/profile 边界） |
 | 门禁修复与单一事实源对齐 | PLAN-0023 | SSOT 纪律 + 门禁修复协议 | Preserve |
@@ -135,62 +135,81 @@ regression evidence
 
 对 Generation-1 治理做 Producer/Product ownership 分类。**每一行 = 一个 governance concern，每个 concern 只能有一个 semantic owner**；carrier 归属、implementation location、历史起源不混入 owner 字段（它们是单独的列）。依据：仓库实测——本仓库 `.governance/` 只有 release-proposal.json 与 review-evidence（后者是审查证据产物，不是审查机制实现）；package.json 直接运行 `scripts/check-doc-consistency.js` 与 `scripts/check-doc-freshness.js`（INSTALLED 载体）。术语与不变量见 ADR-0020。
 
-Ownership 分类枚举（**严格五值，不得出现混合值**）：
+四个正交轴，**每个轴只表达一件事**，互不混入：
 
 ```text
-repo-only                       只属于本仓库
-skill-only                      只属于分发给被治理项目的治理
-shared-semantic / separate impl 语义共享，repo 与 skill 各有独立实现（双实现）
-accidental coupling             repo 直接消费 skill 载体（单载体双域）或语义被复制
-unknown                         待调查
+A. Ownership topology（语义适用范围——该 concern 是否跨 profile）
+   repo-only / skill-only / shared-semantic / unknown
+
+B. Semantic authority state（语义权威是否单一——SSOT 状态）
+   single / duplicated / unknown
+
+C. Implementation dependency（实现是否依赖另一 profile 的实现）
+   方向：repo→skill / skill→repo / bidirectional / none / unknown
+
+D. Target disposition（分离目标——粗粒度 outcome，不是 Rule Model schema）
+   keep / separate later / remove dependency / investigate
 ```
 
-Dependency 分类（每行单独标注方向 + 四值之一）：
+**I3 的正确理解**（ADR-0020）：`Shared semantics does not imply shared implementation` 禁止的是**把 repo/skill 两个实现当作同一个实现**（因语义共享而视为同一实现）；两个 profile 各有独立实现本身**不违反 I3**。需要消灭的不是 separate implementations，而是：
 
 ```text
-方向：repo→skill / skill→repo / 双向 / —
-分级：intentional（有意）/ accidental（无意）/ must-remove（必须移除）/ requires-investigation（待查）
+duplicated semantic authority —— 同一语义存在两份权威（AGENTS.md 与 git.policy 各写一套）
+repo implementation 直接依赖 mutable working-tree skill implementation
 ```
 
-| Concern | Semantic owner | Consumers | Repo implementation | Skill implementation | Ownership class | Dependency |
-| --- | --- | --- | --- | --- | --- | --- |
-| INIT 确定性生成器 | skill | skill executor | — | `generate-governance.js`（SKILL-INTERNAL） | skill-only | — |
-| 治理文件与状态管理 | skill | skill executor | — | `references/init-spec.json`（SKILL-INTERNAL） | skill-only | — |
-| 载荷治理教训（INSTALLED rules） | skill | governed projects | — | `docs/rules/*`（INSTALLED） | skill-only | —（历史起源是本仓库经验，写入 note，不影响 owner） |
-| Secret scanning | skill | governed projects；repo（手动预提交） | AGENTS.md:153 手动调用 `scripts/check-secrets.js` | `scripts/check-secrets.js`（INSTALLED） | accidental coupling | repo→skill · accidental |
-| Git 分支与直推保护 | skill | governed projects | — | `.governance/git-policy.json` + `scripts/check-git-policy.js` | skill-only | — |
-| Agent activity audit | skill | governed projects | — | `.governance/activity.jsonl` + validator drift-check | skill-only | — |
-| Governance score / badge | skill | governed projects | — | validator `--json` score | skill-only | — |
-| Repo 文档新鲜度 | repo | repo | 直接运行 `scripts/check-doc-freshness.js`（INSTALLED） | — | accidental coupling | repo→skill · accidental（repo-only concern 用 skill 载体实现） |
-| 被治理项目文档新鲜度 | skill | governed projects | — | `scripts/check-doc-freshness.js` | skill-only | — |
-| Repo 文档一致性 | repo | repo | 直接运行 `scripts/check-doc-consistency.js`（INSTALLED） | — | accidental coupling | repo→skill · accidental（单载体双域；monolith 见 FINDING-0019） |
-| 被治理项目内容一致性 | skill | governed projects | — | `scripts/check-doc-consistency.js` | skill-only | — |
-| 多 Agent 锁 | skill | governed projects | —（本仓库是否使用待查） | `scripts/check-lock.js`（INSTALLED） | unknown | requires-investigation |
-| 计划归档门禁（本仓库） | repo | repo | `check-doc-consistency.js` plan-status 集群（共享载体） | — | accidental coupling | repo→skill · accidental |
-| 交付锚点 | repo | repo | `repo-tools/check-plan-delivery.js`（REPO-ONLY） | — | repo-only | — |
-| 领域级测试入口 | repo | repo | `tests/run-tests.js --suite` | — | repo-only | — |
-| 被治理项目同步组（声明层） | skill | governed projects | — | `.governance/sync-rules.json` | skill-only | — |
-| 同步组机械校验 | skill | governed projects | — | `scripts/check-sync.js`（INSTALLED） | skill-only | — |
-| 治理规则同步与元治理 | skill | governed projects | — | lifecycle.policy § Rule Capture + 规则同步 | skill-only | — |
-| Review mechanism（review-manager） | skill | governed projects | —（`.governance/review-evidence-*.md` 是**证据产物**，非机制实现） | sub-skills 模板 review-manager | skill-only | — |
-| 分级发布审查（release risk tiering） | core | repo；governed projects | `repo-workflows/skill-release.md` | `references/workflows/release.md`（SKILL-INTERNAL） | shared-semantic / separate impl | 双向 · must-remove（同语义两实现，I3） |
-| 审查后积压修复 | repo | repo | `check-doc-consistency.js` broken-links 集群（共享载体） | — | accidental coupling | repo→skill · accidental |
-| Git 写操作确认（consent） | core | repo；governed projects | AGENTS.md § Git Operation Safety Protocol | git.policy.md § 确认范围 + release-manager | shared-semantic / separate impl | 双向 · must-remove（I3，最危险项） |
-| 确认凭证与变更卫生 | core | repo；governed projects | AGENTS.md 影响面对照 | `stagedDigest` + `.governance/change-hygiene.json` | shared-semantic / separate impl | 双向 · must-remove（I3） |
-| Rule Capture | skill | governed projects；repo | AGENTS.md Rule Capture 条文 | lifecycle.policy § Rule Capture | shared-semantic / separate impl | 双向 · must-remove（同语义两实现，I3） |
-| 根因修复协议与失败预算 | skill | governed projects；repo | AGENTS.md 原则索引指针 → lifecycle.policy § 根因修复 | lifecycle.policy § 根因修复（INSTALLED） | accidental coupling | 双向 · intentional（repo 遵循自身规则；单权威载体，物理未复制，不违反 I4） |
-| 工程克制（机制测试） | skill | governed projects；repo | AGENTS.md 指针 → coding.policy § 工程克制 | coding.policy § 工程克制（INSTALLED） | accidental coupling | 双向 · intentional |
-| 治理缺陷闭包 | skill | governed projects；repo | AGENTS.md 指针 → lifecycle.policy § 缺陷闭包 | lifecycle.policy § 缺陷闭包（INSTALLED） | accidental coupling | 双向 · intentional |
-| 变更归位与残留清理 | skill | governed projects；repo | AGENTS.md 变更归位 + hygiene 对照 | lifecycle.policy § 变更归位（INSTALLED） | accidental coupling | 双向 · intentional |
-| 术语门禁 | repo | repo | `docs/glossary.md` + terminology 集群（共享载体） | —（无 glossary 的被治理项目 no-op） | accidental coupling | repo→skill · requires-investigation（实际被治理项目行为待查） |
-| 翻译新鲜度 | repo | repo | `check-doc-freshness.js` 翻译对推导（共享载体） | — | accidental coupling | repo→skill · accidental |
-| 验证门禁分层（evidence tiers） | core | repo；governed projects | AGENTS.md 证据等级表 | testing.policy 证据等级（INSTALLED） | shared-semantic / separate impl | 双向 · must-remove（I3） |
-| 内容受众与可移植性 | core | repo；governed projects | AGENTS.md Content portability | 归档规则四受众（INSTALLED） | shared-semantic / separate impl | 双向 · must-remove（I3） |
-| SSOT 对齐（门禁修复） | core | repo；governed projects | AGENTS.md SSOT 纪律 | 规则文件 + 门禁修复协议（INSTALLED） | shared-semantic / separate impl | 双向 · must-remove（I3） |
-| 仓库边界拆分（三角色） | repo | repo；skill executor | `docs/product/en/architecture.md` + `check-role-completeness.js`（REPO-ONLY） | `init-spec.json` distribution invariants | shared-semantic / separate impl | 双向 · intentional（分发边界设计即跨域） |
-| Skill lifecycle management | skill | governed projects | — | 子技能生命周期 | skill-only | — |
+因此 **Semantic authority state** 与 **Implementation dependency** 是两个不同的问题：consent 这类行是 `authority: duplicated`（两侧实现互不调用也仍然有问题）；Repo 文档一致性是 `impl dependency: repo→skill`（repo 直接跑 skill checker，即使语义单一）。
 
-**需要 CONTROL-X 的 shared controls**（即 shared-semantic / separate impl 且双域都有实现的 7 项；正式实现留给 Rule Model 阶段，见 ADR-0020 § 决策 4）：
+**关于 `core`**：Semantic owner 判定为 `core` 的 concern（consent、分级发布审查、Rule Capture、确认凭证与变更卫生、evidence tiers、portability、SSOT）当前状态是 **owner identified: core，但 physical canonical source 尚未建立**——它们现在仍以两份语义存在（repo 实现 + skill 实现）。`core` 只是 conceptual shared semantic authority（ADR-0020 § 决策 5），物理 canonical source 由 Phase 3 Governance Core 建立。因此「owner = core」不代表「canonical source physically established: yes」。
+
+| Concern | Semantic owner | Consumers | Repo implementation | Skill implementation | Topology | Semantic authority | Impl dependency | Target |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| INIT 确定性生成器 | skill | skill executor | — | `generate-governance.js`（SKILL-INTERNAL） | skill-only | single | none | keep |
+| 治理文件与状态管理 | skill | skill executor | — | `references/init-spec.json`（SKILL-INTERNAL） | skill-only | single | none | keep |
+| 载荷治理教训（INSTALLED rules） | skill | governed projects | — | `docs/rules/*`（INSTALLED） | skill-only | single | none | keep |
+| Secret scanning | skill | governed projects；repo（手动预提交） | AGENTS.md:153 手动调用 `scripts/check-secrets.js` | `scripts/check-secrets.js`（INSTALLED） | shared-semantic | single | repo→skill · accidental | separate later |
+| Git 分支与直推保护 | skill | governed projects | —（本仓库无 git-policy.json，AGENTS.md 的 Git 协议是 consent 非分支政策） | `.governance/git-policy.json` + `scripts/check-git-policy.js` | skill-only | single | none | keep |
+| Agent activity audit | skill | governed projects | — | `.governance/activity.jsonl` + validator drift-check | skill-only | single | none | keep |
+| Governance score / badge | skill | governed projects | — | validator `--json` score | skill-only | single | none | keep |
+| Repo 文档新鲜度 | repo | repo | 直接运行 `scripts/check-doc-freshness.js`（INSTALLED） | — | repo-only | single | repo→skill · accidental | separate later |
+| 被治理项目文档新鲜度 | skill | governed projects | — | `scripts/check-doc-freshness.js` | skill-only | single | none | keep |
+| Repo 文档一致性 | repo | repo | 直接运行 `scripts/check-doc-consistency.js`（INSTALLED） | — | repo-only | single | repo→skill · accidental（monolith 见 FINDING-0019） | separate later |
+| 被治理项目内容一致性 | skill | governed projects | — | `scripts/check-doc-consistency.js` | skill-only | single | none | keep |
+| 多 Agent 锁 | skill | governed projects | —（本仓库是否使用待查） | `scripts/check-lock.js`（INSTALLED） | unknown | unknown | unknown | investigate |
+| 计划归档门禁（本仓库） | repo | repo | `check-doc-consistency.js` plan-status 集群（共享载体） | — | repo-only | single | repo→skill · accidental | separate later |
+| 交付锚点 | repo | repo | `repo-tools/check-plan-delivery.js`（REPO-ONLY） | — | repo-only | single | none | keep |
+| 领域级测试入口 | repo | repo | `tests/run-tests.js --suite` | — | repo-only | single | none | keep |
+| 被治理项目同步组（声明层） | skill | governed projects | — | `.governance/sync-rules.json` | skill-only | single | none | keep |
+| 同步组机械校验 | skill | governed projects | — | `scripts/check-sync.js`（INSTALLED） | skill-only | single | none | keep |
+| 治理规则同步与元治理 | skill | governed projects | — | lifecycle.policy § Rule Capture + 规则同步 | skill-only | single | none | keep |
+| Review mechanism（review-manager） | skill | governed projects | —（`.governance/review-evidence-*.md` 是**证据产物**，非机制实现） | sub-skills 模板 review-manager | skill-only | single | none | keep |
+| 分级发布审查（release risk tiering） | core | repo；governed projects | `repo-workflows/skill-release.md` | `references/workflows/release.md`（SKILL-INTERNAL） | shared-semantic | duplicated | none | remove dependency（消除双重权威，实现保持分离） |
+| 审查后积压修复 | repo | repo | `check-doc-consistency.js` broken-links 集群（共享载体） | — | repo-only | single | repo→skill · accidental | separate later |
+| Git 写操作确认（consent） | core | repo；governed projects | AGENTS.md § Git Operation Safety Protocol | git.policy.md § 确认范围 + release-manager | shared-semantic | duplicated | none | remove dependency（消除双重权威；最危险项） |
+| 确认凭证与变更卫生 | core | repo；governed projects | AGENTS.md 影响面对照 | `stagedDigest` + `.governance/change-hygiene.json` | shared-semantic | duplicated | none | remove dependency |
+| Rule Capture | core | repo；governed projects | AGENTS.md Rule Capture 条文 | lifecycle.policy § Rule Capture | shared-semantic | duplicated | none | remove dependency |
+| 根因修复协议与失败预算 | skill | governed projects；repo | AGENTS.md 原则索引指针 → lifecycle.policy § 根因修复 | lifecycle.policy § 根因修复（INSTALLED） | shared-semantic | single | repo→skill · intentional（repo 消费 skill-owned canonical carrier） | keep |
+| 工程克制（机制测试） | skill | governed projects；repo | AGENTS.md 指针 → coding.policy § 工程克制 | coding.policy § 工程克制（INSTALLED） | shared-semantic | single | repo→skill · intentional | keep |
+| 治理缺陷闭包 | skill | governed projects；repo | AGENTS.md 指针 → lifecycle.policy § 根因修复协议与失败预算（同类实例闭包） | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）（INSTALLED） | shared-semantic | single | repo→skill · intentional | keep |
+| 变更归位与残留清理 | skill | governed projects；repo | AGENTS.md 变更归位 + hygiene 对照 | lifecycle.policy § 变更归位（INSTALLED） | shared-semantic | single | repo→skill · intentional | keep |
+| 术语门禁 | repo | repo | `repo-tools/check-terminology.js`（REPO-ONLY，已从 INSTALLED 检查器拆出） | —（已移除；无 glossary 的被治理项目本就不适用） | repo-only | single | none | keep |
+| 翻译新鲜度 | repo | repo | `check-doc-freshness.js` 翻译对推导（共享载体） | — | repo-only | single | repo→skill · accidental | separate later |
+| 验证门禁分层（evidence tiers） | core | repo；governed projects | AGENTS.md 证据等级表 | testing.policy 证据等级（INSTALLED） | shared-semantic | duplicated | none | remove dependency |
+| 内容受众与可移植性 | core | repo；governed projects | AGENTS.md Content portability | 归档规则四受众（INSTALLED） | shared-semantic | duplicated | none | remove dependency |
+| SSOT 对齐（门禁修复） | core | repo；governed projects | AGENTS.md SSOT 纪律 | 规则文件 + 门禁修复协议（INSTALLED） | shared-semantic | duplicated | none | remove dependency |
+| 仓库边界拆分（三角色） | repo | repo；skill executor | `docs/product/en/architecture.md` + `check-role-completeness.js`（REPO-ONLY） | `init-spec.json` distribution invariants | shared-semantic | single（repo 定义权威，skill executor 消费声明） | skill→repo · intentional | keep |
+| Skill lifecycle management | skill | governed projects | — | 子技能生命周期 | skill-only | single | none | keep |
+
+**需要 CONTROL-X 的 shared controls**（准入判据，不是「owner 是否 core」）：
+
+```text
+shared semantic
++ repo 有独立 evaluator/implementation
++ skill 有独立 evaluator/implementation
++ 同一 negative oracle 对两侧都成立
+```
+
+符合判据的 7 项（正式实现留给 Rule Model 阶段，见 ADR-0020 § 决策 4）：
 
 ```text
 1. Git 写操作确认（consent）
@@ -203,6 +222,8 @@ Dependency 分类（每行单独标注方向 + 四值之一）：
 ```
 
 每条 future CONTROL-X 的 canonical negative fixture 必须同时打 repo 与 skill 两个实现，两侧都必须 fail。
+
+**排除说明**：仓库边界拆分（三角色）拓扑为 `shared-semantic`，但**不建 CONTROL-X**——skill 侧是 `init-spec.json` 的 distribution invariants（声明，不是独立 evaluator），role-completeness gate 是 REPO-ONLY；它不是「双独立 evaluator 的可执行 control」，故按上述判据排除。
 
 ## 与现有测试的关系
 
