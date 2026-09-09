@@ -1,14 +1,14 @@
 ---
 id: RESEARCH-0009
 status: Active
-version: 3
+version: 4
 ---
 
 # RESEARCH-0009：Agent 指令架构
 
-本 RESEARCH 是 **系统模型（System Model）**：描述 Agent 指令如何组织、加载与执行。它回答「Generation-1 的 instruction topology 实际是什么、它如何演化、为什么会产生注意力负担、目标形态长什么样」。
+本 RESEARCH 是 **系统模型（System Model）**：描述 Agent 指令如何组织、加载与执行。它回答「Generation-1 的 instruction topology 实际是什么、它如何演化、为什么会产生注意力负担、Accepted 目标形态在模型上长什么样、怎么评价」。
 
-它是**描述层**，不规定「必须怎么做」。规范决策在 ADR-0022。已观察到的失效由 `docs/findings/` 记录。本版补入 Generation-1 指令拓扑与演进证据；目录重排属于后续阶段，本模型不授权移动 `references/`。
+它是**描述层**，不规定「必须怎么做」。规范决策（薄入口、树状检索、图状适用、机械优先、lifecycle 非政策仓库）在 ADR-0022。已观察到的失效由 `docs/findings/` 记录（FINDING-0015 / 0025 / 0026）。目录重排属于后续阶段，本模型不授权移动 `references/`。
 
 ## 三条校正
 
@@ -314,9 +314,11 @@ Audit 又不断发现漏接 / 假绿 / 子集覆盖 / stale projection
 
 1.0 多轮修改仍然不稳定，并不是因为「团队不会写规则」。它用文档体系承担了应该由控制平面承担的路由和适用性，用大量独立 JS 补机械执行，最后形成两个相互人工同步的系统：Instruction system 与 Checker system。中间没有正式 Control identity。这才是根问题。
 
-## 目标拓扑：树状检索 + 图状适用关系 + 机械执行
+## ADR-0022 接受的目标形态（模型描述）
 
-对 Agent 的检索体验应该是树；对规则适用关系实际上应该是图。例如 `security` 同时适用于 Implement、Validate、Git、Release。若强行纯树：
+下列拓扑是对 **ADR-0022 Accepted decision** 的模型描述，不是本 RESEARCH 的新选择。规范「必须采用」仍只在 ADR-0022。
+
+在该 Accepted decision 下，对 Agent 的检索体验是树，对规则适用关系是图。例如 `security` 同时适用于 Implement、Validate、Git、Release。若强行纯树：
 
 ```text
 Lifecycle
@@ -324,9 +326,9 @@ Lifecycle
     └── Security
 ```
 
-则 Implement / Release 又得复制一遍 Security。这又回到 Generation-1。
+则 Implement / Release 又得复制一遍 Security。这是 Generation-1 在纯树下会复发的失效，用来解释 ADR-0022 为何同时要求图状适用。
 
-更好的模型是两层。
+在该 Accepted decision 下，目标 topology 表现为两层。
 
 导航层（树，给 Agent 检索）：
 
@@ -358,7 +360,7 @@ Capabilities
 └── governance-maintenance/  rule-capture · drift · audit
 ```
 
-入口只做路由，不写完整内容：
+ADR-0022 规定入口只承担路由，不承载规则正文。对应的加载链可描述为：
 
 ```text
 Thin Entry
@@ -378,11 +380,11 @@ Evidence ──────────────┘
 Decision
 ```
 
-有机械 primitive 的先执行；需要 judgment 的部分再给 Agent。这与 ADR-0021 / Roadmap 的 Context Detector + Dispatcher 方向一致，只是把 instruction 侧的检索形态说清楚：树负责找到能力，图负责回答「当前上下文还适用哪些横切控制」，机械层不依赖入口被记住。
+有机械 primitive 的先执行；需要 judgment 的部分再给 Agent。这是把 ADR-0022 的机械优先，在 instruction 侧描述为：树负责找到能力，图负责回答「当前上下文还适用哪些横切控制」，机械层不依赖入口被记住。
 
-## lifecycle 应退回编排骨架
+## ADR-0022 对 lifecycle 目标职责的含义
 
-目标形态里，lifecycle 只保留 lifecycle 本身，例如：
+ADR-0022 接受 lifecycle 的目标职责是编排骨架，不是政策仓库。在该约束下，模型上 lifecycle 只保留 lifecycle 本身，例如：
 
 ```text
 Task Lifecycle
@@ -394,13 +396,13 @@ Synchronize → dispatch knowledge / sync controls
 Report      → evidence aggregation
 ```
 
-可能几页就够。Root Cause Repair、Rule Capture、Git Write、Evidence、Release、Security、CHANGELOG、Review 全部成为独立 capability。lifecycle 重新成为 **orchestration skeleton**，而不是 **policy warehouse**。
+Root Cause Repair、Rule Capture、Git Write、Evidence、Release、Security、CHANGELOG、Review 在该目标形态下是独立 capability，而不是 lifecycle Phase 的内嵌章节。把 lifecycle 拆成许多文件、却仍要求 Agent 自己记得何时读取，只是换了一种单体（FINDING-0015）。
 
-这是目标描述，不是当前执行授权。现在把 lifecycle 拆成 20 个 md、却仍要求 Agent 自己记得何时读取，只是换了一种单体。
+## ADR-0022 下目标 topology 的一种可描述形态
 
-## 长期 `references/` 布局（描述目标，非当前执行）
+下列目录树是 **Accepted 目标形态的一种模型描述**，不是目录授权，也不是 Phase 2 执行计划。当前物理树仍以 `init-spec.json` 为准。
 
-长期更合理的语义分类是：
+在 ADR-0022（入口只路由、叶节点单能力、`templates/` 按生成方式分类不可长期接受）之下，目标语义分类可以表现为：
 
 ```text
 references/
@@ -411,17 +413,17 @@ references/
 └── manifest / registry   # 薄索引，不是 30 KB 聚合正文
 ```
 
-若继续采用 sub-skill 机制，authoring source 应类似 `capabilities/<name>/SKILL.md`，外加很薄的 registry。`sub-skills.md` 不应继续作为 30 KB 聚合文件存在。
+若 2.0 仍采用 sub-skill 机制，authoring 与聚合源如何拆开由后续 ADR / Plan 决定；FINDING-0026 只要求指令源与 boilerplate 责任可分。`sub-skills.md` 作为 30 KB 聚合正文是当前失效形态的证据，不是本 RESEARCH 对替代结构的指定。
 
-**本阶段不移动目录。** 上述布局是设计输入，供 Phase 4 及之后的 disposition 使用；当前仍以 `init-spec.json` 与现有物理树为准。
+**本阶段不移动目录。**
 
-## 三条约束（设计输入）
+## ADR-0022 已接受的三条约束（如何封住当前失效）
 
-「一个入口 → 检索能力 → 按需加载」不是文档整理优化，而是 Generation-2 instruction architecture 的核心设计输入。封住 Generation-1 主要缺陷的三句话：
+ADR-0022 将「一个入口 → 检索能力 → 按需加载」收紧为三条约束。本 RESEARCH 只描述它们如何封住 Generation-1 失效模式：
 
 > **入口负责路由，不负责承载规则；叶节点负责单一能力，不负责全局编排；机械控制不依赖入口被 Agent 记住。**
 
-规范层由 ADR-0022 的后续修正收紧；本 RESEARCH 只描述为何这三句能封住当前失效模式。
+规范层只在 ADR-0022；本段不重复宣布 MUST。
 
 ## 可评价维度
 
@@ -437,17 +439,16 @@ Instruction 投影与 Checker 投影是否仍靠人工同步
 
 ## 与零注意力 / Finding / ADR 的关系
 
-- 规范：ADR-0022（薄入口、专能力、按需加载、路由明确、机械优先；后续修正收紧为树 + 图 + 机械，以及上面三条约束）
-- 注意力负担：FINDING-0015（本拓扑与演进证据是其系统证据）
+- 规范：ADR-0022
+- 注意力负担：FINDING-0015
 - 缺控制平面 / 缺 Control identity：FINDING-0002、FINDING-0025
 - `templates/` 责任边界：FINDING-0026
 - 声明 ≠ 执行、触发靠 Agent：FINDING-0003、FINDING-0004
-- 零注意力方向：ADR-0021、FINDING-0022；演进对应 Roadmap Phase 5（Context Detector + Dispatcher）
+- 零注意力方向：ADR-0021、FINDING-0022；Roadmap Phase 5 是投影
 - 机械基底冻结：ADR-0014、RESEARCH-0006。本模型不把 Gen2 语义编码进 Gen1 checker。
 
 ## 维护规则
 
 - 本模型是活文档：随指令架构落地更新当前拓扑与失效模式。
-- 只描述系统（规范进 ADR-0022，失效进 Finding）。
-- 目录重排、lifecycle 拆分、sub-skill 拆源，必须伴随显式路由与 applicability 图；禁止「只拆文件」。
+- 只描述系统（规范进 ADR-0022，失效进 Finding）。正文不得自行宣布 MUST / 目录必须怎么搬。
 - 不在本 RESEARCH 写入 Rule Registry / Dispatcher schema（那是 Phase 3 的设计面）。

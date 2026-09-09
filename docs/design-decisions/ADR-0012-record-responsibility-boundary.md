@@ -40,7 +40,7 @@ CHANGELOG 的结构契约（版本节形状、分类标题唯一性、空行规�
 
 **（Narrow amendment，2026-09-09：本决策部分被「后续补充」supersede——结构契约的权威仍为 lifecycle.policy（repo 与 governed project 共享格式语义）；repo 自身的 accession / `[Unreleased]` / released-section 执行政策改由 Repo Profile 拥有的 repo-domain 文档承担（AGENTS.md 为指针，详细政策按 ADR-0022 下沉到 repo-domain execution doc）；shared semantics ownership 的正式建模留 Phase 3。）**
 
-**4. 历史记录逐步迁移，不批量重写。**
+**4. 历史记录逐步迁移，不批量重写。**（2026-09-10 修正第 6 条收紧：`[1.0.2]` 及更早 released 节不再做「按现行内容边界抽查迁移」；该条只约束 `[Unreleased]` 与此后新发布节。）
 
 - 最新版本节与 `[Unreleased]`：适用完整边界，这也是机械门禁唯一覆盖的范围。
 - 近期已发布版本：按内容边界抽查——明显含根因分析、方案争论、验证日志的单独处理，不设字符数硬阈值。
@@ -72,6 +72,19 @@ YES → candidate；NO → normally no CHANGELOG entry
 
 **5. Repo CHANGELOG 政策由 Repo Profile 拥有。** 原决策把 CHANGELOG 格式与内容规则权威指向 INSTALLED `references/policies/lifecycle.policy.md`（Skill payload）。按 ADR-0020（shared semantics ≠ shared authority）：repo 与 governed project 可共享「CHANGELOG 记录已交付变更而非验证叙事」的语义，但 repo 自身 CHANGELOG 的执行政策（准入、[Unreleased]、released-section）由 Repo Profile 拥有，落点为 **repo-domain execution document**（`repo-workflows/changelog-policy.md`，REPO-ONLY）；`AGENTS.md` 只放路由指针（按 ADR-0022 薄入口）；payload `lifecycle.policy.md` 继续权威于 governed projects 的 CHANGELOG 格式契约（repo 作为共享格式语义的 consumer 遵循）。
 
+## 后续修正（2026-09-10）：准入按影响、checkpoint 必须对账
+
+本修正是对「后续补充」决策 2 / 3 执行形态的 **Narrow amendment**。上方准入测试与「checkpoint 时统一整理」保留为历史；自本修正起，repo CHANGELOG 执行政策补充并收紧尚未覆盖的部分。全文执行细则在 `repo-workflows/changelog-policy.md`。
+
+1. **判断依据是影响，不是文件类型。** 「doc-only → 无条目」只覆盖纯呈现（typo / 措辞 / 格式）。文档变更若改变公开导航、贡献者工作流、parity 映射、仓库入口或受支持行为，按普通准入评估。
+2. **受众测试。** 只有 ADR / Plan / Research 作者关心 → 不进；使用者 / 贡献者 / 维护者需要知道才能正确使用或维护新版本 → candidate。
+3. **写入可推迟，对账不可推迟。** Migration 日常 commit 可以不写 CHANGELOG；Phase checkpoint 关闭、改变了可观察行为的 Active Plan 到达 Completed、migration 分支 merge/promote、或 release composition 开始时，必须按五问清单对账（行为 / 工作流 / 公开路径 / 受支持能力 / 发布行为）：每项要么已在 `[Unreleased]` 中表示，要么当时显式 no-entry。
+4. **一条 entry = 一个可独立理解的受众效果。** 同一施工项目不是同一 CHANGELOG change；受众、迁移影响或可独立回滚不同则拆条。
+5. **Release composition 按 release boundary 重组。** `[Unreleased]` 在长期 migration 上不等于最终 2.0 投影；仅存在于迁移过程、未进入 release boundary 的中间机制，可在 composition 时从将发布节省略——不是改写 Released 历史。
+6. **已发布节不按新准入回写。** 新政策约束未来写法。`[1.0.2]` 及更早的 released 节保持原貌（Legacy CHANGELOG semantics）；不得为「变短 / 符合今天知识架构」再做全量精简。v0.15.0 一次性获批 trim 与 FINDING-0009（`60185ef` 改写 `[1.0.0]`）已证明：未经同等明确授权的历史改写会破坏 provenance。细则在 `repo-workflows/changelog-policy.md` § Released section。
+
+五条不变量（C1–C5）与核心句「写成可以推迟，对账不能推迟」以 `repo-workflows/changelog-policy.md` 为执行权威。
+
 ## 后果
 
 - 正面：禁令有了去处，遵守成本下降；变更记录回到可快速扫读的密度；根因与决策各归其位，需要时找得到。
@@ -81,5 +94,6 @@ YES → candidate；NO → normally no CHANGELOG entry
 ## 参考
 
 - CHANGELOG 结构契约与内容边界条文：`references/policies/lifecycle.policy.md`
+- Repo CHANGELOG 执行政策（C1–C5）：`repo-workflows/changelog-policy.md`
 - 索引与事实源的边界：ADR-0009
 - 入口层文档不作事实库：ADR-0010

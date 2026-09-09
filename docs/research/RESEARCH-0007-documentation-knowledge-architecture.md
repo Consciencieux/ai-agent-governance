@@ -1,14 +1,14 @@
 ---
 id: RESEARCH-0007
 status: Active
-version: 2
+version: 4
 ---
 
 # RESEARCH-0007：文档知识架构 / 知识对象模型
 
 本 RESEARCH 是 **System Model**：完整描述 `docs/` 作为一套**知识对象模型**如何运作——七类知识对象各是什么、每个对象的唯一主问题与「必须承担 / 禁止承担」、内容如何路由、当前知识与历史知识如何隔离、对象之间如何通过链接关联。它回答「这个知识系统现在是怎么工作的」。
 
-它是**描述层**；「必须遵守的规范决策」是**规范层**，归各域 ADR（ADR-0016 目的优先分类、ADR-0015 Roadmap 权威、ADR-0018 阶段执行、ADR-0019 归档/代际）。它也是**中立系统描述**；已观察到的失效由 `docs/findings/` 记录（FINDING-0020 / 0021）。
+它是**描述层**；「必须遵守的规范决策」是**规范层**，归各域 ADR（ADR-0016 目的优先分类与权威矩阵、ADR-0015 Roadmap 权威、ADR-0018 阶段执行、ADR-0019 归档/代际）。它也是**中立系统描述**；已观察到的失效由 `docs/findings/` 记录（FINDING-0020 / 0021 / 0023 / 0027）。正文级「可权威 / 仅支持 / 不得权威」以 ADR-0016 2026-09-10 修正的矩阵为规范，下表只说明每类对象回答什么问题。
 
 ## 七类知识对象
 
@@ -21,6 +21,8 @@ version: 2
 | **Roadmap** | `docs/plans/roadmap/` | 项目未来往哪里走、当前在哪个阶段？ | 当前战略投影与里程碑投影（索引） | milestones、phases（投影）、outcomes、当前阶段 | 详细设计、完整历史、事实复制；**裁决阶段顺序**（权威归 ADR-0018） |
 | **Plan** | `docs/plans/` | 当前这项工作怎么做、怎么验收？ | 当前任务的执行合同 | scope、steps、risks、validation、completion criteria | 重新定义长期架构（那是 ADR 的职责） |
 | **Glossary** | `docs/glossary.md` | 术语到底叫什么？ | canonical terminology | 术语定义（三语对照） | 业务规则和架构决策 |
+
+写正文时以 ADR-0016 三列权威矩阵为准。上表只映射主问题与目录，不是操作性合同。
 
 **Archive Plan 不是独立知识类型，是 Plan 的生命周期状态。** `docs/plans/archive/` 中的 Plan 回答「这项工作当时最终做成了什么」，是 Plan 的 Archived 状态（历史执行证据），类型仍为 Plan（目录决定类型，状态决定生命周期，R2）。同理，Active Plan / Archived Plan 是同一类型的两个生命周期阶段，不是 type A / type B。
 
@@ -68,7 +70,53 @@ Product  → 若成为分发 Skill 的用户可见能力，再写使用说明
 Research → informs → Finding → motivates → ADR → constrains → Roadmap → sequences → Plan → implements → Code / Tests
 ```
 
-**R3 · "must not" 比 "is" 更重要。** 每种类型都有 `不应该承担` 列；边界靠禁止项锚定，不靠描述。长期最容易漂移的五个位置：Research 写 recommendation、Finding 写 solution、ADR 带 implementation checklist、Roadmap 保存 completed feature inventory、Plan 顺便改 architecture decision——全部禁止。
+**R3 · "must not" 比 "is" 更重要。** 每种类型都有 `不应该承担` 列；边界靠禁止项锚定，不靠描述。长期最容易漂移的不只是「放错文件夹」，而是正文向邻近类型渗漏（Research 70% 描述 + 30% 决策；Finding 70% 问题 + 30% 方案；Plan 70% 施工 + 30% 长期规范）。五个典型位置：Research 写 recommendation 或自行裁决 disposition、Finding 写 solution / 指定实现、ADR 带 implementation checklist、Roadmap 保存 completed feature inventory、Plan 顺便改 architecture decision——全部禁止。
+
+操作性合同（可权威 / 仅支持 / 不得权威）由 ADR-0016 权威矩阵规定，本研究不复制该表。Research 可以保存 disposition evidence（待决问题、Accepted ADR 约束），不能自己宣布 MUST / chosen architecture / final disposition。Finding 的关闭条件描述 failure mode 消失后的 invariant，不指定详细 implementation。Plan 在已有 ADR 约束下安排当前施工，不重新定义长期架构。
+
+## 设计缺陷与执行缺陷（FINDING-0027）
+
+目录级路由解决「文件放哪」；FINDING-0023 解决「一段 supporting 要不要拆文件」。仍不够写正文：作者会问 Research 能不能写目标架构、Finding 关闭条件能不能点名 Registry、capability 表能不能填 Preserve/Redesign。这些问题没有操作化答案时，邻接类型之间的自由解释会把第二种权威写进正文。
+
+两层：
+
+```text
+设计缺陷（优先）
+  高层分类正确，正文级权威不够可操作
+执行缺陷（随后）
+  没有持续机制问「是否新增了 MUST / 架构选择 / 实现承诺」
+```
+
+因果链：
+
+```text
+边界规则不够操作化
+        ↓
+作者/Agent 在邻接知识类型之间自由解释
+        ↓
+正文逐渐承担第二种 authority
+        ↓
+缺少持续检查 / review oracle
+        ↓
+偏移长期存在
+```
+
+这不是精确统计。架构判断是：约 60% 分类模型不够操作化，约 40% 缺少持续 review。**检查机制不能替代分类模型；检查机制只能执行已经定义清楚的边界。**
+
+控制分层（观察，不是本 RESEARCH 的实现承诺）：
+
+```text
+L1  词级信号（「必须」「决定采用」「处置为 Preserve」等）
+    只能 warning：这些词也可能是在引用 ADR。
+
+L2  结构化 review（五问，见 ADR-0016）
+    Phase 2 的执行方式。比 regex 更针对「内容偏移」。
+
+L3  断言分类（descriptive / diagnostic / normative / execution / historical）
+    与文档类型比对。属后续世代的语义 review，不在本研究裁决。
+```
+
+先写 regex 会重演 Generation-1：发现 drift → 词表 → 语义偏移仍在 → checker 变复杂。机械 carrier 表不因此新增 authority-mismatch 行。
 
 **R4 · 当前知识与历史知识隔离。**
 

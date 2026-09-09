@@ -20,7 +20,11 @@ The full repository layout — every directory and its role, down to individual 
 | `tests/run-tests.js` | test harness — run with `npm test` |
 | `docs/` trees · `docs/glossary.md` · `docs/design-decisions/` · `docs/plans/archive/` | per-language docs, glossary, ADRs, archives |
 
-**Where does a new file go?** If the file defines governance behavior or generation mechanisms that agents must follow → `references/`. If it is project knowledge — how to use, maintain or contribute, read by developers AND agents working in this repo — it goes by knowledge type: user-facing docs → `docs/product/<language>/`, roadmap → `docs/plans/roadmap/`, execution plans → `docs/plans/`, findings → `docs/findings/`, research → `docs/research/`, architecture decisions → `docs/design-decisions/`. Test, CI and other development infrastructure go in their respective directories (`tests/`, `.github/`, ...).
+**Where does a new file go?** Judge the knowledge type first, then the path and language (do not pick a language directory first):
+
+- Repository knowledge objects (Product / Research / Finding / ADR / Roadmap / Plan / Glossary) → the routing table in `docs/README.md`
+- Skill install artifacts and materialization sources → `SKILL.md`, `references/`, `scripts/`, placed by distribution role in `docs/product/en/architecture.md`. Being a generator input is **not** a semantic class; `references/templates/` is the current home of materialization templates, not a license to treat executable instruction sources as templates (FINDING-0026)
+- Tests, CI and other development infrastructure → `tests/`, `.github/`, …
 
 ## Language Policy (by audience)
 
@@ -58,7 +62,7 @@ The full repository layout — every directory and its role, down to individual 
 | `npm run check:all` | Audit | before audit, or explicit full audit |
 | `npm run check:skill-release` | Release | before a release, per `repo-workflows/skill-release.md` |
 
-The narrower entries are gate-fail-closed for their scope; when in doubt, escalate to the larger scope — never narrow the verification. Which gates are advisory vs fail-closed, and what each pass means, is described in `AGENTS.md` § Validation.
+The narrower entries are gate-fail-closed for their scope; when in doubt, escalate to the larger scope — never narrow the verification. **Stable 1.x vs 2.0 migration:** on `main` these gates block; on `migration/2.0-governance-architecture` only the Refactor Safety Kernel blocks, and Gen1 `npm run check*` is observational (ADR-0014). Which gates are advisory vs fail-closed, and what each pass means, is described in `AGENTS.md` § Validation.
 
 ## Commit Conventions
 

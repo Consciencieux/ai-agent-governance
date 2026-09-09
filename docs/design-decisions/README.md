@@ -18,11 +18,11 @@
 | [ADR-0009](ADR-0009-index-vs-fact-source.md) | 索引与事实源的边界 | roadmap/里程碑是索引、计划是事实源；本仓库机械验证、被治理项目仅文档约束 |
 | [ADR-0010](ADR-0010-entry-layer-boundary.md) | 文档分层与入口层边界 | README/CONTRIBUTING 是入口层，不承担事实库职责；稳定契约可写但链接权威源 |
 | [ADR-0011](ADR-0011-public-interface-freeze.md) | 1.0.0 冻结公开接口面 | 五类接口受 SemVer 约束；成员清单留在各自事实源，破坏性变更走 MAJOR + 迁移 |
-| [ADR-0012](ADR-0012-record-responsibility-boundary.md) | 变更记录与其他载体的职责边界 | CHANGELOG 记变更事实；根因与决策进 ADR/计划，验证进测试证据；历史逐步迁移 |
+| [ADR-0012](ADR-0012-record-responsibility-boundary.md) | 变更记录与其他载体的职责边界 | CHANGELOG 记已交付变更；准入按影响；写入可推迟、对账不可推迟 |
 | [ADR-0013](ADR-0013-findings-archive.md) | 问题 / 发现档案与知识对象五分类（Issue / Finding Archive） | Finding 在 repo 内 canonical、GitHub Issue 是 projection；状态就地更新不归档；简中单语；review 先分类再修复 |
 | [ADR-0014](ADR-0014-architecture-migration-mode.md) | 架构迁移模式（Architecture Migration Mode） | 2.0 重构期间旧 gate 降级为观测；保留 Refactor Safety Kernel；checkpoint 验证；禁止 release；冻结规则演进 |
 | [ADR-0015](ADR-0015-roadmap-repositioning.md) | 路线图重新定位（Roadmap） | roadmap 从功能清单变为架构演进视图；已完成能力迁往 research/；维护触发从每次发布改为架构事件；加入 Non-goals |
-| [ADR-0016](ADR-0016-doc-structure-purpose-first.md) | 文档结构用途优先 | 语言不是第一层分类；user-facing 才三语；各知识对象按用途分层；Archive Plan 是 Plan 生命周期；Migration Mode 分阶段实施 |
+| [ADR-0016](ADR-0016-doc-structure-purpose-first.md) | 文档结构用途优先 | 语言不是第一层分类；知识对象按用途分层；权威矩阵约束正文级可声明内容 |
 | [ADR-0017](ADR-0017-migration-branch-strategy.md) | 2.0 迁移分支策略 | 长期 migration/2.0 分支 + 阶段里程碑合并；main 保持 1.x 稳定 baseline；不发布 1.1/1.2 过渡；2.0 RC 后合入 |
 | [ADR-0018](ADR-0018-generation-2-dev-path.md) | 第二代开发路径（Generation-2） | Phase 0–8 执行顺序；统一 ID 编号规则；CONTROL-X 跨 profile 契约测试；测试指标转向；Gen2 阶段须通过 Active Plan 执行 |
 | [ADR-0019](ADR-0019-generation-metadata.md) | 知识对象代际元数据 | 用 metadata 不用目录标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete |

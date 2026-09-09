@@ -52,3 +52,4 @@ docs/plans/
 5. **不要在 `roadmap/` 与 `archive/` 之间互相移动**：roadmap 是持续维护的方向文档，不是任务；只有 `PLAN-xxxx` 对象才走 active → archive。
 6. **每个 Plan 声明 `generation`**：`gen1`（Generation-1 历史执行记录）/ `gen2`（Generation-2 计划）。迁移工作（如 2.0 迁移）用 `gen2`，迁移来源在正文背景说明；`migration_from` 是可选项，仅在需要机械查询迁移计划时加。归档不等于能力过时。
 7. **统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `generation`（+ 当前 Plan 的 `target`）；`status` 取值 `Design` / `Active` / `Implemented` / `Completed` / `Archived`（canonical 在 frontmatter，正文不再有 `> **Status:**`）；H1 = `# PLAN-xxxx：中文标题`；空 optional 字段省略。**历史归档 Plan 的 required fields = `id` / `status: Archived` / `generation`（不含 `target`）**——current Plan 与 historical Plan 的必填字段分开定义。
+8. **不重新裁决长期架构**：Plan 的权威是当前施工与验收。ADR 约束只作摘要 + 指针。正文级边界见 ADR-0016 权威矩阵。

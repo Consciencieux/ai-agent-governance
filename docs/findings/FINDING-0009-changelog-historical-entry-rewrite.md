@@ -55,9 +55,11 @@ commit `60185ef` 把 v1.0.0 已发布条目压缩改写，同时创建 ADR-0011/
 ## 关联
 
 - ADR-0011
-- ADR-0012
+- ADR-0012（2026-09-10 修正第 6 条）
+- `repo-workflows/changelog-policy.md` § Released section
+- RESEARCH-0004 § Generation-1 的三重历史投影
 - GitHub Issue #6
 
 ## 回归保护
 
-暂无机械 gate 能防止「改写已发布版本节」——生命周期规则 + changelogCoverage 的边界。后续可考虑 `--gate` 下对已发布版本节的 diff 检测（heuristic 层）。
+暂无机械 gate 能防止「改写已发布版本节」。现行约束：ADR-0012 2026-09-10 修正第 6 条 + `repo-workflows/changelog-policy.md` § Released section（`≤ 1.0.2` 不按新准入回写）。再做「按今天知识架构清洗旧 CHANGELOG」即本 Finding 复发。

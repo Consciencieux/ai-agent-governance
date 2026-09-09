@@ -41,15 +41,16 @@ Generation-1 按**物理生成方式**给文件归类，而不是按**语义责�
 ## 影响
 
 - 人和 Agent 会把 `sub-skills.md` 理解成「又一份模板」，低估它是日常 instruction path 的核心。
-- 后续拆分若仍按 `templates/` 边界思考，只会继续把 instruction module 和 boilerplate 绑在一起移动。
-- 无路由地拆 `sub-skills.md` 而不建立 capability registry，会把一个 authoring monolith 变成许多无 dispatcher 的小文件（FINDING-0015）。
+- 后续若仍按「生成器输入目录」思考分类，会继续把 instruction module 和 boilerplate 绑在一起移动。
+- 无路由地拆开聚合源，负担会从「记一个大文件」变成「找许多小文件」（FINDING-0015）。
 
 ## 关闭条件
 
-1. 可执行 instruction module（含 sub-skill 源、AGENTS 模板）按 capability / runtime instruction 分类，不再与 bootstrap boilerplate 共用「模板」语义。
-2. 真正的物化模板（env / feature-doc / hooks 等）保留为 materialization mechanism。
-3. 若保留 sub-skill 机制：一能力一源文件 + 薄 registry；不再用单一 30 KB 聚合正文充当 registry。
-4. 目录重排必须伴随显式路由与 applicability，且不得在 Phase 2 提前移动。
+1. 可执行 instruction source 与 bootstrap template 有明确不同的 authoritative responsibility；
+2. 文件分类不再依赖「是否被 generator 使用」这一物理属性；
+3. instruction capability 可被稳定发现和路由，不依赖一个职责混杂的聚合源。
+
+具体落成 `capabilities/<name>/SKILL.md`、registry + fragments 或其他结构，由后续 ADR / Phase 4 Plan 决定。本 Finding 不指定实现。目录重排不得在 Phase 2 提前进行。
 
 ## 解决情况
 
@@ -66,4 +67,4 @@ Generation-1 按**物理生成方式**给文件归类，而不是按**语义责�
 
 ## 回归保护
 
-当前无机械 gate 检测「目录名是否等于语义责任」——这正是本 Finding 的内容。关闭时需要：capability 源与 boilerplate 的分类可被声明并对账，而不是靠目录名推断。在此之前，禁止把「挪到更细的 Markdown 目录」当成关闭。
+当前无机械 gate 检测「目录名是否等于语义责任」——这正是本 Finding 的内容。关闭时需要：instruction source 与 boilerplate 的责任可声明、可对账。把文件挪到更细的 Markdown 目录本身不等于关闭。

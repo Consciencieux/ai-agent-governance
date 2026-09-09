@@ -47,15 +47,15 @@ docs/
 **当前 vs 历史（隔离）**：
 
 ```text
-Current truth:      Product / Active Research / Proposed / Confirmed Findings / Accepted ADR（gen2/cross 适用） / Current Roadmap / Active Plan
-Historical evidence: Superseded Research / Resolved·Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG
+当前真相：      Product / Active Research / Proposed / Confirmed Findings / Accepted ADR（gen2/cross 适用） / Current Roadmap / Active Plan
+历史证据：      Superseded Research / Resolved·Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG
 ```
 
 对象是否属于当前真相，必须同时依据 canonical `status` 与该类型定义的 generation/applicability 语义判断；不能只看 `status`。
 
 历史记录可被读来理解 provenance，**不得直接成为当前执行指令**。
 
-完整系统模型（描述层）→ `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；规范层（routing / must-not / 当前-历史隔离）→ ADR-0016。
+完整系统模型（描述层）→ `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；规范层（routing / 权威矩阵 / 当前-历史隔离）→ ADR-0016。正文级「可权威声明 / 仅支持上下文 / 不得权威声明」以 ADR-0016 2026-09-10 修正为准，本页不复制该表。
 
 ## 统一表示法（Representation Normalization）
 
@@ -64,11 +64,11 @@ Plan / Finding / Research / ADR 四类对象：
 ```text
 - YAML frontmatter 统一
 - 公共必填仅 id/status
-- 空 optional 字段省略（sparse）
-- 机器字段/enum 用稳定英文
-- 简中 canonical 正文：H1/章节/表格头以中文为主
-- 类型专属 schema → 对应目录 README
-- 生命周期语义本阶段不改（Representation authority moves now：正文 Status 已删除，旧 parser 失败为已知 compatibility divergence，parser 迁移属 Phase 4）
+- 无值的可选字段省略
+- 机器字段与枚举用稳定英文
+- 简中规范正文：H1 / 章节 / 表头以中文为主
+- 类型专属字段 → 对应目录 README
+- 生命周期语义本阶段不改（表示法权威已迁到 frontmatter：正文 Status 已删除；旧解析器失败是已知兼容性分歧，解析器迁移属 Phase 4）
 ```
 
 规范：ADR-0016 § 后续补充；各类型专属字段/status enum/章节 → `plans/README.md`、`findings/README.md`、`research/README.md`、`design-decisions/README.md`。
@@ -87,7 +87,7 @@ Plan / Finding / Research / ADR 四类对象：
 
 ## 生命周期总原则
 
-> **Archive is a Plan lifecycle concept, not a general documentation category.**
+> **归档是 Plan 的生命周期概念，不是一类通用文档。**
 
 ```text
 Plan     → physical archive（移到 plans/archive/）
@@ -111,22 +111,24 @@ ADR 的修订政策（澄清 vs 语义变化；**ADR 可以演进，但不能改
 **准入测试（decision ≠ delivered change）**：
 
 ```text
-Did observable project behavior / public interface / contributor workflow /
-release behavior / or supported capability actually change?
-YES → candidate；NO → normally no CHANGELOG entry
+可观察的项目行为 / 公开接口 / 贡献者工作流 / 发布行为 / 受支持能力
+是否真的变了？
+是 → 候选条目；否 → 通常不写 CHANGELOG
 ```
+
+判断依据是**影响**，不是文件类型：纯呈现文档无条目；改变公开导航 / 贡献者工作流 / 受支持行为的文档变更按普通准入评估。执行细则（受众测试、checkpoint 对账、C1–C5）在 `repo-workflows/changelog-policy.md`。
 
 **不应包含**：根因分析、架构 rationale、未来计划、research model、raw findings、测试计数 / exit code / 验证叙事、实现日志、每个 commit、每个文档对象。
 
-**`[Unreleased]`** = 已实现、准备进入下一个正式 release 的 change projection；**不是**所有正在讨论的工作 / 所有 Accepted ADR / 所有 Active Plan。Migration Mode 禁发布时，`[Unreleased]` 不是每个 migration commit 的流水账——在 checkpoint / merge / release composition 时统一整理。
+**`[Unreleased]`** = 已实现、当前预计进入下一个正式 release 的 change projection；**不是**所有正在讨论的工作 / 所有 Accepted ADR / 所有 Active Plan。Migration Mode 禁发布时，日常 commit 可以不写；Phase checkpoint / 改变可观察行为的 Plan 完成 / 分支 promote / release composition **必须对账**（写成可以推迟，对账不能推迟）。
 
-**Released section** = 历史记录，默认不可重写；允许 factual correction / broken pointer correction / 明确授权的历史整理，不允许为匹配今天架构改写历史（与 ADR「不改写历史」同源）。
+**Released section** = 历史记录，默认不可重写。`[1.0.2]` 及更早保持发布时写法（可含根因/验证叙事）；不得按现行准入全量精简。允许 factual correction / broken pointer / 已明确授权的一次性整理，不允许为匹配今天架构改写历史（FINDING-0009）。
 
 规范层：ADR-0012 § 后续补充；repo 自身 CHANGELOG 政策由 Repo Profile 拥有（`repo-workflows/changelog-policy.md`；AGENTS 只放指针），格式契约共享自 payload（`references/policies/lifecycle.policy.md`）。
 
 ## 代际政策（总原则）
 
-> **Knowledge objects may carry generation metadata to distinguish Generation 1, Generation 2, or cross-generation applicability. Generation does not change object identity or directory placement.**
+> **知识对象可用代际元数据区分第一代、第二代或跨代适用；代际不改变对象身份，也不改变目录位置。**
 
 代际用**对象元数据**表达，不用目录、不用文件名前缀、不重新编号。各类型的具体字段与取值规则归各目录 README：
 

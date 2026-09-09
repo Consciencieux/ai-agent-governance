@@ -9,7 +9,7 @@ target: repo-infra
 
 > （进行中。2026-09-09：建立三层定义——RESEARCH-0007（完整知识对象模型/系统描述）、ADR-0016（规范层：路由 / must-not / 当前-历史隔离）、`docs/README.md`（日常路由索引）；完成标准为定性判定，见「完成条件」。）
 
-只修改 `docs/` 知识体系与相关 ADR/Research；不涉及 payload 行为。
+只修改 `docs/` 知识体系、相关 ADR/Research，以及仓库入口 `CONTRIBUTING*.md` 中与知识路由冲突的贡献者指令；不涉及 payload 行为。
 
 ## 背景
 
@@ -33,6 +33,12 @@ Phase 2（Research / Findings / Traceability）的第一项工作。`docs/` 已�
 不能承担什么职责？
 ```
 
+## 本 checkpoint 执行边界
+
+长期规则权威只在 ADR-0016、RESEARCH-0007、`docs/README.md`。本计划只记录 Phase 2 checkpoint 的施工、台账与验收；不在此复述知识分类或 CHANGELOG 不变量。
+
+正文职责边界（ADR-0016 权威矩阵）：Research 不裁决 disposition；Finding 关闭条件写 invariant 不写实现；Plan 不重新定义长期架构。新增或大改知识对象时用五问 review，不写 JS authority gate。
+
 ## 三层定义（本次交付）
 
 ```text
@@ -46,8 +52,8 @@ RESEARCH
 ADR
 → 固化关键规范决策
 → purpose-first taxonomy、archive-only-for-Plans、Roadmap is projection not fact source、
-  内容路由测试、must-not 权威、当前/历史隔离
-→ 落点：ADR-0016 § 后续补充、ADR-0015 § 决策 6、ADR-0018 § 决策 6
+  内容路由测试、must-not、权威矩阵（可权威 / 仅支持 / 不得权威）、当前/历史隔离
+→ 落点：ADR-0016 § 后续补充与 2026-09-10 修正、ADR-0015 § 决策 6、ADR-0018 § 决策 6
 
 
 docs/README.md
@@ -76,11 +82,13 @@ docs/README.md
 - `docs/design-decisions/ADR-0016-doc-structure-purpose-first.md` —— § 后续补充：知识对象模型规范
 - `docs/README.md` —— 日常路由索引（路由测试 + 七类判定表 + 当前/历史）
 - `docs/findings/FINDING-0020-roadmap-projection-drift.md`、`FINDING-0021-roadmap-checker-vacuous.md` —— 边界失效证据
+- `docs/findings/FINDING-0027-knowledge-object-authority-matrix-gap.md` —— 正文级权威边界不够操作化
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md` —— 阶段清单对齐 ADR-0018（FINDING-0020 解决）
 - `docs/design-decisions/` —— ADR 对象与管理 README 的 H1、章节标题、表头 presentation normalization
 - `docs/findings/` —— Finding 对象与管理 README 的 H1、章节标题、分类名称、表头 presentation normalization
 - `docs/research/` —— Research 对象与管理 README 的 H1、章节标题、分类名称、表头 presentation normalization
 - `docs/plans/` —— 当前 Plan 与管理 README 的 H1、章节标题、表头 presentation normalization；归档 Plan 仅允许 representation 层调整，不改历史事实
+- `CONTRIBUTING.md`、`CONTRIBUTING.zh-CN.md`、`CONTRIBUTING.zh-TW.md` —— 贡献者入口路由与 1.x / 2.0 迁移工作流（不得继续传播「生成机制 → references/」与「项目知识 → docs/<语言>/」）
 
 ## 验证方法
 
@@ -89,10 +97,11 @@ docs/README.md
 3. 路由表、ADR、Research 三者互相可解析（link check）。
 4. `docs/README.md` 路由判定表可作为单一判定入口（人 + Agent 均可据此路由）。
 5. 完成条件的四条为定性判定，由 review checkpoint 确认，不强行机械门禁化（与 Phase 1 分类人工判断同一性质）。
+6. 新增或大改本计划触及的知识对象时，按 ADR-0016 五问做结构化 review（primary authority / supporting / 是否第二种权威 / 新 MUST 或架构选择 / 权威落点）。
 
 ## 发现台账（Discovery Ledger；closure review workset）
 
-本计划闭包审查（closure review）发现的 26 个语义/一致性点，按已知问题闭包（Known-Issue Closure；ADR-0021）登记并逐项结算。当前快照（snapshot）明确区分已终结条目、带后继触发条件的非 `resolved` 条目，以及本 checkpoint 中重新审查后再次闭合的条目；R25 的人类阅读层 presentation normalization 已完成并重新闭合。
+本计划闭包审查（closure review）发现的语义/一致性点，按已知问题闭包（Known-Issue Closure；ADR-0021）登记并逐项结算。条目一经登记不得删除；`R25` 拆为 `R25a` / `R25b` 后，当前已知集合以台账行数为准。当前快照明确区分已终结条目、仍开放条目、以及带后继触发条件的非 `resolved` 条目。R25a 曾声明 closed，已被 FINDING-0025 H1 等当前反例打回。
 
 | 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -120,35 +129,40 @@ docs/README.md
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
 | R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（revisit: Phase 3 开始前的 entry checkpoint；该 checkpoint 必须重新取回 R23，并确认 ADR-0022 § 后果对应的 AGENTS/SKILL 入口瘦身执行计划与范围） | ADR-0022 § 后果 |
 | R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 R24，并建立 successor Plan ID） | ADR-0021 § 决策 6 |
-| R25a | subtask | 表示法归一 · 人类面向呈现（presentation normalization）：中文 H1 / 章节 / 表头，机器 key/enum 保持稳定英文 | repo | closed | resolved | 四类对象与四个管理 README 的中文主表达 |
-| R25b | subtask | 表示法归一 · 机器元数据精简（metadata minimization）：frontmatter 只保留必要 machine semantics | repo | open | in-progress（Finding schema 减至 id/status/type/observed_in(+resolved_in)；severity/affected/direction/root_cause/related 移入正文） | ADR-0016 § 表示法归一；FINDING-0024 |
+| R25a | subtask | 表示法归一 · 人类面向呈现（presentation normalization）：中文 H1 / 章节 / 表头，机器 key/enum 保持稳定英文 | repo | open | in-progress（reopened：已声明 resolved 后出现当前反例——FINDING-0025 H1 缺 ID 前缀、Research README 把归档计划列成独立类型、docs README 整句英文规范；本 checkpoint 已修这三处，但仍有管理 README 人类标题中的英文元话语，不得再次 closed） | FINDING-0025 H1；`docs/research/README.md`；`docs/README.md` |
+| R25b | subtask | 表示法归一 · 机器元数据精简（metadata minimization）：frontmatter 只保留必要 machine semantics | repo | open | in-progress（Finding schema 减至 id/status/type/observed_in(+resolved_in)；severity/affected/direction/root_cause/related 移入正文。继续审 Research / ADR / Plan 的 metadata 必要性） | ADR-0016 § 表示法归一；FINDING-0024 |
 | R26 | review | canonical 元数据被多份 index/projection 重复 → 持续 drift（ADR-0021 index、README schema 示例等） | repo | closed | promoted-to-finding | FINDING-0024 |
+| R27 | review | CONTRIBUTING 仍传播旧文件路由（生成机制 → `references/`；项目知识 → `docs/<语言>/`）且未区分 1.x / 2.0 迁移工作流 | repo | closed | resolved | 三语 CONTRIBUTING：先按知识类型路由；技能产物按分发角色；稳定 1.x vs 迁移双模式 |
+| R28 | review | FINDING-0015 `type: mechanism-gap` 与正文「L4 级」冲突 | repo | closed | resolved | 正文回归保护改为 supporting evidence，保留 `mechanism-gap` |
+| R29 | review | 目录正确但正文职责渗漏：Research 预填 2.0 disposition；Finding 关闭条件指定实现 | repo | closed | resolved（实例已改；根因升级为 R30 / FINDING-0027） | RESEARCH-0006 第四列改为 undecided；0009 改为描述 ADR-0022；FINDING-0025/0026 关闭条件改为 outcome |
+| R30 | systemic | 高层分类不够操作化；缺权威矩阵与持续 review，正文逐渐承担第二种权威 | repo | closed | promoted-to-finding + 矩阵落地 | FINDING-0027；ADR-0016 2026-09-10 权威矩阵；不引入 JS gate |
 
 **Metadata consumer enumeration（表示法归一前必须，2026-09-09 更新）：** Plan/ADR 状态原由正文解析（plan-status / plan-delivery / roadmap-sync / ADR-status 簇），但 **Representation authority moves now（ADR-0016）**——canonical 已迁入 frontmatter，正文 Status 已删除；旧 parser 的失败属已知 compatibility divergence，parser migration 属 Phase 4。generation / Finding / Research 元数据无机械 consumer。
 
-## 闭包对账（Closure reconciliation；2026-09-09 二次 checkpoint：工作集已重新打开）
+## 闭包对账（Closure reconciliation；2026-09-10 三次 checkpoint）
 
 ```text
-Total known:  27
-Resolved:     22  (R1–R20、R22、R25a)
-Open:         1   (R25b machine metadata minimization — 执行中，见本次 Finding subtraction)
+Total known:  31
+Resolved:     24  (R1–R20、R22、R27、R28、R29)
+Open:         2   (R25a 人类呈现 — 已 reopen；R25b 机器元数据精简)
 Deferred:     1  (R23；Phase 3 开始前 entry checkpoint 重新取回)
-Promoted to Finding:   2  (R21 → FINDING-0023；R26 projection drift → FINDING-0024)
+Promoted to Finding:   3  (R21 → FINDING-0023；R26 projection drift → FINDING-0024；R30 → FINDING-0027)
 Promoted to next Plan: 1  (R24；Phase 4 planning checkpoint 重新取回并建立 successor Plan ID)
-Unaccounted:  1   (R25b open — 完成减法 + 验证后 closed)
+Unaccounted:  0
 ```
 
-**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 机器表示层未收口。本 checkpoint 已重新核验 R2/R4/R14/R19 并再次闭合；R25 拆为 **R25a（人类面向呈现，closed）** 与 **R25b（机器元数据精简，open）**——R25b 由本次 Finding metadata subtraction 执行（Finding frontmatter 减至 id/status/type/observed_in(+resolved_in)，severity/affected/direction/root_cause/related 移入正文）。R23/R24 保留明确的未来取回触发条件，R26 已提升为 FINDING-0024。完成判据保持为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。
+**状态：Active。** R30 把正文渗漏的根因记为：权威边界不够操作化（优先）+ 缺少持续 review。已落地 ADR-0016 权威矩阵与五问 review；未写 JS gate。R25a / R25b 仍 open。PLAN-0032 不得在 R25a / R25b 仍开放时宣布收口。
 
 
 ## 未决风险
 
-- 路由判定本质是分类问题，无法完全机械化；用「主问题唯一」+「Forbidden 锚定」降低歧义，但最终仍有人工/Agent 判断成分。
+- 路由与权威判断本质是语义分类，无法完全机械化；矩阵 + 五问降低歧义，最终仍有人工/Agent 判断。
+- 不要用词级 JS gate 假装已关闭 FINDING-0027；机械化是否引入留给 Phase 4/5 的 ADR / Plan。
 - 机械 carrier 的修复（如 check-roadmap-sync 对新结构适配）留后续执行层迁移，不在本计划完成范围内。
 
 ## 参考
 
 - 知识对象五分类：ADR-0013；用途优先：ADR-0016；Roadmap 定位：ADR-0015；阶段执行：ADR-0018
 - 治理模型（ADR/Roadmap/Plan 权威）：ADR-0015 § 决策 6、ADR-0018 § 决策 6、`docs/README.md` § 治理模型
-- 边界失效证据：FINDING-0020、FINDING-0021
+- 边界失效证据：FINDING-0020、FINDING-0021、FINDING-0023、FINDING-0027
 - 完整系统模型：`docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`

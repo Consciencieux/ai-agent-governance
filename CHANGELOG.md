@@ -12,7 +12,9 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **Repository language entry files moved to the root** — `README.md` / `README.zh-CN.md` / `README.zh-TW.md` and `CONTRIBUTING.md` / `CONTRIBUTING.zh-CN.md` / `CONTRIBUTING.zh-TW.md` are now the six repository entry files; `repo-tools/check-doc-parity.js` compares them directly and keeps `docs/product/{en,zh-CN,zh-TW}/` for the remaining product documentation.
+- **Repository documentation is now organized by knowledge responsibility instead of language-first layout** — product documentation lives under `docs/product/{en,zh-CN,zh-TW}/`, while Research, Findings, ADRs, Plans/Roadmap, and Glossary have distinct responsibility and lifecycle boundaries. Completed Plans live under `docs/plans/archive/`; Research, Findings, and ADRs remain in place across lifecycle changes. `docs/README.md` is the routing entry for the knowledge system.
+
+- **Repository language entry files moved to the root** — `README.md` / `README.zh-CN.md` / `README.zh-TW.md` and `CONTRIBUTING.md` / `CONTRIBUTING.zh-CN.md` / `CONTRIBUTING.zh-TW.md` are the repository entry files; documentation parity now follows those root projections, and remaining product docs stay under `docs/product/{en,zh-CN,zh-TW}/`.
 
 ## [1.0.2] - 2026-09-08
 

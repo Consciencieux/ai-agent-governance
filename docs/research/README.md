@@ -7,8 +7,7 @@
 | 研究（`research/`） | 描述和研究系统 | 当前 gate 模型、治理机制分类 |
 | 发现（`findings/`） | 记录发现的问题 | trigger coverage 缺失 |
 | 架构决策（`design-decisions/`） | 记录已接受决策 | 引入 Rule Registry |
-| 计划（`plans/`） | 描述执行方案 | 实现 Rule Registry MVP |
-| 归档计划（`plans/archive/`） | 保存完成计划 | 已完成迁移计划 |
+| 计划（`plans/`） | 当前施工；已归档计划是其历史生命周期状态，不是独立知识类型 | 实现 Rule Registry MVP；完成后移入 `plans/archive/` |
 
 ## 为什么单独一类
 
@@ -77,8 +76,8 @@ docs/research/
 | D. 架构演进（Architecture Evolution） | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
 | E. 当前能力（Current Capabilities） | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
 | F. 实验记录（Experiments） | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
-| G. 能力基线（Capability Baseline） | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + 2.0 处置（迁移 baseline evidence） |
-| H. 规划/知识控制模型（Planning / Knowledge Control Model） | `RESEARCH-0007-documentation-knowledge-architecture.md` | System Model：知识对象（七类）唯一主问题、Allowed/Forbidden、路由测试、当前/历史隔离、Agent 导航、机械 carrier |
+| G. 能力基线（Capability Baseline） | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵；第四列是待决问题，不裁决 2.0 处置 |
+| H. 规划/知识控制模型（Planning / Knowledge Control Model） | `RESEARCH-0007-documentation-knowledge-architecture.md` | System Model：七类对象、路由、当前/历史隔离；正文级权威矩阵的规范在 ADR-0016 |
 | I. 修复/发现/Workset 模型（Repair / Discovery / Workset Model） | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
 | J. Agent 指令架构（Agent Instruction Architecture） | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
 
@@ -87,7 +86,9 @@ docs/research/
 ## 编号规则
 `RESEARCH-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
 
-## Frontmatter 元数据格式（canonical / sparse；空 optional 一律省略）
+## Frontmatter 元数据格式
+
+原则：权威、精简；无值的可选字段省略。
 
 ```yaml
 ---
@@ -130,8 +131,8 @@ Superseded by: Research-007
 
 新增或修改 research 文档**不需要跑全部 gate**：
 
-- **必须**：Markdown 格式、链接有效性（link validity）、元数据格式
-- **不需要**：三语 parity、changelog、product docs freshness（它不是产品文档）
+- **必须**：Markdown 格式、链接有效性（link validity）、元数据格式；大改时按 ADR-0016 五问做结构化 review
+- **不需要**：三语 parity、changelog、product docs freshness（它不是产品文档）；**不**用词级 JS gate 判定是否跨权威边界
 
 ## 质量标准
 
@@ -146,7 +147,7 @@ Superseded by: Research-007
 ## 关联规则
 
 - Research → findings：`Known limitations: See FINDING-0003`（引用，不复述）
-- Research → ADR：research 分析可能性，ADR 做选择。不要提前把研究结论写成 ADR
+- Research → ADR：research 分析可能性，ADR 做选择。不要提前把研究结论写成 ADR。已接受目标可以描述，MUST / 最终架构 / 执行 disposition 不得由 Research 权威声明（ADR-0016 权威矩阵）。
 - Research → plans：research 提供模型，plan 执行改变
 
 ## 一句规则

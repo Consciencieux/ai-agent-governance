@@ -120,6 +120,57 @@ docs/plans/
 
 **4. 当前知识与历史知识隔离。** 当前/历史对象的分类清单统一维护在 `docs/README.md` §「当前 vs 历史（隔离）」；本 ADR 只规定两者不得混用：历史可被读来理解 provenance，**不得直接成为当前执行指令**。对象是否当前仍须结合其 canonical `status` 与 generation/applicability metadata 判断。
 
+## 后续修正（2026-09-10）：知识对象权威矩阵（authoritative / supporting / forbidden）
+
+本修正是对「后续补充」决策 3 的 **Narrow amendment**。高层分类（Research = 描述系统，Finding = 记录问题，ADR = 长期决策，Plan = 当前施工）保留；自本修正起，**正文级权威**以本矩阵为准。FINDING-0023 区分了 primary vs supporting；本条把 supporting 从「可以出现」收紧为「不得变成第二种权威」。完整因果描述见 RESEARCH-0007；本条只规定必须遵守的合同。
+
+**检查机制不能替代本矩阵。** 未定义清楚的边界，checker 不知道什么算错。本阶段不增加 JS authority gate。Phase 2 用下方五问 review 执行；词级扫描与语义分类是否机械化，由后续阶段的 ADR / Plan 决定，不在本修正预填实现。
+
+**权威矩阵**（可权威声明 = 该类型的 primary authority；支持上下文 = 可简述、必须能指向真正权威；不得权威声明 = 写了也不构成规范）：
+
+| 类型 | 可以权威声明 | 只能作为支持上下文 | 不得权威声明 |
+| --- | --- | --- | --- |
+| Research | 模型、观察、比较、测量、解释 | 已接受目标 / 已接受约束的描述（指针指向 ADR） | MUST、最终架构选择、执行 disposition（Preserve / Redesign / keep / wrap 等） |
+| Finding | 问题、证据、根因、影响、outcome closure（failure mode 消失后的不变式） | 候选修复方向 | 具体实现架构、长期规范、目录/机制处方 |
+| ADR | Accepted decision、constraint、MUST / MUST NOT | 背景、后果、被否决方案 | 当前任务 checklist、发布日程 |
+| Plan | 当前施工、步骤、验收 | 背景 / ADR 约束摘要（指针指向 ADR） | 长期架构重新裁决 |
+| Roadmap | 当前战略投影与里程碑索引 | 一条摘要 | 详细设计、计划正文复述、阶段顺序裁决 |
+| Product | 当前用户事实与用法 | 简短 rationale | 内部计划、研究、未实现目标 |
+| Glossary | 术语叫什么（三语对照） | 一句释义 | 业务规则、架构决策 |
+
+**邻接问题归属（本矩阵的操作性问答）：**
+
+```text
+Research 能不能写「目标架构」？
+  → 可以描述已接受目标（supporting + 指向 ADR）；不能裁决目标。
+
+Finding 能不能写「关闭条件」？
+  → 可以。关闭条件 = outcome invariant，不是施工方案。
+
+关闭条件能不能指定 Rule Registry / 某目录形态？
+  → 不能作为权威。那是实现架构，归后续 ADR / Plan。
+
+Research 能不能给每个 Gen1 capability 写 Preserve / Redesign？
+  → 不能作为权威。那是执行 disposition，归后续 ADR / Plan。
+
+Plan 能不能复述长期 invariant？
+  → 只能摘要 + 指针。复述若与 ADR 冲突，以 ADR 为准；Plan 不得靠复述改写 ADR。
+```
+
+一段文字若删掉后必须由另一类对象承担，说明它已不是 supporting context，应拆出或降为指针。引用 ADR 的「必须」仍是引用，不是 Research/Finding 自己立法。
+
+**Phase 2 结构化 review（新增或大改知识对象时必答，人工 / Agent，不进 JS gate）：**
+
+```text
+1. 这个文件唯一 primary authority 是什么？
+2. 哪些段落是 supporting context？
+3. 是否有一段如果删掉，必须由另一类对象承担？
+4. 是否新增了此前不存在的 MUST / architecture choice / implementation commitment？
+5. 如果有，权威对象在哪里？
+```
+
+四条答不出或第 4 问为是且第 5 问为空 → 先改文档，再继续施工。
+
 ## 后续补充（2026-09-09）：知识对象表示法归一（Representation Normalization）
 
 统一 Plan / Finding / Research / ADR 四类对象的**表示层**（YAML envelope、字段命名与排列、空字段处理、H1 格式、中文章节/表头），**不改变生命周期语义、不强制四类业务字段相同**。
@@ -139,3 +190,4 @@ docs/plans/
 - Roadmap 重新定位（架构演进视图）：ADR-0015
 - 三语拆分原决策（将被本 ADR 的 product 子集延续）：ADR-0005
 - 知识对象模型系统描述（七类、四字段、路由、当前/历史）：`docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`
+- 正文级权威矩阵（FINDING-0027）：本 ADR 2026-09-10 修正

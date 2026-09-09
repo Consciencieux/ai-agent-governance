@@ -62,4 +62,4 @@ Prompt 是被动承载、一次性全量注入，没有按决策点按需加载�
 
 ## 回归保护
 
-这是一个可实验假设（L4 级），不是机械规则。测量框架落地后由对比实验提供数据，无独立 gate。架构侧关闭条件依赖 Context Detector / Dispatcher，不依赖再加静态 prompt。
+本 Finding 的类型是 `mechanism-gap`：当前缺少按决策点加载与路由的机制，Agent 记忆充当 dispatcher。静态全量 vs 按决策点注入的对比实验是关闭条件之一，属于 supporting evidence，不把本条改写成 `research-observation`。测量框架落地后由对比实验提供数据；架构侧关闭依赖路由与机械路径，无独立 gate。

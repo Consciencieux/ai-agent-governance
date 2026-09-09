@@ -5,7 +5,7 @@ type: architecture-gap
 observed_in: gen1
 ---
 
-# 治理语义与机械执行缺少显式控制身份 → 多点同步、checker accretion、regression 维护负担
+# FINDING-0025：治理语义与机械执行缺少显式控制身份 → 多点同步、checker accretion、regression 维护负担
 
 ## 分类
 
@@ -36,9 +36,11 @@ R1（Policy Structure）：治理语义未以「控制」为单位结构化；�
 
 ## 关闭条件
 
-1. 规则以显式 Control identity 表达，`semantics / applicability / evaluator / evidence` 结构化绑定；
-2. 单条规则的 Markdown / checker / routing / test 投影可机械对账（CONTROL-X / Rule Registry，ADR-0018 Phase 3/5）；
-3. 新增规则不再天然产生「人工多点同步」义务。
+1. 治理语义拥有显式、稳定的身份；
+2. semantics / applicability / evaluator / evidence 的关系可追踪；
+3. 一条规则的 Markdown / checker / routing / test 投影不再依赖人工多点同步。
+
+候选方向见 ADR-0018 Phase 3/5。本 Finding 不指定必须采用 Rule Registry 或 CONTROL-X 这一组件名。
 
 ## 解决情况
 

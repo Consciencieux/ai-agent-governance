@@ -49,8 +49,9 @@ R1（Policy Structure）：知识对象模型未充分结构化——缺少「au
 - PLAN-0032
 - ADR-0016
 - RESEARCH-0007
+- FINDING-0027
 
 ## 回归保护
 
 - 描述层：`docs/research/RESEARCH-0007-documentation-knowledge-architecture.md` § 七类知识对象 / primary responsibility。
-- 规范层：ADR-0016 § 后续补充 §1（内容路由测试按 primary responsibility）。
+- 规范层：ADR-0016 § 后续补充 §1（内容路由测试按 primary responsibility）；2026-09-10 修正把 supporting 收紧为权威矩阵（FINDING-0027）。
