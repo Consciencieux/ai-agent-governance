@@ -12,7 +12,7 @@ related:
   adrs: [ADR-0010]
 ---
 
-# FINDING-0017：ADR 无持续 enforcement：ADR Accepted ≠ future changes constrained
+# FINDING-0017：ADR 无持续强制执行（enforcement）：ADR Accepted ≠ 未来变更受约束
 
 ## 观察
 

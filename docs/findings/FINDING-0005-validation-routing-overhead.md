@@ -10,7 +10,7 @@ root_cause: R3
 github_issue: 7
 ---
 
-# FINDING-0005：Validation 调度失衡：简单规则验证过重，复杂规则验证不足
+# FINDING-0005：验证调度失衡（Validation）：简单规则验证过重，复杂规则验证不足
 
 ## 观察
 

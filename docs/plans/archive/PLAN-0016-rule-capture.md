@@ -4,7 +4,7 @@ status: Archived
 generation: gen1
 ---
 
-# PLAN-0016：Rule Capture
+# PLAN-0016：规则捕获（Rule Capture）
 
 
 > （已归档。归档即断言完成。）（原状态：已实现（2026-08-30，待 Release 归档）。 本计划已在当前工作树交付；发布时按仓库规则归档。）

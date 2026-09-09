@@ -13,7 +13,7 @@ related:
   adrs: [ADR-0006, ADR-0020]
 ---
 
-# FINDING-0001：Producer / Product 治理耦合：物理边界已分开，语义与执行仍混杂
+# FINDING-0001：生产者 / 产品治理耦合（Producer / Product）：物理边界已分开，语义与执行仍混杂
 
 ## 观察
 

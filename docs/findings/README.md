@@ -1,12 +1,12 @@
-# Findings 档案（Issue / Finding Archive）
+# 发现档案（Findings）
 
-本目录是本仓库的 **Issue / Finding Archive**：长期保存研究观察、缺陷证据、失败模式与治理缺口。它回答的是「**实际发现了什么**」，与 `plans/`（准备做什么）、`design-decisions/`（为什么做这个架构决定）严格分工。
+本目录是本仓库的发现档案（Issue / Finding Archive）：长期保存研究观察、缺陷证据、失败模式与治理缺口。它回答的是「**实际发现了什么**」，与 `plans/`（准备做什么）、`design-decisions/`（为什么做这个架构决定）严格分工。
 
 | 相关知识对象 | 回答的问题 | 语言 | 生命周期 |
 | --- | --- | --- | --- |
-| Plan | 准备怎么做？ | 简体中文单语 | Active → Archive |
-| Finding | 实际发现了什么？ | 简体中文单语 | 状态变化，路径不变 |
-| ADR | 为什么做这个架构决定？ | 简体中文单语 | 永久记录 |
+| 计划（Plan） | 准备怎么做？ | 简体中文单语 | Active → Archive |
+| 发现（Finding） | 实际发现了什么？ | 简体中文单语 | 状态变化，路径不变 |
+| 架构决策（ADR） | 为什么做这个架构决定？ | 简体中文单语 | 永久记录 |
 
 ## 定位与分工
 
@@ -23,7 +23,7 @@ ADR = 决策（对长期架构做出了什么决定）
 
 ```text
 docs/findings/
-├── README.md                     # 本页：taxonomy、schema、生命周期、语言政策
+├── README.md                     # 本页：分类、元数据格式、生命周期、语言政策
 └── FINDING-xxxx-<slug>.md        # 每条一个文件，按状态变化更新，不移动路径
 ```
 
@@ -31,27 +31,27 @@ docs/findings/
 
 **编号规则**：`FINDING-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
 
-**不建立 `active/` / `archive/` 子目录，也不归档到 `docs/plans/archive/`。** Finding 本身就是长期 evidence record，即使问题修复后仍留在原处，只更新状态字段。
+**不建立 `active/` / `archive/` 子目录，也不归档到 `docs/plans/archive/`。** Finding 本身就是长期证据记录（evidence record），即使问题修复后仍留在原处，只更新状态字段。
 
 **代际标记用 `observed_in` / `resolved_in`，不用单值 `generation`。** 一个 Finding 可能在 Gen1 被发现、Gen2 仍未解决——`generation: gen1` 容易被误读成「它只属于 Gen1」。`observed_in`（何时发现）与 `resolved_in`（何时解决，未解决留空）分别表达这两个时间点。`Resolved` / `Superseded` / `Invalidated` 都只在文件内更新状态，永久留原位。
 
-**统一 envelope（表示法归一，ADR-0016）**：canonical field order = `id` / `status` / `type` / `severity` / `affected` / `observed_in` / `direction` / `root_cause` /（`resolved_in`、`github_issue` 按需）/ `related`；`affected: [repo, skill]`、`related:\n  plans: [PLAN-xxxx]\n  adrs: [ADR-xxxx]\n  research: [RESEARCH-xxxx]`（compact 列表，空类别省略）；H1 = `# FINDING-xxxx：中文标题`；不保留 `opened` / `updated` / `resolved`（Git 有 provenance）与空 optional 字段。
+**统一 envelope（表示法归一，ADR-0016）**：规范字段顺序（canonical field order）= `id` / `status` / `type` / `severity` / `affected` / `observed_in` / `direction` / `root_cause` /（`resolved_in`、`github_issue` 按需）/ `related`；`affected: [repo, skill]`、`related:\n  plans: [PLAN-xxxx]\n  adrs: [ADR-xxxx]\n  research: [RESEARCH-xxxx]`（紧凑列表，compact list；空类别省略）；H1 = `# FINDING-xxxx：中文标题`；不保留 `opened` / `updated` / `resolved`（Git 有 provenance）与空 optional 字段。
 
-## Taxonomy：研究方向（7 方向）
+## 研究方向分类（Taxonomy，7 个方向）
 
 Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 `docs/findings/` 退化成零散 bug 堆。
 
 | 方向 | 主题 | 核心 Finding |
 | --- | --- | --- |
-| **A. Producer / Product Separation** | 仓库治理与 Skill 产品治理的隔离 | A01 逻辑耦合 · A02 ADR-0006 只解决 artifact-level · A03 control-level 隐性狗粮 · A04 repo 修复不传播到 skill · A05 `scope = both` 模糊 ownership |
-| **B. Policy / Control Plane** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher |
-| **C. Enforcement Gap** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 |
-| **D. Validation / Dispatch Efficiency** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
-| **E. Checker Correctness / Regression** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 canonical 元数据被多份投影重复（FINDING-0024） |
-| **F. Portability / Runtime Boundary** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
-| **G. Evidence / Research Methodology** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023） |
+| **A. 生产者 / 产品分离（Producer / Product Separation）** | 仓库治理与 Skill 产品治理的隔离 | A01 逻辑耦合 · A02 ADR-0006 只解决 artifact-level · A03 control-level 隐性狗粮 · A04 repo 修复不传播到 skill · A05 `scope = both` 模糊 ownership |
+| **B. 政策 / 控制平面（Policy / Control Plane）** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher |
+| **C. 执行缺口（Enforcement Gap）** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 |
+| **D. 验证 / 调度效率（Validation / Dispatch Efficiency）** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
+| **E. 检查器正确性 / 回归（Checker Correctness / Regression）** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 权威元数据被多份投影重复（FINDING-0024） |
+| **F. 可移植性 / 运行时边界（Portability / Runtime Boundary）** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
+| **G. 证据 / 研究方法（Evidence / Research Methodology）** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023） |
 
-## Taxonomy：层级与 Finding Type（L0–L4）
+## 分层与 Finding 类型（Taxonomy，L0–L4）
 
 Finding 用 `type` 字段绑定抽象层级（这也是 review 时的分类轴）。3 层模型是粗粒度视角，L0–L4 是精细分类；`type` 直接取 L0–L4 的枚举值。
 
@@ -81,7 +81,7 @@ R5 Producer/Product Isolation producer 与 product 治理缺乏显式隔离与�
 
 后续具体 findings 都挂到这五棵树下；每条 Finding 在 frontmatter 用 `root_cause` 声明归属。**R5 应优先处理**：producer/product ownership 未分清前，设计 Rule Registry / Dispatcher 时容易把当前 `repo / skill / both` 的混乱直接编码进新架构。
 
-## Frontmatter schema（canonical，sparse——空 optional 一律省略）
+## Frontmatter 元数据格式（canonical / sparse；空 optional 一律省略）
 
 ```yaml
 ---
@@ -138,7 +138,7 @@ related:                        # 按需；空类别省略
 哪个 negative oracle / contract test 防止再次发生。
 ```
 
-## Defect 的两种处理方式
+## 缺陷（Defect）的两种处理方式
 
 具体缺陷（bug / false positive / typo）有两种归属，避免 `findings/` 退化成「一个 bug 一个 finding」：
 
@@ -193,7 +193,7 @@ Invalidated
 - **`Superseded` 不删除旧 finding**。
 - **`Invalidated` 也保留**——错误判断本身有研究价值。
 
-Resolved finding ≠ archived finding。修复后它仍要回答：当时发现了什么？怎么复现？根因？后来怎么解决？哪个 regression test 保护？关联哪个 ADR / Plan / Issue？
+Finding 已解决（Resolved）≠ Finding 已归档（archived）。修复后它仍要回答：当时发现了什么？怎么复现？根因？后来怎么解决？哪个 regression test 保护？关联哪个 ADR / Plan / Issue？
 
 ## 关联方式（引用，不复制）
 
@@ -207,9 +207,9 @@ Plan 侧写 `Related Findings: [FINDING-0012, FINDING-0015]`。不要在两处�
 
 ## 语言政策
 
-> **Active operational knowledge 可以多语言；historical/research evidence 使用单一 canonical language。**
+> **当前运行知识（Active operational knowledge）可以多语言；历史/研究证据（historical/research evidence）使用单一规范语言（canonical language）。**
 
-当前 canonical language 是简体中文。本目录属于后者，从创建开始就是简体中文单语，不进入三语树，不参与 parity / freshness 检查——避免重新制造 translation sync / parity / freshness / review 成本。
+当前规范语言是简体中文。本目录属于后者，从创建开始就是简体中文单语，不进入三语树，不参与 parity / freshness 检查——避免重新制造 translation sync / parity / freshness / review 成本。
 
 ## 未来科研指标（数据源）
 

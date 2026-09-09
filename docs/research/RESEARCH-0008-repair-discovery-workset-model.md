@@ -5,7 +5,7 @@ version: 2
 subject_generation: gen1
 ---
 
-# RESEARCH-0008：修复 / 发现 / Workset 运行模型
+# RESEARCH-0008：修复 / 发现 / 工作集运行模型（Workset）
 
 本 RESEARCH 是 **System Model**：描述「修复一个系统问题」的运行模型——已有协议控制什么、缺少什么、问题集合如何随修复过程增长、目标架构的形态。它回答「repair / discovery / workset 这个系统现在是怎么工作的、缺口在哪、可测量的维度是什么」。
 
@@ -30,7 +30,7 @@ Horizontal issue closure  多个问题横向不丢失
 
 > **当前协议控制了「修复尝试的深度」，但没有控制「问题集合的宽度」**（FINDING-0022）。
 
-## 失效机制：recursive discovery / focus drift
+## 失效机制：递归发现 / 注意力漂移（recursive discovery / focus drift）
 
 ```text
 初始发现：B1 B2 B3 B4 B5
@@ -92,9 +92,9 @@ Known = resolved + deferred + blocked + duplicate + promoted + not-applicable
 不设计重型 Issue Registry。第一代 = 当前 TASK Plan 内的一张 **append-only membership** 表（条目不能删除；status / disposition 字段允许更新）：
 
 ```text
-## Discovery Ledger
+## 发现台账（Discovery Ledger）
 
-| ID | Origin | Problem | Scope | Status | Disposition | Evidence |
+| 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 ```
 
 规则语义、disposition 枚举与「prototype ≠ 机制已落地」的边界由 ADR-0021 与 PLAN-0033 规定，本模型不重复。

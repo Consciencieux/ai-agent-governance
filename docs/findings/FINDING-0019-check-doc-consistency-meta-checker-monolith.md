@@ -10,7 +10,7 @@ root_cause: R1
 github_issue: 7
 ---
 
-# FINDING-0019：check-doc-consistency.js 正在形成巨型 Meta-checker（incident-driven checker accretion）
+# FINDING-0019：check-doc-consistency.js 正在形成巨型元检查器（Meta-checker；incident-driven checker accretion）
 
 ## 观察
 

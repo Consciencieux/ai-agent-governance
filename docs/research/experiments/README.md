@@ -1,4 +1,4 @@
-# Experiments（实验记录）
+# 实验记录（Experiments）
 
 本目录保存研究实验记录。每个实验一个文件：
 
@@ -8,7 +8,7 @@ docs/research/experiments/
 └── experiment-0001-<slug>.md                  # 实验记录
 ```
 
-## 建议命名
+## 建议的命名方式
 
 ```text
 experiment-0001-static-vs-dynamic-policy.md
@@ -30,17 +30,17 @@ updated: ...
 
 # 实验标题
 
-## Hypothesis
+## 假设（Hypothesis）
 
-## Method
+## 方法（Method）
 
-## Measurements
+## 测量（Measurements）
 
-## Results
+## 结果（Results）
 
-## Conclusion
+## 结论（Conclusion）
 
-## Replication
+## 复现（Replication）
 ```
 
 ## 待办实验（见 RESEARCH-0003-evaluation-framework.md）

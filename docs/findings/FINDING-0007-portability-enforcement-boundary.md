@@ -10,7 +10,7 @@ root_cause: R4
 github_issue: 7
 ---
 
-# FINDING-0007：Portability 与 Runtime Hard Enforcement 的天然冲突：enforcement boundary 未定义
+# FINDING-0007：可移植性与运行时强制执行的天然冲突（Portability / Runtime Hard Enforcement）：执行边界（enforcement boundary）未定义
 
 ## 观察
 

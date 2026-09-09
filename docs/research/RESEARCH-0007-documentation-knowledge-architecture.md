@@ -112,9 +112,9 @@ Research / Finding
 
 | 关系 | 机械 carrier | 状态 |
 | --- | --- | --- |
-| Roadmap 索引 ↔ Plan 生命周期 | `repo-tools/check-roadmap-sync.js` | 失效中（旧路径/旧 section）→ FINDING-0021 |
-| Plan status 规范 | `scripts/check-doc-consistency.js` plan-status 集群 | Gen1 divergence（观测项） |
-| Plan 交付声明 | `repo-tools/check-plan-delivery.js` | 有效 |
+| 路线图索引（Roadmap）↔ 计划生命周期（Plan） | `repo-tools/check-roadmap-sync.js` | 失效中（旧路径/旧 section）→ FINDING-0021 |
+| 计划状态规范（Plan status） | `scripts/check-doc-consistency.js` plan-status 集群 | Gen1 divergence（观测项） |
+| 计划交付声明（Plan delivery） | `repo-tools/check-plan-delivery.js` | 有效 |
 | ADR 状态 | `scripts/check-doc-consistency.js` ADR-status 集群 | 有效 |
 | 术语权威（glossary） | `repo-tools/check-terminology.js`（repo-owned） | 有效（ADR-0020 首次执行分离） |
 

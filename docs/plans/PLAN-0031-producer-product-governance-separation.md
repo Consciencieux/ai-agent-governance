@@ -5,7 +5,7 @@ generation: gen2
 target: repo-infra
 ---
 
-# PLAN-0031：Producer / Product 治理分离
+# PLAN-0031：生产者 / 产品治理分离（Producer / Product）
 
 > （已完成，待 Release 归档。2026-09-09：Deliverable A–D 全部交付并复核——Profile 术语（ADR-0020）、4 条 separation invariants、cross-profile closure 契约（CONTROL-X 7 项，判据 + 排除说明）、ownership inventory 四正交轴收口（35 条 concern 全量分类，枚举经机械校验，各实现载体与 policy 章节逐项对照真实仓库验证）。本计划只完成 ownership/boundary 分类；**后续 physical execution separation 迁移（首项：术语门禁 extraction，见 ADR-0020 § 实施说明）不在本计划原始完成范围内**，不改变本计划历史目标。归档随 release 发生；Migration Mode 下暂不 release。）
 
@@ -38,7 +38,7 @@ adapter 怎么设计？                                                   ← �
 primitive 怎么抽象？                                                 ← Phase 4
 ```
 
-## SSOT 原则：共享语义只能有一个 authoritative owner
+## 单一事实源原则（SSOT）：共享语义只能有一个权威 owner
 
 > **Shared semantics does not imply shared implementation. 共享语义只能有一个 authoritative owner；repo 与 skill 是 consumer，不互为事实源。**
 
@@ -105,10 +105,10 @@ Phase 3 才决定这些概念最终是否进入正式 machine-readable schema（
 
 核心产物是 **ownership map**（每行 = 一个 concern，一个 semantic owner，明确 consumers / repo impl / skill impl / topology / semantic authority / impl dependency / target disposition，详见 RESEARCH-0006）：
 
-| Concern | Semantic owner | Consumers | Repo implementation | Skill implementation | Topology | Semantic authority | Impl dependency | Target |
+| 关注项（Concern） | 语义所有者（Semantic owner） | 消费者（Consumers） | 仓库实现（Repo implementation） | Skill 实现（Skill implementation） | 拓扑（Topology） | 语义权威状态（Semantic authority） | 实现依赖（Impl dependency） | 目标处置（Target disposition） |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Git 写操作确认 | core | repo；governed | AGENTS.md Git Protocol | git.policy 确认范围 | shared-semantic | duplicated | none | remove dependency（消除双重权威） |
-| Secret scanning | skill | governed；repo(手动) | AGENTS.md 手动调用 | check-secrets.js | shared-semantic | single | repo→skill · accidental | separate later |
+| 密钥扫描（Secret scanning） | skill | governed；repo(手动) | AGENTS.md 手动调用 | check-secrets.js | shared-semantic | single | repo→skill · accidental | separate later |
 | 分级发布审查 | core | repo；governed | skill-release.md | release.md | shared-semantic | duplicated | none | remove dependency（消除双重权威） |
 | 交付锚点 | repo | repo | check-plan-delivery.js | — | repo-only | single | none | keep |
 

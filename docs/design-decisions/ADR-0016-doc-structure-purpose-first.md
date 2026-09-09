@@ -54,11 +54,11 @@ docs/
 
 | 知识类型 | 受众 | 语言 |
 | --- | --- | --- |
-| user-facing（README / 使用指南 / skill 指南 / 安装说明） | 用户、贡献者、外部开发者 | en + zh-CN + zh-TW |
-| roadmap（边界对象） | 对外：项目方向；对内：架构迁移计划 | 三语 |
-| execution plans | 项目维护者 | 单语（zh-CN canonical） |
-| research / findings / ADR | 维护者、研究者、架构设计者 | 单语 |
-| archive | 历史保存 | 单语（zh-CN canonical） |
+| 面向用户（user-facing；README / 使用指南 / skill 指南 / 安装说明） | 用户、贡献者、外部开发者 | en + zh-CN + zh-TW |
+| 路线图（roadmap；边界对象） | 对外：项目方向；对内：架构迁移计划 | 三语 |
+| 执行计划（execution plans） | 项目维护者 | 单语（zh-CN canonical） |
+| 研究 / 发现 / 架构决策（research / findings / ADR） | 维护者、研究者、架构设计者 | 单语 |
+| 归档（archive） | 历史保存 | 单语（zh-CN canonical） |
 
 **3. roadmap 保留三语**（它是边界对象，对外表达方向、对内承载迁移计划），但位置从 `docs/{en,zh-CN,zh-TW}/roadmap.md` 移到 `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`。
 
@@ -87,7 +87,7 @@ docs/
 
 每个 D 步骤是一个独立 checkpoint（ADR-0014），gate 在 Migration Mode 下为观测性。
 
-## 后续修正（2026-09-09）：archive 只保留 `plans/`，且位置在 `docs/plans/archive/`
+## 后续修正（2026-09-09）：归档（archive）只保留 `plans/`，且位置在 `docs/plans/archive/`
 
 本 ADR 原决策的 archive 子树（`plans/` / `findings/` / `research/` / `adr/` 四类）与后来确定的生命周期语义冲突，予以部分修正：
 

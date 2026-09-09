@@ -1,14 +1,14 @@
-# Research（研究知识库）
+# 研究知识库
 
 本目录保存对 **ai-agent-governance 系统本身**的科学描述：系统模型、机制分类、评价框架、架构演进、实验记录、方法论。它回答「**我们正在研究什么系统？如何理解它？如何评价它？**」，与以下知识类别严格区分：
 
 | 类型 | 用途 | 示例 |
 | --- | --- | --- |
-| `research/`（本目录） | 描述和研究系统 | 当前 gate 模型、治理机制分类 |
-| `findings/` | 记录发现的问题 | trigger coverage 缺失 |
-| `design-decisions/` | 记录已接受决策 | 引入 Rule Registry |
-| `plans/` | 描述执行方案 | 实现 Rule Registry MVP |
-| `plans/archive/` | 保存完成计划 | 已完成迁移计划 |
+| 研究（`research/`） | 描述和研究系统 | 当前 gate 模型、治理机制分类 |
+| 发现（`findings/`） | 记录发现的问题 | trigger coverage 缺失 |
+| 架构决策（`design-decisions/`） | 记录已接受决策 | 引入 Rule Registry |
+| 计划（`plans/`） | 描述执行方案 | 实现 Rule Registry MVP |
+| 归档计划（`plans/archive/`） | 保存完成计划 | 已完成迁移计划 |
 
 ## 为什么单独一类
 
@@ -58,7 +58,7 @@ docs/research/
 ├── RESEARCH-0003-evaluation-framework.md          # 评价体系
 ├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3）
 ├── RESEARCH-0005-current-capabilities.md          # 当前能力清单（Generation-1 baseline）
-├── RESEARCH-0006-generation-1-capability-baseline.md # Generation-1 能力保存矩阵（2.0 迁移 baseline evidence）
+├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵（2.0 迁移基线证据）
 ├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：七类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
 ├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
 ├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：薄入口、分层加载、路由、机械优先、当前/目标模型）
@@ -67,7 +67,7 @@ docs/research/
 
 不要：`系统模型.md`。
 
-## Research 文档类型
+## 研究文档类型
 
 | 类型 | 文件 | 内容 |
 | --- | --- | --- |
@@ -82,12 +82,12 @@ docs/research/
 | I. 修复/发现/Workset 模型（Repair / Discovery / Workset Model） | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
 | J. Agent 指令架构（Agent Instruction Architecture） | `RESEARCH-0009-agent-instruction-architecture.md` | System Model：薄入口/专能力/按需加载/职责单一/历史后置/路由明确/机械优先；当前与目标加载模型 |
 
-**统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
+**统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 
 ## 编号规则
 `RESEARCH-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
 
-## Frontmatter metadata（canonical，sparse——空 optional 一律省略）
+## Frontmatter 元数据格式（canonical / sparse；空 optional 一律省略）
 
 ```yaml
 ---
@@ -126,22 +126,22 @@ Superseded by: Research-007
 
 这本身就是研究轨迹。第一版只保留 `Draft / Active / Superseded / Archived` 四个状态，**不建议**建过度复杂状态机（Hypothesis / Reviewed / Validated / Published / Deprecated / Retired 会让 research 本身变成治理对象）。
 
-## Review 规则
+## 审阅规则（Review）
 
 新增或修改 research 文档**不需要跑全部 gate**：
 
-- **必须**：Markdown 格式、link validity、metadata 格式
+- **必须**：Markdown 格式、链接有效性（link validity）、元数据格式
 - **不需要**：三语 parity、changelog、product docs freshness（它不是产品文档）
 
 ## 质量标准
 
 好的 research 文档应回答：
 
-- **What**：研究对象是什么？
-- **Why**：为什么研究？（连接到 finding / 动机）
-- **Model**：抽象模型是什么？
-- **Evidence**：有什么证据？（实验、代码位置、测量数据）
-- **Implication**：对未来设计有什么影响？
+- **研究对象（What）**：研究对象是什么？
+- **研究动机（Why）**：为什么研究？（连接到 finding / 动机）
+- **模型（Model）**：抽象模型是什么？
+- **证据（Evidence）**：有什么证据？（实验、代码位置、测量数据）
+- **影响（Implication）**：对未来设计有什么影响？
 
 ## 关联规则
 

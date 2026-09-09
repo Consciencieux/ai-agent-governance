@@ -50,20 +50,20 @@ generation  → 这个对象属于哪个架构时代？（gen1 / gen2 / cross-ge
 
 | 类型 | 字段 | 取值 |
 | --- | --- | --- |
-| Plan | `generation` | `gen1` / `gen2` |
-| ADR | `generation` | `gen1` / `gen2` / `cross-generation` |
-| Finding | `observed_in` / `resolved_in` | 架构时代（一个 Finding 可能在 Gen1 发现、Gen2 仍未解决，所以用观察/解决两个时间点，不用单值 `generation`） |
-| Research | `subject_generation` | 该研究描述的架构时代 |
+| 计划（Plan） | `generation` | `gen1` / `gen2` |
+| 架构决策（ADR） | `generation` | `gen1` / `gen2` / `cross-generation` |
+| 发现（Finding） | `observed_in` / `resolved_in` | 架构时代（一个 Finding 可能在 Gen1 发现、Gen2 仍未解决，所以用观察/解决两个时间点，不用单值 `generation`） |
+| 研究（Research） | `subject_generation` | 该研究描述的架构时代 |
 
 **4. 三个概念必须彻底分开：**
 
 ```text
-Plan archived    ≠   Feature deprecated    ≠   Control obsolete
+计划已归档（Plan archived）≠ 功能已弃用（Feature deprecated）≠ 控制已废弃（Control obsolete）
 ```
 
-- **Plan archived** = 这个具体任务做完了，执行过程冻结为历史记录（生命周期事件）；
-- **Feature deprecated** = 这个功能不再建议使用（产品事件）；
-- **Control obsolete** = 这个治理控制不再保护任何东西（架构事件）。
+- **计划已归档（Plan archived）** = 这个具体任务做完了，执行过程冻结为历史记录（生命周期事件）；
+- **功能已弃用（Feature deprecated）** = 这个功能不再建议使用（产品事件）；
+- **控制已废弃（Control obsolete）** = 这个治理控制不再保护任何东西（架构事件）。
 
 归档只回答「任务是否完成」，不回答「能力现在是否仍存在」。`docs/plans/archive/` 保持不动，但角色重新定义为**历史执行证据与 capability provenance**：
 

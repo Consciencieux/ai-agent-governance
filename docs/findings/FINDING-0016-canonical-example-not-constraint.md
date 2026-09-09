@@ -10,7 +10,7 @@ root_cause: R1
 github_issue: 7
 ---
 
-# FINDING-0016：Canonical Example 只是参考，不是约束（reference ≠ constraint）
+# FINDING-0016：规范示例仅供参考，不是约束（Canonical Example；reference ≠ constraint）
 
 ## 观察
 

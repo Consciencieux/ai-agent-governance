@@ -19,7 +19,7 @@ github_issue: 6
 ## 证据
 
 ```text
-## GitLab CI (python)
+## GitLab CI（Python 栈）
   image: python:3.11
   script:
     - npx prettier --check .    # Python 镜像跑 Node 命令

@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0021：Known-Issue Closure（已知问题闭包）
+# ADR-0021：已知问题闭包（Known-Issue Closure）
 
 
 ## 背景
@@ -53,7 +53,7 @@ resolved（含 fixed-now） / deferred / duplicate / not-applicable / blocked
 不设计重型 Issue Registry。第一代 = 当前任务 Plan 内一张表（**append-only membership**：条目一经登记不得删除；`Status` / `Disposition` 字段允许更新）：
 
 ```text
-| ID | Origin | Problem | Scope | Status | Disposition | Evidence |
+| 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 ```
 
 规则：发现→先登记；登记→不得删除（membership append-only）；处置→更新 Status/Disposition 字段；新问题→不自动抢占当前任务；结束→所有条目必须有 terminal disposition 且 Status=closed。
@@ -62,7 +62,7 @@ resolved（含 fixed-now） / deferred / duplicate / not-applicable / blocked
 
 **6. 本 ADR 是 Gen2 执行语义（`generation: gen2`）。** Migration Mode（ADR-0014）冻结 Gen1 规则演进；PLAN-0033 是对该语义的 **first-generation prototype / characterization**（演示载体可行），不宣称 Gen1 lifecycle 已被改变；正式纳入 TASK Plan 格式与 machine-readable task state 留待后续阶段。
 
-## 后续修正（2026-09-09）：terminal disposition 的跟踪与后继约束
+## 后续修正（2026-09-09）：终结处置（terminal disposition）的跟踪与后继约束
 
 本修正是对「决策 3」的 **Narrow amendment**。原有关于 terminal disposition 枚举与 `Unaccounted discovered items = 0` 的文字保留为历史；自本修正起，以下约束补充并 supersede 原 clause 中未覆盖的部分：
 

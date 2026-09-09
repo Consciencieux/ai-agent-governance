@@ -10,7 +10,7 @@ root_cause: R3
 github_issue: 7
 ---
 
-# FINDING-0006：Regression Oracle 缺口：Fix 正确 ≠ Fix 被保护
+# FINDING-0006：回归判定预言机缺口（Regression Oracle）：修复正确 ≠ 修复受保护
 
 ## 观察
 

@@ -1,4 +1,4 @@
-# Plans 目录（执行计划）
+# 执行计划目录
 
 本目录是本仓库的 **执行计划库**：保存当前正在执行的具体任务设计。它回答「**准备怎么做**」，与 `findings/`（实际发现了什么）、`research/`（如何理解这个系统）、`design-decisions/`（为什么做这个架构决定）严格分工。
 
@@ -22,22 +22,22 @@ docs/plans/
 | 归档计划 | `docs/plans/archive/PLAN-xxxx-*.md` | 这个任务最终做成了什么？ | 冻结历史 |
 
 - **`PLAN-xxxx-<slug>.md`**：当前执行中的计划，状态为 design plan / Active / implemented（等归档）。
-- **`roadmap/`**：长期架构演进视图（Vision / Current State / Known Limitations / Target Architecture / Migration Phases / Research Goals / Non-goals），三语边界对象。它的修订触发是架构事件，**不按普通 Plan 走 active → archive**。
+- **`roadmap/`**：长期架构演进视图（愿景 / 当前状态 / 已知限制 / 目标架构 / 迁移阶段 / 研究目标 / 非目标；Vision / Current State / Known Limitations / Target Architecture / Migration Phases / Research Goals / Non-goals），三语边界对象。它的修订触发是架构事件，**不按普通 Plan 走 active → archive**。
 - **`archive/`**：已完成计划的最终归属。Plan 完成后从 `docs/plans/` 移入 `docs/plans/archive/`，此移动发生在 release 归档点。
 
 ## 归档计划 = 历史执行证据与能力溯源
 
-> **Archived Plans are immutable historical execution records and may be used as provenance when reconstructing previous-generation capabilities. Archiving does not mean the capability is obsolete.**
+> **归档计划是不可变的历史执行记录（Archived Plans），可用于重建前一代能力的 provenance；归档不表示该能力已经过时。**
 
 三个概念必须彻底分开：
 
 ```text
-Plan archived    ≠   Feature deprecated    ≠   Control obsolete
+计划已归档（Plan archived）≠ 功能已弃用（Feature deprecated）≠ 控制已废弃（Control obsolete）
 ```
 
-- **Plan archived** = 这个具体任务做完了，其执行过程冻结为历史记录（生命周期事件）。
-- **Feature deprecated** = 这个功能不再建议使用（产品事件）。
-- **Control obsolete** = 这个治理控制不再保护任何东西（架构事件）。
+- **计划已归档（Plan archived）** = 这个具体任务做完了，其执行过程冻结为历史记录（生命周期事件）。
+- **功能已弃用（Feature deprecated）** = 这个功能不再建议使用（产品事件）。
+- **控制已废弃（Control obsolete）** = 这个治理控制不再保护任何东西（架构事件）。
 
 一个 Plan 归档，只回答「任务是否完成」，不回答「这个能力现在是否仍然存在、是否仍然有效」。归档计划记录了「为什么加入这个机制、当时解决什么问题、涉及哪些文件、边界条件、同步点、最终交付了什么」——它是最完整的 Generation-1 功能演进记录，也是 1.0 → 2.0 capability audit 的证据来源。
 

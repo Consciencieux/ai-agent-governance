@@ -10,7 +10,7 @@ root_cause: R4
 github_issue: 5
 ---
 
-# FINDING-0003：Declaration 与 Enforcement 强度脱节：文档 MUST ≠ mechanical deny
+# FINDING-0003：声明与执行强度脱节（Declaration / Enforcement）：文档 MUST ≠ 机械拒绝
 
 ## 观察
 

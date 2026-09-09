@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0015：Roadmap 重新定位
+# ADR-0015：路线图重新定位（Roadmap）
 
 
 ## 背景
@@ -27,20 +27,20 @@ generation: gen2
 ```text
 # Roadmap
 
-## Vision                    AI Coding Governance Framework
+## 愿景（Vision）                    AI Coding Governance Framework
 
-## Current State             Generation 1（document-centric / agent-triggered / script-based）
+## 当前状态（Current State）             第一代（document-centric / agent-triggered / script-based）
 
-## Known Limitations         引用 findings（FINDING-0001 / 0002 / ...），不复述
+## 已知限制（Known Limitations）         引用 findings（FINDING-0001 / 0002 / ...），不复述
 
-## Target Architecture       Generation 2（Rule Registry → Context Detector → Dispatcher → Mechanism → Evidence）
+## 目标架构（Target Architecture）       第二代（Rule Registry → Context Detector → Dispatcher → Mechanism → Evidence）
 
-## Migration Phases          Phase 1 Producer/Product Separation → Phase 2 Governance Core → Phase 3 Policy Model → Phase 4 Dispatcher → Phase 5 Runtime Adapter
+## 迁移阶段（Migration Phases）          Phase 1 Producer/Product Separation → Phase 2 Governance Core → Phase 3 Policy Model → Phase 4 Dispatcher → Phase 5 Runtime Adapter
                            （**Historical proposal — superseded by ADR-0018 Phase 0–8. Not an operative phase definition.**）
 
-## Research Goals            dynamic policy injection / incremental validation / enforcement coverage
+## 研究目标（Research Goals）            dynamic policy injection / incremental validation / enforcement coverage
 
-## Non-goals                 不继续新增 policy 解决所有问题；不为每个 incident 建独立 checker；不假设所有 judgment rule 可机械化；不追求所有 Agent runtime 完全一致
+## 非目标（Non-goals）                 不继续新增 policy 解决所有问题；不为每个 incident 建独立 checker；不假设所有 judgment rule 可机械化；不追求所有 Agent runtime 完全一致
 ```
 
 **2. 已完成能力迁移到 `docs/research/`。**
@@ -52,7 +52,7 @@ generation: gen2
 | 当前 roadmap 内容 | 去向 |
 | --- | --- |
 | 已完成能力列表 | `docs/research/RESEARCH-0005-current-capabilities.md` |
-| checker 分类 | `docs/research/RESEARCH-0002-governance-mechanism-taxonomy.md`（已有） |
+| 检查器分类（checker） | `docs/research/RESEARCH-0002-governance-mechanism-taxonomy.md`（已有） |
 | 缺陷教训 | `docs/findings/`（已有） |
 | 架构选择 | `docs/design-decisions/`（已有） |
 | 未来阶段 | roadmap（重构后） |

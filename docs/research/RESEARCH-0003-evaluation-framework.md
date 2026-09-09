@@ -82,7 +82,7 @@ Rule Registry + Dispatcher
 
 对比 enforcement coverage、trigger coverage、runtime、token、human cost。
 
-## Zero-Attention 成熟度标准
+## 零注意力成熟度标准（Zero-Attention）
 
 假设 **Agent 完全不记得任何治理规则**，然后问：
 

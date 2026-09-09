@@ -10,7 +10,7 @@ root_cause: R2
 github_issue: 7
 ---
 
-# FINDING-0004：Trigger Coverage 缺口：门禁触发依赖 Agent 注意力
+# FINDING-0004：触发覆盖率缺口（Trigger Coverage）：门禁触发依赖 Agent 注意力
 
 ## 观察
 

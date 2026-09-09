@@ -10,7 +10,7 @@ root_cause: R4
 github_issue: 6
 ---
 
-# FINDING-0012：check-lock.js 是 read-only advisory，不是 concurrency-safe lock（TOCTOU race）
+# FINDING-0012：check-lock.js 是只读提示（read-only advisory），不是并发安全锁（concurrency-safe lock；TOCTOU race）
 
 ## 观察
 

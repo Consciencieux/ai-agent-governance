@@ -4,7 +4,7 @@ status: Archived
 generation: gen1
 ---
 
-# PLAN-0013：Consent 政策重写：提交前一次确认
+# PLAN-0013：提交确认政策重写（Consent）：提交前一次确认
 
 > （已归档。归档即断言完成。）
 

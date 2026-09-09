@@ -4,7 +4,7 @@ status: Archived
 generation: gen1
 ---
 
-# PLAN-0025：Skill 生命周期管理
+# PLAN-0025：技能生命周期管理（Skill lifecycle management）
 
 归档共享单语原文(简体中文为准)。原三语版本已随归档移除;本文件随 v0.13.2 归档于 2026-09-06。
 

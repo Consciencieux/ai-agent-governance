@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0014：Architecture Migration Mode
+# ADR-0014：架构迁移模式（Architecture Migration Mode）
 
 
 ## 背景
@@ -53,6 +53,27 @@ Release Candidate → 完整 regression + security + packaging + release gates
 **7. 冻结规则演进。** 2.0 重构期间暂停给 1.x governance 增加新 policy/checker/cluster，除非是 security critical / data loss / release corruption / 无法继续重构的 blocker。否则一边拆 Generation-1，一边继续建设 Generation-1。
 
 **8. 发现的问题按既有链路由：** 系统性/重复出现的 issue → `docs/findings/`（FINDING，L0–L4 分类）；架构决策 → ADR；具体任务 → Plan。不立即 `改 policy → 加 regex → 加 checker → 加 test → 加三语 docs`。
+
+## 后续修正（2026-09-09）：第一代机械层冻结（Generation-1 Mechanical Freeze）
+
+本修正是对决策 1、3、4、7 的 **Narrow amendment**，用于明确迁移边界；它不删除或重定义现有 Gen1 capability。
+
+在 Gen2 Phase 2–3 期间，Generation-1 mechanical implementations 是**冻结的迁移基底**（Frozen Gen1 Mechanical Substrate），是行为证据与 characterization specimen，不是 active architecture design surface。
+
+**允许：**
+
+- security / data-loss / release-corruption / migration-blocker 修复；
+- 对现有行为增加 characterization；
+- 观察和记录 compatibility divergence。
+
+**禁止：**
+
+- 在 Gen1 checker 或 generator 中编码新的 Gen2 semantics；
+- 因单个 incident 持续追加 Gen1 checker / cluster；
+- 提前进行 checker restructuring、抽象重构或机制迁移；
+- 在没有明确 Gen2 disposition 与替代证据前删除 Gen1 capability。
+
+Replacement / decomposition / retirement 的正式判断从 Phase 4 开始，逐项采用 `keep / wrap / extract / rewrite / retire` disposition，并以 RESEARCH-0006 的 capability baseline 与 invariant/characterization evidence 为输入。必要的 Safety Kernel 修复不构成提前进入 Phase 4。
 
 ## 后果
 

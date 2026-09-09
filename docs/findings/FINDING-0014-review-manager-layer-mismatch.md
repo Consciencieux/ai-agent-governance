@@ -10,7 +10,7 @@ root_cause: R1
 github_issue: 7
 ---
 
-# FINDING-0014：review-manager 审查任务定义错了层级：implementation assurance ≠ architecture quality
+# FINDING-0014：review-manager 审查任务定义错了层级：实现保证（implementation assurance）≠ 架构质量（architecture quality）
 
 ## 观察
 

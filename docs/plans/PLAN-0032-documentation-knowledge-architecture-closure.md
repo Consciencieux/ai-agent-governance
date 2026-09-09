@@ -77,19 +77,24 @@ docs/README.md
 - `docs/README.md` —— 日常路由索引（路由测试 + 七类判定表 + 当前/历史）
 - `docs/findings/FINDING-0020-roadmap-projection-drift.md`、`FINDING-0021-roadmap-checker-vacuous.md` —— 边界失效证据
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md` —— 阶段清单对齐 ADR-0018（FINDING-0020 解决）
+- `docs/design-decisions/` —— ADR 对象与管理 README 的 H1、章节标题、表头 presentation normalization
+- `docs/findings/` —— Finding 对象与管理 README 的 H1、章节标题、分类名称、表头 presentation normalization
+- `docs/research/` —— Research 对象与管理 README 的 H1、章节标题、分类名称、表头 presentation normalization
+- `docs/plans/` —— 当前 Plan 与管理 README 的 H1、章节标题、表头 presentation normalization；归档 Plan 仅允许 representation 层调整，不改历史事实
 
 ## 验证方法
 
-1. `npm test` exit 0（测试计数作为 completion evidence，不作为验收契约本身）。
-2. 路由表、ADR、Research 三者互相可解析（link check）。
-3. `docs/README.md` 路由判定表可作为单一判定入口（人 + Agent 均可据此路由）。
-4. 完成条件的四条为定性判定，由 review checkpoint 确认，不强行机械门禁化（与 Phase 1 分类人工判断同一性质）。
+1. 迁移分支的 Gen1 full test / legacy gate 仅作 observational characterization；本次 doc-only change 不以旧 gate 全绿作为验收条件。
+2. 全量 presentation inventory：四类当前知识对象与四个管理 README 不存在英文主 H1、英文主章节标题或英文主表头；技术名、ID、enum、路径、CLI 和代码标识可保留英文。
+3. 路由表、ADR、Research 三者互相可解析（link check）。
+4. `docs/README.md` 路由判定表可作为单一判定入口（人 + Agent 均可据此路由）。
+5. 完成条件的四条为定性判定，由 review checkpoint 确认，不强行机械门禁化（与 Phase 1 分类人工判断同一性质）。
 
-## Discovery Ledger（closure review workset）
+## 发现台账（Discovery Ledger；closure review workset）
 
-本计划 closure review 发现的 26 个语义/一致性点，按 Known-Issue Closure（ADR-0021）登记并逐项结算。当前 snapshot 明确区分已终结条目、带后继触发条件的非 `resolved` 条目，以及本 checkpoint 中重新审查后再次闭合的条目。
+本计划闭包审查（closure review）发现的 26 个语义/一致性点，按已知问题闭包（Known-Issue Closure；ADR-0021）登记并逐项结算。当前快照（snapshot）明确区分已终结条目、带后继触发条件的非 `resolved` 条目，以及本 checkpoint 中重新审查后再次闭合的条目；R25 的人类阅读层 presentation normalization 已完成并重新闭合。
 
-| ID | Origin | Problem | Scope | Status | Disposition | Evidence |
+| 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
 | R1 | review | 八类 vs 七类（Archive Plan 是 Plan 生命周期） | repo | closed | resolved | RESEARCH-0007/ADR-0016/docs README |
 | R2 | review | 「两问同答必须拆」太绝对 | repo | closed | resolved | primary-authoritative-responsibility 模型 |
@@ -115,12 +120,12 @@ docs/README.md
 | R22 | review | RESEARCH-0007/0009 subject_generation 元数据 | repo | closed | resolved | 迁移型 Research 省略 |
 | R23 | review | AGENTS 完整瘦身（SKILL/AGENTS 厚入口） | repo | closed | deferred（revisit: Phase 3 开始前的 entry checkpoint；该 checkpoint 必须重新取回 R23，并确认 ADR-0022 § 后果对应的 AGENTS/SKILL 入口瘦身执行计划与范围） | ADR-0022 § 后果 |
 | R24 | review | payload 内嵌 Discovery Ledger（lifecycle.policy TASK 格式） | skill | closed | promoted-to-next-plan（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 R24，并建立 successor Plan ID） | ADR-0021 § 决策 6 |
-| R25 | subtask | 知识对象表示法归一（Representation Normalization）：统一 YAML envelope / sparse / 中文 H1 章节表头 | repo | closed | resolved | ADR-0016 § 后续补充；四类当前对象 |
+| R25 | subtask | 知识对象表示法归一（Representation Normalization）：机器表示层与人类阅读层均已完成全仓归一 | repo | closed | resolved | 四类对象与四个管理 README 的 presentation inventory；ADR-0016 § 表示法归一 |
 | R26 | review | canonical 元数据被多份 index/projection 重复 → 持续 drift（ADR-0021 index、README schema 示例等） | repo | closed | promoted-to-finding | FINDING-0024 |
 
 **Metadata consumer enumeration（表示法归一前必须，2026-09-09 更新）：** Plan/ADR 状态原由正文解析（plan-status / plan-delivery / roadmap-sync / ADR-status 簇），但 **Representation authority moves now（ADR-0016）**——canonical 已迁入 frontmatter，正文 Status 已删除；旧 parser 的失败属已知 compatibility divergence，parser migration 属 Phase 4。generation / Finding / Research 元数据无机械 consumer。
 
-## Closure reconciliation（2026-09-09 二次 checkpoint：workset reopened）
+## 闭包对账（Closure reconciliation；2026-09-09 二次 checkpoint：工作集已重新打开）
 
 ```text
 Total known:  26
@@ -131,7 +136,7 @@ Promoted to next Plan: 1  (R24；Phase 4 planning checkpoint 重新取回并建�
 Unaccounted:  0
 ```
 
-**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 README/schema projection 未收干净。本 checkpoint 已重新核验这些条目并再次闭合；R23/R24 则保留明确的未来取回触发条件，R26 已提升为 FINDING-0024。完成判据保持为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。
+**状态：Active（二次 checkpoint）。** 首次 closure 声明被仓库现状反证：R2 旧规则残留于正文、R4 顺序权威表述残留、R14 open+terminal 复发、R19 AGENTS policy 部分下沉、R25 README/schema projection 未收干净。本 checkpoint 已重新核验 R2/R4/R14/R19/R25 并再次闭合；R23/R24 保留明确的未来取回触发条件，R26 已提升为 FINDING-0024。完成判据保持为：canonical rule 只有一份；所有 README/index/projection 与 canonical 一致；所有 metadata 值有语义依据；所有已声明 resolved 的问题在仓库中找不到反例。R25 的四类当前知识对象与四个管理 README 已完成中文主标题、章节标题与表头 normalization。
 
 
 ## 未决风险

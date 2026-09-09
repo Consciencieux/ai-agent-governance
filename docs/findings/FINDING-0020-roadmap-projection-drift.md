@@ -13,7 +13,7 @@ related:
   research: [RESEARCH-0007]
 ---
 
-# FINDING-0020：Roadmap 投影漂移（ADR-0018 阶段顺序 ≠ Roadmap 阶段定义）
+# FINDING-0020：路线图投影漂移（Roadmap；ADR-0018 阶段顺序 ≠ 路线图阶段定义）
 
 ## 观察
 

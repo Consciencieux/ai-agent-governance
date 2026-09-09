@@ -4,7 +4,7 @@ status: Accepted
 generation: gen2
 ---
 
-# ADR-0018：Generation-2 开发路径
+# ADR-0018：第二代开发路径（Generation-2）
 
 
 ## 背景
@@ -102,7 +102,7 @@ Runtime / token cost / human burden   运维成本观测
 - 测试指标转向不要求立即重写全部测试，而是新 control 一律 invariant-centric，存量渐进迁移。
 - ID 编号规则统一后，各 README 的隐含约定收敛为一条可引用规则。
 
-## 后续修正（2026-09-09）：Phase 3 schema 边界
+## 后续修正（2026-09-09）：第三阶段 schema 边界（Phase 3 schema）
 
 本修正是对上方原始 Consequences clause 的 **Narrow amendment**。原文字保留为 Phase 1 期间的历史概念表述；它不再被解释为 Phase 3 的正式字段或 ownership schema。
 

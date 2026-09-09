@@ -4,7 +4,7 @@ status: Accepted
 generation: cross-generation
 ---
 
-# ADR-0013：Issue / Finding Archive 与知识对象五分类
+# ADR-0013：问题 / 发现档案与知识对象五分类（Issue / Finding Archive）
 
 
 ## 背景

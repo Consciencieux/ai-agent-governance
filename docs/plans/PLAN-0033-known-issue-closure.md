@@ -35,9 +35,9 @@ target: repo-infra
 
 本计划即演示载体。执行期间任何新发现问题必须先追加到这里（**append-only membership**：条目不得删除，`Status` / `Disposition` 字段允许更新），任务结束时所有条目必须有 terminal disposition 且 `Status=closed`，并做 closure reconciliation。
 
-## Discovery Ledger
+## 发现台账（Discovery Ledger）
 
-| ID | Origin | Problem | Scope | Status | Disposition | Evidence |
+| 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
 | K1 | initial | 修复任务无持久已知问题集合（recursive discovery 丢失风险） | repo+skill | closed | promoted-to-finding | FINDING-0022 |
 | K2 | K1 | 需要 Accepted 执行语义（capture / disposition / zero-unaccounted） | repo+skill | closed | promoted-to-adr | ADR-0021 |
@@ -45,7 +45,7 @@ target: repo-infra
 | K4 | K1 | 第一代载体 = TASK Plan 内 append-only 表（不重型 Registry） | repo | closed | resolved | 本计划 § 第一代载体 |
 | K5 | K2 | payload 内嵌（lifecycle.policy TASK 格式）留后续阶段 | skill | closed | deferred（revisit: Phase 4 planning checkpoint；开始 lifecycle.policy TASK Plan 格式集成时必须重新取回 K5，并建立 successor Plan ID） | ADR-0021 § 后续修正 |
 
-## Closure reconciliation（本计划结束时的目标状态）
+## 闭包对账（Closure reconciliation；本计划结束时的目标状态）
 
 ```text
 Total known:  5

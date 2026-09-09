@@ -9,7 +9,7 @@ subject_generation: gen1
 
 > 记录 ai-agent-governance 的世代演进。每个 Generation 是独立模型，不删除旧记录——演进过程本身就是研究轨迹。
 
-## Generation 0 — Prompt-only governance
+## 第 0 代（Generation 0）— 仅提示词治理（Prompt-only governance）
 
 ```text
 规则写在 prompt / README
@@ -22,7 +22,7 @@ Agent 自律执行
 - 无机械 carrier，无 gate，无测试
 - 治理强度完全依赖 Agent 注意力
 
-## Generation 1 — Document + scripts（当前，1.0.x）
+## 第一代（Generation 1）— 文档 + 脚本（当前，1.0.x）
 
 ```text
 Markdown / AGENTS / SKILL / policies
@@ -40,7 +40,7 @@ exit 0/1
 - 验证简单过重 / 复杂不足（FINDING-0005）
 - 1.0.0 冻结了 interface surface 但没冻结核心模型（FINDING-0018），定位为 Generation-1 baseline
 
-## Generation 2 — Rule Registry + Dispatcher（规划中，2.0）
+## 第二代（Generation 2）— Rule Registry + Dispatcher（规划中，2.0）
 
 ```text
                 Rule Registry
@@ -71,7 +71,7 @@ exit 0/1
 - 统一 Evidence Model：`rule / tool / query / exitCode / timestamp / resultHash`
 - 进入路径由 ADR-0014（Architecture Migration Mode）管控
 
-## Generation 3 — Runtime adapters（远期）
+## 第三代（Generation 3）— 运行时适配器（Runtime adapters；远期）
 
 ```text
 Portable Governance Core
