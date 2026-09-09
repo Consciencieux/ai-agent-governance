@@ -57,6 +57,15 @@ Release Candidate → 完整 regression + security + packaging + release gates
 - 代价：旧 gate 在迁移期间不阻断，可能放过 Generation-1 内部的回归——由 Safety Kernel 的 characterization + checkpoint 兜底。
 - 遗留风险：判断「哪些问题进 findings、哪些必须立即修」仍是人工的；migration mode 的进入/退出需要纪律（由本 ADR + 重构 Plan 约束，不额外造状态机）。
 
+## 实施说明（2026-09-09，非决策性 note）
+
+`.github/workflows/ci.yml` 已按本决策落实**双模式 CI**，不再由 Gen1 gate 阻断 migration 分支：
+
+- `main` / 1.x → `gen1-check`：`npm run check` 仍为 blocking（+ governance badge）。
+- `migration/2.0-governance-architecture` → `migration-safety`（blocking，Refactor Safety Kernel：JS syntax + `--suite security/generator/payload`）+ `migration-legacy-observation`（`npm run check`，`continue-on-error`，仅作 observational compatibility probe）。
+
+这是落实本决策的 Migration Mode 基础设施修正，非新增架构决策；不引入新的 Gen1 gate、checker 或 CI routing 框架。CI 的长期形态（Repo Profile / Dispatcher 路由）留待 Generation-2 另行决策。
+
 ## 参考
 
 - 科研测量缺口：FINDING-0008（`docs/findings/FINDING-0008-governance-measurement-gap.md`）

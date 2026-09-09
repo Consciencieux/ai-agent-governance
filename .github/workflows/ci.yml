@@ -1,20 +1,38 @@
 name: CI
 
+# Dual-mode CI per ADR-0014 (Architecture Migration Mode):
+#   - main / 1.x              → gen1-check (npm run check, blocking)
+#   - migration/2.0-...       → migration-safety (Refactor Safety Kernel, blocking)
+#                               + migration-legacy-observation (Gen1 probes, observational)
+# Implementation note: ADR-0014 § 实施说明 (2026-09-09).
+
 on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  # ------------------------------------------------------------
+  # Generation-1 stable CI
+  # main / ordinary 1.x work continues to use the old blocking gates.
+  # ------------------------------------------------------------
+  gen1-check:
+    if: >-
+      github.ref != 'refs/heads/migration/2.0-governance-architecture' &&
+      github.base_ref != 'migration/2.0-governance-architecture'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
         with:
           node-version: 20
+
       - run: npm run check
+
       - name: Governance badge endpoint
         run: |
           node scripts/verify_governance.js --json > governance-report.json || true
@@ -26,7 +44,60 @@ jobs:
               schemaVersion: 1, label: 'governance', message: r.passed + '/' + r.total, color
             }));
           "
+
       - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         with:
           name: governance-badge
           path: governance-badge.json
+
+  # ------------------------------------------------------------
+  # Generation-2 migration blocking authority.
+  # Only the Refactor Safety Kernel may make migration CI red.
+  # ------------------------------------------------------------
+  migration-safety:
+    if: >-
+      github.ref == 'refs/heads/migration/2.0-governance-architecture' ||
+      github.base_ref == 'migration/2.0-governance-architecture'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
+        with:
+          node-version: 20
+
+      - name: JavaScript syntax
+        run: |
+          find scripts repo-tools tests -type f -name '*.js' -print0 \
+            | xargs -0 -n1 node --check
+
+      - name: Security characterization
+        run: node tests/run-tests.js --suite security
+
+      - name: Generator characterization
+        run: node tests/run-tests.js --suite generator
+
+      - name: Payload and packaging characterization
+        run: node tests/run-tests.js --suite payload
+
+  # ------------------------------------------------------------
+  # Generation-1 compatibility observation.
+  # Keep the signal, remove blocking authority.
+  # ------------------------------------------------------------
+  migration-legacy-observation:
+    if: >-
+      github.ref == 'refs/heads/migration/2.0-governance-architecture' ||
+      github.base_ref == 'migration/2.0-governance-architecture'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
+        with:
+          node-version: 20
+
+      - name: Generation-1 compatibility probes
+        run: npm run check
