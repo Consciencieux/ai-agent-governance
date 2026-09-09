@@ -89,6 +89,20 @@ shared control
 - 存量 `scope = both` 文本保留为 compatibility residue，明确记录不再是架构 ownership 结论。
 - FINDING-0001 保持 `status: Confirmed`（remediation underway）；其 Resolved 前提是 cross-profile contract 真正落地（Phase 3+）。
 
+## 实施说明（2026-09-09，非决策性 note）：第一次执行层分离已落地
+
+这是**后续 physical execution separation 迁移的第一项成果**，不属于 PLAN-0031 的原始完成范围（PLAN-0031 只完成 ownership/boundary 分类）；不改变 PLAN-0031 的历史目标。
+
+第一条 `repo → mutable working-tree skill implementation` 依赖已从代码路径移除：
+
+- **术语门禁**（repo-only concern，数据源 `docs/glossary.md`）从 INSTALLED 检查器 `scripts/check-doc-consistency.js` 拆出，成为 repo-owned `repo-tools/check-terminology.js`（REPO-ONLY，永不分发）。
+- `package.json` 的 `check` / `check:docs` 改为运行 `node repo-tools/check-terminology.js`。
+- INSTALLED 检查器职责面有意收缩（移除该 cluster）——被治理项目无 glossary，该 cluster 本就 no-op，标准生成项目的预期行为不受影响；但其 `--json` 输出契约相应变化（不再含 `issues.terminology_usage` 与 `termsRegistered`，无外部代码消费者，已核验）。
+- 附带修复：旧 cluster 扫描迁移前的 `docs/{zh-CN,zh-TW}`（静默失效），repo-owned checker 扫描 `docs/product/{zh-CN,zh-TW}`（含 legacy 回退）。
+- ownership inventory 中「术语门禁」行更新：`Impl dependency: none`（不再是 repo→skill）、`Target: keep`。
+
+其余 `repo → skill` 依赖（consent、doc consistency/freshness、broken-links、plan-status 等）仍存在，属后续执行层分离任务。
+
 ## 参考
 
 - FINDING-0001（producer/product 耦合，`docs/findings/FINDING-0001-producer-product-governance-coupling.md`）

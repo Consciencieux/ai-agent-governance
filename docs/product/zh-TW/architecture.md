@@ -111,6 +111,7 @@ ai-agent-governance/
 │   ├── check-roadmap-sync.js   # roadmap 索引 vs 計劃生命週期狀態（implemented→Done、archived 不在活躍 horizon、條目帶連結）
 │   ├── check-role-completeness.js # 分發角色完整性（未分類/重疊/失效路徑/打包邊界 + repo-only 反向檢查）
 │   ├── check-coding-hygiene.js # 編碼衛生（測試歸屬 + 殘留標記）
+│   ├── check-terminology.js    # repo-owned 術語門禁（從 INSTALLED 一致性檢查器拆出；ADR-0020 首次執行分離）
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] 驗證敘事提醒（repo-only，advisory）
 │   ├── mutation-probe.js      # 按需驗證測試斷言是否活著（暫存克隆內的抽樣變異）
 │   └── package-skill.sh        # 發佈載荷 tarball 打包

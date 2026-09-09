@@ -138,6 +138,7 @@ ai-agent-governance/
 │   ├── check-roadmap-sync.js   # roadmap index vs plan lifecycle state (implemented→Done, archived∉active, entries linked)
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
+│   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] verification-narration advisor (repo-only, advisory)
 │   ├── mutation-probe.js      # on-demand assurance that test ASSERTIONS are alive (sampled mutations in a temp clone)
 │   └── package-skill.sh        # release payload tarball packaging
