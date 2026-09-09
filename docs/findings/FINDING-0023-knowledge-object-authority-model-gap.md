@@ -14,7 +14,7 @@ related:
   research: [RESEARCH-0007]
 ---
 
-# FINDING-0023：FINDING-0023：FINDING-0023：知识对象模型缺失「primary authoritative responsibility + supporting context」区分
+# FINDING-0023：知识对象模型缺失「primary authoritative responsibility + supporting context」区分
 
 ## 观察
 

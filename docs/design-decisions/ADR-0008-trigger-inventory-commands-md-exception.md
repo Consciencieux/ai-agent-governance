@@ -1,7 +1,7 @@
 ---
 id: ADR-0008
 status: Accepted
-generation: cross-generation
+generation: gen1
 ---
 
 # ADR-0008：触发词清单复制的规则冲突裁定（commands.md 例外）

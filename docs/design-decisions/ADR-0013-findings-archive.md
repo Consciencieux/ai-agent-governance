@@ -45,6 +45,10 @@ GitHub Issue 提供 open/closed 生命周期与协作，但不提供：Git histo
 - 代价：review 写一次问题可能要多动一个文件（GitHub Issue + findings/）。这是刻意的——分类本身决定 remediation 层级。
 - 遗留风险：finding 分类（L0–L4、direction、root_cause）是人工判断，无机械门禁（首版纯结构，不加 gate，符合 engineering restraint）。与 ADR-0012 的「分流判断是人工的」同一性质。
 
+## 后续注记（2026-09-09）
+
+本 ADR 的「知识对象五分类」（Finding / ADR / Plan / Archive + 决策载体）部分被 ADR-0016 § 后续补充的**七类模型**（Product / Research / Finding / ADR / Roadmap / Plan / Glossary）局部 supersede——「五分类」这一 clause 仅作历史保留；本 ADR 的 `cross-generation` 依据是其核心语义（Finding 长期 evidence record、状态就地演进、review 先分类再修复）明确延续到 Gen2。Generation 模型暂不支持 clause 级拆分，本条作为注记保留。
+
 ## 参考
 
 - Finding schema / taxonomy / 生命周期：`docs/findings/README.md`

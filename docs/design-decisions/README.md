@@ -6,13 +6,13 @@
 | ID | 标题 | 代际 | 状态 |
 | --- | --- | --- | --- |
 | [ADR-0001](ADR-0001-governance-directory.md) | 用 `.governance/` 取代旧的 `.agent/` 状态目录 | cross-generation | Accepted（v0.3.1） |
-| [ADR-0002](ADR-0002-optional-runtime-outputs.md) | `validation.json` / `drift-report.json` 为可选的运行时输出 | cross-generation | Accepted（v0.3.2） |
+| [ADR-0002](ADR-0002-optional-runtime-outputs.md) | `validation.json` / `drift-report.json` 为可选的运行时输出 | gen1 | Accepted（v0.3.2） |
 | [ADR-0003](ADR-0003-single-file-bilingual-readme.md) | 单文件双语 README，而非按语言拆分文件 | gen1 | Superseded（被 ADR-0005 取代） |
 | [ADR-0005](ADR-0005-trilingual-split-docs.md) | 三语拆分文档（docs/en/ + docs/zh-CN/ + docs/zh-TW/） | gen1 | Accepted |
 | [ADR-0004](ADR-0004-human-in-the-loop-release.md) | Human-in-the-loop 发布流程（Analyze → Proposal → Approval → Execute） | cross-generation | Accepted（v0.4.0） |
 | [ADR-0006](ADR-0006-no-dogfooding.md) | 本仓库不狗粮自身治理框架 | cross-generation | Accepted |
-| [ADR-0007](ADR-0007-plan-layering-orthogonal-triggers.md) | 治理计划分层独立与正交触发（工程克制 × 反补丁） | cross-generation | Accepted |
-| [ADR-0008](ADR-0008-trigger-inventory-commands-md-exception.md) | 触发词清单复制的规则冲突裁定（commands.md 例外） | cross-generation | Accepted |
+| [ADR-0007](ADR-0007-plan-layering-orthogonal-triggers.md) | 治理计划分层独立与正交触发（工程克制 × 反补丁） | gen1 | Accepted |
+| [ADR-0008](ADR-0008-trigger-inventory-commands-md-exception.md) | 触发词清单复制的规则冲突裁定（commands.md 例外） | gen1 | Accepted |
 | [ADR-0009: 索引与事实源的边界](ADR-0009-index-vs-fact-source.md) | roadmap/里程碑是索引、计划是事实源；本仓库机械验证、被治理项目仅文档约束 | cross-generation | Accepted |
 | [ADR-0010: 文档分层与入口层边界](ADR-0010-entry-layer-boundary.md) | README/CONTRIBUTING 是入口层，不承担事实库职责；稳定契约可写但链接权威源 | cross-generation | Accepted |
 | [ADR-0011: 1.0.0 冻结公开接口面](ADR-0011-public-interface-freeze.md) | 五类接口受 SemVer 约束；成员清单留在各自事实源，破坏性变更走 MAJOR + 迁移 | cross-generation | Accepted（v1.0.0） |
@@ -25,8 +25,39 @@
 | [ADR-0018: Generation-2 开发路径](ADR-0018-generation-2-dev-path.md) | Phase 0–8 执行顺序（Phase 0 = Migration Mode 前置；Phase 1–8 = 执行阶段）；统一 ID 编号规则；CONTROL-X 跨 profile 契约测试；测试指标转向；Gen2 阶段须通过 Active Plan 执行 | gen2 | Accepted |
 | [ADR-0019: 知识对象代际元数据](ADR-0019-generation-metadata.md) | 用 metadata 不用目录：`generation`/`observed_in`/`subject_generation` 标记架构时代；与 status 正交；Plan archived ≠ feature deprecated ≠ control obsolete；30 个归档 Plan 标 gen1，18 个 ADR 分类；RESEARCH-0006 能力基线 | cross-generation | Accepted |
 | [ADR-0020: Producer/Product Governance Separation](ADR-0020-producer-product-governance-separation.md) | Phase 1 产物：Profile 术语（repo/skill/shared semantic owner/consumer/implementation/dependency）；SSOT「共享语义单一权威 owner」；4 条 separation invariants；cross-profile closure contract（CONTROL-X 契约定义，不实现）；`owner: core` 仅为分类词汇 | gen2 | Accepted |
-| [ADR-0021: Known-Issue Closure](ADR-0021-known-issue-closure.md) | 已知问题闭包执行语义：discovery 必须持久捕获（Once discovered → represented until disposition）；新发现 ≠ 自动抢占当前任务；完成要求 zero unaccounted（disposition 枚举）；第一代载体 = TASK Plan 内 append-only Discovery Ledger；分层（workset / Finding / GitHub Issue） | cross-generation | Accepted |
+| [ADR-0021: Known-Issue Closure](ADR-0021-known-issue-closure.md) | 已知问题闭包执行语义：discovery 必须持久捕获（Once discovered → represented until disposition）；新发现 ≠ 自动抢占当前任务；完成要求 zero unaccounted（disposition 枚举）；第一代载体 = TASK Plan 内 append-only Discovery Ledger；分层（workset / Finding / GitHub Issue） | gen2 | Accepted |
 | [ADR-0022: Agent Instruction Architecture](ADR-0022-agent-instruction-architecture.md) | 指令架构总原则：薄入口（入口文档只承担身份/invariants/优先级/分类/入口/fallback）、专能力、渐进披露、按需加载、知识≠执行、历史后置、路由必须明确、机械优先（零注意力）；总原则「薄入口、专能力、按需加载、职责单一、历史后置、路由明确、机械优先」 | gen2 | Accepted |
+
+## 代际分类复核（2026-09-09）
+
+**判据**：`gen1` = 决策定义或依赖 Generation-1 具体架构 / carrier / checker / path / trigger / 执行模型；`gen2` = 为 Generation-2 架构建立；`cross-generation` = 核心规范在两代都明确适用且不依赖某一代具体实现。「这个原则以后可能有用」→ 不算 cross-generation；必须是「Gen2 当前 Accepted architecture 明确继续依赖这条约束」。
+
+| ADR | 代际 | 依据 |
+| --- | --- | --- |
+| 0001 | cross | `.governance/` 目录位置两代沿用 |
+| 0002 | gen1 | 裁定 `validation.json` / `drift-report.json` 两个具体 runtime 文件是否 required；Gen2 Evidence Model 未定，不提前断言跨代 |
+| 0003 | gen1 | 单文件双语 README（被 ADR-0005 取代） |
+| 0004 | cross | Human-in-the-loop release 原则两代明确适用 |
+| 0005 | gen1 | 三语拆分文档（被用途优先结构延续但本身属 Gen1 形态） |
+| 0006 | cross | artifact-level no-dogfooding 两代适用 |
+| 0007 | gen1 | 绑定 engineering-restraint / anti-patch-development 两个 Gen1 Plan/Policy 机制 + coding.policy + SKILL policy layer |
+| 0008 | gen1 | 围绕 Gen1 trigger inventory / 三语 commands.md / prompt-sync cluster / check-doc-consistency fail-closed；Gen2 目标恰是把 trigger 从 attention 迁走 |
+| 0009 | cross* | 核心语义「索引不是事实源」跨代；Gen1 enforcement 裁定（roadmap-sync / plan-sync / release gate）属 Gen1 clause —— 见 ADR-0009 § 代际注记 |
+| 0010 | cross | entrypoint ≠ fact warehouse 两代适用 |
+| 0011 | cross | 公开接口面 SemVer 纪律两代适用 |
+| 0012 | cross | CHANGELOG / ADR / Plan / evidence 职责边界两代适用 |
+| 0013 | cross* | Finding 长期 evidence record / 状态就地演进跨代；「五分类」clause 被 ADR-0016 七类局部 supersede —— 见 ADR-0013 § 后续注记 |
+| 0014 | gen2 | Migration Mode |
+| 0015 | gen2 | Roadmap 重定位 |
+| 0016 | gen2 | 文档用途优先 + 知识对象模型 |
+| 0017 | gen2 | 迁移分支策略 |
+| 0018 | gen2 | Phase 0–8 执行顺序 |
+| 0019 | cross | generation metadata 本身两代适用 |
+| 0020 | gen2 | Producer/Product separation |
+| 0021 | gen2 | Known-Issue Closure 执行语义（本表原误标 cross，已修正） |
+| 0022 | gen2 | Agent 指令架构 |
+
+`*` = 混合型：核心语义跨代，但含 Gen1 具体实现 clause，已在 ADR 内加注记（Generation 模型暂不支持 clause 级 generation 拆分）。
 
 ## 生命周期与代际
 

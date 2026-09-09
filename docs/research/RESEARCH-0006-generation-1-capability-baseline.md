@@ -126,7 +126,7 @@ regression evidence
 | --- | --- | --- | --- |
 | Skill lifecycle management | PLAN-0025 | 子技能生命周期 | Redesign |
 
-## Ownership Classification（PLAN-0031 Deliverable B）
+## Ownership 分类（PLAN-0031 Deliverable B）
 
 对 Generation-1 治理做 Producer/Product ownership 分类。**每一行 = 一个 governance concern，每个 concern 只能有一个 semantic owner**；carrier 归属、implementation location、历史起源不混入 owner 字段（它们是单独的列）。依据：仓库实测——本仓库 `.governance/` 只有 release-proposal.json 与 review-evidence（后者是审查证据产物，不是审查机制实现）；package.json 直接运行 `scripts/check-doc-consistency.js` 与 `scripts/check-doc-freshness.js`（INSTALLED 载体）。术语与不变量见 ADR-0020。
 

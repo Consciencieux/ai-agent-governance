@@ -1,7 +1,7 @@
 ---
 id: ADR-0007
 status: Accepted
-generation: cross-generation
+generation: gen1
 ---
 
 # ADR-0007：治理计划分层独立与正交触发（工程克制 × 反补丁）

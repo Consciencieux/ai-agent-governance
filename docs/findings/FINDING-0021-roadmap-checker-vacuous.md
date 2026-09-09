@@ -12,7 +12,7 @@ related:
   research: [RESEARCH-0007]
 ---
 
-# FINDING-0021：FINDING-0021：FINDING-0021：Roadmap 机械检查失效（check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
+# FINDING-0021：Roadmap 机械检查失效（check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
 
 ## 观察
 

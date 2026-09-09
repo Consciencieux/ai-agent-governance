@@ -51,6 +51,10 @@ generation: cross-generation
 
 - roadmap 每个未来条目要么链接其设计计划，要么显式标注"尚无设计计划"；Done 条目链接计划或归档。
 - `check-roadmap-sync.js` 是 REPO-ONLY，被治理项目形态下报 not-applicable 并退出 0。
+
+## 代际注记（2026-09-09）
+
+本 ADR 是**混合型**：`generation: cross-generation` 指其**核心语义**「索引不是事实源」在两代都明确适用；但其中对 Gen1 具体 enforcement 的裁定（`check-roadmap-sync.js` / `check-plan-sync.js` 路径、Gen1 release gate、prompt-sync 触发词）属 **Gen1 implementation decision**，随 Phase 4 parser 迁移 / Gen2 control plane 落地会被替代。Generation 模型暂不支持 clause 级拆分，本条作为注记保留，不做整篇降级。
 - 被治理项目的 lifecycle 政策增加约束（里程碑指向其 TASK 计划、里程碑只表达状态），可判定部分由 `scripts/check-plan-sync.js` 在发布时对账；语义判断仍属人工。
 - 新检查独立成脚本，不并入 `check-doc-consistency.js`（该脚本职责已冻结）也不并入 `check-plan-delivery.js`（后者比对计划声明与交付物，输入与失败含义都不同）。
 - 本 ADR 不记录"纯文档规则容易失效"这一泛化判断。那是风险经验，已由工程克制政策与证据层级分类（mechanical / human-attested / unverified claim）承载；把它写成架构决策会把一次风险判断固化成普遍定律，而本 ADR 的三条决策各自有具体证据支撑。

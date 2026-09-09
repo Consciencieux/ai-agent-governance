@@ -13,7 +13,7 @@ related:
   research: [RESEARCH-0008]
 ---
 
-# FINDING-0022：FINDING-0022：FINDING-0022：修复过程中已发现问题可能因 recursive discovery 丢失（缺持久 workset）
+# FINDING-0022：修复过程中已发现问题可能因 recursive discovery 丢失（缺持久 workset）
 
 ## 观察
 

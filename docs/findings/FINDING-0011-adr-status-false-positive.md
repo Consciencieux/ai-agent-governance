@@ -12,9 +12,9 @@ related:
   adrs: [ADR-0012]
 ---
 
-# FINDING-0011：FINDING-0011：check-doc-consistency 的 adr_statuses 启发式把正文里的 [Unreleased] 节名误报为「ADR 状态异常」
+# FINDING-0011：check-doc-consistency 的 adr_statuses 启发式把正文里的 [Unreleased] 节名误报为「ADR 状态异常」
 
-## 观察 Observation
+## 观察
 
 `node scripts/check-doc-consistency.js --release-gate` 持续报告：
 
@@ -25,7 +25,7 @@ adr_statuses:
 
 但 ADR-0012 的 `- 状态：Accepted`，根本不是 Unreleased。误报源是 ADR 正文第 39 行引用了 CHANGELOG 的 `[Unreleased]` 节名作为行文内容。
 
-## 证据 Evidence
+## 证据
 
 ```text
 Select-String -Path docs\design-decisions\adr-0012-*.md -Pattern 'Unreleased'
@@ -34,24 +34,24 @@ Select-String -Path docs\design-decisions\adr-0012-*.md -Pattern 'Unreleased'
 
 ADR 状态字段为 `状态：Accepted`，无异常。误报来自正文中的字符串匹配，不是状态解析。
 
-## 根因 Root cause
+## 根因
 
 `adr_statuses` cluster 对「marked Unreleased」的判定没有限定在 Status 字段区域，而是全文扫描；正文里合法出现的 `[Unreleased]`（CHANGELOG 节名）被当作状态声明。
 
-## 影响 Impact
+## 影响
 
 - 每次 release-gate 都输出这条告警（当前 advisory、不阻断）。
 - 掩盖真实 adr_statuses 信号：若未来真有 ADR 状态漂移，会被这条持续误报淹没。
 
-## 关闭条件 Resolution criteria
+## 关闭条件
 
 1. 定位 adr_statuses 对「Unreleased」的判定逻辑。
 2. 将判定限定在 Status 字段（`- 状态：`）内，或对正文引用显式豁免。
 
-## 解决 Resolution
+## 解决情况
 
 （待填。）
 
-## 回归保护 Regression protection
+## 回归保护
 
 一个负向 fixture：ADR 正文包含 `[Unreleased]` 字面引用但状态为 Accepted 时，adr_statuses 不得报 Unreleased。修复后由 `consistency.test.js` 覆盖。
