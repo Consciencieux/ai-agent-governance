@@ -29,7 +29,7 @@
 | [ADR-0020](ADR-0020-producer-product-governance-separation.md) | 生产者 / 产品治理分离 | Profile 术语、共享语义单一权威 owner、separation invariants 与 CONTROL-X 契约 |
 | [ADR-0021](ADR-0021-known-issue-closure.md) | 已知问题闭包 | 已知问题持久捕获、显式处置、zero unaccounted 与 Discovery Ledger |
 | [ADR-0022](ADR-0022-agent-instruction-architecture.md) | Agent 指令架构 | 薄入口路由、叶节点单一能力、树状检索 + 图状适用 + 机械执行；机械控制不依赖入口被记住 |
-| [ADR-0023](ADR-0023-governance-control-model.md) | Governance Control Model | Control 为一级对象；semantics ≠ evaluator ≠ gate ≠ test；最小 slot；CTRL identity 稳定；schema 家在本 ADR，不预置 payload 目录 |
+| [ADR-0023](ADR-0023-governance-control-model.md) | Governance Control Model | Control 为一级对象；Model authority ≠ rule semantics；decision/guarantee 挂 binding/投影；serialization-agnostic slot model |
 
 ## 生命周期与代际
 

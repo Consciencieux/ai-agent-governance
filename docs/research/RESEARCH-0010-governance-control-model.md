@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0010
 status: Active
-version: 1
+version: 2
 ---
 
 # RESEARCH-0010：Governance Control 系统模型
@@ -66,11 +66,14 @@ Authoritative semantics          ← 唯一事实源（义务 / invariant）
         │
         ├── evaluator binding    ← 每个 profile 可绑不同检查机制
         │
-        ├── evidence expectation ← 通过时留下什么（可缺省）
+        ├── enforcement binding  ← 调用面（default / --gate / CI / release…）
+        │     └── decision effect ← advisory / warn / deny / require-review
+        │                           （不是 Control 单值 intrinsic）
         │
-        └── decision semantics   ← allow / deny / warn / require-review
-                                   以及默认 vs --gate / --release-gate 分层
+        └── evidence expectation ← 通过时留下什么（可缺省）
 ```
+
+Guarantee（L0–L3）是派生投影：Control × profile × evaluator × enforcement → level；不是 Control 本体字段。
 
 **Shared semantic authority** 只出现在 semantics 这一层：
 
@@ -106,10 +109,10 @@ evaluatorA   evaluatorB     ← 实现可以完全不同
 
 1. **引用稳定**：Roadmap / CONTROL-X / 入口指针需要指向 Control，而不是指向某次重构后的文件名。
 2. **语义只定义一次**：repo 与 skill 引用同一 identity，各自绑 evaluator。
-3. **遗忘测试**：可以问「Agent 完全忘记这条 Markdown 之后，哪些 guarantee 仍成立？」——答案必须挂在 identity 上，而不是挂在「有没有读到 AGENTS」。
+3. **遗忘测试**：可以问「Agent 完全忘记这条 Markdown 之后，在哪个 enforcement boundary 上哪些 guarantee 仍成立？」——答案是派生投影，不是 Control 单值字段。
 4. **拆分准备**：Phase 4 对 JS 做 KEEP / WRAP / … 时，拆的是 evaluator，不是偷偷改语义。
 
-编号形态与 PLAN / ADR 同类（`CTRL-xxxx`）只是候选；权威选择见 ADR-0023。
+编号形态与 PLAN / ADR 同类（`CTRL-xxxx`）只是候选；权威选择见 ADR-0023。注意：ADR-0023 是 **Control Model / schema** 权威，不是每条 Control 规则语义的正文家（规则语义跟 `semantics_ref`）。
 
 ## 设计问题矩阵
 
@@ -123,8 +126,8 @@ evaluatorA   evaluatorB     ← 实现可以完全不同
 | Q4 profile | 与 repo/skill 关系？ | `scope = both` 或直接跑对方脚本 | consumer profiles 引用同一 identity | 术语门禁已拆出 vs freshness 仍 repo→skill | ADR-0020；绑定形态 ADR-0023 |
 | Q5 evaluator | 谁检查？ | 脚本即规则 | profile 级绑定；可缺省（纯 guidance） | 无脚本的 consent 仍是 Control | ADR-0023 |
 | Q6 evidence | 留下什么？ | 不稳定 | 可选 slot；无 consumer 则不建字段 | 多数 checker 只有 stderr | ADR-0023 |
-| Q7 decision | pass 是什么意思？ | 同一脚本 0/1，flag 改变语义 | decision 分层写在 Control，不藏在 argv | freshness 默认 advisory、`--release-gate` 阻断译文 | ADR-0023 |
-| Q8 guarantee | 忘了规则还剩什么？ | 关键保证仍靠记住 Markdown | 每条 Control 声明当前 guarantee 级（L0–L3 投影） | ADR-0022 机械优先 | ADR-0023 记录级；升级路径 Phase 4–8 |
+| Q7 decision | pass 是什么意思？ | 同一脚本 0/1，flag 改变语义 | decision_effect 挂在 profile × enforcement binding，不挂 Control 单值 | freshness 默认 advisory、`--release-gate` 阻断译文 | ADR-0023 |
+| Q8 guarantee | 忘了规则还剩什么？ | 关键保证仍靠记住 Markdown | L0–L3 为 derived projection（Control×profile×evaluator×boundary） | 同 Control local L1 / CI L2 | ADR-0023；升级路径 Phase 4–8 |
 | Q9 lifecycle | 版本怎么走？ | 无 | identity 稳定；语义变更可版本化；归档 ≠ 控制废弃 | Plan archive ≠ control obsolete（ADR-0019） | ADR-0023 最小集；细版本可后置 |
 | Q10 references | 依赖谁？ | 隐式 `require` 与文档互指 | 显式 semantics / evaluator 引用；禁止入口复述变权威 | 原则索引指针合法；正文复制不合法 | ADR-0023 |
 
@@ -196,4 +199,4 @@ evaluatorA   evaluatorB     ← 实现可以完全不同
 
 ## 对后续设计的影响
 
-若采纳「Control 为一级对象、slot 最小、身份稳定、物理家后置」，Phase 3 的可检验产物是：一份规范（ADR）+ 本模型 + 四个真实控制的映射记录。机器可读 YAML 可以等到出现第二个真实 consumer（生成器、Dispatcher、或 CONTROL-X runner）再物化；过早物化会重演 Finding 元数据膨胀。
+若采纳「Control 为一级对象、slot 最小、身份稳定、decision/guarantee 挂在 binding/投影、物理序列化后置」，Phase 3 的可检验产物是：一份规范（ADR）+ 本模型 + 真实控制的映射记录。机器可读 YAML 等到出现第二个真实 consumer 再物化；过早物化会重演 Finding 元数据膨胀。
