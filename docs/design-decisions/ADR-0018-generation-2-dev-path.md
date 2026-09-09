@@ -88,6 +88,8 @@ Runtime / token cost / human burden   运维成本观测
 
 每条重要 mechanical control 的验收标准：positive fixture（合法输入通过）+ negative fixture（非法输入被拦）双备。
 
+**6. Gen2 阶段必须通过 Active Plan 执行。** 每个 phase 的执行以当前阶段唯一 Active Plan 为载体；Agent 不「直接按 Roadmap 施工」——先读 Roadmap 确认 current phase，再读约束该阶段的 Accepted ADR 确认边界，然后执行该阶段的 Active Plan（描述层见 `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`）。本 ADR 是阶段顺序的权威来源（ADR-0015 § 决策 6），Roadmap 的 Migration Phases 清单必须与此对齐。
+
 ## 后果
 
 - 8 阶段顺序成为 2.0 migration 分支（ADR-0017）的 phase 划分依据；每阶段一个 `PLAN-xxxx` 计划 + checkpoint 验证。

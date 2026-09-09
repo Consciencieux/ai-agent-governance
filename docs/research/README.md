@@ -59,6 +59,8 @@ docs/research/
 ├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3）
 ├── RESEARCH-0005-current-capabilities.md          # 当前能力清单（Generation-1 baseline）
 ├── RESEARCH-0006-generation-1-capability-baseline.md # Generation-1 能力保存矩阵（2.0 迁移 baseline evidence）
+├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：八类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
+├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
 └── experiments/                     # 实验记录
 ```
 
@@ -75,6 +77,8 @@ docs/research/
 | E. Current Capabilities | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
 | F. Experiments | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
 | G. Capability Baseline | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + 2.0 处置（迁移 baseline evidence） |
+| H. Planning / Knowledge Control Model | `RESEARCH-0007-documentation-knowledge-architecture.md` | System Model：知识对象（八类）唯一主问题、Allowed/Forbidden、路由测试、当前/历史隔离、Agent 导航、机械 carrier |
+| I. Repair / Discovery / Workset Model | `RESEARCH-0008-repair-discovery-workset-model.md` | System Model：纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
 
 ## 编号规则
 

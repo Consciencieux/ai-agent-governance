@@ -15,6 +15,45 @@ docs/
 └── design-decisions/      # 长期设计决策（简体中文单语）
 ```
 
+## 东西放哪里（知识对象路由）
+
+**内容路由测试**——按主问题判定归属：
+
+```text
+这是在描述系统？            → Research
+这是在记录已经观察到的问题？  → Finding
+这是在做长期选择？          → ADR
+这是在安排长期未来？        → Roadmap
+这是在安排当前施工？        → Plan
+这是给产品用户看的当前事实？ → Product
+```
+
+一个内容同时回答两个问题 → **拆开成多个知识对象并互相引用**，不选一个目录硬塞。
+
+**八类对象（唯一主问题 + 禁止承担）**：
+
+| 类型 | 唯一主问题 | 禁止承担 |
+| --- | --- | --- |
+| Product | 用户现在应该知道什么？ | 内部研究、计划、历史决策 |
+| Research | 这个系统现在是什么、怎么工作、如何理解？ | 宣布必须采用某方案 |
+| Finding | 实际发现了什么问题？ | 详细施工方案 |
+| ADR | 我们接受了什么长期决策，为什么？ | 任务状态、implementation checklist、bug inventory、roadmap scheduling |
+| Roadmap | 未来往哪里走、当前在哪个阶段？ | 详细设计、完整历史、事实复制 |
+| Plan | 当前这项工作怎么做、怎么验收？ | 重新定义长期架构 |
+| Archive Plan | 当时最终做成了什么？ | 当前执行规则 |
+| Glossary | 术语到底叫什么？ | 业务规则和架构决策 |
+
+**当前 vs 历史（隔离）**：
+
+```text
+Current truth:      Product / Active Research / Active Findings / Accepted ADR / Current Roadmap / Active Plan
+Historical evidence: Superseded Research / Resolved·Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG
+```
+
+历史记录可被读来理解 provenance，**不得直接成为当前执行指令**。
+
+完整系统模型（描述层）→ `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；规范层（routing / must-not / 当前-历史隔离）→ ADR-0016。
+
 ## 类型边界、语言与生命周期
 
 | 类型 | 位置 | 职责 | 语言 | 生命周期 |
@@ -40,6 +79,8 @@ ADR      → status transition in place（Accepted → Superseded / Deprecated�
 
 只有 Plan 做物理归档；Finding / Research / ADR 不因状态变化移动路径。
 
+ADR 的修订政策（澄清 vs 语义变化；**ADR 可以演进，但不能改写历史**）见 `docs/design-decisions/README.md` § ADR 修订与演进。
+
 ## 代际政策（总原则）
 
 > **Knowledge objects may carry generation metadata to distinguish Generation 1, Generation 2, or cross-generation applicability. Generation does not change object identity or directory placement.**
@@ -54,6 +95,28 @@ ADR      → status transition in place（Accepted → Superseded / Deprecated�
 | Research | `subject_generation` | `docs/research/README.md` |
 
 决策记录：ADR-0019。
+
+## 治理模型（ADR / Roadmap / Plan）
+
+系统如何运作（描述层）见 `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`（System Model：Roadmap / ADR / Plan / Archive / Finding / Research 的关系、数据流、Agent 导航、机械 carrier）。规范层（必须遵守的权威规则）归各域 ADR：
+
+| 规范规则 | 权威 |
+| --- | --- |
+| Roadmap MUST NOT override Accepted ADR；冲突修 Roadmap | ADR-0015 § 决策 |
+| 改变 ADR 已决定的架构方向必须先新增/修订 ADR | ADR-0015 § 决策 |
+| Gen2 阶段必须通过当前阶段 Active Plan 执行 | ADR-0018 § 决策 |
+
+| 对象 | 核心职责 | 回答的问题 | 是否事实源 |
+| --- | --- | --- | --- |
+| ADR | 架构决策与约束 | 为什么这样设计？哪些约束已经成立？ | 是 |
+| Roadmap | 长期方向与阶段顺序 | 未来往哪里走？当前在哪个阶段？ | 否，索引/演进视图 |
+| Plan | 当前具体执行合同 | 这个阶段现在具体怎么做、怎么验收？ | 是，针对当前任务 |
+
+```text
+Accepted ADR  >  Roadmap  >  Active Plan
+```
+
+ADR 定约束，Roadmap 排顺序，Plan 负责施工；阶段顺序权威 = ADR-0018。
 
 ## 总设计原则
 

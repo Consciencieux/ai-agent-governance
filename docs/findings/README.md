@@ -46,9 +46,9 @@ Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 
 | **B. Policy / Control Plane** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher |
 | **C. Enforcement Gap** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 |
 | **D. Validation / Dispatch Efficiency** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
-| **E. Checker Correctness / Regression** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive |
+| **E. Checker Correctness / Regression** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021） |
 | **F. Portability / Runtime Boundary** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
-| **G. Evidence / Research Methodology** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 |
+| **G. Evidence / Research Methodology** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022） |
 
 ## Taxonomy：层级与 Finding Type（L0–L4）
 

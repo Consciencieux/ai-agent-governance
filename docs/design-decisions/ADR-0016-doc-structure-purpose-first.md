@@ -103,9 +103,22 @@ docs/plans/
 
 原正文（含 archive 四类子目录的树与 Phase 4 条文）保留作为历史决策记录；本修正以明确的接受日期 supersede 其中冲突的部分。
 
+## 后续补充（2026-09-09）：知识对象模型规范（边界、路由与生命周期）
+
+将 `docs/` 固化为一套稳定的**知识对象模型**（八类：Product / Research / Finding / ADR / Roadmap / Plan / Archive Plan / Glossary）。完整系统模型（描述层）见 `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；本条只规定**必须遵守的规范决策**：
+
+**1. 内容路由测试。** 每个新知识内容按主问题判定归属（描述系统→Research / 记录问题→Finding / 长期选择→ADR / 长期未来→Roadmap / 当前施工→Plan / 用户当前事实→Product）。**一个内容同时回答两个问题 → 必须拆开成多个知识对象并互相引用**，不得选一个目录硬塞。
+
+**2. 目录决定知识类型，不决定重要程度；状态决定生命周期，引用决定关系。** 不得因对象「重要 / 影响未来 / 已完成」而跨目录复制内容；关系通过链接表达（Research→informs→Finding→motivates→ADR→constrains→Roadmap→sequences→Plan→implements→Code/Tests），不通过复制。
+
+**3. "must not" 是权威。** 每种知识类型有禁止内容（ADR 禁止 implementation checklist / bug inventory / roadmap scheduling；Roadmap 禁止 completed feature inventory 与事实复制；Finding 禁止详细施工方案；Research 禁止宣布必须采用某方案；Plan 禁止重新定义长期架构）。边界靠禁止项锚定，不靠描述。
+
+**4. 当前知识与历史知识隔离。** Current truth（Product / Active Research / Active Findings / Accepted ADR / Current Roadmap / Active Plan）与 Historical evidence（Superseded Research / Resolved+Invalidated Findings / Superseded ADR / Archived Plans / Git / CHANGELOG）不得混用；历史可被读来理解 provenance，**不得直接成为当前执行指令**。
+
 ## 参考
 
 - Migration Mode（重构期间 gate 观测化、checkpoint 验证）：ADR-0014
 - 知识对象五分类（findings/research/ADR/plan/archive 边界）：ADR-0013
 - Roadmap 重新定位（架构演进视图）：ADR-0015
 - 三语拆分原决策（将被本 ADR 的 product 子集延续）：ADR-0005
+- 知识对象模型系统描述（八类、四字段、路由、当前/历史）：`docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`

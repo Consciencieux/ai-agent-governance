@@ -58,6 +58,19 @@
 
 **5. roadmap 仍是指向 plans/findings/ADR 的索引，不是事实源**（延续 ADR-0009）。
 
+**6. Roadmap 与 ADR / Plan 的规范权威关系。** 三者冲突时：
+
+```text
+Accepted ADR  >  Roadmap  >  Active Plan
+```
+
+- **Roadmap MUST NOT override an Accepted ADR。** Roadmap 是 projection/index，不是架构事实源；若二者冲突，修 Roadmap，不反向改 ADR。
+- **改变 ADR 已决定的架构方向，必须先新增或修订 ADR，再更新 Roadmap。** Roadmap 不得偷偷改写 Accepted ADR 的既有裁决。
+- **阶段顺序的权威来源是裁决它的 ADR**（当前：ADR-0018 定义 Gen2 Phase 0–8），Roadmap 的 Migration Phases 清单必须与之对齐。
+- **Active Plan 不得违反其所在阶段的 Accepted ADR 约束**（Plan 是执行合同，不是决策源）。
+
+系统的运作模型（对象组成、数据流、Agent 导航）是描述层，见 `docs/research/RESEARCH-0007-documentation-knowledge-architecture.md`；本条只规定必须遵守的权威关系。
+
 ## 后果
 
 - 正面：roadmap 回到「路线图」职责；已完成能力有正确归宿；架构演进视角与 2.0 重构对齐；Non-goals 约束治理膨胀。
