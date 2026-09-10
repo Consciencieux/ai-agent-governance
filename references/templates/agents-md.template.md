@@ -142,6 +142,8 @@ The protected files list is:
 - `scripts/check-lock.js`
 - `scripts/check-git-policy.js`
 - `scripts/check-secrets.js`
+- `scripts/lib/secret-scan-facts.js`
+- `scripts/evaluators/ctrl-0001-secret-protection.js`
 - `scripts/check-sync.js`
 <!-- /phase -->
 <!-- phase:C -->

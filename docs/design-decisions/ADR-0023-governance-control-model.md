@@ -109,13 +109,13 @@ Machine-readable 独立序列化文件
 
 ### CTRL-0001 Secret protection
 
-| Slot / 投影 | Phase 3 记录 |
+| Slot / 投影 | Phase 3/4 记录 |
 | --- | --- |
-| semantics_ref | interim：义务「staged 内容不得含凭证类材料」目前住在 `scripts/check-secrets.js` 模式表；**JS 不是长期语义家** |
+| semantics_ref | interim：义务「staged 内容不得含凭证类材料」；模式表住在 `scripts/lib/secret-scan-facts.js`（JS ≠ 长期语义家） |
 | applicability | 将产生 git commit / 检查暂存区时 |
-| evaluation_binding | skill × `scripts/check-secrets.js` × local/pre-commit → deny（不回显秘密）；repo × 同一脚本 × 预提交手动调用 → deny——**共享文件是实现耦合，不是模型胜利** |
+| evaluation_binding | skill × `scripts/check-secrets.js`（WRAP → CTRL-0001 evaluator）× local/pre-commit → deny（不回显秘密）；**repo** × `repo-tools/check-secrets.js`（WRAP → 同一 evaluator）× 预提交清单 → deny——**分 CLI 入口；共享 facts/evaluator，不是 accidental 同文件** |
 | guarantee（派生） | hook/清单调用存在 → 偏 L1；仅 AGENTS 提醒 → L0 |
-| test | 测 evaluator 行为；禁止把模式表再抄进测试当第二权威 |
+| test | 测 evaluator / 两侧 CLI 行为；禁止把模式表再抄进测试当第二权威 |
 
 ### CTRL-0002 Git write consent
 
@@ -161,7 +161,7 @@ Machine-readable 独立序列化文件
 | Slot / 投影 | Phase 4 记录 |
 | --- | --- |
 | semantics_ref | `references/policies/lifecycle.policy.md` § 相对 Markdown 链接有效性 |
-| applicability | 扫描面内存在相对 Markdown 链接时 |
+| applicability | 对受支持 repository/project shape 做 Markdown link consistency evaluation（无相对链接 → vacuous pass；evaluator 保持 `applicable: true`） |
 | evaluation_binding | skill/repo × `scripts/evaluators/ctrl-0006-broken-links.js`（via consistency WRAP）× 默认/`--gate`/`--release-gate` → **advisory**（verdict fail ≠ deny） |
 | guarantee（派生） | advisory 报告偏 L0；尚未绑定 deny boundary |
 

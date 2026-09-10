@@ -86,7 +86,7 @@ Three rules follow:
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill entry point / product spec | agents (skill users) | single |
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
-| `scripts/` | Skill runtime scripts. Mixed too: 14 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
+| `scripts/` | Skill runtime scripts. Mixed too: 16 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
 | `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | mixed by knowledge type: product/roadmap trilingual; plans/findings/research/ADR canonical Chinese |
 | `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `README*.md`, `CONTRIBUTING*.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
@@ -117,12 +117,14 @@ ai-agent-governance/
 │   ├── verify_governance.js    # validator (manifest-driven paths + governance_version)
 │   ├── check-lock.js           # multi-agent lock check (read-only, exit 1 = lock held)
 │   ├── check-git-policy.js     # Git workflow gate (protected branch + directPush=false → exit 1)
-│   ├── check-secrets.js        # secret scan gate (staged diff, never prints the secret)
+│   ├── check-secrets.js        # skill-profile CTRL-0001 CLI WRAP (staged diff; never prints the secret)
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
 │   ├── lib/
 │   │   ├── git-facts.js        # shared git/path/date factual primitives (no Control policy)
-│   │   └── md-link-facts.js    # shared Markdown-link factual primitives (extract/resolve/exists)
+│   │   ├── md-link-facts.js    # shared Markdown-link factual primitives (extract/resolve/exists)
+│   │   └── secret-scan-facts.js # shared secret-scan factual primitives (patterns / staged / blob)
 │   ├── evaluators/
+│   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 secret protection evaluator (deny at CLI binding)
 │   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 governance-doc freshness evaluator (advisory)
 │   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 translation freshness evaluator (--release-gate deny)
 │   │   └── ctrl-0006-broken-links.js        # CTRL-0006 relative markdown link validity (consistency cluster #4)
@@ -146,6 +148,7 @@ ai-agent-governance/
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)
+│   ├── check-secrets.js        # repo-profile CTRL-0001 CLI (shared evaluator under scripts/; not the skill CLI path)
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] verification-narration advisor (repo-only, advisory)
 │   ├── mutation-probe.js      # on-demand assurance that test ASSERTIONS are alive (sampled mutations in a temp clone)
 │   └── package-skill.sh        # release payload tarball packaging

@@ -69,7 +69,7 @@ test("generate-governance: manifest lists created artifacts with correct types",
   const count = (t) => m.artifacts.filter((a) => a.type === t).length;
   const validKinds = m.artifacts.every((a) => a.kind === "file" || a.kind === "dir");
   const agentsType = m.artifacts.find((a) => a.path === "AGENTS.md").type;
-  return count("policy") === 10 && count("script") === 5 && count("state") === 6 && validKinds && agentsType === "policy";
+  return count("policy") === 10 && count("script") === 7 && count("state") === 6 && validKinds && agentsType === "policy";
 });
 
 test("generate-governance: gitignore covers sensitive filenames", () => {

@@ -34,14 +34,14 @@ Control
 
 | 字段 | 现状 |
 | --- | --- |
-| semantics_ref | interim：模式表住在 `scripts/check-secrets.js`（JS ≠ 长期语义家） |
-| evaluator(s) | `scripts/check-secrets.js`（INSTALLED；Node builtins only） |
-| enforcement_boundary | local / pre-commit 手册调用（AGENTS.md 预提交清单）；无专用 npm script；governed 项目同脚本 |
-| decision_effect | 命中 → deny（exit 1）；`--json`；不回显秘密 |
-| tests | `tests/suites/security.test.js`（大量 `check-secrets:*`）；Safety Kernel **security** suite |
-| profile | skill（INSTALLED）；repo 预提交跑同一文件 → **accidental shared implementation**（ADR-0023） |
-| characterization | staged fake secret fail；binary/`-diff` 仍扫；clean exit 0；placeholder vs real；generated project passes |
-| 候选 disposition（非权威） | 见 PLAN-0035 § Disposition（权威） |
+| semantics_ref | interim：模式表住在 `scripts/lib/secret-scan-facts.js`（JS ≠ 长期语义家） |
+| evaluator(s) | `scripts/evaluators/ctrl-0001-secret-protection.js`；skill CLI `scripts/check-secrets.js` WRAP；**repo CLI** `repo-tools/check-secrets.js` WRAP |
+| enforcement_boundary | skill：local/pre-commit 手册调用；repo：`AGENTS.md` → `repo-tools/check-secrets.js` |
+| decision_effect | 命中 / unscanned / git error → deny（exit 1）；`--json`；不回显秘密 |
+| tests | `tests/suites/security.test.js`（`check-secrets:*` + direct CTRL-0001 + repo/skill CLI parity） |
+| profile | skill INSTALLED + **repo-owned CLI**（P3：accidental same-file coupling 已消） |
+| characterization | staged fake secret fail；binary/`-diff` 仍扫；clean exit 0；placeholder vs real；generated project passes；repo≠skill CLI path |
+| 候选 disposition（非权威） | PLAN-0035：**P3 CLOSED** |
 
 
 ### CTRL-0002 Git write consent
@@ -110,7 +110,7 @@ Control
 | decision_effect | 本 CLI 绑定 = advisory；verdict fail ≠ process deny |
 | tests | `tests/suites/consistency.test.js`：wrapper + **direct** `evaluateBrokenLinks`（missing→fail / valid→pass / `--gate` 不 deny） |
 | profile | skill INSTALLED；repo 直接跑同一 WRAP |
-| characterization | `f -> target` 字符串；跳过 http/mailto；scan set 含 README/SKILL/AGENTS + docs/{en,zh-CN,zh-TW} + design-decisions/archive + references/ |
+| characterization | `f -> target`；跳过 `https?://` / `mailto:`（大小写不敏感）；**无** root-containment；无链接 = vacuous pass / always applicable；scan set 含 README/SKILL/AGENTS + docs/{en,zh-CN,zh-TW} + design-decisions/archive + references/ |
 | 候选 disposition | PLAN-0035：**#4 CLOSED**；SKIP #9 |
 
 ## 共文件反例（Phase 4 纪律）→ 0003/0004 已拆 evaluator
@@ -183,7 +183,10 @@ scripts/check-doc-consistency.js
 verify-governance.js     ✓ validator
 check-lock.js            ✓ multi-agent lock
 check-git-policy.js      ✓ git-policy
-check-secrets.js         ✓ CTRL-0001
+check-secrets.js         ✓ CTRL-0001 skill CLI WRAP
+lib/secret-scan-facts.js ✓ shared secret facts
+evaluators/ctrl-0001…    ✓ CTRL-0001
+repo-tools/check-secrets.js ✓ CTRL-0001 repo CLI（REPO-ONLY）
 check-sync.js            ✓ sync groups
 check-doc-freshness.js   ✓ CTRL-0003/0004 CLI WRAP
 lib/git-facts.js         ✓ shared primitive
@@ -231,7 +234,7 @@ payload    42/42 passed
 
 | 调用 | 脚本角色 | 与 CTRL |
 | --- | --- | --- |
-| AGENTS 预提交 → `scripts/check-secrets.js` | INSTALLED | CTRL-0001 accidental share |
+| AGENTS 预提交 → `repo-tools/check-secrets.js` | REPO-ONLY CLI | CTRL-0001 repo binding（P3；不再 accidental 调 skill CLI） |
 | `npm run check*` → `scripts/check-doc-consistency.js` | INSTALLED | monolith；含 CTRL-0002 cluster |
 | `check:all` / release → `scripts/check-doc-freshness.js` | INSTALLED | CTRL-0003/0004 |
 | `plans:delivery` → `repo-tools/check-plan-delivery.js` | REPO-ONLY | CTRL-0005（无 skill 耦合） |

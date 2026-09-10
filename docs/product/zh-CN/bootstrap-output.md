@@ -33,7 +33,7 @@ INIT 脚本化生成器（`scripts/generate-governance.js`）为被治理项目�
 | .governance/manifest.json | 最后生成——只列出磁盘上实际存在的工件 |
 | .governance/state.json / preflight.json | 生成（确定性；preflight 字段留空至 Phase 0 检测填写） |
 | .governance/git-policy.json / sync-rules.json | 模板（JSON 从代码块提取） |
-| scripts/verify-governance.js + 4 个门禁脚本 | 从本 skill 原样复制 |
+| scripts/verify-governance.js + Phase B 门禁（含 check-secrets.js + lib/secret-scan-facts.js + evaluators/ctrl-0001-secret-protection.js） | 从本 skill 原样复制 |
 
 ## Phase C — 结构适配与可选钩子
 

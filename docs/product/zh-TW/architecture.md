@@ -59,7 +59,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill 入口 / 產品規範 | agent（skill 使用者） | 單語 |
 | `references/` | **Skill 主體——skill 行為唯一存放處。** INSTALLED 與 SKILL-INTERNAL 混裝（見角色表）。 | agent（skill 使用者） | 單語 |
-| `scripts/` | Skill 執行時腳本。同樣混裝：14 個是 INSTALLED（複製進被治理專案），其餘是只在本倉庫執行的 SKILL-INTERNAL 工具。 | agent/CI | 程式碼 |
+| `scripts/` | Skill 執行時腳本。同樣混裝：16 個是 INSTALLED（複製進被治理專案），其餘是只在本倉庫執行的 SKILL-INTERNAL 工具。 | agent/CI | 程式碼 |
 | `LICENSE` | MIT 授權條款——隨 tarball 分發 | 安裝者 | — |
 | `docs/` | **專案知識。REPO-ONLY。** 開發者維護，供開發者與在本倉庫工作的 Agent 讀取：如何使用 skill（`commands.md` 觸發詞）、設計計劃（`plans/`）、findings 檔案（`findings/`）、研究知識庫（`research/`）、路線圖、術語表。 | 開發者 + Agent | 依知識類型：Product/Roadmap 三語；Plan/Finding/Research/ADR 以簡中為 canonical |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`README*.md`、`CONTRIBUTING*.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基礎設施：CI、發佈流程、變更日誌、貢獻指南 | 倉庫維護者 | 按檔案 |
@@ -90,12 +90,14 @@ ai-agent-governance/
 │   ├── verify_governance.js    # 校驗引擎（manifest 驅動路徑 + governance_version）
 │   ├── check-lock.js           # 多 Agent 鎖檢查（唯讀，exit 1 = 持鎖）
 │   ├── check-git-policy.js     # Git 工作流程閘門（受保護分支 + directPush=false → exit 1）
-│   ├── check-secrets.js        # 密鑰掃描閘門（暫存區掃描，絕不列印密鑰）
+│   ├── check-secrets.js        # skill 側 CTRL-0001 CLI WRAP（暫存區掃描；絕不列印密鑰）
 │   ├── check-sync.js           # 同步組閘門（watch/require 對照，exit 1）
 │   ├── lib/
 │   │   ├── git-facts.js        # 共享 git/path/date 事實 primitive（無 Control 政策）
-│   │   └── md-link-facts.js    # 共享 Markdown 連結事實 primitive（extract/resolve/exists）
+│   │   ├── md-link-facts.js    # 共享 Markdown 連結事實 primitive（extract/resolve/exists）
+│   │   └── secret-scan-facts.js # 共享密鑰掃描事實 primitive（模式 / staged / blob）
 │   ├── evaluators/
+│   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 密鑰保護求值器（CLI 綁定 deny）
 │   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 治理文件新鮮度求值器（建議性）
 │   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 譯文新鮮度求值器（--release-gate 阻斷）
 │   │   └── ctrl-0006-broken-links.js        # CTRL-0006 相對 Markdown 連結有效性（consistency #4）
@@ -119,6 +121,7 @@ ai-agent-governance/
 │   ├── check-role-completeness.js # 分發角色完整性（未分類/重疊/失效路徑/打包邊界 + repo-only 反向檢查）
 │   ├── check-coding-hygiene.js # 編碼衛生（測試歸屬 + 殘留標記）
 │   ├── check-terminology.js    # repo-owned 術語門禁（從 INSTALLED 一致性檢查器拆出；ADR-0020 首次執行分離）
+│   ├── check-secrets.js        # repo 側 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路徑）
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] 驗證敘事提醒（repo-only，advisory）
 │   ├── mutation-probe.js      # 按需驗證測試斷言是否活著（暫存克隆內的抽樣變異）
 │   └── package-skill.sh        # 發佈載荷 tarball 打包

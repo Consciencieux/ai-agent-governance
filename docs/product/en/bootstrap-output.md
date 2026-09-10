@@ -33,7 +33,7 @@ The INIT scripted generator (`scripts/generate-governance.js`) produces a determ
 | .governance/manifest.json | generated last — lists only artifacts that exist on disk |
 | .governance/state.json / preflight.json | generated (deterministic; preflight fields empty until Phase 0 inspection) |
 | .governance/git-policy.json / sync-rules.json | templates (JSON extracted from code block) |
-| scripts/verify-governance.js + 4 gate scripts | copied verbatim from this skill |
+| scripts/verify-governance.js + Phase B gates (incl. check-secrets.js + lib/secret-scan-facts.js + evaluators/ctrl-0001-secret-protection.js) | copied verbatim from this skill |
 
 ## Phase C — adaptive output and optional hooks
 

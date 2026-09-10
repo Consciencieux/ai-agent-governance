@@ -151,4 +151,4 @@ Read-only git ops (`status`/`log`/`diff`/`show`/`fetch`/`remote`/`branch`) are f
 
 **Independent confirmation** — never covered by the pre-commit echo: `tag`, `reset`, `rebase`, `revert`, `merge`, force push, `clean`, `rm`, `restore`, `stash`, `pull`; checkout carrying uncommitted changes; amend of an already-pushed commit (counts as force push). `checkout -b` and clean-worktree switches are free.
 
-Before confirming, still run the pre-commit checklist: `scripts/check-secrets.js` exit 0, no sensitive/unrelated files staged. When in doubt, ask first.
+Before confirming, still run the pre-commit checklist: `repo-tools/check-secrets.js` exit 0, no sensitive/unrelated files staged. When in doubt, ask first.

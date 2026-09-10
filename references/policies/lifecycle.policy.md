@@ -139,9 +139,9 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 
 ## 相对 Markdown 链接有效性
 
-**义务（CTRL-0006 规则语义权威）：** 被扫描的 Markdown 文件中，相对路径链接目标必须能解析为仓库内已存在的路径；`http` / `https` / `mailto` 目标不适用本义务。断链是内容一致性缺陷，不得用叙事性「已知缺失」脚注代替修复或显式移出扫描面。
+**义务（CTRL-0006 规则语义权威）：** 被扫描的 Markdown 文件中，相对路径链接目标必须能解析为已存在的本地路径（`path.resolve` + 存在性检查；与 Gen1 一致，**不含** repo-root containment）。`http://` / `https://` / `mailto:` 目标（大小写不敏感）不适用本义务。断链是内容一致性缺陷，不得用叙事性「已知缺失」脚注代替修复或显式移出扫描面。
 
-本义务陈述「必须可解析存在」；**不**规定扫描集合、advisory/deny 或 CLI 标志——那些属于 evaluator / binding。机械求值见 `scripts/evaluators/ctrl-0006-broken-links.js`；一致性 CLI 的默认绑定为 advisory。
+本义务陈述「必须可解析存在」；**不**规定扫描集合、advisory/deny 或 CLI 标志——那些属于 evaluator / binding。机械求值见 `scripts/evaluators/ctrl-0006-broken-links.js`；一致性 CLI 的默认绑定为 advisory。若将来要求「链接不得逃出 repo root」，须显式收紧本义务并配套 primitive / negative test——不得借 refactor 静默加入。
 
 ## Phase 5 — Synchronize Knowledge（同步知识）
 

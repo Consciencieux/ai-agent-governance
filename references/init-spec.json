@@ -365,7 +365,21 @@
       "path": "scripts/check-secrets.js",
       "source": "scripts/check-secrets.js",
       "type": "copy",
-      "description": "Secret scan gate"
+      "description": "Secret scan CLI WRAP for CTRL-0001 (skill profile; deny; never prints secrets)"
+    },
+    {
+      "phase": "B",
+      "path": "scripts/lib/secret-scan-facts.js",
+      "source": "scripts/lib/secret-scan-facts.js",
+      "type": "copy",
+      "description": "Shared secret-scan factual primitives (patterns / staged-diff / blob; no profile policy)"
+    },
+    {
+      "phase": "B",
+      "path": "scripts/evaluators/ctrl-0001-secret-protection.js",
+      "source": "scripts/evaluators/ctrl-0001-secret-protection.js",
+      "type": "copy",
+      "description": "CTRL-0001 evaluator — staged secret-like material / unscanned blobs (semantic verdict only)"
     },
     {
       "phase": "B",

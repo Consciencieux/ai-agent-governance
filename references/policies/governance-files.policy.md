@@ -17,7 +17,9 @@
 | `scripts/verify-governance.js` | 校验门禁 |
 | `scripts/check-lock.js` | 锁检查 |
 | `scripts/check-git-policy.js` | Git 策略门禁 |
-| `scripts/check-secrets.js` | 密钥扫描门禁 |
+| `scripts/check-secrets.js` | skill 侧 CTRL-0001 密钥扫描 CLI WRAP |
+| `scripts/lib/secret-scan-facts.js` | 密钥扫描共享事实 primitive |
+| `scripts/evaluators/ctrl-0001-secret-protection.js` | CTRL-0001 密钥保护求值器 |
 | `scripts/check-sync.js` | 同步组门禁 |
 | `scripts/check-doc-consistency.js` | 文档一致性 WRAP（#4 → CTRL-0006） |
 | `scripts/lib/md-link-facts.js` | Markdown 链接共享事实 primitive |

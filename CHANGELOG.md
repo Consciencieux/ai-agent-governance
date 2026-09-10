@@ -44,6 +44,8 @@ All notable changes to this project will be documented here.
 
 - **CTRL-0006 broken-links vertical (consistency cluster #4)** — link extract/resolve/exists live in INSTALLED `scripts/lib/md-link-facts.js`; CTRL-0006 evaluator owns scan-set + semantic verdict; `check-doc-consistency.js` remains WRAP and keeps cluster #4 advisory-only. Other consistency clusters untouched. No Dispatcher; no doc topology moves.
 - **CTRL-0006 closure** — canonical `semantics_ref` = `references/policies/lifecycle.policy.md` § 相对 Markdown 链接有效性; direct `evaluateBrokenLinks` characterization + `--gate` advisory binding tests; RESEARCH-0006 pre-commit wording corrected to staged-content binding. #4 CLOSED; #9 skipped; next cut = P3 CTRL-0001.
+- **CTRL-0006 semantics↔evaluator alignment** — drop unimplemented “仓库内” root-containment from the obligation; applicability = supported-shape evaluation (vacuous pass); protocol skip tightened to `https?://` / `mailto:` (case-insensitive). No PLAN architecture change.
+- **CTRL-0001 P3 repo/skill decoupling** — shared `secret-scan-facts` + CTRL-0001 evaluator; skill CLI WRAP remains `scripts/check-secrets.js`; repo profile binds `repo-tools/check-secrets.js` (AGENTS pre-commit). Accidental same-file coupling removed; Safety Kernel characterization preserved. PLAN-0035 P3 CLOSED; next = PLAN-0036.
 
 ## [1.0.2] - 2026-09-08
 

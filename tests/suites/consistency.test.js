@@ -76,7 +76,25 @@ test("CTRL-0006: valid relative link → evaluateBrokenLinks pass", () => {
   write(path.join(dir, "docs/target.md"), "# ok\n");
   write(path.join(dir, "README.md"), "[ok](docs/target.md)\n");
   const r = evaluateBrokenLinks({ root: dir });
-  return r.control === "CTRL-0006" && r.verdict === "pass" && r.evidence.broken_links.length === 0;
+  return r.control === "CTRL-0006" && r.verdict === "pass" && r.applicable === true && r.evidence.broken_links.length === 0;
+});
+
+
+test("CTRL-0006: empty tree is applicable vacuous pass", () => {
+  const { evaluateBrokenLinks } = require(path.join(SKILL_ROOT, "scripts/evaluators/ctrl-0006-broken-links.js"));
+  const dir = tmp("ctrl-0006-empty");
+  const r = evaluateBrokenLinks({ root: dir });
+  return r.control === "CTRL-0006" && r.applicable === true && r.verdict === "pass" && r.evidence.broken_links.length === 0;
+});
+
+
+test("CTRL-0006: http(s)/mailto targets are skipped; httpfoo remains relative", () => {
+  const { createMdLinkFacts } = require(path.join(SKILL_ROOT, "scripts/lib/md-link-facts.js"));
+  const facts = createMdLinkFacts(tmp("ctrl-0006-proto"));
+  const targets = facts.extractRelativeTargets(
+    "[a](https://example.com/x) [b](HTTP://example.com/y) [c](mailto:a@b.c) [d](httpfoo.md) [e](docs/ok.md)\n"
+  );
+  return targets.length === 2 && targets.includes("httpfoo.md") && targets.includes("docs/ok.md");
 });
 
 

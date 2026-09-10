@@ -1,19 +1,29 @@
 #!/usr/bin/env node
-// PAYLOAD SCRIPT — copied into governed projects (references/init-spec.json).
-// Thin skill-profile CLI wrapper for CTRL-0001 (Phase 4 P3 strangler).
-// External CLI unchanged: node scripts/check-secrets.js [--json]
-// Relative requires must close under INSTALLED copy list (init-spec invariants).
+// REPO-ONLY — lives under repo-tools/; never ships in the skill tarball.
 //
-// Evaluator returns semantic verdict only. This wrapper applies skill binding:
-// local / pre-commit → deny (exit 1); never print secret values.
+// Repo-profile CLI binding for CTRL-0001 Secret protection (PLAN-0035 P3 /
+// ADR-0020 Producer/Product execution separation). Shared semantics and scan
+// facts live under scripts/ (skill INSTALLED + shared mechanical specimen);
+// THIS file is the repo enforcement entry so contributors do not invoke the
+// skill working-tree CLI as the repo gate by accident.
+//
+// Usage: node repo-tools/check-secrets.js [--json]
+// Exit 0 clean · Exit 1 on hits / unscanned / git error (never prints secrets).
 
 "use strict";
 
-const { evaluateSecretProtection } = require("./evaluators/ctrl-0001-secret-protection.js");
+const path = require("path");
+const { evaluateSecretProtection } = require(path.join(
+  __dirname,
+  "..",
+  "scripts",
+  "evaluators",
+  "ctrl-0001-secret-protection.js"
+));
 
 function printHelp() {
   console.log(`Usage:
-  check-secrets.js [--json]   Scan the staged diff for secret-like material (read-only)
+  repo-tools/check-secrets.js [--json]   Repo-profile CTRL-0001 secret scan (read-only)
 Exit codes: 0 clean · 1 hits (reports file:line + pattern class, never the secret)`);
 }
 

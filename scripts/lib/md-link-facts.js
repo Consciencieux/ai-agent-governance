@@ -10,6 +10,7 @@ const fs = require("fs");
 const path = require("path");
 
 const LINK_RE = /\[[^\]]*\]\(([^)#]+)(?:#[^)]*)?\)/g;
+const EXTERNAL_LINK_RE = /^(https?:\/\/|mailto:)/i;
 
 function createMdLinkFacts(root) {
   const ROOT = root;
@@ -40,7 +41,7 @@ function createMdLinkFacts(root) {
     }
   }
 
-  /** Relative markdown link targets only (skips http/mailto). */
+  /** Relative markdown link targets only (skips http(s):// and mailto:). */
   function extractRelativeTargets(content) {
     const out = [];
     if (!content) return out;
@@ -48,7 +49,7 @@ function createMdLinkFacts(root) {
     let m;
     while ((m = LINK_RE.exec(content))) {
       const t = m[1];
-      if (t.startsWith("http") || t.startsWith("mailto")) continue;
+      if (EXTERNAL_LINK_RE.test(t)) continue;
       out.push(t);
     }
     return out;
@@ -78,4 +79,4 @@ function createMdLinkFacts(root) {
   };
 }
 
-module.exports = { createMdLinkFacts, LINK_RE };
+module.exports = { createMdLinkFacts, LINK_RE, EXTERNAL_LINK_RE };
