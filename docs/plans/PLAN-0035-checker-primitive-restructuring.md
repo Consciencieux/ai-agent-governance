@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：CTRL-0003/0004 vertical 已收口；RESEARCH-0006 v6 baseline completeness pass 补齐 Pre-PLAN / INSTALLED 反向对账。下一步先做 P2 低风险 cluster，不整拆 consistency monolith。Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：Baseline **双面闭合**（scripts + instruction/workflow）✓ RESEARCH-0006 v7。**下一刀 JS = consistency cluster #4 broken links**（优先于 #9）。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -66,22 +66,23 @@ Review 三类拆分                                 → Phase 7
 │
 ├─ 1. 冻结 Gen1 capability inventory（功能/语义，不是目录树）
 │     mechanical：RESEARCH-0011 v3（含 check-plan-sync）
-│     instruction/workflow + Pre-PLAN 压缩层：RESEARCH-0006 v6
+│     instruction/workflow + Pre-PLAN 压缩层：RESEARCH-0006 v7
 │     旧功能不得 silently drop；新增必须有来源；重复有 disposition
 │     INSTALLED scripts 反向对账 → Unaccounted = 0
+│     INSTALLED instruction/workflow 反向对账 → Unaccounted = 0
 │     默认不重读 PLAN-0001..0030（归档 = cold provenance）
 │
-├─ 1b. Baseline completeness pass（本轮）✓
-│     补 check-plan-sync / INIT·AUDIT·MIGRATE·RELEASE / validator /
-│     manifest·state·validation·preflight / multi-agent lock
+├─ 1b. Baseline completeness（scripts + Pre-PLAN）✓ P9
+├─ 1c. Instruction/workflow product surface 闭合 ✓ P10
+│     8 sub-skills 逐能力记账 + githooks + 非 script carriers
 │
 ├─ 2. Phase 4 mechanical restructuring（本计划主体）
-│     下一条：**P2 consistency 低风险 cluster**（优先 #4 broken links 或 #9 principles-index）
+│     **下一刀锁定：P2 cluster #4 broken links**
+│     然后视结果决定 #9 principles-index
 │     **不要**先整文件拆 `check-doc-consistency.js`
-│     **不要**先碰 #1 version/release、#8 consent、#10 plan-status（风险高）
+│     **不要**先碰 #1 version/release、#8 consent、#10 plan-status
 │     然后 P3 repo→skill（CTRL-0001 第二批）
-│     PLAN-0036 可并行（Discovery Ledger → INSTALLED lifecycle TASK）
-│     **稳定边界 = Control/capability，不是 Markdown 物理路径**
+│     PLAN-0036 可并行
 │
 ├─ 3. Phase 5 applicability / routing 成型
 │
@@ -123,7 +124,7 @@ B Characterization   ✓（Safety Kernel 基线快照）
 C Disposition        ✓（本计划 § Disposition 表；主体 = capability/cluster/evaluator）
 D Primitive extract  ✓（第一条 vertical = CTRL-0003/0004）
 E Evaluator rebuild  ✓（与 D 同刀；verdict ≠ decision_effect consistency pass）
-E′ Instruction inventory（并行文档轨）✓ RESEARCH-0006 v6（P8 + P9 completeness）
+E′ Instruction inventory ✓ RESEARCH-0006 v7（P8–P10；双面 Unaccounted=0）
 F Producer/Product decoupling（P3）
 G PLAN-0036 Discovery Ledger
 H Exit review
@@ -285,24 +286,25 @@ evidence
 | P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
 | P6 | PLAN-0035 C | Disposition 表未裁定 | both | closed | resolved | 本计划 § 2 Disposition |
 | P7 | PLAN-0035 D/E | CTRL-0003/0004 第一条 vertical | both | closed | resolved | 结构拆分 + require closure + **verdict/binding 分离**；docs/Safety Kernel 再绿 |
-| P8 | ADR-0022 / PLAN-0035 | Gen1 instruction/workflow capability 压缩层 | both | closed | resolved | RESEARCH-0006 v5→**v6**（补 Pre-PLAN + INSTALLED 反向对账） |
-| P9 | PLAN-0035 / RESEARCH-0006 | Baseline completeness：无 Plan provenance 能力漏项 | both | closed | resolved | 补 check-plan-sync、INIT/AUDIT/MIGRATE/RELEASE、validator、四态、lock；RESEARCH-0011 v3；INSTALLED Unaccounted=0 |
+| P8 | ADR-0022 / PLAN-0035 | Gen1 instruction/workflow capability 压缩层 | both | closed | resolved | RESEARCH-0006 v5→v7 |
+| P9 | PLAN-0035 / RESEARCH-0006 | Baseline completeness：scripts + Pre-PLAN | both | closed | resolved | check-plan-sync 等；INSTALLED scripts Unaccounted=0 |
+| P10 | PLAN-0035 / RESEARCH-0006 | Instruction/workflow product surface 闭合 | both | closed | resolved | 8 sub-skills + githooks + 非 script carriers；RESEARCH-0006 v7 |
 
 ## 闭包对账（进行中）
 
 ```text
-Total known:  10
-Resolved:     7  (P0, P1, P5, P6, P7, P8, P9)
+Total known:  11
+Resolved:     8  (P0, P1, P5, P6, P7, P8, P9, P10)
 Deferred:     1  (P4)
-Open:         2  (P2 延后实施→下一刀低风险 cluster, P3)
-Unaccounted:  0  （INSTALLED scripts 面已与 RESEARCH-0006/0011 闭合）
+Open:         2  (P2 → 下一刀 #4 broken links, P3)
+Unaccounted:  0  （scripts 面 + instruction/workflow 面均闭合）
 ```
 
-下一步：
-1. **不要**整拆 `check-doc-consistency.js`；
-2. P2 第一刀优先 **cluster #4 broken links** 或 **#9 principles-index**；
-3. P3 = CTRL-0001 第二批；PLAN-0036 可并行；
-4. 文档物理拓扑仍禁止大规模搬家（待 Phase 5 routing）。
+下一步（锁定）：
+1. **JS 下一刀 = `check-doc-consistency.js` cluster #4 broken links**；
+2. 再视结果决定 #9 principles-index；
+3. 然后 P3 CTRL-0001；PLAN-0036 可并行；
+4. **停止继续扩写 baseline 文档**；文档物理拓扑仍禁止大规模搬家。
 
 ## 参考
 

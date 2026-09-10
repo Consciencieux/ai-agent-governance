@@ -40,6 +40,8 @@ All notable changes to this project will be documented here.
 
 - **Gen1 baseline completeness pass (RESEARCH-0006 v6)** — Agent compressed layer now includes Pre-PLAN/non-Plan base capabilities (INIT/AUDIT/MIGRATE/RELEASE, validator, manifest/state/validation/preflight, multi-agent lock, plan/milestone sync). `init-spec` INSTALLED scripts reverse-reconciled; `check-plan-sync.js` explicitly inventoried in RESEARCH-0011 v3. PLAN-0025 row corrected (install-layer Skill Manager ≠ generated sub-skill lifecycle). PLAN-0035 P9 closed; next Phase 4 cut prefers consistency clusters #4 or #9, not the whole monolith.
 
+- **Gen1 instruction/workflow surface closure (RESEARCH-0006 v7)** — eight generated sub-skills and opt-in githooks are capability-accounted (not collapsed into “Generated sub-skill lifecycle”). Dual closure: mechanical scripts `Unaccounted=0` and instruction/workflow product surface `Unaccounted=0`. PLAN-0035 P10 closed; next JS cut locked to consistency cluster #4 broken links.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 6
+version: 7
 subject_generation: gen1
 ---
 
@@ -19,9 +19,11 @@ subject_generation: gen1
 
 它是**描述层**。规范冻结见 ADR-0014；阶段顺序见 ADR-0018（Phase 4 才对 Gen1 mechanism 做 keep / wrap / extract / rewrite / retire）。已观察到的同步缺口见 FINDING-0025。
 
-**Agent 默认消费层：** 下文「Agent 压缩上下文」（v6）。默认**不要**重读 PLAN-0001..0030；归档 Plan 是 cold provenance。仅当压缩层不足以解决溯源、边界语义或争议迁移时，才回查某一份 `PLAN-xxxx`。
+**Agent 默认消费层：** 下文「Agent 压缩上下文」（v7）。默认**不要**重读 PLAN-0001..0030；归档 Plan 是 cold provenance。仅当压缩层不足以解决溯源、边界语义或争议迁移时，才回查某一份 `PLAN-xxxx`。
 
-**v6 completeness：** v5 压缩层偏重 Plan-derived 能力；v6 补齐 **Pre-PLAN / non-Plan** 基础产品能力，并用 `init-spec` 脚本面做反向对账（见「INSTALLED 机械面反向清单」）。对账闭合后，就 INSTALLED scripts 面而言可声称 `Unaccounted = 0`。
+**Completeness：**
+- v6：Pre-PLAN / non-Plan + INSTALLED **scripts** 反向对账 → mechanical script surface `Unaccounted = 0`
+- v7：INSTALLED **instruction/workflow** 产品面（8 sub-skills + githooks + 非 script init-spec 面）反向对账 → instruction/workflow surface `Unaccounted = 0`
 
 ## 为什么需要
 
@@ -39,7 +41,7 @@ subject_generation: gen1
 
 测试数量（如 `332/332`）不能替代设计意图证据——测试只证明已覆盖的断言，不一定覆盖所有设计意图；而归档 Plan 很可能记录了「为什么加入这个机制、当时解决什么问题、涉及什么文件、哪些边界条件、哪些同步点、哪些功能最终交付」。
 
-## Agent 压缩上下文（v6）
+## Agent 压缩上下文（v7）
 
 ### 演化单位
 
@@ -72,8 +74,11 @@ Change/Repair Governance; Plan/Delivery Governance;
 Testing/Evidence; Ownership/Distribution; Engineering Restraint.
 
 Treat archived Plans as provenance, not current authorization.
-Also reconcile against current SKILL + init-spec INSTALLED scripts:
-any installed script must map to an accounted capability.
+Also reconcile against current SKILL + init-spec:
+(1) any INSTALLED script maps to an accounted capability;
+(2) any generated sub-skill / githook / INSTALLED policy carrier
+    maps to an accounted capability (do not collapse eight skills
+    into only "Generated sub-skill lifecycle").
 Migrate capability semantics, not historical file topology.
 For every Gen1 capability, assign an explicit target disposition:
 KEEP / EXTRACT / MERGE / REWRITE / RETIRE / DEFER.
@@ -111,6 +116,7 @@ migration decision.
    INIT · AUDIT/drift repair · MIGRATE · RELEASE
    governance validator · deterministic generator
    init-spec · tarball · portability
+   repository/environment inspection · CI materialization
 
 6. Change / Repair Governance
    change hygiene · root-cause repair · failure budget
@@ -167,7 +173,54 @@ migration decision.
 | `check-plan-sync.js` | DEVELOPMENT_PLAN ↔ TASK sync | Pre-PLAN 表；族 7；矩阵 B |
 | `release-manager.js` | RELEASE write executor | Pre-PLAN 表；族 5 |
 
-**闭合规则：** 新增 INSTALLED script 而未更新本表 / 压缩层 → `Unaccounted > 0`。v6 对账结果：上表全覆盖；`Unaccounted = 0`（就 INSTALLED scripts 面而言）。
+**闭合规则：** 新增 INSTALLED script 而未更新本表 / 压缩层 → `Unaccounted > 0`。v6 对账结果：上表全覆盖；**Mechanical script surface: Unaccounted = 0**。
+
+### INSTALLED instruction/workflow 产品面反向清单（v7）
+
+仅登记独立 capability，不复制正文。事实源：`init-spec` 非 script artifacts + `references/templates/sub-skills.md`（8 个生成技能）+ githooks。
+
+#### Generated sub-skills（必须逐能力记账，禁止只写「lifecycle」）
+
+| Installed surface | Capability | 归属族 |
+| --- | --- | --- |
+| `repository-inspection` | repository / environment inspection（栈、布局、成熟度输入） | 5 |
+| `ci-generator` | CI materialization（从 inspection 输入生成 CI） | 5 |
+| `governance-validator` | governance validation（调用/编排 validator） | 5 / 2 |
+| `state-manager` | state / persistence（含 Rule Capture 运行脚手架） | 2 |
+| `drift-check` | audit / drift repair（freshness/consistency 调用面） | 5 / 3 |
+| `release-manager` | release orchestration（HITL + tag executor 边界） | 5 / 4 |
+| `plan-manager` | plan lifecycle（TASK 创建/状态；归档边界归 RELEASE） | 7 |
+| `review-manager` | review / HITL（≠ drift-check） | 4 |
+
+> 「Generated sub-skill lifecycle」只描述**生成机制存在**；上表 8 行才是不可漏的产品能力。重构 prompt topology 时每一行都要有 disposition。
+
+#### Githooks
+
+| Installed surface | Capability | 归属族 |
+| --- | --- | --- |
+| `.githooks/pre-commit` | change-set / secret / gate enforcement（opt-in） | 1 / 8 |
+| `.githooks/commit-msg` | consent / approved-message enforcement（opt-in） | 1 / 4 |
+
+#### 其他非 script INSTALLED carriers（能力已在他处记账，此处闭合存在性）
+
+| Installed surface | Capability 解释 | 说明 |
+| --- | --- | --- |
+| `AGENTS.md`（template） | thin entry / always-on routing carrier | 族 9/10；非能力仓库 |
+| `docs/rules/{lifecycle,git-policy,security,coding,testing,governance-files}.md` | INSTALLED policy carriers | 语义分属各族；不在此复述正文 |
+| `.governance/{manifest,state,preflight,git-policy,sync-rules}.json` | desired/current/rollback + policy/sync config | 族 2 / 3 |
+| `.github/workflows/ci.yml`（generated） | CI materialization 输出 | 与 `ci-generator` 同族 5 |
+| `docs/features/_TEMPLATE.md` · plans/ARCHITECTURE/CHANGELOG/README 等 | bootstrap documentation materialization | 族 5；非独立治理 Control |
+| `.env.example` · `.gitignore` · `.gitmessage.txt` | bootstrap hygiene | 族 5；低风险；disposition 时 KEEP/RETIRE 即可 |
+
+**闭合规则：** 新增 generated sub-skill / hook / INSTALLED policy carrier 而未更新本表 → instruction/workflow surface `Unaccounted > 0`。v7 对账结果：**Instruction/workflow product surface: Unaccounted = 0**。
+
+```text
+Mechanical script surface:           Unaccounted = 0
+Instruction/workflow product surface: Unaccounted = 0
+```
+
+此后 baseline 冻结；下一刀进入 JS（consistency cluster #4 broken links），不再扩写 baseline 文档。
+
 ### PLAN-0001..0030 → 能力压缩表
 
 | Plan | 真正留下来的能力/意图 | 2.0 重构时的理解 |
@@ -397,7 +450,9 @@ Tests     = JS enforcement 有没有坏
 | 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
 | --- | --- | --- | --- |
 | Skill 安装层生命周期（INSTALL/UPDATE/ROLLBACK） | PLAN-0025 | 历史 skill-manager 面；除 version metadata / check-update 外已明确移出本仓库 → 未来 `ai-skill-manager` | `accepted constraint: 完整 INSTALL/UPDATE/ROLLBACK 不回归本仓库（PLAN-0025）；本仓仅保留 version/check-update 类元数据能力的去留仍 undecided` |
-| Generated sub-skill lifecycle（生成子技能的运行期生命周期） | 非 PLAN-0025 | `.governance/generated/skills/` + templates | `undecided` — 与安装层 Skill Manager **不是同一能力**；2.0 路由/物化下如何承载？ |
+| Generated sub-skill lifecycle（生成机制） | 非 PLAN-0025 | `.governance/generated/skills/` + `sub-skills.md` | `undecided` — **机制**是否保留；**8 个能力**见压缩层 v7 表（不可折叠为单行） |
+| Generated sub-skill: repository-inspection | Pre-PLAN / templates | generated skill | `undecided` — 环境巡检能力是否保留为独立叶节点 |
+| Generated sub-skill: ci-generator | Pre-PLAN / templates | generated skill | `undecided` — CI 物化能力是否保留为独立叶节点 |
 
 ## 所有权分类（Ownership；PLAN-0031 Deliverable B）
 
