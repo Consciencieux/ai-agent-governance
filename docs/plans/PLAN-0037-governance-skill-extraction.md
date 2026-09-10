@@ -80,7 +80,52 @@ ai-agent-governance 的实验实现
 
 本计划强制：**写死结构性约束，不写死项目实例**（目录名、编号、本仓迁移剧本属 L3）。
 
+## 提取协议（Design 约束；Active 时按此执行，禁止一次 prompt 出 skill）
+
+ADR-0020 的 L1/L2/L3 是 **skill 产物分层**（invariants / patterns / customization）。下面是 **如何到达那一层** 的工程流程。二者正交，不得混用编号。
+
+最大难点是 **抽象层级选择**：一次从本仓跳到通用 skill，只会落进两个极端。
+
+```text
+极端 1 复制型抽象     提取 WHAT（路径、CTRL 号、三语目录）当 invariant
+极端 2 空泛型抽象     只剩口号（「要有语言策略」「保持清晰」）无约束
+正确                 保留 WHY + CONSTRAINT + PATTERN，再写成 L1/L2/L3
+```
+
+禁止：
+
+```text
+原项目  →  通用 Skill
+```
+
+必须经过中间产物与审查点（每步只做低风险判断，不要求模型一次性「高级抽象正确」）：
+
+```text
+Project Facts          本仓实际怎么做（不抽象、不解释）
+        ↓ 审查
+Design Rationale        为何存在、解决什么、删了会怎样
+        ↓ 审查
+Reusable Pattern       哪些 rationale 跨项目成立；哪些绑死本仓环境
+        ↓ 审查
+Skill L1 / L2 / L3     才写成 invariant / pattern / template
+```
+
+示例（语言边界；说明用，非现在定稿）：
+
+| 层 | 内容 |
+| --- | --- |
+| Fact | Roadmap 三语；Plan / ADR 单语；Product 三语 |
+| Rationale | 执行对象要单一 canonical；用户/贡献者边界对象允许多语 projection |
+| Pattern | Canonical object = 一种源语言；boundary object 可翻译，projection ≠ authority |
+| Skill | Language ownership policy（分类 + 防 drift）；**不**写死 `roadmap/{en,zh-CN,zh-TW}` |
+
+Active 时每条候选 invariant 必须能回溯到 Fact 行；缺 Rationale 不得升格为 L1。审查否决复制型/空泛型后再进入 Stage A–D。
+
+这也是本计划 **现在不 Active** 的原因之一：Phase 5 routing 未验证时，Fact 层仍会变（例如「Capability-first」可能被「Task-context routing」修正）；提前抽 Skill 会冻结错误模型。
+
 ## 执行阶段（仅当 Active 后）
+
+Active 后先跑提取协议（Facts → Rationale → Patterns），再写 skill 正文。
 
 ### Stage A — 提取 Hard Invariants（L1）
 
@@ -146,7 +191,8 @@ governance-skill/
 ## 完成条件（Active 后的 exit）
 
 - [ ] 前置条件全部满足后才曾转为 Active
-- [ ] L1 invariants 成文且与 ADR-0020 分层一致
+- [ ] 提取协议四段产物均有审查记录（Facts / Rationale / Patterns / Skill）；无「一次抽象」交付
+- [ ] L1 invariants 成文且与 ADR-0020 分层一致；每条可回溯到 Fact；无复制型/空泛型
 - [ ] L2 / L3 边界显式；无本仓目录/CTRL/Phase 剧本硬编码进 L1
 - [ ] Skill 结构落地并可 INIT/打包（或明确的分发形态）
 - [ ] Stage D 干净目标验证有真实证据（非宣称）
@@ -172,12 +218,13 @@ governance-skill/
 | X0 | observation | design | 过早抽取会固化未验证 routing | skill | high | closed | deferred | — | revisit: Phase 5 routing 验证后 Active |
 | X1 | observation | review | 「不写死」易被读成软建议 | skill | high | closed | resolved | — | ADR-0020 L1 硬约束修正 |
 | X2 | migration_gap | design | 尚无 extraction 执行车辆 | both | med | open | — | — | 本计划；Active 后关闭 |
+| X3 | observation | review | 一次抽象会复制实现或空泛口号 | skill | high | closed | resolved | — | 本计划 § 提取协议；产物分层 ≠ 提取流程 |
 
 ## 闭包对账（Design 基线）
 
 ```text
-Total known:  3
-Resolved:     1  (X1)
+Total known:  4
+Resolved:     2  (X1, X3)
 Deferred:     1  (X0 — revisit: Phase 5 后)
 Open:         1  (X2 — 本计划尚未 Active/交付)
 Unaccounted:  0

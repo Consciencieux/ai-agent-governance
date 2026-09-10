@@ -144,6 +144,8 @@ L3 Project Customization        — 目录名、编号、模板实例（可选�
 
 **时机：** 在 **Phase 5 Task→Capability routing 稳定并验证** 之后再做 skill 方法论提炼（routing 把「不要乱放」从人工约束变成结构约束）。过早抽取会把未验证的 applicability / topology 假设固化进载荷。执行车辆 = **PLAN-0037**（Design；非当前 Active）。当前顺序：Phase 5 research/plan → 验证 capability 边界 → PLAN-0037 Active → 再提炼通用 skill（含 L1 硬约束定稿）。
 
+**提取方法（流程权威在 PLAN-0037，此处只钉边界）：** 不得 `原项目 → Skill` 一次跳转。必须经 Facts → Rationale → Reusable Pattern 再写入 L1/L2/L3。禁止把本仓 WHAT 当 invariant（复制型），也禁止只有口号无约束（空泛型）。L1/L2/L3 是产物分层，不是提取步骤编号。
+
 ## 实施说明（2026-09-09，非决策性 note）：第一次执行层分离已落地
 
 这是**后续 physical execution separation 迁移的第一项成果**，不属于 PLAN-0031 的原始完成范围（PLAN-0031 只完成 ownership/boundary 分类）；不改变 PLAN-0031 的历史目标。
