@@ -295,7 +295,7 @@ Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的�
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
 当前阶段：5 — Dispatcher（入口 = Task→Capability 适用研究；**尚未**实现 Dispatcher）
-当前阶段计划：Phase 4 checkpoint PLAN-0035 / PLAN-0036 = Implemented（EXITED）。Phase 5 入口研究：RESEARCH-0012（Task→Capability routing）。Phase 3 baseline：`24021c4`。Plan archive ≠ Release（ADR-0016）。
+当前阶段计划：Phase 4 checkpoint PLAN-0035 / PLAN-0036 = Implemented（EXITED）。Phase 5 入口研究：RESEARCH-0012（Task→Capability routing）。路由验证后的提炼（Design，非当前 Active）：[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) — 可复用治理 skill（L1 invariants / L2 patterns / L3 customization）；仅在 Phase 5 routing 验证后执行。Phase 3 baseline：`24021c4`。Plan archive ≠ Release（ADR-0016）。
 
 
 ## Guarantee Levels
@@ -528,7 +528,11 @@ P1 Producer / Product Separation
 P2 Research / Findings / Traceability
 P3 Governance Core / Rule Model
 P4 Checker / Primitive restructuring
-P5 Dispatcher
+P5 Dispatcher（routing 验证）
+        ↓
+PLAN-0037 — 提炼可复用治理 skill
+  （L1 硬约束 · L2 模式 · L3 项目定制）
+        ↓
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates

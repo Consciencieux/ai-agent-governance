@@ -75,9 +75,10 @@ Phase 4（PLAN-0035）已 EXITED：extraction pattern、CTRL-0001 解耦、basel
 - Phase 5 Plan（Task taxonomy + applicability map 施工）
 - 必要时 Narrow ADR（routing 权威表示）
 - Dispatcher 实现仍属更后切片
+- **PLAN-0037**（Design）：Governance Skill Extraction — 须等本 RESEARCH / Phase 5 routing 验证后再 Active；写死 L1 结构性 invariants，不写死目录/编号等项目实例；**禁止**复制本仓 `docs/` 树
 
 ## 参考
 
-- ADR-0018 Phase 5 · ADR-0022 · ADR-0023
+- ADR-0018 Phase 5 · ADR-0020（skill 提炼边界）· ADR-0022 · ADR-0023
 - RESEARCH-0004 / 0006 / 0009 / 0010 / 0011
 - PLAN-0035 Phase 4 Exit Criteria

@@ -48,6 +48,7 @@ All notable changes to this project will be documented here.
 - **CTRL-0001 P3 repo/skill decoupling** — shared `secret-scan-facts` + CTRL-0001 evaluator; skill CLI WRAP remains `scripts/check-secrets.js`; repo profile binds `repo-tools/check-secrets.js` (AGENTS pre-commit). Accidental same-file coupling removed; Safety Kernel characterization preserved. PLAN-0035 P3 CLOSED; next = PLAN-0036.
 - **PLAN-0036 Discovery Ledger L1** — INSTALLED contract in `lifecycle.policy.md` § 发现台账（storage = TASK plan table; not state.json/registry); ADR-0021 payload amendment; workflow hooks; characterization via docs + clean-target payload tests. No auto-discovery JS.
 - **Phase 4 EXITED** — PLAN-0035 Exit Criteria satisfied; remaining consistency clusters / #9 / routing / topology / automation deferred by design. Phase 5 entry opened as RESEARCH-0012 (explicit Task→Capability map; no Dispatcher yet).
+- **Skill distillation boundary (ADR-0020) + PLAN-0037 (Design)** — reusable skill sets design-space bounds (L1 hard invariants: closed metadata, type boundaries, canonical ownership, thin entry, routing contract), not soft advice and not a copy of this repo’s `docs/` / Phase / CTRL instances; L2 patterns + L3 project customization remain separate; PLAN-0037 is the extraction vehicle — Design only until Phase 5 routing stabilizes; not the current active task.
 
 ## [1.0.2] - 2026-09-08
 

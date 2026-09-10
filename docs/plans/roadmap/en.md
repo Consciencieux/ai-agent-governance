@@ -293,7 +293,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
 Current Phase: 5 — Dispatcher (entry = Task→Capability applicability research; Dispatcher **not** implemented yet)
-Current Phase Plan: Phase 4 checkpoints PLAN-0035 / PLAN-0036 = Implemented (EXITED). Phase 5 entry research: RESEARCH-0012 (Task→Capability routing). Phase 3 baseline: `24021c4`. Plan archive ≠ Release (ADR-0016).
+Current Phase Plan: Phase 4 checkpoints PLAN-0035 / PLAN-0036 = Implemented (EXITED). Phase 5 entry research: RESEARCH-0012 (Task→Capability routing). Post-routing extraction (Design, not active): [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) — reusable governance skill (L1 invariants / L2 patterns / L3 customization); execute only after Phase 5 routing validates. Phase 3 baseline: `24021c4`. Plan archive ≠ Release (ADR-0016).
 
 
 ## Guarantee Levels
@@ -526,7 +526,11 @@ P1 Producer / Product Separation
 P2 Research / Findings / Traceability
 P3 Governance Core / Rule Model
 P4 Checker / Primitive restructuring
-P5 Dispatcher
+P5 Dispatcher (routing validated)
+        ↓
+PLAN-0037 — Extract reusable governance skill
+  (L1 hard invariants · L2 patterns · L3 project customization)
+        ↓
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates

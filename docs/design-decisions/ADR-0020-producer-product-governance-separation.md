@@ -92,6 +92,58 @@ shared control
 - 存量 `scope = both` 文本保留为 compatibility residue，明确记录不再是架构 ownership 结论。
 - FINDING-0001 保持 `status: Confirmed`（remediation underway）；其 Resolved 前提是 cross-profile contract 真正落地（Phase 3+）。
 
+## 后续修正（2026-09-10）：可复用 Skill = 设计空间边界，不是建议清单也不是文档树拷贝
+
+本修正是对决策 1–2（producer/product 边界）的 **Narrow amendment**：规定本仓库向「可复用 Agent Governance Skill」提炼时的内容边界与时机。不授权现在改写 INSTALLED 载荷目录，也不新建平行 skill 包。
+
+**角色区分：**
+
+```text
+本仓库（ai-agent-governance）
+  = 实验场 + 参考实现（reference implementation）
+
+未来可复用 skill
+  = 经 Phase 5+ 验证后提炼的治理方法论与执行策略
+  = 给 Agent 设置设计空间边界（不是「建议」）
+```
+
+禁止把本仓库整棵 `docs/`（或 research/findings/ADR 物理树）当作 skill 安装物复制进被治理项目。
+
+### 关键限定：写死结构性约束，不写死项目实例
+
+「不写死」**只**指项目实例（目录名、编号、本仓迁移剧本、具体 YAML 列名）。**不得**把 invariants、语义边界与禁止行为降级为理念建议——否则 Agent 会用默认经验补全缺失约束（典型失败：metadata 膨胀、文档类型混用、规则全文复制、入口变百科）。
+
+可复用 skill 必须分三层：
+
+```text
+L1 Hard Rules（invariants）     — 不可违反；宜可机械检查
+L2 Recommended Patterns         — 推荐实现模式
+L3 Project Customization        — 目录名、编号、模板实例（可选）
+```
+
+**L1 必须写死（结构性约束，示例集合；提炼时定稿）：**
+
+1. **Metadata budget** — 每种文档类型有封闭 metadata schema；禁止任意加字段、为搜索堆冗余、把正文已有信息复制进 frontmatter；新增字段须经 ADR。
+2. **Document type boundary** — Research=事实/证据；Finding=问题/影响；ADR=决策/理由；Plan=执行；禁止跨类型混用。
+3. **Canonical ownership** — 一个事实一个 owner；他处仅 link / summarize / reference；禁止完整规则多处复制。
+4. **Entry point size** — `AGENTS.md` / `SKILL.md` 仅 identity · scope · invariants · routing；禁止长背景、历史、完整 workflow、reference encyclopedia。
+5. **Routing requirement** — 新增 capability 必须声明 Task trigger → Capability → Authority → Execution → Verification。
+6. **Mechanical control shape**（若采用 Control）— 须具备 identity · semantic owner · evaluator · binding · evidence；不强制本仓 `CTRL-NNNN` 编号。
+7. **Discovery disposition** — 长期任务中的有价值发现须可追踪并有 disposition + closure；不强制本仓 Ledger 表列 schema。
+
+**L2 推荐（可进 skill，非强制路径）：** Research/Finding/ADR/Plan 分离、capability-first 组织、progressive disclosure / Context Economy、抽象 migration stages。
+
+**L3 不得写死为 skill 硬约束（项目实例）：**
+
+1. 具体目录名（须存在 Research / Decision / Execution **类对象**，路径由项目定）
+2. 本仓 CTRL 编号与种子 Control 清单
+3. 本仓 Phase 0–8 / PLAN-003x 迁移剧本
+4. Discovery Ledger 的具体 YAML/表列字段名
+
+**Gen2 立场：** 允许空间 → 明确边界 → 机械检查 → Agent 在边界内发挥。可复用 skill 若只写「建议薄入口 / 适度元数据」，仍是 Gen1。
+
+**时机：** 在 **Phase 5 Task→Capability routing 稳定并验证** 之后再做 skill 方法论提炼（routing 把「不要乱放」从人工约束变成结构约束）。过早抽取会把未验证的 applicability / topology 假设固化进载荷。执行车辆 = **PLAN-0037**（Design；非当前 Active）。当前顺序：Phase 5 research/plan → 验证 capability 边界 → PLAN-0037 Active → 再提炼通用 skill（含 L1 硬约束定稿）。
+
 ## 实施说明（2026-09-09，非决策性 note）：第一次执行层分离已落地
 
 这是**后续 physical execution separation 迁移的第一项成果**，不属于 PLAN-0031 的原始完成范围（PLAN-0031 只完成 ownership/boundary 分类）；不改变 PLAN-0031 的历史目标。
@@ -113,5 +165,7 @@ shared control
 - ADR-0018（Phase 顺序 + 决策 2 硬约束）
 - ADR-0019（元数据而非目录原则）
 - RESEARCH-0006（Generation-1 能力基线 + ownership classification）
+- RESEARCH-0012（Task→Capability routing；skill L1 提炼前置）
+- PLAN-0037（Governance Skill Extraction；Design，routing 验证后 Active）
 - PLAN-0031（Phase 1 交付物 A–D）
 - Control Model（Phase 3）：ADR-0023
