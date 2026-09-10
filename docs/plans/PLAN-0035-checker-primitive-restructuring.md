@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：0003/0004 consistency pass + RESEARCH-0006 v5 Agent 压缩上下文待推；跨 Phase 顺序已冻结。Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：CTRL-0003/0004 vertical 已收口；RESEARCH-0006 v6 baseline completeness pass 补齐 Pre-PLAN / INSTALLED 反向对账。下一步先做 P2 低风险 cluster，不整拆 consistency monolith。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -65,16 +65,23 @@ Review 三类拆分                                 → Phase 7
 现在
 │
 ├─ 1. 冻结 Gen1 capability inventory（功能/语义，不是目录树）
-│     mechanical：RESEARCH-0011（已有）
-│     instruction/workflow 压缩层：RESEARCH-0006 v5 Agent 压缩上下文（P8）
+│     mechanical：RESEARCH-0011 v3（含 check-plan-sync）
+│     instruction/workflow + Pre-PLAN 压缩层：RESEARCH-0006 v6
 │     旧功能不得 silently drop；新增必须有来源；重复有 disposition
-│     Unaccounted = 0
+│     INSTALLED scripts 反向对账 → Unaccounted = 0
 │     默认不重读 PLAN-0001..0030（归档 = cold provenance）
 │
+├─ 1b. Baseline completeness pass（本轮）✓
+│     补 check-plan-sync / INIT·AUDIT·MIGRATE·RELEASE / validator /
+│     manifest·state·validation·preflight / multi-agent lock
+│
 ├─ 2. Phase 4 mechanical restructuring（本计划主体）
-│     primitive / evaluator / repo·skill ownership
+│     下一条：**P2 consistency 低风险 cluster**（优先 #4 broken links 或 #9 principles-index）
+│     **不要**先整文件拆 `check-doc-consistency.js`
+│     **不要**先碰 #1 version/release、#8 consent、#10 plan-status（风险高）
+│     然后 P3 repo→skill（CTRL-0001 第二批）
+│     PLAN-0036 可并行（Discovery Ledger → INSTALLED lifecycle TASK）
 │     **稳定边界 = Control/capability，不是 Markdown 物理路径**
-│     允许改 wiring / semantics_ref；禁止因 path 硬编码绑定核心判定
 │
 ├─ 3. Phase 5 applicability / routing 成型
 │
@@ -116,7 +123,7 @@ B Characterization   ✓（Safety Kernel 基线快照）
 C Disposition        ✓（本计划 § Disposition 表；主体 = capability/cluster/evaluator）
 D Primitive extract  ✓（第一条 vertical = CTRL-0003/0004）
 E Evaluator rebuild  ✓（与 D 同刀；verdict ≠ decision_effect consistency pass）
-E′ Instruction inventory（并行文档轨）✓ RESEARCH-0006 v5 Agent 压缩上下文（P8）
+E′ Instruction inventory（并行文档轨）✓ RESEARCH-0006 v6（P8 + P9 completeness）
 F Producer/Product decoupling（P3）
 G PLAN-0036 Discovery Ledger
 H Exit review
@@ -278,22 +285,24 @@ evidence
 | P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
 | P6 | PLAN-0035 C | Disposition 表未裁定 | both | closed | resolved | 本计划 § 2 Disposition |
 | P7 | PLAN-0035 D/E | CTRL-0003/0004 第一条 vertical | both | closed | resolved | 结构拆分 + require closure + **verdict/binding 分离**；docs/Safety Kernel 再绿 |
-| P8 | ADR-0022 / PLAN-0035 | Gen1 instruction/workflow capability 压缩层 | both | closed | resolved | RESEARCH-0006 v5「Agent 压缩上下文」；默认不重读 PLAN-0001..0030 |
+| P8 | ADR-0022 / PLAN-0035 | Gen1 instruction/workflow capability 压缩层 | both | closed | resolved | RESEARCH-0006 v5→**v6**（补 Pre-PLAN + INSTALLED 反向对账） |
+| P9 | PLAN-0035 / RESEARCH-0006 | Baseline completeness：无 Plan provenance 能力漏项 | both | closed | resolved | 补 check-plan-sync、INIT/AUDIT/MIGRATE/RELEASE、validator、四态、lock；RESEARCH-0011 v3；INSTALLED Unaccounted=0 |
 
 ## 闭包对账（进行中）
 
 ```text
-Total known:  9
-Resolved:     6  (P0, P1, P5, P6, P7, P8)
+Total known:  10
+Resolved:     7  (P0, P1, P5, P6, P7, P8, P9)
 Deferred:     1  (P4)
-Open:         2  (P2 延后实施, P3)
-Unaccounted:  0
+Open:         2  (P2 延后实施→下一刀低风险 cluster, P3)
+Unaccounted:  0  （INSTALLED scripts 面已与 RESEARCH-0006/0011 闭合）
 ```
 
 下一步：
-1. 推送：freshness consistency pass + RESEARCH-0006 压缩层 + 本计划同步；
-2. Phase 4 继续下一条 mechanical vertical（稳定边界 = Control/capability，不绑 Markdown 路径）；
-3. 文档物理拓扑仍禁止大规模搬家（待 Phase 5 routing）。
+1. **不要**整拆 `check-doc-consistency.js`；
+2. P2 第一刀优先 **cluster #4 broken links** 或 **#9 principles-index**；
+3. P3 = CTRL-0001 第二批；PLAN-0036 可并行；
+4. 文档物理拓扑仍禁止大规模搬家（待 Phase 5 routing）。
 
 ## 参考
 

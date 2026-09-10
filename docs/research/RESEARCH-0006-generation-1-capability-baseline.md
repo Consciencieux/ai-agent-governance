@@ -1,17 +1,27 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 5
+version: 6
 subject_generation: gen1
 ---
 
 # RESEARCH-0006：第一代能力基线
 
-本 RESEARCH 从 `docs/plans/archive/PLAN-0001..0030`（30 份归档计划）、当前代码与测试中提炼 Generation-1 的**能力保存矩阵**，为 Generation-2 重构提供 baseline evidence。它回答「1.0 曾经保护什么、现在由什么承载、Phase 4 还需要问什么」，不复制任何归档计划的全文，**不裁决** 2.0 处置。
+本 RESEARCH 从三路事实源提炼 Generation-1 的**能力保存矩阵**，为 Generation-2 重构提供 baseline evidence：
+
+```text
+1. PLAN-0001..0030（归档 Plan → 意图 / provenance）
+2. 当前 SKILL / references（产品入口与 instruction surface）
+3. init-spec INSTALLED artifacts + scripts/（实际会装进被治理项目的机械面）
+```
+
+它回答「1.0 曾经保护什么、现在由什么承载、Phase 4 还需要问什么」，不复制任何归档计划的全文，**不裁决** 2.0 处置。
 
 它是**描述层**。规范冻结见 ADR-0014；阶段顺序见 ADR-0018（Phase 4 才对 Gen1 mechanism 做 keep / wrap / extract / rewrite / retire）。已观察到的同步缺口见 FINDING-0025。
 
-**Agent 默认消费层：** 下文「Agent 压缩上下文」。默认**不要**重读 PLAN-0001..0030；归档 Plan 是 cold provenance。仅当压缩层不足以解决溯源、边界语义或争议迁移时，才回查某一份 `PLAN-xxxx`。
+**Agent 默认消费层：** 下文「Agent 压缩上下文」（v6）。默认**不要**重读 PLAN-0001..0030；归档 Plan 是 cold provenance。仅当压缩层不足以解决溯源、边界语义或争议迁移时，才回查某一份 `PLAN-xxxx`。
+
+**v6 completeness：** v5 压缩层偏重 Plan-derived 能力；v6 补齐 **Pre-PLAN / non-Plan** 基础产品能力，并用 `init-spec` 脚本面做反向对账（见「INSTALLED 机械面反向清单」）。对账闭合后，就 INSTALLED scripts 面而言可声称 `Unaccounted = 0`。
 
 ## 为什么需要
 
@@ -29,7 +39,7 @@ subject_generation: gen1
 
 测试数量（如 `332/332`）不能替代设计意图证据——测试只证明已覆盖的断言，不一定覆盖所有设计意图；而归档 Plan 很可能记录了「为什么加入这个机制、当时解决什么问题、涉及什么文件、哪些边界条件、哪些同步点、哪些功能最终交付」。
 
-## Agent 压缩上下文（v5）
+## Agent 压缩上下文（v6）
 
 ### 演化单位
 
@@ -52,13 +62,18 @@ subject_generation: gen1
 ```text
 Do not reread PLAN-0001..0030 by default.
 
-Generation-1 capability baseline consists of:
-Security/Git Safety; Governance State & Rule Capture;
-Knowledge Integrity; Review/HITL; Deterministic Materialization;
+Generation-1 capability baseline = Plan-derived capabilities
++ Pre-PLAN / non-Plan base product capabilities.
+
+Ten long-lived families:
+Security/Git Safety; Governance State & Coordination;
+Knowledge Integrity; Review/HITL; Product Modes & Materialization;
 Change/Repair Governance; Plan/Delivery Governance;
 Testing/Evidence; Ownership/Distribution; Engineering Restraint.
 
 Treat archived Plans as provenance, not current authorization.
+Also reconcile against current SKILL + init-spec INSTALLED scripts:
+any installed script must map to an accounted capability.
 Migrate capability semantics, not historical file topology.
 For every Gen1 capability, assign an explicit target disposition:
 KEEP / EXTRACT / MERGE / REWRITE / RETIRE / DEFER.
@@ -72,7 +87,7 @@ migration decision.
 ```
 
 默认读：Active Plan + 本压缩层 + 当前 target files。  
-需要架构裁决 → 对应 ADR。需要事实 → 对应 Research。  
+需要架构裁决 → 对应 ADR。需要事实 → 对应 Research / init-spec / SKILL。  
 只有 provenance / 边界歧义 → 回查某一份 PLAN-xxxx。
 
 ### 十个长期能力族
@@ -81,8 +96,10 @@ migration decision.
 1. Security / Git Safety
    secret protection · protected branch · consent · change-set binding
 
-2. Governance State / Persistence
-   state · activity · Rule Capture · interruption/resume
+2. Governance State / Coordination
+   manifest desired-state · state current-state · validation observed-state
+   preflight/rollback snapshot · activity · Rule Capture
+   interruption/resume · multi-agent lock
 
 3. Knowledge Integrity
    freshness · consistency · translation · terminology · sync
@@ -90,16 +107,19 @@ migration decision.
 4. Review / Human-in-the-loop
    review-manager · risk tiering · explicit approval
 
-5. Materialization / Payload
-   deterministic INIT · init-spec · generator · tarball · portability
+5. Product Modes & Materialization
+   INIT · AUDIT/drift repair · MIGRATE · RELEASE
+   governance validator · deterministic generator
+   init-spec · tarball · portability
 
 6. Change / Repair Governance
    change hygiene · root-cause repair · failure budget
    same-class closure · control-plane tracing
 
 7. Plan / Delivery Governance
-   plan lifecycle · archive semantics · affected-file delivery
-   evidence anchors
+   plan lifecycle · archive semantics
+   DEVELOPMENT_PLAN ↔ TASK plan sync（check-plan-sync）
+   affected-file delivery · evidence anchors
 
 8. Testing / Evidence
    characterization · evidence tiers · negative fixtures
@@ -116,6 +136,38 @@ migration decision.
 
 文档拓扑重构应围绕这十族，而不是围绕旧文件树。
 
+### Pre-PLAN / non-Plan 基础产品能力（v6 补齐）
+
+这些能力在 PLAN-0001 之前或之外已存在于 SKILL 产品面；**没有独立 Plan provenance，因此最容易在「只读 30 个 Plan」时丢失**。压缩层必须显式记账：
+
+| 能力 | 当前载体（事实） | 归属族 | 备注 |
+| --- | --- | --- | --- |
+| INIT 模式 | `SKILL.md` INIT；`scripts/generate-governance.js`；`references/init-spec.json` | 5 | 与 PLAN-0012 重叠但入口模式本身是产品面 |
+| AUDIT / drift repair | `SKILL.md` AUDIT；generated `drift-check`；manifest 对账 | 5 / 2 | 只读巡检 + 最小补丁；不重建 |
+| MIGRATE | `SKILL.md` 版本迁移流程 | 5 | 框架版本升级路径 |
+| RELEASE 编排 | `SKILL.md` RELEASE；`scripts/release-manager.js`；`references/workflows/release.md` | 5 | 前置检查→版本同步→tag/push/GitHub Release |
+| Governance validator | `scripts/verify_governance.js` → INSTALLED `verify-governance.js` | 5 / 2 | 对照 manifest 校验工件存在与结构 |
+| Manifest / state / validation / preflight | `.governance/manifest.json` · `state.json` · `validation.json` · `preflight.json` | 2 | desired / current / observed / rollback 四态 |
+| Multi-agent lock | `scripts/check-lock.js`（INSTALLED；无独立 Plan） | 2 | 细表曾有、压缩层 v5 漏显式列出 |
+| Plan/milestone sync | `scripts/check-plan-sync.js`（INSTALLED；`--release-gate` 可阻断） | 7 | **v5 矩阵漏行**；≠ repo-only CTRL-0005 plan-delivery |
+
+### INSTALLED 机械面反向清单（init-spec ↔ capability）
+
+`references/init-spec.json` 中 `scripts/` copy artifacts 是「当前 payload mechanical surface」的权威反向清单。任一会安装的脚本必须能在本基线解释：
+
+| INSTALLED script | 能力解释 | 基线位置 |
+| --- | --- | --- |
+| `verify-governance.js` | governance validator | Pre-PLAN 表；族 5/2 |
+| `check-lock.js` | multi-agent lock | Pre-PLAN 表；族 2；矩阵 B |
+| `check-git-policy.js` | Git workflow governance | PLAN-0002；族 1 |
+| `check-secrets.js` | secret scanning | PLAN-0001；族 1 |
+| `check-sync.js` | sync-group mechanical verify | PLAN-0010；族 3 |
+| `check-doc-freshness.js` + `lib/git-facts.js` + evaluators/ctrl-0003\|0004 | doc/translation freshness | PLAN-0005/0020；CTRL-0003/0004 |
+| `check-doc-consistency.js` | cross-doc consistency monolith | PLAN-0006；族 3 |
+| `check-plan-sync.js` | DEVELOPMENT_PLAN ↔ TASK sync | Pre-PLAN 表；族 7；矩阵 B |
+| `release-manager.js` | RELEASE write executor | Pre-PLAN 表；族 5 |
+
+**闭合规则：** 新增 INSTALLED script 而未更新本表 / 压缩层 → `Unaccounted > 0`。v6 对账结果：上表全覆盖；`Unaccounted = 0`（就 INSTALLED scripts 面而言）。
 ### PLAN-0001..0030 → 能力压缩表
 
 | Plan | 真正留下来的能力/意图 | 2.0 重构时的理解 |
@@ -143,7 +195,7 @@ migration decision.
 | 0022 | Audience / portability：INSTALLED 内容必须在被治理项目自身成立 | 文档拓扑须同时考虑「文件去哪」与「内容对谁成立」两轴 |
 | 0023 | Gate repair + SSOT：反向 fixture、真实生产路径、CI wiring、声明与机制一致 | 门禁必须真的覆盖其声称范围；不是保存当时那批具体修补 |
 | 0024 | Repository boundary：repo-tools / repo-workflows 与 payload 物理分离；tarball 边界可验证 | 演化为 ADR-0020；物理边界是重要 invariant |
-| 0025 | Skill INSTALL/UPDATE/ROLLBACK | 除 version metadata 外移交未来独立 `ai-skill-manager`；勿重新吸收进本仓库 |
+| 0025 | Skill INSTALL/UPDATE/ROLLBACK（安装层 Skill Manager） | **不是** generated sub-skill lifecycle。除 version metadata / check-update 外，完整 INSTALL/UPDATE/ROLLBACK 移交未来独立 `ai-skill-manager`；勿重新吸收进本仓库 |
 | 0026 | Plan delivery anchors：改已有文件时证明声明内容真的落地 | repo-only CTRL-0005 / plan-delivery；核心是 delivery evidence |
 | 0027 | Consent evidence + change hygiene automation：凭证绑定 change-set；机器证据不能代替人的语义判断 | CTRL-0002/变更卫生的进一步机械化；hash ≠「人已理解」 |
 | 0028 | Payload governance lessons：声明集合=机制覆盖集合；移动后复查枚举；防 shape-guard 空转；空洞测试；证据等级；CI 完整性 | meta invariant 集合 → 原则/测试设计；勿重新复制历史事故 |
@@ -158,10 +210,9 @@ migration decision.
 
 ### 与下文矩阵的关系
 
-- **本压缩层**：Agent 默认入口；十族 + Plan→意图表 + 阅读策略。  
+- **本压缩层**：Agent 默认入口；十族 + Pre-PLAN 表 + Plan→意图表 + INSTALLED 反向清单 + 阅读策略。  
 - **下文「能力保存矩阵」+ Ownership 表**：逐条 carrier / ownership / 待决问题的细粒度 evidence。  
 - 机械 CTRL 面现状 → RESEARCH-0011；处置裁决 → PLAN-0035（及后续 Plan）。
-
 ## 第一代机械基底（Generation-1 Mechanical Substrate）
 
 在 Generation-2 迁移期间，Generation-1 的 JS 与其 materialization 相关工件应被理解为 **Frozen Gen1 Mechanical Substrate**。这是对现状的描述，不是新的执行规范：
@@ -271,12 +322,16 @@ Tests     = JS enforcement 有没有坏
 
 ## 能力保存矩阵
 
-### A. INIT 与生成器
+### A. INIT 与生成器 / 产品入口
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
 | --- | --- | --- | --- |
-| INIT 确定性生成器 | PLAN-0012 | `scripts/generate-governance.js` | `undecided` — 2.0 是否仍要确定性 INIT？载体是否仍是该生成器？ |
-| 治理文件与状态管理 | PLAN-0012 | `references/init-spec.json` + 生成器 | `undecided` — 物化契约是否保留？谁拥有 artifact 清单？ |
+| INIT 确定性生成器 | PLAN-0012；SKILL INIT | `scripts/generate-governance.js` | `undecided` — 2.0 是否仍要确定性 INIT？载体是否仍是该生成器？ |
+| AUDIT / drift repair 模式 | Pre-PLAN / SKILL AUDIT | SKILL AUDIT 流程；generated `drift-check`；manifest 对账 | `undecided` — AUDIT 是否仍为独立产品入口？与 Phase 5 routing 如何分工？ |
+| MIGRATE（框架版本迁移） | Pre-PLAN / SKILL MIGRATE | SKILL 版本迁移流程；manifest `governance_version` | `undecided` — 迁移编排是否保留？谁拥有升级契约？ |
+| RELEASE 编排 | Pre-PLAN / SKILL RELEASE | `scripts/release-manager.js` + `references/workflows/release.md` | `undecided` — release executor 边界？与 CTRL-0002 consent 如何绑定？ |
+| Governance validator | Pre-PLAN | `scripts/verify_governance.js` → INSTALLED `verify-governance.js` | `undecided` — validator 是否仍对照 manifest 做存在性/结构校验？ |
+| 治理文件与状态管理（manifest/state/validation/preflight） | PLAN-0012；Pre-PLAN | `references/init-spec.json` + `.governance/{manifest,state,validation,preflight}.json` | `undecided` — 四态模型是否保留？谁拥有 artifact 清单？ |
 | 载荷治理教训（声明-机制差距、证据等级、测试活性、枚举复查、CI 完整性） | PLAN-0028 | INSTALLED `docs/rules/lifecycle.md` 等 | `undecided` — 哪些 invariant 进入 2.0 evidence / control model？ |
 
 ### B. 运行时检查器（Mechanisms）
@@ -287,13 +342,13 @@ Tests     = JS enforcement 有没有坏
 | Git 工作流治理（Git workflow governance） | PLAN-0002 | `.governance/git-policy.json` + `scripts/check-git-policy.js` | `undecided` — 分支/直推保护是否保留？载体是否仍是 git-policy.json？ |
 | Agent 活动审计（Agent activity audit） | PLAN-0003 | `.governance/activity.jsonl` + drift-check（validator） | `undecided` — 活动审计是否仍是产品能力？ |
 | 治理评分 / 徽章（Governance score / badge） | PLAN-0004 | validator `--json` score + shields badge | `undecided` — 评分/徽章是否保留？ |
-| 文档新鲜度（Doc freshness） | PLAN-0005 | `scripts/check-doc-freshness.js` | `undecided` — 哪些新鲜度行为必须保留？哪些是 Gen1 checker artifact？ |
+| 文档新鲜度（Doc freshness） | PLAN-0005 | `scripts/check-doc-freshness.js` + CTRL-0003/0004 evaluators | `undecided` — 哪些新鲜度行为必须保留？哪些是 Gen1 checker artifact？ |
 | 内容一致性（Content consistency） | PLAN-0006 | `scripts/check-doc-consistency.js`（monolith，见 FINDING-0019） | `undecided` — 哪些一致性行为必须保留？哪些属于 Gen1 checker accretion？ |
-| 多 Agent 锁 | — | `scripts/check-lock.js`（非独立计划引入） | `undecided` — 锁语义是否保留？当前 advisory 是否够？ |
+| 多 Agent 锁 | Pre-PLAN（无独立 Plan） | `scripts/check-lock.js`（INSTALLED） | `undecided` — 锁语义是否保留？当前 fail-closed held-lock 是否够？ |
+| Plan/milestone sync（DEVELOPMENT_PLAN ↔ TASK） | Pre-PLAN / 无独立 Plan（v6 补录） | `scripts/check-plan-sync.js`（INSTALLED；`--release-gate` 可阻断） | `undecided` — 是否保留为 INSTALLED control？与 repo-only plan-delivery（CTRL-0005）如何分工？ |
 | 计划归档门禁 | PLAN-0017 | plan-status / pending-archive 集群 | `undecided` — 随 2.0 plan model 如何承载？ |
 | 交付锚点 | PLAN-0026 | `repo-tools/check-plan-delivery.js` | `undecided` — repo-only 交付对账是否保留？ |
 | 领域级测试入口 | PLAN-0030 | `tests/run-tests.js --suite` | `undecided` — 套件入口是否保留为 repo 能力？ |
-
 ### C. 同步与一致性
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
@@ -341,7 +396,8 @@ Tests     = JS enforcement 有没有坏
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
 | --- | --- | --- | --- |
-| Skill 生命周期管理（Skill lifecycle management） | PLAN-0025 | 子技能生命周期 | `undecided` — 子技能生命周期在 ADR-0022 目标形态下如何承载？ |
+| Skill 安装层生命周期（INSTALL/UPDATE/ROLLBACK） | PLAN-0025 | 历史 skill-manager 面；除 version metadata / check-update 外已明确移出本仓库 → 未来 `ai-skill-manager` | `accepted constraint: 完整 INSTALL/UPDATE/ROLLBACK 不回归本仓库（PLAN-0025）；本仓仅保留 version/check-update 类元数据能力的去留仍 undecided` |
+| Generated sub-skill lifecycle（生成子技能的运行期生命周期） | 非 PLAN-0025 | `.governance/generated/skills/` + templates | `undecided` — 与安装层 Skill Manager **不是同一能力**；2.0 路由/物化下如何承载？ |
 
 ## 所有权分类（Ownership；PLAN-0031 Deliverable B）
 
@@ -388,6 +444,8 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 | Repo 文档一致性 | repo | repo | 直接运行 `scripts/check-doc-consistency.js`（INSTALLED） | — | repo-only | single | repo→skill · accidental（monolith 见 FINDING-0019） | undecided |
 | 被治理项目内容一致性 | skill | governed projects | — | `scripts/check-doc-consistency.js` | skill-only | single | none | undecided |
 | 多 Agent 锁 | skill | governed projects | —（本仓库是否使用待查） | `scripts/check-lock.js`（INSTALLED） | unknown | unknown | unknown | undecided |
+| Plan/milestone sync（DEVELOPMENT_PLAN ↔ TASK） | skill | governed projects | — | `scripts/check-plan-sync.js`（INSTALLED） | skill-only | single | none | undecided |
+| Governance validator | skill | governed projects | — | `scripts/verify_governance.js` → `verify-governance.js` | skill-only | single | none | undecided |
 | 计划归档门禁（本仓库） | repo | repo | `check-doc-consistency.js` plan-status 集群（共享载体） | — | repo-only | single | repo→skill · accidental | undecided |
 | 交付锚点 | repo | repo | `repo-tools/check-plan-delivery.js`（REPO-ONLY） | — | repo-only | single | none | undecided |
 | 领域级测试入口 | repo | repo | `tests/run-tests.js --suite` | — | repo-only | single | none | undecided |
@@ -410,7 +468,8 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 | 内容受众与可移植性 | core | repo；governed projects | AGENTS.md Content portability | 归档规则四受众（INSTALLED） | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
 | SSOT 对齐（门禁修复） | core | repo；governed projects | AGENTS.md SSOT 纪律 | 规则文件 + 门禁修复协议（INSTALLED） | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
 | 仓库边界拆分（三角色） | repo | repo；skill executor | `docs/product/en/architecture.md` + `check-role-completeness.js`（REPO-ONLY） | `init-spec.json` distribution invariants | shared-semantic | single（repo 定义权威，skill executor 消费声明） | skill→repo · intentional | undecided |
-| Skill 生命周期管理（Skill lifecycle management） | skill | governed projects | — | 子技能生命周期 | skill-only | single | none | undecided |
+| Skill 安装层生命周期（INSTALL/UPDATE/ROLLBACK） | skill（未来外部 manager） | governed projects | — | 已移出；仅 version/check-update 残留待决 | skill-only（external） | single | none | accepted constraint: 完整 INSTALL/UPDATE/ROLLBACK 不回归本仓库（PLAN-0025） |
+| Generated sub-skill lifecycle | skill | governed projects | — | `.governance/generated/skills/` | skill-only | single | none | undecided |
 
 **需要 CONTROL-X 的 shared controls**（准入判据，不是「owner 是否 core」）：
 

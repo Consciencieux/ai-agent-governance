@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0011
 status: Active
-version: 2
+version: 3
 subject_generation: gen1
 ---
 
@@ -151,8 +151,35 @@ scripts/check-doc-consistency.js
 | roadmap sync | `repo-tools/check-roadmap-sync.js` | 同上 |
 | layout sync | `repo-tools/check-layout-sync.js` | 同上 |
 | doc parity | `repo-tools/check-doc-parity.js` | cluster 7 委托 |
-| git-policy / lock / sync / verify | `scripts/check-*.js` | skill INSTALLED；扩面时再 CTRL |
+| git-policy | `scripts/check-git-policy.js` | skill INSTALLED；扩面时再 CTRL |
+| multi-agent lock | `scripts/check-lock.js` | skill INSTALLED；无独立 Plan；RESEARCH-0006 v6 已入压缩层 |
+| sync groups | `scripts/check-sync.js` | skill INSTALLED；PLAN-0008/0010 |
+| governance validator | `scripts/verify_governance.js` → INSTALLED `verify-governance.js` | skill INSTALLED；Pre-PLAN 产品面 |
+| **plan/milestone sync** | **`scripts/check-plan-sync.js`** | **skill INSTALLED；`--release-gate` 可阻断；≠ CTRL-0005 plan-delivery（repo-only）；v3 显式补录（v2 漏）** |
 | release-manager | `scripts/release-manager.js` | 部分支撑 CTRL-0002；整机非单 CTRL |
+| freshness shared primitive | `scripts/lib/git-facts.js` | 被 CTRL-0003/0004 共享；非 Control |
+| freshness evaluators | `scripts/evaluators/ctrl-0003-*.js` / `ctrl-0004-*.js` | 已挂 CTRL-0003/0004 |
+
+### INSTALLED scripts ↔ inventory 闭合（v3）
+
+与 RESEARCH-0006 v6 反向清单对齐。`init-spec` 当前 `scripts/` copy set 必须全部出现在上表或种子 Control 行：
+
+```text
+verify-governance.js     ✓ validator
+check-lock.js            ✓ multi-agent lock
+check-git-policy.js      ✓ git-policy
+check-secrets.js         ✓ CTRL-0001
+check-sync.js            ✓ sync groups
+check-doc-freshness.js   ✓ CTRL-0003/0004 CLI WRAP
+lib/git-facts.js         ✓ shared primitive
+evaluators/ctrl-0003…    ✓ CTRL-0003
+evaluators/ctrl-0004…    ✓ CTRL-0004
+check-doc-consistency.js ✓ monolith clusters
+check-plan-sync.js       ✓ plan/milestone sync（本版补录）
+release-manager.js       ✓ release executor
+```
+
+闭合结果：INSTALLED scripts 面 `Unaccounted = 0`。
 
 ## Characterization 冻结锚点（Safety Kernel）
 

@@ -38,7 +38,7 @@ All notable changes to this project will be documented here.
 
 - **CTRL-0003/0004 consistency pass: invariant + verdict/binding split** — `init-spec` `copied_scripts_are_self_contained` now means INSTALLED require-graph closure (aligned with payload tests). Evaluators emit pure semantic `verdict` + `evidence` only; `decision_effect` is applied by the legacy wrapper from profile × enforcement boundary (ADR-0023). CLI characterization unchanged.
 
-- **Phase 4 sequencing freeze: capability semantics before prompt topology** — no large `references/` / SKILL / AGENTS physical moves during Phase 4 (ADR-0022). Mechanical JS stays bound to Control/capability, not Markdown paths. Gen1 Agent-facing compressed baseline lands in RESEARCH-0006 v5 (ten capability families + PLAN-0001..0030 intent table + default no-reread rule); PLAN-0035 P8 closed.
+- **Gen1 baseline completeness pass (RESEARCH-0006 v6)** — Agent compressed layer now includes Pre-PLAN/non-Plan base capabilities (INIT/AUDIT/MIGRATE/RELEASE, validator, manifest/state/validation/preflight, multi-agent lock, plan/milestone sync). `init-spec` INSTALLED scripts reverse-reconciled; `check-plan-sync.js` explicitly inventoried in RESEARCH-0011 v3. PLAN-0025 row corrected (install-layer Skill Manager ≠ generated sub-skill lifecycle). PLAN-0035 P9 closed; next Phase 4 cut prefers consistency clusters #4 or #9, not the whole monolith.
 
 ## [1.0.2] - 2026-09-08
 
