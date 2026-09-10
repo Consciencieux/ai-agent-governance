@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：Baseline **双面闭合**（scripts + instruction/workflow）✓ RESEARCH-0006 v7。**下一刀 JS = consistency cluster #4 broken links**（优先于 #9）。Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：Baseline 双面闭合 ✓。Phase 5 交接命题已冻结：解药是 Task→Capability routing，不是先拆树。**本计划下一刀仍是 #4 broken links。** Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -85,8 +85,11 @@ Review 三类拆分                                 → Phase 7
 │     PLAN-0036 可并行
 │
 ├─ 3. Phase 5 applicability / routing 成型
+│     **首要产物 = Task→Applicable capabilities 逻辑映射**
+│     （不是先写 Dispatcher JS；不是先拆 Markdown 目录）
 │
 ├─ 4. 再按 routing × capability 边界重构 SKILL / AGENTS / references topology
+│     （树形由路由图导出；无路由的拆分禁止）
 │
 └─ 5. 更新少量 path provider / generator wiring（不重写 evaluator 核心逻辑）
 ```
@@ -94,6 +97,48 @@ Review 三类拆分                                 → Phase 7
 **Phase 4 隐藏成功标准：** 以后文档拓扑变化时，应主要改 `semantics_ref` / applicability mapping / path discovery / Dispatcher / generator wiring——若必须重写 freshness 比较、translation 判定等算法，则本阶段抽象失败。
 
 **现在不做：** `lifecycle.policy.md` / `references/` 大规模拆文件搬家。ADR-0022 已写明目录重排留待后续；无 Dispatcher 的拆分只是把大 prompt 变多小 prompt。
+
+### Phase 5 交接命题（冻结；本计划不实施）
+
+**真正的问题不是「平面文档」三个字**，而是 Agent **没有可靠的能力地图 + 按任务检索路径**，于是只能扩大读取范围来降低漏规则风险 → token 上升 + attention dilution + 跨位置关联失败 + context budget 被浪费。
+
+**解药是 routing，不是先拆树。** 无路由的目录树化会变成「扫目录 → 打开 8 个小文件」，甚至更贵。
+
+```text
+错误顺序：
+先把 Markdown 拆成很多目录 → 再想 Agent 怎么找
+
+正确顺序（RESEARCH-0006 v7 已提供输入）：
+能力地图（已冻结）
+        ↓
+Task / Context → Applicable capabilities（Phase 5 首要产物）
+        ↓
+薄入口 + 按需加载
+        ↓
+由 routing 图导出物理 topology
+```
+
+Phase 5 **最先**应交付的是逻辑映射（描述/Plan 层即可），**不是** Dispatcher JS：
+
+| Task / Context | 默认 applicable capabilities（示意） |
+| --- | --- |
+| 普通代码修改 | change hygiene · testing · evidence |
+| 删除/重命名 | change hygiene · reference closure · testing |
+| Git commit/push | git consent · secret protection |
+| 治理规则修改 | governance protection · rule capture · consistency |
+| Release | release · translation freshness · plan sync · changelog |
+| Audit | validator · drift · review |
+| INIT | inspection · materialization · security baseline |
+| Plan task | plan lifecycle · discovery ledger |
+
+目标行为：
+
+```text
+thin entry → task classification → capability map
+→ narrow retrieval → execute → ambiguity 时再扩大 context
+```
+
+**价值排序（跨 Phase）：** Phase 4 结束后，「能力路由 + 由路由导出的文档拓扑」杠杆高于继续堆更多 checker。但 **不得**为做路由而跳过本计划已锁定的 #4 broken-links vertical——Phase 4 仍须证明 consistency monolith 可按 capability 拆。
 
 ## Target: both — 同步点
 
@@ -301,10 +346,10 @@ Unaccounted:  0  （scripts 面 + instruction/workflow 面均闭合）
 ```
 
 下一步（锁定）：
-1. **JS 下一刀 = `check-doc-consistency.js` cluster #4 broken links**；
-2. 再视结果决定 #9 principles-index；
-3. 然后 P3 CTRL-0001；PLAN-0036 可并行；
-4. **停止继续扩写 baseline 文档**；文档物理拓扑仍禁止大规模搬家。
+1. **JS 下一刀 = `check-doc-consistency.js` cluster #4 broken links**（本计划主体；不跳 Phase）；
+2. 再视结果决定 #9 principles-index → P3 CTRL-0001 → PLAN-0036；
+3. Phase 4 exit 后最高杠杆 = Phase 5 Task→Capability routing 映射，再导出文档拓扑；
+4. **禁止**无路由的 references/ 大规模物理搬家；**停止**继续扩写 baseline。
 
 ## 参考
 

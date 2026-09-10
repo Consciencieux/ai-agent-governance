@@ -42,6 +42,8 @@ All notable changes to this project will be documented here.
 
 - **Gen1 instruction/workflow surface closure (RESEARCH-0006 v7)** — eight generated sub-skills and opt-in githooks are capability-accounted (not collapsed into “Generated sub-skill lifecycle”). Dual closure: mechanical scripts `Unaccounted=0` and instruction/workflow product surface `Unaccounted=0`. PLAN-0035 P10 closed; next JS cut locked to consistency cluster #4 broken links.
 
+- **Phase 5 handoff thesis frozen in PLAN-0035** — the Gen1 performance defect is missing Task→Capability retrieval, not “flat Markdown” alone; remedy is routing (then topology derived from it), not directory-splitting first. Phase 5’s first deliverable is a logical applicability map, not Dispatcher JS. Does not change Phase 4’s locked #4 broken-links cut.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added
