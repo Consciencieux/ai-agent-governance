@@ -137,6 +137,12 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 
 **形态守卫不得顺带关闭真实保护**：脚本常有「本项目不含 X 布局 → not applicable → exit 0」的兼容分支。守卫的成立条件必须**窄且明确指向缺失的那个声明源**（例如「缺少某个必需的声明文件」），不得用树级宽条件（例如「整个目录不存在」）——宽条件会在真实缺陷（有目录但声明缺失）出现时把保护一并关掉。守卫触发时必须报告 `not applicable` 并说明原因，不得静默返回成功。
 
+## 相对 Markdown 链接有效性
+
+**义务（CTRL-0006 规则语义权威）：** 被扫描的 Markdown 文件中，相对路径链接目标必须能解析为仓库内已存在的路径；`http` / `https` / `mailto` 目标不适用本义务。断链是内容一致性缺陷，不得用叙事性「已知缺失」脚注代替修复或显式移出扫描面。
+
+本义务陈述「必须可解析存在」；**不**规定扫描集合、advisory/deny 或 CLI 标志——那些属于 evaluator / binding。机械求值见 `scripts/evaluators/ctrl-0006-broken-links.js`；一致性 CLI 的默认绑定为 advisory。
+
 ## Phase 5 — Synchronize Knowledge（同步知识）
 
 **中/大型**改动完成后必须同步（**小型改动跳过本阶段**，见规模分级与 Change Classification）：

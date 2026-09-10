@@ -56,6 +56,44 @@ test("doc consistency: archive links are scanned on Windows path separators", ()
 });
 
 
+test("CTRL-0006: missing relative link → evaluateBrokenLinks fail with evidence", () => {
+  const { evaluateBrokenLinks } = require(path.join(SKILL_ROOT, "scripts/evaluators/ctrl-0006-broken-links.js"));
+  const dir = tmp("ctrl-0006-missing");
+  write(path.join(dir, "README.md"), "[missing](docs/does-not-exist.md)\n");
+  const r = evaluateBrokenLinks({ root: dir });
+  return (
+    r.control === "CTRL-0006" &&
+    r.verdict === "fail" &&
+    !Object.prototype.hasOwnProperty.call(r, "decision_effect") &&
+    r.evidence.broken_links.some((i) => i.includes("does-not-exist.md"))
+  );
+});
+
+
+test("CTRL-0006: valid relative link → evaluateBrokenLinks pass", () => {
+  const { evaluateBrokenLinks } = require(path.join(SKILL_ROOT, "scripts/evaluators/ctrl-0006-broken-links.js"));
+  const dir = tmp("ctrl-0006-valid");
+  write(path.join(dir, "docs/target.md"), "# ok\n");
+  write(path.join(dir, "README.md"), "[ok](docs/target.md)\n");
+  const r = evaluateBrokenLinks({ root: dir });
+  return r.control === "CTRL-0006" && r.verdict === "pass" && r.evidence.broken_links.length === 0;
+});
+
+
+test("CTRL-0006 binding: wrapper --gate still reports broken links without deny", () => {
+  const dir = tmp("ctrl-0006-gate-advisory");
+  write(path.join(dir, "README.md"), "[missing](docs/does-not-exist.md)\n");
+  const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json", "--gate"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  const gateKinds = (out.gateIssues || []).map((g) => g.kind);
+  return (
+    r.status === 0 &&
+    out.gatePass === true &&
+    out.issues.broken_links.some((i) => i.includes("does-not-exist.md")) &&
+    !gateKinds.includes("broken_links")
+  );
+});
+
 
 test("doc consistency: numeric claim mismatch with validator source is flagged", () => {
   const dir = tmp("consistency-numeric");

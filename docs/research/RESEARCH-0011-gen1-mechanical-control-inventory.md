@@ -104,14 +104,14 @@ Control
 
 | 字段 | 现状 |
 | --- | --- |
-| semantics_ref | interim：相对 Markdown 链接目标必须可解析存在 |
+| semantics_ref | `references/policies/lifecycle.policy.md` § 相对 Markdown 链接有效性 |
 | evaluator(s) | `scripts/evaluators/ctrl-0006-broken-links.js`；consistency shell 仍 WRAP 调用 |
 | enforcement_boundary | `check-doc-consistency.js` 默认/任何模式均 **advisory**（不进 `--gate` fail-closed） |
 | decision_effect | 本 CLI 绑定 = advisory；verdict fail ≠ process deny |
-| tests | `tests/suites/consistency.test.js`：`broken relative link` / `archive links … Windows` |
+| tests | `tests/suites/consistency.test.js`：wrapper + **direct** `evaluateBrokenLinks`（missing→fail / valid→pass / `--gate` 不 deny） |
 | profile | skill INSTALLED；repo 直接跑同一 WRAP |
 | characterization | `f -> target` 字符串；跳过 http/mailto；scan set 含 README/SKILL/AGENTS + docs/{en,zh-CN,zh-TW} + design-decisions/archive + references/ |
-| 候选 disposition | PLAN-0035：#4 EXTRACT 完成；shell WRAP |
+| 候选 disposition | PLAN-0035：**#4 CLOSED**；SKIP #9 |
 
 ## 共文件反例（Phase 4 纪律）→ 0003/0004 已拆 evaluator
 

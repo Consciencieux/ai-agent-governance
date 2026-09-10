@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // INSTALLED evaluator — CTRL-0006 Relative markdown link validity (consistency cluster #4).
+// Rule semantics: references/policies/lifecycle.policy.md § 相对 Markdown 链接有效性
 // Semantic evaluation only: broken relative links → verdict fail.
 // Scan-set policy (which files) lives HERE; link extract/resolve/exists live in md-link-facts.
 // Advisory/deny is NOT decided here (consistency shell keeps cluster #4 advisory-only).

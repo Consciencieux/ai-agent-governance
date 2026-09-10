@@ -156,6 +156,15 @@ Machine-readable 独立序列化文件
 | evaluation_binding | repo × `check-plan-delivery.js` × 默认 → advisory；× `--gate` / `check:all` / skill-release 步骤 → deny |
 | guarantee（派生） | 进入 gate/release 步骤时偏 L1；默认 advisory 偏 L0 |
 
+### CTRL-0006 Relative markdown link validity
+
+| Slot / 投影 | Phase 4 记录 |
+| --- | --- |
+| semantics_ref | `references/policies/lifecycle.policy.md` § 相对 Markdown 链接有效性 |
+| applicability | 扫描面内存在相对 Markdown 链接时 |
+| evaluation_binding | skill/repo × `scripts/evaluators/ctrl-0006-broken-links.js`（via consistency WRAP）× 默认/`--gate`/`--release-gate` → **advisory**（verdict fail ≠ deny） |
+| guarantee（派生） | advisory 报告偏 L0；尚未绑定 deny boundary |
+
 **10. 入口。** Control 正文不写入 `AGENTS.md` / `SKILL.md`。索引可增加指向本 ADR 的一行。完整入口瘦身仍受 ADR-0022 约束：无叶节点路由不得拆厚入口。叶节点路由**不是**本 ADR 的完成条件（属后续；见 PLAN-0034 E1）。
 
 ## 后续修正（2026-09-10）：Control Model consistency pass

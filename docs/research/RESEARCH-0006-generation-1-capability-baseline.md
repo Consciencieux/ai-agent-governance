@@ -198,7 +198,7 @@ migration decision.
 
 | Installed surface | Capability | 归属族 |
 | --- | --- | --- |
-| `.githooks/pre-commit` | change-set / secret / gate enforcement（opt-in） | 1 / 8 |
+| `.githooks/pre-commit` | confirmed change-set / staged-content binding（opt-in；≠ secret scan） | 1 / 4 |
 | `.githooks/commit-msg` | consent / approved-message enforcement（opt-in） | 1 / 4 |
 
 #### 其他非 script INSTALLED carriers（能力已在他处记账，此处闭合存在性）

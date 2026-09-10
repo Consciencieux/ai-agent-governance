@@ -43,6 +43,7 @@ All notable changes to this project will be documented here.
 - **Gen1 instruction/workflow surface closure (RESEARCH-0006 v7)** — eight generated sub-skills and opt-in githooks are capability-accounted (not collapsed into “Generated sub-skill lifecycle”). Dual closure: mechanical scripts `Unaccounted=0` and instruction/workflow product surface `Unaccounted=0`. PLAN-0035 P10 closed; next JS cut locked to consistency cluster #4 broken links.
 
 - **CTRL-0006 broken-links vertical (consistency cluster #4)** — link extract/resolve/exists live in INSTALLED `scripts/lib/md-link-facts.js`; CTRL-0006 evaluator owns scan-set + semantic verdict; `check-doc-consistency.js` remains WRAP and keeps cluster #4 advisory-only. Other consistency clusters untouched. No Dispatcher; no doc topology moves.
+- **CTRL-0006 closure** — canonical `semantics_ref` = `references/policies/lifecycle.policy.md` § 相对 Markdown 链接有效性; direct `evaluateBrokenLinks` characterization + `--gate` advisory binding tests; RESEARCH-0006 pre-commit wording corrected to staged-content binding. #4 CLOSED; #9 skipped; next cut = P3 CTRL-0001.
 
 ## [1.0.2] - 2026-09-08
 
