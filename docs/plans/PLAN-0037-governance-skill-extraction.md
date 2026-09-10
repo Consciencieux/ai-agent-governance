@@ -80,6 +80,19 @@ ai-agent-governance 的实验实现
 
 本计划强制：**写死结构性约束，不写死项目实例**（目录名、编号、本仓迁移剧本属 L3）。
 
+### Extraction boundary（Design 约束；Active 前不得展开 skill 目录/模板）
+
+```text
+错误：本仓投影（docs/ 树、语言布局、目录名）→ 通用 skill
+正确：验证后的 Gen2 control plane → portable semantics → governance skill
+```
+
+**In scope（portable semantics）：** Control / Rule model · Applicability resolution · Evidence model · Decision semantics · Profiles · Task→Capability routing patterns · 与之配套的 instruction / document-type / metadata / ownership **语义**（非本仓路径）。
+
+**Out of scope（本仓投影，不得当 invariant）：** repository-specific docs topology · language layout · current directory structure · project-specific identifiers（CTRL-NNNN、Phase/PLAN 剧本）· skill 目录形状 / metadata schema / template / 文档迁移规则（均依赖 Phase 5 验证后再定）。
+
+本仓 `docs/` 知识对象系统已存在且合理；PLAN-0037 **不**重新设计文档体系。Capability 粒度与 Applicability 判据由 Phase 5（RESEARCH-0012 → PLAN-0038）验证——边界错则 skill 必偏。
+
 ## 提取协议（Design 约束；Active 时按此执行，禁止一次 prompt 出 skill）
 
 ADR-0020 的 L1/L2/L3 是 **skill 产物分层**（invariants / patterns / customization）。下面是 **如何到达那一层** 的工程流程。二者正交，不得混用编号。

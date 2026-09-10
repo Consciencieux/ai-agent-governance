@@ -63,7 +63,7 @@ docs/research/
 ├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）
 ├── RESEARCH-0010-governance-control-model.md      # Governance Control 系统模型（semantics ≠ evaluator ≠ gate ≠ test；Gen1 散落面；设计问题矩阵）
 ├── RESEARCH-0011-gen1-mechanical-control-inventory.md # Gen1 机械控制库存（CTRL-centric；Phase 4 inventory；不裁决 disposition）
-├── RESEARCH-0012-task-capability-routing.md           # Task→Capability 适用路由（Phase 5 入口；显式映射；禁图谱/全自动 Dispatcher）
+├── RESEARCH-0012-task-capability-routing.md           # Task→Capability 适用路由（Phase 5 入口；v2 六问工作假设；显式映射；禁图谱/全自动 Dispatcher）
 └── experiments/                     # 实验记录
 ```
 

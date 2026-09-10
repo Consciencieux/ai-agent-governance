@@ -295,7 +295,7 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
 當前階段：5 — Dispatcher（入口 = Task→Capability 適用研究；**尚未**實作 Dispatcher）
-當前階段計劃：Phase 4 checkpoint PLAN-0035 / PLAN-0036 = Implemented（EXITED）。Phase 5 入口研究：RESEARCH-0012（Task→Capability routing）。路由驗證後的提煉（Design，非當前 Active）：[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) — 可複用治理 skill（L1 invariants / L2 patterns / L3 customization）；僅在 Phase 5 routing 驗證後執行。Phase 3 baseline：`24021c4`。Plan archive ≠ Release（ADR-0016）。
+當前階段計劃：Phase 4 checkpoint PLAN-0035 / PLAN-0036 = Implemented（EXITED）。Phase 5 入口：[RESEARCH-0012](../../research/RESEARCH-0012-task-capability-routing.md) v2（六問 + 工作假設）。Phase 5 施工車輛（Design）：[PLAN-0038](../PLAN-0038-task-capability-routing.md) — 顯式 Task→Capability 映射；尚未 Dispatcher。路由驗證後的提煉（Design）：[PLAN-0037](../PLAN-0037-governance-skill-extraction.md)。Phase 3 baseline：`24021c4`。Plan archive ≠ Release（ADR-0016）。
 
 
 ## Guarantee Levels
