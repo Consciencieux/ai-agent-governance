@@ -66,12 +66,29 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 3. **lifecycle 的目标职责是编排骨架，不是政策仓库。** 横切能力（Root Cause Repair、Rule Capture、Security、CHANGELOG、Review 等）应成为独立 capability，由 applicability 图挂到多个导航节点；禁止继续把它们内嵌进某个 Phase 作为默认归宿。本条是目标形态，不授权当前移动 `references/` 或改写 Gen1 JS。
 4. **`templates/` 按生成方式分类不是可接受的长期知识分类。** 可执行 instruction source 与 bootstrap boilerplate 职责不同（FINDING-0026）。目录重排留待后续阶段；当前仍以 `init-spec.json` 为物化契约。
 
+## 后续修正（2026-09-10）：Context Economy
+
+本修正是对决策 3–7（渐进披露 / 按需加载 / 知识与历史后置 / 显式路由）的 **Narrow amendment**：把已反复约束施工的**上下文经济**写成规范后果，**不是**新建 token 框架、预算门禁、评分或 Control。
+
+**目标陈述：** 最小化完成授权工程目标所需的**预期总上下文成本与重复推理**，同时保持所需语义、正确性、安全与验证——不是「token 越少越好」。多读一份权威 ADR 若能避免错误重构与整轮重读，通常更经济。
+
+在不损害语义、正确性、安全和必要证据的前提下：
+
+1. **不默认重新推导**已被可靠 Research / ADR / Plan 压缩层固定的历史结论。
+2. **从最小充分上下文开始**；只在歧义、drift 或验证失败时扩大读取范围。
+3. **避免重复读取**未变化的 authority。
+4. 当同一有效上下文能完成 **implementation → closure → review** 时，不人为切换 Agent / session 只为「再审一遍」而重新支付 context acquisition——独立审查视角、Safety-critical second opinion、或上下文已明显污染时除外。
+5. **文档结构与 routing** 应减少重复读取与无关上下文；禁止把「少文件」本身当成成功标准（无路由的拆分仍增加找规则成本）。
+
+禁止借本条引入：`TOKEN-ECONOMY.md`、token score / budget gate、机器 schema、或新的 Context-Economy Control。施工期 read-set 写在 Active Plan（如 PLAN-0035），不在此 ADR 展开操作清单。
+
 ## 后果
 
 - 入口文档（`SKILL.md` / `AGENTS.md` / README）瘦身为路由层，领域规则下放子技能 / 领域文件。
 - 知识对象与执行规则分离加载；历史对象后置。
 - 关键控制逐步从 Markdown 升级为机械 carrier（与 ADR-0021 Known-Issue Closure、FINDING-0015 零注意力方向一致）。
 - 本 ADR 是 Gen2 instruction architecture 的演进依据；具体入口瘦身 / 子技能拆分 / `references/` 重分类属后续执行任务，不在本 ADR 一次性铺开。拆文件若无路由与机械路径，不得视为本 ADR 已执行。
+- Context Economy 约束预期总上下文成本与重复推理，不授权 token 预算门禁或「为省 token 而少读必要权威」。
 
 ## 参考
 

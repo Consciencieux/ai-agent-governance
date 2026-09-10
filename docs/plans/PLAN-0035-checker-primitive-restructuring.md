@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：P2 **#4 broken-links → CTRL-0006** 已落地，待小 review 后再决定是否 #9。Baseline 双面闭合 ✓。Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：P2 **#4 broken-links → CTRL-0006 CLOSED**（semantics_ref + direct tests + binding）。**SKIP #9**；下一刀 = **P3 CTRL-0001**。Baseline 双面闭合 ✓。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -57,6 +57,18 @@ Review 三类拆分                                 → Phase 7
 按「拆成很多小 Markdown」冒充架构完成           → 禁止（无路由的拆分无效）
 ```
 
+## Execution context discipline（本计划操作规则）
+
+依据 ADR-0022 Context Economy。**不是** token 框架；只约束本 Phase 4 施工读集。
+
+**Required（默认读）：** Active Plan（本文件）· 当前 vertical 的 ADR / Control contract · target source · direct characterization tests。
+
+**Read on ambiguity：** 被点名的 Research / 历史 Plan 片段；验证失败时再扩。
+
+**Do not reread by default：** `PLAN-0001..0030` · 已闭合 baseline research（如 RESEARCH-0006 压缩层结论）· 与当前 vertical 无关的 ADR / checker。
+
+**Prefer：** 同一有效上下文完成 `vertical → closure → review`；不要为 closure review 默认另开 Agent 重建整套上下文。
+
 ## 跨 Phase 施工顺序（冻结）
 
 返工最小顺序——**先冻能力语义，再拆机械，再做路由，最后才搬文档物理拓扑**：
@@ -77,11 +89,11 @@ Review 三类拆分                                 → Phase 7
 │     8 sub-skills 逐能力记账 + githooks + 非 script carriers
 │
 ├─ 2. Phase 4 mechanical restructuring（本计划主体）
-│     **#4 broken-links → CTRL-0006 已落地；先小 review，再决定是否 #9**
+│     **#4 → CTRL-0006 CLOSED**；**SKIP #9**（方法已由 0003/0004 + #4 证明）
 │     **不要**自动连拆其余 consistency clusters
 │     **不要**先整文件拆 `check-doc-consistency.js`
 │     **不要**先碰 #1 version/release、#8 consent、#10 plan-status
-│     然后 P3 repo→skill（CTRL-0001 第二批）
+│     **下一刀：P3** repo→skill（CTRL-0001）
 │     PLAN-0036 可并行
 │
 ├─ 3. Phase 5 applicability / routing 成型
@@ -270,12 +282,12 @@ check-doc-consistency.js → REWRITE
 | #1 version / release sync | EXTRACT | shared-value sync primitive 候选 |
 | #2 protected-files | EXTRACT | 枚举 vs 权威表 |
 | #3 ADR status | WRAP → EXTRACT | 先保行为 |
-| #4 broken links | EXTRACT ✓ | **CTRL-0006** + `md-link-facts`；consistency shell WRAP；characterization 保持 |
+| #4 broken links | EXTRACT ✓ **CLOSED** | CTRL-0006；`semantics_ref` = lifecycle § 相对 Markdown 链接有效性；direct evaluator tests |
 | #5 numeric claims | WRAP | 脆性高；暂不优先 REWRITE |
 | #6 prompt sync | EXTRACT | ADR-0008；双向 |
 | #7 trilingual parity | KEEP（委托） | 已委托 `check-doc-parity.js`；consistency 仅 WRAP 入口 |
 | #8 consent-cluster | EXTRACT | → CTRL-0002（见上） |
-| #9 principles-index | EXTRACT | 指针存在性 |
+| #9 principles-index | deferred **SKIP** | 方法已由 0003/0004 + #4 证明；架构增量低；除非新理由 |
 | #10 plan-status / pending-archive | WRAP | Gen1 release-archive 语义 vs ADR-0016 已知 divergence；parser 迁移另案 |
 | #11 changelog coverage | WRAP → EXTRACT | release-gate 相关 |
 | #12 terminology | KEEP | **已 EXTRACT** → `repo-tools/check-terminology.js`（先例） |
@@ -379,7 +391,7 @@ evidence
 | --- | --- | --- | --- | --- | --- | --- |
 | P0 | PLAN-0032 R24 | payload Discovery Ledger 须有 successor | skill | closed | resolved | PLAN-0036 Active |
 | P1 | ADR-0023 | CTRL-centric mechanical inventory 未建 | both | closed | resolved | RESEARCH-0011 v1 |
-| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | #4 broken-links → CTRL-0006 已落地；其余 cluster 仍延后；**先 review 再决定是否 #9** |
+| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | **#4 CLOSED**（CTRL-0006）；**SKIP #9**；其余 cluster 延后；方法已证明；下一刀 → P3 |
 | P3 | FINDING-0001 | accidental repo→skill script 依赖残留 | both | open | in-progress | CTRL-0001 WRAP 过渡；F 批处理 |
 | P4 | ADR-0023 E4 | 独立 machine-readable Control 文件 | both | closed | deferred（revisit: 第二个真实机器 consumer） | ADR-0023 决策 6 |
 | P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
@@ -395,15 +407,15 @@ evidence
 Total known:  11
 Resolved:     8  (P0, P1, P5, P6, P7, P8, P9, P10)
 Deferred:     1  (P4)
-Open:         2  (P2 其余 cluster 延后；P3 CTRL-0001)
-Unaccounted:  0  （scripts 面 + instruction/workflow 面均闭合；#4 两模块已挂 reverse）
+Open:         2  (P2 其余 cluster 延后；P3 CTRL-0001 ← **下一刀**)
+Unaccounted:  0  （scripts 面 + instruction/workflow 面均闭合）
 ```
 
 下一步（锁定）：
-1. **#4 broken-links 小 review**（primitive≠policy、evaluator≠gate、CLI/JSON 不变、repo/payload shape）→ **再决定是否 #9**；
-2. 然后 P3 CTRL-0001 → PLAN-0036（Ledger only）→ Phase 4 exit；
+1. **P3 CTRL-0001**（repo→skill accidental coupling；共享语义 ≠ 共享 working-tree 实现）；
+2. PLAN-0036（Ledger only；不重写 lifecycle 全文）→ Phase 4 exit；
 3. Phase 5：先建 Task→Capability **确定性适用检索**（知识导航已有 ≠ 任务检索）；再导出文档树；Phase 6 再系统性验 drift；
-4. **禁止**无路由的 references/ 大规模物理搬家；**停止**继续扩写 baseline；**不要自动连拆**其余 consistency clusters。
+4. **SKIP #9**；**禁止**无路由的 references/ 大规模物理搬家；**停止**继续扩写 baseline；**不要自动连拆**其余 consistency clusters。
 
 ## 参考
 
