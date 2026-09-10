@@ -31,6 +31,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Reference closure (validate in the execution environment) | this file § Reference-closure check · `SKILL.md` § Audit 流程 step 3 | both |
 | Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理 · `references/policies/lifecycle.policy.md` § 变更归位与残留清理 | payload |
 | Root-cause repair protocol + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
+| Discovery Ledger (known-issue closure L1) | `references/policies/lifecycle.policy.md` § 发现台账（Discovery Ledger） · ADR-0021 | payload |
 | Two-domain symmetry + sibling-instance closure + control-plane trace | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
 | Scope tiering (rule-decided, not self-judged) | `references/policies/lifecycle.policy.md` § 规模分级 | payload |
 | Test protection | `references/policies/testing.policy.md` § 测试保护 | payload |

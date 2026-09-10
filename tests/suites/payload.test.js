@@ -901,6 +901,10 @@ test("payload: closure requirements (sibling instances + control plane) reach a 
     ["docs/rules/lifecycle.md", "控制面追查"],
     ["docs/rules/lifecycle.md", "不算证据"],
     ["docs/rules/lifecycle.md", "下次生成会覆盖"],
+    ["docs/rules/lifecycle.md", "发现台账（Discovery Ledger）"],
+    ["docs/rules/lifecycle.md", "Unaccounted = 0"],
+    ["docs/rules/lifecycle.md", "append-only"],
+    ["docs/rules/lifecycle.md", "promoted-to-next-plan"],
     // the executing side: the generated agent contract must carry an operational summary
     ["AGENTS.md", "enumerate sibling instances"],
     ["AGENTS.md", "trace the control plane"],

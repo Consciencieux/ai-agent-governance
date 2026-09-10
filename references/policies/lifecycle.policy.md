@@ -34,12 +34,54 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 - **Affected Files**：受影响文件（**基于引用搜索**——改公开接口/模块前先 `rg` 搜引用，搜到的引用文件必须入列；禁止凭印象列影响面）
 - **Risks**：风险
 - **Validation Method**：验证方式
+- **发现台账（Discovery Ledger）**：中/大型 TASK **必须**携带本节（见下方同名专节）。小型改动跳过台账，但若执行中已登记条目，完成前仍须闭包。
 
 中/大型 **bug 修复或机制变更**任务还必须包含「根因修复协议与失败预算」的字段与先决条件（见 Phase 3 同名小节）。
 
 **小型**改动（见"规模分级"）跳过本阶段，直接进入 Implement；报告中一句话说明规模判定即可，无需逐条理由。
 
 **用户确认门**：中/大型的 TASK 计划创建后，**必须展示给用户确认**（展示 Proposed Solution、Affected Files、Risks、Validation Method）。这是**意图对齐**，不是提交授权——改什么、怎么改对齐了，提交前仍须走一次确认（见 Git Write Policy 一次确认 per 变更集）。跨 3 个以上文件的改动，即使规模判定为"中"，同样必须先经用户确认。未获确认不得开始实现（除非用户明确豁免）。
+
+### 发现台账（Discovery Ledger）
+
+**语义权威**：ADR-0021（Known-Issue Closure）。本节是 **INSTALLED L1 契约**——规定被治理项目 TASK 如何承载台账；不复述 ADR 全文，不新建 issue tracker / Control / 自动发现脚本。
+
+**对象性质（存储边界）：** Discovery Ledger 是 **execution state + provenance**（本次工作发现了什么、如何处置），**不是**长期规则、不是 Research/ADR 正文、不是 Finding 仓库。
+
+| 表面 | 是否放 Ledger 条目 |
+| --- | --- |
+| 当前 Active TASK 计划内 `## 发现台账（Discovery Ledger）` 表 | **是** — L1 唯一条目家（append-only membership） |
+| `.governance/state.json` | **否** — 仍只承载锁 / blocked 等任务运行态，不存发现 workset |
+| `docs/findings/` / ADR / Research | **否** — 仅当 disposition 为 promoted-to-* 时由后继对象承接 |
+| 独立 `docs/state/` 或机器 registry 文件 | **否** — L1 未授权 |
+
+**L1 表格式（列）：**
+
+| 标识（ID） | 类型 | 来源 | 问题 | 影响面 | 严重度 | 状态 | 处置 | 责任人 | 验证/证据 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+
+- **类型（type）**：`bug` / `missing_capability` / `drift` / `migration_gap` / `observation`
+- **来源（source）**：`task` / `review` / `test` / `audit`（可加短备注）
+- **状态（status）** 与 **处置（disposition）** 是两轴（ADR-0021）：`open` = 仍跟踪；获得 terminal disposition 后必须 `closed`
+- **处置（disposition）权威枚举**：`resolved` / `deferred` / `duplicate` / `not-applicable` / `blocked` / `promoted-to-finding` / `promoted-to-adr` / `promoted-to-research` / `promoted-to-next-plan`。口语别名：`fix_now`→`resolved`；`create_plan`→`promoted-to-next-plan`；`create_finding`→`promoted-to-finding`；`create_adr`→`promoted-to-adr`；`ignore_with_reason`→`not-applicable`（理由写入验证/证据）
+- **非 resolved 的 terminal disposition** 必须带 **successor**（后继 ID）或显式 **revisit** 条件（写入验证/证据列）
+- **membership append-only**：已登记行不得删除；只更新状态/处置/证据
+
+**工作流（最低）：**
+
+```text
+发现新问题
+  → 先登记一行（不得只靠对话记忆）
+  → 判断是否属于当前任务范围
+       是 → 可 fix-now（处置 resolved）
+       否 → 仍须登记 + terminal disposition（延期/提升/不适用…）
+任务宣称完成前
+  → Unaccounted = 0（每个 in-scope 条目有 terminal disposition 且 status=closed）
+```
+
+**反模式：** 不是每个发现都建 Plan / Finding——系统性才 `promoted-to-finding`，跨任务交付才 `promoted-to-next-plan`。禁止用「再开一个 Plan」逃避本任务台账闭包。
+
+**机械化（L1）：** 无自动发现、无自动分类、无 dashboard。契约与人工/Agent 遵守 + characterization 测试证明约定可达 INSTALLED 表面；fail-closed 门禁留后续阶段。
 
 ## Phase 3 — Implement（实现）
 
@@ -49,6 +91,7 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 - 保持向后兼容
 - 新增代码必须同步登记（见 New Code Registration）
 - **引用搜索（改前必做）** —— 修改任何公开接口/函数/模块/文件**之前**（不仅是删除），先搜索谁引用它（`rg "<名称>"` 全仓 + 配置/动态调用/插件机制），引用到的文件**自动加入** Affected Files 清单；搜索不到的引用（如配置文件里按名字加载的模块）在报告中说明。影响面是**搜出来的，不是想出来的**。
+- **发现先登记** —— 实现中新发现问题：先写入本任务 Discovery Ledger，再决定 fix-now 或其它 disposition；禁止只留在对话上下文。
 
 ### 变更归位与残留清理（Change Hygiene）
 
@@ -237,6 +280,8 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 - 清单里有但实际没改 → ❌ **漏文件**，补改或逐条说明不动的理由
 - 实际改了但清单里没有 → ⚠️ **未预判改动**，说明原因（新发现的必要改动 / 偷懒的顺手改）
 - 对照结果写入任务报告，逐条 ✅/❌/⚠️
+
+**发现台账闭包（中/大型，或小型但已有条目时必做）：** 报告须给出台账对账——Total known / Resolved（closed+terminal） / Open / Unaccounted。宣称完成要求 **Unaccounted = 0**。不得用「修了 N 个」代替闭包。
 
 ## 禁止
 

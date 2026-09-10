@@ -496,6 +496,32 @@ test("permission matrix rows match between SKILL.md and the AGENTS.md template",
   return true;
 });
 
+
+test("lifecycle.policy embeds Discovery Ledger L1 contract (PLAN-0036)", () => {
+  const life = fs.readFileSync(path.join(SKILL_ROOT, "references/policies/lifecycle.policy.md"), "utf8");
+  const need = [
+    "### 发现台账（Discovery Ledger）",
+    "execution state + provenance",
+    "Unaccounted = 0",
+    "append-only",
+    "missing_capability",
+    "promoted-to-next-plan",
+    "fix_now",
+    ".governance/state.json",
+    "L1 未授权",
+  ];
+  for (const n of need) {
+    if (!life.includes(n)) { console.error("  missing: " + n); return false; }
+  }
+  // Storage boundary: entries are NOT parked in state.json
+  if (!/state\.json[\s\S]{0,80}\*\*否\*\*/.test(life) && !life.includes("| `.governance/state.json` | **否**")) {
+    console.error("  state.json must be excluded as ledger home");
+    return false;
+  }
+  return true;
+});
+
+
 // C3: the emptiness guard fired only when BOTH roots vanished, so losing one root left the
 // other alone carrying the check — the scan silently enforced half the corpus and still
 // printed a green line with a plausible count (audit 2026-09-05). Note `references/` is the

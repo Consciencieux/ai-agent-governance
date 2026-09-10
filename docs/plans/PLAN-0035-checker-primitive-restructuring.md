@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：**P3 CTRL-0001 CLOSED**（repo `repo-tools/check-secrets.js` ≠ skill CLI；共享 facts/evaluator）。#4 CLOSED；SKIP #9。下一刀 = **PLAN-0036**。Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：**PLAN-0036 L1 Implemented**（lifecycle Discovery Ledger 契约）。P3/CTRL-0006/#4 CLOSED；SKIP #9。下一刀 = **Phase 4 exit review**。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -89,12 +89,9 @@ Review 三类拆分                                 → Phase 7
 │     8 sub-skills 逐能力记账 + githooks + 非 script carriers
 │
 ├─ 2. Phase 4 mechanical restructuring（本计划主体）
-│     **P3 CTRL-0001 CLOSED**（repo/skill CLI 分离）
-│     **不要**自动连拆其余 consistency clusters
-│     **不要**先整文件拆 `check-doc-consistency.js`
-│     **不要**先碰 #1 version/release、#8 consent、#10 plan-status
-│     **下一刀：PLAN-0036**（Ledger only）
-│     然后 Phase 4 exit
+│     **PLAN-0036 L1 Implemented**
+│     **下一刀：Phase 4 exit review**
+│     然后 Phase 5 Task→Capability routing（再谈文档 topology）
 │
 ├─ 3. Phase 5 applicability / routing 成型
 │     **首要 = Task taxonomy → Applicable map → Authority/Leaf**
@@ -389,7 +386,7 @@ evidence
 
 | 标识（ID） | 来源 | 问题 | 范围 | 状态 | 处置 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 | PLAN-0032 R24 | payload Discovery Ledger 须有 successor | skill | closed | resolved | PLAN-0036 Active |
+| P0 | PLAN-0032 R24 | payload Discovery Ledger 须有 successor | skill | closed | resolved | PLAN-0036 Implemented（L1） |
 | P1 | ADR-0023 | CTRL-centric mechanical inventory 未建 | both | closed | resolved | RESEARCH-0011 v1 |
 | P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | **#4 CLOSED**；**SKIP #9**；其余 cluster 延后 |
 | P3 | FINDING-0001 | accidental repo→skill script 依赖残留 | both | closed | resolved | CTRL-0001：repo-tools CLI + shared facts/evaluator；AGENTS → repo-tools |
@@ -407,14 +404,27 @@ evidence
 Total known:  11
 Resolved:     9  (P0, P1, P3, P5, P6, P7, P8, P9, P10)
 Deferred:     1  (P4)
-Open:         1  (P2 其余 consistency clusters 延后)
+Open:         1  (P2 其余 consistency clusters 延后 — **不阻塞 Phase 4 exit**；SKIP #9)
 Unaccounted:  0
+PLAN-0036 L1: Implemented（契约落地；L2 deferred=门禁机械化）
 ```
 
+## Phase 4 exit readiness（预备；下一刀正式 exit）
+
+| 检查项 | 状态 |
+| --- | --- |
+| CTRL-0003/0004 · CTRL-0006 · CTRL-0001 | ✓ |
+| Baseline Unaccounted=0 · Context Economy | ✓ |
+| PLAN-0036 Discovery Ledger L1 | ✓ Implemented |
+| P2 其余 cluster / #9 | deferred by design / SKIP — **不**作 exit blocker |
+| Dispatcher / topology / Phase 6 | **未偷跑** |
+
+**Exit 判定预备：** L1 齐备后可做 Phase 4 exit review（本提交不关闭 checkpoint）。
+
 下一步（锁定）：
-1. **PLAN-0036**（Discovery Ledger only；不重写 lifecycle 全文）→ Phase 4 exit；
-2. Phase 5：先建 Task→Capability **确定性适用检索**；再导出文档树；Phase 6 再系统性验 drift；
-3. **SKIP #9**；**禁止**无路由的 references/ 大规模物理搬家；**停止**继续扩写 baseline。
+1. **Phase 4 exit review**（Required/Deferred 清单落盘 + completion marker）；
+2. 再开 Phase 5（先 Task→Capability 显式映射 Research，再 topology）；
+3. **SKIP #9**；禁止无路由搬家；停止扩写 baseline。
 
 ## 参考
 
