@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0007
 status: Active
-version: 4
+version: 5
 ---
 
 # RESEARCH-0007：文档知识架构 / 知识对象模型
@@ -123,6 +123,8 @@ L3  断言分类（descriptive / diagnostic / normative / execution / historical
 当前/历史对象的分类清单以 `docs/README.md` §「当前 vs 历史（隔离）」为唯一说明；本研究只描述隔离原则，不复制清单。对象是否当前仍须结合其 canonical `status` 与 generation/applicability metadata 判断。
 
 历史记录可被读来理解 provenance，**不能直接成为当前执行指令**（与 Archived Plan 政策一致：Archive ≠ 当前能力 ≠ 当前规则）。
+
+**R5 · 可回溯的经历靠对象链，不靠每次执行读全库。** 本仓库科研目标要求事后能重建 Why / 放弃方案 / 意外（Plan 合同 + Ledger/Finding/ADR/Research 演进 + Git/CHANGELOG）。这与 R4 一致：历史可查，不是 always-on。事前 Plan 保持短合同；不把逐步预期世界写成科研正文。完整对照（含一般项目更薄的文档面）见 RESEARCH-0013。不因此新增知识类型。
 
 ## 数据流与生命周期
 

@@ -85,6 +85,9 @@ Plan / Finding / Research / ADR 四类对象：
 | **ADR** | `design-decisions/ADR-xxxx-*.md` | 长期设计决策，为什么这样做 | 简体中文单语 | Superseded / Deprecated **仍留原位** |
 | **Glossary** | `glossary.md` | 全文档体系共享的术语事实源 | 三语对照 | 持续维护 |
 
+本仓库同时要能 **回溯开发经历** 与 **执行时不读全库**：事前 Plan 保持短合同，Why/放弃方案事后写入 Research·ADR·Finding/experiments；一般项目不复制本仓科研树。对照：`docs/research/RESEARCH-0013-research-provenance-and-context-economy.md`。
+
+
 ## 生命周期总原则
 
 > **归档是 Plan 的生命周期概念，不是一类通用文档。**

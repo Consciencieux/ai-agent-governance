@@ -82,6 +82,21 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 禁止借本条引入：`TOKEN-ECONOMY.md`、token score / budget gate、机器 schema、或新的 Context-Economy Control。施工期 read-set 写在 Active Plan（如 PLAN-0035），不在此 ADR 展开操作清单。
 
+## 后续修正（2026-09-11）：可回溯 ≠ 每次读全；Plan 短合同 ≠ 科研百科
+
+本修正是对决策 5–6 与 Context Economy 的 **Narrow amendment**。系统描述见 RESEARCH-0013。不新建知识类型、不建 Context Snapshot 文件、不授权事后 Log 生成器。
+
+本仓库同时要：**事后能回溯较完整的开发经历**，以及 **执行时保持上下文经济**。写全 provenance、读时 on-demand。禁止为「科研完整」在每次任务加载全部 Research / 归档 Plan。
+
+**事前 / 事后（不替代规模分级）：**
+
+- **事前 Plan** = 短执行合同（目标/假设、约束、非目标、影响面、验收）。不是 50 页操作手册，也不是研究论文。
+- **事后沉淀**按已有类型：Research / experiments（理解与测量）、Finding（问题）、ADR（选择与放弃方案）、Archived Plan（当时做成了什么）。
+- **Git / CHANGELOG** 仍只承载 What / 发布边界交付；Why 不进这两处。
+- 拒绝「详细事前 Plan 系统性劣于事后 Log」：无短事前边界会失去预注册；无事后类型会丢掉 Reality。
+
+一般被治理项目不复制本仓科研文档树；薄入口与按需加载仍适用。完整对照表在 RESEARCH-0013。
+
 ## 后果
 
 - 入口文档（`SKILL.md` / `AGENTS.md` / README）瘦身为路由层，领域规则下放子技能 / 领域文件。
@@ -89,6 +104,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 - 关键控制逐步从 Markdown 升级为机械 carrier（与 ADR-0021 Known-Issue Closure、FINDING-0015 零注意力方向一致）。
 - 本 ADR 是 Gen2 instruction architecture 的演进依据；具体入口瘦身 / 子技能拆分 / `references/` 重分类属后续执行任务，不在本 ADR 一次性铺开。拆文件若无路由与机械路径，不得视为本 ADR 已执行。
 - Context Economy 约束预期总上下文成本与重复推理，不授权 token 预算门禁或「为省 token 而少读必要权威」。
+- 科研回溯通过类型化对象 + 链接完成；执行上下文不因此变厚（RESEARCH-0013）。
 
 ## 参考
 
@@ -98,4 +114,5 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 - `templates/` 指令源与物化模板混置：FINDING-0026
 - Known-Issue Closure（零注意力执行语义）：ADR-0021
 - 知识对象模型（当前/历史隔离、知识≠执行）：RESEARCH-0007 / ADR-0016
+- 科研回溯 vs 上下文经济、一般项目文档面：RESEARCH-0013
 - Dispatcher 演进（Roadmap Phase 5）：ADR-0018 / Roadmap
