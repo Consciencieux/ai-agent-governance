@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：Baseline 双面闭合 ✓。Phase 5 交接命题已冻结：解药是 Task→Capability routing，不是先拆树。**本计划下一刀仍是 #4 broken links。** Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：P2 **#4 broken-links → CTRL-0006** 已落地，待小 review 后再决定是否 #9。Baseline 双面闭合 ✓。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -77,16 +77,18 @@ Review 三类拆分                                 → Phase 7
 │     8 sub-skills 逐能力记账 + githooks + 非 script carriers
 │
 ├─ 2. Phase 4 mechanical restructuring（本计划主体）
-│     **下一刀锁定：P2 cluster #4 broken links**
-│     然后视结果决定 #9 principles-index
+│     **#4 broken-links → CTRL-0006 已落地；先小 review，再决定是否 #9**
+│     **不要**自动连拆其余 consistency clusters
 │     **不要**先整文件拆 `check-doc-consistency.js`
 │     **不要**先碰 #1 version/release、#8 consent、#10 plan-status
 │     然后 P3 repo→skill（CTRL-0001 第二批）
 │     PLAN-0036 可并行
 │
 ├─ 3. Phase 5 applicability / routing 成型
-│     **首要产物 = Task→Applicable capabilities 逻辑映射**
-│     （不是先写 Dispatcher JS；不是先拆 Markdown 目录）
+│     **首要 = Task taxonomy → Applicable map → Authority/Leaf**
+│     （不是向量搜索；不是先写 Dispatcher JS；不是先拆 Markdown 目录）
+│     然后：薄入口消费 routing → Dispatcher → 由路由导出物理 topology
+│     → routing-integrity 结构检查；完整正反 invariant → Phase 6
 │
 ├─ 4. 再按 routing × capability 边界重构 SKILL / AGENTS / references topology
 │     （树形由路由图导出；无路由的拆分禁止）
@@ -100,27 +102,52 @@ Review 三类拆分                                 → Phase 7
 
 ### Phase 5 交接命题（冻结；本计划不实施）
 
-**真正的问题不是「平面文档」三个字**，而是 Agent **没有可靠的能力地图 + 按任务检索路径**，于是只能扩大读取范围来降低漏规则风险 → token 上升 + attention dilution + 跨位置关联失败 + context budget 被浪费。
+#### 当前到底有什么 / 没有什么
 
-**解药是 routing，不是先拆树。** 无路由的目录树化会变成「扫目录 → 打开 8 个小文件」，甚至更贵。
+| 能力 | 当前状态 |
+| --- | --- |
+| 知识类型导航（Product / Research / Finding / ADR / Roadmap / Plan / Glossary） | **已有且较成熟**（`docs/README.md` canonical index + 各目录 README） |
+| 当前/历史隔离 · canonical authority 指针 · Markdown 链接检索 | **已有相当一部分** |
+| Agent 人工 search/grep | **可用**（不可靠当 dispatcher） |
+| Task → Capability | **没有正式系统** |
+| Capability → 应读哪些 instruction | **只有零散指针** |
+| Applicability graph · 自动按任务加载 · Dispatcher | **未实现**（Phase 5） |
+| 检索完整性机械验证（正反 invariant） | **尚未形成完整体系**（Phase 6） |
+
+**一句话：** 现在有**知识导航系统**，没有真正意义上的**任务检索系统**。后者是 2.0 成败核心之一，但**不是 Phase 4 立刻做**。
+
+Gen1 路径（RESEARCH-0009）仍是：`Task → Agent 读入口 → Agent 自己判断适用规则 → 自己选 sub-skill → 自己调 JS`，即 **Agent memory = dispatcher**。ADR-0022 目标：树状检索 + 图状适用关系 + 机械执行；文件拆分本身不够，必须有显式 `task → capability routing`。
+
+#### 真正的问题与解药
+
+真正的问题不是「平面文档」三个字，而是 Agent **没有可靠的能力地图 + 按任务检索路径**，只能扩大读取范围赌不漏规则 → token↑、attention dilution、跨位置关联失败、context budget 浪费。
+
+**解药是 routing，不是先拆树，也不是向量/RAG。** 无路由的目录树化会变成「扫目录 → 打开 8 个小文件」，甚至更贵。治理检索要回答的是「哪些规则对任务**必须适用**」（deterministic applicability），不是「哪些文档看起来相似」（语义相似度）。
+
+需要的最小确定性层：
 
 ```text
-错误顺序：
-先把 Markdown 拆成很多目录 → 再想 Agent 怎么找
-
-正确顺序（RESEARCH-0006 v7 已提供输入）：
-能力地图（已冻结）
-        ↓
-Task / Context → Applicable capabilities（Phase 5 首要产物）
-        ↓
-薄入口 + 按需加载
-        ↓
-由 routing 图导出物理 topology
+Task Context → Task Class → Applicable Capabilities
+→ Authority / Execution Leaf → Load
+（歧义时再扩大 context）
 ```
 
-Phase 5 **最先**应交付的是逻辑映射（描述/Plan 层即可），**不是** Dispatcher JS：
+#### Phase 5 建设顺序（首要 ≠ Dispatcher JS）
 
-| Task / Context | 默认 applicable capabilities（示意） |
+```text
+1. Task / Context taxonomy
+2. Task → Applicable Capabilities map
+3. Capability → Authority / Execution Leaf
+4. fallback / ambiguity expansion
+5. 薄入口消费 routing
+6. Dispatcher 消费 applicability
+7. 再重构 SKILL / AGENTS / references 物理 topology（由路由图导出）
+8. routing-integrity 结构检查（route 存在、authority 存在、orphan 等）
+```
+
+示意映射（非最终权威表；Phase 5 Plan 再裁定）：
+
+| Task / Context | 默认 applicable capabilities |
 | --- | --- |
 | 普通代码修改 | change hygiene · testing · evidence |
 | 删除/重命名 | change hygiene · reference closure · testing |
@@ -131,14 +158,41 @@ Phase 5 **最先**应交付的是逻辑映射（描述/Plan 层即可），**不
 | INIT | inspection · materialization · security baseline |
 | Plan task | plan lifecycle · discovery ledger |
 
-目标行为：
+目标形态（ADR-0022）：
 
 ```text
-thin entry → task classification → capability map
-→ narrow retrieval → execute → ambiguity 时再扩大 context
+Task → Context/Routing → CAP-A/B/C → leaf → Control
+Agent 见树；适用关系是图；关键保证落机械 Control
 ```
 
-**价值排序（跨 Phase）：** Phase 4 结束后，「能力路由 + 由路由导出的文档拓扑」杠杆高于继续堆更多 checker。但 **不得**为做路由而跳过本计划已锁定的 #4 broken-links vertical——Phase 4 仍须证明 consistency monolith 可按 capability 拆。
+#### 文档 drift：现在更好，但不会消失
+
+当前已能发现部分结构 drift（broken links、prompt sync、部分 version/release sync、translation freshness、protected-files 等）。下一刀 #4 broken-links 是其中一类 detector。
+
+仍难机械发现、且未来检索系统要帮忙变成可验证结构的 drift 类：
+
+```text
+Capability / Applicability / Authority / Projection /
+Routing / Coverage / Orphan / Semantic drift
+```
+
+检索系统的第二价值：不仅省 token，还把文档关系变成可自动检查的结构（route target 存在、capability 有 authority、无 orphan、无重复 canonical、task 不缺 mandatory capability、leaf 可达）。
+
+#### Phase 5 vs Phase 6 边界
+
+| Phase 5 负责 | Phase 6 负责 |
+| --- | --- |
+| 检索模型正确；route 存在；基本结构可验证；Dispatcher 能消费 | Task 正/负命中 capability；条件变化后 applicability；漏 route / orphan capability 测试会红 |
+| **不要**为防 drift 提前拉整套 invariant framework | 系统性正反 invariant |
+
+#### 与本计划的关系
+
+```text
+错误顺序：先拆 Markdown 目录 → 再想怎么找
+正确顺序：能力地图（RESEARCH-0006 v7 已冻）→ Task→Applicable（Phase 5）→ 薄入口 → 由路由导出树
+```
+
+**价值排序：** Phase 4 结束后，「能力路由 + 由路由导出的文档拓扑」杠杆高于继续堆更多 checker。但 **不得**为做路由而跳过本计划已锁定的 **#4 broken-links vertical**——Phase 4 仍须证明 consistency monolith 可按 capability 拆。**现在不用创建文档搜索引擎。**
 
 ## Target: both — 同步点
 
@@ -216,7 +270,7 @@ check-doc-consistency.js → REWRITE
 | #1 version / release sync | EXTRACT | shared-value sync primitive 候选 |
 | #2 protected-files | EXTRACT | 枚举 vs 权威表 |
 | #3 ADR status | WRAP → EXTRACT | 先保行为 |
-| #4 broken links | EXTRACT | 可独立；非第一刀 |
+| #4 broken links | EXTRACT ✓ | **CTRL-0006** + `md-link-facts`；consistency shell WRAP；characterization 保持 |
 | #5 numeric claims | WRAP | 脆性高；暂不优先 REWRITE |
 | #6 prompt sync | EXTRACT | ADR-0008；双向 |
 | #7 trilingual parity | KEEP（委托） | 已委托 `check-doc-parity.js`；consistency 仅 WRAP 入口 |
@@ -325,7 +379,7 @@ evidence
 | --- | --- | --- | --- | --- | --- | --- |
 | P0 | PLAN-0032 R24 | payload Discovery Ledger 须有 successor | skill | closed | resolved | PLAN-0036 Active |
 | P1 | ADR-0023 | CTRL-centric mechanical inventory 未建 | both | closed | resolved | RESEARCH-0011 v1 |
-| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | C 集群 disposition 已定；**实施延后**于 CTRL-0003/0004 vertical |
+| P2 | FINDING-0019 | meta-checker monolith 未按 Control 拆 | both | open | in-progress | #4 broken-links → CTRL-0006 已落地；其余 cluster 仍延后；**先 review 再决定是否 #9** |
 | P3 | FINDING-0001 | accidental repo→skill script 依赖残留 | both | open | in-progress | CTRL-0001 WRAP 过渡；F 批处理 |
 | P4 | ADR-0023 E4 | 独立 machine-readable Control 文件 | both | closed | deferred（revisit: 第二个真实机器 consumer） | ADR-0023 决策 6 |
 | P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
@@ -341,15 +395,15 @@ evidence
 Total known:  11
 Resolved:     8  (P0, P1, P5, P6, P7, P8, P9, P10)
 Deferred:     1  (P4)
-Open:         2  (P2 → 下一刀 #4 broken links, P3)
-Unaccounted:  0  （scripts 面 + instruction/workflow 面均闭合）
+Open:         2  (P2 其余 cluster 延后；P3 CTRL-0001)
+Unaccounted:  0  （scripts 面 + instruction/workflow 面均闭合；#4 两模块已挂 reverse）
 ```
 
 下一步（锁定）：
-1. **JS 下一刀 = `check-doc-consistency.js` cluster #4 broken links**（本计划主体；不跳 Phase）；
-2. 再视结果决定 #9 principles-index → P3 CTRL-0001 → PLAN-0036；
-3. Phase 4 exit 后最高杠杆 = Phase 5 Task→Capability routing 映射，再导出文档拓扑；
-4. **禁止**无路由的 references/ 大规模物理搬家；**停止**继续扩写 baseline。
+1. **#4 broken-links 小 review**（primitive≠policy、evaluator≠gate、CLI/JSON 不变、repo/payload shape）→ **再决定是否 #9**；
+2. 然后 P3 CTRL-0001 → PLAN-0036（Ledger only）→ Phase 4 exit；
+3. Phase 5：先建 Task→Capability **确定性适用检索**（知识导航已有 ≠ 任务检索）；再导出文档树；Phase 6 再系统性验 drift；
+4. **禁止**无路由的 references/ 大规模物理搬家；**停止**继续扩写 baseline；**不要自动连拆**其余 consistency clusters。
 
 ## 参考
 

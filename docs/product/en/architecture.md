@@ -86,7 +86,7 @@ Three rules follow:
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill entry point / product spec | agents (skill users) | single |
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
-| `scripts/` | Skill runtime scripts. Mixed too: 12 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
+| `scripts/` | Skill runtime scripts. Mixed too: 14 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
 | `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | mixed by knowledge type: product/roadmap trilingual; plans/findings/research/ADR canonical Chinese |
 | `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `README*.md`, `CONTRIBUTING*.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
@@ -120,12 +120,14 @@ ai-agent-governance/
 │   ├── check-secrets.js        # secret scan gate (staged diff, never prints the secret)
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
 │   ├── lib/
-│   │   └── git-facts.js        # shared git/path/date factual primitives (no Control policy)
+│   │   ├── git-facts.js        # shared git/path/date factual primitives (no Control policy)
+│   │   └── md-link-facts.js    # shared Markdown-link factual primitives (extract/resolve/exists)
 │   ├── evaluators/
 │   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 governance-doc freshness evaluator (advisory)
-│   │   └── ctrl-0004-translation-freshness.js # CTRL-0004 translation freshness evaluator (--release-gate deny)
+│   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 translation freshness evaluator (--release-gate deny)
+│   │   └── ctrl-0006-broken-links.js        # CTRL-0006 relative markdown link validity (consistency cluster #4)
 │   ├── check-doc-freshness.js  # thin CLI wrapper (CTRL-0003 + CTRL-0004; advisory, --release-gate blocks stale/draft translations)
-│   ├── check-doc-consistency.js # cross-doc contradictions + consent/protected-list/principles-index/plan-status clusters (advisory default; --gate/--release-gate fail-closed; changelog coverage fail-closed only in --release-gate)
+│   ├── check-doc-consistency.js # consistency WRAP (cluster #4 → CTRL-0006; other clusters inline; advisory default; --gate/--release-gate fail-closed)
 │   ├── check-plan-sync.js      # plan/milestone reconciliation (advisory; --release-gate fail-closed; no-op without DEVELOPMENT_PLAN.md)
 │   ├── generate-governance.js  # INIT scripted generator (SKILL-INTERNAL; spec: references/init-spec.json)
 │   └── release-manager.js      # plan (read-only) + execute (approval-gated) release tool

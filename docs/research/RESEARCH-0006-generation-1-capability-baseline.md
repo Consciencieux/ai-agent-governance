@@ -169,7 +169,7 @@ migration decision.
 | `check-secrets.js` | secret scanning | PLAN-0001；族 1 |
 | `check-sync.js` | sync-group mechanical verify | PLAN-0010；族 3 |
 | `check-doc-freshness.js` + `lib/git-facts.js` + evaluators/ctrl-0003\|0004 | doc/translation freshness | PLAN-0005/0020；CTRL-0003/0004 |
-| `check-doc-consistency.js` | cross-doc consistency monolith | PLAN-0006；族 3 |
+| `check-doc-consistency.js` + `lib/md-link-facts.js` + `evaluators/ctrl-0006-broken-links.js` | cross-doc consistency WRAP（#4 → CTRL-0006） | PLAN-0006；族 3；CTRL-0006 |
 | `check-plan-sync.js` | DEVELOPMENT_PLAN ↔ TASK sync | Pre-PLAN 表；族 7；矩阵 B |
 | `release-manager.js` | RELEASE write executor | Pre-PLAN 表；族 5 |
 

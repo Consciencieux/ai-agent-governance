@@ -19,7 +19,9 @@
 | `scripts/check-git-policy.js` | Git 策略门禁 |
 | `scripts/check-secrets.js` | 密钥扫描门禁 |
 | `scripts/check-sync.js` | 同步组门禁 |
-| `scripts/check-doc-consistency.js` | 文档一致性门禁 |
+| `scripts/check-doc-consistency.js` | 文档一致性 WRAP（#4 → CTRL-0006） |
+| `scripts/lib/md-link-facts.js` | Markdown 链接共享事实 primitive |
+| `scripts/evaluators/ctrl-0006-broken-links.js` | CTRL-0006 相对链接有效性求值器 |
 | `scripts/check-plan-sync.js` | 计划与里程碑对账（发布形态 fail-closed；默认建议性） |
 | `scripts/release-manager.js` | 发布写操作执行器与审批门（创建 tag、`--yes` 才写、高风险 Proposal 拒绝） |
 | `scripts/check-doc-freshness.js` | 文档新鲜度 CLI 包装（CTRL-0003 + CTRL-0004） |

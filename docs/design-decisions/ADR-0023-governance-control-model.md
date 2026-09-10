@@ -192,7 +192,7 @@ Machine-readable 独立序列化文件
 - Phase 3 的权威答案：「什么是 Control / 哪些 slot 必填 / identity 是否稳定 / binding 怎么写 / Model 家在哪」→ 本 ADR。
 - 「某条 Control 的义务正文在哪」→ 该 Control 的 `semantics_ref`，不是本 ADR。
 - ADR-0020 的字段名预告（`applies_when` / `evaluator` / `effect` 等）不再生效；由本 ADR 的 slot 集合取代。概念「单一 shared semantic authority + consumer profiles」保留。
-- 下一批 identity 从 `CTRL-0006` 起分配；禁止为了「目录好看」重排 0001–0005；consistency pass **不**新增 CTRL。
+- `CTRL-0006` 已分配给 consistency cluster #4（broken relative links）；下一批从 `CTRL-0007` 起。禁止为了「目录好看」重排既有编号。其余 consistency clusters 未授权批量发号。
 - FINDING-0001 仍未 Resolved：本 ADR 定了 consent 的语义家，但未消除 AGENTS 双写，也未拆除 repo→skill 脚本依赖。
 - Phase 4 的输入是：按 Control 而不是按文件做 inventory。
 - Phase 8 可按 boundary 提升同一 Control 的 guarantee 投影，无需改 identity。

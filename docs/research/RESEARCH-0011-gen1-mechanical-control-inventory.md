@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0011
 status: Active
-version: 3
+version: 4
 subject_generation: gen1
 ---
 
@@ -100,6 +100,19 @@ Control
 | 候选 disposition | 见 PLAN-0035 § Disposition；第三批 |
 
 
+### CTRL-0006 Relative markdown link validity（consistency cluster #4）
+
+| 字段 | 现状 |
+| --- | --- |
+| semantics_ref | interim：相对 Markdown 链接目标必须可解析存在 |
+| evaluator(s) | `scripts/evaluators/ctrl-0006-broken-links.js`；consistency shell 仍 WRAP 调用 |
+| enforcement_boundary | `check-doc-consistency.js` 默认/任何模式均 **advisory**（不进 `--gate` fail-closed） |
+| decision_effect | 本 CLI 绑定 = advisory；verdict fail ≠ process deny |
+| tests | `tests/suites/consistency.test.js`：`broken relative link` / `archive links … Windows` |
+| profile | skill INSTALLED；repo 直接跑同一 WRAP |
+| characterization | `f -> target` 字符串；跳过 http/mailto；scan set 含 README/SKILL/AGENTS + docs/{en,zh-CN,zh-TW} + design-decisions/archive + references/ |
+| 候选 disposition | PLAN-0035：#4 EXTRACT 完成；shell WRAP |
+
 ## 共文件反例（Phase 4 纪律）→ 0003/0004 已拆 evaluator
 
 ```text
@@ -131,7 +144,7 @@ scripts/check-doc-consistency.js
 | 1 | version-example / release sync points | `--gate` fail-closed | consistency suite | package.json / CHANGELOG / SKILL frontmatter / init-spec / generator |
 | 2 | protected-files sync | `--gate` | payload / consistency | 读 governance-files 权威表 |
 | 3 | ADR status sync | 报告；部分 gate | consistency | Unreleased vs 已发布 |
-| 4 | broken links | 报告 | consistency | 相对 md 链接 |
+| 4 | broken links | 报告（advisory） | consistency | **CTRL-0006 EXTRACT 已落地**；shell WRAP |
 | 5 | numeric claims | 报告 | consistency | 文档数字 vs 源 |
 | 6 | prompt sync | `--gate` | consistency / docs | ADR-0008；双向 |
 | 7 | trilingual parity | 委托 | docs:parity | → `repo-tools/check-doc-parity.js` |
@@ -159,6 +172,8 @@ scripts/check-doc-consistency.js
 | release-manager | `scripts/release-manager.js` | 部分支撑 CTRL-0002；整机非单 CTRL |
 | freshness shared primitive | `scripts/lib/git-facts.js` | 被 CTRL-0003/0004 共享；非 Control |
 | freshness evaluators | `scripts/evaluators/ctrl-0003-*.js` / `ctrl-0004-*.js` | 已挂 CTRL-0003/0004 |
+| link facts primitive | `scripts/lib/md-link-facts.js` | 被 CTRL-0006 共享；非 Control |
+| broken-links evaluator | `scripts/evaluators/ctrl-0006-broken-links.js` | **CTRL-0006**（consistency #4） |
 
 ### INSTALLED scripts ↔ inventory 闭合（v3）
 
@@ -174,7 +189,9 @@ check-doc-freshness.js   ✓ CTRL-0003/0004 CLI WRAP
 lib/git-facts.js         ✓ shared primitive
 evaluators/ctrl-0003…    ✓ CTRL-0003
 evaluators/ctrl-0004…    ✓ CTRL-0004
-check-doc-consistency.js ✓ monolith clusters
+check-doc-consistency.js ✓ monolith WRAP（#4 → CTRL-0006）
+lib/md-link-facts.js         ✓ shared link primitive
+evaluators/ctrl-0006…        ✓ CTRL-0006
 check-plan-sync.js       ✓ plan/milestone sync（本版补录）
 release-manager.js       ✓ release executor
 ```

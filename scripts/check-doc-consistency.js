@@ -1,13 +1,14 @@
 #!/usr/bin/env node
-// PAYLOAD SCRIPT — copied standalone into governed projects (references/init-spec.json).
-// Keep it self-contained: Node builtins only, never require() a sibling module.
+// PAYLOAD SCRIPT — copied into governed projects (references/init-spec.json).
+// Relative requires must close under INSTALLED copy list (init-spec invariants).
 // Doc Consistency Check — read-only. Detects cross-document contradictions:
 //   1. version-example sync   — examples of governance_version/manifest values vs current;
 //                               frontmatter version and CHANGELOG newest version section are
 //                               release sync points and must equal the current version
 //   2. protected-files sync   — summary lists vs the single source of truth
 //   3. ADR status sync        — "Accepted (Unreleased)" ADRs whose feature already shipped
-//   4. link validity          — relative markdown links must resolve
+//   4. link validity          — CTRL-0006 evaluator (relative markdown links must resolve);
+//                               advisory-only in this shell (never flips --gate exit)
 //   5. numeric claims         — documented counts (sub-skills, validator checks, tests)
 //   6. prompt sync            - sub-skill / main-skill triggers and the commands.md
 //      inventory must agree in BOTH directions (missing = a skill users cannot discover;
@@ -59,6 +60,8 @@
 const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
+const { createMdLinkFacts } = require("./lib/md-link-facts.js");
+const { evaluateBrokenLinks } = require("./evaluators/ctrl-0006-broken-links.js");
 
 const ROOT = process.cwd();
 const DOCS = path.join(ROOT, "docs");
@@ -798,20 +801,10 @@ function main() {
     }
   }
 
-  // ---- 4. link validity ----
-  const linkFiles = mdFiles();
-  for (const f of linkFiles) {
-    const c = readFile(path.join(ROOT, f));
-    if (!c) continue;
-    const re = /\[[^\]]*\]\(([^)#]+)(?:#[^)]*)?\)/g;
-    let m;
-    while ((m = re.exec(c))) {
-      const t = m[1];
-      if (t.startsWith("http") || t.startsWith("mailto")) continue;
-      if (!fs.existsSync(path.resolve(path.dirname(path.join(ROOT, f)), t))) {
-        issues.broken_links.push(`${f} -> ${t}`);
-      }
-    }
+  // ---- 4. link validity (CTRL-0006; semantic verdict; this shell keeps it advisory) ----
+  {
+    const linkEval = evaluateBrokenLinks({ root: ROOT, facts: createMdLinkFacts(ROOT) });
+    for (const item of linkEval.evidence.broken_links) issues.broken_links.push(item);
   }
 
   // ---- 5. numeric claims ----

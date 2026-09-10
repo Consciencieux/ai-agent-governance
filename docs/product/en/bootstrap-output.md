@@ -40,7 +40,7 @@ The INIT scripted generator (`scripts/generate-governance.js`) produces a determ
 | Path | Source |
 | --- | --- |
 | .github/workflows/ci.yml (or .gitlab-ci.yml) | selected from references/workflows/ci.md |
-| scripts/check-doc-freshness.js (+ lib/git-facts.js, evaluators/ctrl-0003-doc-freshness.js, evaluators/ctrl-0004-translation-freshness.js) + check-doc-consistency.js | copied verbatim from this skill |
+| scripts/check-doc-freshness.js (+ lib/git-facts.js, evaluators/ctrl-0003-doc-freshness.js, evaluators/ctrl-0004-translation-freshness.js) + check-doc-consistency.js (+ lib/md-link-facts.js, evaluators/ctrl-0006-broken-links.js) | copied verbatim from this skill |
 | scripts/release-manager.js | copied verbatim from this skill (the generated release-manager sub-skill invokes it) |
 | .governance/generated/skills/ | generated from references/templates/sub-skills.md |
 | .githooks/pre-commit + .githooks/commit-msg | references/templates/githooks-template.md; executable, opt-in, never enabled by INIT |

@@ -407,7 +407,21 @@
       "path": "scripts/check-doc-consistency.js",
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
-      "description": "Doc consistency check (advisory; --gate/--release-gate fail-closed clusters)"
+      "description": "Doc consistency WRAP (cluster #4 → CTRL-0006; other clusters inline; advisory; --gate/--release-gate fail-closed)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/md-link-facts.js",
+      "source": "scripts/lib/md-link-facts.js",
+      "type": "copy",
+      "description": "Shared Markdown-link factual primitives (extract/resolve/exists; no Control policy)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/evaluators/ctrl-0006-broken-links.js",
+      "source": "scripts/evaluators/ctrl-0006-broken-links.js",
+      "type": "copy",
+      "description": "CTRL-0006 evaluator — relative markdown link validity (consistency cluster #4)"
     },
     {
       "phase": "C",

@@ -59,7 +59,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill 入口 / 產品規範 | agent（skill 使用者） | 單語 |
 | `references/` | **Skill 主體——skill 行為唯一存放處。** INSTALLED 與 SKILL-INTERNAL 混裝（見角色表）。 | agent（skill 使用者） | 單語 |
-| `scripts/` | Skill 執行時腳本。同樣混裝：12 個是 INSTALLED（複製進被治理專案），其餘是只在本倉庫執行的 SKILL-INTERNAL 工具。 | agent/CI | 程式碼 |
+| `scripts/` | Skill 執行時腳本。同樣混裝：14 個是 INSTALLED（複製進被治理專案），其餘是只在本倉庫執行的 SKILL-INTERNAL 工具。 | agent/CI | 程式碼 |
 | `LICENSE` | MIT 授權條款——隨 tarball 分發 | 安裝者 | — |
 | `docs/` | **專案知識。REPO-ONLY。** 開發者維護，供開發者與在本倉庫工作的 Agent 讀取：如何使用 skill（`commands.md` 觸發詞）、設計計劃（`plans/`）、findings 檔案（`findings/`）、研究知識庫（`research/`）、路線圖、術語表。 | 開發者 + Agent | 依知識類型：Product/Roadmap 三語；Plan/Finding/Research/ADR 以簡中為 canonical |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`README*.md`、`CONTRIBUTING*.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基礎設施：CI、發佈流程、變更日誌、貢獻指南 | 倉庫維護者 | 按檔案 |
@@ -93,12 +93,14 @@ ai-agent-governance/
 │   ├── check-secrets.js        # 密鑰掃描閘門（暫存區掃描，絕不列印密鑰）
 │   ├── check-sync.js           # 同步組閘門（watch/require 對照，exit 1）
 │   ├── lib/
-│   │   └── git-facts.js        # 共享 git/path/date 事實 primitive（無 Control 政策）
+│   │   ├── git-facts.js        # 共享 git/path/date 事實 primitive（無 Control 政策）
+│   │   └── md-link-facts.js    # 共享 Markdown 連結事實 primitive（extract/resolve/exists）
 │   ├── evaluators/
 │   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 治理文件新鮮度求值器（建議性）
-│   │   └── ctrl-0004-translation-freshness.js # CTRL-0004 譯文新鮮度求值器（--release-gate 阻斷）
+│   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 譯文新鮮度求值器（--release-gate 阻斷）
+│   │   └── ctrl-0006-broken-links.js        # CTRL-0006 相對 Markdown 連結有效性（consistency #4）
 │   ├── check-doc-freshness.js  # 薄 CLI 包裝（CTRL-0003 + CTRL-0004；建議性，--release-gate 阻斷過時/draft 譯文）
-│   ├── check-doc-consistency.js # 文件一致性 + consent/受保護清單/原則索引/計劃狀態/術語簇（預設建議性；--gate/--release-gate fail-closed；changelog 覆蓋僅 --release-gate fail-closed）
+│   ├── check-doc-consistency.js # consistency WRAP（#4 → CTRL-0006；其餘集群內聯；預設建議性；--gate/--release-gate fail-closed）
 │   ├── check-plan-sync.js      # 計劃與里程碑對帳（預設建議性；--release-gate fail-closed；無 DEVELOPMENT_PLAN.md 時 no-op）
 │   ├── generate-governance.js  # INIT 腳本化生成器（SKILL-INTERNAL；規範：references/init-spec.json）
 │   └── release-manager.js      # plan（唯讀）+ execute（審批閘門）發佈工具
