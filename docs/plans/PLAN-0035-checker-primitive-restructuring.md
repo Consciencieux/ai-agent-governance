@@ -1,13 +1,13 @@
 ---
 id: PLAN-0035
-status: Active
+status: Implemented
 generation: gen2
 target: both
 ---
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：**PLAN-0036 L1 Implemented**（lifecycle Discovery Ledger 契约）。P3/CTRL-0006/#4 CLOSED；SKIP #9。下一刀 = **Phase 4 exit review**。Architecture checkpoint ≠ Release。）
+> （**Phase 4 EXITED** · Implemented。2026-09-10：Exit Criteria 满足；PLAN-0036 L1 已落地；P2 剩余 / #9 = deferred by design。Successor = RESEARCH-0012。Architecture checkpoint ≠ Release；Plan archive 另按 ADR-0016。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -89,9 +89,9 @@ Review 三类拆分                                 → Phase 7
 │     8 sub-skills 逐能力记账 + githooks + 非 script carriers
 │
 ├─ 2. Phase 4 mechanical restructuring（本计划主体）
-│     **PLAN-0036 L1 Implemented**
-│     **下一刀：Phase 4 exit review**
-│     然后 Phase 5 Task→Capability routing（再谈文档 topology）
+│     **Phase 4 EXITED**（见 Exit Criteria）
+│     **下一阶段：Phase 5 RESEARCH-0012**（Task→Capability 显式映射）
+│     再据 routing 谈文档 topology — **禁止**无路由先搬家
 │
 ├─ 3. Phase 5 applicability / routing 成型
 │     **首要 = Task taxonomy → Applicable map → Authority/Leaf**
@@ -409,22 +409,48 @@ Unaccounted:  0
 PLAN-0036 L1: Implemented（契约落地；L2 deferred=门禁机械化）
 ```
 
-## Phase 4 exit readiness（预备；下一刀正式 exit）
+## Phase 4 Exit Criteria（权威完成条件）
+
+Phase 4 目标是 **验证 Gen2 extraction pattern 并建立机械边界**，**不是**一次拆光所有旧 checker。`check-doc-consistency.js` 仍有内联集群 ≠ Phase 4 未完成。
+
+```text
+Required:
+✓ Capability baseline complete（scripts + instruction/workflow Unaccounted=0）
+✓ Control vertical extraction proven（CTRL-0003/0004 + CTRL-0006）
+✓ Primitive / evaluator / binding separation proven
+✓ Repo / skill implementation boundary separated（CTRL-0001）
+✓ Legacy entrypoints preserved（CLI / exit / JSON characterization）
+✓ Context Economy discipline recorded（ADR-0022）
+✓ Discovery Ledger L1 exists（PLAN-0036）
+✓ Safety Kernel green（security / generator / payload）
+✓ Unaccounted capability on closed surfaces = 0
+
+Deferred by design（不是遗漏）:
+- remaining consistency clusters（P2 remainder）
+- #9 principles-index（SKIP）
+- Task→Capability routing / Dispatcher     → Phase 5
+- document topology migration              → after routing
+- automation expansion（auto-discovery / dashboard / Unaccounted gate）
+- full invariant oracle framework          → Phase 6
+```
+
+## Phase 4 exit review（2026-09-10）
 
 | 检查项 | 状态 |
 | --- | --- |
-| CTRL-0003/0004 · CTRL-0006 · CTRL-0001 | ✓ |
-| Baseline Unaccounted=0 · Context Economy | ✓ |
-| PLAN-0036 Discovery Ledger L1 | ✓ Implemented |
-| P2 其余 cluster / #9 | deferred by design / SKIP — **不**作 exit blocker |
-| Dispatcher / topology / Phase 6 | **未偷跑** |
+| Exit Criteria Required 全项 | ✓ |
+| Deferred by design 已显式记录 | ✓ |
+| Dispatcher / 文档 topology / Phase 6 / 自动发现 | **未偷跑** |
+| Open blocker | **无** |
 
-**Exit 判定预备：** L1 齐备后可做 Phase 4 exit review（本提交不关闭 checkpoint）。
+**Completion marker：** Phase 4 checkpoint = **EXITED**（`status: Implemented`）。
+
+**Successor：** `docs/research/RESEARCH-0012-task-capability-routing.md` — 先建 Task/Context → Applicable Capability → Authority → Execution Leaf 显式映射；**禁止**先搬 Markdown 树、禁止万能图谱、禁止全自动 Dispatcher。
 
 下一步（锁定）：
-1. **Phase 4 exit review**（Required/Deferred 清单落盘 + completion marker）；
-2. 再开 Phase 5（先 Task→Capability 显式映射 Research，再 topology）；
-3. **SKIP #9**；禁止无路由搬家；停止扩写 baseline。
+1. 推进 RESEARCH-0012（显式 applicability map）；稳定后再开 Phase 5 Plan；
+2. 再决定 AGENTS/SKILL 薄化与 references 树化；
+3. 保持：Control 是最后手段；Ledger 只收高价值发现；不把所有规则 object 化。
 
 ## 参考
 

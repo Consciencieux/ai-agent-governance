@@ -47,6 +47,7 @@ All notable changes to this project will be documented here.
 - **CTRL-0006 semantics↔evaluator alignment** — drop unimplemented “仓库内” root-containment from the obligation; applicability = supported-shape evaluation (vacuous pass); protocol skip tightened to `https?://` / `mailto:` (case-insensitive). No PLAN architecture change.
 - **CTRL-0001 P3 repo/skill decoupling** — shared `secret-scan-facts` + CTRL-0001 evaluator; skill CLI WRAP remains `scripts/check-secrets.js`; repo profile binds `repo-tools/check-secrets.js` (AGENTS pre-commit). Accidental same-file coupling removed; Safety Kernel characterization preserved. PLAN-0035 P3 CLOSED; next = PLAN-0036.
 - **PLAN-0036 Discovery Ledger L1** — INSTALLED contract in `lifecycle.policy.md` § 发现台账（storage = TASK plan table; not state.json/registry); ADR-0021 payload amendment; workflow hooks; characterization via docs + clean-target payload tests. No auto-discovery JS.
+- **Phase 4 EXITED** — PLAN-0035 Exit Criteria satisfied; remaining consistency clusters / #9 / routing / topology / automation deferred by design. Phase 5 entry opened as RESEARCH-0012 (explicit Task→Capability map; no Dispatcher yet).
 
 ## [1.0.2] - 2026-09-08
 

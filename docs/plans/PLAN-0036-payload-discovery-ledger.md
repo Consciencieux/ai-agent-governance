@@ -7,7 +7,7 @@ target: payload
 
 # PLAN-0036：Payload TASK Discovery Ledger 集成
 
-> （**L1 Implemented**。2026-09-10：lifecycle Discovery Ledger 契约落地；L2（自动发现/dashboard/fail-closed gate）deferred。Architecture checkpoint ≠ Release。Phase 4 exit 另提交。）
+> （**L1 Implemented** · Phase 4 EXITED。2026-09-10：lifecycle Discovery Ledger 契约落地；L2 deferred。Architecture checkpoint ≠ Release。）
 
 将 ADR-0021 Known-Issue Closure 的 Discovery Ledger 从 **repo prototype**（PLAN-0033）推进到 **INSTALLED skill TASK lifecycle**（`references/policies/lifecycle.policy.md`）。属 Phase 4，与 checker/primitive 分解正交。
 

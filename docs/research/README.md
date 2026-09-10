@@ -63,6 +63,7 @@ docs/research/
 ├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）
 ├── RESEARCH-0010-governance-control-model.md      # Governance Control 系统模型（semantics ≠ evaluator ≠ gate ≠ test；Gen1 散落面；设计问题矩阵）
 ├── RESEARCH-0011-gen1-mechanical-control-inventory.md # Gen1 机械控制库存（CTRL-centric；Phase 4 inventory；不裁决 disposition）
+├── RESEARCH-0012-task-capability-routing.md           # Task→Capability 适用路由（Phase 5 入口；显式映射；禁图谱/全自动 Dispatcher）
 └── experiments/                     # 实验记录
 ```
 
@@ -84,6 +85,7 @@ docs/research/
 | J. Agent 指令架构 | `RESEARCH-0009-agent-instruction-architecture.md` | Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
 | K. Governance Control 模型 | `RESEARCH-0010-governance-control-model.md` | Control 作为中间对象；与 evaluator/gate/test 分层；profile 消费共享语义；Gen1 散落与 identity 动机；规范在 ADR-0023 |
 | L. Gen1 机械控制库存 | `RESEARCH-0011-gen1-mechanical-control-inventory.md` | CTRL→evaluator→gate→tests→profile 事实表；monolith 集群行；Safety Kernel 锚点；disposition 归 PLAN-0035 |
+| M. Task→Capability 路由 | `RESEARCH-0012-task-capability-routing.md` | Phase 5 入口：显式 Task/Context→Capability→Authority/Leaf；禁图谱与全自动 Dispatcher |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 
