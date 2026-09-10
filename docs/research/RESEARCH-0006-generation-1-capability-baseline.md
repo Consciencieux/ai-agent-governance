@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 4
+version: 5
 subject_generation: gen1
 ---
 
@@ -10,6 +10,8 @@ subject_generation: gen1
 本 RESEARCH 从 `docs/plans/archive/PLAN-0001..0030`（30 份归档计划）、当前代码与测试中提炼 Generation-1 的**能力保存矩阵**，为 Generation-2 重构提供 baseline evidence。它回答「1.0 曾经保护什么、现在由什么承载、Phase 4 还需要问什么」，不复制任何归档计划的全文，**不裁决** 2.0 处置。
 
 它是**描述层**。规范冻结见 ADR-0014；阶段顺序见 ADR-0018（Phase 4 才对 Gen1 mechanism 做 keep / wrap / extract / rewrite / retire）。已观察到的同步缺口见 FINDING-0025。
+
+**Agent 默认消费层：** 下文「Agent 压缩上下文」。默认**不要**重读 PLAN-0001..0030；归档 Plan 是 cold provenance。仅当压缩层不足以解决溯源、边界语义或争议迁移时，才回查某一份 `PLAN-xxxx`。
 
 ## 为什么需要
 
@@ -26,6 +28,139 @@ subject_generation: gen1
 ```
 
 测试数量（如 `332/332`）不能替代设计意图证据——测试只证明已覆盖的断言，不一定覆盖所有设计意图；而归档 Plan 很可能记录了「为什么加入这个机制、当时解决什么问题、涉及什么文件、哪些边界条件、哪些同步点、哪些功能最终交付」。
+
+## Agent 压缩上下文（v5）
+
+### 演化单位
+
+1.0 的真实演化单位**不是** Markdown 文件，也**不是** JS 文件，而是一个**能力簇**：
+
+```text
+规则语义
++ Agent 指令
++ 状态 / 配置
++ mechanical checker
++ gate
++ tests
++ generator / materialization
+```
+
+2.0 重构必须保存或明确处置**能力**，不能按旧文件做一对一迁移。Carrier（某节 Markdown、某 cluster、某五处同步点）可消失；能力不得 Unaccounted。
+
+### 最短阅读指令（给后续 Agent）
+
+```text
+Do not reread PLAN-0001..0030 by default.
+
+Generation-1 capability baseline consists of:
+Security/Git Safety; Governance State & Rule Capture;
+Knowledge Integrity; Review/HITL; Deterministic Materialization;
+Change/Repair Governance; Plan/Delivery Governance;
+Testing/Evidence; Ownership/Distribution; Engineering Restraint.
+
+Treat archived Plans as provenance, not current authorization.
+Migrate capability semantics, not historical file topology.
+For every Gen1 capability, assign an explicit target disposition:
+KEEP / EXTRACT / MERGE / REWRITE / RETIRE / DEFER.
+
+No historical carrier may disappear without its capability being
+accounted for; completion requires Unaccounted = 0.
+
+Only reopen a specific PLAN-xxxx when the compressed baseline is
+insufficient to resolve provenance, edge semantics, or a disputed
+migration decision.
+```
+
+默认读：Active Plan + 本压缩层 + 当前 target files。  
+需要架构裁决 → 对应 ADR。需要事实 → 对应 Research。  
+只有 provenance / 边界歧义 → 回查某一份 PLAN-xxxx。
+
+### 十个长期能力族
+
+```text
+1. Security / Git Safety
+   secret protection · protected branch · consent · change-set binding
+
+2. Governance State / Persistence
+   state · activity · Rule Capture · interruption/resume
+
+3. Knowledge Integrity
+   freshness · consistency · translation · terminology · sync
+
+4. Review / Human-in-the-loop
+   review-manager · risk tiering · explicit approval
+
+5. Materialization / Payload
+   deterministic INIT · init-spec · generator · tarball · portability
+
+6. Change / Repair Governance
+   change hygiene · root-cause repair · failure budget
+   same-class closure · control-plane tracing
+
+7. Plan / Delivery Governance
+   plan lifecycle · archive semantics · affected-file delivery
+   evidence anchors
+
+8. Testing / Evidence
+   characterization · evidence tiers · negative fixtures
+   mutation evidence · domain suites · scoped iteration
+
+9. Architecture / Ownership
+   SSOT · repo vs skill boundary · semantic owner
+   physical distribution boundary
+
+10. Engineering Principles
+    machinery test · bounded failure · no speculative mechanism
+    finish-and-stop
+```
+
+文档拓扑重构应围绕这十族，而不是围绕旧文件树。
+
+### PLAN-0001..0030 → 能力压缩表
+
+| Plan | 真正留下来的能力/意图 | 2.0 重构时的理解 |
+| --- | --- | --- |
+| 0001 | Secret scanning：提交前扫描 staged content，命中凭证阻断，绝不回显 secret | 保留安全 invariant；旧 regex/单文件结构不是必须保留 |
+| 0002 | Git workflow governance：protected branch、禁止危险直推、分支/PR、人类批准、受控回滚 | Git 安全能力 ≠ 旧 `git-policy.json` 结构必须保留 |
+| 0003 | Agent activity audit：任务级追加审计、失败/动作/文件/命令记录、脱敏 | 审计/状态能力；完整 activity log 须显式 disposition |
+| 0004 | Governance score / badge | Gen1 产品能力，非基础治理 invariant；可 KEEP/RETIRE，非默认必须 |
+| 0005 | Governance-doc freshness（相对代码活动；Git history 非 mtime） | 已演化为 CTRL-0003；advisory 是 enforcement，不是 freshness 事实本身 |
+| 0006 | Cross-document consistency（版本/清单/ADR/链接/数字/语言结构等机械矛盾） | 能力可保；mega-checker 结构不保 |
+| 0007 | Review Manager：按变更集派领域审查，聚合严重度，修复后验证 | 独立 Review capability；≠ drift-check；≠ mechanical evaluator |
+| 0008+0010 | Sync groups：声明 watch→require，再以 task diff 机械验证 | 保存「声明同步关系 + 独立验证」；可能被 Control/applicability 重表达 |
+| 0009 | Risk-tiered review：低/中/高风险决定深度 Review；mechanical checks 始终存在 | 风险分类与 Review orchestration；勿硬编码进普通 evaluator |
+| 0011 | Meta-governance / SSOT：跨 repo/payload 规则不能靠人工同步；Target/ownership/原则索引 | 演化为 Producer/Product separation 与 canonical semantic ownership |
+| 0012 | Deterministic INIT：Agent 决策、机械生成；同输入确定性输出；`init-spec` 物化契约 | 重要产品能力；prompt topology 改动须能闭合到 generator/materialization |
+| 0013 | Git consent：提交前回显完整命令序列一次确认；失败即停；push reject 不擅自 rebase/pull；计划批准 ≠ Git 授权 | 已演化为 CTRL-0002；核心是 consent semantics，不是五处 Markdown 同步结构 |
+| 0014 | Change hygiene：删除/改名/迁移/替换检查当前层、兼容层、历史层；先权威源后投影；残留须 disposition | 横切 capability；不能继续埋在 lifecycle 某一阶段 |
+| 0015 | Review 后真实缺陷修复（fail-open、路径解析、secret coverage、generator version、hook 真实性） | 主要价值是 characterization / historical failure evidence；勿把所有旧 bug 永久架构化 |
+| 0016 | Rule Capture：开发者确认的长期要求持久化；persistent/one-off/unclear；确认后进入 rule owner；blocked/resume | 横切 capability；规则捕获 ≠ 自动写规则 ≠ Git consent |
+| 0017 | Plan lifecycle/status/archive gate：状态可判；implemented/completed 与 archived 区分 | 保留「Plan lifecycle 可判定」；**不要**照搬 Gen1 release-coupled archive timing（ADR-0016 已解耦） |
+| 0018 | Root-cause repair、failure budget、测试拆域、补丁债务；重复失败必须升级 | 横切 repair capability；测试 monolith 拆分也源于此 |
+| 0019 | Engineering Restraint / Machinery Test：未被当前需求证明的机制不要增加 | 重要设计原则；明确不是新的 gate/framework |
+| 0020 | Translation governance：术语 + source→translation freshness + draft/review/release boundary | 已演化为 CTRL-0004；translation semantics 独立于普通 doc freshness |
+| 0021 | Evidence boundary + scoped verification：mechanical ≠ human-attested ≠ unverified claim | 2.0 evidence 模型来源；「checker green」≠「语义正确」 |
+| 0022 | Audience / portability：INSTALLED 内容必须在被治理项目自身成立 | 文档拓扑须同时考虑「文件去哪」与「内容对谁成立」两轴 |
+| 0023 | Gate repair + SSOT：反向 fixture、真实生产路径、CI wiring、声明与机制一致 | 门禁必须真的覆盖其声称范围；不是保存当时那批具体修补 |
+| 0024 | Repository boundary：repo-tools / repo-workflows 与 payload 物理分离；tarball 边界可验证 | 演化为 ADR-0020；物理边界是重要 invariant |
+| 0025 | Skill INSTALL/UPDATE/ROLLBACK | 除 version metadata 外移交未来独立 `ai-skill-manager`；勿重新吸收进本仓库 |
+| 0026 | Plan delivery anchors：改已有文件时证明声明内容真的落地 | repo-only CTRL-0005 / plan-delivery；核心是 delivery evidence |
+| 0027 | Consent evidence + change hygiene automation：凭证绑定 change-set；机器证据不能代替人的语义判断 | CTRL-0002/变更卫生的进一步机械化；hash ≠「人已理解」 |
+| 0028 | Payload governance lessons：声明集合=机制覆盖集合；移动后复查枚举；防 shape-guard 空转；空洞测试；证据等级；CI 完整性 | meta invariant 集合 → 原则/测试设计；勿重新复制历史事故 |
+| 0029 | Governance defect closure：修实例时查同类；追到 control plane；source→generator→output→gate→test→consumer | 横切 repair；Discovery Ledger / 零遗漏思想前身之一 |
+| 0030 | Domain test entry：保留全量 CI，允许手动只跑相关 suite；不做自动 scope routing | repo 开发效率能力；**不应**误演化成 Phase 5 Dispatcher |
+
+### 三类勿 1:1 迁移
+
+1. **旧物理结构（carrier）** — `lifecycle.policy` 某节、`sub-skills.md` 第 N 节、consistency cluster #x、五处同步 Markdown。可替换；能力须记账。  
+2. **已被 supersede 的旧机制** — 如 PLAN-0017 release-coupled archive（ADR-0016 已修正）。历史 Plan ≠ 当前授权。  
+3. **可重新裁决甚至退出本仓库的能力** — Governance score/badge；完整 activity audit 形态；Skill INSTALL/UPDATE/ROLLBACK；部分 Gen1 heuristic consistency；部分 historical compatibility/hook machinery。
+
+### 与下文矩阵的关系
+
+- **本压缩层**：Agent 默认入口；十族 + Plan→意图表 + 阅读策略。  
+- **下文「能力保存矩阵」+ Ownership 表**：逐条 carrier / ownership / 待决问题的细粒度 evidence。  
+- 机械 CTRL 面现状 → RESEARCH-0011；处置裁决 → PLAN-0035（及后续 Plan）。
 
 ## 第一代机械基底（Generation-1 Mechanical Substrate）
 
@@ -102,11 +237,13 @@ Phase 4 ADR / Plan 裁决处置（keep / wrap / extract / rewrite / retire）
 
 ### 分析
 
-Generation-1 不是纯提示词系统，也不是纯 checker 系统。其实际演化单位通常是一个**人工同步簇**：
+Generation-1 不是纯提示词系统，也不是纯 checker 系统。其实际演化单位通常是一个**能力簇**（人工同步）：
 
 ```text
-Plan + normative Markdown + Agent-facing instruction + JS enforcement + gate routing + regression tests
+规则语义 + Agent 指令 + 状态/配置 + mechanical checker + gate + tests + generator/materialization
 ```
+
+（Agent 压缩层见上文；细粒度矩阵见下文。）
 
 三层作用：
 

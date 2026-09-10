@@ -36,6 +36,10 @@ All notable changes to this project will be documented here.
 
 - **CTRL-0003/0004 first vertical strangler (Phase 4 D/E)** — shared factual primitives live in INSTALLED `scripts/lib/git-facts.js` (no stale-day / translation policy); CTRL-0003 and CTRL-0004 are separate evaluators; legacy `scripts/check-doc-freshness.js` remains a thin CLI wrapper (`--json` / `--release-gate` unchanged). Require-graph must close under the INIT copy list (self-containment = closure, not “no relative require”). Consistency monolith untouched.
 
+- **CTRL-0003/0004 consistency pass: invariant + verdict/binding split** — `init-spec` `copied_scripts_are_self_contained` now means INSTALLED require-graph closure (aligned with payload tests). Evaluators emit pure semantic `verdict` + `evidence` only; `decision_effect` is applied by the legacy wrapper from profile × enforcement boundary (ADR-0023). CLI characterization unchanged.
+
+- **Phase 4 sequencing freeze: capability semantics before prompt topology** — no large `references/` / SKILL / AGENTS physical moves during Phase 4 (ADR-0022). Mechanical JS stays bound to Control/capability, not Markdown paths. Gen1 Agent-facing compressed baseline lands in RESEARCH-0006 v5 (ten capability families + PLAN-0001..0030 intent table + default no-reread rule); PLAN-0035 P8 closed.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

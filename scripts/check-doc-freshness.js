@@ -2,10 +2,12 @@
 // PAYLOAD SCRIPT — copied into governed projects (references/init-spec.json).
 // Thin compatibility wrapper for CTRL-0003 + CTRL-0004 (Phase 4 strangler).
 // External CLI unchanged: node scripts/check-doc-freshness.js [--json] [--release-gate]
-// Relative requires must close under INSTALLED copy list (see payload self-containment).
+// Relative requires must close under INSTALLED copy list (see init-spec invariants).
 //
+// Evaluators return semantic verdict only. This wrapper applies profile × boundary
+// bindings (ADR-0023): default → advisory; --release-gate + CTRL-0004 fail → deny.
 // Exit code: 0 in default advisory mode. With --release-gate, stale/draft TRANSLATIONS
-// exit 1 (CTRL-0004 deny). CTRL-0003 never blocks by itself.
+// exit 1. CTRL-0003 findings never flip the process exit code on this CLI.
 
 "use strict";
 
@@ -17,16 +19,26 @@ const { evaluateTranslationFreshness } = require("./evaluators/ctrl-0004-transla
 
 const ROOT = process.cwd();
 
+/** Legacy CLI bindings for this enforcement boundary (not Control intrinsics). */
+function bindDecisionEffect(controlId, enforcementBoundary) {
+  if (controlId === "CTRL-0004" && enforcementBoundary === "release-gate") return "deny";
+  return "advisory";
+}
+
 function main() {
   const json = process.argv.includes("--json");
   const releaseGate = process.argv.includes("--release-gate");
+  const boundary = releaseGate ? "release-gate" : "local-default";
   const facts = createGitFacts(ROOT);
 
   const doc = evaluateDocFreshness({ root: ROOT, facts });
-  const tr = evaluateTranslationFreshness({ root: ROOT, facts, releaseGate });
+  const tr = evaluateTranslationFreshness({ root: ROOT, facts });
 
   const { stale, veryStale, fresh } = doc.evidence;
   const { translations, staleTranslations, draftTranslations } = tr.evidence;
+
+  const docEffect = bindDecisionEffect("CTRL-0003", boundary);
+  const trEffect = bindDecisionEffect("CTRL-0004", boundary);
 
   const report = {
     timestamp: new Date().toISOString(),
@@ -37,8 +49,16 @@ function main() {
     staleTranslations: staleTranslations.length,
     draftTranslations: draftTranslations.length,
     controls: {
-      "CTRL-0003": { verdict: doc.verdict, decision_effect: doc.decision_effect },
-      "CTRL-0004": { verdict: tr.verdict, decision_effect: tr.decision_effect, applicable: tr.applicable },
+      "CTRL-0003": {
+        verdict: doc.verdict,
+        applicable: doc.applicable,
+        decision_effect: docEffect,
+      },
+      "CTRL-0004": {
+        verdict: tr.verdict,
+        applicable: tr.applicable,
+        decision_effect: trEffect,
+      },
     },
   };
 
@@ -69,7 +89,8 @@ function main() {
     }
   }
 
-  const blocking = releaseGate && staleTranslations.length + draftTranslations.length > 0;
+  // Binding: only CTRL-0004 × release-gate × fail → process deny.
+  const blocking = trEffect === "deny" && tr.verdict === "fail";
   process.exit(blocking ? 1 : 0);
 }
 

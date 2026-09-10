@@ -57,7 +57,7 @@ docs/research/
 ├── RESEARCH-0003-evaluation-framework.md          # 评价体系
 ├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3；Gen1→Gen2 strangler 迁移模型）
 ├── RESEARCH-0005-current-capabilities.md          # 当前能力清单（Generation-1 baseline）
-├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵（2.0 迁移基线证据）
+├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵 + Agent 压缩上下文（2.0 迁移基线）
 ├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：七类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
 ├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
 ├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）
@@ -78,7 +78,7 @@ docs/research/
 | D. 架构演进 | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3；Gen1→Gen2 渐进式旁路迁移 / authority 分阶段转移；吸收能力不复制结构 |
 | E. 当前能力 | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
 | F. 实验记录 | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
-| G. 能力基线 | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵；第四列是待决问题，不裁决 2.0 处置 |
+| G. 能力基线 | `RESEARCH-0006-generation-1-capability-baseline.md` | 30 份归档计划提炼的能力保存矩阵 + **Agent 压缩上下文**（十族 / Plan→意图表 / 阅读策略）；第四列是待决问题，不裁决 2.0 处置 |
 | H. 规划/知识控制模型 | `RESEARCH-0007-documentation-knowledge-architecture.md` | 七类对象、路由、当前/历史隔离；正文级权威矩阵的规范在 ADR-0016 |
 | I. 修复/发现/工作集模型 | `RESEARCH-0008-repair-discovery-workset-model.md` | 纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
 | J. Agent 指令架构 | `RESEARCH-0009-agent-instruction-architecture.md` | Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |

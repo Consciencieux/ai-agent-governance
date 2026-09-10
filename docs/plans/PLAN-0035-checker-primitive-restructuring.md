@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：C Disposition 完成；D/E 第一条 vertical **已落地**——`check-doc-freshness.js` → shared `git-facts` + CTRL-0003/0004 evaluators + 薄 WRAP；characterization 绿灯。Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：0003/0004 consistency pass + RESEARCH-0006 v5 Agent 压缩上下文待推；跨 Phase 顺序已冻结。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -53,7 +53,39 @@ Review 三类拆分                                 → Phase 7
 正式 Release / tag / skill tarball              → 禁止（ADR-0014）
 为「所有 Markdown」批量发 CTRL 编号             → 禁止；优先有 evaluator 的能力
 把 Discovery Ledger payload 全文塞进本计划      → PLAN-0036
+大规模 references/ / SKILL / AGENTS 物理拓扑搬家 → 禁止（ADR-0022；待 Phase 5 routing）
+按「拆成很多小 Markdown」冒充架构完成           → 禁止（无路由的拆分无效）
 ```
+
+## 跨 Phase 施工顺序（冻结）
+
+返工最小顺序——**先冻能力语义，再拆机械，再做路由，最后才搬文档物理拓扑**：
+
+```text
+现在
+│
+├─ 1. 冻结 Gen1 capability inventory（功能/语义，不是目录树）
+│     mechanical：RESEARCH-0011（已有）
+│     instruction/workflow 压缩层：RESEARCH-0006 v5 Agent 压缩上下文（P8）
+│     旧功能不得 silently drop；新增必须有来源；重复有 disposition
+│     Unaccounted = 0
+│     默认不重读 PLAN-0001..0030（归档 = cold provenance）
+│
+├─ 2. Phase 4 mechanical restructuring（本计划主体）
+│     primitive / evaluator / repo·skill ownership
+│     **稳定边界 = Control/capability，不是 Markdown 物理路径**
+│     允许改 wiring / semantics_ref；禁止因 path 硬编码绑定核心判定
+│
+├─ 3. Phase 5 applicability / routing 成型
+│
+├─ 4. 再按 routing × capability 边界重构 SKILL / AGENTS / references topology
+│
+└─ 5. 更新少量 path provider / generator wiring（不重写 evaluator 核心逻辑）
+```
+
+**Phase 4 隐藏成功标准：** 以后文档拓扑变化时，应主要改 `semantics_ref` / applicability mapping / path discovery / Dispatcher / generator wiring——若必须重写 freshness 比较、translation 判定等算法，则本阶段抽象失败。
+
+**现在不做：** `lifecycle.policy.md` / `references/` 大规模拆文件搬家。ADR-0022 已写明目录重排留待后续；无 Dispatcher 的拆分只是把大 prompt 变多小 prompt。
 
 ## Target: both — 同步点
 
@@ -83,7 +115,8 @@ A Inventory          ✓（RESEARCH-0011）
 B Characterization   ✓（Safety Kernel 基线快照）
 C Disposition        ✓（本计划 § Disposition 表；主体 = capability/cluster/evaluator）
 D Primitive extract  ✓（第一条 vertical = CTRL-0003/0004）
-E Evaluator rebuild  ✓（与 D 同刀；稳定结果接口；无 Dispatcher）
+E Evaluator rebuild  ✓（与 D 同刀；verdict ≠ decision_effect consistency pass）
+E′ Instruction inventory（并行文档轨）✓ RESEARCH-0006 v5 Agent 压缩上下文（P8）
 F Producer/Product decoupling（P3）
 G PLAN-0036 Discovery Ledger
 H Exit review
@@ -244,19 +277,23 @@ evidence
 | P4 | ADR-0023 E4 | 独立 machine-readable Control 文件 | both | closed | deferred（revisit: 第二个真实机器 consumer） | ADR-0023 决策 6 |
 | P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
 | P6 | PLAN-0035 C | Disposition 表未裁定 | both | closed | resolved | 本计划 § 2 Disposition |
-| P7 | PLAN-0035 D/E | CTRL-0003/0004 第一条 vertical | both | closed | resolved | `git-facts` + CTRL-0003/0004 evaluators + 薄 WRAP；docs 55/55 · Safety Kernel security 35 · generator 33 · payload 42 |
+| P7 | PLAN-0035 D/E | CTRL-0003/0004 第一条 vertical | both | closed | resolved | 结构拆分 + require closure + **verdict/binding 分离**；docs/Safety Kernel 再绿 |
+| P8 | ADR-0022 / PLAN-0035 | Gen1 instruction/workflow capability 压缩层 | both | closed | resolved | RESEARCH-0006 v5「Agent 压缩上下文」；默认不重读 PLAN-0001..0030 |
 
 ## 闭包对账（进行中）
 
 ```text
-Total known:  8
-Resolved:     5  (P0, P1, P5, P6, P7)
+Total known:  9
+Resolved:     6  (P0, P1, P5, P6, P7, P8)
 Deferred:     1  (P4)
 Open:         2  (P2 延后实施, P3)
 Unaccounted:  0
 ```
 
-下一步：P2 consistency 集群落地（0003/0004 vertical 之后）；P3 第二批。不动 Dispatcher / Phase 6。
+下一步：
+1. 推送：freshness consistency pass + RESEARCH-0006 压缩层 + 本计划同步；
+2. Phase 4 继续下一条 mechanical vertical（稳定边界 = Control/capability，不绑 Markdown 路径）；
+3. 文档物理拓扑仍禁止大规模搬家（待 Phase 5 routing）。
 
 ## 参考
 

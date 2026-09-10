@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // INSTALLED evaluator — CTRL-0003 Governance-document freshness (relative to code activity).
-// Policy thresholds live HERE, not in git-facts primitives.
+// Pure evaluation: thresholds live HERE; advisory/deny does NOT. Binding interprets verdict.
 // Node builtins + relative require of INSTALLED siblings only.
 
 "use strict";
@@ -37,11 +37,11 @@ function docCandidates(root) {
 }
 
 /**
+ * Semantic evaluation only — does not know advisory/deny or CLI flags.
  * @returns {{
  *   control: string,
  *   applicable: boolean,
  *   verdict: "pass"|"fail"|"indeterminate",
- *   decision_effect: "advisory",
  *   evidence: { stale: string[], veryStale: string[], fresh: string[] }
  * }}
  */
@@ -65,12 +65,11 @@ function evaluateDocFreshness(options) {
     }
   }
 
-  // CTRL-0003 default binding is advisory: findings never flip verdict to fail.
+  const violated = stale.length + veryStale.length > 0;
   return {
     control: CONTROL_ID,
     applicable: true,
-    verdict: "pass",
-    decision_effect: "advisory",
+    verdict: violated ? "fail" : "pass",
     evidence: { stale, veryStale, fresh },
   };
 }

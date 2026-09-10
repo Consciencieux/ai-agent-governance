@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // INSTALLED evaluator — CTRL-0004 Translation freshness.
-// Translation/draft/review policy and release-gate deny live HERE.
-// Shared git facts come from lib/git-facts.js (no stale-day policy).
+// Pure evaluation: translation/draft/review status lives HERE; --release-gate does NOT.
+// Shared git facts from lib/git-facts.js (no stale-day policy). Binding interprets verdict.
 // Node builtins + relative require of INSTALLED siblings only.
 
 "use strict";
@@ -87,12 +87,12 @@ function translationFreshness(facts) {
 }
 
 /**
- * @param {{ root?: string, releaseGate?: boolean, facts?: object }} options
+ * Semantic evaluation only — does not accept releaseGate or set decision_effect.
+ * @param {{ root?: string, facts?: object }} options
  * @returns {{
  *   control: string,
  *   applicable: boolean,
  *   verdict: "pass"|"fail"|"indeterminate",
- *   decision_effect: "advisory"|"deny",
  *   evidence: {
  *     translations: object[],
  *     staleTranslations: object[],
@@ -102,23 +102,17 @@ function translationFreshness(facts) {
  */
 function evaluateTranslationFreshness(options) {
   const root = (options && options.root) || process.cwd();
-  const releaseGate = !!(options && options.releaseGate);
   const facts = (options && options.facts) || createGitFacts(root);
   const translations = translationFreshness(facts);
-  const applicable = translations.length > 0 || facts.exists(`docs/${SOURCE_LANG}`);
-  // When zh-CN tree is absent, historically translationFreshness() returns [] and
-  // the CLI still runs; applicable stays true for the combined CLI. For a solo
-  // evaluator call with no source tree, mark not-applicable.
   const hasSourceTree = facts.exists(`docs/${SOURCE_LANG}`);
   const staleTranslations = translations.filter((t) => t.status === "stale");
   const draftTranslations = translations.filter((t) => t.status === "draft");
-  const blocking = releaseGate && staleTranslations.length + draftTranslations.length > 0;
+  const violated = staleTranslations.length + draftTranslations.length > 0;
 
   return {
     control: CONTROL_ID,
     applicable: hasSourceTree,
-    verdict: blocking ? "fail" : "pass",
-    decision_effect: releaseGate ? "deny" : "advisory",
+    verdict: !hasSourceTree ? "pass" : violated ? "fail" : "pass",
     evidence: { translations, staleTranslations, draftTranslations },
   };
 }
