@@ -379,7 +379,28 @@
       "path": "scripts/check-doc-freshness.js",
       "source": "scripts/check-doc-freshness.js",
       "type": "copy",
-      "description": "Doc freshness + translation freshness check (advisory; --release-gate blocks stale/draft translations)"
+      "description": "Thin CLI wrapper for CTRL-0003 doc freshness + CTRL-0004 translation freshness (advisory; --release-gate blocks stale/draft translations)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/git-facts.js",
+      "source": "scripts/lib/git-facts.js",
+      "type": "copy",
+      "description": "Shared git/path/date factual primitives for freshness evaluators (no Control policy)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+      "source": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+      "type": "copy",
+      "description": "CTRL-0003 evaluator — governance-document freshness vs code activity (advisory)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+      "source": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+      "type": "copy",
+      "description": "CTRL-0004 evaluator — translation freshness (advisory default; --release-gate deny)"
     },
     {
       "phase": "C",

@@ -147,6 +147,9 @@ The protected files list is:
 <!-- phase:C -->
 - `scripts/check-doc-consistency.js`
 - `scripts/check-doc-freshness.js`
+- `scripts/lib/git-facts.js`
+- `scripts/evaluators/ctrl-0003-doc-freshness.js`
+- `scripts/evaluators/ctrl-0004-translation-freshness.js`
 - `scripts/check-plan-sync.js`
 - `scripts/release-manager.js`
 <!-- /phase -->

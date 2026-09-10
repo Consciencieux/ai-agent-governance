@@ -59,7 +59,7 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 | --- | --- | --- | --- |
 | `SKILL.md` | Skill 入口 / 产品规范 | agent（skill 使用者） | 单语 |
 | `references/` | **Skill 主体——skill 行为唯一存放处。** INSTALLED 与 SKILL-INTERNAL 混装（见角色表）。 | agent（skill 使用者） | 单语 |
-| `scripts/` | Skill 运行时脚本。同样混装：9 个是 INSTALLED（复制进被治理项目），其余是只在本仓库运行的 SKILL-INTERNAL 工具。 | agent/CI | 代码 |
+| `scripts/` | Skill 运行时脚本。同样混装：12 个是 INSTALLED（复制进被治理项目），其余是只在本仓库运行的 SKILL-INTERNAL 工具。 | agent/CI | 代码 |
 | `LICENSE` | MIT 许可证——随 tarball 分发 | 安装者 | — |
 | `docs/` | **项目知识。REPO-ONLY。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、findings 档案（`findings/`）、研究知识库（`research/`）、路线图、术语表。 | 开发者 + Agent | 按知识类型：Product/Roadmap 三语；Plan/Finding/Research/ADR 简中 canonical |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`README*.md`、`CONTRIBUTING*.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
@@ -92,7 +92,12 @@ ai-agent-governance/
 │   ├── check-git-policy.js     # Git 工作流门禁（受保护分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # 密钥扫描门禁（暂存区扫描，绝不打印密钥）
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）
-│   ├── check-doc-freshness.js  # 文档过时度 + 译文新鲜度（git log 日期；建议性，--release-gate 阻断过时/draft 译文）
+│   ├── lib/
+│   │   └── git-facts.js        # 共享 git/path/date 事实 primitive（无 Control 政策）
+│   ├── evaluators/
+│   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 治理文档新鲜度求值器（建议性）
+│   │   └── ctrl-0004-translation-freshness.js # CTRL-0004 译文新鲜度求值器（--release-gate 阻断）
+│   ├── check-doc-freshness.js  # 薄 CLI 包装（CTRL-0003 + CTRL-0004；建议性，--release-gate 阻断过时/draft 译文）
 │   ├── check-doc-consistency.js # 文档一致性 + consent/受保护清单/原则索引/计划状态/术语簇（默认建议性；--gate/--release-gate fail-closed；changelog 覆盖仅 --release-gate fail-closed）
 │   ├── check-plan-sync.js      # 计划与里程碑对账（默认建议性；--release-gate fail-closed；无 DEVELOPMENT_PLAN.md 时 no-op）
 │   ├── generate-governance.js  # INIT 脚本化生成器（SKILL-INTERNAL；规范：references/init-spec.json）

@@ -34,6 +34,8 @@ All notable changes to this project will be documented here.
 
 - **Phase 4 disposition targets capabilities, not whole checkers** — PLAN-0035 records KEEP/WRAP/EXTRACT/REWRITE/RETIRE per Control face and consistency cluster; first vertical refactor is CTRL-0003/0004 (shared freshness primitives, separate evaluators), not the consistency monolith.
 
+- **CTRL-0003/0004 first vertical strangler (Phase 4 D/E)** — shared factual primitives live in INSTALLED `scripts/lib/git-facts.js` (no stale-day / translation policy); CTRL-0003 and CTRL-0004 are separate evaluators; legacy `scripts/check-doc-freshness.js` remains a thin CLI wrapper (`--json` / `--release-gate` unchanged). Require-graph must close under the INIT copy list (self-containment = closure, not “no relative require”). Consistency monolith untouched.
+
 ## [1.0.2] - 2026-09-08
 
 ### Added

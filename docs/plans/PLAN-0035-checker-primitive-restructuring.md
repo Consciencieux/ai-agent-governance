@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
 
-> （进行中。2026-09-10：C Disposition 表已裁定；第一刀 vertical = CTRL-0003/0004。**未改 JS。** Architecture checkpoint ≠ Release。）
+> （进行中。2026-09-10：C Disposition 完成；D/E 第一条 vertical **已落地**——`check-doc-freshness.js` → shared `git-facts` + CTRL-0003/0004 evaluators + 薄 WRAP；characterization 绿灯。Architecture checkpoint ≠ Release。）
 
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
@@ -79,11 +79,11 @@ Control → evaluator(s) → gate/boundary → tests → profile → characteriz
 **施工顺序（本计划冻结）：**
 
 ```text
-A Inventory          ← 完成（RESEARCH-0011）
-B Characterization   ← 完成（Safety Kernel 基线快照）
-C Disposition        ← 完成（本计划 § Disposition 表；主体 = capability/cluster/evaluator）
-D Primitive extract  ← 下一步：第一条 vertical = CTRL-0003/0004
-E Evaluator rebuild（CTRL × profile；稳定结果接口；无 Dispatcher）
+A Inventory          ✓（RESEARCH-0011）
+B Characterization   ✓（Safety Kernel 基线快照）
+C Disposition        ✓（本计划 § Disposition 表；主体 = capability/cluster/evaluator）
+D Primitive extract  ✓（第一条 vertical = CTRL-0003/0004）
+E Evaluator rebuild  ✓（与 D 同刀；稳定结果接口；无 Dispatcher）
 F Producer/Product decoupling（P3）
 G PLAN-0036 Discovery Ledger
 H Exit review
@@ -244,19 +244,19 @@ evidence
 | P4 | ADR-0023 E4 | 独立 machine-readable Control 文件 | both | closed | deferred（revisit: 第二个真实机器 consumer） | ADR-0023 决策 6 |
 | P5 | PLAN-0035 | characterization 基线尚未冻结 | both | closed | resolved | RESEARCH-0011：security 35/35 · generator 33/33 · payload 42/42（2026-09-10） |
 | P6 | PLAN-0035 C | Disposition 表未裁定 | both | closed | resolved | 本计划 § 2 Disposition |
-| P7 | PLAN-0035 D/E | CTRL-0003/0004 第一条 vertical 未做 | both | open | in-progress | § 2.3 授权；**下一步改代码** |
+| P7 | PLAN-0035 D/E | CTRL-0003/0004 第一条 vertical | both | closed | resolved | `git-facts` + CTRL-0003/0004 evaluators + 薄 WRAP；docs 55/55 · Safety Kernel security 35 · generator 33 · payload 42 |
 
 ## 闭包对账（进行中）
 
 ```text
 Total known:  8
-Resolved:     4  (P0, P1, P5, P6)
+Resolved:     5  (P0, P1, P5, P6, P7)
 Deferred:     1  (P4)
-Open:         3  (P2 延后实施, P3, P7 第一刀)
+Open:         2  (P2 延后实施, P3)
 Unaccounted:  0
 ```
 
-下一步：**D/E — CTRL-0003 + CTRL-0004 vertical refactor**（不动 consistency monolith）。
+下一步：P2 consistency 集群落地（0003/0004 vertical 之后）；P3 第二批。不动 Dispatcher / Phase 6。
 
 ## 参考
 

@@ -62,28 +62,28 @@ Control
 
 | 字段 | 现状 |
 | --- | --- |
-| semantics_ref | interim：`scripts/check-doc-freshness.js` 内「治理文档相对代码活动过旧」 |
-| evaluator(s) | `scripts/check-doc-freshness.js`（默认模式；与 CTRL-0004 **共文件**） |
+| semantics_ref | interim：`scripts/evaluators/ctrl-0003-doc-freshness.js`（30/90 天与 CODE_DIRS 政策） |
+| evaluator(s) | `scripts/evaluators/ctrl-0003-doc-freshness.js`；CLI 入口仍为 `scripts/check-doc-freshness.js`（薄 WRAP） |
 | enforcement_boundary | `npm run check:all` / `check:repo-release` 调用（默认 **advisory**，exit 0） |
 | decision_effect | stale → warn/advisory；不得称为 blocking |
 | tests | `tests/suites/docs.test.js`：`doc freshness: stale/fresh/very stale/drift-report` |
 | profile | repo 直接跑 INSTALLED 脚本（repo→skill accidental）；skill 安装同脚本给被治理项目 |
-| characterization | git 日期非 mtime；30/90 天阈值；drift-report.freshness 段 |
-| 候选 disposition | 见 PLAN-0035 § Disposition；**第一刀 vertical** |
+| characterization | git 日期非 mtime；30/90 天阈值；drift-report.freshness 段；共享 `scripts/lib/git-facts.js` |
+| 候选 disposition | PLAN-0035 § Disposition；**第一条 vertical 已落地（P7 resolved）** |
 
 
 ### CTRL-0004 Translation freshness
 
 | 字段 | 现状 |
 | --- | --- |
-| semantics_ref | interim：同脚本内「译文不得落后源 / draft 不得进 release-gate」 |
-| evaluator(s) | 同一 `scripts/check-doc-freshness.js`，边界 = `--release-gate` |
+| semantics_ref | interim：`scripts/evaluators/ctrl-0004-translation-freshness.js`（译文/draft/review + release-gate） |
+| evaluator(s) | `scripts/evaluators/ctrl-0004-translation-freshness.js`；CLI 仍经 `scripts/check-doc-freshness.js` WRAP |
 | enforcement_boundary | `npm run check:skill-release` → `check-doc-freshness.js --release-gate` |
 | decision_effect | `--release-gate` → deny（stale/draft translation） |
 | tests | `tests/suites/docs.test.js`：`translation freshness:*`（含 release-gate 子例） |
 | profile | 本仓库 repo；skill 侧当目标有对等译文树 |
-| characterization | source after translation → stale；synchronized commit OK；uncommitted rules；bogus review SHA fail-closed |
-| 候选 disposition | 见 PLAN-0035 § Disposition；与 0003 分 evaluator |
+| characterization | source after translation → stale；synchronized commit OK；uncommitted rules；bogus review SHA fail-closed；共享 `scripts/lib/git-facts.js` |
+| 候选 disposition | PLAN-0035 § Disposition；与 0003 **分 evaluator**（已落地） |
 
 
 ### CTRL-0005 Plan delivery
@@ -100,12 +100,19 @@ Control
 | 候选 disposition | 见 PLAN-0035 § Disposition；第三批 |
 
 
-## 共文件反例（Phase 4 纪律）
+## 共文件反例（Phase 4 纪律）→ 0003/0004 已拆 evaluator
 
 ```text
+# Gen1（inventory 时）→ 一个文件装两条 Control
 scripts/check-doc-freshness.js
         ├── CTRL-0003  (default advisory)
         └── CTRL-0004  (--release-gate deny)
+
+# 第一条 vertical 后（仍共享 CLI 入口，分 evaluator + 共享 primitive）
+scripts/lib/git-facts.js                 # shared factual primitives（无政策）
+scripts/evaluators/ctrl-0003-…js         # CTRL-0003
+scripts/evaluators/ctrl-0004-…js         # CTRL-0004
+scripts/check-doc-freshness.js           # 薄 WRAP（CLI 不变）
 
 scripts/check-doc-consistency.js
         ├── consent-cluster     → CTRL-0002（部分）

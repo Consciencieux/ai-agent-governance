@@ -8,26 +8,36 @@ const path = require("path");
 
 module.exports = (test) => {
 // Why: init-spec.json copies gate scripts into governed projects FILE BY FILE, so each
-// one must be self-contained. A shared-library refactor once broke this (scripts started
-// requiring ./_lib.js, which was never added to the copy list) and the whole suite stayed
-// green, because tests only ever ran inside this repo where the helper sits next door.
-// Two layers: a static invariant check (precise) and an end-to-end run (trusts nothing).
+// relative require must resolve to another INSTALLED copy (require-graph closure). A
+// shared-library refactor once broke this (_lib.js required but never copied) while the
+// suite stayed green inside this repo. Static closure check + end-to-end load.
 
 
-test("payload: copied gate scripts declare no local require (self-containment)", () => {
+test("payload: copied gate scripts' relative requires close under INSTALLED sources", () => {
+  const sources = new Set(
+    copiedScriptSources().map((s) => s.source.replace(/\\/g, "/"))
+  );
   const offenders = [];
   for (const { source } of copiedScriptSources()) {
+    const normSource = source.replace(/\\/g, "/");
     const c = fs.readFileSync(path.join(SKILL_ROOT, source), "utf8");
-    // relative requires only — node builtins ("fs", "path") are always available
+    const dir = path.posix.dirname(normSource);
     for (const m of c.matchAll(/require\(\s*['"](\.[^'"]+)['"]\s*\)/g)) {
-      offenders.push(`${source} -> ${m[1]}`);
+      const spec = m[1];
+      const resolved = path.posix.normalize(path.posix.join(dir, spec));
+      const candidates = resolved.endsWith(".js")
+        ? [resolved]
+        : [resolved, resolved + ".js"];
+      if (!candidates.some((cand) => sources.has(cand))) {
+        offenders.push(`${normSource} -> ${spec} (not in INSTALLED copy list)`);
+      }
     }
   }
   if (offenders.length > 0) {
-    console.error("  copied scripts must be self-contained; found: " + offenders.join("; "));
+    console.error("  INSTALLED require closure broken; found: " + offenders.join("; "));
     return false;
   }
-  return offenders.length === 0;
+  return true;
 });
 
 test("payload: init-spec copy list matches what INIT actually writes", () => {
