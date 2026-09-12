@@ -43,7 +43,7 @@ Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 
 
 | 方向 | 主题 | 核心 Finding |
 | --- | --- | --- |
-| **A. 生产者 / 产品分离** | 仓库治理与 Skill 产品治理的隔离 | A01 逻辑耦合 · A02 ADR-0006 只解决 artifact-level · A03 control-level 隐性狗粮 · A04 repo 修复不传播到 skill · A05 `scope = both` 模糊 ownership |
+| **A. 生产者 / 产品分离** | 仓库治理与 Skill 产品治理的隔离 | A01 逻辑耦合 · A02 ADR-0006 只解决 artifact-level · A03 control-level 隐性狗粮 · A04 repo 修复不传播到 skill · A05 `scope = both` 模糊 ownership · A06 脚本分发角色清、代际/处置不清（FINDING-0028） |
 | **B. 政策 / 控制平面** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger（FINDING-0015） · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher · B06 语义-机械执行缺显式控制身份（FINDING-0025） · B07 `templates/` 混置指令源与物化模板（FINDING-0026） |
 | **C. 执行缺口** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 |
 | **D. 验证 / 调度效率** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |

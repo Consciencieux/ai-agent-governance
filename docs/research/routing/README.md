@@ -6,7 +6,8 @@ Phase 5（PLAN-0038 / PLAN-0039）的 **repo-only** 路由工作稿。
 | --- | --- |
 | `call-topology.md` | 调用拓扑架构（节点 / 边 / 分层 / 解析；非目录树） |
 | `task-capability-map.md` | 该图的本仓实例（种子 · 映射 · 夹具；人权威） |
-| `graph.v0.json` | 机器投影（机权威；与 map 对账） |
+| `graph.v0.json` | 机器投影（机权威；与 map 对账；含 `authorities`） |
+| `projection-table.md` | Phase 5c Capability→Authority 投影表（施工权威） |
 
 **不是** INSTALLED 载荷。
 
@@ -14,7 +15,7 @@ Phase 5（PLAN-0038 / PLAN-0039）的 **repo-only** 路由工作稿。
 | --- | --- |
 | 5a（PLAN-0038 Implemented） | 人工 / Agent 查表；表征套件 |
 | 5b（PLAN-0039 Implemented） | `repo-tools/lib/routing.js` + `node repo-tools/route-task.js`；**同一套解析** |
-| 5c（5b EXIT 后另开 Plan） | 按 Capability 投影 `references/` 等；只改 `AuthorityRef` |
+| 5c（PLAN-0040 Implemented） | 按 Capability 投影；`authorities` + lifecycle 横切叶；见 PLAN-0040 |
 
 ```bash
 # 显式 task

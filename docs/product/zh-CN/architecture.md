@@ -83,6 +83,8 @@ ai-agent-governance/
 │   ├── policies/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # 受保护文件 + .governance Git 跟踪策略
+│   ├── capabilities/               # Capability 叶权威（Phase 5c；INIT → docs/rules/capabilities/）
+│   │   ├── discovery-ledger.md / change-hygiene.md / root-cause-repair.md / rule-capture.md
 │   └── workflows/
 │       ├── ci.md               # CI 模板（能力检测 + 降级）
 │       └── release.md          # 发布前置检查 + 版本一致性（被治理项目）

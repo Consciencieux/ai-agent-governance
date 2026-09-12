@@ -87,7 +87,7 @@ AGENTS 消费「先 route 再读」
 
 ## Successor
 
-1. **Phase 5c — 物理拓扑投影**（另开 Plan）— 纪律见 `call-topology.md` § 物理拓扑
+1. **Phase 5c — 物理拓扑投影** — [PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）：纪律见 `call-topology.md` § 物理拓扑；投影表 + lifecycle 横切叶
 2. Phase **6** Invariant-based Testing
 3. Narrow ADR（routing 升格进 payload 时）
 

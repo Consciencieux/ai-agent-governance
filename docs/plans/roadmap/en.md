@@ -292,7 +292,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Current phase: 5b EXITED → next entry Phase 5c (physical projection) or Phase 6.** The stable product is still Generation 1 (`main` / 1.x). This branch has completed Phase 0–4, 5a (PLAN-0038), and 5b ([PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) Implemented). Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
+**Current phase: next is Phase 6 (5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) Implemented).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–4, 5a, 5b, and 5c (P0–P2). Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
 
 ## Now → 2.0 (index)
 
@@ -312,9 +312,9 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 
 | Step | What | Vehicle | One line |
 | --- | --- | --- | --- |
-| **Now** | Phase 5c entry (physical projection) or Phase 6 | 5b = [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) (**Implemented**) · 5a = [PLAN-0038](../PLAN-0038-task-capability-routing.md) (**Implemented**) | 5b EXITED: `resolve` + Detector + `route-task.js`; next is 5c or Phase 6 |
+| **Now** | Phase 6 Invariant-based Testing | *(plan TBD / successor of PLAN-0040)* | Positive/negative oracles; 5c = PLAN-0040 Implemented |
 | 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) (**Implemented**) | Consumes the 5a map; no second applicability model, no fully automatic LLM router, no topology-before-routing |
-| 5c | Physical projection by Capability | Later plan (after 5b) | AuthorityRef only; not 1.0 directory skeleton; see call-topology § 物理拓扑 |
+| 5c | Physical projection by Capability | [PLAN-0040](../PLAN-0040-capability-physical-projection.md) (**Implemented**) | AuthorityRef only; not 1.0 directory skeleton; see call-topology § 物理拓扑 |
 | 6 | Invariant-based Testing | Later plan | Positive + negative oracle per important Control |
 | 7 | Review split into three kinds | Later plan | Implementation / System / Research |
 | 8 | Rebuild mandatory gates | Later plan | Blocking authority moves onto the new control plane |
@@ -326,7 +326,7 @@ Phase 5 internal order (indexed from PLAN-0035 / `call-topology.md`, not a new r
 
 ### Deferred by design (does not block starting Phase 5)
 
-Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **physical doc moves (= Phase 5c, after 5b)** · **PLAN-0037 full extraction (unfreeze after 2.0)**.
+Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **5c leftover capability leaves / optional rename** · **PLAN-0037 full extraction (unfreeze after 2.0)**.
 
 ### This repo vs 2.0 product
 
@@ -561,7 +561,8 @@ Generation 1 — Document-Centric Governance
 P0–P4  checkpoints EXITED
 P5a    Task→Capability map — EXITED (PLAN-0038)
 P5b    Dispatcher — EXITED (PLAN-0039)
-P5c    Physical projection by Capability — **next candidate**
+P5c    Physical projection by Capability — **done** (PLAN-0040 Implemented)
+P6     Invariant-based Testing — **current** (plan TBD)
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates

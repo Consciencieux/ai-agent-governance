@@ -137,6 +137,34 @@
     },
     {
       "phase": "A",
+      "path": "docs/rules/capabilities/discovery-ledger.md",
+      "source": "references/capabilities/discovery-ledger.md",
+      "type": "copy",
+      "description": "Discovery Ledger (TASK known-issue closure)"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/change-hygiene.md",
+      "source": "references/capabilities/change-hygiene.md",
+      "type": "copy",
+      "description": "Change hygiene / residue cleanup"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/root-cause-repair.md",
+      "source": "references/capabilities/root-cause-repair.md",
+      "type": "copy",
+      "description": "Root-cause repair protocol and failure budget"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/rule-capture.md",
+      "source": "references/capabilities/rule-capture.md",
+      "type": "copy",
+      "description": "Rule Capture workflow"
+    },
+    {
+      "phase": "A",
       "path": "docs/rules/git-policy.md",
       "source": "references/policies/git.policy.md",
       "type": "copy",

@@ -14,7 +14,7 @@ authority: construction
 **位置：** repo-only（`docs/research/routing/`）。**不**写入薄入口正文。  
 **禁止（5a 完成时）：** LLM 自动路由 · 无路由文档搬家 · Active PLAN-0037。  
 **5b：** 程序化查表 = [PLAN-0039](../../plans/PLAN-0039-context-detector-dispatcher.md)（**Implemented**；`graph.v0.json` + `repo-tools/lib/routing.js` + `route-task.js`）。  
-**5c（另开 Plan）：** 按 Capability 投影物理文件；只改 `AuthorityRef`；**不**按 1.0 目录骨架细切。纪律：`call-topology.md` § 物理拓扑。Gen1 无真正能力路由图——本表替换查找层，不是旧树别名。
+**5c：** [PLAN-0040](../../plans/PLAN-0040-capability-physical-projection.md)（**Implemented**）· 投影表 [`projection-table.md`](projection-table.md) · `graph.v0.json` `authorities`。只改 `AuthorityRef`；不按 1.0 目录骨架细切。纪律：`call-topology.md` § 物理拓扑。
 
 架构（节点/边/解析）：`call-topology.md`。本文件是该图的本仓实例。
 
@@ -63,18 +63,18 @@ authority: construction
 | `thin-entry` | 薄入口 / always-on | ADR-0022 · AGENTS/SKILL 入口 | always | — | keep |
 | `context-economy` | 读集纪律 / 不重推 | ADR-0022 Context Economy · RESEARCH-0013 | always · 中大型任务 | — | keep |
 | `doc-knowledge` | 知识对象路由与边界 | docs/README · RESEARCH-0007 · ADR-0016 | edit_docs · research_write · finding_write · adr_write · plan_write | — | keep |
-| `change-hygiene` | 变更卫生 / 影响面 | lifecycle / coding policy 相关节 | edit_* · repair · git_write | — | keep |
+| `change-hygiene` | 变更卫生 / 影响面 | `references/capabilities/change-hygiene.md` | edit_* · repair · git_write | — | keep |
 | `reference-closure` | 引用闭合 / 安装后可达 | AGENTS Reference-closure · role-completeness | edit_references · edit_scripts · edit_skill_entry | — | keep |
 | `git-write` | Git 写边界与确认 | git.policy | git_write · release | — | keep |
 | `secret-protection` | 密钥/秘密扫描 | CTRL-0001 语义 · check-secrets | git_write · release · edit_scripts | CTRL-0001 | keep |
 | `testing-evidence` | 测试与证据 | testing policy · tests | test_change · repair · edit_scripts | — | keep |
-| `root-cause-repair` | 根因 / 同类闭合 | lifecycle 根因协议 · ADR-0021 相关 | repair | — | keep |
-| `discovery-ledger` | 发现台账闭包 | lifecycle Discovery Ledger · ADR-0021 | plan_write · repair · 中大型 TASK | — | keep |
+| `root-cause-repair` | 根因 / 同类闭合 | `references/capabilities/root-cause-repair.md` | repair | — | keep |
+| `discovery-ledger` | 发现台账闭包 | `references/capabilities/discovery-ledger.md` | plan_write · repair · 中大型 TASK | — | keep |
 | `plan-delivery` | Plan 交付声明 | plan-delivery gate | plan_write | CTRL plan-delivery（若绑定） | keep |
 | `release-governance` | 发布/tag 纪律 | release workflow · skill-release | release | — | keep |
 | `review-implementation` | 实现层审查 | review-manager（Impl） | audit · repair · 可选 | — | keep |
 | `security-baseline` | 安全横切 | security.policy | edit_scripts · release · git_write | — | keep |
-| `rule-capture` | 规则捕获进治理文件 | lifecycle Rule Capture | repair · edit_references · edit_skill_entry | — | keep |
+| `rule-capture` | 规则捕获进治理文件 | `references/capabilities/rule-capture.md` | repair · edit_references · edit_skill_entry | — | keep |
 
 ### Unaccounted / deferred（不得静默丢）
 

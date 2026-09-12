@@ -110,6 +110,8 @@ ai-agent-governance/
 │   ├── policies/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # protected files + .governance git-tracking policy
+│   ├── capabilities/               # Capability leaf authorities (Phase 5c; INIT → docs/rules/capabilities/)
+│   │   ├── discovery-ledger.md / change-hygiene.md / root-cause-repair.md / rule-capture.md
 │   └── workflows/
 │       ├── ci.md               # CI templates (capability detection + degradation)
 │       └── release.md          # release preconditions + version consistency (governed projects)

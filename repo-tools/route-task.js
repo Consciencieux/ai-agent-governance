@@ -102,10 +102,12 @@ function main() {
   };
 
   const graph = loadGraph();
-  const { detection, result } = route(input, graph);
+  const { detection, result, authorities } = route(input, graph);
 
   if (args.json) {
-    console.log(JSON.stringify({ detection, result, budget: graph.budget }, null, 2));
+    console.log(
+      JSON.stringify({ detection, result, authorities, budget: graph.budget }, null, 2)
+    );
     process.exit(0);
   }
 
@@ -115,6 +117,11 @@ function main() {
   console.log(`read_set (${result.read_set.length}): ${result.read_set.join(", ") || "—"}`);
   console.log(`run_set  (${result.run_set.length}): ${result.run_set.join(", ") || "—"}`);
   console.log(`defer_set (${result.defer_set.length}): ${result.defer_set.join(", ") || "—"}`);
+  if (authorities && authorities.length) {
+    console.log(
+      `authorities (${authorities.length}): ${authorities.map((a) => a.path).join(", ")}`
+    );
+  }
   process.exit(0);
 }
 

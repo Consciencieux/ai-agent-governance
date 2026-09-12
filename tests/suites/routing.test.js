@@ -3,8 +3,9 @@
 // Graph: docs/research/routing/graph.v0.json — must stay in sync with task-capability-map.md
 "use strict";
 
+const fs = require("fs");
 const path = require("path");
-const { resolve, detect, loadGraph, route } = require(path.join(
+const { resolve, detect, loadGraph, route, authoritiesFor } = require(path.join(
   __dirname,
   "..",
   "..",
@@ -12,6 +13,7 @@ const { resolve, detect, loadGraph, route } = require(path.join(
   "lib",
   "routing"
 ));
+const REPO_ROOT = path.join(__dirname, "..", "..");
 
 module.exports = function register(test) {
   const graph = loadGraph();
@@ -219,5 +221,42 @@ module.exports = function register(test) {
       run_set: ["CTRL-0001"],
       defer_set: [],
     });
+  });
+
+  test("authorities: every keep capability path exists (Phase 5c)", () => {
+    const table = graph.authorities || {};
+    const ids = Object.keys(table);
+    if (ids.length < 15) {
+      console.error("  expected ≥15 keep authorities, got", ids.length);
+      return false;
+    }
+    for (const id of ids) {
+      const a = table[id];
+      if (!a || !a.path) {
+        console.error("  missing path for", id);
+        return false;
+      }
+      const abs = path.join(REPO_ROOT, a.path);
+      if (!fs.existsSync(abs)) {
+        console.error("  authority path missing:", a.path);
+        return false;
+      }
+    }
+    return true;
+  });
+
+  test("authoritiesFor read_set enrichment", () => {
+    const got = resolve("edit_docs", { trees: ["docs"] }, graph);
+    const auth = authoritiesFor(got.read_set, graph);
+    if (auth.length !== got.read_set.length) {
+      console.error("  authorities length", auth.length, "!==", got.read_set.length);
+      return false;
+    }
+    const { authorities } = route({ task: "edit_docs", trees: ["docs"] }, graph);
+    if (!authorities || authorities.length !== auth.length) {
+      console.error("  route.authorities mismatch", authorities);
+      return false;
+    }
+    return true;
   });
 };

@@ -498,9 +498,21 @@ test("permission matrix rows match between SKILL.md and the AGENTS.md template",
 
 
 test("lifecycle.policy embeds Discovery Ledger L1 contract (PLAN-0036)", () => {
+  // Phase 5c: L1 body lives in capability leaf; lifecycle keeps heading + pointer.
   const life = fs.readFileSync(path.join(SKILL_ROOT, "references/policies/lifecycle.policy.md"), "utf8");
+  const leaf = fs.readFileSync(
+    path.join(SKILL_ROOT, "references/capabilities/discovery-ledger.md"),
+    "utf8"
+  );
+  if (!life.includes("### 发现台账（Discovery Ledger）")) {
+    console.error("  missing lifecycle heading");
+    return false;
+  }
+  if (!life.includes("docs/rules/capabilities/discovery-ledger.md")) {
+    console.error("  missing lifecycle pointer to capability leaf");
+    return false;
+  }
   const need = [
-    "### 发现台账（Discovery Ledger）",
     "execution state + provenance",
     "Unaccounted = 0",
     "append-only",
@@ -511,10 +523,10 @@ test("lifecycle.policy embeds Discovery Ledger L1 contract (PLAN-0036)", () => {
     "L1 未授权",
   ];
   for (const n of need) {
-    if (!life.includes(n)) { console.error("  missing: " + n); return false; }
+    if (!leaf.includes(n)) { console.error("  missing in capability leaf: " + n); return false; }
   }
   // Storage boundary: entries are NOT parked in state.json
-  if (!/state\.json[\s\S]{0,80}\*\*否\*\*/.test(life) && !life.includes("| `.governance/state.json` | **否**")) {
+  if (!/state\.json[\s\S]{0,80}\*\*否\*\*/.test(leaf) && !leaf.includes("| `.governance/state.json` | **否**")) {
     console.error("  state.json must be excluded as ledger home");
     return false;
   }

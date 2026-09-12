@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- **Phase 5c Capability physical projection (PLAN-0040 Implemented)** — `references/capabilities/{discovery-ledger,root-cause-repair,change-hygiene,rule-capture}.md` extracted from lifecycle; INIT installs under `docs/rules/capabilities/`; `graph.v0.json` gains machine-readable `authorities`; `route-task --json` emits authority paths; projection table at `docs/research/routing/projection-table.md`. Edges (triggers/binds/facet_adds) unchanged; PLAN-0037 still frozen.
+
 - **Dual-mode migration CI (ADR-0014 implementation)** — `.github/workflows/ci.yml` now routes by branch: `main` / 1.x keeps `npm run check` as blocking (+ governance badge); `migration/2.0-governance-architecture` runs a Refactor Safety Kernel (JS syntax + `--suite security/generator/payload`) as blocking and Gen1 `npm run check` as observational (`continue-on-error`). Routing covers both direct pushes and PRs targeting the migration branch. Implements ADR-0014 § 实施说明.
 
 - **First Producer/Product execution separation: repo-owned terminology gate (ADR-0020)** — the terminology gate (repo-only data source `docs/glossary.md`) was extracted from the INSTALLED `scripts/check-doc-consistency.js` into repo-owned `repo-tools/check-terminology.js`; `npm run check` / `check:docs` now run it directly. The INSTALLED checker's responsibility surface is intentionally narrowed (terminology cluster removed; its `--json` no longer emits `terminology_usage` / `termsRegistered`, no external consumer). Governed-project behavior unchanged (no glossary → the cluster was a no-op there). Fail-closed: a missing or malformed glossary exits 1.

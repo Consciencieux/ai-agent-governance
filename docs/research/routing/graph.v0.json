@@ -64,5 +64,34 @@
       "add": ["discovery-ledger", "plan-delivery"]
     },
     { "when": { "phase": "validate" }, "add": ["testing-evidence"] }
-  ]
+  ],
+  "authorities": {
+    "thin-entry": {
+      "path": "docs/design-decisions/ADR-0022-agent-instruction-architecture.md",
+      "section": "thin entry"
+    },
+    "context-economy": {
+      "path": "docs/design-decisions/ADR-0022-agent-instruction-architecture.md",
+      "section": "Context Economy"
+    },
+    "doc-knowledge": { "path": "docs/README.md" },
+    "change-hygiene": { "path": "references/capabilities/change-hygiene.md" },
+    "reference-closure": {
+      "path": "AGENTS.md",
+      "section": "Reference-closure check"
+    },
+    "git-write": { "path": "references/policies/git.policy.md" },
+    "secret-protection": { "path": "scripts/check-secrets.js" },
+    "testing-evidence": { "path": "references/policies/testing.policy.md" },
+    "root-cause-repair": { "path": "references/capabilities/root-cause-repair.md" },
+    "discovery-ledger": { "path": "references/capabilities/discovery-ledger.md" },
+    "plan-delivery": { "path": "repo-tools/check-plan-delivery.js" },
+    "release-governance": { "path": "references/workflows/release.md" },
+    "review-implementation": {
+      "path": "references/templates/sub-skills.md",
+      "section": "review-manager"
+    },
+    "security-baseline": { "path": "references/policies/security.policy.md" },
+    "rule-capture": { "path": "references/capabilities/rule-capture.md" }
+  }
 }

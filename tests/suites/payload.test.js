@@ -896,15 +896,17 @@ test("payload: closure requirements (sibling instances + control plane) reach a 
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "ClosureProbe", "--phase", "C"], { encoding: "utf8" });
   if (r.status !== 0) { console.error("  generator failed: " + String(r.stderr || "").slice(0, 200)); return false; }
   const required = [
-    // rule text, installed as docs/rules/lifecycle.md
-    ["docs/rules/lifecycle.md", "同类实例闭包"],
-    ["docs/rules/lifecycle.md", "控制面追查"],
-    ["docs/rules/lifecycle.md", "不算证据"],
-    ["docs/rules/lifecycle.md", "下次生成会覆盖"],
-    ["docs/rules/lifecycle.md", "发现台账（Discovery Ledger）"],
-    ["docs/rules/lifecycle.md", "Unaccounted = 0"],
-    ["docs/rules/lifecycle.md", "append-only"],
-    ["docs/rules/lifecycle.md", "promoted-to-next-plan"],
+    // Phase 5c: Slice B bodies live under docs/rules/capabilities/ (lifecycle keeps pointers)
+    ["docs/rules/capabilities/root-cause-repair.md", "同类实例闭包"],
+    ["docs/rules/capabilities/root-cause-repair.md", "控制面追查"],
+    ["docs/rules/capabilities/root-cause-repair.md", "不算证据"],
+    ["docs/rules/capabilities/root-cause-repair.md", "下次生成会覆盖"],
+    ["docs/rules/capabilities/discovery-ledger.md", "发现台账（Discovery Ledger）"],
+    ["docs/rules/capabilities/discovery-ledger.md", "Unaccounted = 0"],
+    ["docs/rules/capabilities/discovery-ledger.md", "append-only"],
+    ["docs/rules/capabilities/discovery-ledger.md", "promoted-to-next-plan"],
+    ["docs/rules/lifecycle.md", "docs/rules/capabilities/discovery-ledger.md"],
+    ["docs/rules/lifecycle.md", "docs/rules/capabilities/root-cause-repair.md"],
     // the executing side: the generated agent contract must carry an operational summary
     ["AGENTS.md", "enumerate sibling instances"],
     ["AGENTS.md", "trace the control plane"],

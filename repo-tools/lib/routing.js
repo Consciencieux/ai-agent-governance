@@ -105,6 +105,25 @@ function resolve(taskClass, context, graph) {
   };
 }
 
+/**
+ * Resolve AuthorityRef projections for capability ids (Phase 5c / PLAN-0040).
+ * Does not change read_set / run_set semantics — read-only enrichment.
+ * @returns {{ id: string, path: string, section?: string }[]}
+ */
+function authoritiesFor(capabilityIds, graph) {
+  graph = graph || loadGraph();
+  const table = graph.authorities || {};
+  const out = [];
+  for (const id of capabilityIds || []) {
+    const a = table[id];
+    if (!a || !a.path) continue;
+    const row = { id, path: a.path };
+    if (a.section) row.section = a.section;
+    out.push(row);
+  }
+  return out;
+}
+
 /** Normalize path separators and strip leading ./ */
 function normPath(p) {
   return String(p || "")
@@ -224,7 +243,8 @@ function route(input, graph) {
   graph = graph || loadGraph();
   const detection = detect(input, graph);
   const result = resolve(detection.task_class, detection.context, graph);
-  return { detection, result };
+  const authorities = authoritiesFor(result.read_set, graph);
+  return { detection, result, authorities };
 }
 
 module.exports = {
@@ -233,6 +253,7 @@ module.exports = {
   resolve,
   detect,
   route,
+  authoritiesFor,
   facetMatches,
   taskClassFromPath,
 };

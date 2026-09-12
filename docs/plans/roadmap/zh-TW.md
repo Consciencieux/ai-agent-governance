@@ -294,7 +294,7 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**當前階段：5b EXITED → 下一入口 Phase 5c（實體投影）或 Phase 6。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–4、5a（PLAN-0038）、5b（[PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) Implemented）。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
+**當前階段：下一入口 Phase 6（5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) Implemented）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–4、5a、5b、5c（P0–P2）。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
 
 ## 現在 → 2.0（索引）
 
@@ -314,9 +314,9 @@ Roadmap 只列順序與車輛，不複製 Plan 步驟 / Affected Files / 驗收�
 
 | 步 | 內容 | 車輛 | 一句話 |
 | --- | --- | --- | --- |
-| **現在** | Phase 5c 入口（實體投影）或 Phase 6 | 5b = [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md)（**Implemented**）· 5a = [PLAN-0038](../PLAN-0038-task-capability-routing.md)（**Implemented**） | 5b EXITED：`resolve` + Detector + `route-task.js`；下一刀 5c 或 Phase 6 |
+| **現在** | Phase 6 不變量測試 | *（計劃待立 / PLAN-0040 successor）* | 正負 oracle；5c = PLAN-0040 Implemented |
 | 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md)（**Implemented**） | 消費 5a 映射；禁止另造適用關係、禁止全自動 LLM 路由、禁止無路由搬家 |
-| 5c | 按 Capability 實體投影 | 後續 Plan（5b 後另開） | 只改 AuthorityRef；不按 1.0 目錄骨架；見 call-topology § 物理拓撲 |
+| 5c | 按 Capability 實體投影 | [PLAN-0040](../PLAN-0040-capability-physical-projection.md)（**Implemented**） | 只改 AuthorityRef；不按 1.0 目錄骨架；見 call-topology § 物理拓撲 |
 | 6 | Invariant-based Testing | 後續 Plan | 每條重要 Control：positive + negative oracle |
 | 7 | Review 三類拆分 | 後續 Plan | Implementation / System / Research |
 | 8 | 重建 mandatory gates | 後續 Plan | 阻斷權威交到新 control plane |
@@ -328,7 +328,7 @@ Phase 5 內部順序（索引自 PLAN-0035 / `call-topology.md`，非新裁決�
 
 ### 故意延後（不擋 Phase 5 開工）
 
-剩餘 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 獨立 machine-readable Control 檔 · **文件物理搬家（= Phase 5c，待 5b 後）** · **PLAN-0037 全文提煉（2.0 後解凍）**。
+剩餘 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 獨立 machine-readable Control 檔 · **5c 剩餘 Capability 葉 / 可選 rename** · **PLAN-0037 全文提煉（2.0 後解凍）**。
 
 ### 本倉 vs 2.0 產品
 
@@ -563,7 +563,8 @@ Generation 1 — Document-Centric Governance
 P0–P4  checkpoint EXITED
 P5a    Task→Capability map — EXITED（PLAN-0038）
 P5b    Dispatcher — EXITED（PLAN-0039）
-P5c    按 Capability 實體投影 — **next candidate**
+P5c    按 Capability 實體投影 — **done**（PLAN-0040 Implemented）
+P6     不變量測試 — **current**（計劃待立）
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates
