@@ -1,0 +1,68 @@
+{
+  "id": "ROUTING-GRAPH-V0",
+  "version": 0,
+  "authority": "machine-projection",
+  "human_authority": "docs/research/routing/task-capability-map.md",
+  "algorithm": "docs/research/routing/call-topology.md",
+  "budget": 8,
+  "always_on": ["thin-entry", "context-economy"],
+  "unknown_defer": ["ask-user", "expand-entry"],
+  "triggers": {
+    "edit_docs": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
+    "edit_references": ["change-hygiene", "reference-closure", "security-baseline", "rule-capture"],
+    "edit_scripts": [
+      "change-hygiene",
+      "reference-closure",
+      "secret-protection",
+      "testing-evidence",
+      "security-baseline"
+    ],
+    "edit_skill_entry": ["change-hygiene", "reference-closure", "rule-capture"],
+    "git_write": ["change-hygiene", "git-write", "secret-protection", "security-baseline"],
+    "release": [
+      "change-hygiene",
+      "git-write",
+      "secret-protection",
+      "testing-evidence",
+      "release-governance",
+      "security-baseline"
+    ],
+    "audit": ["doc-knowledge", "review-implementation"],
+    "research_write": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
+    "finding_write": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
+    "adr_write": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
+    "plan_write": ["doc-knowledge", "change-hygiene", "discovery-ledger", "plan-delivery"],
+    "repair": [
+      "change-hygiene",
+      "reference-closure",
+      "testing-evidence",
+      "root-cause-repair",
+      "discovery-ledger",
+      "review-implementation",
+      "security-baseline",
+      "rule-capture"
+    ],
+    "test_change": ["change-hygiene", "testing-evidence"],
+    "unknown": []
+  },
+  "binds": {
+    "secret-protection": ["CTRL-0001"]
+  },
+  "facet_adds": [
+    { "when": { "trees_includes": "references" }, "add": ["reference-closure"] },
+    {
+      "when": { "trees_any": ["scripts", "repo-tools"] },
+      "add": ["testing-evidence", "secret-protection"]
+    },
+    {
+      "when": { "write_boundary_in": ["commit", "tag", "release"] },
+      "add": ["git-write", "secret-protection"]
+    },
+    { "when": { "write_boundary": "release" }, "add": ["release-governance"] },
+    {
+      "when": { "artifacts_includes": "plan", "scale": "large" },
+      "add": ["discovery-ledger", "plan-delivery"]
+    },
+    { "when": { "phase": "validate" }, "add": ["testing-evidence"] }
+  ]
+}

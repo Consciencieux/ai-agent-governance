@@ -292,7 +292,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Current phase: 5b — Context Detector / Dispatcher ([PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) Design).** The stable product is still Generation 1 (`main` / 1.x). This branch has completed Phase 0–4 and 5a (PLAN-0038); a runtime Dispatcher is **not** implemented yet. Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
+**Current phase: 5b EXITED → next entry Phase 5c (physical projection) or Phase 6.** The stable product is still Generation 1 (`main` / 1.x). This branch has completed Phase 0–4, 5a (PLAN-0038), and 5b ([PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) Implemented). Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
 
 ## Now → 2.0 (index)
 
@@ -312,8 +312,9 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 
 | Step | What | Vehicle | One line |
 | --- | --- | --- | --- |
-| **Now** | Phase 5b Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) (**Design**) · 5a = [PLAN-0038](../PLAN-0038-task-capability-routing.md) (**Implemented**) | Callable lookup: resolve + Detector + CLI; same graph; awaiting Design approval |
-| 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) | Consumes the 5a map; no second applicability model, no fully automatic LLM router, no topology-before-routing |
+| **Now** | Phase 5c entry (physical projection) or Phase 6 | 5b = [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) (**Implemented**) · 5a = [PLAN-0038](../PLAN-0038-task-capability-routing.md) (**Implemented**) | 5b EXITED: `resolve` + Detector + `route-task.js`; next is 5c or Phase 6 |
+| 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) (**Implemented**) | Consumes the 5a map; no second applicability model, no fully automatic LLM router, no topology-before-routing |
+| 5c | Physical projection by Capability | Later plan (after 5b) | AuthorityRef only; not 1.0 directory skeleton; see call-topology § 物理拓扑 |
 | 6 | Invariant-based Testing | Later plan | Positive + negative oracle per important Control |
 | 7 | Review split into three kinds | Later plan | Implementation / System / Research |
 | 8 | Rebuild mandatory gates | Later plan | Blocking authority moves onto the new control plane |
@@ -559,8 +560,8 @@ Generation 1 — Document-Centric Governance
         ↓
 P0–P4  checkpoints EXITED
 P5a    Task→Capability map — EXITED (PLAN-0038)
-P5b    Dispatcher — **current** (PLAN-0039 Design)
-P5c    Physical projection by Capability — after 5b (see call-topology § 物理拓扑)
+P5b    Dispatcher — EXITED (PLAN-0039)
+P5c    Physical projection by Capability — **next candidate**
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates

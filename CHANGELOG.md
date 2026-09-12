@@ -51,6 +51,7 @@ All notable changes to this project will be documented here.
 - **Skill distillation boundary (ADR-0020) + PLAN-0037 (Design)** — reusable skill sets design-space bounds (L1 hard invariants), not soft advice and not a copy of this repo’s `docs/` / Phase / CTRL instances; extract only after Phase 5 routing stabilizes.
 - **Phase 5a Task→Capability routing (PLAN-0038 Implemented)** — call topology + explicit map + `routing` characterization suite; AGENTS.md thin pointer (repo-only). No Dispatcher; PLAN-0037 remains frozen until after 2.0.
 - **Phase 5 sequencing discipline (5a/5b/5c)** — documented in `call-topology.md` § 物理拓扑 + roadmap: Gen1 had no Task→Capability graph; 5c projects files by Capability (AuthorityRef only) after 5b; no second lookup model; no 1.0-skeleton splits.
+- **Phase 5b Context Detector / Dispatcher (PLAN-0039 Implemented)** — shared `repo-tools/lib/routing.js` + `docs/research/routing/graph.v0.json` + `repo-tools/route-task.js` CLI; routing suite 11/11; AGENTS prefers callable route. No LLM auto-router; no physical moves; PLAN-0037 still frozen.
 
 ## [1.0.2] - 2026-09-08
 

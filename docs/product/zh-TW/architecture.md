@@ -124,6 +124,8 @@ ai-agent-governance/
 │   ├── check-secrets.js        # repo 側 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路徑）
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] 驗證敘事提醒（repo-only，advisory）
 │   ├── mutation-probe.js      # 按需驗證測試斷言是否活著（暫存克隆內的抽樣變異）
+│   ├── lib/routing.js          # Phase 5b 共享 resolve + Context Detector（PLAN-0039；graph.v0.json）
+│   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # 發佈載荷 tarball 打包
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發
 │   └── skill-release.md        # 技能倉庫發佈流程（版本五個同步點 + tag、tarball 建置）

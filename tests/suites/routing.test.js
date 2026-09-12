@@ -1,124 +1,20 @@
 #!/usr/bin/env node
-// Phase 5a characterization: deterministic Task→Capability resolve (call-topology.md).
-// Repo-only; not a Dispatcher. Graph mirrors docs/research/routing/task-capability-map.md v0.
+// Phase 5b characterization: shared resolve + Context Detector (PLAN-0039).
+// Graph: docs/research/routing/graph.v0.json — must stay in sync with task-capability-map.md
 "use strict";
 
+const path = require("path");
+const { resolve, detect, loadGraph, route } = require(path.join(
+  __dirname,
+  "..",
+  "..",
+  "repo-tools",
+  "lib",
+  "routing"
+));
+
 module.exports = function register(test) {
-  const BUDGET = 8;
-
-  const ALWAYS = ["thin-entry", "context-economy"];
-
-  // triggers: task_class → capability ids (beyond always)
-  const TRIGGERS = {
-    edit_docs: ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    edit_references: ["change-hygiene", "reference-closure", "security-baseline", "rule-capture"],
-    edit_scripts: [
-      "change-hygiene",
-      "reference-closure",
-      "secret-protection",
-      "testing-evidence",
-      "security-baseline",
-    ],
-    edit_skill_entry: ["change-hygiene", "reference-closure", "rule-capture"],
-    git_write: ["change-hygiene", "git-write", "secret-protection", "security-baseline"],
-    release: [
-      "change-hygiene",
-      "git-write",
-      "secret-protection",
-      "testing-evidence",
-      "release-governance",
-      "security-baseline",
-    ],
-    audit: ["doc-knowledge", "review-implementation"],
-    research_write: ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    finding_write: ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    adr_write: ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    plan_write: ["doc-knowledge", "change-hygiene", "discovery-ledger", "plan-delivery"],
-    repair: [
-      "change-hygiene",
-      "reference-closure",
-      "testing-evidence",
-      "root-cause-repair",
-      "discovery-ledger",
-      "review-implementation",
-      "security-baseline",
-      "rule-capture",
-    ],
-    test_change: ["change-hygiene", "testing-evidence"],
-    unknown: [],
-  };
-
-  const BINDS = {
-    "secret-protection": ["CTRL-0001"],
-  };
-
-  const FACET_ADDS = [
-    { when: (c) => (c.trees || []).includes("references"), add: ["reference-closure"] },
-    {
-      when: (c) => (c.trees || []).some((t) => t === "scripts" || t === "repo-tools"),
-      add: ["testing-evidence", "secret-protection"],
-    },
-    {
-      when: (c) => ["commit", "tag", "release"].includes(c.write_boundary),
-      add: ["git-write", "secret-protection"],
-    },
-    { when: (c) => c.write_boundary === "release", add: ["release-governance"] },
-    {
-      when: (c) => (c.artifacts || []).includes("plan") && c.scale === "large",
-      add: ["discovery-ledger", "plan-delivery"],
-    },
-    { when: (c) => c.phase === "validate", add: ["testing-evidence"] },
-  ];
-
-  function resolve(taskClass, context) {
-    context = context || {};
-    const order = [];
-    const seen = new Set();
-    function push(id) {
-      if (!id || seen.has(id)) return;
-      seen.add(id);
-      order.push(id);
-    }
-
-    ALWAYS.forEach(push);
-
-    if (taskClass === "unknown" || !TRIGGERS.hasOwnProperty(taskClass)) {
-      return {
-        capabilities: order.slice(),
-        read_set: order.slice(),
-        run_set: [],
-        defer_set: ["ask-user", "expand-entry"],
-        unmatched: true,
-      };
-    }
-
-    (TRIGGERS[taskClass] || []).forEach(push);
-    for (const rule of FACET_ADDS) {
-      if (rule.when(context)) rule.add.forEach(push);
-    }
-
-    let read = order.slice();
-    let defer = [];
-    if (read.length > BUDGET) {
-      defer = read.slice(BUDGET);
-      read = read.slice(0, BUDGET);
-    }
-
-    const run = [];
-    for (const cap of order) {
-      for (const ctrl of BINDS[cap] || []) {
-        if (!run.includes(ctrl)) run.push(ctrl);
-      }
-    }
-
-    return {
-      capabilities: order,
-      read_set: read,
-      run_set: run,
-      defer_set: defer,
-      unmatched: false,
-    };
-  }
+  const graph = loadGraph();
 
   function sameList(a, b) {
     if (a.length !== b.length) return false;
@@ -147,7 +43,7 @@ module.exports = function register(test) {
   }
 
   test("routing F1 edit_docs", () => {
-    const got = resolve("edit_docs", { trees: ["docs"], artifacts: ["research"] });
+    const got = resolve("edit_docs", { trees: ["docs"], artifacts: ["research"] }, graph);
     return assertResult("F1", got, {
       unmatched: false,
       read_set: [
@@ -163,7 +59,7 @@ module.exports = function register(test) {
   });
 
   test("routing F2 edit_scripts", () => {
-    const got = resolve("edit_scripts", { trees: ["scripts"] });
+    const got = resolve("edit_scripts", { trees: ["scripts"] }, graph);
     return assertResult("F2", got, {
       unmatched: false,
       read_set: [
@@ -181,7 +77,7 @@ module.exports = function register(test) {
   });
 
   test("routing F3 git_write", () => {
-    const got = resolve("git_write", { write_boundary: "commit" });
+    const got = resolve("git_write", { write_boundary: "commit" }, graph);
     return assertResult("F3", got, {
       unmatched: false,
       read_set: [
@@ -198,10 +94,7 @@ module.exports = function register(test) {
   });
 
   test("routing F4 repair budget defer", () => {
-    const got = resolve("repair", { phase: "implement" });
-    // order: always(2) + repair triggers(8) = 10 → read 8, defer 2
-    // repair triggers: change-hygiene, reference-closure, testing-evidence,
-    //   root-cause-repair, discovery-ledger, review-implementation, security-baseline, rule-capture
+    const got = resolve("repair", { phase: "implement" }, graph);
     return assertResult("F4", got, {
       unmatched: false,
       read_set: [
@@ -220,7 +113,7 @@ module.exports = function register(test) {
   });
 
   test("routing F5 plan_write", () => {
-    const got = resolve("plan_write", { artifacts: ["plan"], phase: "plan" });
+    const got = resolve("plan_write", { artifacts: ["plan"], phase: "plan" }, graph);
     return assertResult("F5", got, {
       unmatched: false,
       read_set: [
@@ -237,7 +130,7 @@ module.exports = function register(test) {
   });
 
   test("routing F6 unknown unmatched", () => {
-    const got = resolve("unknown", {});
+    const got = resolve("unknown", {}, graph);
     return assertResult("F6", got, {
       unmatched: true,
       read_set: ["thin-entry", "context-economy"],
@@ -247,16 +140,84 @@ module.exports = function register(test) {
   });
 
   test("routing budget never drops bound controls", () => {
-    // Force many caps that include secret-protection; run_set must keep CTRL-0001
-    const got = resolve("release", { write_boundary: "release" });
+    const got = resolve("release", { write_boundary: "release" }, graph);
     if (!got.run_set.includes("CTRL-0001")) {
       console.error("  expected CTRL-0001 in run_set", got);
       return false;
     }
-    if (got.read_set.length > BUDGET) {
+    if (got.read_set.length > graph.budget) {
       console.error("  read_set over budget", got.read_set);
       return false;
     }
     return true;
+  });
+
+  test("detector D1 path edit_scripts", () => {
+    const d = detect({ paths: ["scripts/check-doc-consistency.js"] }, graph);
+    if (d.task_class !== "edit_scripts") {
+      console.error("  D1 expected edit_scripts", d);
+      return false;
+    }
+    if (!d.context.trees.includes("scripts")) {
+      console.error("  D1 trees", d.context.trees);
+      return false;
+    }
+    return true;
+  });
+
+  test("detector D2 explicit task wins", () => {
+    const d = detect(
+      { task: "repair", paths: ["docs/research/RESEARCH-0012-task-capability-routing.md"] },
+      graph
+    );
+    if (d.task_class !== "repair" || d.source !== "explicit") {
+      console.error("  D2", d);
+      return false;
+    }
+    return true;
+  });
+
+  test("detector D3 conflict → unknown", () => {
+    const d = detect(
+      {
+        paths: [
+          "docs/research/RESEARCH-0012-task-capability-routing.md",
+          "scripts/check-doc-consistency.js",
+        ],
+      },
+      graph
+    );
+    if (d.task_class !== "unknown" || d.source !== "conflict") {
+      console.error("  D3", d);
+      return false;
+    }
+    const r = resolve(d.task_class, d.context, graph);
+    if (!r.unmatched) {
+      console.error("  D3 resolve should be unmatched", r);
+      return false;
+    }
+    return true;
+  });
+
+  test("route CLI shape F2 equivalent", () => {
+    const { detection, result } = route(
+      { task: "edit_scripts", trees: ["scripts"] },
+      graph
+    );
+    if (detection.task_class !== "edit_scripts") return false;
+    return assertResult("route-F2", result, {
+      unmatched: false,
+      read_set: [
+        "thin-entry",
+        "context-economy",
+        "change-hygiene",
+        "reference-closure",
+        "secret-protection",
+        "testing-evidence",
+        "security-baseline",
+      ],
+      run_set: ["CTRL-0001"],
+      defer_set: [],
+    });
   });
 };

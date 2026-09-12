@@ -13,8 +13,8 @@ authority: construction
 **权威级别：** 施工权威（RESEARCH-0012 假设已采纳 + PLAN-0038 Active）。非正式 schema；升格 Narrow ADR 前不得当 INSTALLED 硬规范。  
 **位置：** repo-only（`docs/research/routing/`）。**不**写入薄入口正文。  
 **禁止（5a 完成时）：** LLM 自动路由 · 无路由文档搬家 · Active PLAN-0037。  
-**5b：** 程序化查表 = [PLAN-0039](../../plans/PLAN-0039-context-detector-dispatcher.md)（消费本表；不另造适用关系）。  
-**5c（5b EXIT 后另开 Plan）：** 按 Capability 投影物理文件；只改 `AuthorityRef`；**不**按 1.0 目录骨架细切。纪律：`call-topology.md` § 物理拓扑。Gen1 无真正能力路由图——本表替换查找层，不是旧树别名。
+**5b：** 程序化查表 = [PLAN-0039](../../plans/PLAN-0039-context-detector-dispatcher.md)（**Implemented**；`graph.v0.json` + `repo-tools/lib/routing.js` + `route-task.js`）。  
+**5c（另开 Plan）：** 按 Capability 投影物理文件；只改 `AuthorityRef`；**不**按 1.0 目录骨架细切。纪律：`call-topology.md` § 物理拓扑。Gen1 无真正能力路由图——本表替换查找层，不是旧树别名。
 
 架构（节点/边/解析）：`call-topology.md`。本文件是该图的本仓实例。
 

@@ -151,6 +151,8 @@ ai-agent-governance/
 │   ├── check-secrets.js        # repo-profile CTRL-0001 CLI (shared evaluator under scripts/; not the skill CLI path)
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] verification-narration advisor (repo-only, advisory)
 │   ├── mutation-probe.js      # on-demand assurance that test ASSERTIONS are alive (sampled mutations in a temp clone)
+│   ├── lib/routing.js          # Phase 5b shared resolve + Context Detector (PLAN-0039; graph.v0.json)
+│   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
 │   ├── changelog-policy.md      # repo CHANGELOG policy (REPO-ONLY; AGENTS 放指针)
