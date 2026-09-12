@@ -415,4 +415,33 @@ test("generate-governance: partial init registry notes Phase C availability (ful
   return c.includes("review-manager") && !c.includes("**Availability:**");
 });
 
+// PLAN-0042 P3 / FINDING-0006 E02: stack-derived command defaults must not fall back to npm.
+test("stack defaults: python AGENTS uses pytest/ruff not npm test", () => {
+  const dir = tmp("gen-stack-py");
+  const r = spawnSync(
+    process.execPath,
+    [GENERATOR, "--target", dir, "--project-name", "PyApp", "--phase", "A", "--stack", "python"],
+    { encoding: "utf8" }
+  );
+  if (r.status !== 0) {
+    console.error(r.stderr || r.stdout);
+    return false;
+  }
+  const agents = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
+  if (!/pytest/.test(agents)) {
+    console.error("  expected pytest in python AGENTS defaults");
+    return false;
+  }
+  if (!/ruff/.test(agents)) {
+    console.error("  expected ruff in python AGENTS defaults");
+    return false;
+  }
+  // Negative oracle: npm-centric defaults must not appear as the stack test/lint/build commands.
+  if (/\bnpm test\b/.test(agents) || /\bnpm run lint\b/.test(agents) || /\bnpm run build\b/.test(agents)) {
+    console.error("  python AGENTS must not use npm test/lint/build defaults");
+    return false;
+  }
+  return true;
+});
+
 };

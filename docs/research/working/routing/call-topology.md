@@ -132,7 +132,7 @@ Agent / 将来 Dispatcher **同一套解析**。5b 只是把本算法从查表�
 
 Phase 5 内部切片（索引；非独立 ADR Phase）：
 
-| 切片 | 车辆 | 做什么 |
+| 切片 | 施工计划 | 做什么 |
 | --- | --- | --- |
 | **5a** | PLAN-0038 | 显式图 + 表征 + 薄入口指针 |
 | **5b** | PLAN-0039 | Detector + 共享 `resolve` + CLI（同一张图） |
@@ -147,7 +147,7 @@ Dispatcher 跑同一解析        5b EXITED（PLAN-0039）
         ↓
 references/ 按 Capability 投影  5c P0–P2 EXITED（PLAN-0040）；leftover 延后
         ↓
-**Phase 5 checkpoint EXITED** → Phase 6（计划待立）
+**Phase 5 checkpoint EXITED** → Phase 6（[PLAN-0042](../../../plans/PLAN-0042-invariant-based-testing.md) Implemented / EXITED）→ Phase 7（计划待立）
 ```
 
 未稳定前移动 `lifecycle.policy.md` 等 = **无路由拆分**（禁止）。

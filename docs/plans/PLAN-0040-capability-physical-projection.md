@@ -181,7 +181,7 @@ Unaccounted:  0
 
 ## Successor
 
-- Phase **6** Invariant-based Testing（正负 oracle；计划待立）
+- Phase **6** Invariant-based Testing（正负 oracle；[PLAN-0042](PLAN-0042-invariant-based-testing.md) Implemented / EXITED）
 - 5c leftover：其余 Capability 叶 / 可选 rename（**不**重开 Phase 5）
 - Narrow ADR：routing + projection 权威升格（若要进薄入口 / payload 指针）
 
@@ -218,7 +218,7 @@ Deferred by design（不是遗漏）:
 
 **Completion marker：** Phase 5 checkpoint = **EXITED**（PLAN-0038 / 0039 / 0040 `status: Implemented`）。Architecture checkpoint ≠ Release；Plan archive 另按 ADR-0016。
 
-**Successor：** Phase 6 Invariant-based Testing（计划待立）。残留投影与 FINDING-0028/0029 后续不挡 Phase 6 开工。
+**Successor：** Phase 6 = [PLAN-0042](PLAN-0042-invariant-based-testing.md)（Implemented / EXITED）。残留投影与 FINDING-0028/0029 后续不挡后续阶段。
 
 ## 参考
 

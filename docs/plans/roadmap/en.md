@@ -292,15 +292,15 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Current phase: Phase 5 EXITED; next is Phase 6 (plan TBD).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–5 (5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) P0–P2). Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
+**Current phase: Phase 6 EXITED; next entry Phase 7 (plan TBD).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–6 (6 = [PLAN-0042](../PLAN-0042-invariant-based-testing.md) Implemented). Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
 
 ## Now → 2.0 (index)
 
-The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affected Files, or verification commands. Authority: ADR-0018 (phases) · each PLAN (construction) · ADR-0020 / PLAN-0037 (skill extraction boundary).
+The Roadmap lists sequence and construction plans only; it does not copy Plan steps, Affected Files, or verification commands. Authority: ADR-0018 (phases) · each PLAN (construction) · ADR-0020 / PLAN-0037 (skill extraction boundary).
 
 ### Done (checkpoints)
 
-| Phase | Vehicle | Status |
+| Phase | Construction plan | Status |
 | --- | --- | --- |
 | 0 | ADR-0014 Migration Mode | Enabled (gates observational; Safety Kernel blocking) |
 | 1 | [PLAN-0031](../archive/PLAN-0031-producer-product-governance-separation.md) | Archived |
@@ -308,13 +308,13 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 | 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived; baseline `24021c4` |
 | 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
 | 5 | [PLAN-0038](../PLAN-0038-task-capability-routing.md) · [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../PLAN-0040-capability-physical-projection.md) | Implemented / EXITED (5a map · 5b resolve/CLI · 5c P0–P2 projection; leftover deferred) |
+| 6 | [PLAN-0042](../PLAN-0042-invariant-based-testing.md) | Implemented / EXITED (oracle inventory + routing negatives + seed CTRLs; full mechanical coverage still deferred) |
 
 ### Next (this order; do not skip review)
 
-| Step | What | Vehicle | One line |
+| Step | What | Construction plan | One line |
 | --- | --- | --- | --- |
-| **Now** | Phase 6 Invariant-based Testing | *(plan TBD)* | Positive/negative oracles |
-| 6 | Invariant-based Testing | Later plan | Positive + negative oracle per important Control |
+| **Now** | Phase 7 Review split into three kinds | *(plan TBD)* | Implementation / System / Research |
 | 7 | Review split into three kinds | Later plan | Implementation / System / Research |
 | 8 | Rebuild mandatory gates | Later plan | Blocking authority moves onto the new control plane |
 | **2.0** | This repo’s Gen2 skill release | `repo-workflows/skill-release.md` | **Only after Phase 8**; checkpoint ≠ Release |
@@ -557,10 +557,9 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration (ADR-0018 Phase 0–8)
         ↓
-P0–P5  checkpoints EXITED
-         P5 = 5a PLAN-0038 · 5b PLAN-0039 · 5c PLAN-0040 (P0–P2; leftover deferred)
-P6     Invariant-based Testing — **current** (plan TBD)
-P7 Review System redesign
+P0–P6  checkpoints EXITED
+         P6 = PLAN-0042 (oracle inventory + routing negatives + seed CTRLs)
+P7     Review System redesign — **current** (plan TBD)
 P8 Rebuild mandatory gates
         ↓
 2.0 skill-release (this repo’s Gen2 payload)

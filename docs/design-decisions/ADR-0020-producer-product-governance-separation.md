@@ -142,7 +142,7 @@ L3 Project Customization        — 目录名、编号、模板实例（可选�
 
 **Gen2 立场：** 允许空间 → 明确边界 → 机械检查 → Agent 在边界内发挥。可复用 skill 若只写「建议薄入口 / 适度元数据」，仍是 Gen1。
 
-**时机：** **2.0 skill-release（Phase 8 阻断权威交接、退出 Migration Mode）之后** 再做 PLAN-0037 Stage A–D 全文提炼。过早抽取会把未验证的 applicability / topology 假设固化进载荷；把全文 0037 当作 2.0 必达项会与「2.0 = 本仓 Gen2 INSTALLED 载荷」重叠且过大。执行车辆 = **PLAN-0037**（Design **冻结**；禁止 Archived；非 2.0 blocker）。过滤层（L1 结构性约束 vs 项目实例）在冻结期仍约束载荷撰写。当前顺序：Phase 5–8 → 2.0 发布 → PLAN-0037 解冻 Active。
+**时机：** **2.0 skill-release（Phase 8 阻断权威交接、退出 Migration Mode）之后** 再做 PLAN-0037 Stage A–D 全文提炼。过早抽取会把未验证的 applicability / topology 假设固化进载荷；把全文 0037 当作 2.0 必达项会与「2.0 = 本仓 Gen2 INSTALLED 载荷」重叠且过大。执行计划 = **PLAN-0037**（Design **冻结**；禁止 Archived；非 2.0 blocker）。过滤层（L1 结构性约束 vs 项目实例）在冻结期仍约束载荷撰写。当前顺序：Phase 5–8 → 2.0 发布 → PLAN-0037 解冻 Active。
 
 **提取方法（流程权威在 PLAN-0037，此处只钉边界）：** 不得 `原项目 → Skill` 一次跳转。必须经 Facts → Rationale → Reusable Pattern 再写入 L1/L2/L3。禁止把本仓 WHAT 当 invariant（复制型），也禁止只有口号无约束（空泛型）。L1/L2/L3 是产物分层，不是提取步骤编号。
 

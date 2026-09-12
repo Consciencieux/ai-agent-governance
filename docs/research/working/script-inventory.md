@@ -2,7 +2,7 @@
 
 机读源：[`script-inventory.v0.json`](script-inventory.v0.json)  
 基线戳：`v1.0.2`（证据列，**不是**隔离轴）  
-车辆：[PLAN-0041](../../plans/PLAN-0041-script-inventory.md)
+施工计划：[PLAN-0041](../../plans/PLAN-0041-script-inventory.md)
 
 ## 为什么不是「1.0.2 以前整夹搬走」
 

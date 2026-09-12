@@ -294,15 +294,15 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**當前階段：Phase 5 EXITED；下一入口 Phase 6（計劃待立）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–5（5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) P0–P2）。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
+**當前階段：Phase 6 EXITED；下一入口 Phase 7（計劃待立）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–6（6 = [PLAN-0042](../PLAN-0042-invariant-based-testing.md) Implemented）。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
 
 ## 現在 → 2.0（索引）
 
-Roadmap 只列順序與車輛，不複製 Plan 步驟 / Affected Files / 驗收命令。權威：ADR-0018（階段）· 各 PLAN（施工）· ADR-0020 / PLAN-0037（skill 提煉邊界）。
+Roadmap 只列順序與施工計劃，不複製 Plan 步驟 / Affected Files / 驗收命令。權威：ADR-0018（階段）· 各 PLAN（施工）· ADR-0020 / PLAN-0037（skill 提煉邊界）。
 
 ### 已完成（checkpoint）
 
-| Phase | 車輛 | 狀態 |
+| Phase | 施工計劃 | 狀態 |
 | --- | --- | --- |
 | 0 | ADR-0014 Migration Mode | 已啟用（gate 觀測化；Safety Kernel 阻斷） |
 | 1 | [PLAN-0031](../archive/PLAN-0031-producer-product-governance-separation.md) | Archived |
@@ -310,13 +310,13 @@ Roadmap 只列順序與車輛，不複製 Plan 步驟 / Affected Files / 驗收�
 | 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived；baseline `24021c4` |
 | 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
 | 5 | [PLAN-0038](../PLAN-0038-task-capability-routing.md) · [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../PLAN-0040-capability-physical-projection.md) | Implemented / EXITED（5a 圖 · 5b resolve/CLI · 5c P0–P2 投影；leftover 延後） |
+| 6 | [PLAN-0042](../PLAN-0042-invariant-based-testing.md) | Implemented / EXITED（oracle 台帳 + 路由負向 + 種子 CTRL；全量機械規則仍延後） |
 
 ### 下一步（必須按此序；不跳過審查）
 
-| 步 | 內容 | 車輛 | 一句話 |
+| 步 | 內容 | 施工計劃 | 一句話 |
 | --- | --- | --- | --- |
-| **現在** | Phase 6 不變量測試 | *（計劃待立）* | 正負 oracle |
-| 6 | Invariant-based Testing | 後續 Plan | 每條重要 Control：positive + negative oracle |
+| **現在** | Phase 7 Review 三類拆分 | *（計劃待立）* | Implementation / System / Research |
 | 7 | Review 三類拆分 | 後續 Plan | Implementation / System / Research |
 | 8 | 重建 mandatory gates | 後續 Plan | 阻斷權威交到新 control plane |
 | **2.0** | 本倉 Gen2 skill 發布 | `repo-workflows/skill-release.md` | **僅 Phase 8 後**；checkpoint ≠ Release |
@@ -559,10 +559,9 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration（ADR-0018 Phase 0–8）
         ↓
-P0–P5  checkpoint EXITED
-         P5 = 5a PLAN-0038 · 5b PLAN-0039 · 5c PLAN-0040（P0–P2；leftover 延後）
-P6     不變量測試 — **current**（計劃待立）
-P7 Review System redesign
+P0–P6  checkpoint EXITED
+         P6 = PLAN-0042（oracle 台帳 + 路由負向 + 種子 CTRL）
+P7     Review System redesign — **current**（計劃待立）
 P8 Rebuild mandatory gates
         ↓
 2.0 skill-release（本倉 Gen2 載荷）

@@ -7,7 +7,7 @@ subject_generation: gen2
 
 # RESEARCH-0012：Task → Capability 适用路由（Phase 5 入口）
 
-本 RESEARCH 是 **Phase 5 入口观察与问题框定**。施工车辆 PLAN-0038 / 0039 / 0040 已 Implemented；**Phase 5 checkpoint EXITED**（2026-09-12；见 PLAN-0040 § Phase 5 Exit Criteria）。本文件仍是系统模型，不因 checkpoint 归档。
+本 RESEARCH 是 **Phase 5 入口观察与问题框定**。施工计划 PLAN-0038 / 0039 / 0040 已 Implemented；**Phase 5 checkpoint EXITED**（2026-09-12；见 PLAN-0040 § Phase 5 Exit Criteria）。本文件仍是系统模型，不因 checkpoint 归档。
 
 **本文件不**实现 Dispatcher、不搬物理拓扑、不执行 PLAN-0037——那些是 Plan 的事（5b/5c 已落地；0037 仍冻结）。
 
@@ -43,7 +43,7 @@ thin entry 消费 routing
 （随后）Dispatcher；再据 routing 重构物理 topology
 ```
 
-第一阶段只要 **显式映射表 / 人工可维护的 applicability 陈述**；半自动与 runtime Dispatcher 延后。**5a–5c 现已落地**（map → resolve/CLI → Slice B 投影）；完整正反 oracle 仍归 Phase 6。
+第一阶段只要 **显式映射表 / 人工可维护的 applicability 陈述**；半自动与 runtime Dispatcher 延后。**5a–5c 现已落地**（map → resolve/CLI → Slice B 投影）；Phase 6 种子 oracle 已落地（[PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md) EXITED）；全量正反矩阵仍延后。
 
 ## 调用拓扑架构（v3）
 

@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- **Phase 6 invariant oracle inventory (PLAN-0042 Implemented)** — machine-readable `docs/research/working/oracle-inventory.v0.json` (+ human `oracle-inventory.md`) freezes important CTRL-0001–0006 + routing integrity + Safety Kernel suite accounting; characterization suite `oracle-inventory` fail-closes when `important_gap` ≠ 0. Routing suite gains negatives N1–N3 (wrong Capability, orphan authority, deleted trigger). Generator suite adds stack-defaults negative for python→pytest/ruff (FINDING-0006 E02). Architecture checkpoint ≠ Release; full mechanical-rule coverage and FINDING-0006 stay deferred; PLAN-0037 remains frozen.
+
 - **Script inventory L0 (PLAN-0041 Implemented / FINDING-0028)** — machine-readable `docs/research/working/script-inventory.v0.json` (+ human `script-inventory.md`) labels every `scripts/**` and `repo-tools/**` entry with distribution role, generation, and disposition using `v1.0.2` as an evidence baseline (not an attic cut). Characterization suite `script-inventory` fail-closes on missing registrations; `retire` is empty so no date-based folder quarantine. Repo dogfood of INSTALLED CLIs remains an open follow-on.
 
 - **Phase 5c Capability physical projection (PLAN-0040 Implemented)** — `references/capabilities/{discovery-ledger,root-cause-repair,change-hygiene,rule-capture}.md` extracted from lifecycle; INIT installs under `docs/rules/capabilities/`; `graph.v0.json` gains machine-readable `authorities`; `route-task --json` emits authority paths; projection table at `docs/research/working/routing/projection-table.md`. Edges (triggers/binds/facet_adds) unchanged; PLAN-0037 still frozen.
@@ -16,7 +18,9 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **Phase 5 EXITED** — PLAN-0038 / 0039 / 0040 Implemented (5a map, 5b resolve/CLI, 5c P0–P2 Capability projection). Leftover capability leaves, FINDING-0028 dogfood, and FINDING-0029 residue stay deferred by design and do not reopen Phase 5. Next entry is Phase 6 (plan TBD). Architecture checkpoint ≠ Release; PLAN-0037 remains frozen.
+- **Phase 6 EXITED** — PLAN-0042 Implemented (oracle inventory, routing negatives N1–N3, seed CTRL registration, stack-defaults oracle). Next entry is Phase 7 Review System redesign (plan TBD). Architecture checkpoint ≠ Release; FINDING-0006 remains Confirmed for coverage beyond the seed set; PLAN-0037 remains frozen.
+
+- **Phase 5 EXITED** — PLAN-0038 / 0039 / 0040 Implemented (5a map, 5b resolve/CLI, 5c P0–P2 Capability projection). Leftover capability leaves, FINDING-0028 dogfood, and FINDING-0029 residue stay deferred by design and do not reopen Phase 5. Architecture checkpoint ≠ Release; PLAN-0037 remains frozen.
 
 - **Research construction papers colocated under `docs/research/working/`** — Task→Capability graph (`working/routing/`) and script inventory (`working/script-inventory.*`) share one construction slot, distinct from numbered `RESEARCH-xxxx` essays and empty `experiments/`. Path retarget only; no second lookup model.
 

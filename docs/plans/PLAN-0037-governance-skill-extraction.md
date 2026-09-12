@@ -229,7 +229,7 @@ governance-skill/
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | X0 | observation | design | 过早抽取会固化未验证 routing | skill | high | closed | deferred | — | revisit: **2.0 后** Active；不得在 Phase 5 入口解冻 |
 | X1 | observation | review | 「不写死」易被读成软建议 | skill | high | closed | resolved | — | ADR-0020 L1 硬约束修正 |
-| X2 | migration_gap | design | 尚无 extraction 执行车辆 | both | med | open | — | — | 本计划冻结；2.0 后关闭 |
+| X2 | migration_gap | design | 尚无 extraction 执行计划 | both | med | open | — | — | 本计划冻结；2.0 后关闭 |
 | X3 | observation | review | 一次抽象会复制实现或空泛口号 | skill | high | closed | resolved | — | 本计划 § 提取协议；产物分层 ≠ 提取流程 |
 | X4 | observation | review | 全文 0037 作 2.0 必达项过大且与产品定义重叠 | both | high | closed | deferred | — | 冻结 Design；2.0=本仓 Gen2 载荷；A–D 后置 |
 

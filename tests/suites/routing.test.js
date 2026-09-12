@@ -259,4 +259,60 @@ module.exports = function register(test) {
     }
     return true;
   });
+
+  test("routing N1 edit_docs excludes secret-protection", () => {
+    const got = resolve("edit_docs", { trees: ["docs"] }, graph);
+    if (got.unmatched) {
+      console.error("  edit_docs should match", got);
+      return false;
+    }
+    if (got.read_set.includes("secret-protection")) {
+      console.error("  edit_docs must not include secret-protection", got.read_set);
+      return false;
+    }
+    if (got.run_set.includes("CTRL-0001")) {
+      console.error("  edit_docs must not bind CTRL-0001", got.run_set);
+      return false;
+    }
+    return true;
+  });
+
+  test("routing N2 orphan authority path is detected", () => {
+    const g = JSON.parse(JSON.stringify(graph));
+    g.authorities = Object.assign({}, g.authorities, {
+      "doc-knowledge": {
+        path: "docs/research/working/routing/__oracle-missing-authority__.md",
+      },
+    });
+    const got = resolve("edit_docs", { trees: ["docs"] }, g);
+    const auth = authoritiesFor(got.read_set, g);
+    const row = auth.find((a) => a.id === "doc-knowledge");
+    if (!row) {
+      console.error("  expected doc-knowledge authority row", auth);
+      return false;
+    }
+    const abs = path.join(REPO_ROOT, row.path);
+    if (fs.existsSync(abs)) {
+      console.error("  orphan fixture unexpectedly exists:", abs);
+      return false;
+    }
+    return true;
+  });
+
+  test("routing N3 deleted trigger edge drops capabilities", () => {
+    const g = JSON.parse(JSON.stringify(graph));
+    g.triggers = Object.assign({}, g.triggers, {
+      edit_docs: ["doc-knowledge"],
+    });
+    const got = resolve("edit_docs", { trees: ["docs"] }, g);
+    if (got.read_set.includes("change-hygiene") || got.read_set.includes("discovery-ledger")) {
+      console.error("  deleted edges still present", got.read_set);
+      return false;
+    }
+    if (!got.read_set.includes("thin-entry") || !got.read_set.includes("doc-knowledge")) {
+      console.error("  expected always_on + remaining trigger", got.read_set);
+      return false;
+    }
+    return true;
+  });
 };

@@ -88,7 +88,7 @@ AGENTS 消费「先 route 再读」
 ## Successor
 
 1. **Phase 5c** — [PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）。**Phase 5 EXITED**。
-2. Phase **6** Invariant-based Testing（计划待立）
+2. Phase **6** Invariant-based Testing（[PLAN-0042](PLAN-0042-invariant-based-testing.md) Implemented / EXITED）
 3. Narrow ADR（routing 升格进 payload 时）
 4. 5c leftover Capability 叶 / 可选 rename（不重开 Phase 5）
 

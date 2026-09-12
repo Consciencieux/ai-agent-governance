@@ -47,7 +47,7 @@ observed_in: gen1
 1. **三义永久可查**：任意 Agent 读本 Finding + ADR-0022 窄修正即可区分 A/B/C，不得混谈「lifecycle 架构」。
 2. **生长轴**：新规则默认进 Capability / Control / 适用图；lifecycle 只保留编排骨架与指针；禁止新增大段横切正文。
 3. **不回归**：A 不回到本仓；B 不并入 `lifecycle.policy.md` 当「生命周期产品」；C 不升格为 Phase 0–8 之外的并行架构程序。
-4. **残留处置**有计划车辆时再拆（规模分级、计划格式、证据、Synchronize/Report、`state.json` 六阶段状态机等）——关闭本 Finding **不**要求这些已全部搬走，但要求**不得再按错误坐标新增**。
+4. **残留处置**有施工计划时再拆（规模分级、计划格式、证据、Synchronize/Report、`state.json` 六阶段状态机等）——关闭本 Finding **不**要求这些已全部搬走，但要求**不得再按错误坐标新增**。
 
 ## 非目标
 
@@ -61,7 +61,7 @@ observed_in: gen1
 - PLAN-0025 · RESEARCH-0006 § H · RESEARCH-0009 · ADR-0022 · call-topology § Gen1 查找 vs 本图
 - PLAN-0038 / 0039 / 0040（5a–5c：图 → 解析 → 投影）
 - FINDING-0015（静态长 prompt / 注意力）— 同族症状，不同切面
-- 后续车辆（未开）：lifecycle 残留叶抽出 / `state.json` phase 降级为 facet；roadmap「故意延后」仅索引，不展开
+- 后续计划（未开）：lifecycle 残留叶抽出 / `state.json` phase 降级为 facet；roadmap「故意延后」仅索引，不展开
 
 ## 回归保护
 

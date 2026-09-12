@@ -12,8 +12,9 @@ subject_generation: gen1
 Gen1→Gen2 **如何共存与吸收** 的演化模型见 RESEARCH-0004 v3；本文件不重复。
 
 **不**裁决 KEEP / WRAP / EXTRACT / REWRITE / RETIRE（执行 disposition → PLAN-0035）。  
-**不**实现 Dispatcher（Phase 5）。  
-**不**建设完整 invariant oracle 体系（Phase 6）。  
+**不**实现 Dispatcher（Phase 5 EXITED）。  
+**不**在本文件建设 invariant oracle 体系——施工计划 = [PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md)（**Implemented / EXITED**）。  
+覆盖台账：`docs/research/working/oracle-inventory.v0.json`。  
 规范 Control 模型 → ADR-0023；本文件只描述现状。
 
 行形态：
@@ -228,7 +229,7 @@ payload    42/42 passed
 | CTRL-0005 | `tests/suites/plan-delivery.test.js` |
 | CTRL-0002（cluster） | consistency consent / gate 相关例 |
 
-完整 positive/negative oracle 矩阵 → Phase 6，不在本库存范围。
+完整 positive/negative oracle 矩阵 → [PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md)（Phase 6 Implemented / EXITED；种子集台账已落地，全量矩阵仍延后）；本库存只保留 characterization 锚点。
 
 ## repo → skill 调用面（P3 输入）
 
@@ -252,3 +253,4 @@ payload    42/42 passed
 - ADR-0023 · RESEARCH-0010 · PLAN-0035  
 - FINDING-0019（monolith）· FINDING-0001（coupling）  
 - ADR-0014 Safety Kernel · ADR-0020 terminology EXTRACT 先例  
+- Phase 6 oracle：[PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md)  
