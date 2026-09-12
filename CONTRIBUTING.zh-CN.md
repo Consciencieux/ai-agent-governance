@@ -5,10 +5,11 @@
 ## 开发
 
 ```bash
-npm test        # 或 node tests/run-tests.js
+npm test                 # 或 node tests/run-tests.js
+npm run check:must-ship  # CI 阻断门禁（必装机械集合）
 ```
 
-CI 为双模式（ADR-0014）：在 `main` / 1.x 上完整门禁组（`npm run check`）阻断；在 `migration/2.0-governance-architecture` 上只有重构安全内核阻断（JS 语法 + `--suite security/generator/payload`），第一代 `npm run check` 仅作观测。
+CI（ADR-0014 Migration Mode **已退出**）：所有分支 / PR 的阻断权威是 `npm run check:must-ship`。第一代 `npm run check` 仅作观测（`continue-on-error`），不挡 merge。发布另走 `repo-workflows/skill-release.md`。
 
 ## 各目录用途
 
@@ -29,7 +30,7 @@ CI 为双模式（ADR-0014）：在 `main` / 1.x 上完整门禁组（`npm run c
 ## 语言政策（按受众）
 
 - **Agent 面向的文件一律单语** —— `SKILL.md`、`AGENTS.md`、`references/**` 以及生成产物的正文（AGENTS.md、rules、子技能）绝不携带第二语言段落。惯例：本 skill 自身的执行文档（`SKILL.md`、`references/policies`、`references/workflows`）用中文；自动加载的 Agent 指引（`AGENTS.md`、模板正文）用英文。
-- **`docs/` 内语言跟知识类型走，不是整棵树一种语言。** **用户面向的产品文档**三语且拆分——六个 README / CONTRIBUTING 入口文件在仓库根目录；其余产品文档在 `docs/product/{en,zh-CN,zh-TW}/`。**简体中文（zh-CN）是源语言**——修改从简体发起，再同步到英文与繁体中文（台湾用语）。改一种语言必须**在同一次改动里同步另两种**（稳定文档）；活跃草稿可延迟翻译至内容稳定，但 push/release 前必须补齐（parity 闸门兜底；`main` 上阻断，迁移分支上按迁移模式观测）。结构一致性由 `repo-tools/check-doc-parity.js` 强制（CI + 发布前置 `docs.parity_passed`）。**路线图**（`docs/plans/roadmap/`）三语。**计划 / 发现 / 研究 / ADR** 是简体中文规范单语，不参与三语 parity。
+- **`docs/` 内语言跟知识类型走，不是整棵树一种语言。** **用户面向的产品文档**三语且拆分——六个 README / CONTRIBUTING 入口文件在仓库根目录；其余产品文档在 `docs/product/{en,zh-CN,zh-TW}/`。**简体中文（zh-CN）是源语言**——修改从简体发起，再同步到英文与繁体中文（台湾用语）。改一种语言必须**在同一次改动里同步另两种**（稳定文档）；活跃草稿可延迟翻译至内容稳定，但 push/release 前必须补齐（parity 闸门兜底）。结构一致性由 `repo-tools/check-doc-parity.js` 强制（CI + 发布前置 `docs.parity_passed`）。**路线图**（`docs/plans/roadmap/`）三语。**计划 / 发现 / 研究 / ADR** 是简体中文规范单语，不参与三语 parity。
 - **术语** —— 引入新术语前先查 `docs/glossary.md`，缺失则补三语条目；所有文件保持同一译法。
 
 ## 修改治理工件
@@ -39,15 +40,15 @@ CI 为双模式（ADR-0014）：在 `main` / 1.x 上完整门禁组（`npm run c
 1. 更新 `CHANGELOG.md`（分类：纯文档 → 不记；修复 → Fixed；新能力 → Added；破坏性 → Changed）
 2. 升 `package.json` 版本（SemVer：破坏性 → MAJOR，新能力 → MINOR，修复 → PATCH）
 3. 保持版本一致：package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` 默认值 · `scripts/generate-governance.js` 哨兵值 · tag
-4. push 前必须 `npm test`
-5. 仅通过 `release-manager` 流程发布（前置检查 → 版本同步 → 校验 → tag → push → GitHub Release）
+4. push 前必须 `npm test`；合入 `main` 前 `npm run check:must-ship` 必须绿
+5. 仅通过 `release-manager` 流程发布（前置检查含 `gates.must_ship` → 版本同步 → 校验 → tag → push → GitHub Release）
 
 ## 开发工作流
 
-1. 从当前工作分支拉出短生命周期分支：1.x 稳定工作从 `main`；2.0 迁移从 `migration/2.0-governance-architecture`（一个分支只做一个逻辑变更；迁移模式见 ADR-0014）
+1. 从 `main` 拉出短生命周期分支（一个分支只做一个逻辑变更）
 2. 检查受影响面：读变更触及的文件及其引用；分类变更（文档 / 治理机制 / 脚本校验器 / 测试 / CI-发布）——分类决定验证范围
 3. 实施变更，遵循上文语言与 parity 规则
-4. 运行与变更范围匹配的检查（见下方验证要求）；迁移分支上安全内核阻断，第一代门禁仅作观测
+4. 运行与变更范围匹配的检查（见下方验证要求）；合入前 `npm run check:must-ship` 必须绿
 5. 提交前自查 diff：暂存文件、无生成产物、无无关编辑
 6. 用 Conventional Commit 提交（见提交约定）、推送分支、开 PR
 
@@ -55,14 +56,15 @@ CI 为双模式（ADR-0014）：在 `main` / 1.x 上完整门禁组（`npm run c
 
 | 检查 | 角色 | 何时 |
 | --- | --- | --- |
+| `npm run check:must-ship` | CI 阻断 | 合入 `main` / 发布前必绿（ADR-0024 必装集合） |
 | `npm run check:docs` | Gate | 文档（`docs/`、README、CONTRIBUTING）变更 |
 | `npm run check:payload` | Gate | `references/` / `scripts/` / `SKILL.md` / LICENSE 变更 |
 | `npm run check:tests` | Gate | `tests/` 变更 |
-| `npm run check` | Gate | 默认 / 范围不确定 |
+| `npm run check` | 观测 | 第一代全量；CI 不阻断 merge |
 | `npm run check:all` | 巡检 | 巡检前，或显式全量巡检 |
 | `npm run check:skill-release` | 发布 | 发布前，按 `repo-workflows/skill-release.md` |
 
-较窄条目对各自范围 fail-closed；不确定时**升级到更大范围**——绝不缩小验证。**稳定 1.x 与 2.0 迁移：** 在 `main` 上这些门禁阻断；在 `migration/2.0-governance-architecture` 上只有重构安全内核阻断，第一代 `npm run check*` 仅作观测（ADR-0014）。哪些门禁是 advisory 而非 fail-closed、通过各意味着什么，见 `AGENTS.md` § Validation。
+较窄条目对各自范围 fail-closed；不确定时**升级到更大范围**——绝不缩小验证。**产品阻断权威是 `check:must-ship`**；第一代 `npm run check` 仅作观测。哪些门禁是 advisory 而非 fail-closed、通过各意味着什么，见 `AGENTS.md` § Validation。
 
 ## 提交约定
 

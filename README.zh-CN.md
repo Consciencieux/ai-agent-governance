@@ -149,9 +149,9 @@ INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚
 - [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md) — 开发指南
 - [CHANGELOG.md](CHANGELOG.md) — 发布历史
 
-## 1.0 之后的方向
+## 当前版本
 
-v1.0 冻结了核心治理契约。后续工作将在此基础上继续扩展系统能力。
+**v2.0** 是可安装、可在干净目标上直接使用的必装切片：INIT / AUDIT / RELEASE 可跑，本仓 CI 阻断权威是 `npm run check:must-ship`。Generation 1（1.x）仍是历史基线。后续工作（PLAN-0037 跨项目提炼等）在 2.0 之后进行。详见 [CHANGELOG.md](CHANGELOG.md) 与 [docs/plans/roadmap/zh-CN.md](docs/plans/roadmap/zh-CN.md)。
 
 ## License
 

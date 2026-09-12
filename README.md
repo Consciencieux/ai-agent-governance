@@ -149,9 +149,9 @@ INIT generates a governance skeleton whose exact contract — inputs, artifacts,
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development guide
 - [CHANGELOG.md](CHANGELOG.md) — release history
 
-## Post-1.0 directions
+## Current version
 
-v1.0 freezes the core governance contract. Future work will build on it to extend the system's capabilities.
+**v2.0** is the installable, usable must-ship slice: INIT / AUDIT / RELEASE run on a clean target, and this repo's CI blocking authority is `npm run check:must-ship`. Generation 1 (1.x) remains the historical baseline. Follow-on work (PLAN-0037 extraction and later items) starts after 2.0. See [CHANGELOG.md](CHANGELOG.md) and [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md).
 
 ## License
 
