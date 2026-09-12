@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Changed
+
+- **Migration Mode EXITED (human-approved 2026-09-12)** — product blocking gate is `npm run check:must-ship` on all branches/PRs; Gen1 `npm run check` is observational (`continue-on-error`). Record: `docs/plans/mode-exit-proposal.md`. Does **not** authorize `v2.0.0` tag.
+
 ### Added
 
 - **Phase 8 must-ship gate set (PLAN-0044 Implemented / EXITED)** — `npm run check:must-ship` (`repo-tools/check-must-ship.sh` + `check-must-ship-carriers.js`) fail-closes syntax + security/generator/payload/oracle-inventory/routing + carrier presence; migration CI and skill-release `gates.must_ship` bind the set. Inventory: `docs/research/working/must-ship-gates.md` (gap=0). Phase 8 EXIT ≠ 2.0; remaining human gates: `docs/plans/skill-release-2.0-checklist.md`. PLAN-0037 remains frozen.

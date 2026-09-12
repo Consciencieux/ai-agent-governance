@@ -90,7 +90,7 @@ Modifying `SKILL.md`, `references/policies/**`, `references/templates/**`, `refe
 
 ## Validation (gate tiering by change scope)
 
-Run the gate group before declaring any task done; run the full group (`npm run check:all`) before audit, and the release-specific gate (`npm run check:skill-release`, which adds the `--release-gate` fail-closed clusters) before release per `repo-workflows/skill-release.md`. Record real output (never claim "should pass"). **Migration Mode (ADR-0014):** on `migration/2.0-governance-architecture`, the Gen1 gate group (`npm run check` etc.) is observational — its red output is a compatibility-divergence signal, not a task blocker; the Refactor Safety Kernel (JS syntax + `--suite security/generator/payload`) is the blocking authority.
+Run the gate group before declaring any task done; run the full group (`npm run check:all`) before audit, and the release-specific gate (`npm run check:skill-release`, which adds the `--release-gate` fail-closed clusters) before release per `repo-workflows/skill-release.md`. Record real output (never claim "should pass"). **Migration Mode (ADR-0014):** **EXITED** (human-approved 2026-09-12; `docs/plans/mode-exit-proposal.md`). CI blocking = `npm run check:must-ship`; Gen1 `npm run check` = observational. Mode exit ≠ `v2.0.0` — skill-release Approval Gate still required before any 2.0 tag.
 
 **Scope tiering** — match the narrowest entry below by `git diff --name-only` prefix. When scope is uncertain, ESCALATE to the larger scope — never narrow the verification. The entries share the same fail-closed semantics: each gate exits 0 / 1 the same way, only the set of gates that runs changes.
 

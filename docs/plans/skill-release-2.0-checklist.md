@@ -43,9 +43,18 @@ REPO-ONLY。产品定义权威：[ADR-0024](../design-decisions/ADR-0024-gen2-pr
 ### B. Migration Mode 退出（ADR-0014）
 
 - [x] must-ship 为 migration 阻断权威（Phase 8）
-- [ ] `main` 合入后的 dual-CI / Gen1 observational 处置已决策
-- [ ] **人类显式批准**退出 Migration Mode
-- [ ] 按 Proposal 合入 / 集成（禁止即兴）
+- [x] `main` 合入后的 dual-CI / Gen1 observational 处置已决策并落 CI
+- [x] **人类显式批准**退出 Migration Mode（2026-09-12；提案：`docs/plans/mode-exit-proposal.md`）
+- [x] 按 Proposal 合入 `main`（人类已批准；本 PR merge commit 执行）
+
+**已批准处置（`.github/workflows/ci.yml`）：**
+
+| 面 | Job | 权威 |
+| --- | --- | --- |
+| 产品阻断 | `must-ship` → `npm run check:must-ship` | blocking（全部分支 / PR） |
+| Gen1 兼容 | `gen1-observation` → `npm run check` | observational（`continue-on-error`） |
+
+Mode 已退出；**仍未批准 `v2.0.0` tag**。须走本节 D + Approval Gate 才可发布。
 
 ### C. Blocker Findings（ADR-0024）
 
