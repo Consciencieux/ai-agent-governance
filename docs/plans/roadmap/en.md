@@ -326,7 +326,7 @@ Phase 5 internal order (indexed from PLAN-0035 / `call-topology.md`, not a new r
 
 ### Deferred by design (does not block starting Phase 5)
 
-Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **5c leftover capability leaves / optional rename** · **PLAN-0037 full extraction (unfreeze after 2.0)**.
+Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **5c leftover capability leaves / optional rename** · **lifecycle residue extraction / `state.json` phase-as-facet** (concept closure: [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md); no parallel “overturn lifecycle” phase) · **PLAN-0037 full extraction (unfreeze after 2.0)**.
 
 ### This repo vs 2.0 product
 

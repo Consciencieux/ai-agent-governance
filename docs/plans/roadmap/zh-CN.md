@@ -328,7 +328,7 @@ Phase 5 内部顺序（索引自 PLAN-0035 / `call-topology.md`，非新裁决�
 
 ### 故意延后（不挡 Phase 5 开工）
 
-剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · **5c 剩余 Capability 叶 / 可选 rename** · **PLAN-0037 全文提炼（2.0 后解冻）**。
+剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · **5c 剩余 Capability 叶 / 可选 rename** · **lifecycle 残留抽出 / `state.json` phase 降为 facet**（概念闭包：[FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md)；不另开「推翻 lifecycle」阶段）· **PLAN-0037 全文提炼（2.0 后解冻）**。
 
 
 ### 本仓 vs 2.0 产品

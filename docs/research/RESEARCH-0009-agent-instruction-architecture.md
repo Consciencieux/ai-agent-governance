@@ -8,7 +8,7 @@ version: 4
 
 本 RESEARCH 是 **系统模型（System Model）**：描述 Agent 指令如何组织、加载与执行。它回答「Generation-1 的 instruction topology 实际是什么、它如何演化、为什么会产生注意力负担、Accepted 目标形态在模型上长什么样、怎么评价」。
 
-它是**描述层**，不规定「必须怎么做」。规范决策（薄入口、树状检索、图状适用、机械优先、lifecycle 非政策仓库）在 ADR-0022。已观察到的失效由 `docs/findings/` 记录（FINDING-0015 / 0025 / 0026）。目录重排属于后续阶段，本模型不授权移动 `references/`。
+它是**描述层**，不规定「必须怎么做」。规范决策（薄入口、树状检索、图状适用、机械优先、lifecycle 非政策仓库、lifecycle 三义边界）在 ADR-0022。已观察到的失效由 `docs/findings/` 记录（FINDING-0015 / 0025 / 0026 / **0029**）。目录重排属于后续阶段，本模型不授权移动 `references/`。
 
 ## 三条校正
 
@@ -396,7 +396,7 @@ Synchronize → dispatch knowledge / sync controls
 Report      → evidence aggregation
 ```
 
-Root Cause Repair、Rule Capture、Git Write、Evidence、Release、Security、CHANGELOG、Review 在该目标形态下是独立 capability，而不是 lifecycle Phase 的内嵌章节。把 lifecycle 拆成许多文件、却仍要求 Agent 自己记得何时读取，只是换了一种单体（FINDING-0015）。
+Root Cause Repair、Rule Capture、Git Write、Evidence、Release、Security、CHANGELOG、Review 在该目标形态下是独立 capability，而不是 lifecycle Phase 的内嵌章节。把 lifecycle 拆成许多文件、却仍要求 Agent 自己记得何时读取，只是换了一种单体（FINDING-0015）。命名上还须与 Skill 安装生命周期、INIT/AUDIT/RELEASE 产品模式消歧，避免沿错误坐标继续堆政策（FINDING-0029；ADR-0022 2026-09-12 窄修正）。
 
 ## ADR-0022 下目标拓扑的一种可描述形态
 

@@ -97,6 +97,20 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 一般被治理项目不复制本仓科研文档树；薄入口与按需加载仍适用。完整对照表在 RESEARCH-0013。
 
+## 后续修正（2026-09-12）：`lifecycle` 三义边界（不改目标拓扑）
+
+本修正是对「lifecycle 的目标职责是编排骨架，不是政策仓库」（2026-09-10 修正第 3 条）的 **Narrow amendment**：补齐**命名叠义**边界。观察与证据见 FINDING-0029；系统描述见 RESEARCH-0009。不授权重写 ADR-0018 Phase 顺序，不授权删除 `lifecycle.policy.md`，不授权本仓恢复 Skill 自更新。
+
+自本修正起，本仓库口头或文档中的「lifecycle」必须可消歧为下列之一；**禁止**混用为单一架构坐标：
+
+| 义项 | 含义 | 本仓态度 |
+| --- | --- | --- |
+| **A. Skill 安装生命周期** | `INSTALL → UPDATE → ROLLBACK` | 外置 `ai-skill-manager`（PLAN-0025）；完整自更新 **不回归** |
+| **B. 产品模式** | `INIT / AUDIT / RELEASE` | 独立产品面；**不**并入操作 lifecycle 政策单体 |
+| **C. Agent 操作生命周期** | Understand → … → Report | **仅**编排骨架 + 指针；横切进 Capability；`phase` 是 ContextFacet，不是能力分类轴 |
+
+**生长规则（收紧既有第 3 条）：** 新横切规则默认进入 Capability / Control / 适用图；禁止向 `lifecycle.policy.md` 某 Phase 新增大段横切正文。可迁移的规则语义保留；错误的是「按 Phase 堆政策」的生长轴，不是「文件内每一句皆废」。残留抽出走既有 5c leftover / 后继 Plan，不另开并行「推翻 lifecycle」阶段。
+
 ## 后果
 
 - 入口文档（`SKILL.md` / `AGENTS.md` / README）瘦身为路由层，领域规则下放子技能 / 领域文件。
@@ -105,6 +119,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 - 本 ADR 是 Gen2 instruction architecture 的演进依据；具体入口瘦身 / 子技能拆分 / `references/` 重分类属后续执行任务，不在本 ADR 一次性铺开。拆文件若无路由与机械路径，不得视为本 ADR 已执行。
 - Context Economy 约束预期总上下文成本与重复推理，不授权 token 预算门禁或「为省 token 而少读必要权威」。
 - 科研回溯通过类型化对象 + 链接完成；执行上下文不因此变厚（RESEARCH-0013）。
+- `lifecycle` 一词必须消歧为安装层 / 产品模式 / 操作编排三者之一；操作编排不得再当政策仓库生长轴（FINDING-0029；2026-09-12 窄修正）。
 
 ## 参考
 
@@ -112,6 +127,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 - 入口层文档边界（前身）：ADR-0010
 - 静态 prompt 注意力负担：FINDING-0015
 - `templates/` 指令源与物化模板混置：FINDING-0026
+- `lifecycle` 一名三义与错误生长轴：FINDING-0029
 - Known-Issue Closure（零注意力执行语义）：ADR-0021
 - 知识对象模型（当前/历史隔离、知识≠执行）：RESEARCH-0007 / ADR-0016
 - 科研回溯 vs 上下文经济、一般项目文档面：RESEARCH-0013
