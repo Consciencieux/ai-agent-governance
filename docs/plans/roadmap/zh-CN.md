@@ -294,7 +294,7 @@ Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的�
 
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**当前阶段：5 — Dispatcher（入口）。** 稳定产品仍是 Generation 1（`main` / 1.x）。本分支 `migration/2.0-governance-architecture` 已完成 Phase 0–4 checkpoint；Phase 5 **尚未**实现 runtime Dispatcher。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
+**当前阶段：5b — Context Detector / Dispatcher（[PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) Design）。** 稳定产品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–4 与 5a（PLAN-0038）；runtime Dispatcher **尚未**实现。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
 
 ## 现在 → 2.0（索引）
 
@@ -314,8 +314,8 @@ Roadmap 只列顺序与车辆，不复制 Plan 步骤 / Affected Files / 验收�
 
 | 步 | 内容 | 车辆 | 一句话 |
 | --- | --- | --- | --- |
-| **现在** | Phase 5a 显式映射施工 | [PLAN-0038](../PLAN-0038-task-capability-routing.md)（**Active**）· [routing map](../../research/routing/task-capability-map.md) | RESEARCH-0012 已采纳；P0–P1 与夹具 v0 已落；待走读 |
-| 5b | Context Detector / Dispatcher | 后续 Plan（0038 exit 后另开） | 消费 5a 映射；仍禁止无路由搬家、禁止全自动 LLM 路由 |
+| **现在** | Phase 5b Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md)（**Design**）· 5a = [PLAN-0038](../PLAN-0038-task-capability-routing.md)（**Implemented**） | 查表可调用：resolve + Detector + CLI；消费同一张图；待 Design 批准 |
+| 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) | 消费 5a 映射；禁止另造适用关系、禁止全自动 LLM 路由、禁止无路由搬家 |
 | 6 | Invariant-based Testing | 后续 Plan | 每条重要 Control：positive + negative oracle |
 | 7 | Review 三类拆分 | 后续 Plan | Implementation / System / Research |
 | 8 | 重建 mandatory gates | 后续 Plan | 阻断权威交到新 control plane |
@@ -323,11 +323,11 @@ Roadmap 只列顺序与车辆，不复制 Plan 步骤 / Affected Files / 验收�
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **冻结在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必达项；2.0 产品 = 本仓 INSTALLED Gen2 skill。过滤边界仍约束迁移期载荷。解冻：2.0 发布之后。
 
-Phase 5 内部顺序（索引自 PLAN-0035，非新裁决）：显式映射 → 薄入口消费 → Dispatcher → 再谈物理拓扑。
+Phase 5 内部顺序（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → 薄入口 → **5b** Dispatcher（PLAN-0039）→ **5c** 按 Capability 投影物理文件（只改 `AuthorityRef`；5b EXIT 后另开 Plan）。Gen1 无真正 Task→Capability 图；5c **不**按 1.0 目录骨架细切，**不**另造查找架构。纪律：`docs/research/routing/call-topology.md` § 物理拓扑。
 
 ### 故意延后（不挡 Phase 5 开工）
 
-剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · 文档物理搬家 · **PLAN-0037 全文提炼（2.0 后解冻）**。
+剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · **文档物理搬家（= Phase 5c，待 5b 后）** · **PLAN-0037 全文提炼（2.0 后解冻）**。
 
 
 ### 本仓 vs 2.0 产品
@@ -561,7 +561,9 @@ Generation 1 — Document-Centric Governance
   Generation 2 migration（ADR-0018 Phase 0–8）
         ↓
 P0–P4  checkpoint EXITED
-P5     Dispatcher — 当前（先 5a 显式映射，后 5b runtime）
+P5a    Task→Capability map — EXITED（PLAN-0038）
+P5b    Dispatcher — **current**（PLAN-0039 Design）
+P5c    按 Capability 物理投影 — 5b 后另开（见 call-topology § 物理拓扑）
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates

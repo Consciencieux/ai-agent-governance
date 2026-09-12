@@ -49,7 +49,8 @@ All notable changes to this project will be documented here.
 - **PLAN-0036 Discovery Ledger L1** — INSTALLED contract in `lifecycle.policy.md` § 发现台账（storage = TASK plan table; not state.json/registry); ADR-0021 payload amendment; workflow hooks; characterization via docs + clean-target payload tests. No auto-discovery JS.
 - **Phase 4 EXITED** — PLAN-0035 Exit Criteria satisfied; remaining consistency clusters / #9 / routing / topology / automation deferred by design. Phase 5 entry opened as RESEARCH-0012 (explicit Task→Capability map; no Dispatcher yet).
 - **Skill distillation boundary (ADR-0020) + PLAN-0037 (Design)** — reusable skill sets design-space bounds (L1 hard invariants), not soft advice and not a copy of this repo’s `docs/` / Phase / CTRL instances; extract only after Phase 5 routing stabilizes.
-- **Phase 5 entry deepened** — RESEARCH-0012 v2 frames Task / Capability / Applicability / multi-match / Control relation / RoutingResult working hypotheses; PLAN-0038 (Design) is the construction vehicle for an explicit map (no Dispatcher). PLAN-0037 remains post-routing extraction only.
+- **Phase 5a Task→Capability routing (PLAN-0038 Implemented)** — call topology + explicit map + `routing` characterization suite; AGENTS.md thin pointer (repo-only). No Dispatcher; PLAN-0037 remains frozen until after 2.0.
+- **Phase 5 sequencing discipline (5a/5b/5c)** — documented in `call-topology.md` § 物理拓扑 + roadmap: Gen1 had no Task→Capability graph; 5c projects files by Capability (AuthorityRef only) after 5b; no second lookup model; no 1.0-skeleton splits.
 
 ## [1.0.2] - 2026-09-08
 

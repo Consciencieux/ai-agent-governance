@@ -292,7 +292,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Current phase: 5 — Dispatcher (entry).** The stable product is still Generation 1 (`main` / 1.x). This branch `migration/2.0-governance-architecture` has completed Phase 0–4 checkpoints; Phase 5 has **not** implemented a runtime Dispatcher. Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
+**Current phase: 5b — Context Detector / Dispatcher ([PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) Design).** The stable product is still Generation 1 (`main` / 1.x). This branch has completed Phase 0–4 and 5a (PLAN-0038); a runtime Dispatcher is **not** implemented yet. Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
 
 ## Now → 2.0 (index)
 
@@ -312,8 +312,8 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 
 | Step | What | Vehicle | One line |
 | --- | --- | --- | --- |
-| **Now** | Phase 5a explicit-map construction | [PLAN-0038](../PLAN-0038-task-capability-routing.md) (**Active**) · [routing map](../../research/routing/task-capability-map.md) | RESEARCH-0012 adopted; P0–P1 + fixtures v0 landed; walkthrough pending |
-| 5b | Context Detector / Dispatcher | Later plan (after 0038 exit) | Consumes the 5a map; still no topology-before-routing, no fully automatic LLM router |
+| **Now** | Phase 5b Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) (**Design**) · 5a = [PLAN-0038](../PLAN-0038-task-capability-routing.md) (**Implemented**) | Callable lookup: resolve + Detector + CLI; same graph; awaiting Design approval |
+| 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) | Consumes the 5a map; no second applicability model, no fully automatic LLM router, no topology-before-routing |
 | 6 | Invariant-based Testing | Later plan | Positive + negative oracle per important Control |
 | 7 | Review split into three kinds | Later plan | Implementation / System / Research |
 | 8 | Rebuild mandatory gates | Later plan | Blocking authority moves onto the new control plane |
@@ -321,11 +321,11 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **frozen in Design** (not Archived). Full Stages A–D are **not** a 2.0 must-ship; 2.0 = this repo’s INSTALLED Gen2 skill. The extraction boundary still constrains the payload during migration. Unfreeze: after the 2.0 release.
 
-Phase 5 internal order (indexed from PLAN-0035, not a new ruling): explicit map → thin entry consumes it → Dispatcher → then physical topology.
+Phase 5 internal order (indexed from PLAN-0035 / `call-topology.md`, not a new ruling): **5a** explicit map → thin entry → **5b** Dispatcher (PLAN-0039) → **5c** project files by Capability (retarget `AuthorityRef` only; open a Plan after 5b EXIT). Gen1 had no real Task→Capability graph; 5c must **not** slice by the 1.0 directory skeleton or invent a second lookup model. Discipline: `docs/research/routing/call-topology.md` § 物理拓扑.
 
 ### Deferred by design (does not block starting Phase 5)
 
-Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · physical doc moves · **PLAN-0037 full extraction (unfreeze after 2.0)**.
+Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **physical doc moves (= Phase 5c, after 5b)** · **PLAN-0037 full extraction (unfreeze after 2.0)**.
 
 ### This repo vs 2.0 product
 
@@ -558,7 +558,9 @@ Generation 1 — Document-Centric Governance
   Generation 2 migration (ADR-0018 Phase 0–8)
         ↓
 P0–P4  checkpoints EXITED
-P5     Dispatcher — current (5a explicit map, then 5b runtime)
+P5a    Task→Capability map — EXITED (PLAN-0038)
+P5b    Dispatcher — **current** (PLAN-0039 Design)
+P5c    Physical projection by Capability — after 5b (see call-topology § 物理拓扑)
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates

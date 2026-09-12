@@ -37,6 +37,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Test protection | `references/policies/testing.policy.md` § 测试保护 | payload |
 | CHANGELOG content boundary | `references/policies/lifecycle.policy.md` § CHANGELOG 内容边界 · this file § Change classification (repo-owned accession) | both |
 | Agent instruction architecture (thin entrypoint, contextual loading, mechanical-first) | `docs/design-decisions/ADR-0022-agent-instruction-architecture.md` · `docs/research/RESEARCH-0009-agent-instruction-architecture.md` · this file § Conventions | both |
+| Task→Capability call topology (Phase 5a–5c; repo construction) | `docs/research/routing/call-topology.md` · `docs/research/routing/task-capability-map.md` · PLAN-0038 · PLAN-0039 · this file § Task→Capability routing | repo |
 | Producer/product separation (shared semantics, single authoritative owner, separate profiles) | `docs/design-decisions/ADR-0020-producer-product-governance-separation.md` · this file § Classification judge rule | repo |
 | Governance Control Model (control identity, slots, profile binding) | `docs/design-decisions/ADR-0023-governance-control-model.md` · `docs/research/RESEARCH-0010-governance-control-model.md` | repo |
 
@@ -62,6 +63,17 @@ Hard rules that follow from this:
 - **Read `docs/product/en/architecture.md` — Repository Layout section** — it is the mandatory map of what each directory is FOR. The layout gate (`npm run check` → `docs:layout`) fails CI if this tree drifts from `references/` + `scripts/` + `repo-tools/` + `repo-workflows/`, so keeping it read-and-current is enforced, not optional. **CI authority is dual-mode (ADR-0014):** on `main` / 1.x, `npm run check` blocks; on `migration/2.0-governance-architecture`, only the Refactor Safety Kernel blocks (JS syntax + `--suite security/generator/payload`) and Gen1 `npm run check` is observational (continue-on-error).
 - Read [SKILL.md](SKILL.md) — it is the product specification, not just a doc
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the relevant [docs/](docs/) page for the area you change
+
+### Task→Capability routing (Phase 5a · repo construction)
+
+For work **in this repository** on the Gen2 migration branch, do **not** open the whole governance tree by default. Load by call topology (ADR-0022 Context Economy):
+
+1. Classify the task → `task_class` (+ optional context facets).
+2. Resolve via the construction map: [`docs/research/routing/task-capability-map.md`](docs/research/routing/task-capability-map.md) (architecture: [`call-topology.md`](docs/research/routing/call-topology.md)).
+3. Read only the resulting `read_set` authorities; run only `run_set` controls; if `unmatched` or over budget, use `defer_set` — never silently load everything.
+4. **Do not** implement a Dispatcher here (that is PLAN-0039 / Phase 5b); **do not** start Phase **5c** physical projection of `references/` before 5b EXIT; **do not** rearrange files by Gen1 directory skeleton — projection follows Capability nodes and only retargets `AuthorityRef` (see `call-topology.md` § 物理拓扑); **do not** invent a second Task→Capability lookup model; **do not** Active PLAN-0037 (frozen until after 2.0).
+
+This map is **REPO-ONLY** construction authority (not INSTALLED payload). Characterization: `node tests/run-tests.js --suite routing`.
 
 ## Protected files (governance file protection)
 

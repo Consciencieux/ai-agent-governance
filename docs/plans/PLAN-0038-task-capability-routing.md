@@ -1,13 +1,13 @@
 ---
 id: PLAN-0038
-status: Active
+status: Implemented
 generation: gen2
 target: both
 ---
 
 # PLAN-0038：Phase 5 Task→Capability 适用路由（显式映射）
 
-> **Status: Active**（Phase 5a 施工。RESEARCH-0012 v2 六问假设已采纳。**不**实现 Dispatcher；**不**搬文档物理拓扑；**不** Active PLAN-0037——0037 冻结至 2.0 后。）
+> **Status: Implemented**（Phase 5a EXITED。调用拓扑 + 显式 map + 表征套件 + AGENTS 薄指针已落地。**未**实现 Dispatcher；**未**搬文档物理拓扑；**未** Active PLAN-0037。Architecture checkpoint ≠ Release；归档另按 ADR-0016。）
 
 把 RESEARCH-0012 的 Task / Capability / Applicability / Routing 工作假设落成 **人工可维护的显式映射 + 表征验证**，使薄入口能消费稳定 read-set。
 
@@ -22,7 +22,7 @@ RESEARCH-0012 假设已采纳
         ↓
 表征：已知任务 → 稳定 read-set / run-set
         ↓
-（可选）入口指针 / Narrow ADR
+AGENTS 薄指针（repo-only；非 INSTALLED）
         ↓
 再谈 Dispatcher（5b）/ 物理拓扑；PLAN-0037 仍冻结
 ```
@@ -33,7 +33,8 @@ RESEARCH-0012 假设已采纳
 - 种子 capability 清单（Authority 指针；可选 binds_controls）
 - 显式 applicability 映射（陈述式；人工维护）
 - RoutingResult 形状（read_set / run_set / defer_set / unmatched）
-- 表征夹具：≥5 个典型任务
+- 表征夹具：≥5 个典型任务 + `tests/suites/routing.test.js`
+- AGENTS.md 指针（repo-only）
 - roadmap / RESEARCH-0012 同步
 
 ## 非目标（Out）
@@ -45,6 +46,7 @@ references/ 或 docs/ 大规模搬家
 PLAN-0037 extraction / 发布通用 skill
 完整 Phase 6 oracle 体系
 知识图谱 / 句级 ontology
+SKILL.md 写入 docs/ 路径（违反 reference-closure）
 ```
 
 ## 前置条件
@@ -57,9 +59,11 @@ PLAN-0037 extraction / 发布通用 skill
 
 | 产物 | 路径 | 状态 |
 | --- | --- | --- |
-| 路由工作稿（种子 + 映射 + 夹具） | `docs/research/routing/task-capability-map.md` | v0 Working |
 | 调用拓扑架构 | `docs/research/routing/call-topology.md` | v0 Working |
-| 假设来源 | `docs/research/RESEARCH-0012-task-capability-routing.md` | Active v3；P0 已采纳；含拓扑分层 |
+| 路由工作稿（种子 + 映射 + 夹具） | `docs/research/routing/task-capability-map.md` | v0 Working |
+| 确定性解析表征 | `tests/suites/routing.test.js` | 7/7 pass |
+| 假设来源 | `docs/research/RESEARCH-0012-task-capability-routing.md` | Active v3 |
+| 薄入口指针 | `AGENTS.md` § Task→Capability routing | repo-only |
 
 ## 交付阶段
 
@@ -72,35 +76,35 @@ PLAN-0037 extraction / 发布通用 skill
 
 - [x] `task_class` 最小枚举（含 `unknown`）
 - [x] capability 种子 + RESEARCH-0006 族 deferred 对账；静默 Unaccounted = 0
-- [ ] 用户/下一轮审查可修订种子（不阻塞 P2 夹具）
 
-### P2 — 显式映射 + 表征 — Done（v0 走读）
+### P2 — 显式映射 + 表征 — Done
 
-- [x] Task×Capability 触发表（高价值）
-- [x] Context facet 加码规则
-- [x] 表征夹具 F1–F6
-- [x] 人工走读夹具（2026-09-12）：F1–F3/F5/F6 与表一致；F4 `repair` 超 8 → review-implementation / security-baseline / rule-capture 进 defer_set，机械 run_set 保留规则成立
-- [x] 失败模式已登记
+- [x] Task×Capability 触发表 + Context facet 加码
+- [x] 表征夹具 F1–F6 + 人工走读
+- [x] `routing` 测试套件：确定性解析对齐 call-topology（预算裁剪不丢 bound Control）
 
-### P3 — 入口消费（可选） — Not started
+### P3 — 入口消费 — Done（窄）
 
-- 仅当 P2 走读通过：AGENTS/SKILL **指针**指向 map，不塞表正文
-- 禁止借机重写 lifecycle
+- [x] `AGENTS.md` 原则索引 + § Task→Capability routing（指针 only）
+- [x] **不**写入 `SKILL.md`（map 在 `docs/`，INSTALLED 不可引用）
 
 ## 完成条件（exit）
 
-- [x] P0 假设已审查并记录
-- [x] 种子清单存在且 deferred 有 revisit
-- [x] 表征夹具走读通过（v0）
+- [x] P0–P3 完成
+- [x] 表征套件绿
 - [x] 无 Dispatcher；无大规模拓扑搬家；未 Active PLAN-0037
-- [x] Ledger：Open=0；Unaccounted=0（R1/R2/R4 deferred 有 revisit）
+- [x] Ledger：Open=0；Unaccounted=0
+
+## Successor
+
+Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md) Context Detector / Dispatcher（消费同一张图；不另发明适用关系）。打开条件：本计划 Implemented — **已满足**；Design 待批准。
 
 ## Domain sync（Target: both）
 
 | Domain | 同步点 |
 | --- | --- |
-| repo-infra | RESEARCH-0012、roadmap、本计划、`docs/research/routing/*` |
-| payload | P3 前保持 repo-only 映射；写入 INSTALLED 指针须 reference-closure |
+| repo-infra | RESEARCH-0012、roadmap、本计划、`docs/research/routing/*`、AGENTS.md、`tests/suites/routing.test.js` |
+| payload | **未**写入 INSTALLED；5b/Narrow ADR 前保持 repo-only |
 
 ## 受影响文件
 
@@ -110,24 +114,26 @@ PLAN-0037 extraction / 发布通用 skill
 - `docs/research/routing/README.md`
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
 - `docs/plans/PLAN-0038-task-capability-routing.md`（本文件）
-- （P3 可选）AGENTS.md / SKILL.md 指针
-- CHANGELOG（行为入口指针落地时）
+- `AGENTS.md`
+- `tests/run-tests.js` · `tests/suites/routing.test.js`
+- `CHANGELOG.md`
 
 ## 发现台账（Discovery Ledger）
 
 | 标识（ID） | 类型 | 来源 | 问题 | 影响面 | 严重度 | 状态 | 处置 | 责任人 | 验证/证据 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | R0 | observation | research | 无显式 Task→Capability 映射 | both | high | closed | resolved | — | routing map v0 |
-| R1 | observation | review | Capability 过粗/过细会污染提取 | skill | med | closed | deferred | — | revisit: 5b/0037；0037 已冻结 |
+| R1 | observation | review | Capability 过粗/过细会污染提取 | skill | med | closed | deferred | — | revisit: 5b/0037 |
 | R2 | observation | design | Dispatcher 易被提前实现 | both | med | closed | deferred | — | revisit: 5b；Out of scope |
-| R3 | observation | construction | 超预算裁剪阈值需走读验证 | both | med | closed | resolved | — | F4 走读：超 8 进 defer_set |
-| R4 | observation | design | PLAN-0037 误为 2.0 必达 | both | high | closed | deferred | — | 0037 Design 冻结；2.0 后解冻 |
+| R3 | observation | construction | 超预算裁剪启发式需走读验证 | both | med | closed | resolved | — | routing suite F4 |
+| R4 | observation | design | PLAN-0037 误为 2.0 必达 | both | high | closed | deferred | — | 0037 Design 冻结 |
+| R5 | observation | construction | SKILL 不可链 docs/ 路由表 | payload | med | closed | resolved | — | P3 仅 AGENTS |
 
 ## 闭包对账
 
 ```text
-Total known:  5
-Resolved:     2  (R0, R3)
+Total known:  6
+Resolved:     3  (R0, R3, R5)
 Deferred:     3  (R1, R2, R4)
 Open:         0
 Unaccounted:  0
@@ -135,5 +141,5 @@ Unaccounted:  0
 
 ## 参考
 
-- RESEARCH-0012 v2 · ADR-0018 Phase 5 · ADR-0022 · ADR-0023
+- RESEARCH-0012 v3 · ADR-0018 Phase 5 · ADR-0022 · ADR-0023
 - RESEARCH-0006 / 0009 · PLAN-0035 / 0036 · PLAN-0037（冻结）

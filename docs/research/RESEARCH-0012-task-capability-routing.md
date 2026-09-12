@@ -28,6 +28,8 @@ subject_generation: gen2
 
 现状失败模式：Agent 打开厚 `lifecycle.policy` / 多文件自搜 → token↑、漏读、跨位置关联失败（ADR-0022）。
 
+**Gen1「能力路由」澄清：** 1.x 稳定产品**没有**独立的 Task→Capability 适用图。日常查找 ≈ 厚入口 + `lifecycle.policy` 政策仓库 + 子技能 trigger 词 + Agent 自搜（目录/记忆当 dispatcher）。Gen2 调用拓扑**替换**该查找层，而不是给旧目录树加一层别名。物理文件投影（Phase **5c**）只能按 Capability 重挂功能语义；纪律见 `docs/research/routing/call-topology.md` § 物理拓扑。**禁止**另造第三套查找架构。
+
 ## 目标形状（陈述，非实现）
 
 ```text
@@ -195,9 +197,10 @@ PLAN-0037 Extraction boundary：抽 **Gen2 control plane portable semantics**，
 | 产物 | 状态 |
 | --- | --- |
 | 本 RESEARCH v2（六问工作假设） | 本文件；**已采纳** |
-| **PLAN-0038** Phase 5a 施工（taxonomy + 显式 map + 表征验证） | **Active**；工作稿 `docs/research/routing/task-capability-map.md` |
-| 必要时 Narrow ADR（routing 权威表示） | 映射稳定后 |
-| Dispatcher 运行时 | 更后切片 |
+| **PLAN-0038** Phase 5a 施工（taxonomy + 显式 map + 表征验证） | **Implemented**；工作稿 `docs/research/routing/task-capability-map.md` |
+| **PLAN-0039** Phase 5b Context Detector / Dispatcher | **Design**；消费同一张图；待批准后 Active |
+| 必要时 Narrow ADR（routing 权威表示） | 映射稳定且需升格后 |
+| Dispatcher 运行时 | PLAN-0039 施工（本切片） |
 | PLAN-0037 Active | **2.0 后**解冻（Design 冻结；非 2.0 blocker） |
 
 ## 开放项（留给 PLAN-0038 / 审查）
@@ -212,4 +215,4 @@ PLAN-0037 Extraction boundary：抽 **Gen2 control plane portable semantics**，
 
 - ADR-0018 Phase 5 · ADR-0020 · ADR-0022 · ADR-0023
 - RESEARCH-0004 / 0006 / 0009 / 0010 / 0011
-- PLAN-0035 / PLAN-0036 Exit · PLAN-0037 Design 冻结 · PLAN-0038 Active
+- PLAN-0035 / PLAN-0036 Exit · PLAN-0037 Design 冻结 · PLAN-0038 Implemented · PLAN-0039 Design

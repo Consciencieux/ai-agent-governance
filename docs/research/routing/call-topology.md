@@ -128,22 +128,52 @@ Agent / 将来 Dispatcher **同一套解析**。5b 只是把本算法从查表�
 
 共享 **facet 词汇**（trees / phase / write_boundary）为佳；不要求 id 一一对应。对齐方式仍开放（PLAN-0038 开放项 4）。
 
-## 物理拓扑（明确后置）
+## 物理拓扑（明确后置 · Phase 5c）
+
+Phase 5 内部切片（索引；非独立 ADR Phase）：
+
+| 切片 | 车辆 | 做什么 |
+| --- | --- | --- |
+| **5a** | PLAN-0038 | 显式图 + 表征 + 薄入口指针 |
+| **5b** | PLAN-0039 | Detector + 共享 `resolve` + CLI（同一张图） |
+| **5c** | 后续投影 Plan（5b EXIT 后另开） | `references/` / 入口文件 **按 Capability 投影**；只改 `AuthorityRef` |
 
 ```text
-调用拓扑（本文件 + map）     现在
-        ↓ 稳定后
-薄入口指针消费 L4            PLAN-0038 P3 可选
+调用拓扑（本文件 + map）     现在（5a）
         ↓
-Dispatcher 跑同一解析        Phase 5b
+薄入口指针消费 L4            PLAN-0038 P3
         ↓
-references/ 按 Capability 投影  更后；只改 AuthorityRef
+Dispatcher 跑同一解析        PLAN-0039（5b）
+        ↓
+references/ 按 Capability 投影  Phase **5c**；只改 AuthorityRef
 ```
 
-未稳定前移动 `lifecycle.policy.md` 等 = 无路由拆分。
+未稳定前移动 `lifecycle.policy.md` 等 = **无路由拆分**（禁止）。
+
+### Gen1 查找 vs 本图（对比裁决）
+
+| | Generation 1（1.x / `main` 稳定产品） | 本调用拓扑（Gen2 施工权威） |
+| --- | --- | --- |
+| 查找模型 | 厚入口 + 目录/章节位置 + Agent 记忆与自搜 | `TaskClass` + Facet → Capability 集合 → Authority / Control |
+| 「路由」实体 | **没有**独立 Task→Capability 适用图；trigger 词与目录充数 | 显式边 + 确定性解析（L4） |
+| 文件角色 | 文件/章节 ≈ 能力边界（易把 lifecycle 当政策仓库） | 文件只是 `AuthorityRef` 的**当前投影**，**不是**图节点 |
+| 横切能力 | 常内嵌进 lifecycle 某 Phase 小节 | 独立 Capability，由图挂到多个 Task/Facet |
+
+结论：**不要另造第三套能力查找架构。** 5b/5c 只是把本图程序化并投影到磁盘；1.0 目录分类（按生成方式、按 lifecycle Phase 堆横切）**不得**再当查找权威。
+
+### 5c 迁移纪律（投影时必须遵守）
+
+1. **架构以本图为准；1.0 只提供可迁移的功能语义**（规则条文、保证、检查意图）。
+2. **按 Capability 重排位置**，不按 1.0 目录树「细切开」装回旧骨架。
+3. **搬家只改 `AuthorityRef`（及 INIT/生成契约中的路径）**；`always_on` / `triggers` / `facet_adds` / `binds` **不变**。边要变 → 先改 map + 表征，再搬家。
+4. **横切不单挂一个 lifecycle 节点**（与 ADR-0022 目标形态一致）。
+5. **禁止**在 5b 完成前启动 5c；**禁止**无 map 命中面的「对称拆文件」。
+
+5c **不是** Phase 6（正负 oracle），也不是 PLAN-0037 extraction。
 
 ## 演进规则
 
 - 新增 TaskClass / Capability / 边 → 先改本架构是否仍够用，再改 map 与夹具
 - 新边类型 = 新研究；默认拒绝
+- **禁止**平行维护第二套 Task→Capability 查找模型（与 D1「一套解析」同族）
 - 本图不承担科研回溯（那是 RESEARCH-0013 的对象链，on-demand）
