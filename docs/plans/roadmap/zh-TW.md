@@ -294,7 +294,7 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**當前階段：Phase 7 Active（[PLAN-0043](../PLAN-0043-review-system-redesign.md)；消費 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–6（6 = [PLAN-0042](../PLAN-0042-invariant-based-testing.md) Implemented）。Plan archive ≠ Release（ADR-0016）；Phase 8 EXIT ≠ skill-release（ADR-0018 2026-09-12 修正 + ADR-0024 可用性門檻）。
+**當前階段：Phase 8 Active（[PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md)；消費 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–7（7 = [PLAN-0043](../PLAN-0043-review-system-redesign.md) Implemented）。Plan archive ≠ Release（ADR-0016）；Phase 8 EXIT ≠ skill-release（ADR-0018 2026-09-12 修正 + ADR-0024 可用性門檻）。
 
 ## 現在 → 2.0（索引）
 
@@ -311,14 +311,14 @@ Roadmap 只列順序與施工計劃，不複製 Plan 步驟 / Affected Files / �
 | 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
 | 5 | [PLAN-0038](../PLAN-0038-task-capability-routing.md) · [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../PLAN-0040-capability-physical-projection.md) | Implemented / EXITED（5a 圖 · 5b resolve/CLI · 5c P0–P2 投影；leftover 延後） |
 | 6 | [PLAN-0042](../PLAN-0042-invariant-based-testing.md) | Implemented / EXITED（oracle 台帳 + 路由負向 + 種子 CTRL；全量機械規則仍延後） |
+| 7 | [PLAN-0043](../PLAN-0043-review-system-redesign.md) | Implemented / EXITED（Impl must-ship；System/Research repo-keep；路由 N4） |
 
 ### 下一步（必須按此序；不跳過審查）
 
 | 步 | 內容 | 施工計劃 | 一句話 |
 | --- | --- | --- | --- |
-| **現在** | Phase 7 Review 三類拆分 | [PLAN-0043](../PLAN-0043-review-system-redesign.md)（**Active**） | Implementation Review 必裝；System/Research 倉內 |
-| 7 | Review 三類拆分 | [PLAN-0043](../PLAN-0043-review-system-redesign.md)（Active） | 消費 ADR-0024；不是重寫全部 Gen1 審查文 |
-| 8 | 重建 mandatory gates | 後續 Plan | **只把必裝機械控制**交回阻斷權威 |
+| **現在** | Phase 8 重建 mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md)（**Active**） | `check:must-ship` fail-closed；≠ 全量 Gen1 check |
+| 8 | 重建 mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md)（Active） | 只把必裝機械控制交回阻斷權威 |
 | **2.0** | 本倉 Gen2 skill 發布 | `repo-workflows/skill-release.md` | 必裝切片乾淨目標可用 + Mode 退出 + 必裝阻斷（[ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）；Phase 8 必要不充分 |
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **凍結在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必達項；2.0 產品切片 = [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)。過濾邊界仍約束遷移期載荷。解凍：2.0 發布之後。
@@ -561,10 +561,10 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration（ADR-0018 Phase 0–8）
         ↓
-P0–P6  checkpoint EXITED
+P0–P7  checkpoint EXITED
          P6 = PLAN-0042（oracle 台帳 + 路由負向 + 種子 CTRL）
-P7     Review System redesign — **current**（PLAN-0043 Active；消費 ADR-0024）
-P8 Rebuild mandatory gates（必裝機械控制的阻斷權威）
+         P7 = PLAN-0043（Review 三類；Impl must-ship）
+P8     Rebuild mandatory gates — **current**（PLAN-0044 Active；`check:must-ship`）
         ↓
 2.0 skill-release（ADR-0024 可用性門檻：乾淨目標 + Mode 退出 + 必裝阻斷；Phase 8 必要不充分）
         ↓

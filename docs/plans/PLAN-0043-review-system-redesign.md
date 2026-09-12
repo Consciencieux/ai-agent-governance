@@ -1,13 +1,13 @@
 ---
 id: PLAN-0043
-status: Active
+status: Implemented
 generation: gen2
 target: both
 ---
 
 # PLAN-0043：Phase 7 Review System redesign
 
-> **Status: Active**（P0 已批准并开工。前置：Phase 6 EXITED · [ADR-0024](../design-decisions/ADR-0024-gen2-product-freeze.md) Accepted。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。）
+> **Status: Implemented**（P0–P4 完成。**Phase 7 checkpoint EXITED**。前置：Phase 6 EXITED · ADR-0024 Accepted。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。）
 
 把「一个 review-manager 扛全部审查」拆成三类，并让每类有可加载权威与验收面。动机权威：ADR-0018 决策 5 · FINDING-0014。产品边界权威：**必须消费** ADR-0024。
 
@@ -27,14 +27,14 @@ System Review + Research Review = repo-keep（仓内可运行；不进 skill 默
 Phase 7 checkpoint EXITED → Phase 8（只重建必装机械控制阻断权威）
 ```
 
-## 现状
+## 现状（Exit 时）
 
 | 观察 | 含义 |
 | --- | --- |
-| 图已有 `review-implementation` | `graph.v0.json` / map 指向 `sub-skills.md` § review-manager |
-| 无 System / Research 叶 | Agent 默认仍把「全面审查」塞进 Implementation |
-| FINDING-0014 Confirmed | 层级错配：实现保证 ≠ 架构质量；关闭条件要求分层 |
-| ADR-0024 §9 | Phase 7 验收 = Impl 能力仍在 + System/Research 在 **repo** 可运行 |
+| `review-implementation` | map / graph 指向 `references/templates/sub-skills.md` § review-manager；边界句 = Impl only |
+| System / Research 叶 | `docs/research/working/review/{system,research}-review.md` + 路由 Capability |
+| FINDING-0014 | 分层落地；L0–L4 工具化仍 later；Finding 保持 Confirmed |
+| ADR-0024 §9 | Phase 7 验收面满足 |
 
 ## 范围（In）
 
@@ -84,7 +84,7 @@ Migration 分支上把 Gen1 npm run check 改成 blocking
 - [x] `docs/research/working/review/review-kinds.md`（边界 + 触发 + 输出物）
 - [x] `docs/research/working/review/system-review.md`
 - [x] `docs/research/working/review/research-review.md`
-- [x] Impl：map / 投影表声明「仅 Implementation」；`sub-skills.md` §8 边界句
+- [x] Impl：map / 投影表声明「仅 Implementation」；`references/templates/sub-skills.md` §8 边界句
 
 ### P2 — 路由投影
 
@@ -94,23 +94,23 @@ Migration 分支上把 Gen1 npm run check 改成 blocking
 
 ### P3 — 表征 + Finding
 
-- [x] `tests/suites/routing.test.js`：N4 / F7 / F8
+- [x] `tests/suites/routing.test.js`：N4 / F7 / F8（routing suite 19/19）
 - [x] FINDING-0014：分层已落地；L0–L4 全量工具化标 later，Finding 仍 Confirmed
 
 ### P4 — Exit
 
-- [ ] ADR-0024 §9 Phase 7 验收面满足（人工确认后勾）
-- [ ] roadmap ×3：Phase 7 Implemented / EXITED
-- [ ] PLAN-0037 仍 Design 冻结；无 Phase 8 偷跑
-- [ ] Ledger Open=0（本计划范围内）
+- [x] ADR-0024 §9 Phase 7 验收面满足（人工确认）
+- [x] roadmap ×3：Phase 7 Implemented / EXITED
+- [x] PLAN-0037 仍 Design 冻结；无 Phase 8 偷跑（Phase 8 = 后继 PLAN-0044）
+- [x] Ledger Open=0（本计划范围内）
 
 ## 完成条件（exit）
 
-- [ ] P0–P4 完成
-- [ ] Implementation Review 能力仍可指出载体（must-ship；**Phase 7 checkpoint**，不是 2.0 干净目标验收）
-- [ ] System / Research 在本仓有可加载剧本且路由可命中（repo-keep）
-- [ ] 无「一个 review 扛三类」的权威表述残留于 Phase 7 新权威文件
-- [ ] 未 Active PLAN-0037；未改 Migration Gen1 check 为 blocking
+- [x] P0–P4 完成
+- [x] Implementation Review 能力仍可指出载体（must-ship；**Phase 7 checkpoint**，不是 2.0 干净目标验收）— `references/templates/sub-skills.md` § review-manager
+- [x] System / Research 在本仓有可加载剧本且路由可命中（repo-keep）
+- [x] 无「一个 review 扛三类」的权威表述残留于 Phase 7 新权威文件
+- [x] 未 Active PLAN-0037；未改 Migration Gen1 check 为 blocking
 
 ## Discovery Ledger
 
@@ -148,6 +148,20 @@ Deferred by design:
 - review-manager 正文大改
 ```
 
+## Phase 7 exit review（2026-09-12）
+
+| 检查项 | 状态 |
+| --- | --- |
+| Exit Criteria Required 全项 | ✓ |
+| Deferred by design 已显式记录 | ✓ |
+| Phase 8 / Active PLAN-0037 / Gen1 check→blocking | **未偷跑** |
+| Open blocker | **无** |
+| 表征证据 | `node tests/run-tests.js --suite routing` → 19/19 |
+
+**Completion marker：** Phase 7 checkpoint = **EXITED**（PLAN-0043 `status: Implemented`）。
+
+**Successor：** Phase 8 Rebuild mandatory gates（[PLAN-0044](PLAN-0044-rebuild-mandatory-gates.md) Active）。
+
 ## Affected Files（预期）
 
 - `docs/plans/PLAN-0043-review-system-redesign.md`（本文件）
@@ -157,13 +171,13 @@ Deferred by design:
 - `docs/research/working/routing/projection-table.md`
 - `docs/research/working/routing/call-topology.md`（指针）
 - `repo-tools/lib/routing.js` / Detector 触发（若需）
-- `tests/suites/routing.test.js`（或新 suite）
+- `tests/suites/routing.test.js`
 - `docs/findings/FINDING-0014-review-manager-layer-mismatch.md`
 - `docs/plans/roadmap/{zh-CN,en,zh-TW}.md` · `AGENTS.md` · `CHANGELOG.md`
 - 可选薄编辑：`references/templates/sub-skills.md`（仅边界句）
 
 ## Successor
 
-- Phase **8** Rebuild mandatory gates（只针对 ADR-0024 must-ship 机械控制）
-- FINDING-0014：分层落地后按关闭条件评估是否 Resolved
+- Phase **8** Rebuild mandatory gates — [PLAN-0044](PLAN-0044-rebuild-mandatory-gates.md)
+- FINDING-0014：分层落地后按关闭条件评估是否 Resolved（仍 Confirmed；L0–L4 later）
 - PLAN-0037 仍冻结至 2.0 后

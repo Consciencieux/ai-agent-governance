@@ -24,7 +24,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Human-in-the-loop release | `references/workflows/release.md` § 发布流程总览 + `repo-workflows/skill-release.md` § Skill Repository Release | both |
 | SemVer discipline | `references/workflows/release.md` § Phase 2 | both |
 | Release transactionality | `references/workflows/release.md` § 事务性 | payload |
-| Turn-scoped consent + exceptions A/B | `references/policies/git.policy.md` § 确认范围 · this file § Git Operation Safety Protocol | both |
+| Turn-scoped consent + exceptions A/B | `references/policies/git.policy.md` § 确认范围（**sole semantic authority**; this file keeps a pointer only — ADR-0024） | both |
 | Payload self-containment | `references/init-spec.json` § invariants | repo |
 | Distribution roles (declared, never inferred) | `references/init-spec.json` § invariants + § distribution | repo |
 | Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
@@ -71,7 +71,7 @@ For work **in this repository** on the Gen2 migration branch, do **not** open th
 1. Classify the task → `task_class` (+ optional context facets), **or** run the Detector/CLI.
 2. Prefer the callable router: `node repo-tools/route-task.js --task <class> …` or `--path <file>…` (shared impl: `repo-tools/lib/routing.js`; graph: `docs/research/working/routing/graph.v0.json`). Human map: [`task-capability-map.md`](docs/research/working/routing/task-capability-map.md) (architecture: [`call-topology.md`](docs/research/working/routing/call-topology.md)).
 3. Read only the resulting `read_set` authorities; run only `run_set` controls; if `unmatched` or over budget, use `defer_set` — never silently load everything.
-4. Phase 5 is **EXITED** (PLAN-0038 / 0039 / 0040). Leftover Capability leaves follow the same discipline — **do not** rearrange by Gen1 directory skeleton; only retarget `AuthorityRef` (see `call-topology.md` § 物理拓扑); **do not** invent a second Task→Capability lookup model; **do not** Active PLAN-0037 (frozen until after 2.0). Phase 6 is **EXITED** ([PLAN-0042](docs/plans/PLAN-0042-invariant-based-testing.md) Implemented — oracle inventory + routing negatives + seed CTRLs). Phase 7 is **Active** ([PLAN-0043](docs/plans/PLAN-0043-review-system-redesign.md) — Review System redesign; load that plan before changing review authorities). Phase 7/8 Plans **must consume** [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) (`must-ship` / `repo-keep` / `later` / `retire` / `out`). Phase 8 EXIT is not a 2.0 release. 2.0 = usable must-ship slice on a clean target + Migration Mode exit + blocking must-ship controls (ADR-0024 2026-09-12 amendment). A WRAP carrier list is not 2.0 evidence.
+4. Phase 5 is **EXITED** (PLAN-0038 / 0039 / 0040). Leftover Capability leaves follow the same discipline — **do not** rearrange by Gen1 directory skeleton; only retarget `AuthorityRef` (see `call-topology.md` § 物理拓扑); **do not** invent a second Task→Capability lookup model; **do not** Active PLAN-0037 (frozen until after 2.0). Phase 6 is **EXITED** ([PLAN-0042](docs/plans/PLAN-0042-invariant-based-testing.md) Implemented — oracle inventory + routing negatives + seed CTRLs). Phase 7 is **EXITED** ([PLAN-0043](docs/plans/PLAN-0043-review-system-redesign.md) Implemented — three review kinds; Impl must-ship; System/Research repo-keep). Phase 8 is **Active** ([PLAN-0044](docs/plans/PLAN-0044-rebuild-mandatory-gates.md) — rebuild must-ship blocking gates via `npm run check:must-ship`; load that plan before changing CI/release blocking sets). Phase 8 Plans **must consume** [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) (`must-ship` / `repo-keep` / `later` / `retire` / `out`). Phase 8 EXIT is not a 2.0 release. 2.0 = usable must-ship slice on a clean target + Migration Mode exit + blocking must-ship controls (ADR-0024 2026-09-12 amendment). A WRAP carrier list is not 2.0 evidence.
 
 This map/router is **REPO-ONLY** construction authority (not INSTALLED payload). Characterization: `node tests/run-tests.js --suite routing`.
 
@@ -147,21 +147,14 @@ Defects distribute by resolvability, not by suspicious wording — enumerate and
 
 ## Git Operation Safety Protocol (HIGHEST PRIORITY)
 
-Read-only git ops (`status`/`log`/`diff`/`show`/`fetch`/`remote`/`branch`) are free.
+**Sole semantic authority:** [`references/policies/git.policy.md`](references/policies/git.policy.md) (§ 确认范围 / HITL invariants / independent-confirm list). This file is **not** a second authoritative body (ADR-0022 thin entry · ADR-0024 single owner). Load that policy before any Git write. Always-on summary only:
 
-**One confirmation per change set — the pre-commit echo.** After any task completes (regardless of size), before committing, echo the full git command sequence — which files to add, the commit message (a line per commit, type carried in its prefix), the push target — and take **one** confirmation covering `add` → `commit` → `push`. A user's write instruction ("push", "commit these changes") triggers this echo; the instruction itself is **not** the consent. No per-step re-asking.
+- Read-only git ops are free; `checkout -b` / clean-worktree branch switches are free.
+- One confirmation per change set: echo the full `add → commit → push` command sequence, then take explicit consent; a user write instruction ("push"/"commit") **triggers** the echo — it is **not** consent.
+- Plan approval = intent alignment ≠ commit authorization; task-level phrasing ("wrap it up" / "发布吧") is not a write instruction.
+- Any step fails or push is non-fast-forward → stop and report; never improvise a retry / pull-rebase-and-repush.
+- Independent confirmation (not covered by the pre-commit echo): `tag` / `reset` / `rebase` / `revert` / `merge` / force push / `clean` / `rm` / `restore` / `stash` / `pull`; checkout carrying uncommitted changes; amend of an already-pushed commit.
+- Release sequence: an Approval-Gate–approved Proposal covers that release's write ops (see `repo-workflows/skill-release.md`).
+- Before confirming, still run: `node scripts/check-secrets.js` exit 0; no sensitive/unrelated files staged.
 
-**Plan approval is intent alignment.** A medium/large task's Phase 2 plan approval aligns "what to change, how" — it is not a commit authorisation. Size tiering decides only whether a plan document is written, never whether the user gets to confirm the commit.
-
-**Release sequence.** A Proposal approved at the Approval Gate covers the whole sequence (version sync → archive → release commit → tag → push branch → push tag → GitHub Release → asset upload); no per-step re-asking. If any check fails mid-sequence, stop and re-plan.
-
-**Universal hard constraints (every change set):**
-
-- The echo IS the full command sequence (staged files, each commit message, target remote/branch); execution never deviates from it.
-- Any step fails → stop and report. Never retry with a different approach, never improvise a repair; re-confirm before continuing.
-- Push rejected (non-fast-forward) → stop and report. Never pull/rebase and re-push on your own.
-- Task-level phrasing ("wrap it up", "完成任务", "发布吧") is NOT a write instruction. Ambiguous remarks ("提交一下", "clean up the repo") → ask first.
-
-**Independent confirmation** — never covered by the pre-commit echo: `tag`, `reset`, `rebase`, `revert`, `merge`, force push, `clean`, `rm`, `restore`, `stash`, `pull`; checkout carrying uncommitted changes; amend of an already-pushed commit (counts as force push). `checkout -b` and clean-worktree switches are free.
-
-Before confirming, still run the pre-commit checklist: `repo-tools/check-secrets.js` exit 0, no sensitive/unrelated files staged. When in doubt, ask first.
+Details, checklists, and branch policy live in `git.policy.md`; on conflict, that file wins.

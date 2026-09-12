@@ -1,6 +1,6 @@
 # Git Write Policy（分层权限）
 
-本文件定义 AI Agent 的 Git 操作边界。写入 AGENTS.md 摘要 + 本文件详解。
+本文件是 AI Agent Git 操作边界的**唯一语义权威**（ADR-0024）。`AGENTS.md` / `SKILL.md` 只保留指针与 always-on 摘要，禁止第二份权威正文。
 
 ## 允许自动执行（无需确认）
 

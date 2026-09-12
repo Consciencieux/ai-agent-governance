@@ -125,6 +125,7 @@ ai-agent-governance/
 │   ├── check-terminology.js    # repo-owned 术语门禁（从 INSTALLED 一致性检查器拆出；ADR-0020 首次执行分离）
 │   ├── check-secrets.js        # repo 侧 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路径）
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] 验证叙事提醒（repo-only，advisory）
+│   ├── check-must-ship.sh      # Phase 8 必装机械门禁集合（PLAN-0044 / ADR-0024）
 │   ├── mutation-probe.js      # 按需验证测试断言是否活着（临时克隆内的抽样变异）
 │   ├── lib/routing.js          # Phase 5b 共享 resolve + Context Detector（PLAN-0039；graph.v0.json）
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult

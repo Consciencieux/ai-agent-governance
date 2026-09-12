@@ -292,7 +292,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Current phase: Phase 7 Active ([PLAN-0043](../PLAN-0043-review-system-redesign.md); consumes [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–6 (6 = [PLAN-0042](../PLAN-0042-invariant-based-testing.md) Implemented). Plan archive ≠ Release (ADR-0016); Phase 8 EXIT ≠ skill-release (ADR-0018 2026-09-12 amendment + ADR-0024 usability gate).
+**Current phase: Phase 8 Active ([PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md); consumes [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–7 (7 = [PLAN-0043](../PLAN-0043-review-system-redesign.md) Implemented). Plan archive ≠ Release (ADR-0016); Phase 8 EXIT ≠ skill-release (ADR-0018 2026-09-12 amendment + ADR-0024 usability gate).
 
 ## Now → 2.0 (index)
 
@@ -309,14 +309,14 @@ The Roadmap lists sequence and construction plans only; it does not copy Plan st
 | 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
 | 5 | [PLAN-0038](../PLAN-0038-task-capability-routing.md) · [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../PLAN-0040-capability-physical-projection.md) | Implemented / EXITED (5a map · 5b resolve/CLI · 5c P0–P2 projection; leftover deferred) |
 | 6 | [PLAN-0042](../PLAN-0042-invariant-based-testing.md) | Implemented / EXITED (oracle inventory + routing negatives + seed CTRLs; full mechanical coverage still deferred) |
+| 7 | [PLAN-0043](../PLAN-0043-review-system-redesign.md) | Implemented / EXITED (Impl must-ship; System/Research repo-keep; routing N4) |
 
 ### Next (this order; do not skip review)
 
 | Step | What | Construction plan | One line |
 | --- | --- | --- | --- |
-| **Now** | Phase 7 Review split into three kinds | [PLAN-0043](../PLAN-0043-review-system-redesign.md) (**Active**) | Implementation Review is must-ship; System/Research are repo-keep |
-| 7 | Review split into three kinds | [PLAN-0043](../PLAN-0043-review-system-redesign.md) (Active) | Consume ADR-0024; do not rewrite all Gen1 review text |
-| 8 | Rebuild mandatory gates | Later plan | Restore blocking authority **only for must-ship mechanical controls** |
+| **Now** | Phase 8 rebuild mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md) (**Active**) | `check:must-ship` fail-closed; ≠ full Gen1 check |
+| 8 | Rebuild mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md) (Active) | Restore blocking authority **only for must-ship mechanical controls** |
 | **2.0** | This repo’s Gen2 skill release | `repo-workflows/skill-release.md` | Must-ship slice usable on a clean target + Mode exit + blocking controls ([ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)); Phase 8 necessary but not sufficient |
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **frozen in Design** (not Archived). Full Stages A–D are **not** a 2.0 must-ship; the 2.0 product slice is [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md). The extraction boundary still constrains the payload during migration. Unfreeze: after the 2.0 release.
@@ -559,10 +559,10 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration (ADR-0018 Phase 0–8)
         ↓
-P0–P6  checkpoints EXITED
+P0–P7  checkpoints EXITED
          P6 = PLAN-0042 (oracle inventory + routing negatives + seed CTRLs)
-P7     Review System redesign — **current** (PLAN-0043 Active; consumes ADR-0024)
-P8 Rebuild mandatory gates (blocking authority for must-ship mechanical controls)
+         P7 = PLAN-0043 (three review kinds; Impl must-ship)
+P8     Rebuild mandatory gates — **current** (PLAN-0044 Active; `check:must-ship`)
         ↓
 2.0 skill-release (ADR-0024 usability gate: clean target + Mode exit + blocking must-ship; Phase 8 necessary but not sufficient)
         ↓

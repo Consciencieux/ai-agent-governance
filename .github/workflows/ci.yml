@@ -52,7 +52,8 @@ jobs:
 
   # ------------------------------------------------------------
   # Generation-2 migration blocking authority.
-  # Only the Refactor Safety Kernel may make migration CI red.
+  # Phase 8 (PLAN-0044 / ADR-0024): must-ship mechanical set is fail-closed.
+  # Full Gen1 `npm run check` stays observational (job below).
   # ------------------------------------------------------------
   migration-safety:
     if: >-
@@ -67,19 +68,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: JavaScript syntax
-        run: |
-          find scripts repo-tools tests -type f -name '*.js' -print0 \
-            | xargs -0 -n1 node --check
-
-      - name: Security characterization
-        run: node tests/run-tests.js --suite security
-
-      - name: Generator characterization
-        run: node tests/run-tests.js --suite generator
-
-      - name: Payload and packaging characterization
-        run: node tests/run-tests.js --suite payload
+      - name: Must-ship mechanical gates
+        run: npm run check:must-ship
 
   # ------------------------------------------------------------
   # Generation-1 compatibility observation.

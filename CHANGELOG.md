@@ -18,7 +18,9 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **Phase 7 Review System redesign started (PLAN-0043 Active)** — three review kinds are now explicit: Implementation (`review-implementation`, must-ship) vs System/Research (repo-keep playbooks under `docs/research/working/review/`). Routing adds `system_review` / `research_review`; default `audit` must not silently load System/Research (routing N4). Consumes ADR-0024; PLAN-0037 remains frozen. Phase 7 Exit (P4) not yet marked.
+- **Thin entry for Git consent (ADR-0022 / ADR-0024)** — `references/policies/git.policy.md` is the sole semantic authority for HITL Git writes; `AGENTS.md` and `SKILL.md` keep pointer + always-on summary only (no second authoritative body). `SKILL.md` states thin-entry loading: detailed policies/workflows/lifecycle load from `references/` by task, not as always-on full text.
+
+- **Phase 7 EXITED / Phase 8 Active** — PLAN-0043 Implemented (three review kinds; Impl must-ship; System/Research repo-keep; routing N4). Successor [PLAN-0044](docs/plans/PLAN-0044-rebuild-mandatory-gates.md) Active: must-ship gate inventory + `npm run check:must-ship` (+ CI / skill-release wiring). Phase 8 EXIT ≠ 2.0; PLAN-0037 remains frozen.
 
 - **2.0 product freeze (ADR-0024)** — Phase 8 EXIT is necessary but not sufficient for skill-release. RESEARCH-0006 v8 projects must-ship / repo-keep / later / retire / out. Git HITL invariants stay; procedure is to be thinned under a single `git.policy.md` authority. Phase 7/8 plans must consume the freeze. PLAN-0037 remains frozen.
 
