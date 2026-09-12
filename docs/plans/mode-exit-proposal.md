@@ -1,3 +1,7 @@
+---
+status: Completed
+---
+
 # Migration Mode 退出提案
 
 日期：2026-09-12  

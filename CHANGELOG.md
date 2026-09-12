@@ -4,80 +4,28 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-12
+
 ### Changed
 
-- **Migration Mode EXITED (human-approved 2026-09-12)** — product blocking gate is `npm run check:must-ship` on all branches/PRs; Gen1 `npm run check` is observational (`continue-on-error`). Record: `docs/plans/mode-exit-proposal.md`. Does **not** authorize `v2.0.0` tag.
+- **Migration Mode EXITED (human-approved 2026-09-12)** — product blocking gate is `npm run check:must-ship` on all branches/PRs; Gen1 `npm run check` is observational (`continue-on-error`). Record: `docs/plans/mode-exit-proposal.md`.
+
+- **CI product authority** — `.github/workflows/ci.yml` uses `must-ship` as the sole blocking job on all branches/PRs; Gen1 probes remain observational. Supersedes the dual-mode split used during Migration Mode.
+
+- **Thin entry for Git consent (ADR-0022 / ADR-0024)** — `references/policies/git.policy.md` is the sole semantic authority for HITL Git writes; `AGENTS.md` and `SKILL.md` keep pointer + always-on summary only (no second authoritative body).
+
+- **Phase 7 EXITED / Phase 8 EXITED** — PLAN-0043 Implemented (three review kinds; Impl must-ship; System/Research repo-keep). PLAN-0044 Implemented: must-ship set fail-closed; inventory gap=0. PLAN-0037 remains frozen.
+
+- **2.0 product freeze + usability gate (ADR-0024)** — Phase 8 EXIT is necessary but not sufficient; WRAP/carrier lists are not release evidence. Release requires a usable must-ship slice on a clean target, Migration Mode exit, blocking must-ship controls, and blocker Findings closed or waived.
 
 ### Added
 
-- **Phase 8 must-ship gate set (PLAN-0044 Implemented / EXITED)** — `npm run check:must-ship` (`repo-tools/check-must-ship.sh` + `check-must-ship-carriers.js`) fail-closes syntax + security/generator/payload/oracle-inventory/routing + carrier presence; migration CI and skill-release `gates.must_ship` bind the set. Inventory: `docs/research/working/must-ship-gates.md` (gap=0). Phase 8 EXIT ≠ 2.0; remaining human gates: `docs/plans/skill-release-2.0-checklist.md`. PLAN-0037 remains frozen.
+- **2.0.0 Gen2 skill release** — usable must-ship slice on a clean target (INIT Phase C + verify 62/62 precheck), Migration Mode exit, blocking must-ship controls (ADR-0024). `npm run check:must-ship` fail-closes syntax + security/generator/payload/oracle-inventory/routing + carrier presence. Inventory: `docs/research/working/must-ship-gates.md` (gap=0). PLAN-0037 remains frozen.
 
-- **Phase 6 invariant oracle inventory (PLAN-0042 Implemented)** — machine-readable `docs/research/working/oracle-inventory.v0.json` (+ human `oracle-inventory.md`) freezes important CTRL-0001–0006 + routing integrity + Safety Kernel suite accounting; characterization suite `oracle-inventory` fail-closes when `important_gap` ≠ 0. Routing suite gains negatives N1–N3 (wrong Capability, orphan authority, deleted trigger). Generator suite adds stack-defaults negative for python→pytest/ruff (FINDING-0006 E02). Architecture checkpoint ≠ Release; full mechanical-rule coverage and FINDING-0006 stay deferred; PLAN-0037 remains frozen.
+- **Phase 8 must-ship gate set (PLAN-0044)** — `repo-tools/check-must-ship.sh` + `check-must-ship-carriers.js`; CI and skill-release `gates.must_ship` bind the set.
 
-- **Script inventory L0 (PLAN-0041 Implemented / FINDING-0028)** — machine-readable `docs/research/working/script-inventory.v0.json` (+ human `script-inventory.md`) labels every `scripts/**` and `repo-tools/**` entry with distribution role, generation, and disposition using `v1.0.2` as an evidence baseline (not an attic cut). Characterization suite `script-inventory` fail-closes on missing registrations; `retire` is empty so no date-based folder quarantine. Repo dogfood of INSTALLED CLIs remains an open follow-on.
+- **Gen2 construction through Phase 8 (summarized)** — Phase 5–7 routing/review/oracle work and Phase 8 must-ship rebuild landed on the migration branch and ship in this major. Details remain in `docs/plans/` and prior Unreleased notes folded here by reference; PLAN-0037 stays frozen.
 
-- **Phase 5c Capability physical projection (PLAN-0040 Implemented)** — `references/capabilities/{discovery-ledger,root-cause-repair,change-hygiene,rule-capture}.md` extracted from lifecycle; INIT installs under `docs/rules/capabilities/`; `graph.v0.json` gains machine-readable `authorities`; `route-task --json` emits authority paths; projection table at `docs/research/working/routing/projection-table.md`. Edges (triggers/binds/facet_adds) unchanged; PLAN-0037 still frozen.
-
-- **Dual-mode migration CI (ADR-0014 implementation)** — `.github/workflows/ci.yml` now routes by branch: `main` / 1.x keeps `npm run check` as blocking (+ governance badge); `migration/2.0-governance-architecture` runs a Refactor Safety Kernel (JS syntax + `--suite security/generator/payload`) as blocking and Gen1 `npm run check` as observational (`continue-on-error`). Routing covers both direct pushes and PRs targeting the migration branch. Implements ADR-0014 § 实施说明.
-
-- **First Producer/Product execution separation: repo-owned terminology gate (ADR-0020)** — the terminology gate (repo-only data source `docs/glossary.md`) was extracted from the INSTALLED `scripts/check-doc-consistency.js` into repo-owned `repo-tools/check-terminology.js`; `npm run check` / `check:docs` now run it directly. The INSTALLED checker's responsibility surface is intentionally narrowed (terminology cluster removed; its `--json` no longer emits `terminology_usage` / `termsRegistered`, no external consumer). Governed-project behavior unchanged (no glossary → the cluster was a no-op there). Fail-closed: a missing or malformed glossary exits 1.
-
-### Changed
-
-- **Thin entry for Git consent (ADR-0022 / ADR-0024)** — `references/policies/git.policy.md` is the sole semantic authority for HITL Git writes; `AGENTS.md` and `SKILL.md` keep pointer + always-on summary only (no second authoritative body). `SKILL.md` states thin-entry loading: detailed policies/workflows/lifecycle load from `references/` by task, not as always-on full text.
-
-- **Phase 7 EXITED / Phase 8 EXITED** — PLAN-0043 Implemented (three review kinds; Impl must-ship; System/Research repo-keep; routing N4). [PLAN-0044](docs/plans/PLAN-0044-rebuild-mandatory-gates.md) Implemented: must-ship set fail-closed; inventory gap=0. Phase 8 EXIT ≠ 2.0 skill-release; PLAN-0037 remains frozen.
-
-- **2.0 product freeze (ADR-0024)** — Phase 8 EXIT is necessary but not sufficient for skill-release. RESEARCH-0006 v8 projects must-ship / repo-keep / later / retire / out. Git HITL invariants stay; procedure is to be thinned under a single `git.policy.md` authority. Phase 7/8 plans must consume the freeze. PLAN-0037 remains frozen.
-
-- **2.0 usability gate (ADR-0024 2026-09-12 amendment)** — a WRAP / carrier list is not 2.0 evidence. Release requires a usable must-ship slice on a clean target, Migration Mode exit, blocking must-ship controls, and blocker Findings closed or waived. `later` items still do not block 2.0; closing every Confirmed Finding still does not define 2.0.
-
-- **Phase 6 EXITED** — PLAN-0042 Implemented (oracle inventory, routing negatives N1–N3, seed CTRL registration, stack-defaults oracle). Successor is Phase 7 ([PLAN-0043](docs/plans/PLAN-0043-review-system-redesign.md) Active). Architecture checkpoint ≠ Release; FINDING-0006 remains Confirmed for coverage beyond the seed set; PLAN-0037 remains frozen.
-
-- **Phase 5 EXITED** — PLAN-0038 / 0039 / 0040 Implemented (5a map, 5b resolve/CLI, 5c P0–P2 Capability projection). Leftover capability leaves, FINDING-0028 dogfood, and FINDING-0029 residue stay deferred by design and do not reopen Phase 5. Architecture checkpoint ≠ Release; PLAN-0037 remains frozen.
-
-- **Research construction papers colocated under `docs/research/working/`** — Task→Capability graph (`working/routing/`) and script inventory (`working/script-inventory.*`) share one construction slot, distinct from numbered `RESEARCH-xxxx` essays and empty `experiments/`. Path retarget only; no second lookup model.
-
-- **Repository documentation is now organized by knowledge responsibility instead of language-first layout** — product documentation lives under `docs/product/{en,zh-CN,zh-TW}/`, while Research, Findings, ADRs, Plans/Roadmap, and Glossary have distinct responsibility and lifecycle boundaries. Completed Plans live under `docs/plans/archive/`; Research, Findings, and ADRs remain in place across lifecycle changes. `docs/README.md` is the routing entry for the knowledge system.
-
-- **Repository language entry files moved to the root** — `README.md` / `README.zh-CN.md` / `README.zh-TW.md` and `CONTRIBUTING.md` / `CONTRIBUTING.zh-CN.md` / `CONTRIBUTING.zh-TW.md` are the repository entry files; documentation parity now follows those root projections, and remaining product docs stay under `docs/product/{en,zh-CN,zh-TW}/`.
-
-- **Knowledge-object writing follows an authoritative / supporting / forbidden matrix** — contributors and agents must keep Research descriptive, Finding closures outcome-based, and Plans from re-deciding Accepted ADR constraints; new or major edits answer a five-question authority review. Normative matrix: ADR-0016.
-
-- **Knowledge-object representation normalized for Plan / Finding / Research / ADR** — sparse YAML frontmatter; Finding metadata minimized to `id` / `status` / `type` / `observed_in` (+ `resolved_in` when Resolved); human-facing H1 / section / table presentation is Chinese-first while machine keys and enums stay English.
-
-- **Repo CHANGELOG accession is impact-based; released history through `[1.0.2]` stays frozen** — eligibility is by observable audience impact, not file type; writing may defer to a checkpoint but accounting may not; legacy released sections are not restyled to today's accession rules (FINDING-0009). Execution policy: `repo-workflows/changelog-policy.md`.
-
-- **Plan archive is decoupled from product release** — Plans move to `docs/plans/archive/` at lifecycle closure (exit review), not at SemVer / GitHub Release. Migration Mode still forbids tags and skill distribution; it does not block archive. Normative: ADR-0016 amendment; `docs/plans/README.md`.
-
-- **Governance Control is a first-class architecture object** — rule semantics, evaluator, gate, and test are distinct; shared semantics stay single-owned while repo/skill bind evaluators separately. Phase 3 delivers a serialization-agnostic slot model in ADR-0023 (CTRL-0001–0005), not a payload YAML tree. Decision effects and guarantee levels attach to profile × enforcement bindings / derived projections. Descriptive model: RESEARCH-0010.
-
-- **Phase 3 Governance Core / Rule Model closed; Phase 4 opened** — PLAN-0034 archived at lifecycle closure; Roadmap current phase is Checker / Primitive restructuring under PLAN-0035, with subordinate PLAN-0036 retrieving PLAN-0032 R24 (payload Discovery Ledger). No SemVer release (ADR-0014).
-
-- **Phase 4 mechanical inventory is CTRL-centric** — Generation-1 evaluators, gates, tests, and profile coupling are catalogued by Control identity (CTRL-0001–0005 plus consistency clusters), not by script filename. Fact source: RESEARCH-0011; dispositions remain PLAN-0035 work.
-
-- **Gen1→Gen2 migration is described as progressive capability absorption** — semantic skeleton first (Phases 1–3), then Control-unit strangler migration with phased authority transfer; Gen1 Safety Kernel remains the protected baseline until Phase 8 blocking handover. Descriptive model: RESEARCH-0004 v3.
-
-- **Phase 4 disposition targets capabilities, not whole checkers** — PLAN-0035 records KEEP/WRAP/EXTRACT/REWRITE/RETIRE per Control face and consistency cluster; first vertical refactor is CTRL-0003/0004 (shared freshness primitives, separate evaluators), not the consistency monolith.
-
-- **CTRL-0003/0004 first vertical strangler (Phase 4 D/E)** — shared factual primitives live in INSTALLED `scripts/lib/git-facts.js` (no stale-day / translation policy); CTRL-0003 and CTRL-0004 are separate evaluators; legacy `scripts/check-doc-freshness.js` remains a thin CLI wrapper (`--json` / `--release-gate` unchanged). Require-graph must close under the INIT copy list (self-containment = closure, not “no relative require”). Consistency monolith untouched.
-
-- **CTRL-0003/0004 consistency pass: invariant + verdict/binding split** — `init-spec` `copied_scripts_are_self_contained` now means INSTALLED require-graph closure (aligned with payload tests). Evaluators emit pure semantic `verdict` + `evidence` only; `decision_effect` is applied by the legacy wrapper from profile × enforcement boundary (ADR-0023). CLI characterization unchanged.
-
-- **Gen1 baseline completeness pass (RESEARCH-0006 v6)** — Agent compressed layer now includes Pre-PLAN/non-Plan base capabilities (INIT/AUDIT/MIGRATE/RELEASE, validator, manifest/state/validation/preflight, multi-agent lock, plan/milestone sync). `init-spec` INSTALLED scripts reverse-reconciled; `check-plan-sync.js` explicitly inventoried in RESEARCH-0011 v3. PLAN-0025 row corrected (install-layer Skill Manager ≠ generated sub-skill lifecycle). PLAN-0035 P9 closed; next Phase 4 cut prefers consistency clusters #4 or #9, not the whole monolith.
-
-- **Gen1 instruction/workflow surface closure (RESEARCH-0006 v7)** — eight generated sub-skills and opt-in githooks are capability-accounted (not collapsed into “Generated sub-skill lifecycle”). Dual closure: mechanical scripts `Unaccounted=0` and instruction/workflow product surface `Unaccounted=0`. PLAN-0035 P10 closed; next JS cut locked to consistency cluster #4 broken links.
-
-- **CTRL-0006 broken-links vertical (consistency cluster #4)** — link extract/resolve/exists live in INSTALLED `scripts/lib/md-link-facts.js`; CTRL-0006 evaluator owns scan-set + semantic verdict; `check-doc-consistency.js` remains WRAP and keeps cluster #4 advisory-only. Other consistency clusters untouched. No Dispatcher; no doc topology moves.
-- **CTRL-0006 closure** — canonical `semantics_ref` = `references/policies/lifecycle.policy.md` § 相对 Markdown 链接有效性; direct `evaluateBrokenLinks` characterization + `--gate` advisory binding tests; RESEARCH-0006 pre-commit wording corrected to staged-content binding. #4 CLOSED; #9 skipped; next cut = P3 CTRL-0001.
-- **CTRL-0006 semantics↔evaluator alignment** — drop unimplemented “仓库内” root-containment from the obligation; applicability = supported-shape evaluation (vacuous pass); protocol skip tightened to `https?://` / `mailto:` (case-insensitive). No PLAN architecture change.
-- **CTRL-0001 P3 repo/skill decoupling** — shared `secret-scan-facts` + CTRL-0001 evaluator; skill CLI WRAP remains `scripts/check-secrets.js`; repo profile binds `repo-tools/check-secrets.js` (AGENTS pre-commit). Accidental same-file coupling removed; Safety Kernel characterization preserved. PLAN-0035 P3 CLOSED; next = PLAN-0036.
-- **PLAN-0036 Discovery Ledger L1** — INSTALLED contract in `lifecycle.policy.md` § 发现台账（storage = TASK plan table; not state.json/registry); ADR-0021 payload amendment; workflow hooks; characterization via docs + clean-target payload tests. No auto-discovery JS.
-- **Phase 4 EXITED** — PLAN-0035 Exit Criteria satisfied; remaining consistency clusters / #9 / routing / topology / automation deferred by design. Phase 5 entry opened as RESEARCH-0012 (explicit Task→Capability map; no Dispatcher yet).
-- **Skill distillation boundary (ADR-0020) + PLAN-0037 (Design)** — reusable skill sets design-space bounds (L1 hard invariants), not soft advice and not a copy of this repo’s `docs/` / Phase / CTRL instances; extract only after Phase 5 routing stabilizes.
-- **Phase 5a Task→Capability routing (PLAN-0038 Implemented)** — call topology + explicit map + `routing` characterization suite; AGENTS.md thin pointer (repo-only). No Dispatcher; PLAN-0037 remains frozen until after 2.0.
-- **Phase 5 sequencing discipline (5a/5b/5c)** — documented in `call-topology.md` § 物理拓扑 + roadmap: Gen1 had no Task→Capability graph; 5c projects files by Capability (AuthorityRef only) after 5b; no second lookup model; no 1.0-skeleton splits.
-- **Phase 5b Context Detector / Dispatcher (PLAN-0039 Implemented)** — shared `repo-tools/lib/routing.js` + `docs/research/working/routing/graph.v0.json` + `repo-tools/route-task.js` CLI; routing suite 11/11; AGENTS prefers callable route. No LLM auto-router; no physical moves; PLAN-0037 still frozen.
 
 ## [1.0.2] - 2026-09-08
 

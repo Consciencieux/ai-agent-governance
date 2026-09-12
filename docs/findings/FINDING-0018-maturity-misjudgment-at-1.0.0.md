@@ -1,8 +1,9 @@
 ---
 id: FINDING-0018
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen1
+resolved_in: v2.0.0
 ---
 
 # FINDING-0018：1.0.0 成熟度误判：冻结了 interface surface，没冻结更核心的 rule/trigger/enforcement model
@@ -39,9 +40,10 @@ observed_in: gen1
 
 ## 解决情况
 
-ADR-0024 2026-09-12 修正把 2.0 冻结面定为**必装切片的可用与稳定**（干净目标 INIT / AUDIT / RELEASE、Migration Mode 退出、必装机械控制阻断），禁止再用「载体清单 / 功能齐全」冒充成熟。关闭条件 1 因此收窄到必装面的 rule / trigger / enforcement，不是全仓模型、也不是 zero-attention。
+ADR-0024 2026-09-12 修正把 2.0 冻结面定为**必装切片的可用与稳定**（干净目标 INIT / AUDIT / RELEASE、Migration Mode 退出、必装机械控制阻断），禁止再用「载体清单 / 功能齐全」冒充成熟。
 
-**进展（2026-09-12）：** Phase 8 EXITED（`check:must-ship` fail-closed）；干净目标预检 INIT+VERIFY 62/62；Mode 退出 CI 处置已落盘（提案 `docs/plans/mode-exit-proposal.md`，待人类批准）。本 Finding 仍 Confirmed，直至 Mode 退出 + skill-release Approval Gate 实际成立——届时关闭条件视为满足，可标 Resolved。
+**关闭（2026-09-12 · skill-release）：** Phase 8 EXITED；Mode 退出已批准并合入 `main`；干净目标预检 INIT+VERIFY 62/62；人类批准发布 `v2.0.0`。关闭条件满足 → **Resolved（成熟度误判 blocker）**。zero-attention / 全仓模型仍属 later，不挡 2.0。
+
 
 ## 关联
 

@@ -40,11 +40,10 @@ enforcement boundary 候选（AI task completion / git hook / pre-push / CI / re
 
 ## 解决情况
 
-**2.0 切片预检（2026-09-12 · 未结案）：** ADR-0024 将本 Finding 的 2.0 blocker 收窄为「干净目标上必装 INSTALLED 引用闭合 + INIT/VERIFY 可跑」，不是全仓 runtime adapter 矩阵。预检：`bash repo-tools/package-skill.sh` → 空仓 INIT Phase C → 8 子技能 → 目标根 `verify_governance.js` **62/62**。仓库级确定性门禁另有 `npm run check:must-ship`（CI blocking，Mode 退出后）。
+**2.0 切片关闭（2026-09-12 · skill-release）：** ADR-0024 将本 Finding 的 2.0 blocker 收窄为「干净目标上必装 INSTALLED 引用闭合 + INIT/VERIFY 可跑」。证据：打包 → 空仓 INIT Phase C → 8 子技能 → 目标根 verify **62/62**；仓库级 `check:must-ship` fail-closed。**2.0 blocker 切片关闭。**
 
-**仍开放（非 2.0 blocker / later）：** 跨宿主 tool-call hard enforcement、hooks/`--no-verify`、锁 TOCTOU、Portable Core + Runtime Adapter 分层全文。关闭条件 1–3 的完整矩阵不挡 2.0。
+**仍开放（later，不挡 2.0）：** 跨宿主 tool-call hard enforcement、hooks/`--no-verify`、锁 TOCTOU、Portable Core + Runtime Adapter 分层全文。Finding 整体可保持 Confirmed 直至 later 项有载体；不挡 `v2.0.0`。
 
-**待人类：** Release Proposal 附预检证据后将 **2.0 切片**标为关闭或书面豁免；Finding 整体可保持 Confirmed 直至 later 项有载体。
 
 ## 关联
 

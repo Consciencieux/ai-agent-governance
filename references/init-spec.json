@@ -94,7 +94,7 @@
     },
     "governance_version": {
       "type": "string",
-      "default": "1.0.2",
+      "default": "2.0.0",
       "description": "Governance framework version stamped into manifest/CHANGELOG"
     },
     "release_version": {
