@@ -10,7 +10,7 @@ authority: construction
 
 # Task → Capability 路由表（工作稿 · PLAN-0038）
 
-**权威级别：** 施工权威（RESEARCH-0012 假设已采纳 + PLAN-0038 Active）。非正式 schema；升格 Narrow ADR 前不得当 INSTALLED 硬规范。  
+**权威级别：** 施工权威（RESEARCH-0012 假设已采纳 + PLAN-0038 Implemented；Phase 5 EXITED）。非正式 schema；升格 Narrow ADR 前不得当 INSTALLED 硬规范。  
 **位置：** repo-only（`docs/research/working/routing/`）。**不**写入薄入口正文。  
 **禁止（5a 完成时）：** LLM 自动路由 · 无路由文档搬家 · Active PLAN-0037。  
 **5b：** 程序化查表 = [PLAN-0039](../../../plans/PLAN-0039-context-detector-dispatcher.md)（**Implemented**；`graph.v0.json` + `repo-tools/lib/routing.js` + `route-task.js`）。  

@@ -292,7 +292,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Current phase: next is Phase 6 (5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) Implemented).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–4, 5a, 5b, and 5c (P0–P2). Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
+**Current phase: Phase 5 EXITED; next is Phase 6 (plan TBD).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–5 (5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) P0–P2). Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
 
 ## Now → 2.0 (index)
 
@@ -307,14 +307,13 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 | 2 | [PLAN-0032](../archive/PLAN-0032-documentation-knowledge-architecture-closure.md) · [PLAN-0033](../archive/PLAN-0033-known-issue-closure.md) | Archived |
 | 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived; baseline `24021c4` |
 | 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
+| 5 | [PLAN-0038](../PLAN-0038-task-capability-routing.md) · [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../PLAN-0040-capability-physical-projection.md) | Implemented / EXITED (5a map · 5b resolve/CLI · 5c P0–P2 projection; leftover deferred) |
 
 ### Next (this order; do not skip review)
 
 | Step | What | Vehicle | One line |
 | --- | --- | --- | --- |
-| **Now** | Phase 6 Invariant-based Testing | *(plan TBD / successor of PLAN-0040)* | Positive/negative oracles; 5c = PLAN-0040 Implemented |
-| 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) (**Implemented**) | Consumes the 5a map; no second applicability model, no fully automatic LLM router, no topology-before-routing |
-| 5c | Physical projection by Capability | [PLAN-0040](../PLAN-0040-capability-physical-projection.md) (**Implemented**) | AuthorityRef only; not 1.0 directory skeleton; see call-topology § 物理拓扑 |
+| **Now** | Phase 6 Invariant-based Testing | *(plan TBD)* | Positive/negative oracles |
 | 6 | Invariant-based Testing | Later plan | Positive + negative oracle per important Control |
 | 7 | Review split into three kinds | Later plan | Implementation / System / Research |
 | 8 | Rebuild mandatory gates | Later plan | Blocking authority moves onto the new control plane |
@@ -322,9 +321,9 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **frozen in Design** (not Archived). Full Stages A–D are **not** a 2.0 must-ship; 2.0 = this repo’s INSTALLED Gen2 skill. The extraction boundary still constrains the payload during migration. Unfreeze: after the 2.0 release.
 
-Phase 5 internal order (indexed from PLAN-0035 / `call-topology.md`, not a new ruling): **5a** explicit map → thin entry → **5b** Dispatcher (PLAN-0039) → **5c** project files by Capability (retarget `AuthorityRef` only; open a Plan after 5b EXIT). Gen1 had no real Task→Capability graph; 5c must **not** slice by the 1.0 directory skeleton or invent a second lookup model. Discipline: `docs/research/working/routing/call-topology.md` § 物理拓扑.
+Phase 5 has EXITED (indexed from PLAN-0035 / `call-topology.md`, not a new ruling): **5a** explicit map → **5b** Dispatcher → **5c** project by Capability (`AuthorityRef` only). Leftover leaves / optional rename do **not** reopen Phase 5. Discipline: `docs/research/working/routing/call-topology.md` § 物理拓扑.
 
-### Deferred by design (does not block starting Phase 5)
+### Deferred by design (does not block starting Phase 6)
 
 Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **5c leftover capability leaves / optional rename** · **lifecycle residue extraction / `state.json` phase-as-facet** (concept closure: [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md); no parallel “overturn lifecycle” phase) · **script disposition follow-ons** (dogfood / retire isolation; L0 inventory = [PLAN-0041](../PLAN-0041-script-inventory.md) Implemented — do **not** attic by `v1.0.2` date) · **PLAN-0037 full extraction (unfreeze after 2.0)**.
 
@@ -558,12 +557,9 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration (ADR-0018 Phase 0–8)
         ↓
-P0–P4  checkpoints EXITED
-P5a    Task→Capability map — EXITED (PLAN-0038)
-P5b    Dispatcher — EXITED (PLAN-0039)
-P5c    Physical projection by Capability — **done** (PLAN-0040 Implemented)
+P0–P5  checkpoints EXITED
+         P5 = 5a PLAN-0038 · 5b PLAN-0039 · 5c PLAN-0040 (P0–P2; leftover deferred)
 P6     Invariant-based Testing — **current** (plan TBD)
-P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates
         ↓

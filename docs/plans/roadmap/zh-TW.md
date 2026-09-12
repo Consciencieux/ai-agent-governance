@@ -294,7 +294,7 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**當前階段：下一入口 Phase 6（5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) Implemented）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–4、5a、5b、5c（P0–P2）。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
+**當前階段：Phase 5 EXITED；下一入口 Phase 6（計劃待立）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–5（5c = [PLAN-0040](../PLAN-0040-capability-physical-projection.md) P0–P2）。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
 
 ## 現在 → 2.0（索引）
 
@@ -309,14 +309,13 @@ Roadmap 只列順序與車輛，不複製 Plan 步驟 / Affected Files / 驗收�
 | 2 | [PLAN-0032](../archive/PLAN-0032-documentation-knowledge-architecture-closure.md) · [PLAN-0033](../archive/PLAN-0033-known-issue-closure.md) | Archived |
 | 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived；baseline `24021c4` |
 | 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
+| 5 | [PLAN-0038](../PLAN-0038-task-capability-routing.md) · [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../PLAN-0040-capability-physical-projection.md) | Implemented / EXITED（5a 圖 · 5b resolve/CLI · 5c P0–P2 投影；leftover 延後） |
 
 ### 下一步（必須按此序；不跳過審查）
 
 | 步 | 內容 | 車輛 | 一句話 |
 | --- | --- | --- | --- |
-| **現在** | Phase 6 不變量測試 | *（計劃待立 / PLAN-0040 successor）* | 正負 oracle；5c = PLAN-0040 Implemented |
-| 5b | Context Detector / Dispatcher | [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md)（**Implemented**） | 消費 5a 映射；禁止另造適用關係、禁止全自動 LLM 路由、禁止無路由搬家 |
-| 5c | 按 Capability 實體投影 | [PLAN-0040](../PLAN-0040-capability-physical-projection.md)（**Implemented**） | 只改 AuthorityRef；不按 1.0 目錄骨架；見 call-topology § 物理拓撲 |
+| **現在** | Phase 6 不變量測試 | *（計劃待立）* | 正負 oracle |
 | 6 | Invariant-based Testing | 後續 Plan | 每條重要 Control：positive + negative oracle |
 | 7 | Review 三類拆分 | 後續 Plan | Implementation / System / Research |
 | 8 | 重建 mandatory gates | 後續 Plan | 阻斷權威交到新 control plane |
@@ -324,9 +323,9 @@ Roadmap 只列順序與車輛，不複製 Plan 步驟 / Affected Files / 驗收�
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **凍結在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必達項；2.0 產品 = 本倉 INSTALLED Gen2 skill。過濾邊界仍約束遷移期載荷。解凍：2.0 發布之後。
 
-Phase 5 內部順序（索引自 PLAN-0035 / `call-topology.md`，非新裁決）：**5a** 顯式映射 → 薄入口 → **5b** Dispatcher（PLAN-0039）→ **5c** 按 Capability 投影實體檔（只改 `AuthorityRef`；5b EXIT 後另開 Plan）。Gen1 無真正 Task→Capability 圖；5c **不**按 1.0 目錄骨架細切，**不**另造查找架構。紀律：`docs/research/working/routing/call-topology.md` § 物理拓撲。
+Phase 5 已 EXITED（索引自 PLAN-0035 / `call-topology.md`，非新裁決）：**5a** 顯式映射 → **5b** Dispatcher → **5c** 按 Capability 投影（只改 `AuthorityRef`）。殘留葉 / 可選 rename **不**重開 Phase 5。紀律：`docs/research/working/routing/call-topology.md` § 物理拓撲。
 
-### 故意延後（不擋 Phase 5 開工）
+### 故意延後（不擋 Phase 6 開工）
 
 剩餘 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 獨立 machine-readable Control 檔 · **5c 剩餘 Capability 葉 / 可選 rename** · **lifecycle 殘留抽出 / `state.json` phase 降為 facet**（概念閉包：[FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md)；不另開「推翻 lifecycle」階段）· **腳本 disposition 後續**（dogfood / retire 隔離；L0 台帳 = [PLAN-0041](../PLAN-0041-script-inventory.md) Implemented — **禁止**按 `v1.0.2` 日期整夾進閣樓）· **PLAN-0037 全文提煉（2.0 後解凍）**。
 
@@ -560,12 +559,9 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration（ADR-0018 Phase 0–8）
         ↓
-P0–P4  checkpoint EXITED
-P5a    Task→Capability map — EXITED（PLAN-0038）
-P5b    Dispatcher — EXITED（PLAN-0039）
-P5c    按 Capability 實體投影 — **done**（PLAN-0040 Implemented）
+P0–P5  checkpoint EXITED
+         P5 = 5a PLAN-0038 · 5b PLAN-0039 · 5c PLAN-0040（P0–P2；leftover 延後）
 P6     不變量測試 — **current**（計劃待立）
-P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates
         ↓

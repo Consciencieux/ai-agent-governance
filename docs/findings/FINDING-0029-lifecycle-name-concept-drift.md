@@ -23,7 +23,7 @@ observed_in: gen1
 | **B. 产品模式** | `INIT / AUDIT / RELEASE`（本 skill 如何治理目标项目） | `SKILL.md` 模式面；与 A 无关 |
 | **C. Agent 操作生命周期** | Understand → … → Report（任务执行阶段） | `references/policies/lifecycle.policy.md` → INSTALLED `docs/rules/lifecycle.md` |
 
-起源上，义项 A 曾被误命名 / 误承载为「生命周期管理」子能力；自更新外置后，**文件与词没有跟着死掉**，反而变成义项 C 的「哪里出事就往哪个 Phase 塞」的政策单体（RESEARCH-0009）。Gen2 已裁定 C 的目标职责是**编排骨架，不是政策仓库**（ADR-0022），Phase 5a–5c 正把横切投影为 Capability；但仓库里仍缺一条**显式命名辨析 Finding**，后续 Agent 容易再次：
+起源上，义项 A 曾被误命名 / 误承载为「生命周期管理」子能力；自更新外置后，**文件与词没有跟着死掉**，反而变成义项 C 的「哪里出事就往哪个 Phase 塞」的政策单体（RESEARCH-0009）。Gen2 已裁定 C 的目标职责是**编排骨架，不是政策仓库**（ADR-0022），Phase 5a–5c 已把 Slice B 横切投影为 Capability；残留抽出延后，不重开 Phase 5。本 Finding 记录该辨析（Confirmed，未 Resolved）；后续 Agent 容易再次：
 
 - 把六阶段当产品骨架继续长肉；
 - 把自更新需求重新塞回本仓 lifecycle；

@@ -16,6 +16,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **Phase 5 EXITED** — PLAN-0038 / 0039 / 0040 Implemented (5a map, 5b resolve/CLI, 5c P0–P2 Capability projection). Leftover capability leaves, FINDING-0028 dogfood, and FINDING-0029 residue stay deferred by design and do not reopen Phase 5. Next entry is Phase 6 (plan TBD). Architecture checkpoint ≠ Release; PLAN-0037 remains frozen.
+
 - **Research construction papers colocated under `docs/research/working/`** — Task→Capability graph (`working/routing/`) and script inventory (`working/script-inventory.*`) share one construction slot, distinct from numbered `RESEARCH-xxxx` essays and empty `experiments/`. Path retarget only; no second lookup model.
 
 - **Repository documentation is now organized by knowledge responsibility instead of language-first layout** — product documentation lives under `docs/product/{en,zh-CN,zh-TW}/`, while Research, Findings, ADRs, Plans/Roadmap, and Glossary have distinct responsibility and lifecycle boundaries. Completed Plans live under `docs/plans/archive/`; Research, Findings, and ADRs remain in place across lifecycle changes. `docs/README.md` is the routing entry for the knowledge system.

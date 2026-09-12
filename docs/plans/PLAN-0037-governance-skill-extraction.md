@@ -47,7 +47,7 @@ target: both
 ## 前置条件（Gate — 未满足则不得 Active）
 
 1. Phase 4 EXITED（PLAN-0035 / PLAN-0036）— 已满足
-2. Phase 5 **Task→Capability routing** 已验证（RESEARCH-0012 → PLAN-0038 → 5b Dispatcher）
+2. Phase 5 **Task→Capability routing** 已验证（RESEARCH-0012 → PLAN-0038 → 5b Dispatcher）— **Phase 5 EXITED（2026-09-12）；仍不解冻本计划**
 3. **Phase 8 阻断权威已交接，且已退出 Migration Mode / 完成 2.0 skill-release（或等价：本仓 Gen2 载荷已是可发布产品）** — 全文提炼的对象必须是已封板的 control plane，不是迁移中的草稿
 4. ADR-0020 L1/L2/L3 分层仍为 Accepted；无 Narrow 撤销
 

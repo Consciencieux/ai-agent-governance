@@ -1,18 +1,15 @@
 ---
 id: RESEARCH-0012
 status: Active
-version: 3
+version: 4
 subject_generation: gen2
 ---
 
 # RESEARCH-0012：Task → Capability 适用路由（Phase 5 入口）
 
-本 RESEARCH 是 **Phase 5 入口观察与问题框定**：在 Phase 4 已证明 Control vertical extraction 与机械边界之后，描述「任务如何命中应读能力」的缺口与目标形状，并给出 **可审查的工作假设**（非 Accepted ADR、非 Dispatcher 实现）。
+本 RESEARCH 是 **Phase 5 入口观察与问题框定**。施工车辆 PLAN-0038 / 0039 / 0040 已 Implemented；**Phase 5 checkpoint EXITED**（2026-09-12；见 PLAN-0040 § Phase 5 Exit Criteria）。本文件仍是系统模型，不因 checkpoint 归档。
 
-**不**实现 Dispatcher。  
-**不**搬 `references/` / SKILL / AGENTS 物理拓扑。  
-**不**建设知识图谱 / 句级 ontology / 全自动 LLM 路由。  
-**不**执行 PLAN-0037（extraction 在 routing 验证之后）。
+**本文件不**实现 Dispatcher、不搬物理拓扑、不执行 PLAN-0037——那些是 Plan 的事（5b/5c 已落地；0037 仍冻结）。
 
 系统背景：ADR-0022（thin entry / progressive disclosure / Context Economy）、ADR-0023（Control slots）、RESEARCH-0009（指令架构）、RESEARCH-0006（能力基线）。
 
@@ -22,9 +19,9 @@ subject_generation: gen2
 | --- | --- |
 | 知识类型导航（Product / Research / Finding / ADR / Plan…） | 已有（`docs/README.md`） |
 | Control identity + evaluator/binding | Phase 3–4 已有 |
-| **Task / Context → Applicable Capabilities** 确定性映射 | **施工中**（PLAN-0038；`working/routing/task-capability-map.md` v0） |
-| 调用拓扑（分层图 + 解析算法） | **已陈述**（`working/routing/call-topology.md`；非正式 schema） |
-| 由 routing 导出的文档物理拓扑 | 尚无（禁止无路由先拆树） |
+| **Task / Context → Applicable Capabilities** 确定性映射 | **已落地**（PLAN-0038 Implemented；`working/routing/task-capability-map.md` v0） |
+| 调用拓扑（分层图 + 解析算法） | **已陈述且 5b 可调用**（`working/routing/call-topology.md` + `routing.js`） |
+| 由 routing 导出的文档物理拓扑 | **5c P0–P2 已投影**（PLAN-0040；leftover 叶延后） |
 
 现状失败模式：Agent 打开厚 `lifecycle.policy` / 多文件自搜 → token↑、漏读、跨位置关联失败（ADR-0022）。
 
@@ -46,7 +43,7 @@ thin entry 消费 routing
 （随后）Dispatcher；再据 routing 重构物理 topology
 ```
 
-第一阶段只要 **显式映射表 / 人工可维护的 applicability 陈述**；半自动与 runtime Dispatcher 延后。
+第一阶段只要 **显式映射表 / 人工可维护的 applicability 陈述**；半自动与 runtime Dispatcher 延后。**5a–5c 现已落地**（map → resolve/CLI → Slice B 投影）；完整正反 oracle 仍归 Phase 6。
 
 ## 调用拓扑架构（v3）
 
@@ -196,23 +193,21 @@ PLAN-0037 Extraction boundary：抽 **Gen2 control plane portable semantics**，
 
 | 产物 | 状态 |
 | --- | --- |
-| 本 RESEARCH v2（六问工作假设） | 本文件；**已采纳** |
-| **PLAN-0038** Phase 5a 施工（taxonomy + 显式 map + 表征验证） | **Implemented**；工作稿 `docs/research/working/routing/task-capability-map.md` |
-| **PLAN-0039** Phase 5b Context Detector / Dispatcher | **Design**；消费同一张图；待批准后 Active |
+| 本 RESEARCH v2（六问工作假设） | 本文件；**已采纳**；v4 = Phase 5 EXITED 记录 |
+| **PLAN-0038** Phase 5a | **Implemented** / 5a EXITED |
+| **PLAN-0039** Phase 5b | **Implemented** / 5b EXITED |
+| **PLAN-0040** Phase 5c | **Implemented** / 5c P0–P2；**Phase 5 EXITED** |
 | 必要时 Narrow ADR（routing 权威表示） | 映射稳定且需升格后 |
-| Dispatcher 运行时 | PLAN-0039 施工（本切片） |
 | PLAN-0037 Active | **2.0 后**解冻（Design 冻结；非 2.0 blocker） |
 
-## 开放项（留给 PLAN-0038 / 审查）
+## 开放项（Phase 5 外）
 
-1. ~~种子 `task_class` 枚举~~ → map v0（可修订）
-2. ~~种子 capability 清单 + deferred 对账~~ → map v0
-3. ~~显式 Task→Capability 表 + 表征夹具~~ → map v0；待走读
-4. 与 ADR-0023 Control.applicability 的对齐方式（共享 facet 词汇 vs 分表）
-5. 超预算 / unmatched 人工审查协议的走读确认（非 token 门禁）
+1. 与 ADR-0023 Control.applicability 的对齐方式（共享 facet 词汇 vs 分表）
+2. 超预算 / unmatched 人工审查协议的走读确认（非 token 门禁）
+3. 5c leftover Capability 叶 / 可选 rename（不重开 Phase 5）
 
 ## 参考
 
 - ADR-0018 Phase 5 · ADR-0020 · ADR-0022 · ADR-0023
 - RESEARCH-0004 / 0006 / 0009 / 0010 / 0011
-- PLAN-0035 / PLAN-0036 Exit · PLAN-0037 Design 冻结 · PLAN-0038 Implemented · PLAN-0039 Design
+- PLAN-0035 / PLAN-0036 Exit · PLAN-0037 Design 冻结 · PLAN-0038 / 0039 / 0040 Implemented（Phase 5 EXITED）

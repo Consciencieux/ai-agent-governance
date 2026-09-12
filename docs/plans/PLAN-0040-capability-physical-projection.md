@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0040：Phase 5c 按 Capability 物理投影
 
-> **Status: Implemented**（P0–P2 完成；P3 可选未做 rename。前置：PLAN-0038 / PLAN-0039 Implemented。边冻结；Slice B 横切已迁出 lifecycle。）
+> **Status: Implemented**（P0–P2 完成；P3 可选未做 rename。前置：PLAN-0038 / PLAN-0039 Implemented。边冻结；Slice B 横切已迁出 lifecycle。**Phase 5 checkpoint EXITED**。）
 
 纪律权威：`docs/research/working/routing/call-topology.md` § 物理拓扑。  
 图权威：人表 `task-capability-map.md` · 机表 `graph.v0.json` · 解析 `repo-tools/lib/routing.js`。
@@ -167,23 +167,58 @@ references/
 | P3 | observation | INIT | 新 capabilities/ 必须进 init-spec | payload | high | closed | resolved | — | init-spec artifacts added |
 | P4 | observation | ADR-0020 | INSTALLED 不得引用 docs/research/working/routing | payload | high | deferred | deferred | — | Out；authority 用 references 路径 |
 | P5 | observation | PLAN-0038 | Capability 粒度仍可能过粗/过细 | skill | med | deferred | deferred | — | revisit: map 修订 / 0037 |
-| P6 | observation | FINDING-0028 | 脚本机械面无 generation/disposition 台账；与 5c 文档投影正交 | repo | med | deferred | deferred | — | revisit: script inventory Plan；非 PLAN-0040 In |
+| P6 | observation | FINDING-0028 | 脚本机械面无 generation/disposition 台账；与 5c 文档投影正交 | repo | med | closed | resolved | — | L0 = PLAN-0041 Implemented；dogfood / retire 仍归 FINDING-0028 |
 
 ## 闭包对账
 
 ```text
 Total known:  7
-Resolved:     4  (P0–P3)
-Deferred:     3  (P4, P5, P6)
+Resolved:     5  (P0–P3, P6)
+Deferred:     2  (P4, P5)
 Open:         0
 Unaccounted:  0
 ```
 
 ## Successor
 
-- Phase **6** Invariant-based Testing（正负 oracle）
-- 或 5c 尾巴：其余 Capability 叶 / 可选 rename
+- Phase **6** Invariant-based Testing（正负 oracle；计划待立）
+- 5c leftover：其余 Capability 叶 / 可选 rename（**不**重开 Phase 5）
 - Narrow ADR：routing + projection 权威升格（若要进薄入口 / payload 指针）
+
+## Phase 5 Exit Criteria（checkpoint · 本计划为末切片）
+
+Phase 5 目标是 **可调用的 Task→Capability 图 + 按 Capability 投影 AuthorityRef**，不是拆光所有 policy 文件，不是正负 oracle（Phase 6），不是 PLAN-0037 提炼。
+
+```text
+Required:
+✓ 5a 显式 map + 表征（PLAN-0038）
+✓ 5b 共享 resolve + Detector + CLI（PLAN-0039）；同一张图
+✓ 5c P0–P2 authority 机读 + Slice B lifecycle 横切叶（本计划）
+✓ 一套查找模型（无第三套 Task→Capability 图；无 LLM 自动路由）
+✓ PLAN-0037 仍冻结在 Design
+✓ 5c 边集合与 5b 表征同形
+
+Deferred by design（不是遗漏）:
+- 5c leftover Capability 叶 / 可选 rename
+- lifecycle 残留抽出 / state.json phase-as-facet（FINDING-0029）
+- 脚本 dogfood / retire 隔离（FINDING-0028；L0 = PLAN-0041）
+- Narrow ADR 写入 INSTALLED
+- Phase 6 正负 oracle
+- PLAN-0037 Active（2.0 后）
+```
+
+## Phase 5 exit review（2026-09-12）
+
+| 检查项 | 状态 |
+| --- | --- |
+| Exit Criteria Required 全项 | ✓ |
+| Deferred by design 已显式记录 | ✓ |
+| LLM 自动路由 / 1.0 骨架对称拆分 / 第三套查找 / Active PLAN-0037 / Phase 6 oracle | **未偷跑** |
+| Open blocker | **无** |
+
+**Completion marker：** Phase 5 checkpoint = **EXITED**（PLAN-0038 / 0039 / 0040 `status: Implemented`）。Architecture checkpoint ≠ Release；Plan archive 另按 ADR-0016。
+
+**Successor：** Phase 6 Invariant-based Testing（计划待立）。残留投影与 FINDING-0028/0029 后续不挡 Phase 6 开工。
 
 ## 参考
 

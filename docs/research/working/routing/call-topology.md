@@ -126,7 +126,7 @@ Agent / 将来 Dispatcher **同一套解析**。5b 只是把本算法从查表�
 | 消费者 | Agent read_set | gate / CI / 将来 Dispatcher run_set |
 | 可空 | Capability 可不 bind Control | Control 可不对应长指令 |
 
-共享 **facet 词汇**（trees / phase / write_boundary）为佳；不要求 id 一一对应。对齐方式仍开放（PLAN-0038 开放项 4）。
+共享 **facet 词汇**（trees / phase / write_boundary）为佳；不要求 id 一一对应。对齐方式仍开放（RESEARCH-0012 v4 开放项）。
 
 ## 物理拓扑（明确后置 · Phase 5c）
 
@@ -139,13 +139,15 @@ Phase 5 内部切片（索引；非独立 ADR Phase）：
 | **5c** | [PLAN-0040](../../../plans/PLAN-0040-capability-physical-projection.md)（Implemented） | `references/` / 入口文件 **按 Capability 投影**；只改 `AuthorityRef` |
 
 ```text
-调用拓扑（本文件 + map）     现在（5a）
+调用拓扑（本文件 + map）     5a EXITED（PLAN-0038）
         ↓
 薄入口指针消费 L4            PLAN-0038 P3
         ↓
-Dispatcher 跑同一解析        PLAN-0039（5b）
+Dispatcher 跑同一解析        5b EXITED（PLAN-0039）
         ↓
-references/ 按 Capability 投影  PLAN-0040（Phase **5c** Implemented）；只改 AuthorityRef
+references/ 按 Capability 投影  5c P0–P2 EXITED（PLAN-0040）；leftover 延后
+        ↓
+**Phase 5 checkpoint EXITED** → Phase 6（计划待立）
 ```
 
 未稳定前移动 `lifecycle.policy.md` 等 = **无路由拆分**（禁止）。
@@ -167,7 +169,7 @@ references/ 按 Capability 投影  PLAN-0040（Phase **5c** Implemented）；只
 2. **按 Capability 重排位置**，不按 1.0 目录树「细切开」装回旧骨架。
 3. **搬家只改 `AuthorityRef`（及 INIT/生成契约中的路径）**；`always_on` / `triggers` / `facet_adds` / `binds` **不变**。边要变 → 先改 map + 表征，再搬家。
 4. **横切不单挂一个 lifecycle 节点**（与 ADR-0022 目标形态一致）。
-5. **禁止**在 5b 完成前启动 5c；**禁止**无 map 命中面的「对称拆文件」。
+5. **禁止**无 map 命中面的「对称拆文件」。5c leftover 不重开 Phase 5。
 
 5c **不是** Phase 6（正负 oracle），也不是 PLAN-0037 extraction。
 

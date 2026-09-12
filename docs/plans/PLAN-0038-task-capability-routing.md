@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0038：Phase 5 Task→Capability 适用路由（显式映射）
 
-> **Status: Implemented**（Phase 5a EXITED。调用拓扑 + 显式 map + 表征套件 + AGENTS 薄指针已落地。**未**实现 Dispatcher；**未**搬文档物理拓扑；**未** Active PLAN-0037。Architecture checkpoint ≠ Release；归档另按 ADR-0016。）
+> **Status: Implemented**（Phase 5a EXITED。调用拓扑 + 显式 map + 表征套件 + AGENTS 薄指针已落地。Dispatcher / 物理投影已由 PLAN-0039 / PLAN-0040 完成。**Phase 5 checkpoint EXITED**（见 PLAN-0040 § Phase 5 Exit Criteria）。**未** Active PLAN-0037。Architecture checkpoint ≠ Release；归档另按 ADR-0016。）
 
 把 RESEARCH-0012 的 Task / Capability / Applicability / Routing 工作假设落成 **人工可维护的显式映射 + 表征验证**，使薄入口能消费稳定 read-set。
 
@@ -97,7 +97,7 @@ SKILL.md 写入 docs/ 路径（违反 reference-closure）
 
 ## Successor
 
-Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md) Context Detector / Dispatcher（消费同一张图；不另发明适用关系）。打开条件：本计划 Implemented — **已满足**；Design 待批准。
+Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md)（**Implemented**）。Phase **5c**：[PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）。**Phase 5 EXITED**；下一入口 Phase 6（计划待立）。
 
 ## Domain sync（Target: both）
 
@@ -123,8 +123,8 @@ Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md) Context Det
 | 标识（ID） | 类型 | 来源 | 问题 | 影响面 | 严重度 | 状态 | 处置 | 责任人 | 验证/证据 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | R0 | observation | research | 无显式 Task→Capability 映射 | both | high | closed | resolved | — | routing map v0 |
-| R1 | observation | review | Capability 过粗/过细会污染提取 | skill | med | closed | deferred | — | revisit: 5b/0037 |
-| R2 | observation | design | Dispatcher 易被提前实现 | both | med | closed | deferred | — | revisit: 5b；Out of scope |
+| R1 | observation | review | Capability 过粗/过细会污染提取 | skill | med | closed | deferred | — | revisit: 0037 / map 修订 |
+| R2 | observation | design | Dispatcher 易被提前实现 | both | med | closed | resolved | — | PLAN-0039 Implemented；未另造适用关系 |
 | R3 | observation | construction | 超预算裁剪启发式需走读验证 | both | med | closed | resolved | — | routing suite F4 |
 | R4 | observation | design | PLAN-0037 误为 2.0 必达 | both | high | closed | deferred | — | 0037 Design 冻结 |
 | R5 | observation | construction | SKILL 不可链 docs/ 路由表 | payload | med | closed | resolved | — | P3 仅 AGENTS |
@@ -133,8 +133,8 @@ Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md) Context Det
 
 ```text
 Total known:  6
-Resolved:     3  (R0, R3, R5)
-Deferred:     3  (R1, R2, R4)
+Resolved:     4  (R0, R2, R3, R5)
+Deferred:     2  (R1, R4)
 Open:         0
 Unaccounted:  0
 ```

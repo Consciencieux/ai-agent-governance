@@ -7,7 +7,7 @@ target: repo-infra
 
 # PLAN-0039：Phase 5b Context Detector / Dispatcher
 
-> **Status: Implemented**（Phase 5b EXITED。共享 `resolve` + Context Detector + `repo-tools/route-task.js` 已落地；消费 PLAN-0038 同一张图。**未**另造适用关系；**未** LLM 自动路由；**未**搬物理拓扑；**未** Active PLAN-0037。Architecture checkpoint ≠ Release。）
+> **Status: Implemented**（Phase 5b EXITED。共享 `resolve` + Context Detector + `repo-tools/route-task.js` 已落地；消费 PLAN-0038 同一张图。物理投影已由 PLAN-0040 完成。**Phase 5 checkpoint EXITED**（见 PLAN-0040 § Phase 5 Exit Criteria）。**未**另造适用关系；**未** LLM 自动路由；**未** Active PLAN-0037。Architecture checkpoint ≠ Release。）
 
 把 5a 的确定性解析（`call-topology.md` L4）做成 **repo-only 可执行入口**：Context Detector 归类任务，Dispatcher 输出 `read_set` / `run_set` / `defer_set` / `unmatched`。
 
@@ -87,9 +87,10 @@ AGENTS 消费「先 route 再读」
 
 ## Successor
 
-1. **Phase 5c — 物理拓扑投影** — [PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）：纪律见 `call-topology.md` § 物理拓扑；投影表 + lifecycle 横切叶
-2. Phase **6** Invariant-based Testing
+1. **Phase 5c** — [PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）。**Phase 5 EXITED**。
+2. Phase **6** Invariant-based Testing（计划待立）
 3. Narrow ADR（routing 升格进 payload 时）
+4. 5c leftover Capability 叶 / 可选 rename（不重开 Phase 5）
 
 ## Domain sync（Target: repo-infra）
 

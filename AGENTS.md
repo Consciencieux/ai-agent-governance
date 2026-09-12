@@ -37,7 +37,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Test protection | `references/policies/testing.policy.md` § 测试保护 | payload |
 | CHANGELOG content boundary | `references/policies/lifecycle.policy.md` § CHANGELOG 内容边界 · this file § Change classification (repo-owned accession) | both |
 | Agent instruction architecture (thin entrypoint, contextual loading, mechanical-first) | `docs/design-decisions/ADR-0022-agent-instruction-architecture.md` · `docs/research/RESEARCH-0009-agent-instruction-architecture.md` · this file § Conventions | both |
-| Task→Capability call topology (Phase 5a–5c; repo construction) | `docs/research/working/routing/call-topology.md` · `task-capability-map.md` · `graph.v0.json` · `repo-tools/lib/routing.js` · `repo-tools/route-task.js` · PLAN-0038 · PLAN-0039 · PLAN-0040 · this file § Task→Capability routing | repo |
+| Task→Capability call topology (Phase 5 EXITED; repo construction) | `docs/research/working/routing/call-topology.md` · `task-capability-map.md` · `graph.v0.json` · `repo-tools/lib/routing.js` · `repo-tools/route-task.js` · PLAN-0038 · PLAN-0039 · PLAN-0040 · this file § Task→Capability routing | repo |
 | Producer/product separation (shared semantics, single authoritative owner, separate profiles) | `docs/design-decisions/ADR-0020-producer-product-governance-separation.md` · this file § Classification judge rule | repo |
 | Governance Control Model (control identity, slots, profile binding) | `docs/design-decisions/ADR-0023-governance-control-model.md` · `docs/research/RESEARCH-0010-governance-control-model.md` | repo |
 
@@ -64,14 +64,14 @@ Hard rules that follow from this:
 - Read [SKILL.md](SKILL.md) — it is the product specification, not just a doc
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the relevant [docs/](docs/) page for the area you change
 
-### Task→Capability routing (Phase 5b · repo construction)
+### Task→Capability routing (Phase 5 EXITED · repo construction)
 
 For work **in this repository** on the Gen2 migration branch, do **not** open the whole governance tree by default. Load by call topology (ADR-0022 Context Economy):
 
 1. Classify the task → `task_class` (+ optional context facets), **or** run the Detector/CLI.
 2. Prefer the callable router: `node repo-tools/route-task.js --task <class> …` or `--path <file>…` (shared impl: `repo-tools/lib/routing.js`; graph: `docs/research/working/routing/graph.v0.json`). Human map: [`task-capability-map.md`](docs/research/working/routing/task-capability-map.md) (architecture: [`call-topology.md`](docs/research/working/routing/call-topology.md)).
 3. Read only the resulting `read_set` authorities; run only `run_set` controls; if `unmatched` or over budget, use `defer_set` — never silently load everything.
-4. Phase **5c** physical projection is under [PLAN-0040](docs/plans/PLAN-0040-capability-physical-projection.md) (**Implemented** for P0–P2); further leaves follow the same discipline — **do not** rearrange by Gen1 directory skeleton; only retarget `AuthorityRef` (see `call-topology.md` § 物理拓扑); **do not** invent a second Task→Capability lookup model; **do not** Active PLAN-0037 (frozen until after 2.0).
+4. Phase 5 is **EXITED** (PLAN-0038 / 0039 / 0040). Leftover Capability leaves follow the same discipline — **do not** rearrange by Gen1 directory skeleton; only retarget `AuthorityRef` (see `call-topology.md` § 物理拓扑); **do not** invent a second Task→Capability lookup model; **do not** Active PLAN-0037 (frozen until after 2.0). Next construction entry is Phase 6 (plan TBD).
 
 This map/router is **REPO-ONLY** construction authority (not INSTALLED payload). Characterization: `node tests/run-tests.js --suite routing`.
 

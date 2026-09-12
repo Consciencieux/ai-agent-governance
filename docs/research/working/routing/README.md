@@ -2,7 +2,7 @@
 
 父槽：`docs/research/working/`（施工产物，非 RESEARCH 正文）。
 
-Phase 5（PLAN-0038 / PLAN-0039）的 **repo-only** 路由工作稿。
+Phase 5（PLAN-0038 / 0039 / 0040）**EXITED** 后的 **repo-only** 路由工作稿。切片完成；本目录仍是施工权威（非正式 schema）。
 
 | 文件 | 用途 |
 | --- | --- |

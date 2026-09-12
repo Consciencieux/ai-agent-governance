@@ -452,6 +452,8 @@ Deferred by design（不是遗漏）:
 2. 再决定 AGENTS/SKILL 薄化与 references 树化；
 3. 保持：Control 是最后手段；Ledger 只收高价值发现；不把所有规则 object 化。
 
+**Phase 5 follow-up（2026-09-12）：** RESEARCH-0012 → PLAN-0038 / 0039 / 0040 已施工；**Phase 5 checkpoint EXITED**。本计划 2026-09-10 审查记录不改。现 successor = Phase 6（计划待立）。
+
 ## 参考
 
 - 阶段顺序：ADR-0018
