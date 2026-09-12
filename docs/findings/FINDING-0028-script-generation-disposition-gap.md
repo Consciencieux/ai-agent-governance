@@ -86,8 +86,9 @@ observed_in: gen2
 - ADR-0020 Producer/Product 执行分离 · ADR-0006 分发边界
 - RESEARCH-0006 Gen1 能力基线 · FINDING-0001 / A03 隐性狗粮
 - PLAN-0035 Phase 4 strangler · PLAN-0039（5b 新 CLI 仅注释可辨）
-- 后续车辆（未开）：script inventory / disposition 门禁 Plan；可与 Phase 4 尾巴或 Phase 6 机械面 oracle 交错，**不是** 5c 文档投影的隐含范围
+- L0 车辆：[PLAN-0041](../plans/PLAN-0041-script-inventory.md)（**Implemented**）· [`script-inventory.v0.json`](../research/working/script-inventory.v0.json)
+- 仍开：repo dogfood INSTALLED CLI、按 `retire` 隔离/删除（**禁止**按 `v1.0.2` 整夹搬走）
 
 ## 回归保护
 
-（未关闭）关闭时应有：inventory 表征或 gate；抽查 `repo-tools/route-task.js` 等新文件若缺登记则红；`disposition: retire` 文件不得再被 `package.json` 本仓 check 引用。
+（部分满足，Finding **未**关闭）L0：`tests/suites/script-inventory.test.js` — 缺登记则红；v0 禁止非空 `retire`。关闭仍需：dogfood 拆分或显式 dual_profile 声明门禁；`retire` 删除条件与引用清零。

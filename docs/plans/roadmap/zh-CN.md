@@ -324,11 +324,11 @@ Roadmap 只列顺序与车辆，不复制 Plan 步骤 / Affected Files / 验收�
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **冻结在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必达项；2.0 产品 = 本仓 INSTALLED Gen2 skill。过滤边界仍约束迁移期载荷。解冻：2.0 发布之后。
 
-Phase 5 内部顺序（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → 薄入口 → **5b** Dispatcher（PLAN-0039）→ **5c** 按 Capability 投影物理文件（只改 `AuthorityRef`；5b EXIT 后另开 Plan）。Gen1 无真正 Task→Capability 图；5c **不**按 1.0 目录骨架细切，**不**另造查找架构。纪律：`docs/research/routing/call-topology.md` § 物理拓扑。
+Phase 5 内部顺序（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → 薄入口 → **5b** Dispatcher（PLAN-0039）→ **5c** 按 Capability 投影物理文件（只改 `AuthorityRef`；5b EXIT 后另开 Plan）。Gen1 无真正 Task→Capability 图；5c **不**按 1.0 目录骨架细切，**不**另造查找架构。纪律：`docs/research/working/routing/call-topology.md` § 物理拓扑。
 
 ### 故意延后（不挡 Phase 5 开工）
 
-剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · **5c 剩余 Capability 叶 / 可选 rename** · **lifecycle 残留抽出 / `state.json` phase 降为 facet**（概念闭包：[FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md)；不另开「推翻 lifecycle」阶段）· **PLAN-0037 全文提炼（2.0 后解冻）**。
+剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · **5c 剩余 Capability 叶 / 可选 rename** · **lifecycle 残留抽出 / `state.json` phase 降为 facet**（概念闭包：[FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md)；不另开「推翻 lifecycle」阶段）· **脚本 disposition 后续**（dogfood / retire 隔离；L0 台账 = [PLAN-0041](../PLAN-0041-script-inventory.md) Implemented — **禁止**按 `v1.0.2` 日期整夹进阁楼）· **PLAN-0037 全文提炼（2.0 后解冻）**。
 
 
 ### 本仓 vs 2.0 产品

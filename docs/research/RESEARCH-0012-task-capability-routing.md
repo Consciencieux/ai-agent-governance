@@ -22,13 +22,13 @@ subject_generation: gen2
 | --- | --- |
 | 知识类型导航（Product / Research / Finding / ADR / Plan…） | 已有（`docs/README.md`） |
 | Control identity + evaluator/binding | Phase 3–4 已有 |
-| **Task / Context → Applicable Capabilities** 确定性映射 | **施工中**（PLAN-0038；`routing/task-capability-map.md` v0） |
-| 调用拓扑（分层图 + 解析算法） | **已陈述**（`routing/call-topology.md`；非正式 schema） |
+| **Task / Context → Applicable Capabilities** 确定性映射 | **施工中**（PLAN-0038；`working/routing/task-capability-map.md` v0） |
+| 调用拓扑（分层图 + 解析算法） | **已陈述**（`working/routing/call-topology.md`；非正式 schema） |
 | 由 routing 导出的文档物理拓扑 | 尚无（禁止无路由先拆树） |
 
 现状失败模式：Agent 打开厚 `lifecycle.policy` / 多文件自搜 → token↑、漏读、跨位置关联失败（ADR-0022）。
 
-**Gen1「能力路由」澄清：** 1.x 稳定产品**没有**独立的 Task→Capability 适用图。日常查找 ≈ 厚入口 + `lifecycle.policy` 政策仓库 + 子技能 trigger 词 + Agent 自搜（目录/记忆当 dispatcher）。Gen2 调用拓扑**替换**该查找层，而不是给旧目录树加一层别名。物理文件投影（Phase **5c**）只能按 Capability 重挂功能语义；纪律见 `docs/research/routing/call-topology.md` § 物理拓扑。**禁止**另造第三套查找架构。
+**Gen1「能力路由」澄清：** 1.x 稳定产品**没有**独立的 Task→Capability 适用图。日常查找 ≈ 厚入口 + `lifecycle.policy` 政策仓库 + 子技能 trigger 词 + Agent 自搜（目录/记忆当 dispatcher）。Gen2 调用拓扑**替换**该查找层，而不是给旧目录树加一层别名。物理文件投影（Phase **5c**）只能按 Capability 重挂功能语义；纪律见 `docs/research/working/routing/call-topology.md` § 物理拓扑。**禁止**另造第三套查找架构。
 
 ## 目标形状（陈述，非实现）
 
@@ -50,7 +50,7 @@ thin entry 消费 routing
 
 ## 调用拓扑架构（v3）
 
-**调用拓扑 ≠ 目录结构。** 它是 Task/Context 如何命中 Capability、再命中 Authority/Control 的分层图。施工全文：`docs/research/routing/call-topology.md`。实例：`docs/research/routing/task-capability-map.md`。
+**调用拓扑 ≠ 目录结构。** 它是 Task/Context 如何命中 Capability、再命中 Authority/Control 的分层图。施工全文：`docs/research/working/routing/call-topology.md`。实例：`docs/research/working/routing/task-capability-map.md`。
 
 ```text
 L0 always-on → L1 TaskClass→Capability+ → L2 Facet 叠加
@@ -64,7 +64,7 @@ L0 always-on → L1 TaskClass→Capability+ → L2 Facet 叠加
 
 这些问题决定 PLAN-0037 将来能抽出什么；Capability / Applicability 边界错则 skill 必偏。
 
-**采纳状态（2026-09-12）：** 六问工作假设 **全部采纳、无修订**，作为 PLAN-0038 施工权威。验证载体 = 显式映射 + 表征夹具（`docs/research/routing/task-capability-map.md`），不是 Dispatcher。
+**采纳状态（2026-09-12）：** 六问工作假设 **全部采纳、无修订**，作为 PLAN-0038 施工权威。验证载体 = 显式映射 + 表征夹具（`docs/research/working/routing/task-capability-map.md`），不是 Dispatcher。
 
 | # | 问题 | 本 RESEARCH 工作假设（已采纳 → Plan 验证） |
 | --- | --- | --- |
@@ -197,7 +197,7 @@ PLAN-0037 Extraction boundary：抽 **Gen2 control plane portable semantics**，
 | 产物 | 状态 |
 | --- | --- |
 | 本 RESEARCH v2（六问工作假设） | 本文件；**已采纳** |
-| **PLAN-0038** Phase 5a 施工（taxonomy + 显式 map + 表征验证） | **Implemented**；工作稿 `docs/research/routing/task-capability-map.md` |
+| **PLAN-0038** Phase 5a 施工（taxonomy + 显式 map + 表征验证） | **Implemented**；工作稿 `docs/research/working/routing/task-capability-map.md` |
 | **PLAN-0039** Phase 5b Context Detector / Dispatcher | **Design**；消费同一张图；待批准后 Active |
 | 必要时 Narrow ADR（routing 权威表示） | 映射稳定且需升格后 |
 | Dispatcher 运行时 | PLAN-0039 施工（本切片） |

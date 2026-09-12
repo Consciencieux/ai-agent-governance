@@ -322,11 +322,11 @@ The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affec
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **frozen in Design** (not Archived). Full Stages A–D are **not** a 2.0 must-ship; 2.0 = this repo’s INSTALLED Gen2 skill. The extraction boundary still constrains the payload during migration. Unfreeze: after the 2.0 release.
 
-Phase 5 internal order (indexed from PLAN-0035 / `call-topology.md`, not a new ruling): **5a** explicit map → thin entry → **5b** Dispatcher (PLAN-0039) → **5c** project files by Capability (retarget `AuthorityRef` only; open a Plan after 5b EXIT). Gen1 had no real Task→Capability graph; 5c must **not** slice by the 1.0 directory skeleton or invent a second lookup model. Discipline: `docs/research/routing/call-topology.md` § 物理拓扑.
+Phase 5 internal order (indexed from PLAN-0035 / `call-topology.md`, not a new ruling): **5a** explicit map → thin entry → **5b** Dispatcher (PLAN-0039) → **5c** project files by Capability (retarget `AuthorityRef` only; open a Plan after 5b EXIT). Gen1 had no real Task→Capability graph; 5c must **not** slice by the 1.0 directory skeleton or invent a second lookup model. Discipline: `docs/research/working/routing/call-topology.md` § 物理拓扑.
 
 ### Deferred by design (does not block starting Phase 5)
 
-Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **5c leftover capability leaves / optional rename** · **lifecycle residue extraction / `state.json` phase-as-facet** (concept closure: [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md); no parallel “overturn lifecycle” phase) · **PLAN-0037 full extraction (unfreeze after 2.0)**.
+Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · **5c leftover capability leaves / optional rename** · **lifecycle residue extraction / `state.json` phase-as-facet** (concept closure: [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md); no parallel “overturn lifecycle” phase) · **script disposition follow-ons** (dogfood / retire isolation; L0 inventory = [PLAN-0041](../PLAN-0041-script-inventory.md) Implemented — do **not** attic by `v1.0.2` date) · **PLAN-0037 full extraction (unfreeze after 2.0)**.
 
 ### This repo vs 2.0 product
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Phase 5b characterization: shared resolve + Context Detector (PLAN-0039).
-// Graph: docs/research/routing/graph.v0.json — must stay in sync with task-capability-map.md
+// Graph: docs/research/working/routing/graph.v0.json — must stay in sync with task-capability-map.md
 "use strict";
 
 const fs = require("fs");

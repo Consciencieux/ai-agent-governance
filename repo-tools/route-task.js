@@ -26,7 +26,7 @@ Options:
   --help                   This help
 
 RoutingResult fields: read_set · run_set · defer_set · unmatched
-Graph: docs/research/routing/graph.v0.json (human map = task-capability-map.md)`);
+Graph: docs/research/working/routing/graph.v0.json (human map = task-capability-map.md)`);
 }
 
 function csv(v) {

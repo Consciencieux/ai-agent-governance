@@ -9,7 +9,7 @@ target: both
 
 > **Status: Implemented**（P0–P2 完成；P3 可选未做 rename。前置：PLAN-0038 / PLAN-0039 Implemented。边冻结；Slice B 横切已迁出 lifecycle。）
 
-纪律权威：`docs/research/routing/call-topology.md` § 物理拓扑。  
+纪律权威：`docs/research/working/routing/call-topology.md` § 物理拓扑。  
 图权威：人表 `task-capability-map.md` · 机表 `graph.v0.json` · 解析 `repo-tools/lib/routing.js`。
 
 ## 目标
@@ -88,7 +88,7 @@ references/
 | D2 | **边冻结**：本计划不改 `always_on` / `triggers` / `facet_adds` / `binds`；要改边先改 map+表征再开搬家 PR |
 | D3 | **lifecycle 非仓库**：横切叶迁出；lifecycle 只留编排 + 指针 |
 | D4 | **Target: both**：payload（`references/` + init-spec）与 repo-infra（map/graph/tests/docs/architecture）同变更枚举同步点 |
-| D5 | **reference-closure**：每个新 INSTALLED 路径在干净目标上可读；禁止 INSTALLED 引用 `docs/research/routing/` |
+| D5 | **reference-closure**：每个新 INSTALLED 路径在干净目标上可读；禁止 INSTALLED 引用 `docs/research/working/routing/` |
 | D6 | **切片可停**：Slice A 可单独合入；Slice B 为 5c 主交付；Slice C 可选 |
 
 ## 交付阶段
@@ -96,7 +96,7 @@ references/
 ### P0 — Design 批准 + 投影表
 
 - [x] 批准本 Design → `status: Active`
-- [x] 写入投影表（`docs/research/routing/projection-table.md`）
+- [x] 写入投影表（`docs/research/working/routing/projection-table.md`）
 - [x] 冻结 Slice B 叶清单与目标路径
 
 ### P1 — Slice A：authority_ref 机读化（可先于搬家）
@@ -140,14 +140,14 @@ references/
 | Domain | 同步点 |
 | --- | --- |
 | payload | `references/capabilities/*`、`references/policies/lifecycle.policy.md`、`references/init-spec.json`（及 role 声明）、必要时 templates 指针 |
-| repo-infra | 本计划、roadmap、`docs/research/routing/*`、`graph.v0.json`、`repo-tools/lib/routing.js`（若暴露 authority）、`tests/suites/routing*.js`、architecture ×3、AGENTS 薄指针、CHANGELOG |
+| repo-infra | 本计划、roadmap、`docs/research/working/routing/*`、`graph.v0.json`、`repo-tools/lib/routing.js`（若暴露 authority）、`tests/suites/routing*.js`、architecture ×3、AGENTS 薄指针、CHANGELOG |
 
 ## 受影响文件（预举；实施时按投影表收敛）
 
 - `docs/plans/PLAN-0040-capability-physical-projection.md`（本文件）
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
-- `docs/research/routing/{call-topology,task-capability-map,README,graph.v0.json}`
-- `docs/research/routing/projection-table.md`（P0）
+- `docs/research/working/routing/{call-topology,task-capability-map,README,graph.v0.json}`
+- `docs/research/working/routing/projection-table.md`（P0）
 - `references/policies/lifecycle.policy.md`
 - `references/capabilities/*.md`（新建）
 - `references/init-spec.json`
@@ -165,7 +165,7 @@ references/
 | P1 | observation | lifecycle | 横切内嵌 Phase 小节 | payload | high | closed | resolved | — | capabilities/* extracted |
 | P2 | observation | design | Capability 叶与 coding.policy 语义重叠 | both | med | closed | resolved | — | change-hygiene leaf is single body; coding keeps restraint pointer |
 | P3 | observation | INIT | 新 capabilities/ 必须进 init-spec | payload | high | closed | resolved | — | init-spec artifacts added |
-| P4 | observation | ADR-0020 | INSTALLED 不得引用 docs/research/routing | payload | high | deferred | deferred | — | Out；authority 用 references 路径 |
+| P4 | observation | ADR-0020 | INSTALLED 不得引用 docs/research/working/routing | payload | high | deferred | deferred | — | Out；authority 用 references 路径 |
 | P5 | observation | PLAN-0038 | Capability 粒度仍可能过粗/过细 | skill | med | deferred | deferred | — | revisit: map 修订 / 0037 |
 | P6 | observation | FINDING-0028 | 脚本机械面无 generation/disposition 台账；与 5c 文档投影正交 | repo | med | deferred | deferred | — | revisit: script inventory Plan；非 PLAN-0040 In |
 

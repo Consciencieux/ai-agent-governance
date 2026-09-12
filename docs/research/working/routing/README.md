@@ -1,5 +1,7 @@
 # routing/ — Task→Capability 施工产物
 
+父槽：`docs/research/working/`（施工产物，非 RESEARCH 正文）。
+
 Phase 5（PLAN-0038 / PLAN-0039）的 **repo-only** 路由工作稿。
 
 | 文件 | 用途 |

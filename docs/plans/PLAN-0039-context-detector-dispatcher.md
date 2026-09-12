@@ -31,7 +31,7 @@ AGENTS 消费「先 route 再读」
 
 | 产物 | 路径 |
 | --- | --- |
-| 机器图投影 | `docs/research/routing/graph.v0.json` |
+| 机器图投影 | `docs/research/working/routing/graph.v0.json` |
 | 共享模块 | `repo-tools/lib/routing.js`（`resolve` / `detect` / `route`） |
 | Dispatcher CLI | `repo-tools/route-task.js` |
 | 表征 | `tests/suites/routing.test.js`（F1–F6 + D1–D3 + route shape；11/11） |
@@ -52,7 +52,7 @@ AGENTS 消费「先 route 再读」
 
 - [x] Design 批准 → Active → Implemented
 - [x] RoutingResult 字段与 call-topology L4 对齐
-- [x] 投影路径：`docs/research/routing/graph.v0.json`
+- [x] 投影路径：`docs/research/working/routing/graph.v0.json`
 
 ### P1 — 共享 resolve + 去分叉 — Done
 
@@ -70,7 +70,7 @@ AGENTS 消费「先 route 再读」
 
 - [x] `repo-tools/route-task.js`
 - [x] AGENTS.md 先 route 再读
-- [x] `docs/research/routing/README.md` 5b 消费方式
+- [x] `docs/research/working/routing/README.md` 5b 消费方式
 
 ### P4 — Exit — Done
 

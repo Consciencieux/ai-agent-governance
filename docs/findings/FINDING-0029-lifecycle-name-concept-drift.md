@@ -35,7 +35,7 @@ observed_in: gen1
 - RESEARCH-0006 § H：完整 INSTALL/UPDATE/ROLLBACK **accepted constraint: 不回归本仓库**。
 - RESEARCH-0009 §「lifecycle 是面向阶段的政策单体」：表面六阶段，打开后是规模分级、计划 schema、变更卫生、根因修复、证据、Rule Capture、CHANGELOG…「Lifecycle」只是容器名。
 - ADR-0022 后续修正：lifecycle 目标职责 = 编排骨架；横切独立 capability；禁止内嵌进某 Phase 当默认归宿。
-- `docs/research/routing/call-topology.md`：文件只是 `AuthorityRef` 当前投影；1.0 按 lifecycle Phase 堆横切 **不得**再当查找权威。
+- `docs/research/working/routing/call-topology.md`：文件只是 `AuthorityRef` 当前投影；1.0 按 lifecycle Phase 堆横切 **不得**再当查找权威。
 - PLAN-0040（5c Implemented）：已抽出 discovery-ledger / change-hygiene / root-cause-repair / rule-capture；lifecycle 留指针——证明「留语义、拆容器」路径，而非整文件作废。
 
 ## 根因

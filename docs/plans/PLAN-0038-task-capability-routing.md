@@ -59,8 +59,8 @@ SKILL.md 写入 docs/ 路径（违反 reference-closure）
 
 | 产物 | 路径 | 状态 |
 | --- | --- | --- |
-| 调用拓扑架构 | `docs/research/routing/call-topology.md` | v0 Working |
-| 路由工作稿（种子 + 映射 + 夹具） | `docs/research/routing/task-capability-map.md` | v0 Working |
+| 调用拓扑架构 | `docs/research/working/routing/call-topology.md` | v0 Working |
+| 路由工作稿（种子 + 映射 + 夹具） | `docs/research/working/routing/task-capability-map.md` | v0 Working |
 | 确定性解析表征 | `tests/suites/routing.test.js` | 7/7 pass |
 | 假设来源 | `docs/research/RESEARCH-0012-task-capability-routing.md` | Active v3 |
 | 薄入口指针 | `AGENTS.md` § Task→Capability routing | repo-only |
@@ -103,15 +103,15 @@ Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md) Context Det
 
 | Domain | 同步点 |
 | --- | --- |
-| repo-infra | RESEARCH-0012、roadmap、本计划、`docs/research/routing/*`、AGENTS.md、`tests/suites/routing.test.js` |
+| repo-infra | RESEARCH-0012、roadmap、本计划、`docs/research/working/routing/*`、AGENTS.md、`tests/suites/routing.test.js` |
 | payload | **未**写入 INSTALLED；5b/Narrow ADR 前保持 repo-only |
 
 ## 受影响文件
 
 - `docs/research/RESEARCH-0012-task-capability-routing.md`
-- `docs/research/routing/task-capability-map.md`
-- `docs/research/routing/call-topology.md`
-- `docs/research/routing/README.md`
+- `docs/research/working/routing/task-capability-map.md`
+- `docs/research/working/routing/call-topology.md`
+- `docs/research/working/routing/README.md`
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
 - `docs/plans/PLAN-0038-task-capability-routing.md`（本文件）
 - `AGENTS.md`

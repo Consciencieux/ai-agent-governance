@@ -136,7 +136,7 @@ Phase 5 内部切片（索引；非独立 ADR Phase）：
 | --- | --- | --- |
 | **5a** | PLAN-0038 | 显式图 + 表征 + 薄入口指针 |
 | **5b** | PLAN-0039 | Detector + 共享 `resolve` + CLI（同一张图） |
-| **5c** | [PLAN-0040](../../plans/PLAN-0040-capability-physical-projection.md)（Implemented） | `references/` / 入口文件 **按 Capability 投影**；只改 `AuthorityRef` |
+| **5c** | [PLAN-0040](../../../plans/PLAN-0040-capability-physical-projection.md)（Implemented） | `references/` / 入口文件 **按 Capability 投影**；只改 `AuthorityRef` |
 
 ```text
 调用拓扑（本文件 + map）     现在（5a）

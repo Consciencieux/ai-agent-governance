@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // REPO-ONLY — Task→Capability resolve + Context Detector (PLAN-0039 / Phase 5b).
-// Algorithm: docs/research/routing/call-topology.md
-// Graph: docs/research/routing/graph.v0.json (machine projection of task-capability-map.md)
+// Algorithm: docs/research/working/routing/call-topology.md
+// Graph: docs/research/working/routing/graph.v0.json (machine projection of task-capability-map.md)
 "use strict";
 
 const fs = require("fs");
@@ -13,6 +13,7 @@ const GRAPH_PATH = path.join(
   "..",
   "docs",
   "research",
+  "working",
   "routing",
   "graph.v0.json"
 );

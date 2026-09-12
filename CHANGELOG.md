@@ -6,13 +6,17 @@ All notable changes to this project will be documented here.
 
 ### Added
 
-- **Phase 5c Capability physical projection (PLAN-0040 Implemented)** — `references/capabilities/{discovery-ledger,root-cause-repair,change-hygiene,rule-capture}.md` extracted from lifecycle; INIT installs under `docs/rules/capabilities/`; `graph.v0.json` gains machine-readable `authorities`; `route-task --json` emits authority paths; projection table at `docs/research/routing/projection-table.md`. Edges (triggers/binds/facet_adds) unchanged; PLAN-0037 still frozen.
+- **Script inventory L0 (PLAN-0041 Implemented / FINDING-0028)** — machine-readable `docs/research/working/script-inventory.v0.json` (+ human `script-inventory.md`) labels every `scripts/**` and `repo-tools/**` entry with distribution role, generation, and disposition using `v1.0.2` as an evidence baseline (not an attic cut). Characterization suite `script-inventory` fail-closes on missing registrations; `retire` is empty so no date-based folder quarantine. Repo dogfood of INSTALLED CLIs remains an open follow-on.
+
+- **Phase 5c Capability physical projection (PLAN-0040 Implemented)** — `references/capabilities/{discovery-ledger,root-cause-repair,change-hygiene,rule-capture}.md` extracted from lifecycle; INIT installs under `docs/rules/capabilities/`; `graph.v0.json` gains machine-readable `authorities`; `route-task --json` emits authority paths; projection table at `docs/research/working/routing/projection-table.md`. Edges (triggers/binds/facet_adds) unchanged; PLAN-0037 still frozen.
 
 - **Dual-mode migration CI (ADR-0014 implementation)** — `.github/workflows/ci.yml` now routes by branch: `main` / 1.x keeps `npm run check` as blocking (+ governance badge); `migration/2.0-governance-architecture` runs a Refactor Safety Kernel (JS syntax + `--suite security/generator/payload`) as blocking and Gen1 `npm run check` as observational (`continue-on-error`). Routing covers both direct pushes and PRs targeting the migration branch. Implements ADR-0014 § 实施说明.
 
 - **First Producer/Product execution separation: repo-owned terminology gate (ADR-0020)** — the terminology gate (repo-only data source `docs/glossary.md`) was extracted from the INSTALLED `scripts/check-doc-consistency.js` into repo-owned `repo-tools/check-terminology.js`; `npm run check` / `check:docs` now run it directly. The INSTALLED checker's responsibility surface is intentionally narrowed (terminology cluster removed; its `--json` no longer emits `terminology_usage` / `termsRegistered`, no external consumer). Governed-project behavior unchanged (no glossary → the cluster was a no-op there). Fail-closed: a missing or malformed glossary exits 1.
 
 ### Changed
+
+- **Research construction papers colocated under `docs/research/working/`** — Task→Capability graph (`working/routing/`) and script inventory (`working/script-inventory.*`) share one construction slot, distinct from numbered `RESEARCH-xxxx` essays and empty `experiments/`. Path retarget only; no second lookup model.
 
 - **Repository documentation is now organized by knowledge responsibility instead of language-first layout** — product documentation lives under `docs/product/{en,zh-CN,zh-TW}/`, while Research, Findings, ADRs, Plans/Roadmap, and Glossary have distinct responsibility and lifecycle boundaries. Completed Plans live under `docs/plans/archive/`; Research, Findings, and ADRs remain in place across lifecycle changes. `docs/README.md` is the routing entry for the knowledge system.
 
@@ -53,7 +57,7 @@ All notable changes to this project will be documented here.
 - **Skill distillation boundary (ADR-0020) + PLAN-0037 (Design)** — reusable skill sets design-space bounds (L1 hard invariants), not soft advice and not a copy of this repo’s `docs/` / Phase / CTRL instances; extract only after Phase 5 routing stabilizes.
 - **Phase 5a Task→Capability routing (PLAN-0038 Implemented)** — call topology + explicit map + `routing` characterization suite; AGENTS.md thin pointer (repo-only). No Dispatcher; PLAN-0037 remains frozen until after 2.0.
 - **Phase 5 sequencing discipline (5a/5b/5c)** — documented in `call-topology.md` § 物理拓扑 + roadmap: Gen1 had no Task→Capability graph; 5c projects files by Capability (AuthorityRef only) after 5b; no second lookup model; no 1.0-skeleton splits.
-- **Phase 5b Context Detector / Dispatcher (PLAN-0039 Implemented)** — shared `repo-tools/lib/routing.js` + `docs/research/routing/graph.v0.json` + `repo-tools/route-task.js` CLI; routing suite 11/11; AGENTS prefers callable route. No LLM auto-router; no physical moves; PLAN-0037 still frozen.
+- **Phase 5b Context Detector / Dispatcher (PLAN-0039 Implemented)** — shared `repo-tools/lib/routing.js` + `docs/research/working/routing/graph.v0.json` + `repo-tools/route-task.js` CLI; routing suite 11/11; AGENTS prefers callable route. No LLM auto-router; no physical moves; PLAN-0037 still frozen.
 
 ## [1.0.2] - 2026-09-08
 

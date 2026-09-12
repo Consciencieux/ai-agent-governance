@@ -11,10 +11,10 @@ authority: construction
 # Task → Capability 路由表（工作稿 · PLAN-0038）
 
 **权威级别：** 施工权威（RESEARCH-0012 假设已采纳 + PLAN-0038 Active）。非正式 schema；升格 Narrow ADR 前不得当 INSTALLED 硬规范。  
-**位置：** repo-only（`docs/research/routing/`）。**不**写入薄入口正文。  
+**位置：** repo-only（`docs/research/working/routing/`）。**不**写入薄入口正文。  
 **禁止（5a 完成时）：** LLM 自动路由 · 无路由文档搬家 · Active PLAN-0037。  
-**5b：** 程序化查表 = [PLAN-0039](../../plans/PLAN-0039-context-detector-dispatcher.md)（**Implemented**；`graph.v0.json` + `repo-tools/lib/routing.js` + `route-task.js`）。  
-**5c：** [PLAN-0040](../../plans/PLAN-0040-capability-physical-projection.md)（**Implemented**）· 投影表 [`projection-table.md`](projection-table.md) · `graph.v0.json` `authorities`。只改 `AuthorityRef`；不按 1.0 目录骨架细切。纪律：`call-topology.md` § 物理拓扑。
+**5b：** 程序化查表 = [PLAN-0039](../../../plans/PLAN-0039-context-detector-dispatcher.md)（**Implemented**；`graph.v0.json` + `repo-tools/lib/routing.js` + `route-task.js`）。  
+**5c：** [PLAN-0040](../../../plans/PLAN-0040-capability-physical-projection.md)（**Implemented**）· 投影表 [`projection-table.md`](projection-table.md) · `graph.v0.json` `authorities`。只改 `AuthorityRef`；不按 1.0 目录骨架细切。纪律：`call-topology.md` § 物理拓扑。
 
 架构（节点/边/解析）：`call-topology.md`。本文件是该图的本仓实例。
 
