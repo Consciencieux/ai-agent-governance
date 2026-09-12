@@ -57,7 +57,7 @@ docs/research/
 ├── RESEARCH-0003-evaluation-framework.md          # 评价体系
 ├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3；Gen1→Gen2 strangler 迁移模型）
 ├── RESEARCH-0005-current-capabilities.md          # 当前能力清单（Generation-1 baseline）
-├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵 + Agent 压缩上下文（2.0 迁移基线）
+├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵 + Agent 压缩上下文（2.0 迁移基线；v8 投影 ADR-0024）
 ├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：七类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
 ├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
 ├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）

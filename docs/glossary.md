@@ -150,5 +150,10 @@
 | split | 拆分 | 拆分 |  |  |
 | canonical source | 源语言 | 源語言 |  |  |
 | draft exception | 草稿例外 | 草稿例外 |  |  |
+| product freeze | 产品冻结 | 產品凍結 |  |  |
+| must-ship | 必装 | 必裝 |  |  |
+| repo-keep | 仓内保留 | 倉內保留 |  |  |
+| later | 后置 | 後置 |  |  |
+| retire | 退役 | 退役 |  |  |
 
 禁止译法（Forbidden 列）只登记**概念术语**；触发词按源形态引用（如 审核一下、全项目审核），刻意不登记。豁免注释 <!-- i18n: allow 术语 --> 可标注行内或紧邻上一行的正当引用。

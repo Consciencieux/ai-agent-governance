@@ -112,6 +112,16 @@ Runtime / token cost / human burden   运维成本观测
 
 本修正是对「后续修正（2026-09-09）：第三阶段 schema 边界」的 **Narrow amendment**。2026-09-09 条文保留为「当时尚未定稿」的历史；自本修正起，Phase 3 Control / Rule 规范由 ADR-0023 承担。独立机器文件与 Dispatcher 仍未授权。
 
+## 后续修正（2026-09-12）：2.0 发布门槛 = 产品冻结（ADR-0024）
+
+本修正是对「Phase 8 后即可 2.0 skill-release」读法的 **Narrow amendment**。决策 1 的 Phase 0–8 **顺序不变**；决策 4 的 CONTROL-X **仍有效但降为 2.0 后置（later）**，不作为首发门槛。
+
+原始后果「每个执行阶段一个 PLAN + checkpoint」与「Review 三类在 Phase 7 落地」保留。自本修正起：
+
+- **Phase 8 EXIT 必要但不充分。** 2.0 发布还须满足 [ADR-0024](ADR-0024-gen2-product-freeze.md) § 发布门槛。
+- Phase 7 / 8 的 Plan 必须消费 ADR-0024 的 `must-ship` / `repo-keep` / `later` / `retire` / `out`，不得把「重建全部 Gen1 gate」或「未冻结的产品面」当作验收。
+- 2.0 产品定义以 ADR-0024 为准：本仓 INSTALLED Gen2 skill；PLAN-0037 仍非 2.0 必达。
+
 ## 参考
 
 - Migration Mode（gate 观测化、checkpoint 验证）：ADR-0014
@@ -122,3 +132,4 @@ Runtime / token cost / human burden   运维成本观测
 - review-manager 层级错配（Review 三分的动机）：FINDING-0014
 - 知识对象五分类与 findings 永久库：ADR-0013
 - Governance Control Model：ADR-0023
+- 2.0 产品冻结（发布门槛）：ADR-0024

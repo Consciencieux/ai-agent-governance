@@ -179,16 +179,16 @@ Deferred by design:
 
 **Completion marker：** Phase 6 checkpoint = **EXITED**（PLAN-0042 `status: Implemented`）。
 
-**Successor：** Phase 7 Review System redesign（计划待立）。
+**Successor：** Phase 7 Review System redesign（计划待立；须消费 [ADR-0024](../design-decisions/ADR-0024-gen2-product-freeze.md)）。
 
 ## Successor
 
-- Phase **7** Review System redesign（Implementation / System / Research）
+- Phase **7** Review System redesign（Implementation / System / Research；须消费 ADR-0024）
 - FINDING-0006：种子集已有台账与 E02 oracle；全量「所有机械规则」仍不在本 checkpoint 关闭面——Finding 保持 Confirmed 直至更广覆盖
 - 5c leftover / FINDING-0028 / 0029 仍不挡、不并入
 
 ## 参考
 
-- ADR-0018 决策 6 · ADR-0023 决策 2 · ADR-0014 Safety Kernel
+- ADR-0018 决策 6 · ADR-0023 决策 2 · ADR-0014 Safety Kernel · ADR-0024 产品冻结
 - RESEARCH-0003 · RESEARCH-0011 · FINDING-0006
 - PLAN-0035 Phase 5 vs 6 边界 · PLAN-0038–0040 EXITED · PLAN-0037 冻结

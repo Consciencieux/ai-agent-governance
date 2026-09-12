@@ -147,7 +147,7 @@ Dispatcher 跑同一解析        5b EXITED（PLAN-0039）
         ↓
 references/ 按 Capability 投影  5c P0–P2 EXITED（PLAN-0040）；leftover 延后
         ↓
-**Phase 5 checkpoint EXITED** → Phase 6（[PLAN-0042](../../../plans/PLAN-0042-invariant-based-testing.md) Implemented / EXITED）→ Phase 7（计划待立）
+**Phase 5 checkpoint EXITED** → Phase 6（[PLAN-0042](../../../plans/PLAN-0042-invariant-based-testing.md) Implemented / EXITED）→ Phase 7（[PLAN-0043](../../../plans/PLAN-0043-review-system-redesign.md) Active；须消费 [ADR-0024](../../../design-decisions/ADR-0024-gen2-product-freeze.md)）
 ```
 
 未稳定前移动 `lifecycle.policy.md` 等 = **无路由拆分**（禁止）。

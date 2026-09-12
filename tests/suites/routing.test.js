@@ -315,4 +315,67 @@ module.exports = function register(test) {
     }
     return true;
   });
+
+  test("routing N4 audit excludes review-system/research", () => {
+    const got = resolve("audit", {}, graph);
+    if (got.unmatched) {
+      console.error("  audit should match", got);
+      return false;
+    }
+    if (!got.read_set.includes("review-implementation")) {
+      console.error("  audit must include review-implementation", got.read_set);
+      return false;
+    }
+    if (got.read_set.includes("review-system") || got.read_set.includes("review-research")) {
+      console.error("  audit must not silently load System/Research review", got.read_set);
+      return false;
+    }
+    return true;
+  });
+
+  test("routing F7 system_review loads review-system only among review kinds", () => {
+    const got = resolve("system_review", {}, graph);
+    if (got.unmatched || !got.read_set.includes("review-system")) {
+      console.error("  system_review expected review-system", got);
+      return false;
+    }
+    if (got.read_set.includes("review-research")) {
+      console.error("  system_review must not include review-research", got.read_set);
+      return false;
+    }
+    const auth = authoritiesFor(["review-system"], graph);
+    if (!auth[0] || !auth[0].path) {
+      console.error("  review-system authority missing", auth);
+      return false;
+    }
+    const abs = path.join(REPO_ROOT, auth[0].path);
+    if (!fs.existsSync(abs)) {
+      console.error("  review-system path missing on disk", abs);
+      return false;
+    }
+    return true;
+  });
+
+  test("routing F8 research_review loads review-research authority", () => {
+    const got = resolve("research_review", {}, graph);
+    if (got.unmatched || !got.read_set.includes("review-research")) {
+      console.error("  research_review expected review-research", got);
+      return false;
+    }
+    if (got.read_set.includes("review-system") || got.read_set.includes("review-implementation")) {
+      console.error("  research_review wrong review mix", got.read_set);
+      return false;
+    }
+    const auth = authoritiesFor(["review-research"], graph);
+    if (!auth[0] || !auth[0].path) {
+      console.error("  review-research authority missing", auth);
+      return false;
+    }
+    const abs = path.join(REPO_ROOT, auth[0].path);
+    if (!fs.existsSync(abs)) {
+      console.error("  review-research path missing on disk", abs);
+      return false;
+    }
+    return true;
+  });
 };

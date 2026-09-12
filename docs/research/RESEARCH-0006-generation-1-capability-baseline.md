@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 7
+version: 8
 subject_generation: gen1
 ---
 
@@ -15,15 +15,16 @@ subject_generation: gen1
 3. init-spec INSTALLED artifacts + scripts/（实际会装进被治理项目的机械面）
 ```
 
-它回答「1.0 曾经保护什么、现在由什么承载、Phase 4 还需要问什么」，不复制任何归档计划的全文，**不裁决** 2.0 处置。
+它回答「1.0 曾经保护什么、现在由什么承载、2.0 产品切片如何投影」。不复制任何归档计划的全文。**产品处置由 ADR-0024 裁决**；本文件第四列是该 ADR 的投影，不是 Research 自己的 MUST。
 
-它是**描述层**。规范冻结见 ADR-0014；阶段顺序见 ADR-0018（Phase 4 才对 Gen1 mechanism 做 keep / wrap / extract / rewrite / retire）。已观察到的同步缺口见 FINDING-0025。
+它是**描述层 + 处置投影**。规范冻结见 ADR-0014；阶段顺序见 ADR-0018；**2.0 产品切片见 ADR-0024**。Phase 4 checker Disposition 见 PLAN-0035（与产品去留正交）。已观察到的同步缺口见 FINDING-0025。
 
 **Agent 默认消费层：** 下文「Agent 压缩上下文」（v7）。默认**不要**重读 PLAN-0001..0030；归档 Plan 是 cold provenance。仅当压缩层不足以解决溯源、边界语义或争议迁移时，才回查某一份 `PLAN-xxxx`。
 
 **Completeness：**
 - v6：Pre-PLAN / non-Plan + INSTALLED **scripts** 反向对账 → mechanical script surface `Unaccounted = 0`
 - v7：INSTALLED **instruction/workflow** 产品面（8 sub-skills + githooks + 非 script init-spec 面）反向对账 → instruction/workflow surface `Unaccounted = 0`
+- v8：第四列投影 ADR-0024（must-ship / repo-keep / later / retire / out）；清单不再 `undecided`
 
 ## 为什么需要
 
@@ -192,7 +193,7 @@ migration decision.
 | `plan-manager` | plan lifecycle（TASK 创建/状态；归档边界归 RELEASE） | 7 |
 | `review-manager` | review / HITL（≠ drift-check） | 4 |
 
-> 「Generated sub-skill lifecycle」只描述**生成机制存在**；上表 8 行才是不可漏的产品能力。重构 prompt topology 时每一行都要有 disposition。
+> 「Generated sub-skill lifecycle」只描述**生成机制存在**；上表 8 行才是不可漏的产品能力。ADR-0024：机制 + 8 叶均为 `must-ship`。
 
 #### Githooks
 
@@ -219,7 +220,7 @@ Mechanical script surface:           Unaccounted = 0
 Instruction/workflow product surface: Unaccounted = 0
 ```
 
-此后 baseline 冻结；下一刀进入 JS（consistency cluster #4 broken links），不再扩写 baseline 文档。
+此后 baseline 冻结能力清单；产品处置投影随 ADR-0024 更新第四列，不再扩写未登记能力。
 
 ### PLAN-0001..0030 → 能力压缩表
 
@@ -259,7 +260,7 @@ Instruction/workflow product surface: Unaccounted = 0
 
 1. **旧物理结构（carrier）** — `lifecycle.policy` 某节、`sub-skills.md` 第 N 节、consistency cluster #x、五处同步 Markdown。可替换；能力须记账。  
 2. **已被 supersede 的旧机制** — 如 PLAN-0017 release-coupled archive（ADR-0016 已修正）。历史 Plan ≠ 当前授权。  
-3. **可重新裁决甚至退出本仓库的能力** — Governance score/badge；完整 activity audit 形态；Skill INSTALL/UPDATE/ROLLBACK；部分 Gen1 heuristic consistency；部分 historical compatibility/hook machinery。
+3. **可重新裁决甚至退出本仓库的能力** — Governance score/badge（ADR-0024 `retire`）；完整 activity audit 形态（`later`）；Skill INSTALL/UPDATE/ROLLBACK（`out`）；部分 Gen1 heuristic consistency；部分 historical compatibility/hook machinery。
 
 ### 与下文矩阵的关系
 
@@ -303,7 +304,7 @@ Phase 4 ADR / Plan 裁决处置（keep / wrap / extract / rewrite / retire）
 回归证据
 ```
 
-**计划已归档 ≠ 功能已弃用 ≠ 控制已废弃。** 归档只表示任务完成。每条 Generation-1 能力在进入 2.0 产品行为前需要明确处置；**本 RESEARCH 不预填该裁决。**
+**计划已归档 ≠ 功能已弃用 ≠ 控制已废弃。** 归档只表示任务完成。2.0 产品处置见 ADR-0024；本表第四列为其投影。
 
 ## Generation-1 开发演化特征
 
@@ -360,99 +361,102 @@ Tests     = JS enforcement 有没有坏
 
 随着 1.0 发展，维护成本越来越向 **JS enforcement + regression tests** 偏移（测试数量沿 49 → 63 → 78 → … → 193 → 223 → 300+ 增长）。这些元素之间**缺少显式 machine-readable control identity**，semantics → applicability → evaluator → evidence 无结构化关系，因此多点同步、drift、checker accretion、regression burden 依赖开发者与 Agent 人工维护。这是 ADR-0018 把 Rule / Applicability / Evidence 显式化放在 Phase 3/5 的**历史证据**，不是本 RESEARCH 对方案的选择。系统性缺陷见 FINDING-0025。
 
-## 待决问题（不是处置裁决）
+## 产品处置投影（ADR-0024）
 
-**Research 可以保存 disposition evidence，不能自己裁决 disposition。**
-
-第四列默认 `undecided`：只记录 Phase 4 还需要回答的问题。仅当 Accepted ADR 已给出约束时写 `accepted constraint` 并指出权威。Phase 4 候选词汇（`keep` / `wrap` / `extract` / `rewrite` / `retire`，以及历史上用过的 Preserve / Redesign 等）由届时的 ADR / Plan 填写。
+**Research 不自己裁决 disposition。** 2.0 产品切片由 [ADR-0024](../design-decisions/ADR-0024-gen2-product-freeze.md) 裁决。第四列投影该 ADR：
 
 | 本列取值 | 含义 |
 | --- | --- |
-| `undecided` | 本 RESEARCH 未裁决；附迁移问 |
-| `accepted constraint: …` | 已有 Accepted ADR 约束；2.0 载体仍可能 undecided |
+| `must-ship` | 进入 2.0 INSTALLED 默认面 |
+| `repo-keep` | 本仓库继续要；不进 skill 默认面 |
+| `later` | 不挡 2.0 |
+| `retire` | 2.0 不带 |
+| `out` | 已离开本仓库 |
+| `accepted constraint: …` | 另有 ADR 约束（与上列同时成立时并写） |
 
-当前跨行约束：ADR-0014 冻结 Gen1 机械层至 Phase 4——这约束的是**现在不要改 Gen1 JS 来编码 Gen2**，不是「该能力原样进入 2.0」。
+Checker 层 KEEP/WRAP/EXTRACT 仍只在 PLAN-0035，与本列正交。ADR-0014 冻结 Gen1 JS 至 Phase 4 的历史约束，不阻止按 ADR-0024 在后续 Phase 更换载体。
 
 ## 能力保存矩阵
 
 ### A. INIT 与生成器 / 产品入口
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| INIT 确定性生成器 | PLAN-0012；SKILL INIT | `scripts/generate-governance.js` | `undecided` — 2.0 是否仍要确定性 INIT？载体是否仍是该生成器？ |
-| AUDIT / drift repair 模式 | Pre-PLAN / SKILL AUDIT | SKILL AUDIT 流程；generated `drift-check`；manifest 对账 | `undecided` — AUDIT 是否仍为独立产品入口？与 Phase 5 routing 如何分工？ |
-| MIGRATE（框架版本迁移） | Pre-PLAN / SKILL MIGRATE | SKILL 版本迁移流程；manifest `governance_version` | `undecided` — 迁移编排是否保留？谁拥有升级契约？ |
-| RELEASE 编排 | Pre-PLAN / SKILL RELEASE | `scripts/release-manager.js` + `references/workflows/release.md` | `undecided` — release executor 边界？与 CTRL-0002 consent 如何绑定？ |
-| Governance validator | Pre-PLAN | `scripts/verify_governance.js` → INSTALLED `verify-governance.js` | `undecided` — validator 是否仍对照 manifest 做存在性/结构校验？ |
-| 治理文件与状态管理（manifest/state/validation/preflight） | PLAN-0012；Pre-PLAN | `references/init-spec.json` + `.governance/{manifest,state,validation,preflight}.json` | `undecided` — 四态模型是否保留？谁拥有 artifact 清单？ |
-| 载荷治理教训（声明-机制差距、证据等级、测试活性、枚举复查、CI 完整性） | PLAN-0028 | INSTALLED `docs/rules/lifecycle.md` 等 | `undecided` — 哪些 invariant 进入 2.0 evidence / control model？ |
+| INIT 确定性生成器 | PLAN-0012；SKILL INIT | `scripts/generate-governance.js` | `must-ship` — 载体可换，能力不可缺 |
+| AUDIT / drift repair 模式 | Pre-PLAN / SKILL AUDIT | SKILL AUDIT 流程；generated `drift-check`；manifest 对账 | `must-ship` — 独立产品入口保留 |
+| MIGRATE（框架版本迁移） | Pre-PLAN / SKILL MIGRATE | SKILL 版本迁移流程；manifest `governance_version` | `later` — 2.0 首发可用文档说明；不挡发布 |
+| RELEASE 编排 | Pre-PLAN / SKILL RELEASE | `scripts/release-manager.js` + `references/workflows/release.md` | `must-ship` — 与 HITL（ADR-0004）绑定 |
+| Governance validator | Pre-PLAN | `scripts/verify_governance.js` → INSTALLED `verify-governance.js` | `must-ship` |
+| 治理文件与状态管理（manifest/state/validation/preflight） | PLAN-0012；Pre-PLAN | `references/init-spec.json` + `.governance/{manifest,state,validation,preflight}.json` | `must-ship` — 四态或其 Gen2 等价物 |
+| 载荷治理教训（声明-机制差距、证据等级、测试活性、枚举复查、CI 完整性） | PLAN-0028 | INSTALLED `docs/rules/lifecycle.md` 等 | `must-ship` 为原则（证据分层等）；勿复制事故清单 |
 
 ### B. 运行时检查器（Mechanisms）
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 密钥扫描（Secret scanning） | PLAN-0001 | `scripts/check-secrets.js` | `undecided` — 是否保留此 invariant？由什么 mechanism 承担？ |
-| Git 工作流治理（Git workflow governance） | PLAN-0002 | `.governance/git-policy.json` + `scripts/check-git-policy.js` | `undecided` — 分支/直推保护是否保留？载体是否仍是 git-policy.json？ |
-| Agent 活动审计（Agent activity audit） | PLAN-0003 | `.governance/activity.jsonl` + drift-check（validator） | `undecided` — 活动审计是否仍是产品能力？ |
-| 治理评分 / 徽章（Governance score / badge） | PLAN-0004 | validator `--json` score + shields badge | `undecided` — 评分/徽章是否保留？ |
-| 文档新鲜度（Doc freshness） | PLAN-0005 | `scripts/check-doc-freshness.js` + CTRL-0003/0004 evaluators | `undecided` — 哪些新鲜度行为必须保留？哪些是 Gen1 checker artifact？ |
-| 内容一致性（Content consistency） | PLAN-0006 | `scripts/check-doc-consistency.js`（monolith，见 FINDING-0019） | `undecided` — 哪些一致性行为必须保留？哪些属于 Gen1 checker accretion？ |
-| 多 Agent 锁 | Pre-PLAN（无独立 Plan） | `scripts/check-lock.js`（INSTALLED） | `undecided` — 锁语义是否保留？当前 fail-closed held-lock 是否够？ |
-| Plan/milestone sync（DEVELOPMENT_PLAN ↔ TASK） | Pre-PLAN / 无独立 Plan（v6 补录） | `scripts/check-plan-sync.js`（INSTALLED；`--release-gate` 可阻断） | `undecided` — 是否保留为 INSTALLED control？与 repo-only plan-delivery（CTRL-0005）如何分工？ |
-| 计划归档门禁 | PLAN-0017 | plan-status / pending-archive 集群 | `undecided` — 随 2.0 plan model 如何承载？ |
-| 交付锚点 | PLAN-0026 | `repo-tools/check-plan-delivery.js` | `undecided` — repo-only 交付对账是否保留？ |
-| 领域级测试入口 | PLAN-0030 | `tests/run-tests.js --suite` | `undecided` — 套件入口是否保留为 repo 能力？ |
+| 密钥扫描（Secret scanning） | PLAN-0001 | `scripts/check-secrets.js` | `must-ship` |
+| Git 工作流治理（Git workflow governance） | PLAN-0002 | `.governance/git-policy.json` + `scripts/check-git-policy.js` | `must-ship` 语义；载体可换 |
+| Agent 活动审计（Agent activity audit） | PLAN-0003 | `.governance/activity.jsonl` + drift-check（validator） | `later` — 完整 jsonl 形态不挡 2.0 |
+| 治理评分 / 徽章（Governance score / badge） | PLAN-0004 | validator `--json` score + shields badge | `retire` |
+| 文档新鲜度（Doc freshness） | PLAN-0005 | `scripts/check-doc-freshness.js` + CTRL-0003/0004 evaluators | 被治理项目面 `must-ship`（CTRL-0003 可仍 advisory）；本仓翻译新鲜度 `repo-keep` |
+| 内容一致性（Content consistency） | PLAN-0006 | `scripts/check-doc-consistency.js`（monolith，见 FINDING-0019） | `must-ship` 能力；单体结构 `later` 再拆 |
+| 多 Agent 锁 | Pre-PLAN（无独立 Plan） | `scripts/check-lock.js`（INSTALLED） | `later` — 现有锁可随 INIT 装；原子性强化不挡 2.0 |
+| Plan/milestone sync（DEVELOPMENT_PLAN ↔ TASK） | Pre-PLAN / 无独立 Plan（v6 补录） | `scripts/check-plan-sync.js`（INSTALLED；`--release-gate` 可阻断） | `must-ship` 对仍使用 DEVELOPMENT_PLAN 的被治理项目；与 CTRL-0005 分工不变 |
+| 计划归档门禁 | PLAN-0017 | plan-status / pending-archive 集群 | `repo-keep`；废旧「随 Release 才归档」语义 |
+| 交付锚点 | PLAN-0026 | `repo-tools/check-plan-delivery.js` | `repo-keep` |
+| 领域级测试入口 | PLAN-0030 | `tests/run-tests.js --suite` | `repo-keep` |
+
 ### C. 同步与一致性
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 被治理项目同步组（声明层） | PLAN-0008 | `.governance/sync-rules.json` | `undecided` — 声明层同步组是否保留？ |
-| 同步组机械校验 | PLAN-0010 | `scripts/check-sync.js` | `undecided` — 机械 sync check 是否保留？ |
-| 治理规则同步与元治理 | PLAN-0011 | `references/` ↔ 规则文件同步 | `undecided` — 多点同步被 Control identity 取代后还剩什么？ |
+| 被治理项目同步组（声明层） | PLAN-0008 | `.governance/sync-rules.json` | `must-ship` 声明能力；可用 Control/applicability 重表达 |
+| 同步组机械校验 | PLAN-0010 | `scripts/check-sync.js` | `must-ship` |
+| 治理规则同步与元治理 | PLAN-0011 | `references/` ↔ 规则文件同步 | 由 ADR-0020 / Control identity 承接；旧多点同步结构不保 |
 
 ### D. 审查与人类在环
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 审查管理器（Review manager） | PLAN-0007 | `references/templates/sub-skills.md` 第 8 节 | `undecided` — 审查能力如何拆层？实现形态未决 |
-| 分级审查门禁 | PLAN-0009 | `references/workflows/release.md` 风险分级 | `undecided` — 风险分级是否保留？权威落在哪一 profile？ |
-| 审查后积压修复 | PLAN-0015 | broken-links 集群 + consistency | `undecided` — 积压修复门禁是否保留？ |
-| 提交确认政策（Consent；提交前一次确认） | PLAN-0013 | release-manager consent + git.policy | `accepted constraint: 共享语义须单一权威（ADR-0020）；2.0 载体 undecided` |
-| 确认凭证与变更卫生 | PLAN-0027 | `stagedDigest` + `.governance/change-hygiene.json` | `accepted constraint: 共享语义须单一权威（ADR-0020）；2.0 载体 undecided` |
+| 审查管理器（Review manager） | PLAN-0007 | `references/templates/sub-skills.md` 第 8 节 | `must-ship` Implementation Review；Phase 7 可换载体 |
+| 分级审查门禁 | PLAN-0009 | `references/workflows/release.md` 风险分级 | `must-ship` 发布风险分级；权威单一（ADR-0020） |
+| 审查后积压修复 | PLAN-0015 | broken-links 集群 + consistency | 作历史证据；链接有效性已 CTRL-0006 `must-ship` |
+| 提交确认政策（Consent；提交前一次确认） | PLAN-0013 | release-manager consent + git.policy | `must-ship` HITL 不变量；手续按 ADR-0024 §8 削薄；单一权威 git.policy |
+| 确认凭证与变更卫生 | PLAN-0027 | `stagedDigest` + `.governance/change-hygiene.json` | `must-ship` 变更卫生；hash ≠ 人已理解 |
 
 ### E. 生命周期与过程模型
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 规则捕获（Rule Capture） | PLAN-0016 | `references/policies/lifecycle.policy.md` § Rule Capture | `undecided` — 捕获语义是否进入 Control model？形态未决 |
-| 反补丁式开发 / 根因修复协议 | PLAN-0018 | lifecycle.policy § 根因修复 + 失败预算 | `undecided` — 纵向修复控制是否保留？与 ADR-0021 如何分工？ |
-| 工程克制（机制测试） | PLAN-0019 | coding.policy § 工程克制 | `undecided` — 机制测试 invariant 由什么 carrier 承担？ |
-| 治理缺陷闭包 | PLAN-0029 | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）+ sibling 搜索 | `undecided` — 同类实例闭包是否保留为机械/判断规则？ |
-| 变更归位与残留清理 | PLAN-0014 | change-hygiene + 残留标记检查 | `undecided` — 残留清理是否保留？ |
+| 规则捕获（Rule Capture） | PLAN-0016 | `references/policies/lifecycle.policy.md` § Rule Capture | `must-ship` |
+| 反补丁式开发 / 根因修复协议 | PLAN-0018 | lifecycle.policy § 根因修复 + 失败预算 | `must-ship` |
+| 工程克制（机制测试） | PLAN-0019 | coding.policy § 工程克制 | `must-ship` 原则；不是新 gate |
+| 治理缺陷闭包 | PLAN-0029 | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）+ sibling 搜索 | `must-ship` |
+| 变更归位与残留清理 | PLAN-0014 | change-hygiene + 残留标记检查 | `must-ship` |
 
 ### F. 文档与知识治理
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 术语门禁 + 翻译新鲜度 | PLAN-0020 | `repo-tools/check-terminology.js` + freshness | `undecided` — 翻译新鲜度待查；术语门禁已是 repo-owned 执行事实，2.0 去留未决 |
-| 验证门禁分层与证据边界 | PLAN-0021 | evidence tiers | `accepted constraint: 共享语义须单一权威（ADR-0020）；2.0 载体 undecided` |
-| 内容受众与可移植性 | PLAN-0022 | 四受众 portability 规则 | `accepted constraint: 共享语义须单一权威（ADR-0020）；2.0 载体 undecided` |
-| 门禁修复与单一事实源对齐 | PLAN-0023 | SSOT 纪律 + 门禁修复协议 | `accepted constraint: 共享语义须单一权威（ADR-0020）；2.0 载体 undecided` |
+| 术语门禁 + 翻译新鲜度 | PLAN-0020 | `repo-tools/check-terminology.js` + freshness | 术语 `repo-keep`；CTRL-0004 翻译新鲜度 `repo-keep` |
+| 验证门禁分层与证据边界 | PLAN-0021 | evidence tiers | `must-ship`；单一权威（ADR-0020） |
+| 内容受众与可移植性 | PLAN-0022 | 四受众 portability 规则 | `must-ship`；单一权威（ADR-0020） |
+| 门禁修复与单一事实源对齐 | PLAN-0023 | SSOT 纪律 + 门禁修复协议 | `must-ship` 原则 |
 
 ### G. 分发与边界
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 仓库边界拆分（载荷 vs 仓库工具） | PLAN-0024 | 三种分发角色 | `accepted constraint: Producer/Product 物理分发角色（ADR-0020）；语义权威仍须单一` |
+| 仓库边界拆分（载荷 vs 仓库工具） | PLAN-0024 | 三种分发角色 | `repo-keep` 执行 + skill 消费声明（ADR-0020） |
 
 ### H. Skill 生命周期
 
-| 1.0 能力 | 历史来源 | 当前实现载体 | 待决问题 |
+| 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| Skill 安装层生命周期（INSTALL/UPDATE/ROLLBACK） | PLAN-0025 | 历史 skill-manager 面；除 version metadata / check-update 外已明确移出本仓库 → 未来 `ai-skill-manager` | `accepted constraint: 完整 INSTALL/UPDATE/ROLLBACK 不回归本仓库（PLAN-0025）；本仓仅保留 version/check-update 类元数据能力的去留仍 undecided` |
-| Generated sub-skill lifecycle（生成机制） | 非 PLAN-0025 | `.governance/generated/skills/` + `sub-skills.md` | `undecided` — **机制**是否保留；**8 个能力**见压缩层 v7 表（不可折叠为单行） |
-| Generated sub-skill: repository-inspection | Pre-PLAN / templates | generated skill | `undecided` — 环境巡检能力是否保留为独立叶节点 |
-| Generated sub-skill: ci-generator | Pre-PLAN / templates | generated skill | `undecided` — CI 物化能力是否保留为独立叶节点 |
+| Skill 安装层生命周期（INSTALL/UPDATE/ROLLBACK） | PLAN-0025 | 历史 skill-manager 面；除 version metadata / check-update 外已明确移出本仓库 → 未来 `ai-skill-manager` | `out`；version/check-update `later` |
+| Generated sub-skill lifecycle（生成机制） | 非 PLAN-0025 | `.governance/generated/skills/` + `sub-skills.md` | `must-ship` 机制；8 个能力叶不可折叠 |
+| Generated sub-skill: repository-inspection | Pre-PLAN / templates | generated skill | `must-ship` |
+| Generated sub-skill: ci-generator | Pre-PLAN / templates | generated skill | `must-ship` |
 
 ## 所有权分类（Ownership；PLAN-0031 Deliverable B）
 
@@ -470,8 +474,8 @@ B. Semantic authority state（语义权威是否单一——SSOT 状态）
 C. Implementation dependency（实现是否依赖另一 profile 的实现）
    方向：repo→skill / skill→repo / bidirectional / none / unknown
 
-D. 处置状态（Phase 4 才裁决；本列默认 undecided）
-   仅当 Accepted ADR 已约束时写 accepted constraint
+D. 处置状态（产品切片 = ADR-0024；checker 层仍见 PLAN-0035）
+   must-ship / repo-keep / later / retire / out
 ```
 
 **I3 的正确理解**（ADR-0020）：`Shared semantics does not imply shared implementation` 禁止的是**把 repo/skill 两个实现当作同一个实现**（因语义共享而视为同一实现）；两个 profile 各有独立实现本身**不违反 I3**。需要消灭的不是 separate implementations，而是：
@@ -487,44 +491,44 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 
 | 关注项 | 语义所有者 | 消费者 | 仓库实现 | 技能实现 | 拓扑 | 语义权威状态 | 实现依赖 | 处置状态 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| INIT 确定性生成器 | skill | skill executor | — | `generate-governance.js`（SKILL-INTERNAL） | skill-only | single | none | undecided |
-| 治理文件与状态管理 | skill | skill executor | — | `references/init-spec.json`（SKILL-INTERNAL） | skill-only | single | none | undecided |
-| 载荷治理教训（INSTALLED rules） | skill | governed projects | — | `docs/rules/*`（INSTALLED） | skill-only | single | none | undecided |
-| 密钥扫描（Secret scanning） | skill | governed projects；repo（手动预提交） | AGENTS.md:153 手动调用 `scripts/check-secrets.js` | `scripts/check-secrets.js`（INSTALLED） | shared-semantic | single | repo→skill · accidental | undecided |
-| Git 分支与直推保护 | skill | governed projects | —（本仓库无 git-policy.json，AGENTS.md 的 Git 协议是 consent 非分支政策） | `.governance/git-policy.json` + `scripts/check-git-policy.js` | skill-only | single | none | undecided |
-| Agent 活动审计（Agent activity audit） | skill | governed projects | — | `.governance/activity.jsonl` + validator drift-check | skill-only | single | none | undecided |
-| 治理评分 / 徽章（Governance score / badge） | skill | governed projects | — | validator `--json` score | skill-only | single | none | undecided |
-| Repo 文档新鲜度 | repo | repo | 直接运行 `scripts/check-doc-freshness.js`（INSTALLED） | — | repo-only | single | repo→skill · accidental | undecided |
-| 被治理项目文档新鲜度 | skill | governed projects | — | `scripts/check-doc-freshness.js` | skill-only | single | none | undecided |
-| Repo 文档一致性 | repo | repo | 直接运行 `scripts/check-doc-consistency.js`（INSTALLED） | — | repo-only | single | repo→skill · accidental（monolith 见 FINDING-0019） | undecided |
-| 被治理项目内容一致性 | skill | governed projects | — | `scripts/check-doc-consistency.js` | skill-only | single | none | undecided |
-| 多 Agent 锁 | skill | governed projects | —（本仓库是否使用待查） | `scripts/check-lock.js`（INSTALLED） | unknown | unknown | unknown | undecided |
-| Plan/milestone sync（DEVELOPMENT_PLAN ↔ TASK） | skill | governed projects | — | `scripts/check-plan-sync.js`（INSTALLED） | skill-only | single | none | undecided |
-| Governance validator | skill | governed projects | — | `scripts/verify_governance.js` → `verify-governance.js` | skill-only | single | none | undecided |
-| 计划归档门禁（本仓库） | repo | repo | `check-doc-consistency.js` plan-status 集群（共享载体） | — | repo-only | single | repo→skill · accidental | undecided |
-| 交付锚点 | repo | repo | `repo-tools/check-plan-delivery.js`（REPO-ONLY） | — | repo-only | single | none | undecided |
-| 领域级测试入口 | repo | repo | `tests/run-tests.js --suite` | — | repo-only | single | none | undecided |
-| 被治理项目同步组（声明层） | skill | governed projects | — | `.governance/sync-rules.json` | skill-only | single | none | undecided |
-| 同步组机械校验 | skill | governed projects | — | `scripts/check-sync.js`（INSTALLED） | skill-only | single | none | undecided |
-| 治理规则同步与元治理 | skill | governed projects | — | lifecycle.policy § Rule Capture + 规则同步 | skill-only | single | none | undecided |
-| 审查机制（Review mechanism；review-manager） | skill | governed projects | —（`.governance/review-evidence-*.md` 是**证据产物**，非机制实现） | sub-skills 模板 review-manager | skill-only | single | none | undecided |
-| 分级发布审查（release risk tiering） | core | repo；governed projects | `repo-workflows/skill-release.md` | `references/workflows/release.md`（SKILL-INTERNAL） | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
-| 审查后积压修复 | repo | repo | `check-doc-consistency.js` broken-links 集群（共享载体） | — | repo-only | single | repo→skill · accidental | undecided |
-| Git 写操作确认（consent） | core | repo；governed projects | AGENTS.md § Git Operation Safety Protocol | git.policy.md § 确认范围 + release-manager | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
-| 确认凭证与变更卫生 | core | repo；governed projects | AGENTS.md 影响面对照 | `stagedDigest` + `.governance/change-hygiene.json` | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
-| 规则捕获（Rule Capture） | core | repo；governed projects | AGENTS.md Rule Capture 条文 | lifecycle.policy § Rule Capture | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
-| 根因修复协议与失败预算 | skill | governed projects；repo | AGENTS.md 原则索引指针 → lifecycle.policy § 根因修复 | lifecycle.policy § 根因修复（INSTALLED） | shared-semantic | single | repo→skill · intentional（repo 消费 skill-owned canonical carrier） | undecided |
-| 工程克制（机制测试） | skill | governed projects；repo | AGENTS.md 指针 → coding.policy § 工程克制 | coding.policy § 工程克制（INSTALLED） | shared-semantic | single | repo→skill · intentional | undecided |
-| 治理缺陷闭包 | skill | governed projects；repo | AGENTS.md 指针 → lifecycle.policy § 根因修复协议与失败预算（同类实例闭包） | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）（INSTALLED） | shared-semantic | single | repo→skill · intentional | undecided |
-| 变更归位与残留清理 | skill | governed projects；repo | AGENTS.md 变更归位 + hygiene 对照 | lifecycle.policy § 变更归位（INSTALLED） | shared-semantic | single | repo→skill · intentional | undecided |
-| 术语门禁 | repo | repo | `repo-tools/check-terminology.js`（REPO-ONLY，已从 INSTALLED 检查器拆出） | —（已移除；无 glossary 的被治理项目本就不适用） | repo-only | single | none | undecided |
-| 翻译新鲜度 | repo | repo | `check-doc-freshness.js` 翻译对推导（共享载体） | — | repo-only | single | repo→skill · accidental | undecided |
-| 验证门禁分层（evidence tiers） | core | repo；governed projects | AGENTS.md 证据等级表 | testing.policy 证据等级（INSTALLED） | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
-| 内容受众与可移植性 | core | repo；governed projects | AGENTS.md Content portability | 归档规则四受众（INSTALLED） | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
-| SSOT 对齐（门禁修复） | core | repo；governed projects | AGENTS.md SSOT 纪律 | 规则文件 + 门禁修复协议（INSTALLED） | shared-semantic | duplicated | none | accepted constraint: 消除双重语义权威（ADR-0020）；载体 undecided |
-| 仓库边界拆分（三角色） | repo | repo；skill executor | `docs/product/en/architecture.md` + `check-role-completeness.js`（REPO-ONLY） | `init-spec.json` distribution invariants | shared-semantic | single（repo 定义权威，skill executor 消费声明） | skill→repo · intentional | undecided |
-| Skill 安装层生命周期（INSTALL/UPDATE/ROLLBACK） | skill（未来外部 manager） | governed projects | — | 已移出；仅 version/check-update 残留待决 | skill-only（external） | single | none | accepted constraint: 完整 INSTALL/UPDATE/ROLLBACK 不回归本仓库（PLAN-0025） |
-| Generated sub-skill lifecycle | skill | governed projects | — | `.governance/generated/skills/` | skill-only | single | none | undecided |
+| INIT 确定性生成器 | skill | skill executor | — | `generate-governance.js`（SKILL-INTERNAL） | skill-only | single | none | must-ship |
+| 治理文件与状态管理 | skill | skill executor | — | `references/init-spec.json`（SKILL-INTERNAL） | skill-only | single | none | must-ship |
+| 载荷治理教训（INSTALLED rules） | skill | governed projects | — | `docs/rules/*`（INSTALLED） | skill-only | single | none | must-ship（原则） |
+| 密钥扫描（Secret scanning） | skill | governed projects；repo（手动预提交） | AGENTS.md:153 手动调用 `scripts/check-secrets.js` | `scripts/check-secrets.js`（INSTALLED） | shared-semantic | single | repo→skill · accidental | must-ship |
+| Git 分支与直推保护 | skill | governed projects | —（本仓库无 git-policy.json，AGENTS.md 的 Git 协议是 consent 非分支政策） | `.governance/git-policy.json` + `scripts/check-git-policy.js` | skill-only | single | none | must-ship |
+| Agent 活动审计（Agent activity audit） | skill | governed projects | — | `.governance/activity.jsonl` + validator drift-check | skill-only | single | none | later |
+| 治理评分 / 徽章（Governance score / badge） | skill | governed projects | — | validator `--json` score | skill-only | single | none | retire |
+| Repo 文档新鲜度 | repo | repo | 直接运行 `scripts/check-doc-freshness.js`（INSTALLED） | — | repo-only | single | repo→skill · accidental | repo-keep |
+| 被治理项目文档新鲜度 | skill | governed projects | — | `scripts/check-doc-freshness.js` | skill-only | single | none | must-ship |
+| Repo 文档一致性 | repo | repo | 直接运行 `scripts/check-doc-consistency.js`（INSTALLED） | — | repo-only | single | repo→skill · accidental（monolith 见 FINDING-0019） | repo-keep |
+| 被治理项目内容一致性 | skill | governed projects | — | `scripts/check-doc-consistency.js` | skill-only | single | none | must-ship |
+| 多 Agent 锁 | skill | governed projects | —（本仓库是否使用待查） | `scripts/check-lock.js`（INSTALLED） | unknown | unknown | unknown | later |
+| Plan/milestone sync（DEVELOPMENT_PLAN ↔ TASK） | skill | governed projects | — | `scripts/check-plan-sync.js`（INSTALLED） | skill-only | single | none | must-ship |
+| Governance validator | skill | governed projects | — | `scripts/verify_governance.js` → `verify-governance.js` | skill-only | single | none | must-ship |
+| 计划归档门禁（本仓库） | repo | repo | `check-doc-consistency.js` plan-status 集群（共享载体） | — | repo-only | single | repo→skill · accidental | repo-keep |
+| 交付锚点 | repo | repo | `repo-tools/check-plan-delivery.js`（REPO-ONLY） | — | repo-only | single | none | repo-keep |
+| 领域级测试入口 | repo | repo | `tests/run-tests.js --suite` | — | repo-only | single | none | repo-keep |
+| 被治理项目同步组（声明层） | skill | governed projects | — | `.governance/sync-rules.json` | skill-only | single | none | must-ship |
+| 同步组机械校验 | skill | governed projects | — | `scripts/check-sync.js`（INSTALLED） | skill-only | single | none | must-ship |
+| 治理规则同步与元治理 | skill | governed projects | — | lifecycle.policy § Rule Capture + 规则同步 | skill-only | single | none | must-ship（Control identity 承接） |
+| 审查机制（Review mechanism；review-manager） | skill | governed projects | —（`.governance/review-evidence-*.md` 是**证据产物**，非机制实现） | sub-skills 模板 review-manager | skill-only | single | none | must-ship |
+| 分级发布审查（release risk tiering） | core | repo；governed projects | `repo-workflows/skill-release.md` | `references/workflows/release.md`（SKILL-INTERNAL） | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
+| 审查后积压修复 | repo | repo | `check-doc-consistency.js` broken-links 集群（共享载体） | — | repo-only | single | repo→skill · accidental | repo-keep（CTRL-0006 链接有效性 must-ship） |
+| Git 写操作确认（consent） | core | repo；governed projects | AGENTS.md § Git Operation Safety Protocol | git.policy.md § 确认范围 + release-manager | shared-semantic | duplicated | none | must-ship；单一权威 git.policy（ADR-0024 §8） |
+| 确认凭证与变更卫生 | core | repo；governed projects | AGENTS.md 影响面对照 | `stagedDigest` + `.governance/change-hygiene.json` | shared-semantic | duplicated | none | must-ship |
+| 规则捕获（Rule Capture） | core | repo；governed projects | AGENTS.md Rule Capture 条文 | lifecycle.policy § Rule Capture | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
+| 根因修复协议与失败预算 | skill | governed projects；repo | AGENTS.md 原则索引指针 → lifecycle.policy § 根因修复 | lifecycle.policy § 根因修复（INSTALLED） | shared-semantic | single | repo→skill · intentional（repo 消费 skill-owned canonical carrier） | must-ship |
+| 工程克制（机制测试） | skill | governed projects；repo | AGENTS.md 指针 → coding.policy § 工程克制 | coding.policy § 工程克制（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship（原则） |
+| 治理缺陷闭包 | skill | governed projects；repo | AGENTS.md 指针 → lifecycle.policy § 根因修复协议与失败预算（同类实例闭包） | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship |
+| 变更归位与残留清理 | skill | governed projects；repo | AGENTS.md 变更归位 + hygiene 对照 | lifecycle.policy § 变更归位（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship |
+| 术语门禁 | repo | repo | `repo-tools/check-terminology.js`（REPO-ONLY，已从 INSTALLED 检查器拆出） | —（已移除；无 glossary 的被治理项目本就不适用） | repo-only | single | none | repo-keep |
+| 翻译新鲜度 | repo | repo | `check-doc-freshness.js` 翻译对推导（共享载体） | — | repo-only | single | repo→skill · accidental | repo-keep |
+| 验证门禁分层（evidence tiers） | core | repo；governed projects | AGENTS.md 证据等级表 | testing.policy 证据等级（INSTALLED） | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
+| 内容受众与可移植性 | core | repo；governed projects | AGENTS.md Content portability | 归档规则四受众（INSTALLED） | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
+| SSOT 对齐（门禁修复） | core | repo；governed projects | AGENTS.md SSOT 纪律 | 规则文件 + 门禁修复协议（INSTALLED） | shared-semantic | duplicated | none | must-ship（原则） |
+| 仓库边界拆分（三角色） | repo | repo；skill executor | `docs/product/en/architecture.md` + `check-role-completeness.js`（REPO-ONLY） | `init-spec.json` distribution invariants | shared-semantic | single（repo 定义权威，skill executor 消费声明） | skill→repo · intentional | repo-keep + skill 消费声明 |
+| Skill 安装层生命周期（INSTALL/UPDATE/ROLLBACK） | skill（未来外部 manager） | governed projects | — | 已移出；仅 version/check-update 残留待决 | skill-only（external） | single | none | out；version/check-update later |
+| Generated sub-skill lifecycle | skill | governed projects | — | `.governance/generated/skills/` | skill-only | single | none | must-ship（机制 + 8 叶） |
 
 **需要 CONTROL-X 的 shared controls**（准入判据，不是「owner 是否 core」）：
 
@@ -535,7 +539,7 @@ shared semantic
 + 同一 negative oracle 对两侧都成立
 ```
 
-符合判据的 7 项（是否建 CONTROL-X、形态如何，留给 Phase 3 Rule Model，见 ADR-0020 § 决策 4；本表不预填实现）：
+符合判据的 7 项：ADR-0024 将 CONTROL-X 本身标为 `later`（不挡 2.0）。Consent 等行的 **单一语义权威** 仍是 2.0 门槛（ADR-0020 + ADR-0024 §8），与是否已建 CONTROL-X 无关：
 
 ```text
 1. Git 写操作确认（consent）
@@ -558,10 +562,10 @@ shared semantic
 - **测试**证明「当前代码当前行为正确」（mechanical, 现状）；
 - **本基线**保存「这个能力为什么存在、保护什么」（provenance, 意图）。
 
-2.0 迁移时以本基线为清单逐条核对：每移除/替换一个 Generation-1 载体前，先确认对应能力已被新的 carrier 承载或由届时 ADR/Plan **明确**移除。本表第四列在 Phase 4 之前保持 `undecided`（或已有 ADR 的 accepted constraint），不把 Preserve / Redesign 当作已批准。
+2.0 迁移时以本基线为清单逐条核对：每移除/替换一个 Generation-1 载体前，先确认对应能力已被新的 carrier 承载或由 ADR-0024 **明确** `retire` / `out` / `later`。
 
 ## 维护规则
 
-- 本 RESEARCH 是活文档：Phase 4 及之后由 **ADR / Plan** 把相应行从 `undecided` 更新为已裁决处置，并保留版本演进（不删除历史）。
-- 新增 Generation-1 能力来源时补充对应行。
-- 本表不得自行宣布 MUST / chosen architecture / final disposition。
+- 本 RESEARCH 是活文档：产品处置投影 ADR-0024；checker Disposition 投影 PLAN-0035。修订第四列时保留版本演进（不删除历史）。
+- 新增 Generation-1 能力来源时补充对应行，并立刻在 ADR-0024 取得档位（禁止新行停留 undecided）。
+- 本表不得自行宣布与 ADR-0024 冲突的 MUST。

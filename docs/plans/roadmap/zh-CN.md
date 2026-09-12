@@ -294,7 +294,7 @@ Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的�
 
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**当前阶段：Phase 6 EXITED；下一入口 Phase 7（计划待立）。** 稳定产品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–6（6 = [PLAN-0042](../PLAN-0042-invariant-based-testing.md) Implemented）。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
+**当前阶段：Phase 7 Active（[PLAN-0043](../PLAN-0043-review-system-redesign.md)；消费 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）。** 稳定产品仍是 Generation 1（`main` / 1.x）。本分支已完成 Phase 0–6（6 = [PLAN-0042](../PLAN-0042-invariant-based-testing.md) Implemented）。Plan archive ≠ Release（ADR-0016）；Phase 8 EXIT ≠ skill-release（ADR-0018 2026-09-12 修正 + ADR-0024）。
 
 ## 现在 → 2.0（索引）
 
@@ -316,24 +316,24 @@ Roadmap 只列顺序与施工计划，不复制 Plan 步骤 / Affected Files / �
 
 | 步 | 内容 | 施工计划 | 一句话 |
 | --- | --- | --- | --- |
-| **现在** | Phase 7 Review 三类拆分 | *（计划待立）* | Implementation / System / Research |
-| 7 | Review 三类拆分 | 后续 Plan | Implementation / System / Research |
-| 8 | 重建 mandatory gates | 后续 Plan | 阻断权威交到新 control plane |
-| **2.0** | 本仓 Gen2 skill 发布 | `repo-workflows/skill-release.md` | **仅 Phase 8 后**；checkpoint ≠ Release |
+| **现在** | Phase 7 Review 三类拆分 | [PLAN-0043](../PLAN-0043-review-system-redesign.md)（**Active**） | Implementation Review 必装；System/Research 仓内 |
+| 7 | Review 三类拆分 | [PLAN-0043](../PLAN-0043-review-system-redesign.md)（Active） | 消费 ADR-0024；不是重写全部 Gen1 审查文 |
+| 8 | 重建 mandatory gates | 后续 Plan | **只把必装机械控制**交回阻断权威 |
+| **2.0** | 本仓 Gen2 skill 发布 | `repo-workflows/skill-release.md` | Phase 8 **且** ADR-0024 发布门槛；checkpoint ≠ Release |
 
-[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **冻结在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必达项；2.0 产品 = 本仓 INSTALLED Gen2 skill。过滤边界仍约束迁移期载荷。解冻：2.0 发布之后。
+[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **冻结在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必达项；2.0 产品切片 = [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)。过滤边界仍约束迁移期载荷。解冻：2.0 发布之后。
 
 Phase 5 已 EXITED（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → **5b** Dispatcher → **5c** 按 Capability 投影（只改 `AuthorityRef`）。残留叶 / 可选 rename **不**重开 Phase 5。纪律：`docs/research/working/routing/call-topology.md` § 物理拓扑。
 
-### 故意延后（不挡 Phase 6 开工）
+### 故意延后（ADR-0024 `later`；不挡 2.0）
 
-剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · **5c 剩余 Capability 叶 / 可选 rename** · **lifecycle 残留抽出 / `state.json` phase 降为 facet**（概念闭包：[FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md)；不另开「推翻 lifecycle」阶段）· **脚本 disposition 后续**（dogfood / retire 隔离；L0 台账 = [PLAN-0041](../PLAN-0041-script-inventory.md) Implemented — **禁止**按 `v1.0.2` 日期整夹进阁楼）· **PLAN-0037 全文提炼（2.0 后解冻）**。
+剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · CONTROL-X 契约测试 · L3 运行时拦截 · FINDING-0006 全量 oracle · **5c 剩余 Capability 叶 / 可选 rename** · **lifecycle 残留抽出 / `state.json` phase 降为 facet**（概念闭包：[FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md)）· **脚本 disposition 后续**（dogfood / retire 隔离；L0 台账 = [PLAN-0041](../PLAN-0041-script-inventory.md) Implemented）· **PLAN-0037 全文提炼（2.0 后解冻）** · 完整 activity 审计 · MIGRATE 独立入口 · Git consent 机械 evaluator。
 
 
 ### 本仓 vs 2.0 产品
 
 - **本仓**：实验场 + 参考实现 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
-- **2.0 skill**：本仓 INSTALLED Gen2 载荷（portable 语义随迁移写入，不是 PLAN-0037 另开通用包）。
+- **2.0 skill**：本仓 INSTALLED Gen2 载荷，切片见 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)（不是 PLAN-0037 另开通用包）。
 
 ## Guarantee Levels
 
@@ -562,10 +562,10 @@ Generation 1 — Document-Centric Governance
         ↓
 P0–P6  checkpoint EXITED
          P6 = PLAN-0042（oracle 台账 + 路由负向 + 种子 CTRL）
-P7     Review System redesign — **current**（计划待立）
-P8 Rebuild mandatory gates
+P7     Review System redesign — **current**（PLAN-0043 Active；消费 ADR-0024）
+P8 Rebuild mandatory gates（必装机械控制的阻断权威）
         ↓
-2.0 skill-release（本仓 Gen2 载荷）
+2.0 skill-release（ADR-0024 发布门槛 + Phase 8）
         ↓
 PLAN-0037  跨项目 portable 提炼（冻结至 2.0 后；非 Archived）
         ↓

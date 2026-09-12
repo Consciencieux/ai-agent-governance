@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0037：可复用治理 Skill 提炼（Governance Skill Extraction）
 
-> **Status: design plan, not implemented**（**冻结**。Stage A–D 全文 **不是** 2.0 blocker，不得在 Phase 8 / 2.0 skill-release **之前** Active。过滤层约束仍生效：禁止把本仓 `docs/`、CTRL 编号、Phase 剧本当 portable invariant。Architecture checkpoint ≠ Release。**禁止 Archived**：归档断言完成，本计划尚未执行。）
+> **Status: design plan, not implemented**（**冻结**。Stage A–D 全文 **不是** 2.0 blocker，不得在 Phase 8 / 2.0 skill-release **之前** Active。2.0 产品切片见 ADR-0024。过滤层约束仍生效：禁止把本仓 `docs/`、CTRL 编号、Phase 剧本当 portable invariant。Architecture checkpoint ≠ Release。**禁止 Archived**：归档断言完成，本计划尚未执行。）
 
 将 `ai-agent-governance` 中**已验证**的 Gen2 治理原则提炼为可复用 Agent Governance Skill，并显式划分 **L1 invariants / L2 patterns / L3 project customization**。权威边界见 ADR-0020（2026-09-10 修正）。
 

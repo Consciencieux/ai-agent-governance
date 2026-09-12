@@ -5,11 +5,26 @@
   "human_authority": "docs/research/working/routing/task-capability-map.md",
   "algorithm": "docs/research/working/routing/call-topology.md",
   "budget": 8,
-  "always_on": ["thin-entry", "context-economy"],
-  "unknown_defer": ["ask-user", "expand-entry"],
+  "always_on": [
+    "thin-entry",
+    "context-economy"
+  ],
+  "unknown_defer": [
+    "ask-user",
+    "expand-entry"
+  ],
   "triggers": {
-    "edit_docs": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    "edit_references": ["change-hygiene", "reference-closure", "security-baseline", "rule-capture"],
+    "edit_docs": [
+      "doc-knowledge",
+      "change-hygiene",
+      "discovery-ledger"
+    ],
+    "edit_references": [
+      "change-hygiene",
+      "reference-closure",
+      "security-baseline",
+      "rule-capture"
+    ],
     "edit_scripts": [
       "change-hygiene",
       "reference-closure",
@@ -17,8 +32,17 @@
       "testing-evidence",
       "security-baseline"
     ],
-    "edit_skill_entry": ["change-hygiene", "reference-closure", "rule-capture"],
-    "git_write": ["change-hygiene", "git-write", "secret-protection", "security-baseline"],
+    "edit_skill_entry": [
+      "change-hygiene",
+      "reference-closure",
+      "rule-capture"
+    ],
+    "git_write": [
+      "change-hygiene",
+      "git-write",
+      "secret-protection",
+      "security-baseline"
+    ],
     "release": [
       "change-hygiene",
       "git-write",
@@ -27,11 +51,31 @@
       "release-governance",
       "security-baseline"
     ],
-    "audit": ["doc-knowledge", "review-implementation"],
-    "research_write": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    "finding_write": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    "adr_write": ["doc-knowledge", "change-hygiene", "discovery-ledger"],
-    "plan_write": ["doc-knowledge", "change-hygiene", "discovery-ledger", "plan-delivery"],
+    "audit": [
+      "doc-knowledge",
+      "review-implementation"
+    ],
+    "research_write": [
+      "doc-knowledge",
+      "change-hygiene",
+      "discovery-ledger"
+    ],
+    "finding_write": [
+      "doc-knowledge",
+      "change-hygiene",
+      "discovery-ledger"
+    ],
+    "adr_write": [
+      "doc-knowledge",
+      "change-hygiene",
+      "discovery-ledger"
+    ],
+    "plan_write": [
+      "doc-knowledge",
+      "change-hygiene",
+      "discovery-ledger",
+      "plan-delivery"
+    ],
     "repair": [
       "change-hygiene",
       "reference-closure",
@@ -42,28 +86,83 @@
       "security-baseline",
       "rule-capture"
     ],
-    "test_change": ["change-hygiene", "testing-evidence"],
-    "unknown": []
+    "test_change": [
+      "change-hygiene",
+      "testing-evidence"
+    ],
+    "unknown": [],
+    "system_review": [
+      "review-system"
+    ],
+    "research_review": [
+      "review-research"
+    ]
   },
   "binds": {
-    "secret-protection": ["CTRL-0001"]
+    "secret-protection": [
+      "CTRL-0001"
+    ]
   },
   "facet_adds": [
-    { "when": { "trees_includes": "references" }, "add": ["reference-closure"] },
     {
-      "when": { "trees_any": ["scripts", "repo-tools"] },
-      "add": ["testing-evidence", "secret-protection"]
+      "when": {
+        "trees_includes": "references"
+      },
+      "add": [
+        "reference-closure"
+      ]
     },
     {
-      "when": { "write_boundary_in": ["commit", "tag", "release"] },
-      "add": ["git-write", "secret-protection"]
+      "when": {
+        "trees_any": [
+          "scripts",
+          "repo-tools"
+        ]
+      },
+      "add": [
+        "testing-evidence",
+        "secret-protection"
+      ]
     },
-    { "when": { "write_boundary": "release" }, "add": ["release-governance"] },
     {
-      "when": { "artifacts_includes": "plan", "scale": "large" },
-      "add": ["discovery-ledger", "plan-delivery"]
+      "when": {
+        "write_boundary_in": [
+          "commit",
+          "tag",
+          "release"
+        ]
+      },
+      "add": [
+        "git-write",
+        "secret-protection"
+      ]
     },
-    { "when": { "phase": "validate" }, "add": ["testing-evidence"] }
+    {
+      "when": {
+        "write_boundary": "release"
+      },
+      "add": [
+        "release-governance"
+      ]
+    },
+    {
+      "when": {
+        "artifacts_includes": "plan",
+        "scale": "large"
+      },
+      "add": [
+        "discovery-ledger",
+        "plan-delivery"
+      ]
+    },
+    {
+      "when": {
+        "phase": "validate"
+      },
+      "add": [
+        "testing-evidence"
+      ]
+    }
   ],
   "authorities": {
     "thin-entry": {
@@ -74,24 +173,52 @@
       "path": "docs/design-decisions/ADR-0022-agent-instruction-architecture.md",
       "section": "Context Economy"
     },
-    "doc-knowledge": { "path": "docs/README.md" },
-    "change-hygiene": { "path": "references/capabilities/change-hygiene.md" },
+    "doc-knowledge": {
+      "path": "docs/README.md"
+    },
+    "change-hygiene": {
+      "path": "references/capabilities/change-hygiene.md"
+    },
     "reference-closure": {
       "path": "AGENTS.md",
       "section": "Reference-closure check"
     },
-    "git-write": { "path": "references/policies/git.policy.md" },
-    "secret-protection": { "path": "scripts/check-secrets.js" },
-    "testing-evidence": { "path": "references/policies/testing.policy.md" },
-    "root-cause-repair": { "path": "references/capabilities/root-cause-repair.md" },
-    "discovery-ledger": { "path": "references/capabilities/discovery-ledger.md" },
-    "plan-delivery": { "path": "repo-tools/check-plan-delivery.js" },
-    "release-governance": { "path": "references/workflows/release.md" },
+    "git-write": {
+      "path": "references/policies/git.policy.md"
+    },
+    "secret-protection": {
+      "path": "scripts/check-secrets.js"
+    },
+    "testing-evidence": {
+      "path": "references/policies/testing.policy.md"
+    },
+    "root-cause-repair": {
+      "path": "references/capabilities/root-cause-repair.md"
+    },
+    "discovery-ledger": {
+      "path": "references/capabilities/discovery-ledger.md"
+    },
+    "plan-delivery": {
+      "path": "repo-tools/check-plan-delivery.js"
+    },
+    "release-governance": {
+      "path": "references/workflows/release.md"
+    },
     "review-implementation": {
       "path": "references/templates/sub-skills.md",
       "section": "review-manager"
     },
-    "security-baseline": { "path": "references/policies/security.policy.md" },
-    "rule-capture": { "path": "references/capabilities/rule-capture.md" }
+    "security-baseline": {
+      "path": "references/policies/security.policy.md"
+    },
+    "rule-capture": {
+      "path": "references/capabilities/rule-capture.md"
+    },
+    "review-system": {
+      "path": "docs/research/working/review/system-review.md"
+    },
+    "review-research": {
+      "path": "docs/research/working/review/research-review.md"
+    }
   }
 }

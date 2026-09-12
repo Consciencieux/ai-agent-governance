@@ -72,7 +72,9 @@ authority: construction
 | `discovery-ledger` | 发现台账闭包 | `references/capabilities/discovery-ledger.md` | plan_write · repair · 中大型 TASK | — | keep |
 | `plan-delivery` | Plan 交付声明 | plan-delivery gate | plan_write | CTRL plan-delivery（若绑定） | keep |
 | `release-governance` | 发布/tag 纪律 | release workflow · skill-release | release | — | keep |
-| `review-implementation` | 实现层审查 | review-manager（Impl） | audit · repair · 可选 | — | keep |
+| `review-implementation` | 实现层审查（仅 Impl；非 System/Research） | review-manager（`sub-skills.md` §8） | audit · repair · 可选 | — | keep · must-ship |
+| `review-system` | 系统/架构审查 | `docs/research/working/review/system-review.md` | system_review | — | keep · repo-keep |
+| `review-research` | 研究/评价审查 | `docs/research/working/review/research-review.md` | research_review | — | keep · repo-keep |
 | `security-baseline` | 安全横切 | security.policy | edit_scripts · release · git_write | — | keep |
 | `rule-capture` | 规则捕获进治理文件 | `references/capabilities/rule-capture.md` | repair · edit_references · edit_skill_entry | — | keep |
 
@@ -82,7 +84,7 @@ authority: construction
 | --- | --- | --- |
 | Governance State / lock / manifest 四态 | deferred | Phase 5b / 状态模型 Plan |
 | Product Modes INIT/AUDIT/MIGRATE 全编排 | deferred | 非本切片；映射到 `audit`/`release` 局部即可 |
-| Review System / Research 两类 | deferred | Phase 7 |
+| Review System / Research 两类 | **keep（PLAN-0043）** | `review-system` / `review-research`；见 `docs/research/working/review/` |
 | Translation / trilingual parity 专面 | deferred | 已有 doc-parity；能力升格另议 |
 | Engineering Restraint 专面 | merge → `change-hygiene` + ADR-0022 | — |
 | Generated sub-skill 生命周期机制 | deferred | 指令拓扑重构后 |

@@ -97,7 +97,7 @@ SKILL.md 写入 docs/ 路径（违反 reference-closure）
 
 ## Successor
 
-Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md)（**Implemented**）。Phase **5c**：[PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）。**Phase 5 EXITED**；Phase 6 = [PLAN-0042](PLAN-0042-invariant-based-testing.md) Implemented / EXITED；下一入口 Phase 7（计划待立）。
+Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md)（**Implemented**）。Phase **5c**：[PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）。**Phase 5 EXITED**；Phase 6 = [PLAN-0042](PLAN-0042-invariant-based-testing.md) Implemented / EXITED；下一入口 Phase 7（计划待立；须消费 [ADR-0024](../design-decisions/ADR-0024-gen2-product-freeze.md)）。
 
 ## Domain sync（Target: both）
 

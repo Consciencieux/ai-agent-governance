@@ -18,6 +18,8 @@
 | `plan-delivery` | A | `repo-tools/check-plan-delivery.js` | — |
 | `release-governance` | C | `references/workflows/release.md` | — |
 | `review-implementation` | A | `references/templates/sub-skills.md` | — |
+| `review-system` | A | `docs/research/working/review/system-review.md` | —（repo-keep；非默认 INSTALLED） |
+| `review-research` | A | `docs/research/working/review/research-review.md` | —（repo-keep；非默认 INSTALLED） |
 | `security-baseline` | C | `references/policies/security.policy.md` | — |
 | `rule-capture` | B | `references/capabilities/rule-capture.md` | `docs/rules/capabilities/rule-capture.md` |
 
