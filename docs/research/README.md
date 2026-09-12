@@ -88,6 +88,7 @@ docs/research/
 | L. Gen1 机械控制库存 | `RESEARCH-0011-gen1-mechanical-control-inventory.md` | CTRL→evaluator→gate→tests→profile 事实表；monolith 集群行；Safety Kernel 锚点；disposition 归 PLAN-0035 |
 | M. Task→Capability 路由 | `RESEARCH-0012-task-capability-routing.md` | Phase 5 入口：显式 Task/Context→Capability→Authority/Leaf；禁图谱与全自动 Dispatcher |
 | N. 科研回溯与上下文经济 | `RESEARCH-0013-research-provenance-and-context-economy.md` | 写全 provenance、执行 on-demand；Plan=短合同；一般项目不复制本仓科研树 |
+| — | `routing/` | PLAN-0038 施工表（repo-only；非 INSTALLED） |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 

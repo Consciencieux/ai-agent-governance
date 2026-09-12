@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0037：可复用治理 Skill 提炼（Governance Skill Extraction）
 
-> **Status: design plan, not implemented**（Phase 5 routing 验证之后再 Active；**不是**当前执行主线。本计划是过滤层：防止把本仓实验实现硬编码成「所有项目必须如此」。Architecture checkpoint ≠ Release。）
+> **Status: design plan, not implemented**（**冻结**。Stage A–D 全文 **不是** 2.0 blocker，不得在 Phase 8 / 2.0 skill-release **之前** Active。过滤层约束仍生效：禁止把本仓 `docs/`、CTRL 编号、Phase 剧本当 portable invariant。Architecture checkpoint ≠ Release。**禁止 Archived**：归档断言完成，本计划尚未执行。）
 
 将 `ai-agent-governance` 中**已验证**的 Gen2 治理原则提炼为可复用 Agent Governance Skill，并显式划分 **L1 invariants / L2 patterns / L3 project customization**。权威边界见 ADR-0020（2026-09-10 修正）。
 
@@ -47,22 +47,21 @@ target: both
 ## 前置条件（Gate — 未满足则不得 Active）
 
 1. Phase 4 EXITED（PLAN-0035 / PLAN-0036）— 已满足
-2. Phase 5 **Task→Capability routing** 模型已验证（RESEARCH-0012 → 后续 Phase 5 Plan）：capability 边界、applicability 表达、routing 合同稳定
-3. ADR-0020 L1/L2/L3 分层仍为 Accepted；无 Narrow 撤销
+2. Phase 5 **Task→Capability routing** 已验证（RESEARCH-0012 → PLAN-0038 → 5b Dispatcher）
+3. **Phase 8 阻断权威已交接，且已退出 Migration Mode / 完成 2.0 skill-release（或等价：本仓 Gen2 载荷已是可发布产品）** — 全文提炼的对象必须是已封板的 control plane，不是迁移中的草稿
+4. ADR-0020 L1/L2/L3 分层仍为 Accepted；无 Narrow 撤销
 
 **当前顺序：**
 
 ```text
-Phase 4 exit
+Phase 5–8 → 2.0 skill-release（本仓 Gen2 产品）
     ↓
-Phase 5 routing model（RESEARCH-0012 → Phase 5 Plan）
+本计划解冻 Active（PLAN-0037 Stage A–D）
     ↓
-验证 capability / applicability 边界
-    ↓
-本计划 Active（PLAN-0037）
-    ↓
-发布可复用 skill（另循 skill-release；本计划不吞并 release）
+跨项目 portable skill 验证（干净目标）
 ```
+
+2.0 发布的是 **本仓 INSTALLED Gen2 skill**，不是 PLAN-0037 另抽的通用包。过滤约束（Extraction boundary）在冻结期仍约束载荷撰写，避免 2.0 把本仓投影写进产品。
 
 ## 为何需要本计划（过滤层）
 
@@ -203,7 +202,7 @@ governance-skill/
 
 ## 完成条件（Active 后的 exit）
 
-- [ ] 前置条件全部满足后才曾转为 Active
+- [ ] 前置条件全部满足后才曾转为 Active（含 2.0 / Phase 8；非 2.0 路径上的 Active）
 - [ ] 提取协议四段产物均有审查记录（Facts / Rationale / Patterns / Skill）；无「一次抽象」交付
 - [ ] L1 invariants 成文且与 ADR-0020 分层一致；每条可回溯到 Fact；无复制型/空泛型
 - [ ] L2 / L3 边界显式；无本仓目录/CTRL/Phase 剧本硬编码进 L1
@@ -228,18 +227,19 @@ governance-skill/
 
 | 标识（ID） | 类型 | 来源 | 问题 | 影响面 | 严重度 | 状态 | 处置 | 责任人 | 验证/证据 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| X0 | observation | design | 过早抽取会固化未验证 routing | skill | high | closed | deferred | — | revisit: Phase 5 routing 验证后 Active |
+| X0 | observation | design | 过早抽取会固化未验证 routing | skill | high | closed | deferred | — | revisit: **2.0 后** Active；不得在 Phase 5 入口解冻 |
 | X1 | observation | review | 「不写死」易被读成软建议 | skill | high | closed | resolved | — | ADR-0020 L1 硬约束修正 |
-| X2 | migration_gap | design | 尚无 extraction 执行车辆 | both | med | open | — | — | 本计划；Active 后关闭 |
+| X2 | migration_gap | design | 尚无 extraction 执行车辆 | both | med | open | — | — | 本计划冻结；2.0 后关闭 |
 | X3 | observation | review | 一次抽象会复制实现或空泛口号 | skill | high | closed | resolved | — | 本计划 § 提取协议；产物分层 ≠ 提取流程 |
+| X4 | observation | review | 全文 0037 作 2.0 必达项过大且与产品定义重叠 | both | high | closed | deferred | — | 冻结 Design；2.0=本仓 Gen2 载荷；A–D 后置 |
 
 ## 闭包对账（Design 基线）
 
 ```text
-Total known:  4
+Total known:  5
 Resolved:     2  (X1, X3)
-Deferred:     1  (X0 — revisit: Phase 5 后)
-Open:         1  (X2 — 本计划尚未 Active/交付)
+Deferred:     2  (X0, X4 — revisit: **2.0 后**)
+Open:         1  (X2 — 冻结期允许；解冻交付后须 0)
 Unaccounted:  0
 ```
 

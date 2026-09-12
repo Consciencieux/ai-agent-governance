@@ -294,9 +294,45 @@ Roadmap 不獨立定義或裁決 phase order；它只鏡像/索引 ADR-0018 的�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-當前階段：5 — Dispatcher（入口 = Task→Capability 適用研究；**尚未**實作 Dispatcher）
-當前階段計劃：Phase 4 checkpoint PLAN-0035 / PLAN-0036 = Implemented（EXITED）。Phase 5 入口：[RESEARCH-0012](../../research/RESEARCH-0012-task-capability-routing.md) v2（六問 + 工作假設）。Phase 5 施工車輛（Design）：[PLAN-0038](../PLAN-0038-task-capability-routing.md) — 顯式 Task→Capability 映射；尚未 Dispatcher。路由驗證後的提煉（Design）：[PLAN-0037](../PLAN-0037-governance-skill-extraction.md)。Phase 3 baseline：`24021c4`。Plan archive ≠ Release（ADR-0016）。
+**當前階段：5 — Dispatcher（入口）。** 穩定產品仍是 Generation 1（`main` / 1.x）。本分支 `migration/2.0-governance-architecture` 已完成 Phase 0–4 checkpoint；Phase 5 **尚未**實作 runtime Dispatcher。Plan archive ≠ Release（ADR-0016）；Migration Mode 下 Phase 完成 ≠ SemVer / skill-release（ADR-0014）。
 
+## 現在 → 2.0（索引）
+
+Roadmap 只列順序與車輛，不複製 Plan 步驟 / Affected Files / 驗收命令。權威：ADR-0018（階段）· 各 PLAN（施工）· ADR-0020 / PLAN-0037（skill 提煉邊界）。
+
+### 已完成（checkpoint）
+
+| Phase | 車輛 | 狀態 |
+| --- | --- | --- |
+| 0 | ADR-0014 Migration Mode | 已啟用（gate 觀測化；Safety Kernel 阻斷） |
+| 1 | [PLAN-0031](../archive/PLAN-0031-producer-product-governance-separation.md) | Archived |
+| 2 | [PLAN-0032](../archive/PLAN-0032-documentation-knowledge-architecture-closure.md) · [PLAN-0033](../archive/PLAN-0033-known-issue-closure.md) | Archived |
+| 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived；baseline `24021c4` |
+| 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
+
+### 下一步（必須按此序；不跳過審查）
+
+| 步 | 內容 | 車輛 | 一句話 |
+| --- | --- | --- | --- |
+| **現在** | Phase 5a 顯式映射施工 | [PLAN-0038](../PLAN-0038-task-capability-routing.md)（**Active**）· [routing map](../../research/routing/task-capability-map.md) | RESEARCH-0012 已採納；P0–P1 與夾具 v0 已落；待走讀 |
+| 5b | Context Detector / Dispatcher | 後續 Plan（0038 exit 後另開） | 消費 5a 映射；仍禁止無路由搬家、禁止全自動 LLM 路由 |
+| 6 | Invariant-based Testing | 後續 Plan | 每條重要 Control：positive + negative oracle |
+| 7 | Review 三類拆分 | 後續 Plan | Implementation / System / Research |
+| 8 | 重建 mandatory gates | 後續 Plan | 阻斷權威交到新 control plane |
+| **2.0** | 本倉 Gen2 skill 發布 | `repo-workflows/skill-release.md` | **僅 Phase 8 後**；checkpoint ≠ Release |
+
+[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **凍結在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必達項；2.0 產品 = 本倉 INSTALLED Gen2 skill。過濾邊界仍約束遷移期載荷。解凍：2.0 發布之後。
+
+Phase 5 內部順序（索引自 PLAN-0035，非新裁決）：顯式映射 → 薄入口消費 → Dispatcher → 再談物理拓撲。
+
+### 故意延後（不擋 Phase 5 開工）
+
+剩餘 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 獨立 machine-readable Control 檔 · 文件物理搬家 · **PLAN-0037 全文提煉（2.0 後解凍）**。
+
+### 本倉 vs 2.0 產品
+
+- **本倉**：實驗場 + 參考實作 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
+- **2.0 skill**：本倉 INSTALLED Gen2 載荷（portable 語義隨遷移寫入，不是 PLAN-0037 另開通用包）。
 
 ## Guarantee Levels
 
@@ -523,19 +559,15 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration（ADR-0018 Phase 0–8）
         ↓
-P0 Architecture Migration Mode
-P1 Producer / Product Separation
-P2 Research / Findings / Traceability
-P3 Governance Core / Rule Model
-P4 Checker / Primitive restructuring
-P5 Dispatcher（routing 驗證）
-        ↓
-PLAN-0037 — 提煉可複用治理 skill
-  （L1 硬約束 · L2 模式 · L3 專案定製）
-        ↓
+P0–P4  checkpoint EXITED
+P5     Dispatcher — 當前（先 5a 顯式映射，後 5b runtime）
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates
         ↓
-Generation 2 — Policy-Driven Governance Control Plane
+2.0 skill-release（本倉 Gen2 載荷）
+        ↓
+PLAN-0037  跨專案 portable 提煉（凍結至 2.0 後；非 Archived）
+        ↓
+Generation 2 — Policy-Driven Governance Control Plane + reusable method
 ```

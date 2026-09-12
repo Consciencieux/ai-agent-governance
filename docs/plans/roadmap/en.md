@@ -292,9 +292,45 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-Current Phase: 5 — Dispatcher (entry = Task→Capability applicability research; Dispatcher **not** implemented yet)
-Current Phase Plan: Phase 4 checkpoints PLAN-0035 / PLAN-0036 = Implemented (EXITED). Phase 5 entry: [RESEARCH-0012](../../research/RESEARCH-0012-task-capability-routing.md) v2 (six open questions + working hypotheses). Phase 5 construction vehicle (Design): [PLAN-0038](../PLAN-0038-task-capability-routing.md) — explicit Task→Capability map; no Dispatcher yet. Post-routing extraction (Design): [PLAN-0037](../PLAN-0037-governance-skill-extraction.md). Phase 3 baseline: `24021c4`. Plan archive ≠ Release (ADR-0016).
+**Current phase: 5 — Dispatcher (entry).** The stable product is still Generation 1 (`main` / 1.x). This branch `migration/2.0-governance-architecture` has completed Phase 0–4 checkpoints; Phase 5 has **not** implemented a runtime Dispatcher. Plan archive ≠ Release (ADR-0016); under Migration Mode a phase checkpoint ≠ SemVer / skill-release (ADR-0014).
 
+## Now → 2.0 (index)
+
+The Roadmap lists sequence and vehicles only; it does not copy Plan steps, Affected Files, or verification commands. Authority: ADR-0018 (phases) · each PLAN (construction) · ADR-0020 / PLAN-0037 (skill extraction boundary).
+
+### Done (checkpoints)
+
+| Phase | Vehicle | Status |
+| --- | --- | --- |
+| 0 | ADR-0014 Migration Mode | Enabled (gates observational; Safety Kernel blocking) |
+| 1 | [PLAN-0031](../archive/PLAN-0031-producer-product-governance-separation.md) | Archived |
+| 2 | [PLAN-0032](../archive/PLAN-0032-documentation-knowledge-architecture-closure.md) · [PLAN-0033](../archive/PLAN-0033-known-issue-closure.md) | Archived |
+| 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived; baseline `24021c4` |
+| 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
+
+### Next (this order; do not skip review)
+
+| Step | What | Vehicle | One line |
+| --- | --- | --- | --- |
+| **Now** | Phase 5a explicit-map construction | [PLAN-0038](../PLAN-0038-task-capability-routing.md) (**Active**) · [routing map](../../research/routing/task-capability-map.md) | RESEARCH-0012 adopted; P0–P1 + fixtures v0 landed; walkthrough pending |
+| 5b | Context Detector / Dispatcher | Later plan (after 0038 exit) | Consumes the 5a map; still no topology-before-routing, no fully automatic LLM router |
+| 6 | Invariant-based Testing | Later plan | Positive + negative oracle per important Control |
+| 7 | Review split into three kinds | Later plan | Implementation / System / Research |
+| 8 | Rebuild mandatory gates | Later plan | Blocking authority moves onto the new control plane |
+| **2.0** | This repo’s Gen2 skill release | `repo-workflows/skill-release.md` | **Only after Phase 8**; checkpoint ≠ Release |
+
+[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **frozen in Design** (not Archived). Full Stages A–D are **not** a 2.0 must-ship; 2.0 = this repo’s INSTALLED Gen2 skill. The extraction boundary still constrains the payload during migration. Unfreeze: after the 2.0 release.
+
+Phase 5 internal order (indexed from PLAN-0035, not a new ruling): explicit map → thin entry consumes it → Dispatcher → then physical topology.
+
+### Deferred by design (does not block starting Phase 5)
+
+Remaining consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · standalone machine-readable Control files · physical doc moves · **PLAN-0037 full extraction (unfreeze after 2.0)**.
+
+### This repo vs 2.0 product
+
+- **This repo:** experiment + reference implementation + research provenance ([RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)).
+- **2.0 skill:** this repo’s INSTALLED Gen2 payload (portable semantics written during migration, not a separate PLAN-0037 universal pack).
 
 ## Guarantee Levels
 
@@ -521,19 +557,15 @@ Generation 1 — Document-Centric Governance
         ↓
   Generation 2 migration (ADR-0018 Phase 0–8)
         ↓
-P0 Architecture Migration Mode
-P1 Producer / Product Separation
-P2 Research / Findings / Traceability
-P3 Governance Core / Rule Model
-P4 Checker / Primitive restructuring
-P5 Dispatcher (routing validated)
-        ↓
-PLAN-0037 — Extract reusable governance skill
-  (L1 hard invariants · L2 patterns · L3 project customization)
-        ↓
+P0–P4  checkpoints EXITED
+P5     Dispatcher — current (5a explicit map, then 5b runtime)
 P6 Invariant-based Testing
 P7 Review System redesign
 P8 Rebuild mandatory gates
         ↓
-Generation 2 — Policy-Driven Governance Control Plane
+2.0 skill-release (this repo’s Gen2 payload)
+        ↓
+PLAN-0037  cross-project portable extract (frozen until after 2.0; not Archived)
+        ↓
+Generation 2 — Policy-Driven Governance Control Plane + reusable method
 ```
