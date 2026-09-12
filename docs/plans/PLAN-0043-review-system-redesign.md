@@ -107,7 +107,7 @@ Migration 分支上把 Gen1 npm run check 改成 blocking
 ## 完成条件（exit）
 
 - [ ] P0–P4 完成
-- [ ] Implementation Review 能力仍可指出载体（must-ship）
+- [ ] Implementation Review 能力仍可指出载体（must-ship；**Phase 7 checkpoint**，不是 2.0 干净目标验收）
 - [ ] System / Research 在本仓有可加载剧本且路由可命中（repo-keep）
 - [ ] 无「一个 review 扛三类」的权威表述残留于 Phase 7 新权威文件
 - [ ] 未 Active PLAN-0037；未改 Migration Gen1 check 为 blocking

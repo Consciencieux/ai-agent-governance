@@ -118,9 +118,9 @@ Runtime / token cost / human burden   运维成本观测
 
 原始后果「每个执行阶段一个 PLAN + checkpoint」与「Review 三类在 Phase 7 落地」保留。自本修正起：
 
-- **Phase 8 EXIT 必要但不充分。** 2.0 发布还须满足 [ADR-0024](ADR-0024-gen2-product-freeze.md) § 发布门槛。
+- **Phase 8 EXIT 必要但不充分。** 2.0 发布还须满足 [ADR-0024](ADR-0024-gen2-product-freeze.md) 收紧后的发布门槛（干净目标可用 + Migration Mode 退出 + 必装阻断）。「指出载体 / WRAP 清单」不是验收。
 - Phase 7 / 8 的 Plan 必须消费 ADR-0024 的 `must-ship` / `repo-keep` / `later` / `retire` / `out`，不得把「重建全部 Gen1 gate」或「未冻结的产品面」当作验收。
-- 2.0 产品定义以 ADR-0024 为准：本仓 INSTALLED Gen2 skill；PLAN-0037 仍非 2.0 必达。
+- 2.0 产品定义以 ADR-0024 为准：可直接用的 INSTALLED 必装切片；PLAN-0037 仍非 2.0 必达。
 
 ## 参考
 

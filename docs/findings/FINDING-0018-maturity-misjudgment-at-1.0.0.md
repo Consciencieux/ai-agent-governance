@@ -39,7 +39,7 @@ observed_in: gen1
 
 ## 解决情况
 
-（待填。ADR-0014 已把 2.0 重构定义为 Generation-1 → Generation-2，本 finding 提供「为什么 1.0.0 只是 baseline」的证据。）
+ADR-0024 2026-09-12 修正把 2.0 冻结面定为**必装切片的可用与稳定**（干净目标 INIT / AUDIT / RELEASE、Migration Mode 退出、必装机械控制阻断），禁止再用「载体清单 / 功能齐全」冒充成熟。关闭条件 1 因此收窄到必装面的 rule / trigger / enforcement，不是全仓模型、也不是 zero-attention。本 Finding 仍 Confirmed，直至该门槛在实际 skill-release 上成立。
 
 ## 关联
 
@@ -48,4 +48,4 @@ observed_in: gen1
 
 ## 回归保护
 
-无机械 gate（成熟度判断是研究判断，L4）。2.0 发布时用「zero-attention 保证度」而非「功能完整度」作为成熟度证据（衔接 FINDING-0008 / FINDING-0005 D04）。
+无机械 gate（成熟度判断是研究判断，L4）。2.0 发布时用「必装切片可用且稳定」（ADR-0024）作为成熟度证据，禁止用功能清单冒充成熟。zero-attention 保证度属 2.x / FINDING-0008，不挡 2.0。

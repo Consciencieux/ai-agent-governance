@@ -24,7 +24,7 @@ subject_generation: gen1
 **Completeness：**
 - v6：Pre-PLAN / non-Plan + INSTALLED **scripts** 反向对账 → mechanical script surface `Unaccounted = 0`
 - v7：INSTALLED **instruction/workflow** 产品面（8 sub-skills + githooks + 非 script init-spec 面）反向对账 → instruction/workflow surface `Unaccounted = 0`
-- v8：第四列投影 ADR-0024（must-ship / repo-keep / later / retire / out）；清单不再 `undecided`
+- v8：第四列投影 ADR-0024（must-ship / repo-keep / later / retire / out）；清单不再 `undecided`。发布含义按 ADR-0024 2026-09-12 修正：must-ship 须在干净目标上跑通，不是「指出载体」。
 
 ## 为什么需要
 
@@ -374,7 +374,7 @@ Tests     = JS enforcement 有没有坏
 | `out` | 已离开本仓库 |
 | `accepted constraint: …` | 另有 ADR 约束（与上列同时成立时并写） |
 
-Checker 层 KEEP/WRAP/EXTRACT 仍只在 PLAN-0035，与本列正交。ADR-0014 冻结 Gen1 JS 至 Phase 4 的历史约束，不阻止按 ADR-0024 在后续 Phase 更换载体。
+Checker 层 KEEP/WRAP/EXTRACT 仍只在 PLAN-0035，与本列正交。ADR-0014 冻结 Gen1 JS 至 Phase 4 的历史约束，不阻止按 ADR-0024 在后续 Phase 更换载体。`must-ship` 的**发布**含义（干净目标跑通，不是指出载体）由 ADR-0024 2026-09-12 修正裁决；本列只投影档位。
 
 ## 能力保存矩阵
 

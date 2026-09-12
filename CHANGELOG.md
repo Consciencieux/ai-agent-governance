@@ -22,6 +22,8 @@ All notable changes to this project will be documented here.
 
 - **2.0 product freeze (ADR-0024)** — Phase 8 EXIT is necessary but not sufficient for skill-release. RESEARCH-0006 v8 projects must-ship / repo-keep / later / retire / out. Git HITL invariants stay; procedure is to be thinned under a single `git.policy.md` authority. Phase 7/8 plans must consume the freeze. PLAN-0037 remains frozen.
 
+- **2.0 usability gate (ADR-0024 2026-09-12 amendment)** — a WRAP / carrier list is not 2.0 evidence. Release requires a usable must-ship slice on a clean target, Migration Mode exit, blocking must-ship controls, and blocker Findings closed or waived. `later` items still do not block 2.0; closing every Confirmed Finding still does not define 2.0.
+
 - **Phase 6 EXITED** — PLAN-0042 Implemented (oracle inventory, routing negatives N1–N3, seed CTRL registration, stack-defaults oracle). Successor is Phase 7 ([PLAN-0043](docs/plans/PLAN-0043-review-system-redesign.md) Active). Architecture checkpoint ≠ Release; FINDING-0006 remains Confirmed for coverage beyond the seed set; PLAN-0037 remains frozen.
 
 - **Phase 5 EXITED** — PLAN-0038 / 0039 / 0040 Implemented (5a map, 5b resolve/CLI, 5c P0–P2 Capability projection). Leftover capability leaves, FINDING-0028 dogfood, and FINDING-0029 residue stay deferred by design and do not reopen Phase 5. Architecture checkpoint ≠ Release; PLAN-0037 remains frozen.

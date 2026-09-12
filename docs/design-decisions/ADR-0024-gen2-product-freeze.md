@@ -18,6 +18,8 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 
 **1. 2.0 产品 = 本仓 INSTALLED Gen2 skill。** 不是跨项目通用包（那是 PLAN-0037，仍冻结至 2.0 之后）。不是「Phase 8 checkpoint 绿了就算发布」。
 
+> **已被 2026-09-12 后续修正 supersede（可用性）：** 「INSTALLED」不等于「指出载体」；2.0 必须是干净项目上可直接使用、必装机械控制可阻断的 skill。原文保留为冻结切片当时的表述。
+
 **2. Phase 8 EXIT ≠ 2.0 发布。** 发布还须满足本 ADR § 发布门槛。ADR-0014 仍然：checkpoint ≠ SemVer / skill-release；Migration Mode 下禁止正式 tag。
 
 **3. 产品处置词汇（与 PLAN-0035 checker 词汇正交）。** 一条能力必须恰好落入一档：
@@ -30,7 +32,7 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 | `retire` | 2.0 不带、不承诺迁移 |
 | `out` | 已离开本仓库；禁止再吸收回来 |
 
-载体可变。禁止「文件还在所以能力算装上」。禁止把 RESEARCH-0006 未列能力静默带进 2.0。
+载体可变。施工期允许 WRAP 后的 Gen1 脚本继续跑。**禁止**把「文件还在 / 能指出载体」当作 2.0 已可用。禁止把 RESEARCH-0006 未列能力静默带进 2.0。
 
 **4. 2.0 必装（must-ship）。** 语义必须出现在 INSTALLED 载荷（政策 / 生成器 / 脚本 / 生成子技能均可，不要求 1:1 旧文件）：
 
@@ -101,6 +103,8 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 
 ## 发布门槛（2.0 skill-release 前）
 
+> **已被下方「后续修正（2026-09-12）：可用性与稳定」supersede。** 下列 1–8 是冻结切片当日的门槛；其中第 1 条「可指出载体（允许仍是 WRAP）」不得再当作 2.0 验收。
+
 同时成立才允许走 `repo-workflows/skill-release.md`（且须先退出或按 ADR-0014 允许的方式结束 Migration Mode 禁 tag）：
 
 1. §4 必装能力在 INSTALLED 面可指出载体（允许仍是 WRAP 后的 Gen1 脚本）。
@@ -112,12 +116,45 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 7. PLAN-0037 仍 Design 冻结。
 8. 人类批准发布（ADR-0004）。
 
+## 后续修正（2026-09-12）：2.0 = 可用且稳定（不是指出载体即可，也不是全部 Finding 关闭）
+
+本修正 **Narrow-amend** 决策 1 与上方发布门槛第 1 条。`later` 清单（决策 6）**不变**——全量 Control 文件 / CONTROL-X / L3 / PLAN-0037 / 全量 oracle 仍不挡 2.0。本修正禁止的是：用「有载体」代替「能用」。
+
+**2.0 是：**
+
+```text
+可安装、可直接用的 skill
+必装切片在干净项目上成立
+Migration Mode 退出
+必装机械控制在 CI / release 阻断
+挡住本门槛的 Finding 关闭或显式豁免
+```
+
+**2.0 不是：** 关闭全部 Confirmed Finding；做完 `later`；零注意力治理；跨项目通用包。
+
+自本修正起，2.0 skill-release **同时**要求：
+
+1. **干净目标：** 从本仓打包 tarball，对空仓库 INIT；必装入口 INIT / AUDIT / RELEASE（含人类批准）在该项目路径上可执行，且必装 INSTALLED 引用闭合（FINDING-0007 的 2.0 切片）。WRAP 后的 Gen1 脚本可以仍是实现，但必须在该目标上**跑通**，不能只在本仓目录树里「找得到文件」。
+2. **稳定：** 退出 Migration Mode（ADR-0014）：产品分支上必装机械控制 fail-closed，不再把 Gen1 `npm run check` 的观测化红当作可发布状态；禁止未退出 Mode 就 tag / 发 skill。
+3. **阻断：** Phase 8 已把 §4 必装机械控制接到 CI / release（不是把所有观测化 cluster 变红）。
+4. **单一权威：** Git consent = `git.policy.md`；薄入口指针加载（决策 4/8 与原门槛 2、4、5 仍有效）。
+5. **Finding：** 仅下列为 2.0 blocker，须 Resolved 或书面豁免（豁免须写清「缺什么、为何不挡可用」）。其余 Confirmed 保持 `later`，**不**挡发布。
+
+| Finding | 2.0 角色 |
+| --- | --- |
+| FINDING-0007 可移植性 | blocker（干净目标） |
+| FINDING-0003 声明–机制差距（**仅必装控制**） | blocker（Phase 8 阻断面） |
+| FINDING-0018 成熟度误判 | blocker 至本门槛生效（冻结面 = 必装可用/稳定，不是外围路径） |
+| FINDING-0006 全量 oracle、0001 CONTROL-X、0002 机器 Control、0012 锁、0015 长 prompt 全文、0019 单体、0026 leftover、0028 dogfood、0029 lifecycle 残留、PLAN-0037 | `later` |
+
+6. PLAN-0037 仍 Design 冻结。人类批准（ADR-0004）仍要。
+
 ## 后果
 
 - RESEARCH-0006 第四列改为本 ADR 投影；Research 仍不自己裁决。
-- ADR-0018「Phase 8 后即可发布」由后续修正收窄：Phase 8 必要但不充分。
+- ADR-0018「Phase 8 后即可发布」由后续修正收窄：Phase 8 必要但不充分；「指出载体」亦不足。
 - Roadmap 索引本冻结；不把冻结表抄进路线图。
-- 下一步施工仍是 Phase 7 Plan（待立），但其 In 集合必须引用本 ADR。
+- 下一步施工仍是 Phase 7 Plan（PLAN-0043）；Phase 8 与 skill-release 必须按本 ADR **收紧后的**发布门槛验收，不得把 WRAP 载体清单当 2.0。
 
 ## 参考
 
