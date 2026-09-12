@@ -1,11 +1,13 @@
 ---
 id: PLAN-0040
-status: Implemented
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0040：Phase 5c 按 Capability 物理投影
+
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
 > **Status: Implemented**（P0–P2 完成；P3 可选未做 rename。前置：PLAN-0038 / PLAN-0039 Implemented。边冻结；Slice B 横切已迁出 lifecycle。**Phase 5 checkpoint EXITED**。）
 
@@ -144,7 +146,7 @@ references/
 
 ## 受影响文件（预举；实施时按投影表收敛）
 
-- `docs/plans/PLAN-0040-capability-physical-projection.md`（本文件）
+- `docs/plans/archive/PLAN-0040-capability-physical-projection.md`（本文件）
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
 - `docs/research/working/routing/{call-topology,task-capability-map,README,graph.v0.json}`
 - `docs/research/working/routing/projection-table.md`（P0）
@@ -155,7 +157,7 @@ references/
 - `repo-tools/lib/routing.js` · `repo-tools/route-task.js`（可选增强）
 - `tests/suites/routing.test.js` · payload/docs 表征
 - `AGENTS.md` · `CHANGELOG.md`
-- `docs/plans/PLAN-0039-context-detector-dispatcher.md`（successor 回指）
+- `docs/plans/archive/PLAN-0039-context-detector-dispatcher.md`（successor 回指）
 
 ## 发现台账（Discovery Ledger）
 

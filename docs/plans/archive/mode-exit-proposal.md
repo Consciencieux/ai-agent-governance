@@ -27,11 +27,15 @@ status: Completed
 
 1. CI：阻断 = `npm run check:must-ship`；观测 = `npm run check`（`continue-on-error`）。  
 2. Migration Mode **已退出**（ADR-0014）。  
-3. 分发边界仍关闭：禁止 tag / GitHub Release / 宣称 2.0，直至 skill-release Approval Gate。
+3. （历史）分发边界曾关闭至 skill-release Approval Gate。**已被 2026-09-12 `v2.0.0` 发布 supersede。**
 
-## 合入后下一步（skill-release · 仍待做）
+## 后续（2026-09-12）：skill-release 已完成
 
-见 `docs/plans/skill-release-2.0-checklist.md`：AUDIT/drift 人工确认 → Findings 0007/0003/0018 关闭或豁免 → 五同步点升 `2.0.0` → Approval Gate → 显式同意回声后 tag。
+人类后续批准「发布2.0，删除迁移分支」。`v2.0.0` 已 tag / GitHub Release；迁移分支已删。本提案的「分发边界仍关闭」条款被该次发布 supersede。2.x 顺序见 [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md)。
+
+## 合入后下一步（skill-release · 历史；已完成）
+
+见 `docs/plans/skill-release-2.0-checklist.md`（历史清单，项已勾完）。
 
 ## 预检摘要
 

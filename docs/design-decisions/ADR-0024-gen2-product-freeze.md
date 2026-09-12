@@ -156,6 +156,14 @@ Migration Mode 退出
 - Roadmap 索引本冻结；不把冻结表抄进路线图。
 - 下一步施工仍是 Phase 7 Plan（PLAN-0043）；Phase 8 与 skill-release 必须按本 ADR **收紧后的**发布门槛验收，不得把 WRAP 载体清单当 2.0。
 
+## 后续修正（2026-09-12）：2.0.0 已发布；later 顺序见 ADR-0025
+
+本修正不改决策 6 的 `later` **成员**。发布门槛已在 `v2.0.0` 满足。自本修正起，later 项的**施工顺序**由 [ADR-0025](ADR-0025-gen2x-product-path.md) 裁决；Roadmap 只索引。PLAN-0037 仍 Design，直至人类 Active。
+
+## 后续修正（2026-09-12）：PLAN-0037 已 Active
+
+本修正是对上方「PLAN-0037 仍 Design」现在时条款的 **Narrow amendment**。人类已解冻 PLAN-0037（指令「归档，解冻」）。`later` 成员不变；PLAN-0037 仍属 2.x H1 主线，不是 2.0 回写。
+
 ## 参考
 
 - RESEARCH-0006 能力基线 · ADR-0018 阶段顺序 · ADR-0014 Migration Mode · ADR-0012 CHANGELOG 准入

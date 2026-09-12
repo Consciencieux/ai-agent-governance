@@ -31,6 +31,7 @@
 | [ADR-0022](ADR-0022-agent-instruction-architecture.md) | Agent 指令架构 | 薄入口路由、叶节点单一能力、树状检索 + 图状适用 + 机械执行；机械控制不依赖入口被记住 |
 | [ADR-0023](ADR-0023-governance-control-model.md) | Governance Control Model | Control 为一级对象；Model authority ≠ rule semantics；decision/guarantee 挂 binding/投影；serialization-agnostic slot model |
 | [ADR-0024](ADR-0024-gen2-product-freeze.md) | 2.0 产品冻结 | 必装可用/稳定；指出载体 ≠ 发布；Phase 8 EXIT ≠ 发布；Git HITL 削薄 |
+| [ADR-0025](ADR-0025-gen2x-product-path.md) | 2.x 产品演进路径 | Phase 0–8 已关闭；H0 Archived；H1 = PLAN-0037 Active；`later` 只裁决顺序不改成员 |
 
 ## 生命周期与代际
 

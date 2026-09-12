@@ -133,6 +133,16 @@ Replacement / decomposition / retirement 的正式判断从 Phase 4 开始，逐
 
 Migration Mode **已退出**；分发边界仍关闭，直到完成 skill-release。
 
+## 后续修正（2026-09-12）：skill-release 已完成，分发边界重开
+
+本修正是对上方「Mode 退出处置」中「仍禁止 tag / 分发边界仍关闭」条款的 **Narrow amendment**。原句保留为退出当日、tag 尚未批准时的处置。
+
+自 `v2.0.0` 发布起：
+
+- 分发边界 **已重开**（tag / GitHub Release / 宣称 2.0 已发生）。
+- Mode 退出本身不变：CI 阻断 = `check:must-ship`；Gen1 `npm run check` 仍观测。
+- 2.x 顺序权威 = [ADR-0025](ADR-0025-gen2x-product-path.md)；本 ADR 不再描述「下一步是 skill-release」。
+
 ## 参考
 
 - 科研测量缺口：FINDING-0008（`docs/findings/FINDING-0008-governance-measurement-gap.md`）

@@ -1,11 +1,13 @@
 ---
 id: PLAN-0035
-status: Implemented
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0035：Checker / Primitive Restructuring（Phase 4 checkpoint）
+
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
 > （**Phase 4 EXITED** · Implemented。2026-09-10：Exit Criteria 满足；PLAN-0036 L1 已落地；P2 剩余 / #9 = deferred by design。Successor = RESEARCH-0012。Architecture checkpoint ≠ Release；Plan archive 另按 ADR-0016。）
 
@@ -367,9 +369,9 @@ evidence
 
 ## 受影响文件
 
-- `docs/plans/PLAN-0035-checker-primitive-restructuring.md` —— 本计划
+- `docs/plans/archive/PLAN-0035-checker-primitive-restructuring.md` —— 本计划
 - `docs/research/RESEARCH-0011-gen1-mechanical-control-inventory.md` —— CTRL-centric 事实库存
-- `docs/plans/PLAN-0036-payload-discovery-ledger.md` —— R24 subordinate
+- `docs/plans/archive/PLAN-0036-payload-discovery-ledger.md` —— R24 subordinate
 - `docs/plans/archive/PLAN-0034-governance-core-rule-model.md` —— Phase 3 归档
 - `docs/plans/archive/PLAN-0032-…` —— R24 取回注记
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md` —— Current Phase → 4

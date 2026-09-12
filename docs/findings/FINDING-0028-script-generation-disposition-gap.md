@@ -86,7 +86,7 @@ observed_in: gen2
 - ADR-0020 Producer/Product 执行分离 · ADR-0006 分发边界
 - RESEARCH-0006 Gen1 能力基线 · FINDING-0001 / A03 隐性狗粮
 - PLAN-0035 Phase 4 strangler · PLAN-0039（5b 新 CLI 仅注释可辨）
-- L0 计划：[PLAN-0041](../plans/PLAN-0041-script-inventory.md)（**Implemented**）· [`script-inventory.v0.json`](../research/working/script-inventory.v0.json)
+- L0 计划：[PLAN-0041](../plans/archive/PLAN-0041-script-inventory.md)（**Implemented**）· [`script-inventory.v0.json`](../research/working/script-inventory.v0.json)
 - 仍开：repo dogfood INSTALLED CLI、按 `retire` 隔离/删除（**禁止**按 `v1.0.2` 整夹搬走）
 
 ## 回归保护

@@ -1,11 +1,13 @@
 ---
 id: PLAN-0042
-status: Implemented
+status: Archived
 generation: gen2
 target: repo-infra
 ---
 
 # PLAN-0042：Phase 6 Invariant-based Testing
+
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
 > **Status: Implemented**（P0–P4 完成。**Phase 6 checkpoint EXITED**。前置：Phase 5 EXITED。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。）
 
@@ -121,7 +123,7 @@ CTRL-0001 已有 repo/skill CLI parity：只记账，不另造 CONTROL-X 框架�
 
 ## 受影响文件
 
-- `docs/plans/PLAN-0042-invariant-based-testing.md`（本文件）
+- `docs/plans/archive/PLAN-0042-invariant-based-testing.md`（本文件）
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
 - `AGENTS.md`
 - `docs/research/RESEARCH-0003-evaluation-framework.md`
@@ -179,7 +181,7 @@ Deferred by design:
 
 **Completion marker：** Phase 6 checkpoint = **EXITED**（PLAN-0042 `status: Implemented`）。
 
-**Successor：** Phase 7 Review System redesign（计划待立；须消费 [ADR-0024](../design-decisions/ADR-0024-gen2-product-freeze.md)）。
+**Successor：** Phase 7 Review System redesign（计划待立；须消费 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）。
 
 ## Successor
 

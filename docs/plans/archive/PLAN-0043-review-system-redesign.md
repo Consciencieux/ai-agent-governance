@@ -1,11 +1,13 @@
 ---
 id: PLAN-0043
-status: Implemented
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0043：Phase 7 Review System redesign
+
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
 > **Status: Implemented**（P0–P4 完成。**Phase 7 checkpoint EXITED**。前置：Phase 6 EXITED · ADR-0024 Accepted。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。）
 
@@ -164,7 +166,7 @@ Deferred by design:
 
 ## Affected Files（预期）
 
-- `docs/plans/PLAN-0043-review-system-redesign.md`（本文件）
+- `docs/plans/archive/PLAN-0043-review-system-redesign.md`（本文件）
 - `docs/research/working/review/**`
 - `docs/research/working/routing/graph.v0.json`
 - `docs/research/working/routing/task-capability-map.md`

@@ -50,7 +50,7 @@ Blocking paths tested: 6/8
 
 测试数量很多不能证明 `Rule → mechanism → trigger → gate → block` 链完整（FINDING-0006 E03）。
 
-Phase 6 施工计划：[PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md)（**Implemented / EXITED**；种子集台账已落地；本文件数字仍是示意，不是全仓实测计数）。
+Phase 6 施工计划：[PLAN-0042](../plans/archive/PLAN-0042-invariant-based-testing.md)（**Implemented / EXITED**；种子集台账已落地；本文件数字仍是示意，不是全仓实测计数）。
 
 ## 未来实验设计
 

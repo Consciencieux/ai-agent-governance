@@ -51,11 +51,13 @@ Explicit Enforcement Boundary
 
 治理系统应尽可能减少对 Agent 注意力、记忆和自觉性的依赖。
 
-## 当前状态：Generation 1
+## 当前状态：v2.0.0（Generation 2 必装切片）
 
-当前稳定版本属于 **Generation-1 Document-Centric Governance**。
+当前产品是 **`v2.0.0`**：可安装、可在干净目标上直接使用的 INSTALLED 必装切片。CI 阻断权威是 `npm run check:must-ship`。Migration Mode 已退出；`main` 就是 2.0 产品线。权威：[ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md) · [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md)。
 
-它已经具备较完整的治理能力，包括：
+这 **不是**「Generation-1 限制已消失」。2.0 把已验证的控制面接到可发布 skill 上；底层仍大量是文档 + 脚本 + WRAP 后的 checker。Generation 1 的六条限制仍描述剩余架构债，只是不再挡住已发布的必装面。
+
+Generation 1（1.x）仍是历史基线，具备：
 
 - INIT / AUDIT / RELEASE 生命周期
 - 确定性治理生成器
@@ -276,9 +278,9 @@ Profile              Profile
 
 > 注：上图 Governance Core 组成（Control / Rule Model、Applicability Model、Evidence Model、Decision Semantics、Shared Primitives、Contracts）是**目标架构示意**，不是 Phase 3 schema 决策；确切归属（Core vs profile）与 machine-readable schema 由 Phase 3 决定（ADR-0018 Phase 边界纪律；ADR-0020）。
 
-## Generation 2 开发阶段
+## Generation 2 开发阶段（迁移路径，已关闭）
 
-Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的当前 projection（下表即该 projection，非新裁决）。每个 Phase 由对应 `PLAN-xxxx` 在 Accepted ADR 约束下执行。
+Roadmap 不独立定义或裁决 phase order。下表镜像 ADR-0018 的 **已关闭** 迁移 projection。2.x 工作带镜像 [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md)，见后文。
 
 | Phase | 名称（ADR-0018） | 一句话成果 |
 | --- | --- | --- |
@@ -294,48 +296,69 @@ Roadmap 不独立定义或裁决 phase order；它只镜像/索引 ADR-0018 的�
 
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**当前阶段：Phase 8 EXITED（[PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md) Implemented；消费 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）。** 下一动作 = **2.0 skill-release**（清单：[skill-release-2.0-checklist.md](../skill-release-2.0-checklist.md)）。稳定产品仍是 Generation 1（`main` / 1.x）直至 Mode 退出。本分支已完成 Phase 0–8。Plan archive ≠ Release（ADR-0016）；Phase 8 EXIT ≠ skill-release（ADR-0018 2026-09-12 修正 + ADR-0024 可用性门槛）。
+**迁移阶段已关闭：** Phase 0–8 EXITED；**`v2.0.0` 已发布**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**当前工作带 = ADR-0025 H1**（[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **Active**）。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已归档。
 
-## 现在 → 2.0（索引）
+## 2.0 已发布（索引）
 
-Roadmap 只列顺序与施工计划，不复制 Plan 步骤 / Affected Files / 验收命令。权威：ADR-0018（阶段）· 各 PLAN（施工）· ADR-0020 / PLAN-0037（skill 提炼边界）。
+Roadmap 只列顺序与施工计划，不复制 Plan 步骤 / Affected Files / 验收命令。迁移顺序权威：ADR-0018。2.x 顺序权威：ADR-0025。产品切片：ADR-0024。提炼边界：ADR-0020 / PLAN-0037。
 
 ### 已完成（checkpoint）
 
 | Phase | 施工计划 | 状态 |
 | --- | --- | --- |
-| 0 | ADR-0014 Migration Mode | 已启用（gate 观测化；Safety Kernel 阻断） |
+| 0 | ADR-0014 Migration Mode | **已退出**（2026-09-12）；CI 阻断 = `check:must-ship` |
 | 1 | [PLAN-0031](../archive/PLAN-0031-producer-product-governance-separation.md) | Archived |
 | 2 | [PLAN-0032](../archive/PLAN-0032-documentation-knowledge-architecture-closure.md) · [PLAN-0033](../archive/PLAN-0033-known-issue-closure.md) | Archived |
 | 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived；baseline `24021c4` |
-| 4 | [PLAN-0035](../PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
-| 5 | [PLAN-0038](../PLAN-0038-task-capability-routing.md) · [PLAN-0039](../PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../PLAN-0040-capability-physical-projection.md) | Implemented / EXITED（5a 图 · 5b resolve/CLI · 5c P0–P2 投影；leftover 延后） |
-| 6 | [PLAN-0042](../PLAN-0042-invariant-based-testing.md) | Implemented / EXITED（oracle 台账 + 路由负向 + 种子 CTRL；全量机械规则仍延后） |
-| 7 | [PLAN-0043](../PLAN-0043-review-system-redesign.md) | Implemented / EXITED（Impl must-ship；System/Research repo-keep；路由 N4） |
+| 4 | [PLAN-0035](../archive/PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../archive/PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
+| 5 | [PLAN-0038](../archive/PLAN-0038-task-capability-routing.md) · [PLAN-0039](../archive/PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../archive/PLAN-0040-capability-physical-projection.md) | Implemented / EXITED（5a 图 · 5b resolve/CLI · 5c P0–P2 投影；leftover 延后） |
+| 6 | [PLAN-0042](../archive/PLAN-0042-invariant-based-testing.md) | Implemented / EXITED（oracle 台账 + 路由负向 + 种子 CTRL；全量机械规则仍延后） |
+| 7 | [PLAN-0043](../archive/PLAN-0043-review-system-redesign.md) | Implemented / EXITED（Impl must-ship；System/Research repo-keep；路由 N4） |
 
-### 下一步（必须按此序；不跳过审查）
+### 发布记录
 
-| 步 | 内容 | 施工计划 | 一句话 |
-| --- | --- | --- | --- |
-| **现在** | 2.0 skill-release | [skill-release-2.0-checklist.md](../skill-release-2.0-checklist.md) · `repo-workflows/skill-release.md` | 干净目标 + Mode 退出 + 人类批准；Phase 8 已 EXITED |
-| 8 | 重建 mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md)（**Implemented / EXITED**） | `check:must-ship` fail-closed；≠ 全量 Gen1 check |
-| **2.0** | 本仓 Gen2 skill 发布 | `repo-workflows/skill-release.md` | 必装切片干净目标可用 + Mode 退出 + 必装阻断（[ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）；Phase 8 必要不充分 |
+| 项 | 状态 |
+| --- | --- |
+| 8 重建 mandatory gates | [PLAN-0044](../archive/PLAN-0044-rebuild-mandatory-gates.md) Implemented / EXITED |
+| 2.0 skill-release | **已发布** `v2.0.0`（清单：[skill-release-2.0-checklist.md](../archive/skill-release-2.0-checklist.md) 历史） |
 
-[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **冻结在 Design**（不是 Archived）。全文 Stage A–D **不是** 2.0 必达项；2.0 产品切片 = [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)。过滤边界仍约束迁移期载荷。解冻：2.0 发布之后。
+[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **已解冻为 Active**（2026-09-12）。过滤边界仍约束提炼产物：禁止把本仓目录 / CTRL 号 / Phase 剧本当 L1。
 
 Phase 5 已 EXITED（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → **5b** Dispatcher → **5c** 按 Capability 投影（只改 `AuthorityRef`）。残留叶 / 可选 rename **不**重开 Phase 5。纪律：`docs/research/working/routing/call-topology.md` § 物理拓扑。
 
-### 故意延后（ADR-0024 `later`；不挡 2.0）
+## 2.x 工作带（索引 ADR-0025）
 
-延后 ≠ 允许必装切片不能跑。下列项不挡发布；2.0 仍须满足 ADR-0024 可用性门槛。
+Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025。施工只走 Active Plan。
 
-剩余 consistency clusters · principles-index #9 SKIP · Discovery Ledger L2 · 独立 machine-readable Control 文件 · CONTROL-X 契约测试 · L3 运行时拦截 · FINDING-0006 全量 oracle · **5c 剩余 Capability 叶 / 可选 rename** · **lifecycle 残留抽出 / `state.json` phase 降为 facet**（概念闭包：[FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md)）· **脚本 disposition 后续**（dogfood / retire 隔离；L0 台账 = [PLAN-0041](../PLAN-0041-script-inventory.md) Implemented）· **PLAN-0037 全文提炼（2.0 后解冻）** · 完整 activity 审计 · MIGRATE 独立入口 · Git consent 机械 evaluator。
+| 带 | 一句话 | 施工 | 状态 |
+| --- | --- | --- | --- |
+| **H0** 文档与生命周期对账 | 入口/路线图/计划位置与 `v2.0.0` 对齐 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 计划已归档） |
+| **H1** 可复用治理 Skill 提炼 | L1/L2/L3 提取协议 → 干净目标验证 | [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) | **Active** |
+| **H2** 控制面补完 | 残留抽出 → 检查器/台账 → 机器 Control / CONTROL-X → 载荷调度与可移植性 | 另开 Plan；输入见下表 | 未开工 |
+| **H3** 运行时与科研 | L3、测量、注意力实验；不挡 2.1 | 无 Active Plan | 远 |
 
+### H0 已完成
 
-### 本仓 vs 2.0 产品
+已归档 PLAN-0035 / 0036 / 0038–0044 与 PLAN-0045；`mode-exit-proposal` / `skill-release-2.0-checklist` 移入 `docs/plans/archive/`。`docs/plans/` 当前施工计划仅 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md)。
+
+### H2 输入（按子带；不挡已发布的 2.0）
+
+| 子带 | 索引（Finding / 残留，非施工步骤） |
+| --- | --- |
+| H2a 残留抽出 | 5c leftover Capability 叶 · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md)（L0 台账 = [PLAN-0041](../archive/PLAN-0041-script-inventory.md)） |
+| H2b 检查器与台账 | 剩余 consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · ADR-0016 parser 迁移 |
+| H2c 跨 profile / 机器 Control | [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
+| H2d 载荷调度与可移植性 | [FINDING-0003](../../findings/FINDING-0003-declaration-enforcement-gap.md) 判断型 MUST · [FINDING-0004](../../findings/FINDING-0004-trigger-coverage-gap.md) · [FINDING-0005](../../findings/FINDING-0005-validation-routing-overhead.md) · [FINDING-0006](../../findings/FINDING-0006-regression-oracle-gap.md) 全量 oracle · [FINDING-0007](../../findings/FINDING-0007-portability-enforcement-boundary.md) adapter · [FINDING-0010](../../findings/FINDING-0010-gitlab-ci-stack-template-mismatch.md) · [FINDING-0012](../../findings/FINDING-0012-lock-not-atomic.md) · Git consent 机械 evaluator · MIGRATE 入口 · [FINDING-0014](../../findings/FINDING-0014-review-manager-layer-mismatch.md) L0–L4 工具 · [FINDING-0016](../../findings/FINDING-0016-canonical-example-not-constraint.md) · [FINDING-0017](../../findings/FINDING-0017-adr-no-continuous-enforcement.md) |
+
+### H3 输入（远；不挡 2.1）
+
+[FINDING-0008](../../findings/FINDING-0008-governance-measurement-gap.md) 测量 · [FINDING-0015](../../findings/FINDING-0015-static-prompt-attention-burden.md) 静态 vs 注入 · L3 运行时拦截 · 完整 `activity.jsonl`。
+
+### 本仓 vs 2.x 产品
 
 - **本仓**：实验场 + 参考实现 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
-- **2.0 skill**：可安装、可直接用的 INSTALLED 必装切片（[ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md) 可用性门槛）；不是「指出载体」；不是 PLAN-0037 另开通用包。
+- **已发布 skill（2.0）**：可安装必装切片，不是 PLAN-0037 另开通用包。
+- **2.x 产品主线（H1）**：[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **Active** — 把已验证原则提炼为可复用 skill。
 
 ## Guarantee Levels
 
@@ -449,11 +472,14 @@ Generation 2 明确不追求：
 - 不以测试数量、checker 数量或规则数量衡量成熟度
 - 不让治理框架自身的复杂度增长成为默认方向
 - 不为了保持 Generation-1 兼容而长期维护两套架构
-- Migration Mode 期间不以正式 Release（SemVer / tag / skill-release）标记 Phase 完成（见 ADR-0014）
+- 不以正式 Release 标记已关闭的迁移 Phase 完成（ADR-0014 历史纪律；Mode 已退出）
+- 不把 ADR-0024 `later` 扁平清单当作施工顺序（顺序权威 = ADR-0025）
+- 不跳过 Stage A–D 一次抽象出 portable skill
+- 不把本仓目录名 / CTRL 号 / Phase 剧本当 L1
 
 ## Success Criteria
 
-Generation 2 成功不以「新增多少能力」为主要标准。下列长期标准 **不是** 2.0 skill-release 门槛；2.0 门槛见 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)。
+Generation 2 成功不以「新增多少能力」为主要标准。2.0 门槛已在 `v2.0.0` 满足。下列长期标准 **不是** 每一次 2.x tag 的门槛；2.x 验收面由当时 Active Plan 写，默认不把 H3 / CONTROL-X / PLAN-0037 全文绑死（[ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 8）。
 
 更重要的是：
 
@@ -565,11 +591,17 @@ Generation 1 — Document-Centric Governance
 P0–P7  checkpoint EXITED
          P6 = PLAN-0042（oracle 台账 + 路由负向 + 种子 CTRL）
          P7 = PLAN-0043（Review 三类；Impl must-ship）
-P8     Rebuild mandatory gates — **EXITED**（PLAN-0044 Implemented；`check:must-ship`）
+P8     Rebuild mandatory gates — EXITED（PLAN-0044）
         ↓
-2.0 skill-release — **current**（ADR-0024 可用性门槛；清单 skill-release-2.0-checklist.md）
+v2.0.0 skill-release — **已发布**（2026-09-12）
         ↓
-PLAN-0037  跨项目 portable 提炼（冻结至 2.0 后；非 Archived）
+H0     文档与生命周期对账 — EXITED / Archived（PLAN-0045）
+        ↓
+H1     PLAN-0037 跨项目 portable 提炼 — **current / Active**
+        ↓
+H2     控制面补完（ADR-0024 later 机械债）
+        ↓
+H3     运行时与科研（L3 / 测量；不挡 2.1）
         ↓
 Generation 2 — Policy-Driven Governance Control Plane + reusable method
 ```

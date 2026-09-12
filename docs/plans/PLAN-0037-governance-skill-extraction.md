@@ -1,13 +1,13 @@
 ---
 id: PLAN-0037
-status: Design
+status: Active
 generation: gen2
 target: both
 ---
 
 # PLAN-0037：可复用治理 Skill 提炼（Governance Skill Extraction）
 
-> **Status: design plan, not implemented**（**冻结**。Stage A–D 全文 **不是** 2.0 blocker，不得在 Phase 8 / 2.0 skill-release **之前** Active。2.0 产品切片见 ADR-0024。过滤层约束仍生效：禁止把本仓 `docs/`、CTRL 编号、Phase 剧本当 portable invariant。Architecture checkpoint ≠ Release。**禁止 Archived**：归档断言完成，本计划尚未执行。）
+> **Status: Active**（2026-09-12 人类解冻：「归档，解冻」。Gate 1–3 已满足；[ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) H1 现为当前产品主线。过滤层约束仍生效：禁止把本仓 `docs/`、CTRL 编号、Phase 剧本当 portable invariant。按提取协议 Stage A→D 施工，禁止一次抽象出 skill。**禁止 Archived**，直至 Stage D 验证通过并 exit review。）
 
 将 `ai-agent-governance` 中**已验证**的 Gen2 治理原则提炼为可复用 Agent Governance Skill，并显式划分 **L1 invariants / L2 patterns / L3 project customization**。权威边界见 ADR-0020（2026-09-10 修正）。
 
@@ -44,24 +44,24 @@ target: both
 把未验证的 Phase 5 早期模型固化进 skill
 ```
 
-## 前置条件（Gate — 未满足则不得 Active）
+## 前置条件（Gate — 转 Active 前须满足）
 
-1. Phase 4 EXITED（PLAN-0035 / PLAN-0036）— 已满足
-2. Phase 5 **Task→Capability routing** 已验证（RESEARCH-0012 → PLAN-0038 → 5b Dispatcher）— **Phase 5 EXITED（2026-09-12）；仍不解冻本计划**
-3. **Phase 8 阻断权威已交接，且已退出 Migration Mode / 完成 2.0 skill-release（或等价：本仓 Gen2 载荷已是可发布产品）** — 全文提炼的对象必须是已封板的 control plane，不是迁移中的草稿
-4. ADR-0020 L1/L2/L3 分层仍为 Accepted；无 Narrow 撤销
+1. Phase 4 EXITED（PLAN-0035 / PLAN-0036）— **已满足**（已归档）
+2. Phase 5 **Task→Capability routing** 已验证（RESEARCH-0012 → PLAN-0038 → 5b Dispatcher）— **已满足**（Phase 5 EXITED）
+3. Phase 8 阻断权威已交接，且已退出 Migration Mode / 完成 2.0 skill-release — **已满足**（`v2.0.0`）
+4. ADR-0020 L1/L2/L3 分层仍为 Accepted；无 Narrow 撤销 — **仍成立**
 
 **当前顺序：**
 
 ```text
-Phase 5–8 → 2.0 skill-release（本仓 Gen2 产品）
-    ↓
-本计划解冻 Active（PLAN-0037 Stage A–D）
-    ↓
+v2.0.0 已发布 · H0 归档完成
+        ↓
+本计划 Active — Stage A→D（ADR-0025 H1）
+        ↓
 跨项目 portable skill 验证（干净目标）
 ```
 
-2.0 发布的是 **本仓 INSTALLED Gen2 skill**，不是 PLAN-0037 另抽的通用包。过滤约束（Extraction boundary）在冻结期仍约束载荷撰写，避免 2.0 把本仓投影写进产品。
+2.0 已发布的是 **本仓 INSTALLED Gen2 skill**；本计划提炼的是可复用原则包，不是复制本仓目录。过滤约束（Extraction boundary）在 Active 期仍约束产物撰写。
 
 ## 为何需要本计划（过滤层）
 
@@ -213,13 +213,13 @@ governance-skill/
 
 ## 受影响文件
 
-（Design；交付门禁跳过。Active 时再冻结清单。）
+（Active；交付清单随 Stage A–D 增量冻结，禁止一次写完宣称完成。）
 
 - ADR-0020（权威边界；已含 2026-09-10 修正）
 - RESEARCH-0012（前置；routing 验证）
-- 后续 Phase 5 Plan（routing 施工；本计划前置）
-- roadmap ×3（索引本计划为后置项）
-- 提炼落地时的 skill 入口与 references（路径 Active 时定）
+- `docs/plans/archive/PLAN-0035-…` / `PLAN-0036-…` / `PLAN-0038-…`（前置已归档）
+- roadmap ×3（索引本计划为 H1 Active）
+- 提炼落地时的 skill 入口与 references（路径 Stage C 定稿）
 - CHANGELOG（行为交付时）
 - 验证用干净目标证据（tests 或记录）
 
@@ -227,27 +227,27 @@ governance-skill/
 
 | 标识（ID） | 类型 | 来源 | 问题 | 影响面 | 严重度 | 状态 | 处置 | 责任人 | 验证/证据 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| X0 | observation | design | 过早抽取会固化未验证 routing | skill | high | closed | deferred | — | revisit: **2.0 后** Active；不得在 Phase 5 入口解冻 |
+| X0 | observation | design | 过早抽取会固化未验证 routing | skill | high | closed | resolved | — | Phase 5 EXITED + 2.0 后解冻（2026-09-12） |
 | X1 | observation | review | 「不写死」易被读成软建议 | skill | high | closed | resolved | — | ADR-0020 L1 硬约束修正 |
-| X2 | migration_gap | design | 尚无 extraction 执行计划 | both | med | open | — | — | 本计划冻结；2.0 后关闭 |
+| X2 | migration_gap | design | 尚无 extraction 执行产物 | both | med | open | — | — | Active 后按 Stage A–D 关闭 |
 | X3 | observation | review | 一次抽象会复制实现或空泛口号 | skill | high | closed | resolved | — | 本计划 § 提取协议；产物分层 ≠ 提取流程 |
-| X4 | observation | review | 全文 0037 作 2.0 必达项过大且与产品定义重叠 | both | high | closed | deferred | — | 冻结 Design；2.0=本仓 Gen2 载荷；A–D 后置 |
+| X4 | observation | review | 全文 0037 作 2.0 必达项过大且与产品定义重叠 | both | high | closed | resolved | — | 2.0=本仓 Gen2 载荷已发布；A–D 为 2.x H1 |
 
-## 闭包对账（Design 基线）
+## 闭包对账（Active 基线）
 
 ```text
 Total known:  5
-Resolved:     2  (X1, X3)
-Deferred:     2  (X0, X4 — revisit: **2.0 后**)
-Open:         1  (X2 — 冻结期允许；解冻交付后须 0)
+Resolved:     4  (X0, X1, X3, X4)
+Deferred:     0
+Open:         1  (X2 — Stage A–D 交付后须 0)
 Unaccounted:  0
 ```
 
-Design 阶段允许 X2 Open；转为 Active 并完成 Stage D 后须 Open=0。
+Active 期间允许 X2 Open；完成 Stage D 后须 Open=0。
 
 ## 参考
 
-- ADR-0020（skill 提炼边界 · L1/L2/L3）
+- ADR-0020（skill 提炼边界 · L1/L2/L3）· ADR-0025 H1
 - ADR-0018 Phase 5 · ADR-0022 · ADR-0023
 - RESEARCH-0012（前置）
-- PLAN-0035 / PLAN-0036（Phase 4 EXITED）
+- PLAN-0035 / PLAN-0036（Phase 4 EXITED；已归档）

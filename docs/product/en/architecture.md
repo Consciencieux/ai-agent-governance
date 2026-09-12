@@ -146,7 +146,7 @@ ai-agent-governance/
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
 │   ├── check-layout-sync.js    # architecture.md Repository Layout vs the four scanned dirs (fail-closed gate)
 │   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
-│   ├── check-roadmap-sync.js   # roadmap index vs plan lifecycle state (currently stale vs new Roadmap — FINDING-0021; Migration Mode observational)
+│   ├── check-roadmap-sync.js   # roadmap index vs plan lifecycle state (vacuous vs current Roadmap — FINDING-0021; H2b)
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)

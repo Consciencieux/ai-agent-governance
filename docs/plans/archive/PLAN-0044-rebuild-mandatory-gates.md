@@ -1,13 +1,15 @@
 ---
 id: PLAN-0044
-status: Implemented
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0044：Phase 8 Rebuild mandatory gates
 
-> **Status: Implemented**（P0–P4 完成。**Phase 8 checkpoint EXITED**。前置：Phase 7 EXITED · [ADR-0024](../design-decisions/ADR-0024-gen2-product-freeze.md) Accepted。Architecture checkpoint ≠ Release；**Phase 8 EXIT ≠ 2.0 skill-release**；PLAN-0037 仍冻结。）
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
+
+> **Status: Implemented**（P0–P4 完成。**Phase 8 checkpoint EXITED**。前置：Phase 7 EXITED · [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md) Accepted。Architecture checkpoint ≠ Release；**Phase 8 EXIT ≠ 2.0 skill-release**；PLAN-0037 仍冻结。）
 
 在新控制面约束下，**只把 ADR-0024 必装机械控制**的阻断权威交回 CI / release。动机权威：ADR-0018 决策 1 Phase 8 · ADR-0014 Migration Mode 退出前提 · ADR-0024 发布门槛「阻断」条。
 
@@ -155,7 +157,7 @@ Deferred by design / 2.0 skill-release:
 
 ## Affected Files
 
-- `docs/plans/PLAN-0044-rebuild-mandatory-gates.md`（本文件）
+- `docs/plans/archive/PLAN-0044-rebuild-mandatory-gates.md`（本文件）
 - `docs/research/working/must-ship-gates.md`
 - `repo-tools/check-must-ship.sh` · `repo-tools/check-must-ship-carriers.js`
 - `.github/workflows/ci.yml` · `package.json`

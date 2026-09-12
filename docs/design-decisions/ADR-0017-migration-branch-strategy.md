@@ -66,6 +66,16 @@ main
 - ADR-0016 的 docs 结构迁移（product/plans/findings/research/ADR/archive）属于本 ADR 的破坏性重构，进 migration 分支。
 - ADR-0015 roadmap 重写同理。
 
+## 后续修正（2026-09-12）：迁移分支已合入并删除
+
+本修正是对决策 2「main 保持 1.x 稳定」作为 **当前操作约束** 的 **Narrow amendment**。决策原文保留为迁移期纪律。
+
+自 `v2.0.0` 起：
+
+- `main` 是 Generation 2 产品线；1.x 基线由 tag `v1.0.x` 与 Git history 承担，不再由一条并行 long-lived 分支承担。
+- `migration/2.0-governance-architecture` 已合入并删除（历史在 merge commit / PR #8）。
+- 禁止再以本 ADR 为由把 2.x 工作开回一条与 `main` 平行的长期迁移分支；2.x 在 `main` 上按 [ADR-0025](ADR-0025-gen2x-product-path.md) 演进。
+
 ## 参考
 
 - Migration Mode：ADR-0014

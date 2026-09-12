@@ -1,11 +1,13 @@
 ---
 id: PLAN-0041
-status: Implemented
+status: Archived
 generation: gen2
 target: repo
 ---
 
 # PLAN-0041：Script Inventory（FINDING-0028 L0）
+
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
 > **Status: Implemented**（L0：机读台账 + 表征。不做目录隔离、不删脚本。）
 

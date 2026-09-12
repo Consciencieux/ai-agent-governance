@@ -1,7 +1,7 @@
 # Oracle Inventory v0（施工权威 · PLAN-0042 / FINDING-0006）
 
 机读源：[`oracle-inventory.v0.json`](oracle-inventory.v0.json)  
-施工计划：[PLAN-0042](../../plans/PLAN-0042-invariant-based-testing.md)
+施工计划：[PLAN-0042](../../plans/archive/PLAN-0042-invariant-based-testing.md)
 
 ## 为什么需要台账
 

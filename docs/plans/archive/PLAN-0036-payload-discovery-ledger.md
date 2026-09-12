@@ -1,11 +1,13 @@
 ---
 id: PLAN-0036
-status: Implemented
+status: Archived
 generation: gen2
 target: payload
 ---
 
 # PLAN-0036：Payload TASK Discovery Ledger 集成
+
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
 > （**L1 Implemented** · Phase 4 EXITED。2026-09-10：lifecycle Discovery Ledger 契约落地；L2 deferred。Architecture checkpoint ≠ Release。）
 
@@ -50,7 +52,7 @@ Dispatcher / Phase 5 routing / 文档 topology
 - `AGENTS.md`（原则索引指针）
 - `docs/glossary.md` · `docs/product/{en,zh-CN,zh-TW}/lifecycle.md`
 - `tests/suites/docs.test.js` · `tests/suites/payload.test.js`
-- `docs/plans/PLAN-0035-…` · `CHANGELOG.md`
+- `docs/plans/archive/PLAN-0035-…` · `CHANGELOG.md`
 
 ## 发现台账（Discovery Ledger）
 

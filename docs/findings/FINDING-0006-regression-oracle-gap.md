@@ -41,7 +41,7 @@ observed_in: gen1
 
 ## 解决情况
 
-未关闭。Phase 6 种子集已落地（[PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md) Implemented / EXITED：oracle 台账 + 路由负向 + E02 stack defaults），但「全部机械规则」仍不在关闭面——保持 Confirmed，直至更广覆盖。
+未关闭。Phase 6 种子集已落地（[PLAN-0042](../plans/archive/PLAN-0042-invariant-based-testing.md) Implemented / EXITED：oracle 台账 + 路由负向 + E02 stack defaults），但「全部机械规则」仍不在关闭面——保持 Confirmed，直至更广覆盖。
 
 ## 关联
 

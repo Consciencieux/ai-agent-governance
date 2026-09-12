@@ -43,7 +43,7 @@ thin entry 消费 routing
 （随后）Dispatcher；再据 routing 重构物理 topology
 ```
 
-第一阶段只要 **显式映射表 / 人工可维护的 applicability 陈述**；半自动与 runtime Dispatcher 延后。**5a–5c 现已落地**（map → resolve/CLI → Slice B 投影）；Phase 6 种子 oracle 已落地（[PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md) EXITED）；全量正反矩阵仍延后。
+第一阶段只要 **显式映射表 / 人工可维护的 applicability 陈述**；半自动与 runtime Dispatcher 延后。**5a–5c 现已落地**（map → resolve/CLI → Slice B 投影）；Phase 6 种子 oracle 已落地（[PLAN-0042](../plans/archive/PLAN-0042-invariant-based-testing.md) EXITED）；全量正反矩阵仍延后。
 
 ## 调用拓扑架构（v3）
 

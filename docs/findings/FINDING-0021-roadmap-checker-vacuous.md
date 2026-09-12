@@ -47,7 +47,7 @@ R4（Enforcement Boundary）：gate 的扫描路径 / section 语义与对象实
 
 ## 解决情况
 
-（未解决。Migration Mode 下旧 gate 为 observational（ADR-0014），不为此改 Gen1 gate 至绿灯；适配作为后续执行层迁移项。）
+未解决。`v2.0.0` 之后 Migration Mode 已退出，但本检查器仍 vacuous（旧路径 / 旧 section 语义）。适配属于 ADR-0025 H2b，不是 2.0 发布债。
 
 ## 关联
 

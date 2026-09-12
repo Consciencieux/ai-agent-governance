@@ -1,11 +1,13 @@
 ---
 id: PLAN-0038
-status: Implemented
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0038：Phase 5 Task→Capability 适用路由（显式映射）
+
+> （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
 > **Status: Implemented**（Phase 5a EXITED。调用拓扑 + 显式 map + 表征套件 + AGENTS 薄指针已落地。Dispatcher / 物理投影已由 PLAN-0039 / PLAN-0040 完成。**Phase 5 checkpoint EXITED**（见 PLAN-0040 § Phase 5 Exit Criteria）。**未** Active PLAN-0037。Architecture checkpoint ≠ Release；归档另按 ADR-0016。）
 
@@ -97,7 +99,7 @@ SKILL.md 写入 docs/ 路径（违反 reference-closure）
 
 ## Successor
 
-Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md)（**Implemented**）。Phase **5c**：[PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）。**Phase 5 EXITED**；Phase 6 = [PLAN-0042](PLAN-0042-invariant-based-testing.md) Implemented / EXITED；下一入口 Phase 7（计划待立；须消费 [ADR-0024](../design-decisions/ADR-0024-gen2-product-freeze.md)）。
+Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md)（**Implemented**）。Phase **5c**：[PLAN-0040](PLAN-0040-capability-physical-projection.md)（**Implemented**）。**Phase 5 EXITED**；Phase 6 = [PLAN-0042](PLAN-0042-invariant-based-testing.md) Implemented / EXITED；下一入口 Phase 7（计划待立；须消费 [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)）。
 
 ## Domain sync（Target: both）
 
@@ -113,7 +115,7 @@ Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md)（**Impleme
 - `docs/research/working/routing/call-topology.md`
 - `docs/research/working/routing/README.md`
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
-- `docs/plans/PLAN-0038-task-capability-routing.md`（本文件）
+- `docs/plans/archive/PLAN-0038-task-capability-routing.md`（本文件）
 - `AGENTS.md`
 - `tests/run-tests.js` · `tests/suites/routing.test.js`
 - `CHANGELOG.md`
