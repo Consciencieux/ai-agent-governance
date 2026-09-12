@@ -1,0 +1,551 @@
+{
+  "id": "SCRIPT-INVENTORY-V0",
+  "version": 0,
+  "authority": "construction",
+  "finding": "FINDING-0028",
+  "plan": "PLAN-0041",
+  "baseline_ref": "v1.0.2",
+  "scope": [
+    "scripts/**/*.js",
+    "scripts/**/*.sh",
+    "repo-tools/**/*.js",
+    "repo-tools/**/*.sh"
+  ],
+  "enums": {
+    "distribution_role": [
+      "INSTALLED",
+      "SKILL-INTERNAL",
+      "REPO-ONLY"
+    ],
+    "generation": [
+      "gen1_carrier",
+      "gen2_native",
+      "dual_profile"
+    ],
+    "disposition": [
+      "keep",
+      "wrap",
+      "extract",
+      "rewrite",
+      "retire",
+      "undecided"
+    ]
+  },
+  "rules": [
+    "Git history fills evidence columns; it does not choose isolation folders.",
+    "Unchanged since baseline ≠ retire. Gen1 carriers that still ship are keep until adjudicated otherwise.",
+    "Changed WRAP CLIs stay on path; semantics live in evaluators/lib.",
+    "Only disposition=retire may move to a quarantine tree; none in v0.",
+    "No third Task→Capability lookup model; inventory is file identity, not routing.",
+    "Packaging copies scripts/ wholesale — quarantine inside scripts/ still ships unless packaging changes."
+  ],
+  "summary": {
+    "total": 30,
+    "by_disposition": {
+      "wrap": 3,
+      "keep": 27
+    },
+    "by_generation": {
+      "gen1_carrier": 19,
+      "gen2_native": 10,
+      "dual_profile": 1
+    },
+    "by_role": {
+      "INSTALLED": 16,
+      "SKILL-INTERNAL": 1,
+      "REPO-ONLY": 13
+    },
+    "wrap": [
+      "scripts/check-doc-consistency.js",
+      "scripts/check-doc-freshness.js",
+      "scripts/check-secrets.js"
+    ],
+    "retire": [],
+    "dogfood_installed_from_repo": [
+      "scripts/check-doc-consistency.js",
+      "scripts/check-doc-freshness.js"
+    ]
+  },
+  "entries": [
+    {
+      "path": "scripts/check-doc-consistency.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "wrap",
+      "owns": "CTRL-0006+clusters",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 2
+      },
+      "first_seen": "2026-08-16",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": true,
+      "notes": "WRAP/monolith residue; dogfooded by repo npm check"
+    },
+    {
+      "path": "scripts/check-doc-freshness.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "wrap",
+      "owns": "CTRL-0003+CTRL-0004",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 2
+      },
+      "first_seen": "2026-08-16",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": true,
+      "notes": "WRAP CLI; dogfooded by repo npm check:*"
+    },
+    {
+      "path": "scripts/check-git-policy.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "git-policy",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-08-13",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+    },
+    {
+      "path": "scripts/check-lock.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "lock",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-08-13",
+      "last_touch": "2026-09-04",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+    },
+    {
+      "path": "scripts/check-plan-sync.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "plan-sync",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-06",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+    },
+    {
+      "path": "scripts/check-secrets.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "wrap",
+      "owns": "CTRL-0001",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 1
+      },
+      "first_seen": "2026-08-13",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Skill-profile WRAP CLI; evaluator under scripts/evaluators/"
+    },
+    {
+      "path": "scripts/check-sync.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "sync",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-08-21",
+      "last_touch": "2026-09-05",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+    },
+    {
+      "path": "scripts/evaluators/ctrl-0001-secret-protection.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0001",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Phase 4 strangler evaluator"
+    },
+    {
+      "path": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0003",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Phase 4 strangler evaluator"
+    },
+    {
+      "path": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0004",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Phase 4 strangler evaluator"
+    },
+    {
+      "path": "scripts/evaluators/ctrl-0006-broken-links.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0006",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Phase 4 strangler evaluator"
+    },
+    {
+      "path": "scripts/generate-governance.js",
+      "distribution_role": "SKILL-INTERNAL",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "INIT",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-08-21",
+      "last_touch": "2026-09-08",
+      "dogfood_from_repo_package_json": false,
+      "notes": "SKILL-INTERNAL generator; unchanged since v1.0.2 — still product, not attic"
+    },
+    {
+      "path": "scripts/lib/git-facts.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0003/0004",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Shared facts primitive"
+    },
+    {
+      "path": "scripts/lib/md-link-facts.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0006",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Shared facts primitive"
+    },
+    {
+      "path": "scripts/lib/secret-scan-facts.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0001",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Shared facts primitive"
+    },
+    {
+      "path": "scripts/release-manager.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "RELEASE",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-08-12",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": false,
+      "notes": "INSTALLED release executor"
+    },
+    {
+      "path": "scripts/verify_governance.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "validator",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-08-10",
+      "last_touch": "2026-09-08",
+      "dogfood_from_repo_package_json": false,
+      "notes": "INSTALLED rename target verify-governance.js"
+    },
+    {
+      "path": "repo-tools/check-changelog-narration.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": null,
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-07",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": true,
+      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/check-coding-hygiene.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": null,
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-05",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": true,
+      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/check-doc-parity.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "doc-parity",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 1
+      },
+      "first_seen": "2026-09-05",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": true,
+      "notes": "Touched after v1.0.2; still REPO-ONLY gate"
+    },
+    {
+      "path": "repo-tools/check-layout-sync.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": null,
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-05",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": true,
+      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/check-plan-delivery.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": null,
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-05",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": true,
+      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/check-roadmap-sync.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": null,
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-06",
+      "last_touch": "2026-09-07",
+      "dogfood_from_repo_package_json": true,
+      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/check-role-completeness.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": null,
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-05",
+      "last_touch": "2026-09-06",
+      "dogfood_from_repo_package_json": true,
+      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/check-secrets.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "dual_profile",
+      "disposition": "keep",
+      "owns": "CTRL-0001",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-10",
+      "last_touch": "2026-09-10",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Repo-profile CLI (ADR-0020); pair of scripts/check-secrets.js"
+    },
+    {
+      "path": "repo-tools/check-terminology.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "terminology",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-09",
+      "last_touch": "2026-09-09",
+      "dogfood_from_repo_package_json": true,
+      "notes": "ADR-0020 Producer/Product split"
+    },
+    {
+      "path": "repo-tools/lib/routing.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "routing",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-12",
+      "last_touch": "2026-09-12",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0039 shared resolve"
+    },
+    {
+      "path": "repo-tools/mutation-probe.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": null,
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-08",
+      "last_touch": "2026-09-08",
+      "dogfood_from_repo_package_json": false,
+      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/package-skill.sh",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen1_carrier",
+      "disposition": "keep",
+      "owns": "packaging",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": true,
+        "commits_after": 0
+      },
+      "first_seen": "2026-09-05",
+      "last_touch": "2026-09-06",
+      "dogfood_from_repo_package_json": false,
+      "notes": "Copies entire scripts/; quarantine under scripts/ would still ship"
+    },
+    {
+      "path": "repo-tools/route-task.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "routing",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-12",
+      "last_touch": "2026-09-12",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0039 CLI"
+    }
+  ]
+}

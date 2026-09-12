@@ -1,15 +1,11 @@
 ---
 id: RESEARCH-0003
-title: 评价框架（Evaluation Framework）
 status: Active
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []
-superseded_by: []
+subject_generation: gen1
 ---
 
-# 评价框架（Evaluation Framework）
+# RESEARCH-0003：评价框架
 
 > 衡量治理系统有效性的指标集。对应科研目标：从「工程经验」升级为「可重复实验的平台」（FINDING-0008 G04）。
 
@@ -54,6 +50,8 @@ Blocking paths tested: 6/8
 
 测试数量很多不能证明 `Rule → mechanism → trigger → gate → block` 链完整（FINDING-0006 E03）。
 
+Phase 6 施工计划：[PLAN-0042](../plans/PLAN-0042-invariant-based-testing.md)（**Implemented / EXITED**；种子集台账已落地；本文件数字仍是示意，不是全仓实测计数）。
+
 ## 未来实验设计
 
 ### 实验 1：静态 AGENTS vs decision-point injection
@@ -86,7 +84,7 @@ Rule Registry + Dispatcher
 
 对比 enforcement coverage、trigger coverage、runtime、token、human cost。
 
-## Zero-Attention 成熟度标准
+## 零注意力成熟度标准（Zero-Attention）
 
 假设 **Agent 完全不记得任何治理规则**，然后问：
 
@@ -104,3 +102,4 @@ CI 是否还能保证运行？
 - `docs/findings/`：governance findings 统计（mechanical gaps / trigger gaps / FP/FN / cross-profile defects / vacuous passes / attention failures / time-to-resolution / regression-protected %）
 - `docs/research/experiments/`：实验记录
 - ADR-0014 Migration Mode：full vs incremental validation 对比
+- Phase 6 覆盖台账：`docs/research/working/oracle-inventory.v0.json`（PLAN-0042 Implemented）

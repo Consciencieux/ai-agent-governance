@@ -17,12 +17,19 @@
 | `scripts/verify-governance.js` | 校验门禁 |
 | `scripts/check-lock.js` | 锁检查 |
 | `scripts/check-git-policy.js` | Git 策略门禁 |
-| `scripts/check-secrets.js` | 密钥扫描门禁 |
+| `scripts/check-secrets.js` | skill 侧 CTRL-0001 密钥扫描 CLI WRAP |
+| `scripts/lib/secret-scan-facts.js` | 密钥扫描共享事实 primitive |
+| `scripts/evaluators/ctrl-0001-secret-protection.js` | CTRL-0001 密钥保护求值器 |
 | `scripts/check-sync.js` | 同步组门禁 |
-| `scripts/check-doc-consistency.js` | 文档一致性门禁 |
+| `scripts/check-doc-consistency.js` | 文档一致性 WRAP（#4 → CTRL-0006） |
+| `scripts/lib/md-link-facts.js` | Markdown 链接共享事实 primitive |
+| `scripts/evaluators/ctrl-0006-broken-links.js` | CTRL-0006 相对链接有效性求值器 |
 | `scripts/check-plan-sync.js` | 计划与里程碑对账（发布形态 fail-closed；默认建议性） |
 | `scripts/release-manager.js` | 发布写操作执行器与审批门（创建 tag、`--yes` 才写、高风险 Proposal 拒绝） |
-| `scripts/check-doc-freshness.js` | 文档新鲜度 + 译文新鲜度检查（默认建议性；`--release-gate` fail-closed） |
+| `scripts/check-doc-freshness.js` | 文档新鲜度 CLI 包装（CTRL-0003 + CTRL-0004） |
+| `scripts/lib/git-facts.js` | 新鲜度共享 git/path/date 事实 primitive |
+| `scripts/evaluators/ctrl-0003-doc-freshness.js` | CTRL-0003 治理文档新鲜度求值器 |
+| `scripts/evaluators/ctrl-0004-translation-freshness.js` | CTRL-0004 译文新鲜度求值器 |
 | `.githooks/pre-commit` | 暂存内容一致性门禁（默认不启用） |
 | `.githooks/commit-msg` | 已确认提交消息门禁（默认不启用） |
 | `opencode.json` | Agent 配置 |

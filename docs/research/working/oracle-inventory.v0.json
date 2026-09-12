@@ -1,0 +1,183 @@
+{
+  "id": "ORACLE-INVENTORY-V0",
+  "version": 0,
+  "authority": "construction",
+  "plan": "PLAN-0042",
+  "finding": "FINDING-0006",
+  "enums": {
+    "kind": ["ctrl", "routing", "safety_kernel"],
+    "classification": ["oracle_pair", "characterization_only", "gap", "deferred"]
+  },
+  "rules": [
+    "oracle_pair = independent positive (legal→green) + negative (break invariant→red) fixtures; tests must not copy evaluator regex as a second semantics source.",
+    "characterization_only = behavior snapshot only; does not count as Rule protection coverage.",
+    "gap = important row missing an oracle_pair; fail-closed for inventory suite.",
+    "deferred = explicit postpone with reason; not silent.",
+    "Important set (frozen): CTRL-0001–0006 + routing integrity + Safety Kernel suite accounting."
+  ],
+  "summary": {
+    "total": 13,
+    "by_classification": {
+      "oracle_pair": 11,
+      "characterization_only": 2,
+      "gap": 0,
+      "deferred": 0
+    },
+    "important_gap": 0
+  },
+  "entries": [
+    {
+      "id": "CTRL-0001",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/security.test.js::check-secrets: clean staged diff exits 0",
+        "tests/suites/security.test.js::CTRL-0001: evaluateSecretProtection fail/pass without decision_effect"
+      ],
+      "negative_tests": [
+        "tests/suites/security.test.js::check-secrets: staged fake secret exits 1 without leaking the token",
+        "tests/suites/security.test.js::CTRL-0001: evaluateSecretProtection fail/pass without decision_effect"
+      ],
+      "notes": "Repo/skill CLI parity characterized; not a CONTROL-X framework."
+    },
+    {
+      "id": "CTRL-0002",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/consistency.test.js::consistency --gate: complete five sync points exit 0"
+      ],
+      "negative_tests": [
+        "tests/suites/consistency.test.js::consistency --gate: marker removed from one sync point exits 1 and names it"
+      ],
+      "notes": "Consent-cluster markers under --gate."
+    },
+    {
+      "id": "CTRL-0003",
+      "kind": "ctrl",
+      "classification": "characterization_only",
+      "positive_tests": [
+        "tests/suites/docs.test.js::doc freshness: stale doc flagged, fresh doc not flagged (exit 0)"
+      ],
+      "negative_tests": [],
+      "notes": "Advisory binding (exit 0). Stale is flagged but not deny — not a red oracle under current enforcement_boundary."
+    },
+    {
+      "id": "CTRL-0004",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/docs.test.js::translation freshness: same-commit pair is translated (synchronized commit)"
+      ],
+      "negative_tests": [
+        "tests/suites/docs.test.js::translation freshness: a stale (non-draft) translation blocks --release-gate"
+      ],
+      "notes": "--release-gate deny path."
+    },
+    {
+      "id": "CTRL-0005",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/plan-delivery.test.js::check-plan-delivery: delivered declaration exits 0"
+      ],
+      "negative_tests": [
+        "tests/suites/plan-delivery.test.js::check-plan-delivery: archived plan declaring a missing file exits 1 in gate mode"
+      ],
+      "notes": "Repo-only plan delivery gate."
+    },
+    {
+      "id": "CTRL-0006",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/consistency.test.js::CTRL-0006: valid relative link → evaluateBrokenLinks pass"
+      ],
+      "negative_tests": [
+        "tests/suites/consistency.test.js::CTRL-0006: missing relative link → evaluateBrokenLinks fail with evidence"
+      ],
+      "notes": "Evaluator-level oracle; CLI --gate remains advisory (binding ≠ verdict)."
+    },
+    {
+      "id": "routing-positive-resolve",
+      "kind": "routing",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/routing.test.js::routing F1 edit_docs",
+        "tests/suites/routing.test.js::routing F2 edit_scripts"
+      ],
+      "negative_tests": [
+        "tests/suites/routing.test.js::routing N1 edit_docs excludes secret-protection"
+      ],
+      "notes": "Positive resolve + exclusion negative (PLAN-0042 P2)."
+    },
+    {
+      "id": "routing-unknown-unmatched",
+      "kind": "routing",
+      "classification": "oracle_pair",
+      "positive_tests": [],
+      "negative_tests": [
+        "tests/suites/routing.test.js::routing F6 unknown unmatched",
+        "tests/suites/routing.test.js::detector D3 conflict → unknown"
+      ],
+      "notes": "unknown must not silently load the full table."
+    },
+    {
+      "id": "routing-orphan-authority",
+      "kind": "routing",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/routing.test.js::authorities: every keep capability path exists (Phase 5c)"
+      ],
+      "negative_tests": [
+        "tests/suites/routing.test.js::routing N2 orphan authority path is detected"
+      ],
+      "notes": "Mutated graph fixture; production graph stays clean."
+    },
+    {
+      "id": "routing-edge-deletion",
+      "kind": "routing",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/routing.test.js::routing F1 edit_docs"
+      ],
+      "negative_tests": [
+        "tests/suites/routing.test.js::routing N3 deleted trigger edge drops capabilities"
+      ],
+      "notes": "Edge deletion must change read_set (PLAN-0042 P2)."
+    },
+    {
+      "id": "CTRL-stack-defaults",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/generator.test.js::stack defaults: python AGENTS uses pytest/ruff not npm test"
+      ],
+      "negative_tests": [
+        "tests/suites/generator.test.js::stack defaults: python AGENTS rejects npm test/lint/build defaults"
+      ],
+      "notes": "FINDING-0006 E02 — generator STACK_COMMANDS oracle (PLAN-0042 P3)."
+    },
+    {
+      "id": "safety-kernel-security",
+      "kind": "safety_kernel",
+      "classification": "oracle_pair",
+      "positive_tests": ["tests/suites/security.test.js (suite)"],
+      "negative_tests": [
+        "tests/suites/security.test.js::check-secrets: staged fake secret exits 1 without leaking the token"
+      ],
+      "notes": "ADR-0014 Safety Kernel suite accounting."
+    },
+    {
+      "id": "safety-kernel-generator-payload",
+      "kind": "safety_kernel",
+      "classification": "characterization_only",
+      "positive_tests": [
+        "tests/suites/generator.test.js (suite)",
+        "tests/suites/payload.test.js (suite)"
+      ],
+      "negative_tests": [],
+      "notes": "Kernel suites retained; per-CTRL oracles live in CTRL-* rows."
+    }
+  ]
+}

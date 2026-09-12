@@ -349,10 +349,12 @@ Archiving happens at RELEASE (release-manager), NOT here.
 ````
 ## 8. review-manager
 
+> **Phase 7 边界（PLAN-0043 / ADR-0024）：** 本子技能 = **Implementation Review only**（must-ship）。不负责 System Review（架构 / control topology）或 Research Review（评价与研究主张）。后两类权威在本仓 `docs/research/working/review/`，默认不进入 INSTALLED 子技能。触发「全面审查」若实为架构/研究问题，应改走 `system_review` / `research_review`，而不是扩大下面五域。
+
 ````
 ---
 name: review-manager
-description: Perform a review across two independent dimensions — depth (lightweight quick pass vs full audit: line-by-line, dev-plan cross-reference, execution-level verification, distrust-of-gates) and scope (the change set by default, a specified path, or the whole project). Triggers on "review this" · "review the changes" · "audit recent changes" · "review my changes" · "审核一下" (light/change-set) · "deep review" · "full review" · "全面审查" · "彻底审查" · "逐行审查" (full/change-set) · "review the whole project" · "全项目审核" (light/whole-project) · "audit everything" · "全项目彻查" (full/whole-project); append a path argument to scope it (review <path> / deep review <path> / 审核 <路径>).
+description: Perform a review across two independent dimensions — depth (lightweight quick pass vs full audit: line-by-line, dev-plan cross-reference, execution-level verification, distrust-of-gates) and scope (the change set by default, a specified path, or the whole project). Triggers on "review this" · "review the changes" · "audit recent changes" · "review my changes" · "审核一下" (light/change-set) · "deep review" · "full review" · "全面审查" · "彻底审查" · "逐行审查" (full/change-set) · "review the whole project" · "全项目审核" (light/whole-project) · "audit everything" · "全项目彻查" (full/whole-project); append a path argument to scope it (review <path> / deep review <path> / 审核 <路径>). Implementation Review only — not System/Research review (see docs/research/working/review/review-kinds.md).
 ---
 
 # Review Manager

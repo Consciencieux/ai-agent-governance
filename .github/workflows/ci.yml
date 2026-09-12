@@ -1,32 +1,69 @@
 name: CI
 
+# Migration Mode exit disposition (ADR-0014 / ADR-0024 / PLAN-0044):
+#   Product blocking authority = `npm run check:must-ship` (all branches / PRs).
+#   Gen1 `npm run check` = observational probe only (continue-on-error).
+# Human must still explicitly approve Mode exit before v2.0.0 tag (skill-release).
+# Prior dual-mode split (main→gen1 blocking, migration→must-ship) retired by this file.
+
 on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  # ------------------------------------------------------------
+  # Product blocking authority (must-ship mechanical set)
+  # ------------------------------------------------------------
+  must-ship:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
         with:
           node-version: 20
-      - run: npm run check
-      - name: Governance badge endpoint
+
+      - name: Must-ship mechanical gates
+        run: npm run check:must-ship
+
+  # ------------------------------------------------------------
+  # Gen1 compatibility observation (non-blocking)
+  # Divergence signal only — not a merge or release gate.
+  # ------------------------------------------------------------
+  gen1-observation:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
+        with:
+          node-version: 20
+
+      - name: Generation-1 compatibility probes
+        run: npm run check
+
+      - name: Governance badge endpoint (observational)
         run: |
           node scripts/verify_governance.js --json > governance-report.json || true
           node -e "
-            const r = require('./governance-report.json');
+            const fs = require('fs');
+            let r = { total: 0, passed: 0 };
+            try { r = JSON.parse(fs.readFileSync('governance-report.json', 'utf8')); } catch (_) {}
             const pct = r.total ? Math.round(r.passed / r.total * 100) : 0;
             const color = pct === 100 ? 'green' : pct >= 80 ? 'yellow' : 'red';
-            require('fs').writeFileSync('governance-badge.json', JSON.stringify({
-              schemaVersion: 1, label: 'governance', message: r.passed + '/' + r.total, color
+            fs.writeFileSync('governance-badge.json', JSON.stringify({
+              schemaVersion: 1, label: 'governance', message: (r.passed || 0) + '/' + (r.total || 0), color
             }));
           "
+
       - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         with:
           name: governance-badge
           path: governance-badge.json
+          if-no-files-found: ignore

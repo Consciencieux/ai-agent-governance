@@ -1,15 +1,11 @@
 ---
 id: RESEARCH-0002
-title: 治理机制分类（Governance Mechanism Taxonomy）
 status: Active
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []
-superseded_by: []
+subject_generation: gen1
 ---
 
-# 治理机制分类（Governance Mechanism Taxonomy）
+# RESEARCH-0002：治理机制分类
 
 > Generation-1 门禁不是单一机制，而是几类 checker 的组合。本文档是机制分类，也是未来 Rule Registry 设计的基础。
 

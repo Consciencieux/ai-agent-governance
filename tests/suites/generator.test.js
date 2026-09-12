@@ -69,7 +69,8 @@ test("generate-governance: manifest lists created artifacts with correct types",
   const count = (t) => m.artifacts.filter((a) => a.type === t).length;
   const validKinds = m.artifacts.every((a) => a.kind === "file" || a.kind === "dir");
   const agentsType = m.artifacts.find((a) => a.path === "AGENTS.md").type;
-  return count("policy") === 10 && count("script") === 5 && count("state") === 6 && validKinds && agentsType === "policy";
+  // Phase 5c projects four Capability leaves under docs/rules/capabilities/ (+4 policy).
+  return count("policy") === 14 && count("script") === 7 && count("state") === 6 && validKinds && agentsType === "policy";
 });
 
 test("generate-governance: gitignore covers sensitive filenames", () => {
@@ -125,7 +126,8 @@ test("generate-governance: --json outputs structured result", () => {
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "JsonTest", "--phase", "A", "--json"], { encoding: "utf8" });
   if (r.status !== 0) return false;
   const out = JSON.parse(r.stdout);
-  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 15;
+  // Phase A includes the four Capability rule files projected in Phase 5c (+4 vs prior 15).
+  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 19;
 });
 
 test("generate-governance: missing --project-name exits 2", () => {
@@ -413,6 +415,35 @@ test("generate-governance: partial init registry notes Phase C availability (ful
   spawnSync(process.execPath, [GENERATOR, "--target", dirC, "--project-name", "RegC", "--phase", "C"]);
   const c = fs.readFileSync(path.join(dirC, "AGENTS.md"), "utf8");
   return c.includes("review-manager") && !c.includes("**Availability:**");
+});
+
+// PLAN-0042 P3 / FINDING-0006 E02: stack-derived command defaults must not fall back to npm.
+test("stack defaults: python AGENTS uses pytest/ruff not npm test", () => {
+  const dir = tmp("gen-stack-py");
+  const r = spawnSync(
+    process.execPath,
+    [GENERATOR, "--target", dir, "--project-name", "PyApp", "--phase", "A", "--stack", "python"],
+    { encoding: "utf8" }
+  );
+  if (r.status !== 0) {
+    console.error(r.stderr || r.stdout);
+    return false;
+  }
+  const agents = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8");
+  if (!/pytest/.test(agents)) {
+    console.error("  expected pytest in python AGENTS defaults");
+    return false;
+  }
+  if (!/ruff/.test(agents)) {
+    console.error("  expected ruff in python AGENTS defaults");
+    return false;
+  }
+  // Negative oracle: npm-centric defaults must not appear as the stack test/lint/build commands.
+  if (/\bnpm test\b/.test(agents) || /\bnpm run lint\b/.test(agents) || /\bnpm run build\b/.test(agents)) {
+    console.error("  python AGENTS must not use npm test/lint/build defaults");
+    return false;
+  }
+  return true;
 });
 
 };

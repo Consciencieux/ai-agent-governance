@@ -6,7 +6,7 @@
 [![CI](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Consciencieux/ai-agent-governance)](https://github.com/Consciencieux/ai-agent-governance/releases)
 
-[English](README.md) · [简体中文](docs/zh-CN/README.md) · [繁體中文](docs/zh-TW/README.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 ## What it is
 
@@ -39,9 +39,9 @@ The governance lifecycle runs inside the repository, across five stages:
 | AUDIT | Audit aggregates the activity trail and validates all governance facts — from doc consistency to rule capture. |
 | RELEASE | A human-in-the-loop flow analyzes change history, proposes a SemVer version, and publishes — with evidence, not fabrication. |
 
-The Spec / Status / Health state model behind these stages is documented in [docs/en/governance-model.md](docs/en/governance-model.md).
+The Spec / Status / Health state model behind these stages is documented in [docs/product/en/governance-model.md](docs/product/en/governance-model.md).
 
-This is the repository-level governance lifecycle. The per-task agent operating lifecycle (six phases) is documented separately in [docs/en/lifecycle.md](docs/en/lifecycle.md).
+This is the repository-level governance lifecycle. The per-task agent operating lifecycle (six phases) is documented separately in [docs/product/en/lifecycle.md](docs/product/en/lifecycle.md).
 
 ```
    AI Agent
@@ -86,7 +86,7 @@ Through one initialization the governance environment is established; continuous
 initialize project governance
 ```
 
-See [docs/en/commands.md](docs/en/commands.md) for the complete list of available prompts.
+See [docs/product/en/commands.md](docs/product/en/commands.md) for the complete list of available prompts.
 
 ## Quick Start
 
@@ -126,7 +126,7 @@ my-project/
 └── .github/workflows/
 ```
 
-Complete annotated initialization output: [docs/en/bootstrap-output.md](docs/en/bootstrap-output.md).
+Complete annotated initialization output: [docs/product/en/bootstrap-output.md](docs/product/en/bootstrap-output.md).
 
 ## Generated Environment
 
@@ -134,15 +134,16 @@ INIT generates a governance skeleton whose exact contract — inputs, artifacts,
 
 ## Documentation
 
-- [docs/en/skill-discovery.md](docs/en/skill-discovery.md) — how agents discover and trigger the skill
-- [docs/en/commands.md](docs/en/commands.md) — complete prompt list and runtime components
-- [docs/en/bootstrap-output.md](docs/en/bootstrap-output.md) — complete annotated initialization output
-- [docs/en/governance-model.md](docs/en/governance-model.md) — the Spec / Status / Health state model
-- [docs/en/architecture.md](docs/en/architecture.md) — repository layout and three distribution roles
-- [docs/en/anti-regression.md](docs/en/anti-regression.md) — anti-regression mechanisms in full
-- [docs/en/lifecycle.md](docs/en/lifecycle.md) — the 6-phase agent operating lifecycle
-- [docs/en/validator.md](docs/en/validator.md) — validator usage and checks
-- [docs/en/roadmap.md](docs/en/roadmap.md) — roadmap with status and design docs
+- [docs/README.md](docs/README.md) — documentation knowledge architecture: doc-type boundaries, language policy, lifecycle overview
+- [docs/product/en/skill-discovery.md](docs/product/en/skill-discovery.md) — how agents discover and trigger the skill
+- [docs/product/en/commands.md](docs/product/en/commands.md) — complete prompt list and runtime components
+- [docs/product/en/bootstrap-output.md](docs/product/en/bootstrap-output.md) — complete annotated initialization output
+- [docs/product/en/governance-model.md](docs/product/en/governance-model.md) — the Spec / Status / Health state model
+- [docs/product/en/architecture.md](docs/product/en/architecture.md) — repository layout and three distribution roles
+- [docs/product/en/anti-regression.md](docs/product/en/anti-regression.md) — anti-regression mechanisms in full
+- [docs/product/en/lifecycle.md](docs/product/en/lifecycle.md) — the 6-phase agent operating lifecycle
+- [docs/product/en/validator.md](docs/product/en/validator.md) — validator usage and checks
+- [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md) — roadmap with status and design docs
 - [docs/design-decisions/](docs/design-decisions/) — architecture decision records (简体中文)
 - [docs/glossary.md](docs/glossary.md) — trilingual terminology table
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development guide

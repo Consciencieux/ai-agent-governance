@@ -13,6 +13,8 @@ description: >-
 
 本 Skill 只负责治理体系搭建与巡检维护，不写业务代码、技术规范、测试内容。
 
+> **薄入口（ADR-0022 / ADR-0024）：** 本文件是 always-on 路由层——身份、进入模式、优先级、权限摘要与指向 `references/` 的指针。详细政策 / 工作流 / 生命周期正文**不**作为 always-on 全文；按任务加载对应 `references/policies/*`、`references/workflows/*` 与生成子技能。禁止把 lifecycle 全文或全部子技能 checklist 塞进本入口。
+
 ### 概念总览（Concept Map）
 
 ```
@@ -84,13 +86,11 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 | Modify 3+ Files at Once | confirmation required（跨 3 个以上文件的改动先经用户确认，见 `references/policies/lifecycle.policy.md` § 规模分级） |
 | Delete Code | confirmation required |
 | Dependency Change | confirmation required |
-| Git Commit / Git Push | 一次确认 per 变更集（见下方确认范围） |
+| Git Commit / Git Push | 一次确认 per 变更集（权威：`references/policies/git.policy.md`） |
 
-**确认范围（一次确认 per 变更集）**：提交前回显完整 git 命令序列——暂存哪些文件、每个 commit 的消息（类型含在消息前缀）、目标 remote/branch——用户确认**一次**，覆盖 add → commit → push。与任务规模无关：小改动也不例外，计划批准不是提交授权（意图对齐），用户说 "push" 等写指令只触发回显，**指令本身不是确认**。范围外操作（tag、reset、rebase、revert、merge、force push、clean、rm、restore、stash、pull、携带未提交改动切换分支、已推送提交的 amend）需各自独立确认。任务级表述（"完成任务"/"发布吧"）不是写指令；歧义表述（"提交一下"）先问。
+**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)（ADR-0024）。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准 ≠ 提交授权；范围外操作各自独立确认；任务级表述不是写指令。冲突时以 `git.policy.md` 为准。
 
-**发布序列（RELEASE）**：Release Proposal 在 Approval Gate 获批准后，该批准覆盖本次发布序列的全部写操作（版本同步 → 归档 → release commit → tag → push 分支 → push tag → GitHub Release → 资产上传），不再逐步追问。前提：完整 Proposal 已展示且获明确批准、工作区与 HEAD 仍一致。中途任一校验失败 → 停止并重新走 plan。
-
-**通用硬约束**：回显即完整命令序列（执行不得偏离）；任一步失败 → 停止并报告，不得改用其他方式重试、不得即兴修补；push 被拒（non-fast-forward）→ 停止并报告，不得擅自 pull/rebase。
+**发布序列（RELEASE）：** Release Proposal 在 Approval Gate 获批准后，该批准覆盖本次发布序列的全部写操作（见 `references/workflows/release.md`），不再逐步追问。前提：完整 Proposal 已展示且获明确批准、工作区与 HEAD 仍一致。中途任一校验失败 → 停止并重新走 plan。
 
 ### 状态协议（最终报告必须支持三态）
 

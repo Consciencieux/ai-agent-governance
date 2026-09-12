@@ -1,6 +1,6 @@
-# Experiments（实验记录）
+# 实验记录
 
-本目录保存研究实验记录。每个实验一个文件：
+本目录保存研究实验记录（**事后测量**，不是执行前操作手册）。与 TASK Plan 的分工见 RESEARCH-0013：Plan = 短合同/假设；本目录 = 做了什么、数据、结果。每个实验一个文件：
 
 ```text
 docs/research/experiments/
@@ -8,7 +8,7 @@ docs/research/experiments/
 └── experiment-0001-<slug>.md                  # 实验记录
 ```
 
-## 建议命名
+## 建议的命名方式
 
 ```text
 experiment-0001-static-vs-dynamic-policy.md
@@ -30,17 +30,17 @@ updated: ...
 
 # 实验标题
 
-## Hypothesis
+## 假设
 
-## Method
+## 方法
 
-## Measurements
+## 测量
 
-## Results
+## 结果
 
-## Conclusion
+## 结论
 
-## Replication
+## 复现
 ```
 
 ## 待办实验（见 RESEARCH-0003-evaluation-framework.md）

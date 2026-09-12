@@ -28,6 +28,8 @@
 | change hygiene | 变更归位与残留清理 | 變更歸位與殘留清理 |  |  |
 | coding hygiene | 编码卫生 | 編碼衛生 |  |  |
 | root-cause repair protocol | 根因修复协议 | 根因修復協定 |  |  |
+| Discovery Ledger | 发现台账 | 發現台帳 |  |  |
+| known-issue closure | 已知问题闭包 | 已知問題閉包 |  |  |
 | failure budget | 失败预算 | 失敗預算 |  |  |
 | compatibility surface | 兼容/过渡层 | 相容/過渡層 |  |  |
 | historical surface | 历史层 | 歷史層 |  |  |
@@ -137,9 +139,21 @@
 | code | 代码 | 程式碼 |  |  |
 | execute | 执行 | 執行 |  |  |
 | gate | 门禁 | 閘門 |  |  |
+| control | 治理控制 | 治理控制 |  |  |
+| control identity | 控制标识 | 控制識別 |  |  |
+| rule semantics | 规则语义 | 規則語義 |  |  |
+| evaluator | 求值器 | 求值器 |  |  |
+| decision semantics | 决策语义 | 決策語義 |  |  |
+| applicability | 适用性 | 適用性 |  |  |
+| shared semantic authority | 共享语义权威 | 共享語義權威 |  |  |
 | entry file | 入口文件 | 入口檔案 |  |  |
 | split | 拆分 | 拆分 |  |  |
 | canonical source | 源语言 | 源語言 |  |  |
 | draft exception | 草稿例外 | 草稿例外 |  |  |
+| product freeze | 产品冻结 | 產品凍結 |  |  |
+| must-ship | 必装 | 必裝 |  |  |
+| repo-keep | 仓内保留 | 倉內保留 |  |  |
+| later | 后置 | 後置 |  |  |
+| retire | 退役 | 退役 |  |  |
 
 禁止译法（Forbidden 列）只登记**概念术语**；触发词按源形态引用（如 审核一下、全项目审核），刻意不登记。豁免注释 <!-- i18n: allow 术语 --> 可标注行内或紧邻上一行的正当引用。

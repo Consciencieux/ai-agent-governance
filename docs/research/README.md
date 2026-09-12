@@ -1,28 +1,27 @@
-# Research（研究知识库）
+# 研究知识库
 
 本目录保存对 **ai-agent-governance 系统本身**的科学描述：系统模型、机制分类、评价框架、架构演进、实验记录、方法论。它回答「**我们正在研究什么系统？如何理解它？如何评价它？**」，与以下知识类别严格区分：
 
 | 类型 | 用途 | 示例 |
 | --- | --- | --- |
-| `research/`（本目录） | 描述和研究系统 | 当前 gate 模型、治理机制分类 |
-| `findings/` | 记录发现的问题 | trigger coverage 缺失 |
-| `design-decisions/` | 记录已接受决策 | 引入 Rule Registry |
-| `plans/` | 描述执行方案 | 实现 Rule Registry MVP |
-| `archive/plans/` | 保存完成计划 | 已完成迁移计划 |
+| 研究（`research/`） | 描述和研究系统 | 当前 gate 模型、治理机制分类 |
+| 发现（`findings/`） | 记录发现的问题 | trigger coverage 缺失 |
+| 架构决策（`design-decisions/`） | 记录已接受决策 | 接受 Control Model（ADR-0023） |
+| 计划（`plans/`） | 当前施工；已归档计划是其历史生命周期状态，不是独立知识类型 | 按 CTRL 拆解 Gen1 checker（PLAN-0035） |
 
 ## 为什么单独一类
 
 常见讨论经常混淆三个层次。例如：
 
-> 「当前 gate 靠文本匹配，所以应该改成 Rule Registry。」
+> 「当前 gate 靠文本匹配，所以应该改成统一的 Control / evaluator 模型。」
 
 实际包含三种知识：
 
 ```text
 Research：当前 gate 主要是文本/结构检查。          ← 中性描述
 Finding：  文本检查无法覆盖 semantic invariant。    ← 问题判断
-ADR：      采用 Rule Registry 作为下一代模型。      ← 决策
-Plan：     实现 registry schema。                  ← 工作设计
+ADR：      采用 Control identity + profile binding。 ← 决策
+Plan：     按 CTRL inventory 做 disposition。       ← 工作设计
 ```
 
 过去这些混在 issue / plan / AGENTS / 讨论里导致重复与歧义。本目录把「对系统的科学描述」独立出来，作为 2.0 重构的 baseline 与科研实验的事实源。
@@ -44,7 +43,7 @@ plan
 
 ## 语言规则
 
-**简体中文 canonical 单语**，与 `findings/` 一致。属于长期知识 / 方法论记录 / 项目内部研究资产，不是用户产品文档。不进入 `docs/en/` / `docs/zh-CN/` / `docs/zh-TW/`，不要求 translation parity / freshness check / 三语同步。代码、命令、错误日志、专有术语保持原文。
+**简体中文 canonical 单语**，与 `findings/` 一致。属于长期知识 / 方法论记录 / 项目内部研究资产，不是用户产品文档。不进入 `docs/product/en/` / `docs/product/zh-CN/` / `docs/product/zh-TW/`，不要求 translation parity / freshness check / 三语同步。代码、命令、错误日志、专有术语保持原文。
 
 ## 文件命名规则
 
@@ -56,38 +55,67 @@ docs/research/
 ├── RESEARCH-0001-system-model.md                  # 当前治理系统控制模型
 ├── RESEARCH-0002-governance-mechanism-taxonomy.md # 治理机制分类
 ├── RESEARCH-0003-evaluation-framework.md          # 评价体系
-├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3）
+├── RESEARCH-0004-architecture-evolution.md        # 架构演进（Generation 0→3；Gen1→Gen2 strangler 迁移模型）
 ├── RESEARCH-0005-current-capabilities.md          # 当前能力清单（Generation-1 baseline）
-└── experiments/                     # 实验记录
+├── RESEARCH-0006-generation-1-capability-baseline.md # 第一代能力保存矩阵 + Agent 压缩上下文（2.0 迁移基线；v8 投影 ADR-0024）
+├── RESEARCH-0007-documentation-knowledge-architecture.md # 文档知识架构/知识对象模型（System Model：七类知识对象、路由、当前/历史隔离、Agent 导航、机械 carrier）
+├── RESEARCH-0008-repair-discovery-workset-model.md # 修复/发现/Workset 运行模型（System Model：vertical vs horizontal、recursive discovery、closure gate）
+├── RESEARCH-0009-agent-instruction-architecture.md # Agent 指令架构（System Model：Gen1 指令拓扑/演进证据；树状检索 + 图状适用 + 机械执行）
+├── RESEARCH-0010-governance-control-model.md      # Governance Control 系统模型（semantics ≠ evaluator ≠ gate ≠ test；Gen1 散落面；设计问题矩阵）
+├── RESEARCH-0011-gen1-mechanical-control-inventory.md # Gen1 机械控制库存（CTRL-centric；Phase 4 inventory；不裁决 disposition）
+├── RESEARCH-0012-task-capability-routing.md           # Task→Capability 适用路由（Phase 5 入口；v2 六问工作假设；显式映射；禁图谱/全自动 Dispatcher）
+├── RESEARCH-0013-research-provenance-and-context-economy.md # 科研回溯 vs 上下文经济；事前短合同 vs 事后沉淀；一般项目文档面
+├── working/                         # 施工产物（路由图、脚本台账；非 RESEARCH 正文）
+│   ├── routing/                     # Task→Capability 图 / map / graph.v0.json
+│   └── script-inventory.md + .v0.json
+└── experiments/                     # 实验记录（测量；槽位可空）
 ```
 
 不要：`系统模型.md`。
 
-## Research 文档类型
+## 研究文档类型
 
 | 类型 | 文件 | 内容 |
 | --- | --- | --- |
-| A. System Model | `RESEARCH-0001-system-model.md` | 当前架构、数据流、执行流程、组件关系 |
-| B. Mechanism Taxonomy | `RESEARCH-0002-governance-mechanism-taxonomy.md` | Existence / Text / Structure / Consistency / Behavior / LLM Review / Human Review / Runtime |
-| C. Evaluation Framework | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
-| D. Architecture Evolution | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3 演进 |
-| E. Current Capabilities | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
-| F. Experiments | `experiments/` | 每实验一文件 |
+| A. 系统模型 | `RESEARCH-0001-system-model.md` | 当前架构、数据流、执行流程、组件关系 |
+| B. 机制分类 | `RESEARCH-0002-governance-mechanism-taxonomy.md` | Existence / Text / Structure / Consistency / Behavior / LLM Review / Human Review / Runtime |
+| C. 评价框架 | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
+| D. 架构演进 | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3；Gen1→Gen2 渐进式旁路迁移 / authority 分阶段转移；吸收能力不复制结构 |
+| E. 当前能力 | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
+| F. 实验记录 | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
+| G. 能力基线 | `RESEARCH-0006-generation-1-capability-baseline.md` | Plan + Pre-PLAN + Agent 压缩上下文；**scripts 面与 instruction/workflow 面双闭合**（含 8 sub-skills / githooks）；第四列待决，不裁决处置 |
+| H. 规划/知识控制模型 | `RESEARCH-0007-documentation-knowledge-architecture.md` | 七类对象、路由、当前/历史隔离；正文级权威矩阵的规范在 ADR-0016 |
+| I. 修复/发现/工作集模型 | `RESEARCH-0008-repair-discovery-workset-model.md` | 纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
+| J. Agent 指令架构 | `RESEARCH-0009-agent-instruction-architecture.md` | Gen1 `references/` 六类作用与演进证据；目标为树状检索 + 图状适用关系 + 机械执行；入口路由/叶节点单一能力/机械不依赖被记住 |
+| K. Governance Control 模型 | `RESEARCH-0010-governance-control-model.md` | Control 作为中间对象；与 evaluator/gate/test 分层；profile 消费共享语义；Gen1 散落与 identity 动机；规范在 ADR-0023 |
+| L. Gen1 机械控制库存 | `RESEARCH-0011-gen1-mechanical-control-inventory.md` | CTRL→evaluator→gate→tests→profile 事实表；monolith 集群行；Safety Kernel 锚点；disposition 归 PLAN-0035 |
+| M. Task→Capability 路由 | `RESEARCH-0012-task-capability-routing.md` | Phase 5 入口：显式 Task/Context→Capability→Authority/Leaf；禁图谱与全自动 Dispatcher |
+| N. 科研回溯与上下文经济 | `RESEARCH-0013-research-provenance-and-context-economy.md` | 写全 provenance、执行 on-demand；Plan=短合同；一般项目不复制本仓科研树 |
+| — | `working/` | 施工产物槽：`routing/`（RESEARCH-0012 / PLAN-0038–0040）+ script inventory（FINDING-0028 / PLAN-0041）；repo-only，非 INSTALLED |
 
-## Frontmatter metadata
+**统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
+
+## 编号规则
+`RESEARCH-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1，**永久不复用、不重排**（统一规则见 ADR-0018 § 决策 3）。
+
+## Frontmatter 元数据格式
+
+原则：权威、精简；无值的可选字段省略。
 
 ```yaml
 ---
 id: RESEARCH-0001
-title: Current Governance System Model
-status: active             # Draft / Active / Superseded / Archived
+status: Active              # Draft / Active / Superseded / Archived
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []             # 本文档取代的 research id
-superseded_by: []          # 取代本文档的 research id
+subject_generation: gen1    # 该研究描述的架构时代；迁移型（跨代描述）省略
+supersedes: [RESEARCH-0000] # 按需；无则省略
+superseded_by: [RESEARCH-0007] # 按需；无则省略
 ---
 ```
+
+**不保留**：`title`（H1 已有）、`created` / `updated`（Git 有 provenance）、空 `supersedes` / `superseded_by`。
+
+**代际标记用 `subject_generation`**：表达「这项研究描述的是哪个架构时代」，不用于表达「研究文档自身属于哪代」——research 是跨代的研究资产，随版本演进留在原位。
 
 ## 生命周期（版本演进，非状态流转）
 
@@ -100,7 +128,7 @@ Superseded 被新模型替代（不删除）
 Archived   仅表示历史参考
 ```
 
-**Research 不删除，只 supersede。** 科研价值来自演进过程：
+**Research 不删除，只 supersede，也不物理归档。** `Superseded` / `Archived` 都只是版本演进标记，文件永久留在本目录原位——科研价值来自演进过程：
 
 ```text
 Research-001
@@ -111,27 +139,27 @@ Superseded by: Research-007
 
 这本身就是研究轨迹。第一版只保留 `Draft / Active / Superseded / Archived` 四个状态，**不建议**建过度复杂状态机（Hypothesis / Reviewed / Validated / Published / Deprecated / Retired 会让 research 本身变成治理对象）。
 
-## Review 规则
+## 审阅规则
 
 新增或修改 research 文档**不需要跑全部 gate**：
 
-- **必须**：Markdown 格式、link validity、metadata 格式
-- **不需要**：三语 parity、changelog、product docs freshness（它不是产品文档）
+- **必须**：Markdown 格式、链接有效性、元数据格式；大改时按 ADR-0016 五问做结构化 review
+- **不需要**：三语 parity、changelog、product docs freshness（它不是产品文档）；**不**用词级 JS gate 判定是否跨权威边界
 
 ## 质量标准
 
 好的 research 文档应回答：
 
-- **What**：研究对象是什么？
-- **Why**：为什么研究？（连接到 finding / 动机）
-- **Model**：抽象模型是什么？
-- **Evidence**：有什么证据？（实验、代码位置、测量数据）
-- **Implication**：对未来设计有什么影响？
+- **研究对象**：研究对象是什么？
+- **研究动机**：为什么研究？（连接到 finding / 动机）
+- **模型**：抽象模型是什么？
+- **证据**：有什么证据？（实验、代码位置、测量数据）
+- **影响**：对未来设计有什么影响？
 
 ## 关联规则
 
 - Research → findings：`Known limitations: See FINDING-0003`（引用，不复述）
-- Research → ADR：research 分析可能性，ADR 做选择。不要提前把研究结论写成 ADR
+- Research → ADR：research 分析可能性，ADR 做选择。不要提前把研究结论写成 ADR。已接受目标可以描述，MUST / 最终架构 / 执行 disposition 不得由 Research 权威声明（ADR-0016 权威矩阵）。
 - Research → plans：research 提供模型，plan 执行改变
 
 ## 一句规则

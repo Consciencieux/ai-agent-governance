@@ -21,6 +21,7 @@ const CONSISTENCY_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc
 const RELEASE_TOOL = path.join(__dirname, "..", "..", "scripts", "release-manager.js");
 const SKILL_ROOT = path.join(__dirname, "..", "..");
 const CONSISTENCY = path.join(__dirname, "..", "..", "scripts", "check-doc-consistency.js");
+const TERMINOLOGY_CHECK = path.join(__dirname, "..", "..", "repo-tools", "check-terminology.js");
 const CONSENT_THREE_MARKERS_TEXT =
   "One confirmation per change set — echo the full git command sequence before committing.\n" +
   "Plan approval is intent alignment, not a commit authorisation workaround.\n" +
@@ -77,16 +78,18 @@ function buildFullDefault(dir) {
 }
 
 function buildParityTrees(dir) {
-  // minimal three-tree fixture with one parallel doc + root entry files
-  write(path.join(dir, "README.md"), "# AI Agent Governance\n\n[English](README.md) · [简体中文](docs/zh-CN/README.md) · [繁體中文](docs/zh-TW/README.md)\n\n## Intro\n\n- Hello\n");
-  write(path.join(dir, "CONTRIBUTING.md"), "# Contributing\n\n## Development\n");
-  for (const lang of ["en", "zh-CN", "zh-TW"]) {
-    write(path.join(dir, "docs", lang, "README.md"), `# 标题\n\n## 章节\n\n- 项目\n`);
-    write(path.join(dir, "docs", lang, "doc.md"), `# Doc\n\n## Section\n\n- one\n\n## Table\n\n| a | b |\n| --- | --- |\n| 1 | 2 |\n`);
+  // minimal three-tree fixture with one parallel doc + six root entry files
+  const entry = "# AI Agent Governance\n\n## Intro\n\n- Hello\n";
+  const contributing = "# Contributing\n\n## Development\n";
+  for (const file of ["README.md", "README.zh-CN.md", "README.zh-TW.md"]) {
+    write(path.join(dir, file), entry);
   }
-  // zh-CN/zh-TW in-tree CONTRIBUTING.md must also exist for entry checks
-  write(path.join(dir, "docs", "zh-CN", "CONTRIBUTING.md"), "# 贡献\n\n## 开发\n");
-  write(path.join(dir, "docs", "zh-TW", "CONTRIBUTING.md"), "# 貢獻\n\n## 開發\n");
+  for (const file of ["CONTRIBUTING.md", "CONTRIBUTING.zh-CN.md", "CONTRIBUTING.zh-TW.md"]) {
+    write(path.join(dir, file), contributing);
+  }
+  for (const lang of ["en", "zh-CN", "zh-TW"]) {
+    write(path.join(dir, "docs", "product", lang, "doc.md"), `# Doc\n\n## Section\n\n- one\n\n## Table\n\n| a | b |\n| --- | --- |\n| 1 | 2 |\n`);
+  }
 }
 
 function gitCommitAt(dir, files, dateIso, msg) {
@@ -126,6 +129,10 @@ function buildI18nFixture(dir, opts = {}) {
     "| --- | --- | --- | --- | --- |\n" +
     "| protocol | 协议 | 協定 | 協定 | 協議 |\n" +
     "| template | 模板 | 範本 | 範本 | 模板 |\n");
+  // Legacy tree shape — shared with the INSTALLED freshness checker's pair derivation
+  // (docs/zh-CN → docs/en, docs/zh-TW). The repo-owned terminology checker falls back
+  // to this shape when docs/product/{lang} is absent (tests/suites/docs.test.js also
+  // exercises the post-migration docs/product/{lang} path directly).
   write(path.join(dir, "docs", "zh-CN", "guide.md"), opts.zhCN || "# 指南\n\n使用协议与模板。\n");
   write(path.join(dir, "docs", "en", "guide.md"), opts.en || "# Guide\n\nUse the protocol and template.\n");
   write(path.join(dir, "docs", "zh-TW", "guide.md"), opts.zhTW || "# 指南\n\n使用協定與範本。\n");
@@ -275,4 +282,4 @@ function linkDir(target, linkPath) {
 
 
 
-module.exports = { VALIDATOR, LOCK_CHECK, GIT_POLICY_CHECK, SECRET_CHECK, SYNC_CHECK, GENERATOR, LAYOUT_CHECK, ROLE_CHECK, PLAN_DELIVERY, PARITY_CHECK, FRESHNESS_CHECK, CONSISTENCY_CHECK, RELEASE_TOOL, SKILL_ROOT, CONSISTENCY, CONSENT_THREE_MARKERS_TEXT, TMP_ROOT, tmp, write, assemble, run, cleanup, buildFullDefault, buildParityTrees, gitCommitAt, buildFreshnessFixture, runRelease, planChanges, buildI18nFixture, gitInit, gitHead, gitTags, listFiles, buildLayoutRepo, buildPlanRepo, findPosixShell, findBashShell, copiedScriptSources, writeConsentSyncPoint, linkDir };
+module.exports = { VALIDATOR, LOCK_CHECK, GIT_POLICY_CHECK, SECRET_CHECK, SYNC_CHECK, GENERATOR, LAYOUT_CHECK, ROLE_CHECK, PLAN_DELIVERY, PARITY_CHECK, FRESHNESS_CHECK, CONSISTENCY_CHECK, RELEASE_TOOL, SKILL_ROOT, CONSISTENCY, TERMINOLOGY_CHECK, CONSENT_THREE_MARKERS_TEXT, TMP_ROOT, tmp, write, assemble, run, cleanup, buildFullDefault, buildParityTrees, gitCommitAt, buildFreshnessFixture, runRelease, planChanges, buildI18nFixture, gitInit, gitHead, gitTags, listFiles, buildLayoutRepo, buildPlanRepo, findPosixShell, findBashShell, copiedScriptSources, writeConsentSyncPoint, linkDir };

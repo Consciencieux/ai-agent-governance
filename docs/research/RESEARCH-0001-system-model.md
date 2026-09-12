@@ -1,25 +1,21 @@
 ---
 id: RESEARCH-0001
-title: 当前治理系统控制模型（Generation-1 System Model）
 status: Active
 version: 1
-created: 2026-09-08
-updated: 2026-09-08
-supersedes: []
-superseded_by: []
+subject_generation: gen1
 ---
 
-# 当前治理系统控制模型（System Model）
+# RESEARCH-0001：当前治理系统控制模型
 
 > **Generation-1 现状表征**：document-driven、agent-triggered 的治理架构。本文档是 2.0 重构的 baseline，不是规范。
 
-## Overview
+## 概览
 
 当前 `ai-agent-governance` 是一个 **document-driven, agent-triggered governance architecture**：规则以 Markdown 文档承载，由 Agent 阅读、理解、选择触发，最终落到 JS checker / test runner 执行。
 
 系统的核心不是「治理运行时自动执行规则」，而是「AI 按文档指示触发机械检查」。
 
-## Execution Flow
+## 执行流程
 
 ```text
 Rule documents (AGENTS.md / SKILL.md / policies)
@@ -47,7 +43,7 @@ Rule documents (AGENTS.md / SKILL.md / policies)
 | 检查执行 | JS checker / test runner | 机械 |
 | 结果判定 | exit code | 机械 |
 
-## Enforcement Layers
+## 强制层
 
 当前门禁由 5 类机制组合而成（详见 `mechanism-taxonomy.md`）：
 
@@ -88,7 +84,7 @@ Detection Coverage  运行以后能不能发现违规
 - CI：触发可靠（push/PR 自动），但 scope 粗（无条件 `npm run check`）。
 - 两端各缺一半，需要统一 dispatcher（FINDING-0002 / FINDING-0005）。
 
-## Known Limitations（已知限制）
+## 已知限制
 
 1. **Declaration–Enforcement gap**：判断型规则与可判定规则使用相同 MUST 措辞，实际 enforcement 强度 100% vs 0%（FINDING-0003）。
 2. **Trigger 依赖 AI 注意力**：checker 机械 ≠ 触发机械（FINDING-0004）。

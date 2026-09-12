@@ -2,7 +2,7 @@
   "$schema": "init-spec-v1",
   "description": "Machine-readable specification for the INIT scripted generator. SKILL.md references this file; never restate its contents in prose. Single source of truth for what the generator produces.",
   "invariants": {
-    "copied_scripts_are_self_contained": "Artifacts of type 'copy' under scripts/ are copied into governed projects FILE BY FILE. Each one must therefore run standalone: Node builtins only, no relative require() of sibling modules, no reads of skill-repo files. Extracting shared helpers into a library breaks every governed project unless the library is added here too - and even then it burdens each project with an implicit dependency. Duplication across these scripts is deliberate, not an oversight. Enforced by the 'payload:' tests in tests/run-tests.js (static invariant + end-to-end load check).",
+    "copied_scripts_are_self_contained": "Artifacts of type 'copy' under scripts/ are copied into governed projects FILE BY FILE. Self-contained means the INSTALLED dependency graph closes: Node builtins are always allowed; a relative require() is allowed only when it resolves to another artifact source listed here (and thus actually copied by INIT). Forbidden: require of undeclared siblings, skill-repo-only files, or undeclared external runtime packages. A shared helper that is not listed as a copy source breaks every governed project (historical defect: scripts/_lib.js). Enforced by the 'payload:' tests in tests/suites/payload.test.js (static require-graph closure + INIT write check + end-to-end module resolution).",
     "distribution_roles_are_declared_not_inferred": "Every file under references/ and scripts/ has exactly one distribution role. INSTALLED = it appears as an artifact 'source' below (INIT writes it into the governed project). SKILL-INTERNAL = it is listed in distribution.skillInternal (it travels in the tarball because packaging copies references/ and scripts/ wholesale, but INIT never installs it, so a governed project does NOT have it). Roles are HUMAN decisions and must never be inferred from directory or filename: copy/template/generated, renames (lifecycle.policy.md -> docs/rules/lifecycle.md, verify_governance.js -> verify-governance.js), one-to-many outputs (githooks-template.md -> pre-commit + commit-msg) and static inline content all encode contract decisions a generator cannot recover. Enforced by repo-tools/check-role-completeness.js: no unclassified file, no file in both sets, no declared path that does not exist, and the tarball's file set must match the union of both roles."
   },
   "distribution": {
@@ -134,6 +134,34 @@
       "source": "references/policies/lifecycle.policy.md",
       "type": "copy",
       "description": "Agent operating lifecycle rules"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/discovery-ledger.md",
+      "source": "references/capabilities/discovery-ledger.md",
+      "type": "copy",
+      "description": "Discovery Ledger (TASK known-issue closure)"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/change-hygiene.md",
+      "source": "references/capabilities/change-hygiene.md",
+      "type": "copy",
+      "description": "Change hygiene / residue cleanup"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/root-cause-repair.md",
+      "source": "references/capabilities/root-cause-repair.md",
+      "type": "copy",
+      "description": "Root-cause repair protocol and failure budget"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/rule-capture.md",
+      "source": "references/capabilities/rule-capture.md",
+      "type": "copy",
+      "description": "Rule Capture workflow"
     },
     {
       "phase": "A",
@@ -365,7 +393,21 @@
       "path": "scripts/check-secrets.js",
       "source": "scripts/check-secrets.js",
       "type": "copy",
-      "description": "Secret scan gate"
+      "description": "Secret scan CLI WRAP for CTRL-0001 (skill profile; deny; never prints secrets)"
+    },
+    {
+      "phase": "B",
+      "path": "scripts/lib/secret-scan-facts.js",
+      "source": "scripts/lib/secret-scan-facts.js",
+      "type": "copy",
+      "description": "Shared secret-scan factual primitives (patterns / staged-diff / blob; no profile policy)"
+    },
+    {
+      "phase": "B",
+      "path": "scripts/evaluators/ctrl-0001-secret-protection.js",
+      "source": "scripts/evaluators/ctrl-0001-secret-protection.js",
+      "type": "copy",
+      "description": "CTRL-0001 evaluator — staged secret-like material / unscanned blobs (semantic verdict only)"
     },
     {
       "phase": "B",
@@ -379,14 +421,49 @@
       "path": "scripts/check-doc-freshness.js",
       "source": "scripts/check-doc-freshness.js",
       "type": "copy",
-      "description": "Doc freshness + translation freshness check (advisory; --release-gate blocks stale/draft translations)"
+      "description": "Thin CLI wrapper for CTRL-0003 doc freshness + CTRL-0004 translation freshness (advisory; --release-gate blocks stale/draft translations)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/git-facts.js",
+      "source": "scripts/lib/git-facts.js",
+      "type": "copy",
+      "description": "Shared git/path/date factual primitives for freshness evaluators (no Control policy)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+      "source": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+      "type": "copy",
+      "description": "CTRL-0003 evaluator — governance-document freshness vs code activity (advisory)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+      "source": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+      "type": "copy",
+      "description": "CTRL-0004 evaluator — translation freshness (advisory default; --release-gate deny)"
     },
     {
       "phase": "C",
       "path": "scripts/check-doc-consistency.js",
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
-      "description": "Doc consistency check (advisory; --gate/--release-gate fail-closed clusters)"
+      "description": "Doc consistency WRAP (cluster #4 → CTRL-0006; other clusters inline; advisory; --gate/--release-gate fail-closed)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/md-link-facts.js",
+      "source": "scripts/lib/md-link-facts.js",
+      "type": "copy",
+      "description": "Shared Markdown-link factual primitives (extract/resolve/exists; no Control policy)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/evaluators/ctrl-0006-broken-links.js",
+      "source": "scripts/evaluators/ctrl-0006-broken-links.js",
+      "type": "copy",
+      "description": "CTRL-0006 evaluator — relative markdown link validity (consistency cluster #4)"
     },
     {
       "phase": "C",

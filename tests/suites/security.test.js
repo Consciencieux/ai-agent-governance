@@ -491,4 +491,54 @@ test("check-secrets: modified-file hunk reports the correct line number", () => 
   return out.hits.length === 1 && out.hits[0].pattern === "credential-assignment" && out.hits[0].line === 4;
 });
 
+
+test("CTRL-0001: evaluateSecretProtection fail/pass without decision_effect", () => {
+  const { evaluateSecretProtection } = require(path.join(SKILL_ROOT, "scripts/evaluators/ctrl-0001-secret-protection.js"));
+  const dirty = tmp("ctrl-0001-eval-dirty");
+  gitInit(dirty);
+  const value = assemble("AKIA", "IOSFODNN7EXAMPLE");
+  write(path.join(dirty, "app.js"), assemble("const k = '", value, "';"));
+  spawnSync("git", ["add", "app.js"], { cwd: dirty });
+  const fail = evaluateSecretProtection({ root: dirty });
+  if (
+    fail.control !== "CTRL-0001" ||
+    fail.verdict !== "fail" ||
+    Object.prototype.hasOwnProperty.call(fail, "decision_effect") ||
+    !fail.evidence.hits.some((h) => h.pattern === "aws-access-key")
+  ) return false;
+
+  const clean = tmp("ctrl-0001-eval-clean");
+  gitInit(clean);
+  write(path.join(clean, "app.js"), "const ok = 1;\n");
+  spawnSync("git", ["add", "app.js"], { cwd: clean });
+  const pass = evaluateSecretProtection({ root: clean });
+  return pass.control === "CTRL-0001" && pass.verdict === "pass" && pass.evidence.hits.length === 0;
+});
+
+
+test("CTRL-0001: repo-tools CLI matches skill CLI and AGENTS uses repo entry", () => {
+  const repoCheck = path.join(SKILL_ROOT, "repo-tools", "check-secrets.js");
+  const agents = fs.readFileSync(path.join(SKILL_ROOT, "AGENTS.md"), "utf8");
+  if (!agents.includes("`repo-tools/check-secrets.js`")) return false;
+  if (/pre-commit checklist: `scripts\/check-secrets\.js`/.test(agents)) return false;
+
+  const dir = tmp("ctrl-0001-repo-cli");
+  gitInit(dir);
+  const value = assemble("AKIA", "IOSFODNN7EXAMPLE");
+  write(path.join(dir, "app.js"), assemble("const apiKey = '", value, "';"));
+  spawnSync("git", ["add", "app.js"], { cwd: dir });
+  const skill = spawnSync(process.execPath, [SECRET_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const repo = spawnSync(process.execPath, [repoCheck, "--json"], { cwd: dir, encoding: "utf8" });
+  if (skill.status !== 1 || repo.status !== 1) return false;
+  const a = JSON.parse(skill.stdout);
+  const b = JSON.parse(repo.stdout);
+  return (
+    a.clean === false &&
+    b.clean === false &&
+    a.hits[0].pattern === b.hits[0].pattern &&
+    !skill.stderr.includes(value) &&
+    !repo.stderr.includes(value)
+  );
+});
+
 };

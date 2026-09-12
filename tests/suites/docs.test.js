@@ -18,7 +18,7 @@ test("doc parity: parallel trees exit 0", () => {
 test("doc parity: heading drift in one tree exits 1", () => {
   const dir = tmp("parity-drift");
   buildParityTrees(dir);
-  fs.appendFileSync(path.join(dir, "docs", "zh-TW", "doc.md"), "\n## 额外章节\n");
+  fs.appendFileSync(path.join(dir, "docs", "product", "zh-TW", "doc.md"), "\n## 额外章节\n");
   const r = spawnSync(process.execPath, [PARITY_CHECK], { cwd: dir, encoding: "utf8" });
   return r.status === 1 && r.stdout.includes("structure drift");
 });
@@ -26,9 +26,17 @@ test("doc parity: heading drift in one tree exits 1", () => {
 test("doc parity: missing file in one tree exits 1", () => {
   const dir = tmp("parity-missing");
   buildParityTrees(dir);
-  fs.rmSync(path.join(dir, "docs", "en", "doc.md"));
+  fs.rmSync(path.join(dir, "docs", "product", "en", "doc.md"));
   const r = spawnSync(process.execPath, [PARITY_CHECK], { cwd: dir, encoding: "utf8" });
-  return r.status === 1 && r.stdout.includes("missing in docs/en/");
+  return r.status === 1 && r.stdout.includes("missing in docs/product/en/");
+});
+
+test("doc parity: missing root language entry exits 1", () => {
+  const dir = tmp("parity-root-entry-missing");
+  buildParityTrees(dir);
+  fs.rmSync(path.join(dir, "README.zh-CN.md"));
+  const r = spawnSync(process.execPath, [PARITY_CHECK], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && r.stdout.includes("missing root entry: README.zh-CN.md");
 });
 
 
@@ -70,57 +78,57 @@ test("doc freshness: drift-report.json gains freshness section", () => {
 
 
 // Trilingual fixture: glossary with forbidden renderings + one doc per language tree.
-test("terminology gate: forbidden rendering in a language tree is reported and gated", () => {
+// The terminology gate was EXTRACTED from the INSTALLED checker (scripts/check-doc-consistency.js)
+// into a repo-owned checker (repo-tools/check-terminology.js) — Producer/Product separation
+// (PLAN-0031 / ADR-0020). These tests exercise the REPO-owned mechanism.
+test("terminology gate: forbidden rendering in a language tree is reported and fails", () => {
   const dir = tmp("term-hit");
   buildI18nFixture(dir, { zhTW: "# 指南\n\n使用協議與範本。\n" }); // 協議 is forbidden in zh-TW
-  const advisory = spawnSync(process.execPath, [CONSISTENCY, "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(advisory.stdout);
-  const hit = out.issues.terminology_usage.some((i) => i.includes("zh-TW") && i.includes("協議"));
-  if (!hit || advisory.status !== 0) return false; // advisory reports but never blocks
-  const gated = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  return gated.status === 1 && JSON.parse(gated.stdout).gateIssues.some((g) => g.kind === "terminology_usage");
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 1 && out.issues.terminology_usage.some((i) => i.includes("zh-TW") && i.includes("協議"));
 });
 
 test("terminology gate: zh-CN leg reports its own forbidden column", () => {
   const dir = tmp("term-zhcn");
   buildI18nFixture(dir, { zhCN: "# 指南\n\n使用協定與範本。\n" }); // 協定 is forbidden in zh-CN
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  return r.status === 1 && JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "terminology_usage" && g.item.includes("zh-CN") && g.item.includes("協定"));
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 1 && out.issues.terminology_usage.some((g) => g.includes("zh-CN") && g.includes("協定"));
 });
 
 test("terminology gate: line-level exemption suppresses a deliberate source-form quote", () => {
   const dir = tmp("term-exempt");
   buildI18nFixture(dir, { zhTW: "# 指南\n\n討論 `協議` 這個譯法本身。 <!-- i18n: allow 協議 -->\n" });
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   return r.status === 0 && JSON.parse(r.stdout).issues.terminology_usage.length === 0;
 });
 
 test("terminology gate: preceding-line exemption (the table-safe form) suppresses", () => {
   const dir = tmp("term-exempt-prev");
   buildI18nFixture(dir, { zhTW: "# 指南\n\n<!-- i18n: allow 協議 -->\n討論 `協議` 這個譯法本身。\n" });
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   return r.status === 0 && JSON.parse(r.stdout).issues.terminology_usage.length === 0;
 });
 
 test("terminology gate: clean trees register terms and report nothing (positive marker)", () => {
   const dir = tmp("term-clean");
   buildI18nFixture(dir);
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
   // termsRegistered > 0 proves the parser RAN; a plain empty-issues assertion
   // would pass even with the whole gate disabled (vacuous control).
   return r.status === 0 && out.termsRegistered > 0 && out.issues.terminology_usage.length === 0;
 });
 
-test("terminology gate: no glossary (governed project shape) no-ops with zero registered terms", () => {
-  const dir = tmp("term-noglossary");
+test("terminology gate: missing glossary fails closed (repo-owned source is authoritative)", () => {
+  const dir = tmp("term-missing");
   gitInit(dir);
   write(path.join(dir, "docs", "zh-TW", "guide.md"), "# 指南\n\n使用協議。\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(r.stdout);
-  // registered === 0 proves the no-op branch (not a silently dead feature — the hit test
-  // above already proves "glossary present ⇒ enforces", bracketing this side).
-  return r.status === 0 && out.issues.terminology_usage.length === 0 && out.termsRegistered === 0;
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  // The REPO-owned gate treats its authoritative data source (docs/glossary.md) as
+  // mandatory: absence is a governance data defect, never a vacuous pass.
+  return r.status === 1 && JSON.parse(r.stdout).issues.terminology_usage.some((i) => i.includes("missing"));
 });
 
 test("terminology gate: malformed glossary (no parseable header) fails closed", () => {
@@ -128,10 +136,8 @@ test("terminology gate: malformed glossary (no parseable header) fails closed", 
   gitInit(dir);
   write(path.join(dir, "docs", "glossary.md"), "一些散文，没有表格。\n");
   write(path.join(dir, "docs", "zh-TW", "guide.md"), "# 指南\n\n使用協定。\n");
-  const advisory = spawnSync(process.execPath, [CONSISTENCY, "--json"], { cwd: dir, encoding: "utf8" });
-  if (advisory.status !== 0 || !JSON.parse(advisory.stdout).issues.terminology_usage.some((i) => i.includes("no parseable header"))) return false;
-  const gated = spawnSync(process.execPath, [CONSISTENCY, "--gate"], { cwd: dir, encoding: "utf8" });
-  return gated.status === 1;
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  return r.status === 1 && JSON.parse(r.stdout).issues.terminology_usage.some((i) => i.includes("no parseable header"));
 });
 
 test("terminology gate: glossary without forbidden columns is a legitimate no-constraint config", () => {
@@ -139,7 +145,7 @@ test("terminology gate: glossary without forbidden columns is a legitimate no-co
   gitInit(dir);
   write(path.join(dir, "docs", "glossary.md"), "# Glossary\n\n| English | 简体中文 | 繁體中文 |\n| --- | --- | --- |\n| protocol | 协议 | 協定 |\n");
   write(path.join(dir, "docs", "zh-TW", "guide.md"), "# 指南\n\n使用協議。\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
   return r.status === 0 && out.issues.terminology_usage.length === 0 && out.termsRegistered === 0;
 });
@@ -152,11 +158,55 @@ test("terminology gate: aligned separator row (:---:) is not mistaken for a vari
     "| :--- | :--- | :--- | :---: | ---: |\n" +
     "| protocol | 协议 | 協定 | 協定 | 協議 |\n");
   write(path.join(dir, "docs", "zh-CN", "guide.md"), "# 指南\n\n使用協定。\n"); // genuinely forbidden
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
   // the separator text must NOT be registered as variants; the real forbidden term must be
   return r.status === 1 && out.termsRegistered === 2 &&
-    out.gateIssues.every((g) => g.item.includes("協定") && !g.item.includes(":---"));
+    out.issues.terminology_usage.every((g) => g.includes("協定") && !g.includes(":---"));
+});
+
+test("terminology gate: scans the post-migration docs/product/{lang} trees", () => {
+  const dir = tmp("term-product-tree");
+  gitInit(dir);
+  write(path.join(dir, "docs", "glossary.md"),
+    "# Glossary\n\n| English | 简体中文 | 繁體中文 | Forbidden zh-CN | Forbidden zh-TW |\n" +
+    "| --- | --- | --- | --- | --- |\n" +
+    "| protocol | 协议 | 協定 | 協定 | 協議 |\n");
+  // This repo's real shape after the docs migration (ADR-0016 / purpose-first structure).
+  write(path.join(dir, "docs", "product", "zh-TW", "guide.md"), "# 指南\n\n使用協議。\n"); // forbidden
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  return r.status === 1 && out.issues.terminology_usage.some((i) => i.includes("docs/product/zh-TW") && i.includes("協議"));
+});
+
+test("terminology gate: when the product tree exists, the legacy tree is NOT scanned", () => {
+  const dir = tmp("term-legacy-ignored");
+  gitInit(dir);
+  write(path.join(dir, "docs", "glossary.md"),
+    "# Glossary\n\n| English | 简体中文 | 繁體中文 | Forbidden zh-CN | Forbidden zh-TW |\n" +
+    "| --- | --- | --- | --- | --- |\n" +
+    "| protocol | 协议 | 協定 | 協定 | 協議 |\n");
+  // Authoritative post-migration tree is CLEAN...
+  write(path.join(dir, "docs", "product", "zh-TW", "guide.md"), "# 指南\n\n使用協定。\n");
+  // ...but a legacy tree also exists and deliberately carries a forbidden rendering.
+  write(path.join(dir, "docs", "zh-TW", "guide.md"), "# 指南\n\n使用協議。\n"); // must NOT be scanned
+  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  // True fallback = scan only the first existing authoritative tree; a transient state
+  // where old and new trees coexist must not fail the gate on legacy paths.
+  return r.status === 0 && out.issues.terminology_usage.length === 0;
+});
+
+// Separation proof (Producer/Product): the INSTALLED product checker no longer carries the
+// repo-only terminology gate; the repo enforces it via repo-tools/check-terminology.js.
+test("terminology gate: INSTALLED product checker no longer carries the repo-only gate", () => {
+  const dir = tmp("term-product-removed");
+  buildI18nFixture(dir, { zhTW: "# 指南\n\n使用協議與範本。\n" }); // forbidden, but only for THIS repo
+  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
+  const out = JSON.parse(r.stdout);
+  // The forbidden rendering exists in the fixture, but the product checker has no
+  // terminology_usage cluster anymore — it must not report it (that is now this repo's job).
+  return !("terminology_usage" in out.issues);
 });
 
 test("translation freshness: source committed after translation is stale", () => {
@@ -445,6 +495,44 @@ test("permission matrix rows match between SKILL.md and the AGENTS.md template",
   }
   return true;
 });
+
+
+test("lifecycle.policy embeds Discovery Ledger L1 contract (PLAN-0036)", () => {
+  // Phase 5c: L1 body lives in capability leaf; lifecycle keeps heading + pointer.
+  const life = fs.readFileSync(path.join(SKILL_ROOT, "references/policies/lifecycle.policy.md"), "utf8");
+  const leaf = fs.readFileSync(
+    path.join(SKILL_ROOT, "references/capabilities/discovery-ledger.md"),
+    "utf8"
+  );
+  if (!life.includes("### 发现台账（Discovery Ledger）")) {
+    console.error("  missing lifecycle heading");
+    return false;
+  }
+  if (!life.includes("docs/rules/capabilities/discovery-ledger.md")) {
+    console.error("  missing lifecycle pointer to capability leaf");
+    return false;
+  }
+  const need = [
+    "execution state + provenance",
+    "Unaccounted = 0",
+    "append-only",
+    "missing_capability",
+    "promoted-to-next-plan",
+    "fix_now",
+    ".governance/state.json",
+    "L1 未授权",
+  ];
+  for (const n of need) {
+    if (!leaf.includes(n)) { console.error("  missing in capability leaf: " + n); return false; }
+  }
+  // Storage boundary: entries are NOT parked in state.json
+  if (!/state\.json[\s\S]{0,80}\*\*否\*\*/.test(leaf) && !leaf.includes("| `.governance/state.json` | **否**")) {
+    console.error("  state.json must be excluded as ledger home");
+    return false;
+  }
+  return true;
+});
+
 
 // C3: the emptiness guard fired only when BOTH roots vanished, so losing one root left the
 // other alone carrying the check — the scan silently enforced half the corpus and still
