@@ -45,9 +45,9 @@ observed_in: gen1
 
 ## 解决情况
 
-**部分推进（2026-09-12 · PLAN-0044 Active / ADR-0024）：** 必装机械控制的阻断面已开始与声明对齐——`npm run check:must-ship` + migration CI blocking + skill-release `gates.must_ship` 将密钥/Git policy/生成器/payload/种子 oracle/路由完整性纳入 fail-closed 集合（见 `docs/research/working/must-ship-gates.md`）。这满足关闭条件在「必装机械面」上的切片，不是全仓所有 MUST。
+**必装阻断面已闭合（2026-09-12 · PLAN-0044 Implemented / Phase 8 EXITED / ADR-0024）：** `npm run check:must-ship` + migration CI blocking + skill-release `gates.must_ship` + carriers 将密钥/Git policy/生成器/payload/种子 oracle/路由/八叶与 SKILL 入口纳入 fail-closed 集合（见 `docs/research/working/must-ship-gates.md`）。对 2.0 而言，本 Finding 的 **blocker 切片**已满足；残留判断型 MUST 记 `later`，不挡 2.0（Proposal 须写明边界）。
 
-**仍开放：** 判断型 MUST（sibling closure、machinery test 等）无机械 carrier；enforcement 四值语义未统一；规范语言分层未完成。本 Finding 保持 Confirmed，直至关闭条件 1–3 有可检查载体。Phase 8 只推进必装阻断面，不宣称本 Finding Resolved。
+**仍开放（非 2.0 blocker）：** 判断型 MUST（sibling closure、machinery test 等）无机械 carrier；enforcement 四值语义未统一；规范语言分层未完成。本 Finding 保持 Confirmed，直至关闭条件 1–3 有可检查载体。不宣称本 Finding Resolved。
 
 ## 关联
 

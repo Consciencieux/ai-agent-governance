@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- **Phase 8 must-ship gate set (PLAN-0044 Implemented / EXITED)** — `npm run check:must-ship` (`repo-tools/check-must-ship.sh` + `check-must-ship-carriers.js`) fail-closes syntax + security/generator/payload/oracle-inventory/routing + carrier presence; migration CI and skill-release `gates.must_ship` bind the set. Inventory: `docs/research/working/must-ship-gates.md` (gap=0). Phase 8 EXIT ≠ 2.0; remaining human gates: `docs/plans/skill-release-2.0-checklist.md`. PLAN-0037 remains frozen.
+
 - **Phase 6 invariant oracle inventory (PLAN-0042 Implemented)** — machine-readable `docs/research/working/oracle-inventory.v0.json` (+ human `oracle-inventory.md`) freezes important CTRL-0001–0006 + routing integrity + Safety Kernel suite accounting; characterization suite `oracle-inventory` fail-closes when `important_gap` ≠ 0. Routing suite gains negatives N1–N3 (wrong Capability, orphan authority, deleted trigger). Generator suite adds stack-defaults negative for python→pytest/ruff (FINDING-0006 E02). Architecture checkpoint ≠ Release; full mechanical-rule coverage and FINDING-0006 stay deferred; PLAN-0037 remains frozen.
 
 - **Script inventory L0 (PLAN-0041 Implemented / FINDING-0028)** — machine-readable `docs/research/working/script-inventory.v0.json` (+ human `script-inventory.md`) labels every `scripts/**` and `repo-tools/**` entry with distribution role, generation, and disposition using `v1.0.2` as an evidence baseline (not an attic cut). Characterization suite `script-inventory` fail-closes on missing registrations; `retire` is empty so no date-based folder quarantine. Repo dogfood of INSTALLED CLIs remains an open follow-on.
@@ -20,7 +22,7 @@ All notable changes to this project will be documented here.
 
 - **Thin entry for Git consent (ADR-0022 / ADR-0024)** — `references/policies/git.policy.md` is the sole semantic authority for HITL Git writes; `AGENTS.md` and `SKILL.md` keep pointer + always-on summary only (no second authoritative body). `SKILL.md` states thin-entry loading: detailed policies/workflows/lifecycle load from `references/` by task, not as always-on full text.
 
-- **Phase 7 EXITED / Phase 8 Active** — PLAN-0043 Implemented (three review kinds; Impl must-ship; System/Research repo-keep; routing N4). Successor [PLAN-0044](docs/plans/PLAN-0044-rebuild-mandatory-gates.md) Active: must-ship gate inventory + `npm run check:must-ship` (+ CI / skill-release wiring). Phase 8 EXIT ≠ 2.0; PLAN-0037 remains frozen.
+- **Phase 7 EXITED / Phase 8 EXITED** — PLAN-0043 Implemented (three review kinds; Impl must-ship; System/Research repo-keep; routing N4). [PLAN-0044](docs/plans/PLAN-0044-rebuild-mandatory-gates.md) Implemented: must-ship set fail-closed; inventory gap=0. Phase 8 EXIT ≠ 2.0 skill-release; PLAN-0037 remains frozen.
 
 - **2.0 product freeze (ADR-0024)** — Phase 8 EXIT is necessary but not sufficient for skill-release. RESEARCH-0006 v8 projects must-ship / repo-keep / later / retire / out. Git HITL invariants stay; procedure is to be thinned under a single `git.policy.md` authority. Phase 7/8 plans must consume the freeze. PLAN-0037 remains frozen.
 

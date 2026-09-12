@@ -126,6 +126,7 @@ ai-agent-governance/
 │   ├── check-secrets.js        # repo 侧 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路径）
 │   ├── check-changelog-narration.js # CHANGELOG [Unreleased] 验证叙事提醒（repo-only，advisory）
 │   ├── check-must-ship.sh      # Phase 8 必装机械门禁集合（PLAN-0044 / ADR-0024）
+│   ├── check-must-ship-carriers.js  # 必装载体存在性（子技能 / 脚本 / SKILL 入口）
 │   ├── mutation-probe.js      # 按需验证测试断言是否活着（临时克隆内的抽样变异）
 │   ├── lib/routing.js          # Phase 5b 共享 resolve + Context Detector（PLAN-0039；graph.v0.json）
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult

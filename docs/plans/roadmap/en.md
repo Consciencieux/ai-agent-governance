@@ -292,7 +292,7 @@ The Roadmap does not independently define or adjudicate phase order; it only mir
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Current phase: Phase 8 Active ([PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md); consumes [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)).** Stable product remains Generation 1 (`main` / 1.x). This branch has completed Phase 0–7 (7 = [PLAN-0043](../PLAN-0043-review-system-redesign.md) Implemented). Plan archive ≠ Release (ADR-0016); Phase 8 EXIT ≠ skill-release (ADR-0018 2026-09-12 amendment + ADR-0024 usability gate).
+**Current phase: Phase 8 EXITED ([PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md) Implemented; consumes [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)).** Next action = **2.0 skill-release** (checklist: [skill-release-2.0-checklist.md](../skill-release-2.0-checklist.md)). Stable product remains Generation 1 (`main` / 1.x) until Mode exit. This branch has completed Phase 0–8. Plan archive ≠ Release (ADR-0016); Phase 8 EXIT ≠ skill-release (ADR-0018 2026-09-12 amendment + ADR-0024 usability gate).
 
 ## Now → 2.0 (index)
 
@@ -315,8 +315,8 @@ The Roadmap lists sequence and construction plans only; it does not copy Plan st
 
 | Step | What | Construction plan | One line |
 | --- | --- | --- | --- |
-| **Now** | Phase 8 rebuild mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md) (**Active**) | `check:must-ship` fail-closed; ≠ full Gen1 check |
-| 8 | Rebuild mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md) (Active) | Restore blocking authority **only for must-ship mechanical controls** |
+| **Now** | 2.0 skill-release | [skill-release-2.0-checklist.md](../skill-release-2.0-checklist.md) · `repo-workflows/skill-release.md` | Clean target + Mode exit + human approval; Phase 8 EXITED |
+| 8 | Rebuild mandatory gates | [PLAN-0044](../PLAN-0044-rebuild-mandatory-gates.md) (**Implemented / EXITED**) | `check:must-ship` fail-closed; ≠ full Gen1 check |
 | **2.0** | This repo’s Gen2 skill release | `repo-workflows/skill-release.md` | Must-ship slice usable on a clean target + Mode exit + blocking controls ([ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md)); Phase 8 necessary but not sufficient |
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **frozen in Design** (not Archived). Full Stages A–D are **not** a 2.0 must-ship; the 2.0 product slice is [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md). The extraction boundary still constrains the payload during migration. Unfreeze: after the 2.0 release.
@@ -562,9 +562,9 @@ Generation 1 — Document-Centric Governance
 P0–P7  checkpoints EXITED
          P6 = PLAN-0042 (oracle inventory + routing negatives + seed CTRLs)
          P7 = PLAN-0043 (three review kinds; Impl must-ship)
-P8     Rebuild mandatory gates — **current** (PLAN-0044 Active; `check:must-ship`)
+P8     Rebuild mandatory gates — **EXITED** (PLAN-0044 Implemented; `check:must-ship`)
         ↓
-2.0 skill-release (ADR-0024 usability gate: clean target + Mode exit + blocking must-ship; Phase 8 necessary but not sufficient)
+2.0 skill-release — **current** (ADR-0024 usability gate; checklist skill-release-2.0-checklist.md)
         ↓
 PLAN-0037  cross-project portable extract (frozen until after 2.0; not Archived)
         ↓

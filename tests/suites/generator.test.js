@@ -69,7 +69,8 @@ test("generate-governance: manifest lists created artifacts with correct types",
   const count = (t) => m.artifacts.filter((a) => a.type === t).length;
   const validKinds = m.artifacts.every((a) => a.kind === "file" || a.kind === "dir");
   const agentsType = m.artifacts.find((a) => a.path === "AGENTS.md").type;
-  return count("policy") === 10 && count("script") === 7 && count("state") === 6 && validKinds && agentsType === "policy";
+  // Phase 5c projects four Capability leaves under docs/rules/capabilities/ (+4 policy).
+  return count("policy") === 14 && count("script") === 7 && count("state") === 6 && validKinds && agentsType === "policy";
 });
 
 test("generate-governance: gitignore covers sensitive filenames", () => {
@@ -125,7 +126,8 @@ test("generate-governance: --json outputs structured result", () => {
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "JsonTest", "--phase", "A", "--json"], { encoding: "utf8" });
   if (r.status !== 0) return false;
   const out = JSON.parse(r.stdout);
-  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 15;
+  // Phase A includes the four Capability rule files projected in Phase 5c (+4 vs prior 15).
+  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 19;
 });
 
 test("generate-governance: missing --project-name exits 2", () => {
