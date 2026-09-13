@@ -18,7 +18,7 @@ FINDING-0028：分发角色清楚，代际/处置靠猜
         ↓
 用 v1.0.2 git 证据列 + 人工 disposition
         ↓
-docs/research/working/script-inventory.v0.json（施工权威）
+repo-tools/script-inventory.v0.json（施工权威）
         ↓
 表征：每个 scripts/|repo-tools/ 入口必须登记且路径存在
         ↓
@@ -35,8 +35,8 @@ retire=∅ → 禁止「整夹隔离」捷径
 
 | 项 | 路径 |
 | --- | --- |
-| 机读台账 | `docs/research/working/script-inventory.v0.json` |
-| 人读说明 | `docs/research/working/script-inventory.md` |
+| 机读台账 | `repo-tools/script-inventory.v0.json` |
+| 人读说明 | `repo-tools/script-inventory.md` |
 | 表征 | `tests/suites/script-inventory.test.js` |
 | Finding 回指 | FINDING-0028 |
 | Roadmap 延后行更新 | 指向本计划 Implemented，而非「未开」 |

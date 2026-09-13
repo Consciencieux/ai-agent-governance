@@ -46,7 +46,7 @@ review-manager 对「发现具体缺陷」有效（GitLab stack template 错误�
 
 ## 解决情况
 
-**部分推进（2026-09-12 · PLAN-0043 Active）：** Review 分层已落地为施工权威——Implementation = `review-implementation`（既有 review-manager，must-ship）；System / Research = `docs/research/working/review/*`（repo-keep）。默认 `audit` 不得静默加载后两类（路由 N4）。默认只读至分类的纪律写入 System/Research 剧本。
+**部分推进（2026-09-12 · PLAN-0043 Active）：** Review 分层已落地为施工权威——Implementation = `review-implementation`（既有 review-manager，must-ship）；System / Research = RESEARCH-0012 § System Review / § Research Review（repo-keep）。默认 `audit` 不得静默加载后两类（路由 N4）。默认只读至分类的纪律写入 System/Research 剧本。
 
 **仍开放（不挡 Phase 7 Exit，标 later）：** L0–L4 Finding Level 的全量机械枚举与强制证据格式；review-manager 正文五域未改写；本 Finding 保持 Confirmed 直至关闭条件 2/3/5 有可检查载体。
 

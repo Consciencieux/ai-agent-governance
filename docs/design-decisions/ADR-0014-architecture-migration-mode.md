@@ -118,7 +118,9 @@ Replacement / decomposition / retirement 的正式判断从 Phase 4 开始，逐
 
 ## Mode 退出处置（2026-09-12，非决策性 note）
 
-**状态：人类已批准退出（2026-09-12）。** 批准原文：「接受 must-ship 阻断 + Gen1 观测；批准合入 main；批准退出 Migration Mode。暂不批准 v2.0.0 tag。」提案：`docs/plans/mode-exit-proposal.md`。
+**状态：人类已批准退出（2026-09-12）。** 批准原文：「接受 must-ship 阻断 + Gen1 观测；批准合入 main；批准退出 Migration Mode。暂不批准 v2.0.0 tag。」本段即 HITL 记录（曾误写成独立 `mode-exit-proposal.md`，已并入此处，不另建文件）。
+
+**预检（退出当日）：** `npm run check:must-ship` pass；干净目标 INIT + verify 62/62；Phase 8 EXITED（PLAN-0044）。`v2.0.0` tag 当日未批准。
 
 **CI 落点（`.github/workflows/ci.yml`，随合入 `main` 生效）：**
 
@@ -129,7 +131,7 @@ Replacement / decomposition / retirement 的正式判断从 Phase 4 开始，逐
 
 含义（对齐 ADR-0024）：产品分支阻断权威 = 必装机械集合；Gen1 全量红不再挡 merge，也**不**再被当作可发布状态。
 
-**仍禁止（直至 skill-release Approval Gate）：** `v2.0.0` tag / GitHub Release / 宣称 2.0 已发布。其余人类项见 `docs/plans/skill-release-2.0-checklist.md`。
+**仍禁止（直至 skill-release Approval Gate）：** `v2.0.0` tag / GitHub Release / 宣称 2.0 已发布。其余人类项当时见 [PLAN-0045](../plans/archive/PLAN-0045-post-2.0-doc-truth.md)（发布清单已并入该 Plan 正文）。
 
 Migration Mode **已退出**；分发边界仍关闭，直到完成 skill-release。
 

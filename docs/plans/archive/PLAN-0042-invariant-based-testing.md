@@ -45,7 +45,7 @@ CTRL-0001–0006 缺口补齐（不重写全部 suite）
 
 - **oracle 定义**：夹具独立于 evaluator 实现；positive = 合法输入绿；negative = 破坏 invariant 必须红。
 - **important 冻结**：RESEARCH-0011 已编号 **CTRL-0001–0006** + **路由完整性**（正/负命中 capability、orphan authority、unknown 不静默全表）+ Safety Kernel 三套件已覆盖面的显式记账。
-- **覆盖台账**（仿 PLAN-0041）：`docs/research/working/oracle-inventory.v0.json` + 人读说明。行分类：`oracle_pair` / `characterization_only` / `gap`（及显式 `deferred`）。
+- **覆盖台账**（仿 PLAN-0041）：`repo-tools/oracle-inventory.v0.json` + 人读说明。行分类：`oracle_pair` / `characterization_only` / `gap`（及显式 `deferred`）。
 - **表征**：每个 important 行必须登记；缺 pair 必须是显式 `gap`，禁止静默。
 - **路由**：补负向/变异夹具（例：`edit_docs` 不得带 `secret-protection`；authority 缺失则红；图边被删则红）。
 - **CTRL-0001–0006**：能复用已有负向例则记账；缺则补一条最小负向；不按 suite 整文件重写。优先 FINDING-0006 E02（stack defaults）。
@@ -86,7 +86,7 @@ CTRL-0001 已有 repo/skill CLI parity：只记账，不另造 CONTROL-X 框架�
 
 ### P1 — 覆盖台账
 
-- [x] `docs/research/working/oracle-inventory.v0.json` + 人读 `oracle-inventory.md`
+- [x] `repo-tools/oracle-inventory.v0.json` + 人读 `oracle-inventory.md`
 - [x] `tests/suites/oracle-inventory.test.js`：缺登记则红
 - [x] 现有测试分类为 `oracle_pair` / `characterization_only` / `gap`
 

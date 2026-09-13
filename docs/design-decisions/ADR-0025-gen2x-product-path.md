@@ -69,7 +69,7 @@ H0 与 H1 不可对调：过时入口会把后续施工指回已删除的迁移�
 
 本修正不改决策 1–8 的 Horizon 顺序，也不改 ADR-0024 `later` 成员。补的是 **H1 期间允许 / 禁止什么**，以及脚本机械面如何消费已有台账（避免第三份顺序或去向权威）。触发：对「先清 1.0 脚本 / 用 v2.1–v2.3 当施工阶段」的建议做了对账。
 
-**9. H1 只提炼，不迁载体。** PLAN-0037 Active 期间允许 Stage A–D，并**消费**已有台账（ADR-0024 `later`、PLAN-0035 disposition、[`script-inventory.v0.json`](../research/working/script-inventory.v0.json)、RESEARCH-0011）。禁止：
+**9. H1 只提炼，不迁载体。** PLAN-0037 Active 期间允许 Stage A–D，并**消费**已有台账（ADR-0024 `later`、PLAN-0035 disposition、[`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)、RESEARCH-0011）。禁止：
 
 - 清理、删除或整夹隔离 `scripts/` / `repo-tools/`
 - 给 `check-doc-consistency.js` 加规则、例外或 flag（FINDING-0019；属 H2b）

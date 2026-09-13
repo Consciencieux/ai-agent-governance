@@ -100,6 +100,6 @@ CI 是否还能保证运行？
 ## 数据源
 
 - `docs/findings/`：governance findings 统计（mechanical gaps / trigger gaps / FP/FN / cross-profile defects / vacuous passes / attention failures / time-to-resolution / regression-protected %）
-- `docs/research/experiments/`：实验记录
+- 测量记录写进所属 RESEARCH 正文（不另建 experiments 目录）
 - ADR-0014 Migration Mode：full vs incremental validation 对比
-- Phase 6 覆盖台账：`docs/research/working/oracle-inventory.v0.json`（PLAN-0042 Implemented）
+- Phase 6 覆盖台账：`repo-tools/oracle-inventory.v0.json`（PLAN-0042 Implemented）

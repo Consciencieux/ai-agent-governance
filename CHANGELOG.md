@@ -4,11 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Changed
+
+- **Numbered docs are single files** — construction text lives in that one RESEARCH/ADR/Finding. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. Do not park markdown inventories next to the checkers.
+
 ## [2.0.0] - 2026-09-12
 
 ### Changed
 
-- **Migration Mode EXITED (human-approved 2026-09-12)** — product blocking gate is `npm run check:must-ship` on all branches/PRs; Gen1 `npm run check` is observational (`continue-on-error`). Record: `docs/plans/mode-exit-proposal.md`.
+- **Migration Mode EXITED (human-approved 2026-09-12)** — product blocking gate is `npm run check:must-ship` on all branches/PRs; Gen1 `npm run check` is observational (`continue-on-error`). Record: ADR-0014 § Mode 退出处置.
 
 - **CI product authority** — `.github/workflows/ci.yml` uses `must-ship` as the sole blocking job on all branches/PRs; Gen1 probes remain observational. Supersedes the dual-mode split used during Migration Mode.
 
@@ -20,7 +24,7 @@ All notable changes to this project will be documented here.
 
 ### Added
 
-- **2.0.0 Gen2 skill release** — usable must-ship slice on a clean target (INIT Phase C + verify 62/62 precheck), Migration Mode exit, blocking must-ship controls (ADR-0024). `npm run check:must-ship` fail-closes syntax + security/generator/payload/oracle-inventory/routing + carrier presence. Inventory: `docs/research/working/must-ship-gates.md` (gap=0). PLAN-0037 remains frozen.
+- **2.0.0 Gen2 skill release** — usable must-ship slice on a clean target (INIT Phase C + verify 62/62 precheck), Migration Mode exit, blocking must-ship controls (ADR-0024). `npm run check:must-ship` fail-closes syntax + security/generator/payload/oracle-inventory/routing + carrier presence. Inventory: RESEARCH-0011 § Must-ship (gap=0). PLAN-0037 remains frozen.
 
 - **Phase 8 must-ship gate set (PLAN-0044)** — `repo-tools/check-must-ship.sh` + `check-must-ship-carriers.js`; CI and skill-release `gates.must_ship` bind the set.
 

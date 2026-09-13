@@ -40,7 +40,7 @@ Phase 7 checkpoint EXITED → Phase 8（只重建必装机械控制阻断权威�
 
 ## 范围（In）
 
-- **三类定义**（施工权威，简体中文）：`docs/research/working/review/review-kinds.md`
+- **三类定义**（施工权威，简体中文）：`repo-tools/review-kinds.md`
 - **System Review 剧本**（repo-keep）：问题清单 = 架构 / control topology / producer–product 耦合 / 过度工程；输出 = Finding 分类优先，默认只读至分类完成
 - **Research Review 剧本**（repo-keep）：问题清单 = 我们如何理解/评价系统；不得伪装成 PR 缺陷扫描
 - **Implementation Review**：声明现有 review-manager 仅为 Impl；更新触发词与边界指针；**不**重写其全文 checklist
@@ -83,9 +83,9 @@ Migration 分支上把 Gen1 npm run check 改成 blocking
 
 ### P1 — 三类权威成文
 
-- [x] `docs/research/working/review/review-kinds.md`（边界 + 触发 + 输出物）
-- [x] `docs/research/working/review/system-review.md`
-- [x] `docs/research/working/review/research-review.md`
+- [x] `repo-tools/review-kinds.md`（边界 + 触发 + 输出物）
+- [x] `repo-tools/system-review.md`
+- [x] `repo-tools/research-review.md`
 - [x] Impl：map / 投影表声明「仅 Implementation」；`references/templates/sub-skills.md` §8 边界句
 
 ### P2 — 路由投影
@@ -168,10 +168,10 @@ Deferred by design:
 
 - `docs/plans/archive/PLAN-0043-review-system-redesign.md`（本文件）
 - `docs/research/working/review/**`
-- `docs/research/working/routing/graph.v0.json`
-- `docs/research/working/routing/task-capability-map.md`
-- `docs/research/working/routing/projection-table.md`
-- `docs/research/working/routing/call-topology.md`（指针）
+- `repo-tools/routing-graph.v0.json`
+- `repo-tools/task-capability-map.md`
+- `repo-tools/projection-table.md`
+- `repo-tools/call-topology.md`（指针）
 - `repo-tools/lib/routing.js` / Detector 触发（若需）
 - `tests/suites/routing.test.js`
 - `docs/findings/FINDING-0014-review-manager-layer-mismatch.md`

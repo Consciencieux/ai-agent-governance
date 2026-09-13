@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Characterization for docs/research/working/oracle-inventory.v0.json (PLAN-0042 / FINDING-0006).
+// Characterization for repo-tools/oracle-inventory.v0.json (PLAN-0042 / FINDING-0006).
 // Fail closed: every important id must be registered; gap count must be 0; enums known.
 "use strict";
 
@@ -7,7 +7,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..", "..");
-const INV_PATH = path.join(ROOT, "docs", "research", "working", "oracle-inventory.v0.json");
+const INV_PATH = path.join(ROOT, "repo-tools", "oracle-inventory.v0.json");
 
 const KIND = new Set(["ctrl", "routing", "safety_kernel"]);
 const CLASS = new Set(["oracle_pair", "characterization_only", "gap", "deferred"]);

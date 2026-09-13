@@ -1,22 +1,13 @@
 #!/usr/bin/env node
 // REPO-ONLY — Task→Capability resolve + Context Detector (PLAN-0039 / Phase 5b).
-// Algorithm: docs/research/working/routing/call-topology.md
-// Graph: docs/research/working/routing/graph.v0.json (machine projection of task-capability-map.md)
+// Algorithm: docs/research/RESEARCH-0012-task-capability-routing.md § 调用拓扑
+// Graph: repo-tools/routing-graph.v0.json (machine projection of RESEARCH-0012)
 "use strict";
 
 const fs = require("fs");
 const path = require("path");
 
-const GRAPH_PATH = path.join(
-  __dirname,
-  "..",
-  "..",
-  "docs",
-  "research",
-  "working",
-  "routing",
-  "graph.v0.json"
-);
+const GRAPH_PATH = path.join(__dirname, "..", "routing-graph.v0.json");
 
 let cachedGraph = null;
 

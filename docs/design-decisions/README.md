@@ -76,3 +76,17 @@ ADR 生命周期支持 `Proposed / Accepted / Superseded / Deprecated`，被取�
 规范示例：ADR-0016 原设计多类 archive，后因生命周期语义冲突追加「后续修正（2026-09-09）」，明确只有 Plan 物理归档，原正文保留为历史记录——这是 **Narrow amendment** 的正确形态（原 ADR 保持 Accepted）。
 
 状态：Proposed / Accepted / Superseded / Deprecated。
+
+## Agent 硬禁止（已付学费 · 本目录）
+
+权威：[FINDING-0030](../findings/FINDING-0030-artifact-placement-routing-gap.md) · [docs/README.md](../README.md) § 已付学费。
+
+```text
+禁止  design-decisions/archive/ 或按代际拆夹
+禁止  无编号 proposal/checklist 停在本目录（HITL 并入所属 ADR 正文）
+禁止  把任务状态、Stage 验收、bug 清单写进 ADR（那是 Plan / Finding）
+禁止  用新 ADR 代替「该并入已有 ADR 的一次性记录」（例：Mode 退出 → ADR-0014，不是新 Plan）
+禁止  在 ADR 里复述 Plan 步骤或 Research 全文目录
+```
+
+ADR = 长期选择与约束。施工怎么走归 Active Plan；系统是什么归 Research。纠偏归入 owner ADR，不要新建文件类型。

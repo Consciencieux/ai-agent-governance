@@ -6,7 +6,7 @@
 
 ## release_requirements（技能仓库发布前置检查）
 
-> **Phase 8 / ADR-0024：** Gen2 阻断权威是 `npm run check:must-ship`（必装机械集合；见 `docs/research/working/must-ship-gates.md`），不是「Migration Mode 下 Gen1 `npm run check` 观测红必须先变绿」。2.0 skill-release 另须满足干净目标可用性与 Migration Mode 退出（ADR-0024）；本表仍含完整仓库发布检查。
+> **Phase 8 / ADR-0024：** Gen2 阻断权威是 `npm run check:must-ship`（必装机械集合；台账见 RESEARCH-0011 § Must-ship），不是「Migration Mode 下 Gen1 `npm run check` 观测红必须先变绿」。2.0 skill-release 另须满足干净目标可用性与 Migration Mode 退出（ADR-0024）；本表仍含完整仓库发布检查。
 
 | 检查 | 要求 | 失败处理 |
 | --- | --- | --- |

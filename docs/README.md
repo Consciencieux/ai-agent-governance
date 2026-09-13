@@ -30,6 +30,76 @@ docs/
 
 对象可包含必要的 supporting context（如 ADR 的 Background/Consequences、Finding 的 Resolution）；**只有 forming 独立长期知识时才拆出并互相引用**，不是「两问同答就必须拆」。
 
+**产物归属（owner routing）**——类型判断之后再问「属于哪个生命周期对象」。缺这一步时，Agent 会按主题词新建 `working/` 子树、乱建 Plan 文件夹，或把知识目录塞进 Plan（FINDING-0030）：
+
+```text
+1. Plan 正文只保留执行合同（目标 / 阶段 / 验收 / 状态 / ledger）
+2. 提炼知识（Facts / Pattern / L1 候选 / 系统模型）→ Research
+3. 产生新的问题记录           → Finding
+4. 产生长期设计决定           → ADR
+5. 临时草稿 / HITL 勾选       → 并入所属 Plan 或 ADR 正文，不要新文件
+6. 禁止给编号对象建第二份文件或文件夹（`PLAN-xxxx/`、`PLAN-xxxx-stage-*.md`、`RESEARCH-0012-foo.md`）
+7. 机读 JSON / 路由图不是 Research：放 `repo-tools/`，由编号对象引用
+```
+
+**对象创建（creation gate）**——类型存在不等于允许新建该类型。只有同时满足「跨 session / 需要执行 / 需要 owner / 需要验证闭环 / 需要生命周期」才创建 **PLAN**。一次性 proposal、清单、被否决方向不是 Plan。细则：[FINDING-0030](findings/FINDING-0030-artifact-placement-routing-gap.md) · `docs/plans/README.md`。
+
+## 类型目录封闭（Closed type tree）
+
+`docs/` 下**允许存在的目录**只有上表那些类型位置（外加 `plans/roadmap/`、`plans/archive/`、`product/{en,zh-CN,zh-TW}/`）。这是允许名单，不是禁止名单。
+
+```text
+不确定放哪 → 创建 Finding 或并入已有编号文件
+禁止        → mkdir 一个新夹「先放着」
+禁止        → 给编号对象建文件夹或同号第二份 md/json
+新增类型目录 → 先 ADR，再改本页允许的类型树，不是 Agent 当场发明
+```
+
+**一个编号 = 一个文件。** 机读图 / 台账 JSON 不是 Research，放 `repo-tools/`，由编号对象引用。
+
+## 文档职责与信息密度（Document Scope）
+
+每份文档只有一个主职责。有价值 ≠ 写进当前打开的文件。
+
+```text
+内容有价值
++ 符合该对象职责
++ 不把该对象变成百科
+→ 才写入；否则拆到权威对象并引用
+```
+
+禁止复制：Plan 不贴 Research/L1 目录；ADR 不贴实现手册或研究过程；README/入口不贴政策全书。更长的文档需要更强的理由。Context Economy 包含：**文档自己不能制造无意义上下文**。
+
+| 对象 | 主职责 | 超出时 |
+| --- | --- | --- |
+| README / 入口 | 导航、定位、下一步 | 机制全文 → 权威对象 + 指针 |
+| Plan | 执行合同（目标/范围/阶段/验收/状态） | 理论、模式目录、架构规格 → Research / ADR |
+| ADR | Context / Decision / Consequences / Alternatives | 研究过程、施工手册 → Research / Plan |
+| Research | 调查、证据、分析，并给出可引用结论 | 任务状态、MUST 处置 → Plan / ADR |
+| Finding | 观察到的问题与证据 | 施工步骤 → Plan |
+
+**现在不做行数门禁**（避免为过线硬拆）。语义规则在此；肥胖复发再考虑 advisory。
+
+## 已付学费（同一缺陷的历史实例）
+
+证据：[FINDING-0030](findings/FINDING-0030-artifact-placement-routing-gap.md)。规则是上文封闭树 + 职责密度，**不是**记住某几个文件夹名。同类问题归入该 Finding，禁止另开 Finding、禁止用新目录「修复」。
+
+| 做过的错 | 为什么错 | 以后必须 |
+| --- | --- | --- |
+| Stage 稿进 `research/working/extraction/` | `working/` 是冻结施工槽，不是知识类型 | 提炼知识 → `RESEARCH-xxxx` |
+| 建 `docs/plans/working/` | 生命周期槽被当成类型 | 禁止该路径；Plan 只有单文件 |
+| 建 `docs/plans/PLAN-xxxx/`（含拆已归档 PLAN-0044/0045） | 别的 Plan 都是单文件；文件夹比无编号更乱 | 永远 `PLAN-xxxx-<slug>.md` |
+| 再拆 `PLAN-xxxx-stage-*.md` | 第二份 Plan 文件 | 禁止；状态写进那一个 Plan |
+| 「Stage 写进 Plan 正文」把 Facts/L1–L3 全文塞进 Plan | Plan 变成百科；违反单一权威与 Context Economy | Plan = 执行合同（约数百行）；知识只引用 |
+| 无编号 `*-proposal.md` / `*-checklist.md` 丢进 `plans/archive/` | HITL / 清单不是 Plan | 并入所属 Plan 或 ADR，或不要落盘 |
+| 同号再拆 `RESEARCH-0012-foo.md` / 把 JSON 当 Research | 一个编号必须一个文件 | 人读并入那一份；JSON 给代码读 |
+| 把拓扑/台账/审查剧本 md 堆进 `repo-tools/` | 门禁目录不是文档库 | 施工说明进所属 RESEARCH；`repo-tools/` 只留脚本和它读的 JSON |
+| 把内部研究写进 `docs/product/` | 产品文档不是知识对象垃圾桶 | Product 只给用户当前事实；指针回 Research/Plan |
+
+**纠偏禁令：** 路径错了，把内容归入**已有类型对象**。禁止用「再加一层目录 / 再加一份 md / 再写一个 Finding」当修复。禁止预建 `skill-extraction/`、`skill-design/`、`docs/gen2/` 这类主题夹。
+
+读本页只做调度；改 invariant / pattern 再读对应 Research。不要把 ADR / Research / Plan 互相复述成全文。
+
 **七类对象（唯一主问题 + 禁止承担）**：
 
 | 类型 | 唯一主问题 | 禁止承担 |
@@ -170,7 +240,7 @@ ADR 定约束，Roadmap 投影/呈现顺序，Plan 负责施工；阶段顺序�
 
 > **目录表示知识类型；状态和代际由对象元数据表达。不要通过不断增加目录层级来表达生命周期或架构时代。**
 
-禁止演化出 `docs/gen1/`、`docs/gen2/`、`docs/archive/adr/`、`docs/archive/findings/` 之类的结构。
+禁止把 Plan 拆成 `docs/plans/PLAN-xxxx/` 文件夹。禁止演化出长期的 `research/working/<topic>/` 作为第二知识库。禁止 `docs/gen1/`、`docs/gen2/`、`docs/archive/adr/`、`docs/archive/findings/`。详见上文 **已付学费**。
 
 ## 入口导航
 

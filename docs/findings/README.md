@@ -49,7 +49,7 @@ Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 
 | **D. 验证 / 调度效率** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
 | **E. 检查器正确性 / 回归** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 权威元数据被多份投影重复（FINDING-0024） |
 | **F. 可移植性 / 运行时边界** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
-| **G. 证据 / 研究方法** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023）· G08 正文级权威矩阵缺失（FINDING-0027） |
+| **G. 证据 / 研究方法** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023）· G08 正文级权威矩阵缺失（FINDING-0027）· G09 产物路由：无编号文件 / 禁止文件夹拆 Plan / Plan 不得吸收知识目录（FINDING-0030） |
 
 ## 分层与 Finding 类型（L0–L4）
 
@@ -143,6 +143,20 @@ resolved_in: gen1               # Resolved 时填写（未解决省略）
 2. **单独建文件**：如果问题本身值得长期独立追踪（明确产品 bug、独立生命周期），则单独建 `FINDING-xxxx-<slug>.md`。
 
 判断标准：`这个问题独立追踪比挂在一个大 finding 下更有价值吗？` 是 → 单独建；否 → 作为 Evidence。
+
+## Agent 硬禁止（已付学费 · 本目录）
+
+权威：[FINDING-0030](FINDING-0030-artifact-placement-routing-gap.md) · [docs/README.md](../README.md) § 已付学费。
+
+```text
+禁止  findings/active/  findings/archive/  findings/working/
+禁止  把 Finding 物理搬进 docs/plans/archive/
+禁止  同一根因再开新 Finding（扩围已有条目；PLAN-0037 百科化 = 0030，不是 0031）
+禁止  在 Finding 里写施工步骤 / Stage 验收（那是 Plan）
+禁止  为路径微调各写一条 Finding
+```
+
+路径乱放、文件夹拆 Plan、Plan 吸收知识，是**同一缺口**。关闭条件变了就改 FINDING-0030，不要平行文件。
 
 ## 生命周期（状态机）
 

@@ -61,8 +61,8 @@ SKILL.md 写入 docs/ 路径（违反 reference-closure）
 
 | 产物 | 路径 | 状态 |
 | --- | --- | --- |
-| 调用拓扑架构 | `docs/research/working/routing/call-topology.md` | v0 Working |
-| 路由工作稿（种子 + 映射 + 夹具） | `docs/research/working/routing/task-capability-map.md` | v0 Working |
+| 调用拓扑架构 | `repo-tools/call-topology.md` | v0 Working |
+| 路由工作稿（种子 + 映射 + 夹具） | `repo-tools/task-capability-map.md` | v0 Working |
 | 确定性解析表征 | `tests/suites/routing.test.js` | 7/7 pass |
 | 假设来源 | `docs/research/RESEARCH-0012-task-capability-routing.md` | Active v3 |
 | 薄入口指针 | `AGENTS.md` § Task→Capability routing | repo-only |
@@ -111,8 +111,8 @@ Phase **5b**：[PLAN-0039](PLAN-0039-context-detector-dispatcher.md)（**Impleme
 ## 受影响文件
 
 - `docs/research/RESEARCH-0012-task-capability-routing.md`
-- `docs/research/working/routing/task-capability-map.md`
-- `docs/research/working/routing/call-topology.md`
+- `repo-tools/task-capability-map.md`
+- `repo-tools/call-topology.md`
 - `docs/research/working/routing/README.md`
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
 - `docs/plans/archive/PLAN-0038-task-capability-routing.md`（本文件）

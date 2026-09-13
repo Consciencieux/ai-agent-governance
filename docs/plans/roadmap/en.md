@@ -322,7 +322,7 @@ The Roadmap lists sequence and construction plans only; it does not copy Plan st
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **Active** (thawed 2026-09-12). The extraction boundary still constrains outputs: do not promote this repo’s directories / CTRL ids / Phase scripts to L1.
 
-Phase 5 has EXITED (indexed from PLAN-0035 / `call-topology.md`, not a new ruling): **5a** explicit map → **5b** Dispatcher → **5c** project by Capability (`AuthorityRef` only). Leftover leaves / optional rename do **not** reopen Phase 5. Discipline: `docs/research/working/routing/call-topology.md` § 物理拓扑.
+Phase 5 has EXITED (indexed from PLAN-0035 / `call-topology.md`, not a new ruling): **5a** explicit map → **5b** Dispatcher → **5c** project by Capability (`AuthorityRef` only). Leftover leaves / optional rename do **not** reopen Phase 5. Discipline: RESEARCH-0012 § 物理拓扑.
 
 ## 2.x horizons (index of ADR-0025)
 

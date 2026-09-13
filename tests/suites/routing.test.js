@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Phase 5b characterization: shared resolve + Context Detector (PLAN-0039).
-// Graph: docs/research/working/routing/graph.v0.json — must stay in sync with task-capability-map.md
+// Graph: repo-tools/routing-graph.v0.json — must stay in sync with RESEARCH-0012 § 路由表
 "use strict";
 
 const fs = require("fs");
@@ -281,7 +281,7 @@ module.exports = function register(test) {
     const g = JSON.parse(JSON.stringify(graph));
     g.authorities = Object.assign({}, g.authorities, {
       "doc-knowledge": {
-        path: "docs/research/working/routing/__oracle-missing-authority__.md",
+        path: "repo-tools/__oracle-missing-authority__.md",
       },
     });
     const got = resolve("edit_docs", { trees: ["docs"] }, g);

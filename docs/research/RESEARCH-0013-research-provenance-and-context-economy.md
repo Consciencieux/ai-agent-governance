@@ -29,7 +29,7 @@ subject_generation: gen2
 | 压缩层代替重读归档 Plan | RESEARCH-0006 |
 | 对象按职责分离（Research / Finding / ADR / Plan） | RESEARCH-0007 · `docs/README.md` |
 | Git / CHANGELOG 记 What，不记根因与方案比较 | lifecycle CHANGELOG 内容边界 · changelog-policy · ADR-0012 |
-| 实验记录有独立槽位 | `docs/research/experiments/` |
+| 实验记录挂所属研究正文 | RESEARCH-0012 / 0003（不另建 experiments 目录） |
 | 执行中发现可追踪 | Discovery Ledger（lifecycle · ADR-0021） |
 | 中大型才写 TASK；规模分级只决定要不要写计划 | lifecycle § 规模分级 |
 

@@ -128,10 +128,14 @@ ai-agent-governance/
 │   ├── check-must-ship.sh      # Phase 8 必装机械门禁集合（PLAN-0044 / ADR-0024）
 │   ├── check-must-ship-carriers.js  # 必装载体存在性（子技能 / 脚本 / SKILL 入口）
 │   ├── mutation-probe.js      # 按需验证测试断言是否活着（临时克隆内的抽样变异）
-│   ├── lib/routing.js          # Phase 5b 共享 resolve + Context Detector（PLAN-0039；graph.v0.json）
+│   ├── lib/routing.js          # Phase 5b 共享 resolve + Context Detector（PLAN-0039）
+│   ├── routing-graph.v0.json   # 机读 Task→Capability 图（routing.js 消费；不是 Research 对象）
+│   ├── script-inventory.v0.json
+│   ├── oracle-inventory.v0.json
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发
+│   ├── changelog-policy.md      # 本仓 CHANGELOG 政策（REPO-ONLY）
 │   └── skill-release.md        # 技能仓库发布流程（版本五个同步点 + tag、tarball 构建）
 │
 ├── docs/                       # 项目知识——开发者维护，开发者与 Agent 共享读取（触发词、计划、路线图）

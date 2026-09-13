@@ -11,7 +11,7 @@ target: both
 
 > **Status: Implemented**（P0–P2 完成；P3 可选未做 rename。前置：PLAN-0038 / PLAN-0039 Implemented。边冻结；Slice B 横切已迁出 lifecycle。**Phase 5 checkpoint EXITED**。）
 
-纪律权威：`docs/research/working/routing/call-topology.md` § 物理拓扑。  
+纪律权威：`repo-tools/call-topology.md` § 物理拓扑。  
 图权威：人表 `task-capability-map.md` · 机表 `graph.v0.json` · 解析 `repo-tools/lib/routing.js`。
 
 ## 目标
@@ -98,7 +98,7 @@ references/
 ### P0 — Design 批准 + 投影表
 
 - [x] 批准本 Design → `status: Active`
-- [x] 写入投影表（`docs/research/working/routing/projection-table.md`）
+- [x] 写入投影表（`repo-tools/projection-table.md`）
 - [x] 冻结 Slice B 叶清单与目标路径
 
 ### P1 — Slice A：authority_ref 机读化（可先于搬家）
@@ -149,7 +149,7 @@ references/
 - `docs/plans/archive/PLAN-0040-capability-physical-projection.md`（本文件）
 - `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`
 - `docs/research/working/routing/{call-topology,task-capability-map,README,graph.v0.json}`
-- `docs/research/working/routing/projection-table.md`（P0）
+- `repo-tools/projection-table.md`（P0）
 - `references/policies/lifecycle.policy.md`
 - `references/capabilities/*.md`（新建）
 - `references/init-spec.json`

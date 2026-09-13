@@ -36,13 +36,13 @@ Phase 8 checkpoint EXITED → 2.0 skill-release 仍须干净目标证据
 | `npm run check:must-ship` | fail-closed；含 syntax + security/generator/payload/oracle-inventory/routing + carriers |
 | Migration CI | blocking job 调用 `check:must-ship` |
 | skill-release | `gates.must_ship` 行已接线 |
-| 台账 | `docs/research/working/must-ship-gates.md` **gap=0** |
+| 台账 | `repo-tools/must-ship-gates.md` **gap=0** |
 | FINDING-0003 | 必装阻断面已推进；Finding 仍 Confirmed（判断型 MUST = later） |
 | Git consent | 单一语义权威 = `references/policies/git.policy.md` |
 
 ## 范围（In）
 
-- **必装阻断台账**：`docs/research/working/must-ship-gates.md`
+- **必装阻断台账**：`repo-tools/must-ship-gates.md`
 - **must-ship gate set**：`npm run check:must-ship`
 - 接线：migration CI；`repo-workflows/skill-release.md` 前置 `gates.must_ship`
 - Git consent 单一权威指针（机械 evaluator = later）
@@ -86,7 +86,7 @@ MIGRATE 独立入口
 
 ### P1 — 必装阻断台账
 
-- [x] `docs/research/working/must-ship-gates.md`：must-ship 机械控制全表
+- [x] `repo-tools/must-ship-gates.md`：must-ship 机械控制全表
 - [x] 每行：能力 · 载体 · 当前 CI/release 权威 · 目标 · gap/ok
 - [x] 明确「不进 set」的 Gen1 观测项
 
@@ -158,7 +158,7 @@ Deferred by design / 2.0 skill-release:
 ## Affected Files
 
 - `docs/plans/archive/PLAN-0044-rebuild-mandatory-gates.md`（本文件）
-- `docs/research/working/must-ship-gates.md`
+- `repo-tools/must-ship-gates.md`
 - `repo-tools/check-must-ship.sh` · `repo-tools/check-must-ship-carriers.js`
 - `.github/workflows/ci.yml` · `package.json`
 - `repo-workflows/skill-release.md`

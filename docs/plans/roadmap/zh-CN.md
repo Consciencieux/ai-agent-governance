@@ -324,7 +324,7 @@ Roadmap 只列顺序与施工计划，不复制 Plan 步骤 / Affected Files / �
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **已解冻为 Active**（2026-09-12）。过滤边界仍约束提炼产物：禁止把本仓目录 / CTRL 号 / Phase 剧本当 L1。
 
-Phase 5 已 EXITED（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → **5b** Dispatcher → **5c** 按 Capability 投影（只改 `AuthorityRef`）。残留叶 / 可选 rename **不**重开 Phase 5。纪律：`docs/research/working/routing/call-topology.md` § 物理拓扑。
+Phase 5 已 EXITED（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → **5b** Dispatcher → **5c** 按 Capability 投影（只改 `AuthorityRef`）。残留叶 / 可选 rename **不**重开 Phase 5。纪律：RESEARCH-0012 § 物理拓扑。
 
 ## 2.x 工作带（索引 ADR-0025）
 

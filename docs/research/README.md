@@ -65,13 +65,12 @@ docs/research/
 ├── RESEARCH-0011-gen1-mechanical-control-inventory.md # Gen1 机械控制库存（CTRL-centric；Phase 4 inventory；不裁决 disposition）
 ├── RESEARCH-0012-task-capability-routing.md           # Task→Capability 适用路由（Phase 5 入口；v2 六问工作假设；显式映射；禁图谱/全自动 Dispatcher）
 ├── RESEARCH-0013-research-provenance-and-context-economy.md # 科研回溯 vs 上下文经济；事前短合同 vs 事后沉淀；一般项目文档面
-├── working/                         # 施工产物（路由图、脚本台账；非 RESEARCH 正文）
-│   ├── routing/                     # Task→Capability 图 / map / graph.v0.json
-│   └── script-inventory.md + .v0.json
-└── experiments/                     # 实验记录（测量；槽位可空）
+├── RESEARCH-0014-portable-governance-patterns.md            # PLAN-0037 提炼产物：Facts → Pattern → L1/L2/L3 候选（非 Plan、非 skill）
 ```
 
-不要：`系统模型.md`。
+**一个编号 = 一个文件**（与 Plan 相同）。禁止同号第二份文件，禁止把 JSON 写成 Research，禁止把施工说明堆进 `repo-tools/`。`repo-tools/` 只放门禁/CLI 和代码读取的 JSON。
+
+不要：`系统模型.md`、不要子目录。
 
 ## 研究文档类型
 
@@ -82,7 +81,7 @@ docs/research/
 | C. 评价框架 | `RESEARCH-0003-evaluation-framework.md` | Trigger / Detection / Blocking / Negative Oracle / FP / FN / Runtime / Token / Human Cost |
 | D. 架构演进 | `RESEARCH-0004-architecture-evolution.md` | Generation 0→3；Gen1→Gen2 渐进式旁路迁移 / authority 分阶段转移；吸收能力不复制结构 |
 | E. 当前能力 | `RESEARCH-0005-current-capabilities.md` | 当前能力清单（Generation-1 baseline） |
-| F. 实验记录 | `experiments/` | **只放实际实验记录**（做了什么、数据、结果）；不是普通分析文章——分析归 `RESEARCH-xxxx` |
+| F. 实验记录 | 挂所属 `RESEARCH-xxxx` 文件 | 有测量才写进该研究正文或由其引用；**不**另建 experiments 目录 |
 | G. 能力基线 | `RESEARCH-0006-generation-1-capability-baseline.md` | Plan + Pre-PLAN + Agent 压缩上下文；**scripts 面与 instruction/workflow 面双闭合**（含 8 sub-skills / githooks）；第四列待决，不裁决处置 |
 | H. 规划/知识控制模型 | `RESEARCH-0007-documentation-knowledge-architecture.md` | 七类对象、路由、当前/历史隔离；正文级权威矩阵的规范在 ADR-0016 |
 | I. 修复/发现/工作集模型 | `RESEARCH-0008-repair-discovery-workset-model.md` | 纵向修复控制 vs 横向问题闭包；recursive discovery / focus drift；closure gate |
@@ -91,7 +90,7 @@ docs/research/
 | L. Gen1 机械控制库存 | `RESEARCH-0011-gen1-mechanical-control-inventory.md` | CTRL→evaluator→gate→tests→profile 事实表；monolith 集群行；Safety Kernel 锚点；disposition 归 PLAN-0035 |
 | M. Task→Capability 路由 | `RESEARCH-0012-task-capability-routing.md` | Phase 5 入口：显式 Task/Context→Capability→Authority/Leaf；禁图谱与全自动 Dispatcher |
 | N. 科研回溯与上下文经济 | `RESEARCH-0013-research-provenance-and-context-economy.md` | 写全 provenance、执行 on-demand；Plan=短合同；一般项目不复制本仓科研树 |
-| — | `working/` | 施工产物槽：`routing/`（RESEARCH-0012 / PLAN-0038–0040）+ script inventory（FINDING-0028 / PLAN-0041）；repo-only，非 INSTALLED |
+| O. 可移植治理模式 | `RESEARCH-0014-portable-governance-patterns.md` | PLAN-0037 Stage A/B 知识产物（Facts / Rationale / Pattern / L1–L3 候选）；执行合同仍在 PLAN-0037 |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 
@@ -165,3 +164,14 @@ Superseded by: Research-007
 ## 一句规则
 
 > **Research 保存「我们如何理解和研究这个系统」，使用简体中文单语；通过版本和 supersede 管理演进，不删除历史；它连接 findings、ADR 和 plans，但不替代其中任何一个。**
+
+## Agent 硬禁止（已付学费 · 本目录）
+
+权威：[FINDING-0030](../findings/FINDING-0030-artifact-placement-routing-gap.md) · [docs/README.md](../README.md)。
+
+```text
+一个 RESEARCH-xxxx = 一个文件
+机读 JSON / 路由图 → `repo-tools/*.json`（代码的数据），不要伪造第二份研究文档，也不要把 md 说明书塞进 repo-tools
+不确定归属 → Finding 或并入已有编号文件，不要 mkdir
+Research 不写执行合同 / MUST 处置
+```

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Characterization for docs/research/working/script-inventory.v0.json (PLAN-0041 / FINDING-0028).
+// Characterization for repo-tools/script-inventory.v0.json (PLAN-0041 / FINDING-0028).
 // Fail closed: every scripts/ and repo-tools/ .js|.sh entry must be inventoried;
 // every inventory path must exist; disposition enums must be known; retire set empty in v0.
 "use strict";
@@ -8,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..", "..");
-const INV_PATH = path.join(ROOT, "docs", "research", "working", "script-inventory.v0.json");
+const INV_PATH = path.join(ROOT, "repo-tools", "script-inventory.v0.json");
 
 const ROLE = new Set(["INSTALLED", "SKILL-INTERNAL", "REPO-ONLY"]);
 const GEN = new Set(["gen1_carrier", "gen2_native", "dual_profile"]);

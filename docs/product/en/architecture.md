@@ -155,7 +155,10 @@ ai-agent-governance/
 │   ├── check-must-ship.sh      # Phase 8 must-ship mechanical gate set (PLAN-0044 / ADR-0024)
 │   ├── check-must-ship-carriers.js  # must-ship carrier presence (sub-skills / scripts / SKILL entry)
 │   ├── mutation-probe.js      # on-demand assurance that test ASSERTIONS are alive (sampled mutations in a temp clone)
-│   ├── lib/routing.js          # Phase 5b shared resolve + Context Detector (PLAN-0039; graph.v0.json)
+│   ├── lib/routing.js          # Phase 5b shared resolve + Context Detector (PLAN-0039)
+│   ├── routing-graph.v0.json   # machine Task→Capability graph (consumed by routing.js; not a Research object)
+│   ├── script-inventory.v0.json
+│   ├── oracle-inventory.v0.json
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
