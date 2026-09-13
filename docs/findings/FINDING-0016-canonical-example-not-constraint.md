@@ -47,7 +47,10 @@ forbidden narration markers
 
 ## 解决情况
 
-（待填。）
+**H2d 切片（2026-09-13 · PLAN-0050 Archived）：** 确认已有机械载体 `repo-tools/check-changelog-narration.js`（示例/叙事边界可检查，而非“是否读了示例”）；`h2d-portability` 存在性表征。不声称全部示例特征已机读化。
+
+**仍开放（Confirmed）：** 把更多可观察示例特征拆成 fail-closed 检查。successor = H3 / 下次 2.x Plan。
+
 
 ## 关联
 

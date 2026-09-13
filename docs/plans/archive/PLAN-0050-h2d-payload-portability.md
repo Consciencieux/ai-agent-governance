@@ -1,15 +1,15 @@
 ---
 id: PLAN-0050
-status: Active
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0050：H2d 载荷调度与可移植性
 
-**状态：** Active（2026-09-13；人类「开始H2d」= Active 授权。前置 H2c [PLAN-0049](archive/PLAN-0049-h2c-machine-controls.md) 已 Archived。Stage 0 冻结已记录）。
+**状态：** Archived（2026-09-13 exit review）。Stage 0–4 完成；Discovery Ledger Open=0。Plan archive ≠ Release。下一步 = **H3**（远；无 Active Plan）。
 
-**归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) **H2d**（决策 5 + 决策 14：H2-0 → PLAN-0046 → a→b→c→**d**）。下一步 = **H3**（本带未完成前不得当作必装门槛）。
+**归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) **H2d**（决策 5 + 决策 14：H2-0 → PLAN-0046 → a→b→c→**d**）。H2 完成；下一步 = **H3**（远；不挡 2.1；无 Active Plan）。
 
 **问题（已对齐）：** 判断型 MUST 仍无机械载体（FINDING-0003）；触发/校验路由与 INSTALLED 默认面边界未 Narrow（FINDING-0004 / 0005）；可移植执行边界与 adapter 矩阵未收（FINDING-0007）；GitLab 栈模板与锁原子性、Git consent 机械 evaluator、MIGRATE 独立入口、L0–L4 工具面、示例≠约束与 ADR 持续执行缺口仍在 later 清单（FINDING-0010 / 0012 / 0014 / 0016 / 0017）。H2c 已交付本仓机读 Control + CONTROL-X；本带做**载荷调度与可移植性**，不把 opt-in githooks 或 L3 当作 2.1 必装。
 
@@ -79,19 +79,19 @@ target: both
 - [x] FINDING-0010 残留收口：docs-only GitLab 回归（允许 markdown npx；禁 app-stack `npm run lint/test/build`）
 - [x] FINDING-0007 最小 adapter 矩阵：`repo-tools/portability-boundary.v0.json` + 表征对账（Finding 仍 Confirmed：tool-call hard enforcement = later）
 
-### Stage 3 — INSTALLED 边界 Narrow + L0–L4 + 0016/0017 切片
+### Stage 3 — INSTALLED 边界 Narrow + L0–L4 + 0016/0017 切片 — **完成**
 
-- [ ] FINDING-0004 / 0005：Narrow ADR **或** 明确保持 REPO-ONLY 的可验证声明
-- [ ] FINDING-0014 L0–L4 工具面陈述（repo-keep）
-- [ ] FINDING-0016 / 0017 最小切片或 Ledger defer（须有 successor）
+- [x] FINDING-0004 / 0005：选择 **REPO-ONLY 可验证声明**（不装 INSTALLED router）——`route-task.js` / `routing-graph.v0.json` 仅在 `repo-tools/`；INIT `init-spec` 无安装项；`h2d-portability` 表征（Findings 仍 Confirmed：统一 dispatcher / trigger coverage 属 later）
+- [x] FINDING-0014：`repo-tools/tool-surface-layers.v0.json` L0–L4 可陈述；L3 `must_install_for_2_1=false`（Finding 仍 Confirmed：review-manager 全文分层属 later）
+- [x] FINDING-0016 / 0017 最小切片：载体存在性表征（`check-changelog-narration.js` + `check-metadata-projection.js`）；Finding 仍 Confirmed，余项 successor = **H3 / 下次 2.x Plan**
 
-### Stage 4 — 验证与闭包
+### Stage 4 — 验证与闭包 — **完成**
 
-- [ ] Discovery Ledger Open=0（terminal defer 须 successor）
-- [ ] 本带承诺 Resolved 的 Findings 有证据；未承诺的保持 Confirmed 并写明
-- [ ] exit review → Implemented → Archived（Plan archive ≠ Release）
-- [ ] Roadmap / AGENTS / ADR-0025 现在时 → 下一步 H3（远）或下一次 2.x Plan
-- [ ] 确认未把 hooks/L3 钉成必装；未升 Gen1 check；未无 ADR 装 INSTALLED router
+- [x] Discovery Ledger Open=0
+- [x] 本带承诺切片有证据；未承诺关闭的 Findings 保持 Confirmed 并写明
+- [x] exit review → Archived（Plan archive ≠ Release；人类「收口H2d」）
+- [x] Roadmap / AGENTS / ADR-0025 现在时 → 下一步 H3（远；无 Active Plan）
+- [x] 确认未把 hooks/L3 钉成必装；未升 Gen1 check；未无 ADR 装 INSTALLED router
 
 ## 完成条件（outcome）
 
@@ -100,31 +100,31 @@ target: both
 - [x] 至少一条判断型义务有 carrier；enforcement 词汇可陈述（FINDING-0003 整体仍 Confirmed）
 - [x] MIGRATE 入口可发现
 - [x] 0007 边界可对账（矩阵切片；Finding 整体仍 Confirmed）
-- [ ] 0004/0005 要么 Narrow 后进 INSTALLED，要么可验证地未装
-- [ ] 未把 githooks/L3 当作 2.1 必装；must-ship 仍唯一 CI 阻断
-- [ ] 证据真实（tests + 相关 scope gate / `check:must-ship`）
+- [x] 0004/0005 可验证地未装 INSTALLED router（REPO-ONLY proof）
+- [x] 未把 githooks/L3 当作 2.1 必装；must-ship 仍唯一 CI 阻断
+- [x] 证据真实（tests + 相关 scope gate / `check:must-ship`）
 
 ## Discovery Ledger
 
 | ID | 类型 | 问题 | 状态 | 处置 |
 | --- | --- | --- | --- | --- |
-| D0 | constraint | 禁止 hooks/L3 钉成 2.1 必装；禁止升 Gen1 check | open | observe through Stage 4 |
-| D1 | constraint | 无 Narrow ADR 禁止装 INSTALLED router | open | observe |
+| D0 | constraint | 禁止 hooks/L3 钉成 2.1 必装；禁止升 Gen1 check | resolved | observed through exit — must-ship sole CI block; L3 must_install=false |
+| D1 | constraint | 无 Narrow ADR 禁止装 INSTALLED router | resolved | observed — REPO-ONLY proof; no Narrow ADR install |
 | D2 | architecture_gap | FINDING-0003 judgment MUST carrier（切片） | resolved | enforcement vocab + sibling-closure checker/contracts; Finding remains Confirmed for remaining judgment classes |
 | D3 | mechanism_gap | CTRL-0002 Git consent evaluator | resolved | evaluator + CLI + CTRL-0002.json + tests |
 | D4 | defect | FINDING-0012 lock 非原子 | resolved | wx agent.lock acquire/release + tests |
-| D5 | architecture_gap | FINDING-0004 / 0005 INSTALLED 边界 | open | Stage 3 Narrow or REPO-ONLY proof |
+| D5 | architecture_gap | FINDING-0004 / 0005 INSTALLED 边界 | resolved | REPO-ONLY proof (route-task not INIT-installed); Findings remain Confirmed for dispatcher later |
 | D6 | portability_gap | FINDING-0007 adapter 矩阵 | resolved | portability-boundary.v0.json + h2d characterization; Finding remains Confirmed for tool-call later |
 | D7 | defect | FINDING-0010 GitLab 模板残留 | resolved | docs-only residual regression + non-node stack suite; Finding already Resolved |
 | D8 | product_gap | MIGRATE 独立入口 | resolved | migrate-governance.js + SKILL MIGRATE pointer + tests |
-| D9 | architecture_gap | FINDING-0014 L0–L4 工具面 | open | Stage 3 |
-| D10 | architecture_gap | FINDING-0016 / 0017 切片 | open | Stage 3 or defer+successor |
-| D11 | constraint | 禁第三份去向表；禁 CTRL 号进 portable | open | observe |
+| D9 | architecture_gap | FINDING-0014 L0–L4 工具面 | resolved | tool-surface-layers.v0.json; Finding remains Confirmed for review-manager full rewrite |
+| D10 | architecture_gap | FINDING-0016 / 0017 切片 | resolved | carrier-existence slice; Findings remain Confirmed; successor = H3 / next 2.x Plan |
+| D11 | constraint | 禁第三份去向表；禁 CTRL 号进 portable | resolved | observed through exit — inventory + portable principles hold |
 
 ```text
 Total known:  12
-Resolved:     6
-Open:         6
+Resolved:     12
+Open:         0
 Unaccounted:  0
 ```
 

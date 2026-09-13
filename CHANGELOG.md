@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0050 H2d Archived** — Stage 3–4 closed: REPO-ONLY router proof (FINDING-0004/0005 slice); `tool-surface-layers.v0.json` L0–L4 with L3 not must-install (FINDING-0014); FINDING-0016/0017 carrier-existence slice (successors = H3 / next 2.x Plan). Discovery Ledger Open=0. H2 complete; no Active Plan. Plan archive ≠ Release.
+
 - **PLAN-0050 H2d Stage 2 done** — FINDING-0010 residual closed (docs-only GitLab regression); FINDING-0007 minimal portability/adapter matrix at `repo-tools/portability-boundary.v0.json` (Finding remains Confirmed for tool-call hard enforcement later). Stage 3 next: INSTALLED router Narrow-or-proof, L0–L4, 0016/0017.
 
 - **PLAN-0050 H2d Stage 1 done; Stage 2 underway** — Sibling-closure mechanical carrier (`check-sibling-closure.js` + contracts; negative missing-instance fixture); discoverable MIGRATE entry (`migrate-governance.js` + SKILL pointer). FINDING-0003 remains Confirmed (remaining judgment classes). INSTALLED router still requires Narrow ADR; hooks/L3 not mandatory.

@@ -207,4 +207,32 @@ module.exports = function register(test) {
       doc.finding === "FINDING-0007"
     );
   });
+
+  test("REPO-ONLY router proof: route-task not INIT-installed (FINDING-0004/0005)", () => {
+    const init = JSON.parse(fs.readFileSync(path.join(ROOT, "references", "init-spec.json"), "utf8"));
+    const blob = JSON.stringify(init);
+    if (/route-task|routing-graph\.v0\.json|repo-tools\/lib\/routing/.test(blob)) {
+      console.error("INIT spec must not install Task→Capability router");
+      return false;
+    }
+    const router = path.join(ROOT, "repo-tools", "route-task.js");
+    const graph = path.join(ROOT, "repo-tools", "routing-graph.v0.json");
+    return fs.existsSync(router) && fs.existsSync(graph);
+  });
+
+  test("tool-surface-layers.v0: L0–L4 stated; L3 not 2.1 must-install (FINDING-0014)", () => {
+    const p = path.join(ROOT, "repo-tools", "tool-surface-layers.v0.json");
+    const doc = JSON.parse(fs.readFileSync(p, "utf8"));
+    const ids = new Set((doc.layers || []).map((l) => l.id));
+    if (!["L0", "L1", "L2", "L3", "L4"].every((id) => ids.has(id))) return false;
+    const l3 = (doc.layers || []).find((l) => l.id === "L3");
+    return l3 && l3.must_install_for_2_1 === false && doc.finding === "FINDING-0014";
+  });
+
+  test("FINDING-0016/0017 slice: narration + metadata-projection carriers exist", () => {
+    return (
+      fs.existsSync(path.join(ROOT, "repo-tools", "check-changelog-narration.js")) &&
+      fs.existsSync(path.join(ROOT, "repo-tools", "check-metadata-projection.js"))
+    );
+  });
 };

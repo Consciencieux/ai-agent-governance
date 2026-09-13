@@ -134,9 +134,10 @@ H2-0 与 H2-front **可并行**。**H2a→b→c 不可倒**：b 消费 a 的残�
 
 ## 后果
 
-- Roadmap「当前阶段」= **H2**（H2-front [PLAN-0046](../plans/archive/PLAN-0046-instruction-surface-2.0-alignment.md) **Archived** 2026-09-13；H2a = [PLAN-0047](../plans/archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../plans/archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**；**H2c** = [PLAN-0049](../plans/archive/PLAN-0049-h2c-machine-controls.md) **Archived**；**H2d** = [PLAN-0050](../plans/PLAN-0050-h2d-payload-portability.md) **Active**）。H0 / H1 已 Archived。
+- Roadmap「当前阶段」= **H2 完成**（H2-front [PLAN-0046](../plans/archive/PLAN-0046-instruction-surface-2.0-alignment.md) … **H2d** = [PLAN-0050](../plans/archive/PLAN-0050-h2d-payload-portability.md) **Archived**）。下一步 = **H3**（远；无 Active Plan）。H0 / H1 已 Archived。
+- PLAN-0037 已 Archived（2026-09-13 Stage D）；PLAN-0046…0049 已 Archived；**PLAN-0050 已 Archived（H2d exit 2026-09-13）**。**Active** = none。
 - ADR-0018 继续约束历史 Phase 0–8 与 ID 编号规则；2.x 顺序提问指向本 ADR。
-- PLAN-0037 已 Archived（2026-09-13 Stage D）；PLAN-0046 已 Archived（2026-09-13 Stage 3/4 + Y6）；PLAN-0047 已 Archived（2026-09-13 Stage 0–4）；PLAN-0048 已 Archived（2026-09-13 Stage 0–4；H2b）。PLAN-0049 已 Archived（H2c）。**Active** = PLAN-0050（H2d）。
+- PLAN-0037 已 Archived（2026-09-13 Stage D）；PLAN-0046 已 Archived（2026-09-13 Stage 3/4 + Y6）；PLAN-0047 已 Archived（2026-09-13 Stage 0–4）；PLAN-0048 已 Archived（2026-09-13 Stage 0–4；H2b）。PLAN-0049 已 Archived（H2c）。**Active** = none（H2 complete; next = H3 far）。
 - `retire` / `out`（治理评分、`ai-skill-manager`）仍不进入 2.x 施工；脚本面今日 `retire = ∅`。
 - H2-front 期间对 `scripts/` 的默认动作仍是 **不动载体**；去向问题问 inventory，不问新表。
 

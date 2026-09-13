@@ -1,0 +1,74 @@
+{
+  "id": "TOOL-SURFACE-LAYERS-V0",
+  "version": 0,
+  "authority": "construction",
+  "finding": "FINDING-0014",
+  "plan": "PLAN-0050",
+  "purpose": "Repo-keep L0–L4 tool-surface classification. States what each layer is for; does NOT make L3 a 2.1 must-install.",
+  "layers": [
+    {
+      "id": "L0",
+      "name": "always_on_invariants",
+      "role": "thin entry + hard always-on rules",
+      "examples": [
+        "AGENTS.md always-on",
+        "SKILL.md thin entry"
+      ],
+      "must_install_for_2_1": false,
+      "notes": "Instruction surface only; not a runtime interceptor."
+    },
+    {
+      "id": "L1",
+      "name": "installed_mechanical_gates",
+      "role": "CLI / CI fail-closed checks that ship with INIT",
+      "examples": [
+        "scripts/check-secrets.js",
+        "scripts/verify-governance.js",
+        "scripts/check-lock.js"
+      ],
+      "must_install_for_2_1": true,
+      "notes": "Repository-deterministic when required in CI."
+    },
+    {
+      "id": "L2",
+      "name": "repo_construction_gates",
+      "role": "REPO-ONLY gates for this skill repository",
+      "examples": [
+        "repo-tools/check-must-ship.sh",
+        "repo-tools/check-discovery-ledger.js",
+        "repo-tools/route-task.js"
+      ],
+      "must_install_for_2_1": false,
+      "notes": "Never INIT-installed; never a portable invariant."
+    },
+    {
+      "id": "L3",
+      "name": "host_runtime_adapters",
+      "role": "optional host interception (hooks / tool middleware)",
+      "examples": [
+        "opt-in githooks",
+        "cursor/claude hooks"
+      ],
+      "must_install_for_2_1": false,
+      "notes": "HARD BAN for H2d: L3 is not a 2.1 must-install (ADR-0025 decision 5 Out)."
+    },
+    {
+      "id": "L4",
+      "name": "human_attested_review",
+      "role": "human/system review that cannot be fully mechanized",
+      "examples": [
+        "release Approval Gate",
+        "System Review (repo-keep)",
+        "judgment repair sessions"
+      ],
+      "must_install_for_2_1": false,
+      "notes": "Evidence tier human-attested; scripts cannot replace."
+    }
+  ],
+  "invariants": [
+    "L3 must_install_for_2_1 is always false.",
+    "L2 tools must not appear in references/init-spec.json INSTALLED artifact sources.",
+    "L1 examples must remain INSTALLED or explicitly dual_profile.",
+    "This file is REPO-ONLY classification — not a third capability destination ledger."
+  ]
+}

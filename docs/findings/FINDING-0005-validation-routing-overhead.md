@@ -46,7 +46,10 @@ validation 按 suite/脚本组织，而非按 invariant/impact 驱动。项目�
 
 ## 解决情况
 
-（待填。）
+**H2d 切片（2026-09-13 · PLAN-0050 Archived）：** 与 FINDING-0004 同裁——本带不装 INSTALLED router；REPO-ONLY 证明已落。不声称 impact-driven dispatcher 已交付。
+
+**仍开放（Confirmed）：** 统一 Dispatcher（本地与 CI 共用细粒度 impact routing）。successor = H3 / 下次 2.x Plan。
+
 
 ## 关联
 

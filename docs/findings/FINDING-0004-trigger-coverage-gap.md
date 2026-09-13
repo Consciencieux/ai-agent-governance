@@ -41,7 +41,10 @@ observed_in: gen1
 
 ## 解决情况
 
-（待填。）
+**H2d 切片（2026-09-13 · PLAN-0050 Archived）：** 选择不把本仓 Task→Capability router 写入 INSTALLED 默认面；REPO-ONLY 证明：`route-task.js` / `routing-graph.v0.json` 仅在 `repo-tools/`，INIT 不安装；`h2d-portability` 表征。不声称统一 dispatcher 已交付。
+
+**仍开放（Confirmed）：** 不依赖 Agent 注意力的统一 trigger / dispatcher；Trigger Coverage 可测指标。successor = H3 / 下次 2.x Plan。
+
 
 ## 关联
 

@@ -167,6 +167,7 @@ ai-agent-governance/
 │   ├── controls/               # REPO-ONLY Control JSON projections (schema authority = ADR-0023)
 │   ├── contracts/              # REPO-ONLY sibling-closure dogfood contracts (PLAN-0050)
 │   ├── portability-boundary.v0.json # FINDING-0007 minimal adapter/portability matrix (PLAN-0050)
+│   ├── tool-surface-layers.v0.json # FINDING-0014 L0–L4 tool-surface map (PLAN-0050; L3 not must-install)
 │   ├── check-template-responsibility.js # FINDING-0026 instruction vs template responsibility map (PLAN-0049)
 │   ├── template-responsibility.v0.json # responsibility map data for check-template-responsibility.js
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)

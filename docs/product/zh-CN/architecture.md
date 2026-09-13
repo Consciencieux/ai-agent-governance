@@ -140,6 +140,7 @@ ai-agent-governance/
 │   ├── controls/               # REPO-ONLY Control JSON 投影（schema 权威 = ADR-0023）
 │   ├── contracts/              # REPO-ONLY sibling-closure dogfood 合同（PLAN-0050）
 │   ├── portability-boundary.v0.json # FINDING-0007 最小 adapter/可移植性矩阵（PLAN-0050）
+│   ├── tool-surface-layers.v0.json # FINDING-0014 L0–L4 工具面（PLAN-0050；L3 非必装）
 │   ├── check-template-responsibility.js # FINDING-0026 指令源 vs 模板责任图（PLAN-0049）
 │   ├── template-responsibility.v0.json # check-template-responsibility.js 数据
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）
