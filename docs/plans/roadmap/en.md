@@ -339,7 +339,7 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 
 ### H0 done
 
-**Active** = [PLAN-0051](../PLAN-0051-v2.1.0-release-acceptance.md) (v2.1.0 release acceptance). H2d Archived; H3 remains far. H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**. H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
+**Active** = none. [PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). H2d Archived; H3 remains far. H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**. H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
 
 Archived (H0 band): PLAN-0035 / 0036 / 0038-0044; H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md). Plans stay single files (`PLAN-xxxx-*.md`).
 

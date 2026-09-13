@@ -4,9 +4,11 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-13
+
 ### Changed
 
-- **PLAN-0051 Active (v2.1.0 release acceptance)** — H2 complete; SemVer minor target 2.1.0. Acceptance face frozen; wait Approval Gate before version sync / tag. H3 / hooks / L3 remain non-blocking and non-mandatory.
+- **PLAN-0051 / v2.1.0 release** — H2a–d delivered capabilities shipped as minor: CTRL-0002 git-write consent evaluator, atomic agent.lock, sibling-closure carrier, MIGRATE entry, GitLab stack residual fixes, portability + L0–L4 tool-surface maps. Confirmed Findings remain open where noted; hooks/L3 not mandatory; Gen1 check not CI-blocking; INSTALLED router remains REPO-ONLY.
 
 - **PLAN-0050 H2d Archived** — Stage 3–4 closed: REPO-ONLY router proof (FINDING-0004/0005 slice); `tool-surface-layers.v0.json` L0–L4 with L3 not must-install (FINDING-0014); FINDING-0016/0017 carrier-existence slice (successors = H3 / next 2.x Plan). Discovery Ledger Open=0. H2 complete; no Active Plan. Plan archive ≠ Release.
 
