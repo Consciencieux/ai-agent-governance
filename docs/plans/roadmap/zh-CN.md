@@ -341,7 +341,7 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 
 ### H0 已完成
 
-**Active** = none（H2d Archived；next = H3 far）。H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**。H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**。
+**Active** = [PLAN-0051](../PLAN-0051-v2.1.0-release-acceptance.md)（v2.1.0 发布验收）。H2d 已 Archived；H3 仍为远。H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**。H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**。
 
 已归档（H0 带）：PLAN-0035 / 0036 / 0038-0044；H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)。Plan 保持单文件（`PLAN-xxxx-*.md`）。
 

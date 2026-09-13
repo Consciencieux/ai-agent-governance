@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0051 Active (v2.1.0 release acceptance)** — H2 complete; SemVer minor target 2.1.0. Acceptance face frozen; wait Approval Gate before version sync / tag. H3 / hooks / L3 remain non-blocking and non-mandatory.
+
 - **PLAN-0050 H2d Archived** — Stage 3–4 closed: REPO-ONLY router proof (FINDING-0004/0005 slice); `tool-surface-layers.v0.json` L0–L4 with L3 not must-install (FINDING-0014); FINDING-0016/0017 carrier-existence slice (successors = H3 / next 2.x Plan). Discovery Ledger Open=0. H2 complete; no Active Plan. Plan archive ≠ Release.
 
 - **PLAN-0050 H2d Stage 2 done** — FINDING-0010 residual closed (docs-only GitLab regression); FINDING-0007 minimal portability/adapter matrix at `repo-tools/portability-boundary.v0.json` (Finding remains Confirmed for tool-call hard enforcement later). Stage 3 next: INSTALLED router Narrow-or-proof, L0–L4, 0016/0017.
