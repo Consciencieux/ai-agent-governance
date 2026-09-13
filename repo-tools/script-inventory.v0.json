@@ -29,6 +29,13 @@
       "rewrite",
       "retire",
       "undecided"
+    ],
+    "necessity": [
+      "must_ship",
+      "product_cli",
+      "repo_gate",
+      "debt",
+      "retire"
     ]
   },
   "rules": [
@@ -38,24 +45,31 @@
     "Only disposition=retire may move to a quarantine tree; none in v0.",
     "No third Task→Capability lookup model; inventory is file identity, not routing.",
     "Packaging copies scripts/ wholesale — quarantine inside scripts/ still ships unless packaging changes.",
+    "PLAN-0055 minimum-necessary doctrine: survival ≠ being referenced. Short lists decide keep; references only order teardown.",
+    "necessity=retire ⇒ disposition=retire; file may be deleted only after refs cleared.",
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 46,
+    "total": 44,
     "by_disposition": {
-      "keep": 42,
+      "keep": 40,
       "rewrite": 1,
       "wrap": 3
     },
     "by_generation": {
-      "gen1_carrier": 16,
+      "gen1_carrier": 14,
       "gen2_native": 27,
       "dual_profile": 3
     },
     "by_role": {
-      "REPO-ONLY": 23,
+      "REPO-ONLY": 21,
       "INSTALLED": 22,
       "SKILL-INTERNAL": 1
+    },
+    "by_necessity": {
+      "repo_gate": 20,
+      "must_ship": 5,
+      "product_cli": 19
     },
     "wrap": [
       "scripts/check-doc-consistency.js",
@@ -66,42 +80,66 @@
     "dogfood_installed_from_repo": [],
     "adjudication": {
       "plan": "PLAN-0055",
-      "stage": 2,
+      "stage": "1R+3",
       "date": "2026-09-13",
-      "absorb": [
+      "note": "Minimum-necessary re-adjudication; Stage 3 deleted mutation-probe + changelog-narration",
+      "retired_deleted": [
+        "repo-tools/mutation-probe.js",
+        "repo-tools/check-changelog-narration.js"
+      ]
+    },
+    "short_lists": {
+      "doctrine": "minimum-necessary",
+      "plan": "PLAN-0055",
+      "date": "2026-09-13",
+      "must_ship": [
+        "repo-tools/package-skill.sh",
+        "scripts/check-git-policy.js",
+        "scripts/check-secrets.js",
+        "scripts/generate-governance.js",
+        "scripts/verify_governance.js"
+      ],
+      "product_cli": [
         "scripts/check-doc-consistency.js",
         "scripts/check-doc-freshness.js",
-        "scripts/check-secrets.js"
+        "scripts/check-git-consent.js",
+        "scripts/check-git-policy.js",
+        "scripts/check-lock.js",
+        "scripts/check-plan-sync.js",
+        "scripts/check-secrets.js",
+        "scripts/check-sibling-closure.js",
+        "scripts/check-sync.js",
+        "scripts/generate-governance.js",
+        "scripts/migrate-governance.js",
+        "scripts/release-manager.js",
+        "scripts/verify-governance.js",
+        "scripts/verify_governance.js"
       ],
-      "absorb_done": {
-        "dogfood_shifted_to": [
-          "repo-tools/check-doc-consistency.js",
-          "repo-tools/check-doc-freshness.js"
-        ],
-        "secrets_repo_cli": "repo-tools/check-secrets.js",
-        "installed_dogfood_remaining": []
-      },
-      "retire": [],
-      "note": "Stage 2: repo package.json no longer dogfoods INSTALLED doc CLIs; skill WRAP paths retained"
+      "repo_gate": [
+        "repo-tools/check-coding-hygiene.js",
+        "repo-tools/check-control-registry.js",
+        "repo-tools/check-discovery-ledger.js",
+        "repo-tools/check-doc-consistency.js",
+        "repo-tools/check-doc-freshness.js",
+        "repo-tools/check-doc-parity.js",
+        "repo-tools/check-docs-shape.js",
+        "repo-tools/check-layout-sync.js",
+        "repo-tools/check-metadata-projection.js",
+        "repo-tools/check-must-ship-carriers.js",
+        "repo-tools/check-must-ship.sh",
+        "repo-tools/check-plan-delivery.js",
+        "repo-tools/check-roadmap-sync.js",
+        "repo-tools/check-role-completeness.js",
+        "repo-tools/check-secrets.js",
+        "repo-tools/check-template-responsibility.js",
+        "repo-tools/check-terminology.js",
+        "repo-tools/lib/routing.js",
+        "repo-tools/route-task.js",
+        "repo-tools/run-control-x.js"
+      ]
     }
   },
   "entries": [
-    {
-      "path": "repo-tools/check-changelog-narration.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen1_carrier",
-      "disposition": "keep",
-      "owns": null,
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": true,
-        "commits_after": 0
-      },
-      "first_seen": "2026-09-07",
-      "last_touch": "2026-09-07",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 1 keep: REPO-ONLY narration gate on check:all; not must-ship; still independent value"
-    },
     {
       "path": "repo-tools/check-coding-hygiene.js",
       "distribution_role": "REPO-ONLY",
@@ -116,7 +154,8 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 1 keep: owner of check / check:payload / check:tests hygiene gate"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-discovery-ledger.js",
@@ -132,7 +171,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0048 / FINDING-0022 Discovery Ledger L2 reconcile"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-doc-parity.js",
@@ -148,7 +188,8 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 1 keep: owner of docs:parity"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-docs-shape.js",
@@ -164,7 +205,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0048 / FINDING-0030 §5 docs/ shape allowlist fail-closed"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-layout-sync.js",
@@ -180,7 +222,8 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 1 keep: owner of docs:layout"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-metadata-projection.js",
@@ -196,7 +239,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0048 / FINDING-0024 read-only ADR index projection"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-control-registry.js",
@@ -212,7 +256,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0049 / H2c machine-readable Control registry gate"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/run-control-x.js",
@@ -228,7 +273,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0049 / H2c CONTROL-X dual-profile negative fixture runner"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-template-responsibility.js",
@@ -244,7 +290,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0049 / FINDING-0026 template responsibility map gate"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-must-ship-carriers.js",
@@ -260,7 +307,8 @@
       "first_seen": "2026-09-12",
       "last_touch": "2026-09-12",
       "dogfood_from_repo_package_json": false,
-      "notes": "Carrier presence for must-ship set"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-must-ship.sh",
@@ -276,7 +324,8 @@
       "first_seen": "2026-09-12",
       "last_touch": "2026-09-12",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0044 / ADR-0024 must-ship gate runner"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-plan-delivery.js",
@@ -292,7 +341,8 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 1 keep: plans:delivery + release gates"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-roadmap-sync.js",
@@ -308,7 +358,8 @@
       "first_seen": "2026-09-06",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0048 / FINDING-0021: Gen2 roadmap tree rewrite"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-role-completeness.js",
@@ -324,7 +375,8 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-06",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 1 keep: role-completeness on check / check:payload"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-secrets.js",
@@ -340,7 +392,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Repo-profile CLI (ADR-0020); pair of scripts/check-secrets.js"
+      "notes": "PLAN-0055 minimum-necessary: repo_gate (corrected after 1R — REPO-ONLY twin / router, not Gen1 ceremony debt)",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-terminology.js",
@@ -356,7 +409,8 @@
       "first_seen": "2026-09-09",
       "last_touch": "2026-09-09",
       "dogfood_from_repo_package_json": true,
-      "notes": "ADR-0020 Producer/Product split"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/lib/routing.js",
@@ -372,23 +426,8 @@
       "first_seen": "2026-09-12",
       "last_touch": "2026-09-12",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0039 shared resolve"
-    },
-    {
-      "path": "repo-tools/mutation-probe.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen1_carrier",
-      "disposition": "keep",
-      "owns": null,
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": true,
-        "commits_after": 0
-      },
-      "first_seen": "2026-09-08",
-      "last_touch": "2026-09-08",
-      "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: on-demand assertion probe (mutation:probe); not a sunset fixture"
+      "notes": "PLAN-0055 minimum-necessary: repo_gate (corrected after 1R — REPO-ONLY twin / router, not Gen1 ceremony debt)",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/package-skill.sh",
@@ -404,7 +443,8 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-06",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: must-ship packaging carrier; copies scripts/ wholesale"
+      "notes": "PLAN-0055 minimum-necessary: must-ship carrier",
+      "necessity": "must_ship"
     },
     {
       "path": "repo-tools/route-task.js",
@@ -420,7 +460,8 @@
       "first_seen": "2026-09-12",
       "last_touch": "2026-09-12",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0039 CLI"
+      "notes": "PLAN-0055 minimum-necessary: repo_gate (corrected after 1R — REPO-ONLY twin / router, not Gen1 ceremony debt)",
+      "necessity": "repo_gate"
     },
     {
       "path": "scripts/check-doc-consistency.js",
@@ -436,7 +477,8 @@
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 2 absorb done: INSTALLED skill WRAP retained for governed targets; repo package.json now calls repo-tools/ twin (no longer dogfood)"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator). DEBT/monolith — extract later, not retire while INIT ships CLI.",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/check-doc-freshness.js",
@@ -452,7 +494,8 @@
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 2 absorb done: INSTALLED skill WRAP retained for governed targets; repo package.json now calls repo-tools/ twin (no longer dogfood)"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/check-git-policy.js",
@@ -468,7 +511,8 @@
       "first_seen": "2026-08-13",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: INSTALLED product + must-ship carrier"
+      "notes": "PLAN-0055 minimum-necessary: must-ship carrier",
+      "necessity": "must_ship"
     },
     {
       "path": "scripts/check-lock.js",
@@ -484,7 +528,8 @@
       "first_seen": "2026-08-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: INSTALLED lock product (PLAN-0050 atomic acquire)"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/check-plan-sync.js",
@@ -500,7 +545,8 @@
       "first_seen": "2026-09-06",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: INSTALLED plan-sync product"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/check-secrets.js",
@@ -516,7 +562,8 @@
       "first_seen": "2026-08-13",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 2: skill WRAP confirmed thin (evaluator CTRL-0001); repo already uses repo-tools/check-secrets.js — no package.json dogfood"
+      "notes": "PLAN-0055 minimum-necessary: must-ship carrier",
+      "necessity": "must_ship"
     },
     {
       "path": "scripts/check-sync.js",
@@ -532,7 +579,8 @@
       "first_seen": "2026-08-21",
       "last_touch": "2026-09-05",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: INSTALLED sync-groups product"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/evaluators/ctrl-0001-secret-protection.js",
@@ -548,7 +596,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Phase 4 strangler evaluator"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/evaluators/ctrl-0003-doc-freshness.js",
@@ -564,7 +613,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Phase 4 strangler evaluator"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/evaluators/ctrl-0004-translation-freshness.js",
@@ -580,7 +630,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Phase 4 strangler evaluator"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/evaluators/ctrl-0006-broken-links.js",
@@ -596,7 +647,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Phase 4 strangler evaluator"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/generate-governance.js",
@@ -612,7 +664,8 @@
       "first_seen": "2026-08-21",
       "last_touch": "2026-09-08",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: SKILL-INTERNAL generator + must-ship"
+      "notes": "PLAN-0055 minimum-necessary: must-ship carrier",
+      "necessity": "must_ship"
     },
     {
       "path": "scripts/lib/adr-status.js",
@@ -628,7 +681,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0048 EXTRACT: ADR Status-field Unreleased heuristic"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/lib/git-facts.js",
@@ -644,7 +698,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Shared facts primitive"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/lib/md-link-facts.js",
@@ -660,7 +715,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Shared facts primitive"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/lib/plan-status.js",
@@ -676,7 +732,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0048 / ADR-0016 plan-status frontmatter parser"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/lib/secret-scan-facts.js",
@@ -692,7 +749,8 @@
       "first_seen": "2026-09-10",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Shared facts primitive"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/release-manager.js",
@@ -708,7 +766,8 @@
       "first_seen": "2026-08-12",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: INSTALLED release executor"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/verify_governance.js",
@@ -724,7 +783,8 @@
       "first_seen": "2026-08-10",
       "last_touch": "2026-09-08",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage 1 keep: INSTALLED validator + must-ship"
+      "notes": "PLAN-0055 minimum-necessary: must-ship carrier",
+      "necessity": "must_ship"
     },
     {
       "path": "scripts/check-git-consent.js",
@@ -740,7 +800,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0050 H2d consent CLI"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/evaluators/ctrl-0002-git-write-consent.js",
@@ -756,7 +817,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0050 H2d consent evaluator"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/check-sibling-closure.js",
@@ -772,7 +834,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0050 H2d FINDING-0003 mechanical carrier"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "scripts/migrate-governance.js",
@@ -788,7 +851,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0050 H2d discoverable MIGRATE entry"
+      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator).",
+      "necessity": "product_cli"
     },
     {
       "path": "repo-tools/check-doc-consistency.js",
@@ -804,7 +868,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 2: REPO-ONLY profile CLI; delegates to scripts/check-doc-consistency.js main()"
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "necessity": "repo_gate"
     },
     {
       "path": "repo-tools/check-doc-freshness.js",
@@ -820,7 +885,8 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 Stage 2: REPO-ONLY profile CLI; delegates to scripts/check-doc-freshness.js main()"
+      "notes": "PLAN-0055 minimum-necessary: repo_gate (corrected after 1R — REPO-ONLY twin / router, not Gen1 ceremony debt)",
+      "necessity": "repo_gate"
     }
   ],
   "adjudication_plan": "PLAN-0055"

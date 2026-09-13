@@ -7,27 +7,35 @@ target: both
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
-**状态：** Active（2026-09-13；口径 **B**。Stage 0–2 完成；Stage 3 跳过（retire=∅）；下一步 Stage 4 测试瘦身。）0053/0054 保持 Design。
+**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说，取代「引用图保活」。Stage 1R + Stage 3 首刀完成（已删 mutation-probe / changelog-narration）；下一步 consistency EXTRACT / Stage 4。）0053/0054 保持 Design。
 
 **归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](archive/PLAN-0041-script-inventory.md) 与 [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试保护。
 
-**问题（已对齐）：** 用更严的 **2.x 产品价值** 重裁全部 `gen1_carrier`（及必要 dogfood dual_profile）：无独立价值 → `retire`→清引用→删；有价值但臃肿 → absorb（`wrap`/`extract`/`rewrite`）；并瘦身 `tests/` 冗余用例。
+**问题（已对齐 · 重开）：** Gen1 是一套**自洽屎山**——门禁引用脚本、脚本互引、测试锁死引用。用「谁还在引用」裁决必然全员 keep，**看不见过度工程**。正确刀法：先冻结 **2.x 最小必要面**；名单外默认 `debt`；引用只决定**拆线顺序**，不授予生存权。
 
-**不是：** 口径 C 整夹删；口径 A 只删零引用；重开 H2b/H2c；hooks/L3 必装；第三份去向表；跳过 inventory 直接 `rm`。
+**不是：** 口径 C 无名单整夹删；用引用图证明「有用」；重开 H2b/H2c；hooks/L3 必装；第三份去向表；跳过 inventory 直接 `rm`。
 
 ## 一句话目标
 
-按 B 产出 **absorb / keep / retire** 表并执行；测试按 Test Disposition 有证据裁剪；`check:must-ship` 与本地 `check` 诚实绿。
+冻结 must_ship ∪ product_cli ∪ repo_gate 短名单；名单外标 `debt`/`retire`；按依赖倒序拆线删除；测试按 Disposition 瘦身；`check:must-ship` 诚实绿。
 
-## 裁决口径（已钉死；不得改宽）
+## 裁决口径（2026-09-13 重钉 · 最小必要面）
 
-| 裁决 | 判据 | 动作 |
+| 层 | 判据 | 动作 |
 | --- | --- | --- |
-| **retire** | 无独立 2.x 价值：已被 must-ship / CTRL evaluator / 另一 keep 入口完整覆盖；或仅服务已 sunset 观测/迁徙夹具 | inventory → 清引用 → 短观察 → 删 |
-| **absorb** | 仍有价值，逻辑应并入 evaluator / REPO-ONLY / must-ship | 迁语义；旧 CLI 薄壳；**不**假标 retire |
-| **keep** | 仍是产品/本仓入口且无更优单一主人 | 保留 + 一行证据 |
+| **must_ship** | `check-must-ship-carriers.js` 列出的脚本载体 | 生存 |
+| **product_cli** | `references/init-spec.json` 安装的 CLI（及支撑 lib/evaluator） | 生存（可标 monolith 债务，但不因「厚」直接删契约名） |
+| **repo_gate** | `npm run check` + `check:must-ship` + release delivery 链上的 REPO-ONLY | 生存 |
+| **debt** | 不在上述三集合 | 默认债务；引用无效；排队 extract/retire |
+| **retire** | debt 且本轮选定拆除（无 2.x 最小职责） | inventory → 清引用 → 删文件 → 去条目 |
 
-硬规则：`unchanged-since-baseline ≠ retire`；删前 disposition=`retire` 且引用清零；INSTALLED 删除 = 载荷变更；`tests/` 另表。
+硬规则：引用图**禁止**单独导致 keep；删前 `disposition=retire`；INSTALLED 删除 = 载荷 breaking（须先改 INIT/契约）；`tests/` 另表。
+
+### 冻结短名单（权威副本也在 `summary.short_lists`）
+
+- **must_ship：** `scripts/check-secrets.js` · `check-git-policy.js` · `generate-governance.js` · `verify_governance.js` · `repo-tools/package-skill.sh`
+- **product_cli：** INIT 安装的 `scripts/check-*` / `release-manager` / `migrate-governance` / `verify_*` 等（见 inventory）
+- **repo_gate：** `npm run check` 闭包 + must-ship 机械 + `check-plan-delivery`（见 inventory）
 
 ## 验收面
 
@@ -149,9 +157,9 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | `scripts/check-doc-consistency.js` | **wrap**（保持） | **absorb**（dogfood） | 本仓 `check*` 改调 REPO-ONLY 等价 |
 | `scripts/check-doc-freshness.js` | **wrap**（保持） | **absorb**（dogfood） | 本仓 `check:all`/release 改调 REPO-ONLY 等价 |
 | 其余 13×`gen1_carrier` | **keep** | **keep** | 无删除；见各条 `notes` |
-| （全库） | — | **retire = ∅** | Stage 3 **跳过**直至新证据重裁 |
+| （全库 · Stage 1 旧结论） | — | **retire = ∅** | **已被 Stage 1R 作废** —— 见下方「最小必要面重裁」 |
 
-`summary.adjudication`（inventory）：`plan=PLAN-0055`, `stage=1`, `absorb=[3 wraps]`, `retire=[]`。
+> **Stage 1R 勘误：** 上表「retire=∅ / Stage 3 跳过」是引用中心主义产物，已作废。现行权威 = `necessity` + `summary.short_lists`；已删 mutation-probe / changelog-narration。
 
 ### 1.2 Test Disposition v1（标记；Stage 4 执行）
 
@@ -188,10 +196,36 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 
 **未做（有意）：** 不删 INSTALLED CLI 名；不把共享 `main()` 从 `scripts/` 搬走（薄委托 = absorb，不是 rewrite）。
 
+## Stage 1R — 最小必要面重裁 + Stage 3 首刀 — **完成**（2026-09-13）
+
+人类否决「引用保活」后重裁：
+
+| necessity | 约数 | 含义 |
+| --- | --- | --- |
+| must_ship | 5 | 必装载体 |
+| product_cli | 19 | INIT/产品 CLI 及支撑 |
+| repo_gate | 16 | 本仓最小门禁 |
+| debt | 0（纠偏后） | 首轮误伤已升回 repo_gate；剩余过度工程主要在 **product_cli 内部 monolith**（如 consistency ~950LOC） |
+| retire→deleted | 2 | 本轮已拆 |
+
+**本轮已删：**
+
+| 路径 | 理由 |
+| --- | --- |
+| `repo-tools/mutation-probe.js` | 仅 `mutation:probe`；Gen1 自证仪式；不在三短名单 |
+| `repo-tools/check-changelog-narration.js` | 仅 `check:all` advisory；FINDING-0016 已证无效；不在三短名单 |
+
+同步：去掉 `package.json` 脚本、narration suite、hygiene 探针表征、架构树/CONTRIBUTING 行；inventory 去条目。
+
+**仍为 debt（未删）：** 无独立 debt 文件。过度工程主战场 = `product_cli` 内厚实现（尤其 `scripts/check-doc-consistency.js`）→ EXTRACT，不是先删 CLI 名。
+
+**仍为 product 但 monolith 债务：** `scripts/check-doc-consistency.js`（~950LOC）— 保留 CLI 名，EXTRACT 另排，不在本刀物理删除。
+
 ## Stage 3 — Retire 执行
 
-- [ ] **本轮跳过**（`retire=[]`）；仅当未来重裁出现非空 `retire`
-- [ ] 清引用 → 观察 → 删
+- [x] 首刀：mutation-probe + changelog-narration（见上）
+- [ ] 继续：对 **product_cli monolith** 做 EXTRACT（先 consistency）；仅当 INIT 允许时缩 INSTALLED 面
+- [ ] 无独立 `necessity=debt` 文件残留（纠偏后为 0）
 
 ## Stage 4 — 测试瘦身
 
@@ -202,18 +236,19 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 
 | ID | 类型 | 问题 | 状态 | 处置 |
 | --- | --- | --- | --- | --- |
-| R0 | process | 双 Active | **resolved** | 0055 独占 Active |
-| R1 | scope | 16 carrier 终裁 | **resolved** | §1.1；retire∅；absorb=3；keep=13 |
-| R2 | constraint | INSTALLED SemVer | **resolved** | §0.4；B 类默认不删 |
-| R3 | tests | testing.policy | open | Stage 4；v1 已标记 |
-| R4 | inventory | summary.total 漂移 | **resolved** | 46=46（Stage 2 +2 REPO-ONLY CLI） |
-| R5 | finding | 零 retire | **resolved** | B≠批量删；Stage 2 吸收已执行 |
-| R6 | absorb | dogfood 仍调 INSTALLED | **resolved** | package.json / AGENTS 已迁 repo-tools |
+| R0 | process | 双 Active | **resolved** | 0055 独占 |
+| R1 | scope | 引用中心主义假 keep | **resolved** | 改最小必要面 |
+| R2 | constraint | INSTALLED SemVer | **resolved** | product_cli 不因厚而删名 |
+| R3 | tests | testing.policy | open | Stage 4 |
+| R4 | inventory | summary 漂移 | **resolved** | total 跟 entries |
+| R5 | finding | 零 retire 错觉 | **resolved** | 已删 2；debt 待拆 |
+| R6 | absorb | dogfood INSTALLED | **resolved** | Stage 2 |
+| R7 | debt | 文件级 debt / monolith | open | debt 文件=0；consistency EXTRACT 待排 |
 
 ```text
-Total known:  7
+Total known:  8
 Resolved:     6
-Open:         1
+Open:         2
 Unaccounted:  0
 ```
 

@@ -174,10 +174,8 @@ ai-agent-governance/
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)
 │   ├── check-secrets.js        # repo-profile CTRL-0001 CLI (shared evaluator under scripts/; not the skill CLI path)
-│   ├── check-changelog-narration.js # CHANGELOG [Unreleased] verification-narration advisor (repo-only, advisory)
 │   ├── check-must-ship.sh      # Phase 8 must-ship mechanical gate set (PLAN-0044 / ADR-0024)
 │   ├── check-must-ship-carriers.js  # must-ship carrier presence (sub-skills / scripts / SKILL entry)
-│   ├── mutation-probe.js      # on-demand assurance that test ASSERTIONS are alive (sampled mutations in a temp clone)
 │   ├── lib/routing.js          # Phase 5b shared resolve + Context Detector (PLAN-0039)
 │   ├── routing-graph.v0.json   # machine Task→Capability graph (consumed by routing.js; not a Research object)
 │   ├── script-inventory.v0.json

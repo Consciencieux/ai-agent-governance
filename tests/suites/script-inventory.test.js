@@ -75,15 +75,26 @@ module.exports = function register(test) {
     return true;
   });
 
-  test("script-inventory: v0 has no retire rows (no quarantine shortcut)", () => {
+  test("script-inventory: necessity field present; retire only with necessity=retire (PLAN-0055)", () => {
     const inv = JSON.parse(fs.readFileSync(INV_PATH, "utf8"));
-    const retire = inv.entries.filter((e) => e.disposition === "retire");
-    if (retire.length) {
-      console.error("  unexpected retire:", retire.map((e) => e.path));
+    const NEC = new Set(["must_ship", "product_cli", "repo_gate", "debt", "retire"]);
+    for (const e of inv.entries) {
+      if (!NEC.has(e.necessity)) {
+        console.error("  bad necessity", e.path, e.necessity);
+        return false;
+      }
+      if (e.disposition === "retire" && e.necessity !== "retire") {
+        console.error("  disposition retire without necessity=retire:", e.path);
+        return false;
+      }
+    }
+    if (!inv.summary || !inv.summary.short_lists) {
+      console.error("  missing summary.short_lists (minimum-necessary doctrine)");
       return false;
     }
-    if ((inv.summary && inv.summary.retire && inv.summary.retire.length) || 0) {
-      console.error("  summary.retire non-empty");
+    const sl = inv.summary.short_lists;
+    if (!Array.isArray(sl.must_ship) || !Array.isArray(sl.product_cli) || !Array.isArray(sl.repo_gate)) {
+      console.error("  short_lists incomplete", sl);
       return false;
     }
     return true;

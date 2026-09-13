@@ -85,7 +85,6 @@ Match the narrowest row by `git diff --name-only` prefix. When scope is uncertai
 | `check-docs-shape.js` | `docs/` allowlist | mechanical | shape matches allowlist |
 | `check-discovery-ledger.js` | Active plan Discovery Ledger | mechanical | Open count reconciles |
 | `check-metadata-projection.js` | ADR README projection | mechanical | index stays navigation-only |
-| `check-changelog-narration.js` | `[Unreleased]` narration markers | mechanical (advisory) | listed markers absent |
 | `verify_governance.js` | governance artifact existence | mechanical | default mode here fails by design (ADR-0006) |
 
 Evidence tiers: **mechanical** = marker/path/structure/existence (pass ≠ “behavior correct”); **human-attested** = requires human review (no automated gate emits this today); **unverified claim** = declaration without independent check.

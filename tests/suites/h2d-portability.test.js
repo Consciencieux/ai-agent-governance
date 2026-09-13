@@ -229,10 +229,7 @@ module.exports = function register(test) {
     return l3 && l3.must_install_for_2_1 === false && doc.finding === "FINDING-0014";
   });
 
-  test("FINDING-0016/0017 slice: narration + metadata-projection carriers exist", () => {
-    return (
-      fs.existsSync(path.join(ROOT, "repo-tools", "check-changelog-narration.js")) &&
-      fs.existsSync(path.join(ROOT, "repo-tools", "check-metadata-projection.js"))
-    );
+  test("FINDING-0016/0017 slice: metadata-projection carrier exists (narration advisory retired PLAN-0055)", () => {
+    return fs.existsSync(path.join(ROOT, "repo-tools", "check-metadata-projection.js"));
   });
 };

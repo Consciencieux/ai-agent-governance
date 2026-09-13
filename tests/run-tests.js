@@ -35,7 +35,6 @@ const SUITES = [
   "./suites/generator.test.js",
   "./suites/payload.test.js",
   "./suites/hygiene.test.js",
-  "./suites/narration.test.js",
   "./suites/sync.test.js",
   "./suites/plan-delivery.test.js",
   "./suites/routing.test.js",

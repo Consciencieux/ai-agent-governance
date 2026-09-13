@@ -147,10 +147,8 @@ ai-agent-governance/
 │   ├── check-coding-hygiene.js # 編碼衛生（測試歸屬 + 殘留標記）
 │   ├── check-terminology.js    # repo-owned 術語門禁（從 INSTALLED 一致性檢查器拆出；ADR-0020 首次執行分離）
 │   ├── check-secrets.js        # repo 側 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路徑）
-│   ├── check-changelog-narration.js # CHANGELOG [Unreleased] 驗證敘事提醒（repo-only，advisory）
 │   ├── check-must-ship.sh      # Phase 8 必裝機械門禁集合（PLAN-0044 / ADR-0024）
 │   ├── check-must-ship-carriers.js  # 必裝載體存在性（子技能 / 腳本 / SKILL 入口）
-│   ├── mutation-probe.js      # 按需驗證測試斷言是否活著（暫存克隆內的抽樣變異）
 │   ├── lib/routing.js          # Phase 5b 共享 resolve + Context Detector（PLAN-0039）
 │   ├── routing-graph.v0.json   # 機讀 Task→Capability 圖（routing.js 消費；不是 Research 對象）
 │   ├── script-inventory.v0.json

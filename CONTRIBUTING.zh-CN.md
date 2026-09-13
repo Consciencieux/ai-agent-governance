@@ -85,7 +85,6 @@ CI（ADR-0014 Migration Mode **已退出**）：所有分支 / PR 的阻断权�
 | `check-docs-shape.js` | `docs/` allowlist | mechanical | 形状符合 allowlist |
 | `check-discovery-ledger.js` | Active 计划发现台账 | mechanical | Open 计数可对账 |
 | `check-metadata-projection.js` | ADR README 投影 | mechanical | 索引保持导航-only |
-| `check-changelog-narration.js` | `[Unreleased]` 验证叙事标记 | mechanical（建议性） | 未出现所列标记 |
 | `verify_governance.js` | 治理产物存在性 | mechanical | 本仓默认模式按设计失败（ADR-0006） |
 
 证据分层：**mechanical** = 标记/路径/结构/存在（通过 ≠「行为正确」）；**human-attested** = 需人工（当前无自动门禁产出）；**unverified claim** = 仅声明、无独立核验。

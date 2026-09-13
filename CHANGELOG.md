@@ -12,7 +12,9 @@ All notable changes to this project will be documented here.
 
 - **PLAN-0055 Stage 1** — Final disposition landed in `script-inventory.v0.json` (`summary.total` 37→44 = `entries.length`; `summary.adjudication` absorb=3 wrap CLIs, retire=[]). Test Disposition v1 marks prune/review candidates only (no deletes). Characterization asserts summary sync. Next: Stage 2 dogfood absorb.
 
-- **PLAN-0055 Stage 2** — Absorbed repo dogfood off INSTALLED WRAP CLIs: `package.json` / `AGENTS.md` now call `repo-tools/check-doc-consistency.js` and `repo-tools/check-doc-freshness.js` (thin REPO-ONLY shells over shared `main()`). CTRL-0003/0004/0006 repo bindings retargeted. `summary.dogfood_installed_from_repo=[]`. Skill WRAP paths retained for governed targets; secrets WRAP already paired with `repo-tools/check-secrets.js`. Next: Stage 4 test prune (Stage 3 skipped — retire still empty).
+- **PLAN-0055 Stage 2** — Absorbed repo dogfood off INSTALLED WRAP CLIs: `package.json` / `AGENTS.md` now call `repo-tools/check-doc-consistency.js` and `repo-tools/check-doc-freshness.js` (thin REPO-ONLY shells over shared `main()`). CTRL-0003/0004/0006 repo bindings retargeted. `summary.dogfood_installed_from_repo=[]`. Skill WRAP paths retained for governed targets; secrets WRAP already paired with `repo-tools/check-secrets.js`.
+
+- **PLAN-0055 Stage 1R + Stage 3 (minimum-necessary doctrine)** — Replaced citation-graph “keep” with short lists (`must_ship` ∪ `product_cli` ∪ `repo_gate`); everything else is `debt` by default. Deleted Gen1 ceremony scripts `repo-tools/mutation-probe.js` and `repo-tools/check-changelog-narration.js` (cleared package.json / tests / docs). Inventory gains `necessity` + `summary.short_lists`. Next: remaining `debt` teardown + Stage 4 test prune.
 
 ### Fixed
 
