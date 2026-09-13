@@ -6,22 +6,23 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **Repo routing: skill-release + changelog-policy + engineering-restraint** — `route-task --task release` now binds `repo-workflows/skill-release.md` (not governed `references/workflows/release.md`); `CHANGELOG.md` / changelog-policy path → `edit_changelog`; `edit_scripts` read_set includes engineering-restraint. AGENTS drops false local `.governance/generated/skills` dogfood instruction.
+- Repo routing loads skill-release, changelog-policy, and engineering-restraint on the matching edit surfaces.
 
-- **Finding patches (0006 / 0016 / 0017 / 0007 docs)** — CTRL-0006 broken_links and ADR-0010 numeric_claims fail-closed under `--gate`; restore Unreleased changelog-narration checker as fail-closed (one observable example feature); document FINDING-0007 2.1 delivered vs later boundary (no hooks/`--no-verify` hard claim). Not full oracle/ADR/example mechanization.
+- Finding patches: broken_links and numeric_claims fail-closed under `--gate`; Unreleased changelog-narration fail-closed; FINDING-0007 delivered/later boundary documented.
 
+- Post-2.1.0 hygiene: Gen1 observation job and archives removed; daily check allowlisted; must-ship remains the only CI block.
 
-- **Post-2.1.0 repo hygiene (PLAN-0052 / PLAN-0055)** — Gen1 CI observation job removed; daily `check` allowlisted; H2b/H2c stage parking lot retired (`check:full` ≡ daily); Gen1 test/script archives deleted; doc-consistency split into gate clusters; repo dogfood off INSTALLED WRAP CLIs. `check:must-ship` remains the sole CI block. Plan archive ≠ Release.
+- FINDING-0003 judgment vs mechanical labeling completed (Resolved).
 
-- **FINDING-0003 language layering (PLAN-0053)** — Remaining judgment classes labeled `judgment` vs `mechanical` in authority bodies; characterization suite added. Finding → Resolved (no new mechanical checkers; no INSTALLED router).
+- Roadmap reduced to a rolling index; construction rules stay in AGENTS / ADR-0025 / lifecycle.
 
-- **Roadmap rolling index** — Trilingual roadmap slimmed to Now / Near term / Done (one paragraph) / Far (H3); archives stay authoritative. Construction discipline authority placed in AGENTS.md + ADR-0025 + lifecycle (roadmap indexes only; not a rule body).
+- AGENTS.md trimmed to pointers; status lists stay on the roadmap.
 
-- **AGENTS.md prose trim** — Cut restated procedure paragraphs to one-line pointers; keep principles index + consent markers. Status lists deferred to roadmap.
+- Dropped tracked `.governance/review-evidence-1.0.0.md`; repo `.governance/` stays release-runtime only.
 
 ### Fixed
 
-- **Vacuous Gen1 doc gates / payload path leaks** — layout-sync and consistency `prompt_sync` no longer no-op after `docs/product/` migration; `SKILL.md` no longer points at REPO-ONLY docs paths absent from the install tarball.
+- Gen1 doc gates and SKILL payload paths no longer miss after the docs/product migration.
 
 ## [2.1.0] - 2026-09-13
 

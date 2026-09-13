@@ -58,7 +58,7 @@ Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 - Generated skills ≠ scripts — in a **governed project**, load `.governance/generated/skills/<name>/SKILL.md` (INSTALLED). This skill-distribution repo does not dogfood that tree; do not invent it here.
 - Classification: behavior → `references/`; knowledge → `docs/`; one ID = one file (`docs/README.md`).
 - Three-layer: executor → `SKILL.md`; governed rules → `references/policies/`; this repo → this file.
-- `.governance/` on **this** repo: runtime only (`release-proposal.json` gitignored; optional tracked review evidence). Not an INIT manifest tree.
+- `.governance/` on **this** repo: release-runtime only (`release-proposal.json` gitignored). Do not store docs or review write-ups there.
 
 ## Before editing
 
