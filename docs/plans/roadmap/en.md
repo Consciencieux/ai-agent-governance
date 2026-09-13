@@ -294,7 +294,7 @@ The Roadmap does not independently define or adjudicate phase order. The table b
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Migration closed:** Phase 0–8 EXITED; **`v2.0.0` shipped** (2026-09-12). Plan archive ≠ Release (ADR-0016). **Current horizon = ADR-0025 H2** (H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) **Archived**; H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**; H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**; **H2c** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) **Active**). H1 ([PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)) is Archived.
+**Migration closed:** Phase 0–8 EXITED; **`v2.0.0` shipped** (2026-09-12). Plan archive ≠ Release (ADR-0016). **Current horizon = ADR-0025 H2** (H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) **Archived**; H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**; H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**; **H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**; **H2d** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) **Active**). H1 ([PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)) is Archived.
 
 H0 ([PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)) is Archived.
 
@@ -334,12 +334,12 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 | --- | --- | --- | --- |
 | **H0** Documentation and lifecycle truth | Align entry docs / roadmap / plan location with `v2.0.0` | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived** (nine Phase 4–8 plans archived) |
 | **H1** Reusable governance skill extraction | L1/L2/L3 extraction protocol → clean-target validation; do not migrate script carriers | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** Control-plane completion | Execution order: ADR-0025 decision 14 — H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived; **H2c** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) **Active** | **H2c Active** |
+| **H2** Control-plane completion | Execution order: ADR-0025 decision 14 — H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived; **H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**; **H2d** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) **Active** | **H2d Active** |
 | **H3** Runtime and research | L3, measurement, attention experiments; does not block 2.1 | No Active Plan | Far |
 
 ### H0 done
 
-**Active** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) (H2c). H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
+**Active** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) (H2d). H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**. H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
 
 Archived (H0 band): PLAN-0035 / 0036 / 0038-0044; H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md). Plans stay single files (`PLAN-xxxx-*.md`).
 
@@ -353,7 +353,7 @@ H0 archive = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) (Archived).
 | H2-front Instruction surface | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) (**Archived**) |
 | H2a Residue extract | [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) (**Archived**) · 5c leftover Capability leaves · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) (L0 inventory = [PLAN-0041](../archive/PLAN-0041-script-inventory.md); `retire = ∅` today) |
 | H2b Checkers and ledgers | [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) (**Archived**) · Remaining consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · [FINDING-0030](../../findings/FINDING-0030-artifact-placement-routing-gap.md) §5 · ADR-0016 parser migration |
-| H2c Cross-profile / machine Controls | [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) (**Active**) · [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
+| H2c Cross-profile / machine Controls | [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) (**Archived**) · [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
 | H2d Payload routing and portability | [FINDING-0003](../../findings/FINDING-0003-declaration-enforcement-gap.md) judgmental MUST · [FINDING-0004](../../findings/FINDING-0004-trigger-coverage-gap.md) · [FINDING-0005](../../findings/FINDING-0005-validation-routing-overhead.md) · [FINDING-0006](../../findings/FINDING-0006-regression-oracle-gap.md) full oracles · [FINDING-0007](../../findings/FINDING-0007-portability-enforcement-boundary.md) adapter · [FINDING-0010](../../findings/FINDING-0010-gitlab-ci-stack-template-mismatch.md) · [FINDING-0012](../../findings/FINDING-0012-lock-not-atomic.md) · mechanical Git-consent evaluator · MIGRATE entry · [FINDING-0014](../../findings/FINDING-0014-review-manager-layer-mismatch.md) L0–L4 tooling · [FINDING-0016](../../findings/FINDING-0016-canonical-example-not-constraint.md) · [FINDING-0017](../../findings/FINDING-0017-adr-no-continuous-enforcement.md) |
 
 ### H3 inputs (far; does not block 2.1)
@@ -365,7 +365,7 @@ H0 archive = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) (Archived).
 - **This repo:** experiment + reference implementation + research provenance ([RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)).
 - **Shipped skill (2.0):** installable must-ship slice, not a separate PLAN-0037 universal pack.
 - **2.x product line (H1):** [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — portable principles pack landed (`references/principles/`).
-- **2.x next band (H2):** H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) Archived; H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**; H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**; **H2c** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) **Active** (ADR-0025 decision 14).
+- **2.x next band (H2):** H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) Archived; H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**; H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**; **H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**; **H2d** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) **Active** (ADR-0025 decision 14).
 - **H1 discipline (index of [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) decisions 9–13):** consume the existing inventory; do not create a capability-destination table; do not delete scripts; do not write the repo router into INSTALLED; SemVer is not an alias for Horizon.
 
 ## Guarantee Levels
@@ -609,7 +609,7 @@ H0     Documentation and lifecycle truth — EXITED / Archived (PLAN-0045)
         ↓
 H1     PLAN-0037 cross-project portable extract — **Archived** (2026-09-13)
         ↓
-H2     Execution order ADR-0025: H2-0 → PLAN-0046 (Archived) → PLAN-0047 (H2a Archived) → PLAN-0048 (H2b Archived) → PLAN-0049 (H2c Active)→d
+H2     Execution order ADR-0025: H2-0 → PLAN-0046 (Archived) → PLAN-0047 (H2a Archived) → PLAN-0048 (H2b Archived) → PLAN-0049 (H2c Archived) → PLAN-0050 (H2d Active)
         ↓
 H3     Runtime and research (L3 / measurement; does not block 2.1)
         ↓

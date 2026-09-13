@@ -94,7 +94,8 @@ ai-agent-governance/
 │       └── release.md          # 发布前置检查 + 版本一致性（被治理项目）
 ├── scripts/                    # skill 运行时脚本——安装进被治理项目的脚本 + 生成器
 │   ├── verify_governance.js    # 校验引擎（manifest 驱动路径 + governance_version）
-│   ├── check-lock.js           # 多 Agent 锁检查（只读，exit 1 = 持锁）
+│   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
+│   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
 │   ├── check-git-policy.js     # Git 工作流门禁（受保护分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # skill 侧 CTRL-0001 CLI WRAP（暂存区扫描；绝不打印密钥）
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）

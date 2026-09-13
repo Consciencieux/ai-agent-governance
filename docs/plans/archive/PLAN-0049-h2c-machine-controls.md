@@ -1,13 +1,13 @@
 ---
 id: PLAN-0049
-status: Active
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0049：H2c 跨 profile / 机器 Control
 
-**状态：** Active（2026-09-13；人类「开始H2c」= Active 授权。Stage 0 冻结已记录）。
+**状态：** Archived（2026-09-13 exit review）。Stage 0–4 完成；C0–C7 全关。Plan archive ≠ Release。下一步 = **H2d**（PLAN-0050）。
 
 **归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) **H2c**（决策 5 + 决策 14：H2-0 → PLAN-0046 → H2a → H2b → **c**→d）。前置 H2b [PLAN-0048](archive/PLAN-0048-h2b-checkers-and-ledgers.md) 已 Archived。下一步 = **H2d**（本带未完成前不得开工）。
 
@@ -85,40 +85,40 @@ H2d INSTALLED router / Narrow ADR 进默认安装面
 - [x] `references/principles/control-shape.md`（无 CTRL 号承诺；入 init-spec skillInternal）
 - [x] FINDING-0026 / 0025 → Resolved；FINDING-0002 写明切片 vs Dispatcher 剩余（仍 Confirmed）
 
-### Stage 4 — 验证与闭包 — **进行中**
+### Stage 4 — 验证与闭包 — **完成**
 
 - [x] 核心门禁绿：`h2c-controls` 4/4；`check-roadmap-sync --gate`；`check:must-ship` OK
-- [ ] Discovery Ledger Open=0（约束项 C0/C1/C7 观察至归档）
-- [ ] exit review → Implemented → Archived（Plan archive ≠ Release）
-- [ ] Roadmap / AGENTS / ADR-0025 现在时 → 下一步 H2d（awaiting Design）
-- [x] 确认未升 Gen1 check；未进 H2d；portable 无 CTRL 号硬承诺
+- [x] Discovery Ledger Open=0
+- [x] exit review → Implemented → Archived（Plan archive ≠ Release；人类「开始H2d」触发收口）
+- [x] Roadmap / AGENTS / ADR-0025 现在时 → 下一步 H2d
+- [x] 确认未升 Gen1 check；未把 CTRL 号写入 portable invariant
 
 ## 完成条件（outcome）
 
-- [ ] 至少一条双域 Control 有真实 CONTROL-X 证据（非宣称）
-- [ ] 机读 Control 投影可被 registry gate 校验；ADR-0023 仍为 schema 权威
-- [ ] instruction vs template 责任可声明、可对账
-- [ ] portable 仅有形状、无本仓 CTRL 号承诺
-- [ ] FINDING-0001 / 0025 / 0026 Resolved；FINDING-0002 切片进展写清、Dispatcher 仍 Open/Confirmed
-- [ ] 证据真实（tests + `check:must-ship` / 相关 scope gate）
+- [x] 至少一条双域 Control 有真实 CONTROL-X 证据（非宣称）
+- [x] 机读 Control 投影可被 registry gate 校验；ADR-0023 仍为 schema 权威
+- [x] instruction vs template 责任可声明、可对账
+- [x] portable 仅有形状、无本仓 CTRL 号承诺
+- [x] FINDING-0001 / 0025 / 0026 Resolved；FINDING-0002 切片进展写清、Dispatcher 仍 Open/Confirmed
+- [x] 证据真实（tests + `check:must-ship` / 相关 scope gate）
 
 ## Discovery Ledger
 
 | ID | 类型 | 问题 | 状态 | 处置 |
 | --- | --- | --- | --- | --- |
-| C0 | constraint | 禁止 CTRL 号进 portable invariant | open | observe — control-shape 明确禁止编号硬承诺 |
-| C1 | constraint | 禁止升 Gen1 check 为 CI 阻断；禁止开工 H2d | open | observe — must-ship 仍唯一 CI 阻断 |
+| C0 | constraint | 禁止 CTRL 号进 portable invariant | resolved | observed — control-shape + principles 无编号硬承诺 |
+| C1 | constraint | 禁止升 Gen1 check 为 CI 阻断；H2c 期间禁止开工 H2d | resolved | observed — must-ship 仍唯一 CI 阻断；H2d 于本计划 Archived 后开工 |
 | C2 | architecture_gap | FINDING-0002 机读 Control 身份 | resolved | `repo-tools/controls/` + registry；Dispatcher 仍 Open |
 | C3 | architecture_gap | FINDING-0025 sync / identity | resolved | 机读投影 + FINDING-0025 Resolved |
 | C4 | architecture_gap | FINDING-0001 CONTROL-X | resolved | `run-control-x.js` CTRL-0001 |
 | C5 | architecture_gap | FINDING-0026 instruction vs template | resolved | template-responsibility map + gate |
 | C6 | migration_gap | ADR-0023 决策 6 序列化未授权 → 需 Narrow | resolved | ADR-0023 Narrow 2026-09-13 |
-| C7 | constraint | 禁第三份去向表；禁 Gen1 骨架 bulk move templates | open | observe |
+| C7 | constraint | 禁第三份去向表；禁 Gen1 骨架 bulk move templates | resolved | observed — 只消费 inventory + ADR-0024；未 bulk move |
 
 ```text
 Total known:  8
-Resolved:     5
-Open:         3
+Resolved:     8
+Open:         0
 Unaccounted:  0
 ```
 

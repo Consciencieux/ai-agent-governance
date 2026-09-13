@@ -21,4 +21,4 @@
 
 ## Non-goals
 
-机械 evaluator 拦 Agent 违规属 later（ADR-0024）；本叶不实现机器拦写。
+本叶不替代人授协议正文。机械 classifier（`scripts/check-git-consent.js` / CTRL-0002 evaluator）只分类拟议 argv，**不**执行 git、**不**冒充已获人授。

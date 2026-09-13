@@ -464,9 +464,9 @@
         "commits_after": 0
       },
       "first_seen": "2026-08-13",
-      "last_touch": "2026-09-04",
+      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+      "notes": "Unchanged since v1.0.2; still INSTALLED product; PLAN-0050 atomic acquire/release via agent.lock wx"
     },
     {
       "path": "scripts/check-plan-sync.js",
@@ -707,6 +707,38 @@
       "last_touch": "2026-09-08",
       "dogfood_from_repo_package_json": false,
       "notes": "INSTALLED rename target verify-governance.js"
+    },
+    {
+      "path": "scripts/check-git-consent.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0002",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0050 H2d consent CLI"
+    },
+    {
+      "path": "scripts/evaluators/ctrl-0002-git-write-consent.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0002",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0050 H2d consent evaluator"
     }
   ]
 }

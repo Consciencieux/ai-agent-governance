@@ -296,7 +296,7 @@ Roadmap 不独立定义或裁决 phase order。下表镜像 ADR-0018 的 **已�
 
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**迁移阶段已关闭：** Phase 0–8 EXITED；**`v2.0.0` 已发布**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**当前工作带 = ADR-0025 H2**（H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**；**H2c** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) **Active**）。H1（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)）已 Archived。
+**迁移阶段已关闭：** Phase 0–8 EXITED；**`v2.0.0` 已发布**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**当前工作带 = ADR-0025 H2**（H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**；**H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**；**H2d** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) **Active**）。H1（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)）已 Archived。
 
 H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已归档。
 
@@ -336,12 +336,12 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 | --- | --- | --- | --- |
 | **H0** 文档与生命周期对账 | 入口/路线图/计划位置与 `v2.0.0` 对齐 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 计划已归档） |
 | **H1** 可复用治理 Skill 提炼 | L1/L2/L3 提取协议 → 干净目标验证；不迁脚本载体 | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** 控制面补完 | 执行序见 ADR-0025 决策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived；**H2c** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) **Active** | **H2c Active** |
+| **H2** 控制面补完 | 执行序见 ADR-0025 决策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived；**H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**；**H2d** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) **Active** | **H2d Active** |
 | **H3** 运行时与科研 | L3、测量、注意力实验；不挡 2.1 | 无 Active Plan | 远 |
 
 ### H0 已完成
 
-**Active** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md)（H2c）。H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**。
+**Active** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md)（H2d）。H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**。H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**。
 
 已归档（H0 带）：PLAN-0035 / 0036 / 0038-0044；H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)。Plan 保持单文件（`PLAN-xxxx-*.md`）。
 
@@ -355,8 +355,8 @@ H0 归档 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)（Archived�
 | H2-front 指令面 | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md)（**Archived**） |
 | H2a 残留抽出 | [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md)（**Archived**）· 5c leftover Capability 叶 · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md)（L0 台账 = [PLAN-0041](../archive/PLAN-0041-script-inventory.md)；今日 `retire = ∅`） |
 | H2b 检查器与台账 | [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md)（**Archived**）· 剩余 consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · [FINDING-0030](../../findings/FINDING-0030-artifact-placement-routing-gap.md) §5 · ADR-0016 parser 迁移 |
-| H2c 跨 profile / 机器 Control | [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) (**Active**) · [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
-| H2d 载荷调度与可移植性 | [FINDING-0003](../../findings/FINDING-0003-declaration-enforcement-gap.md) 判断型 MUST · [FINDING-0004](../../findings/FINDING-0004-trigger-coverage-gap.md) · [FINDING-0005](../../findings/FINDING-0005-validation-routing-overhead.md) · [FINDING-0006](../../findings/FINDING-0006-regression-oracle-gap.md) 全量 oracle · [FINDING-0007](../../findings/FINDING-0007-portability-enforcement-boundary.md) adapter · [FINDING-0010](../../findings/FINDING-0010-gitlab-ci-stack-template-mismatch.md) · [FINDING-0012](../../findings/FINDING-0012-lock-not-atomic.md) · Git consent 机械 evaluator · MIGRATE 入口 · [FINDING-0014](../../findings/FINDING-0014-review-manager-layer-mismatch.md) L0–L4 工具 · [FINDING-0016](../../findings/FINDING-0016-canonical-example-not-constraint.md) · [FINDING-0017](../../findings/FINDING-0017-adr-no-continuous-enforcement.md) |
+| H2c 跨 profile / 机器 Control | [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) (**Archived**) · [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
+| H2d 载荷调度与可移植性 | [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) (**Active**) · [FINDING-0003](../../findings/FINDING-0003-declaration-enforcement-gap.md) 判断型 MUST · [FINDING-0004](../../findings/FINDING-0004-trigger-coverage-gap.md) · [FINDING-0005](../../findings/FINDING-0005-validation-routing-overhead.md) · [FINDING-0006](../../findings/FINDING-0006-regression-oracle-gap.md) 全量 oracle · [FINDING-0007](../../findings/FINDING-0007-portability-enforcement-boundary.md) adapter · [FINDING-0010](../../findings/FINDING-0010-gitlab-ci-stack-template-mismatch.md) · [FINDING-0012](../../findings/FINDING-0012-lock-not-atomic.md) · Git consent 机械 evaluator · MIGRATE 入口 · [FINDING-0014](../../findings/FINDING-0014-review-manager-layer-mismatch.md) L0–L4 工具 · [FINDING-0016](../../findings/FINDING-0016-canonical-example-not-constraint.md) · [FINDING-0017](../../findings/FINDING-0017-adr-no-continuous-enforcement.md) |
 
 ### H3 输入（远；不挡 2.1）
 
@@ -367,7 +367,7 @@ H0 归档 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)（Archived�
 - **本仓**：实验场 + 参考实现 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
 - **已发布 skill（2.0）**：可安装必装切片，不是 PLAN-0037 另开通用包。
 - **2.x 产品主线（H1）**：[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — 可复用原则包已落地（`references/principles/`）。
-- **2.x 下一带（H2）**：H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**；**H2c** = [PLAN-0049](../PLAN-0049-h2c-machine-controls.md) **Active**（ADR-0025 决策 14）。
+- **2.x 下一带（H2）**：H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**；**H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**；**H2d** = [PLAN-0050](../PLAN-0050-h2d-payload-portability.md) **Active**（ADR-0025 决策 14）。
 - **H1 纪律（索引 [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 9–13）：** 消费已有 inventory，不新建能力去向表；不删脚本；不把 repo router 写入 INSTALLED；SemVer 不是 Horizon 的别名。
 
 ## Guarantee Levels
@@ -611,7 +611,7 @@ H0     文档与生命周期对账 — EXITED / Archived（PLAN-0045）
         ↓
 H1     PLAN-0037 跨项目 portable 提炼 — **Archived**（2026-09-13）
         ↓
-H2     执行序 ADR-0025：H2-0 → PLAN-0046（Archived）→ PLAN-0047（H2a Archived）→ PLAN-0048（H2b Archived）→ PLAN-0049（H2c Active）→d
+H2     执行序 ADR-0025：H2-0 → PLAN-0046（Archived）→ PLAN-0047（H2a Archived）→ PLAN-0048（H2b Archived）→ PLAN-0049（H2c Archived）→ PLAN-0050（H2d Active）
         ↓
 H3     运行时与科研（L3 / 测量；不挡 2.1）
         ↓

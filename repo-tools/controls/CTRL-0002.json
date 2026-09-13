@@ -10,25 +10,26 @@
   "applicability": "Any git write classified by git.policy.md § 确认范围.",
   "evaluation_bindings": [
     {
-      "profile": "repo",
-      "cli": null,
-      "evaluator": null,
-      "enforcement_boundary": "agent-protocol / consent-cluster sync points",
-      "decision_effect": "require-review"
+      "profile": "skill",
+      "cli": "scripts/check-git-consent.js",
+      "evaluator": "scripts/evaluators/ctrl-0002-git-write-consent.js",
+      "enforcement_boundary": "pre-write classification / agent protocol",
+      "decision_effect": "require-consent"
     },
     {
-      "profile": "skill",
-      "cli": null,
-      "evaluator": null,
-      "enforcement_boundary": "agent-protocol / release-manager sync points",
-      "decision_effect": "require-review"
+      "profile": "repo",
+      "cli": "scripts/check-git-consent.js",
+      "evaluator": "scripts/evaluators/ctrl-0002-git-write-consent.js",
+      "enforcement_boundary": "pre-write classification / agent protocol",
+      "decision_effect": "require-consent",
+      "note": "Same INSTALLED CLI until a distinct repo-profile WRAP is EXTRACTED; dual binding records consumers, not accidental single-file identity."
     }
   ],
   "evidence": {
-    "characterization": "scripts/check-doc-consistency.js consent-cluster (mechanical sync only)"
+    "characterization": "tests/suites/h2d-portability.test.js"
   },
   "control_x": {
     "eligible": false,
-    "reason": "No dual mechanical CLI evaluator yet; H2d may add consent evaluator. Do not fabricate CONTROL-X without shared fixture runners."
+    "reason": "Single CLI path today; CONTROL-X waits for distinct repo WRAP + shared negative fixture policy."
   }
 }

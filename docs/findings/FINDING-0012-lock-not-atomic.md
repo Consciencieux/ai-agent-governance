@@ -1,8 +1,9 @@
 ---
 id: FINDING-0012
-status: Confirmed
+status: Resolved
 type: defect
 observed_in: gen1
+resolved_in: gen2
 ---
 
 # FINDING-0012：check-lock.js 是只读提示，不是并发安全锁
@@ -52,7 +53,7 @@ function lockedValue(state) {
 
 ## 解决情况
 
-（待填。）
+**部分 Resolved（2026-09-13 · PLAN-0050 Stage 1）。** `scripts/check-lock.js` 增加 `--acquire` / `--release`：以 `.governance/agent.lock` + `fs.writeFileSync({ flag: "wx" })` 做原子占位；读路径同时承认 `agent.lock` 与 `state.json` 的 `locked`。表征：`tests/suites/h2d-portability.test.js`（二次 acquire 失败、非 owner release 拒绝）。关闭条件 2 满足。文档仍须强调：未 acquire 前的纯只读 check 仍是 advisory。
 
 ## 关联
 

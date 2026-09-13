@@ -16,6 +16,7 @@
       "references/principles/metadata-policy.md",
       "references/principles/capability-model.md",
       "references/principles/control-shape.md",
+      "references/principles/enforcement-semantics.md",
       "references/principles/decision-records.md",
       "references/principles/migration-method.md"
     ],
@@ -590,7 +591,21 @@
       "path": "scripts/check-lock.js",
       "source": "scripts/check-lock.js",
       "type": "copy",
-      "description": "Lock check"
+      "description": "Lock check + atomic acquire/release (CTRL companion for FINDING-0012)"
+    },
+    {
+      "phase": "B",
+      "path": "scripts/check-git-consent.js",
+      "source": "scripts/check-git-consent.js",
+      "type": "copy",
+      "description": "CTRL-0002 Git write consent classifier CLI (does not execute git)"
+    },
+    {
+      "phase": "B",
+      "path": "scripts/evaluators/ctrl-0002-git-write-consent.js",
+      "source": "scripts/evaluators/ctrl-0002-git-write-consent.js",
+      "type": "copy",
+      "description": "CTRL-0002 Git write consent evaluator"
     },
     {
       "phase": "B",

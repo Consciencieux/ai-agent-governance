@@ -6,6 +6,10 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0050 H2d Active (Stage 1 underway)** — Archived PLAN-0049 (H2c). CTRL-0002 git-write-consent evaluator + `check-git-consent.js`; `check-lock.js` atomic `--acquire/--release` via `agent.lock` (FINDING-0012 Resolved); `enforcement-semantics.md` portable four-value vocabulary (FINDING-0003 slice). INSTALLED router still requires Narrow ADR; hooks/L3 not mandatory.
+
+- **PLAN-0049 H2c Archived; PLAN-0050 H2d Active** — H2c exit review closed (machine Controls, CONTROL-X, template responsibility). H2d starts: judgment MUST carriers, Git consent evaluator, lock atomicity, MIGRATE entry, portability boundary; INSTALLED router only via Narrow ADR. Opt-in githooks/L3 remain non-mandatory.
+
 - **PLAN-0049 H2c Active (in progress)** — Repo-only machine-readable Controls at `repo-tools/controls/` + `check-control-registry.js`; CONTROL-X runner `run-control-x.js` (CTRL-0001 dual-profile negative fixture); `template-responsibility.v0.json` + gate (FINDING-0026); portable `references/principles/control-shape.md` (shape only, no CTRL numbers). FINDING-0001 / 0025 / 0026 Resolved; FINDING-0002 remains Confirmed (Dispatcher/Evidence still open). ADR-0023 decision 6 Narrow. Gen1 `npm run check` stays observational; `check:must-ship` remains sole CI block.
 
 - **AGENTS.md thin entry** — Validation / impact-face / reference-closure detail moved to `CONTRIBUTING.md` (§ Validation Requirements; ×3). `AGENTS.md` keeps always-on invariants + pointers (ADR-0022). Routing graph `reference-closure` AuthorityRef retargeted to CONTRIBUTING. No skill-behavior change.

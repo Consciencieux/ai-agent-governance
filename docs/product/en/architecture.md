@@ -121,7 +121,8 @@ ai-agent-governance/
 │       └── release.md          # release preconditions + version consistency (governed projects)
 ├── scripts/                    # skill runtime scripts — INSTALLED into governed projects + the generator
 │   ├── verify_governance.js    # validator (manifest-driven paths + governance_version)
-│   ├── check-lock.js           # multi-agent lock check (read-only, exit 1 = lock held)
+│   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
+│   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
 │   ├── check-git-policy.js     # Git workflow gate (protected branch + directPush=false → exit 1)
 │   ├── check-secrets.js        # skill-profile CTRL-0001 CLI WRAP (staged diff; never prints the secret)
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
