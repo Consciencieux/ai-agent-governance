@@ -54,17 +54,56 @@ CI（ADR-0014 Migration Mode **已退出**）：所有分支 / PR 的阻断权�
 
 ## 验证要求
 
-| 检查 | 角色 | 何时 |
-| --- | --- | --- |
-| `npm run check:must-ship` | CI 阻断 | 合入 `main` / 发布前必绿（ADR-0024 必装集合） |
-| `npm run check:docs` | Gate | 文档（`docs/`、README、CONTRIBUTING）变更 |
-| `npm run check:payload` | Gate | `references/` / `scripts/` / `SKILL.md` / LICENSE 变更 |
-| `npm run check:tests` | Gate | `tests/` 变更 |
-| `npm run check` | 观测 | 第一代全量；CI 不阻断 merge |
-| `npm run check:all` | 巡检 | 巡检前，或显式全量巡检 |
-| `npm run check:skill-release` | 发布 | 发布前，按 `repo-workflows/skill-release.md` |
+宣布完成前跑与变更范围匹配的门禁组；巡检前跑 `npm run check:all`；发布前跑 `npm run check:skill-release`（含 `--release-gate` 失败即阻断簇），见 `repo-workflows/skill-release.md`。记录真实输出，禁止声称「应该能过」。**CI 阻断权威 = `npm run check:must-ship`**（ADR-0014 已退出；ADR-0024）。第一代 `npm run check` 仅观测。
 
-较窄条目对各自范围 fail-closed；不确定时**升级到更大范围**——绝不缩小验证。**产品阻断权威是 `check:must-ship`**；第一代 `npm run check` 仅作观测。哪些门禁是 advisory 而非 fail-closed、通过各意味着什么，见 `AGENTS.md` § Validation。
+### 范围分级
+
+按 `git diff --name-only` 前缀匹配最窄一行。范围不确定时升级，绝不缩小验证。各门禁同为 fail-closed 退出语义，仅运行集合不同。
+
+| 范围 | 何时使用 | 运行内容 |
+| --- | --- | --- |
+| `npm run check:docs` | 变更 `docs/`、`README.md`、`CONTRIBUTING.md`、`architecture.md` | test + parity + consistency + layout（及已接入的 roadmap/docs-shape/ledger/projection） |
+| `npm run check:payload` | 变更 `references/`、`scripts/`、`SKILL.md`、`LICENSE` | test + layout + consistency + role-completeness + hygiene |
+| `npm run check:tests` | 变更 `tests/`、`.gitattributes` | test + hygiene |
+| `npm run check:full` | 默认、范围不定、或显式全量 | test + parity + layout + consistency + hygiene + role-completeness |
+| `npm run check:all` | 巡检或显式全量巡检 | check + freshness + plan delivery |
+| `npm run check:must-ship` | 合入 / 发布 CI | 仅 must-ship 机械集合 |
+
+### 各门禁证明什么（证据分层）
+
+| 门禁 | 检查内容 | 证据分层 | 通过含义 |
+| --- | --- | --- | --- |
+| `npm test` | `tests/suites/*.test.js` | mechanical | 变更范围条件满足 |
+| `check-doc-parity.js` | 三语树结构 | mechanical | 结构平行（≠语义等价） |
+| `check-layout-sync.js` | architecture.md ×3 与扫描目录 | mechanical | 新文件有文档归属 |
+| `check-doc-consistency.js --gate` | 跨文档事实簇（冻结；新检查优先独立脚本） | mechanical | 声明与源一致 |
+| `check-coding-hygiene.js --gate` | 套件归属、残留标记 | mechanical | 测试架构完整 |
+| `check-role-completeness.js --gate` | 角色分类 / 打包 | mechanical | 分发契约完整 |
+| `check-doc-freshness.js` | 陈旧文档 / 译文滞后 | mechanical（报告；`--release-gate` 阻断） | 未检出机械陈旧 |
+| `check-plan-delivery.js` | 计划声明 vs 交付路径 | mechanical | 声明文件/标识存在 |
+| `check-roadmap-sync.js` | 路线图 vs 计划生命周期 | mechanical | 在途计划已索引；归档未被标为在途 |
+| `check-docs-shape.js` | `docs/` allowlist | mechanical | 形状符合 allowlist |
+| `check-discovery-ledger.js` | Active 计划发现台账 | mechanical | Open 计数可对账 |
+| `check-metadata-projection.js` | ADR README 投影 | mechanical | 索引保持导航-only |
+| `check-changelog-narration.js` | `[Unreleased]` 验证叙事标记 | mechanical（建议性） | 未出现所列标记 |
+| `verify_governance.js` | 治理产物存在性 | mechanical | 本仓默认模式按设计失败（ADR-0006） |
+
+证据分层：**mechanical** = 标记/路径/结构/存在（通过 ≠「行为正确」）；**human-attested** = 需人工（当前无自动门禁产出）；**unverified claim** = 仅声明、无独立核验。
+
+### 影响面检查
+
+触及公共接口/模块/文件前，先 `rg "<name>"`；命中列入 Affected Files。收尾用 `git diff --name-only` 对照：已列未改 → 补做或说明；已改未列 → 解释或回退。并对照计划 `Target`：域外改动必须说明或回退。
+
+### 引用闭包检查
+
+载荷工作，以及「架构是否健全 / 规则是否混杂 / skill 是否可用」类问题：影响面只解决**本仓内**引用，对装机物不够。INSTALLED 文件写在有 `references/workflows/release.md` 处、读在没有它的处。绿门禁 ≠ 目标闭包。按路由走：
+
+1. **引用闭包** — 每个 INSTALLED 文件引用的路径/命令/脚本须在**被治理项目**中存在。
+2. **阶段闭包** — 每阶段自有输出须满足该输出声明的契约。
+3. **干净目标核验** — 打包 → INIT 临时项目 → 在**那里**跑规则/脚本/子技能。
+4. **反向依赖** — 禁止：被治理规则 → 本仓 `docs/`；生成子技能 → SKILL-INTERNAL 脚本；INSTALLED → 本仓 `package.json`；Phase A → Phase B/C 文件。
+
+按可解析性枚举，禁止抽样「看起来像本仓」的行。姿态参考：`scripts/check-doc-consistency.js`。Agent always-on 指针：`AGENTS.md` § Reference-closure check。
 
 ## 提交约定
 

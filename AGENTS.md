@@ -1,10 +1,12 @@
 # AGENTS.md
 
-Guidelines for agents working on the ai-agent-governance skill repo itself. This repo is a skill distribution repository (not a governed software project) — it uses lightweight governance: release flow + plans/archive + ADRs + tests.
+Guidelines for agents working on the ai-agent-governance skill repo itself. This repo is a skill distribution repository (not a governed software project) — lightweight governance: release flow + plans/archive + ADRs + tests.
+
+Thin entry (ADR-0022): always-on invariants + routing only. Detailed procedures live in the linked authorities — do not restate them here.
 
 ## Governance principles index
 
-Where each principle authoritatively lives. Pointers only — never restate the content here; edit the authoritative file and this index stays valid. Scope tells you which domain a principle governs: **payload** ships to governed projects, **repo** governs work on this repository.
+Where each principle authoritatively lives. Pointers only — never restate the content here; edit the authoritative file and this index stays valid. Scope: **payload** ships to governed projects; **repo** governs work on this repository.
 
 | Principle | Authoritative source | Scope |
 | --- | --- | --- |
@@ -26,139 +28,102 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Release transactionality | `references/workflows/release.md` § 事务性 | payload |
 | Turn-scoped consent + exceptions A/B | `references/policies/git.policy.md` § 确认范围（**sole semantic authority**; this file keeps a pointer only — ADR-0024） | both |
 | Payload self-containment | `references/init-spec.json` § invariants | repo |
-| Distribution roles (declared, never inferred) | `references/init-spec.json` § invariants + § distribution | repo |
+| Distribution roles (declared, never inferred) | `references/init-spec.json` § invariants + § distribution · `docs/product/en/architecture.md` § Three distribution roles | repo |
 | Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
-| Reference closure (validate in the execution environment) | this file § Reference-closure check · `SKILL.md` § Audit 流程 step 3 | both |
+| Reference closure (validate in the execution environment) | this file § Reference-closure check · `CONTRIBUTING.md` § Reference-closure check · `SKILL.md` § Audit 流程 step 3 | both |
 | Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理 · `references/policies/lifecycle.policy.md` § 变更归位与残留清理 | payload |
 | Root-cause repair protocol + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
 | Discovery Ledger (known-issue closure L1) | `references/policies/lifecycle.policy.md` § 发现台账（Discovery Ledger） · ADR-0021 | payload |
 | Two-domain symmetry + sibling-instance closure + control-plane trace | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
 | Scope tiering (rule-decided, not self-judged) | `references/policies/lifecycle.policy.md` § 规模分级 | payload |
 | Test protection | `references/policies/testing.policy.md` § 测试保护 | payload |
-| CHANGELOG content boundary | `references/policies/lifecycle.policy.md` § CHANGELOG 内容边界 · this file § Change classification (repo-owned accession) | both |
+| CHANGELOG content boundary | `references/policies/lifecycle.policy.md` § CHANGELOG 内容边界 · `repo-workflows/changelog-policy.md` | both |
 | Agent instruction architecture (thin entrypoint, contextual loading, mechanical-first) | `docs/design-decisions/ADR-0022-agent-instruction-architecture.md` · `docs/research/RESEARCH-0009-agent-instruction-architecture.md` · this file § Conventions | both |
-| Task→Capability call topology (Phase 5 EXITED; repo construction) | `docs/research/RESEARCH-0012-task-capability-routing.md` · `repo-tools/routing-graph.v0.json` · `repo-tools/lib/routing.js` · `repo-tools/route-task.js` · PLAN-0038 · PLAN-0039 · PLAN-0040 · this file § Task→Capability routing | repo |
+| Task→Capability call topology (Phase 5 EXITED; repo construction) | `docs/research/RESEARCH-0012-task-capability-routing.md` · `repo-tools/routing-graph.v0.json` · `repo-tools/lib/routing.js` · `repo-tools/route-task.js` · this file § Task→Capability routing | repo |
 | Producer/product separation (shared semantics, single authoritative owner, separate profiles) | `docs/design-decisions/ADR-0020-producer-product-governance-separation.md` · this file § Classification judge rule | repo |
 | Governance Control Model (control identity, slots, profile binding) | `docs/design-decisions/ADR-0023-governance-control-model.md` · `docs/research/RESEARCH-0010-governance-control-model.md` | repo |
 | 2.x product path (post-2.0 horizons) | `docs/design-decisions/ADR-0025-gen2x-product-path.md` · this file § Task→Capability routing | repo |
 | Artifact placement and object creation (owner routing) | `docs/README.md` § 东西放哪里 · § 类型目录封闭 · § 文档职责与信息密度（incident evidence only：`docs/findings/FINDING-0030-artifact-placement-routing-gap.md`） | repo |
 
-Six always-on gate clusters keep this index and its sources honest: the consent cluster, the protected-files cluster (declared governance paths must exist in the authoritative list — a pointer to the single source of truth excuses incompleteness, never incorrectness), the principles-index cluster (every row's source must resolve), the plan-status cluster (unknown status fails), the prompt-sync cluster (trigger inventory agrees with the skill sources in both directions — missing and stale; ADR-0008) and the frontmatter-version sync point are verified by `node scripts/check-doc-consistency.js --gate` (part of `npm run check`). The terminology gate (glossary-registered forbidden renderings, exempt per line with `<!-- i18n: allow X -->` — inside a Markdown table only the preceding line of the table's first row works; later rows must be reworded) is enforced by the REPO-OWNED `node repo-tools/check-terminology.js` (part of `npm run check`), not by the INSTALLED product checker — the first Producer/Product execution separation (ADR-0020; its data source docs/glossary.md is repo-only). The pending-archive cluster (an implemented/Completed plan still in `docs/plans/`), the archived-plan-status cluster (a file in `docs/plans/archive/` must say `archived`) and the changelog-coverage cluster (a governance/mechanism change without a CHANGELOG record; doc-only changes are exempt) are fail-closed only in `--release-gate`, run as `repo-workflows/skill-release.md` Phase 4 step 3 — alongside `node scripts/check-doc-freshness.js --release-gate`, which blocks when a translation lags its 简体中文 source or is still marked draft.
+Always-on honesty gates for this index (consent / protected-files / principles-index / plan-status / prompt-sync / frontmatter-version) run via `node scripts/check-doc-consistency.js --gate`. Terminology gate: `node repo-tools/check-terminology.js` (REPO-OWNED; ADR-0020). Pending-archive / archived-plan-status / changelog-coverage fail-closed only under `--release-gate` (`repo-workflows/skill-release.md`).
 
 ## Repository architecture
 
-See [docs/product/en/architecture.md](docs/product/en/architecture.md) — the single source of truth for repository layout (what each directory is FOR, install payload vs repo infrastructure split).
+Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md) (layout + distribution roles + portability axis).
 
-Hard rules that follow from this:
+Always-on hard rules:
 
-- **Changing skill behavior = editing `references/` only** (+ `SKILL.md` if a pointer/entry changes + `CHANGELOG.md` if behavioral). Done. Docs edits never change what the skill does.
-- **`docs/` edits are a documentation duty, not the feature.** When a sub-skill gains/changes trigger words, syncing them into `docs/product/{en,zh-CN,zh-TW}/commands.md` exists so USERS can learn how to invoke the skill — it serves the manual, not the skill. The skill works with or without it.
-- **Generated skills vs scripts** — generated skills are loaded from `.governance/generated/skills/<name>/SKILL.md`; they are not `scripts/<name>.js`. The registry is generated from `references/templates/sub-skills.md`; keep the distinction explicit in agent-facing instructions.
-- **Never restate skill content into `docs/`.** Docs reference the skill (file + section pointer); they do not copy workflows, step lists, or rule text. The **trigger-word inventory in `commands.md` is the one deliberate exception** — it is a user-manual duty, it is gate-enforced (prompt-sync), and its authority stays in `references/templates/sub-skills.md`; see ADR-0008. The exception covers trigger words only and extends to nothing else.
-- **Change placement and residue cleanup** — changes to the current source, references, compatibility layer, history and generated projections must be classified and reconciled; the full payload rule is `references/policies/lifecycle.policy.md` § 变更归位与残留清理.
-- **Rule capture** — developer-stated persistent requirements are classified and explicitly adjudicated before entering governed-project rule files; the full payload rule is `references/policies/lifecycle.policy.md` § Rule Capture.
-- **Classification judge rule** — ask "who reads this and does it change the skill?" Skill behavior → `references/`. Project knowledge → `docs/`. After type: **one ID = one file**. Plan = execution contract; knowledge → one Research; machine JSON → `repo-tools/`. Do not mint `RESEARCH-xxxx-foo.md` companions, `PLAN-xxxx/` folders, or dump directories. HITL/checklists merge into the owner file. Document scope: `docs/README.md` § 文档职责与信息密度.
-- **Where a principle goes (the three-layer judge rule)** — `SKILL.md` policy layer holds what the *skill executor* must read on every INIT/AUDIT/RELEASE run; `references/policies/` holds *content artifacts* that get copied into governed projects as `docs/rules/*`; `AGENTS.md` holds rules for working on *this* repository. Test: would an agent executing a concrete task get it wrong without reading this? If yes and it governs the skill's own execution → policy layer. If it is a rule the governed project's agents must follow → `references/policies/`. If it only applies to contributors here → this file. The index above records where each one currently lives.
+- **Skill behavior** → edit `references/` only (+ `SKILL.md` pointer/entry + `CHANGELOG.md` if behavioral). Docs never change skill behavior.
+- **`docs/`** = documentation duty. Trigger-word sync into `docs/product/{en,zh-CN,zh-TW}/commands.md` is the sole deliberate copy exception (ADR-0008; prompt-sync gate); authority stays in `references/templates/sub-skills.md`.
+- **Generated skills ≠ scripts** — load from `.governance/generated/skills/<name>/SKILL.md`, not `scripts/<name>.js`.
+- **Never restate skill workflows/rules into `docs/`** (trigger inventory exception only).
+- **Classification judge** — who reads it / does it change the skill? Behavior → `references/`; knowledge → `docs/`; after type: **one ID = one file**. Placement: `docs/README.md` § 文档职责与信息密度.
+- **Three-layer judge** — skill executor every run → `SKILL.md` policy; governed-project rules → `references/policies/`; this repo only → this file.
 
 ## Before touching anything
 
-- **Read `docs/product/en/architecture.md` — Repository Layout section** — it is the mandatory map of what each directory is FOR. The layout gate (`npm run check` → `docs:layout`) fails CI if this tree drifts from `references/` + `scripts/` + `repo-tools/` + `repo-workflows/`, so keeping it read-and-current is enforced, not optional. **CI blocking authority is `npm run check:must-ship`** (ADR-0014 Mode EXITED; ADR-0024). Gen1 `npm run check` is observational (`continue-on-error`) and does not block merge.
-- Read [SKILL.md](SKILL.md) — it is the product specification, not just a doc
-- Read [CONTRIBUTING.md](CONTRIBUTING.md) and the relevant [docs/](docs/) page for the area you change
+1. Read `docs/product/en/architecture.md` — Repository Layout (layout gate enforces it). **CI block = `npm run check:must-ship`**; Gen1 `npm run check` is observational.
+2. Read [SKILL.md](SKILL.md) (product spec).
+3. Read [CONTRIBUTING.md](CONTRIBUTING.md) and the relevant docs page for the area you change.
 
 ### Task→Capability routing (Phase 5 EXITED · repo construction)
 
-For work **in this repository**, do **not** open the whole governance tree by default. Load by call topology (ADR-0022 Context Economy):
+Do **not** open the whole governance tree by default (ADR-0022 Context Economy):
 
-1. Classify the task → `task_class` (+ optional context facets), **or** run the Detector/CLI.
-2. Prefer the callable router: `node repo-tools/route-task.js --task <class> …` or `--path <file>…` (shared impl: `repo-tools/lib/routing.js`; graph: `repo-tools/routing-graph.v0.json`). Human map and algorithm: [`RESEARCH-0012`](docs/research/RESEARCH-0012-task-capability-routing.md).
-3. Read only the resulting `read_set` authorities; run only `run_set` controls; if `unmatched` or over budget, use `defer_set` — never silently load everything.
-4. Phase 5 is **EXITED** (PLAN-0038 / 0039 / 0040). Leftover Capability leaves follow the same discipline — **do not** rearrange by Gen1 directory skeleton; only retarget `AuthorityRef` (see RESEARCH-0012 § 物理拓扑); **do not** invent a second Task→Capability lookup model. **PLAN-0037 is Archived** (2026-09-13; ADR-0025 H1 complete — `references/principles/`). Do not promote this repo’s paths/CTRL ids/Phase scripts to L1; do not sweep `scripts/` or install the repo router as a side effect of H2 work (ADR-0025 2026-09-13). Phase 6–8 are **EXITED**. **`v2.0.0` shipped**. 2.x order = [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md) (H0 Archived = [PLAN-0045](docs/plans/archive/PLAN-0045-post-2.0-doc-truth.md)). A WRAP carrier list is not 2.0 evidence. Plans still **must consume** [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) (`must-ship` / `repo-keep` / `later` / `retire` / `out`) and the file inventory at [`script-inventory.v0.json`](repo-tools/script-inventory.v0.json) — do not create a third destination ledger.
+1. Classify → `task_class` (+ optional facets), **or** run Detector/CLI.
+2. Prefer `node repo-tools/route-task.js --task <class> …` or `--path <file>…` (impl: `repo-tools/lib/routing.js`; graph: `repo-tools/routing-graph.v0.json`). Map: [`RESEARCH-0012`](docs/research/RESEARCH-0012-task-capability-routing.md).
+3. Read only `read_set`; run only `run_set`; if unmatched/over budget use `defer_set` — never silently load everything.
+4. Leftover Capability leaves: retarget `AuthorityRef` only — do not rearrange by Gen1 dirs or invent a second lookup model. Plans **must consume** [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) and [`script-inventory.v0.json`](repo-tools/script-inventory.v0.json) — no third destination ledger. 2.x order: [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md). H2b [PLAN-0048](docs/plans/archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived; next = H2c (awaiting Design). **No Active plan.**
 
-**Instruction-surface leaves (PLAN-0046 Archived):** human/Agent-callable must-ship cards live under `references/capabilities/` (INIT → `docs/rules/capabilities/`). Coverage map (not a disposition authority): [`instruction-surface-leaves.v0.json`](repo-tools/instruction-surface-leaves.v0.json). Skill entry routing table: `SKILL.md` § 能力叶快速路由.
-
-This map/router is **REPO-ONLY** construction authority (not INSTALLED payload). Characterization: `node tests/run-tests.js --suite routing`.
+Instruction-surface leaves: `references/capabilities/` (coverage map: [`instruction-surface-leaves.v0.json`](repo-tools/instruction-surface-leaves.v0.json)). Skill routing table: `SKILL.md` § 能力叶快速路由. This router is **REPO-ONLY**. Characterization: `node tests/run-tests.js --suite routing`.
 
 ## Protected files (governance file protection)
 
-Modifying `SKILL.md`, `references/policies/**`, `references/templates/**`, `references/workflows/release.md`, `repo-workflows/**`, any `scripts/*.js`, any `repo-tools/*.js`, or `repo-tools/*.sh` requires: reason → CHANGELOG update (if behavioral) → run `npm test`. Never loosen permission limits or remove validation steps. Full protected-files list: `references/policies/governance-files.policy.md` (single source of truth); the above is a summary.
+Summary: changing `SKILL.md`, `references/policies/**`, `references/templates/**`, `references/workflows/release.md`, `repo-workflows/**`, `scripts/*.js`, `repo-tools/*.js`/`.sh` requires reason → CHANGELOG (if behavioral) → `npm test`. Never loosen limits or remove validation. Full list: `references/policies/governance-files.policy.md`.
 
 ## Change classification (CHANGELOG)
 
-- Small changes (single file, no public-interface change) skip the full lifecycle and CHANGELOG entry; medium/large changes follow the full six-phase lifecycle (per `references/policies/lifecycle.policy.md` scope tiers)
-- **CHANGELOG format is unified** — the shared format contract (version heading, category headings, blank-line rules) is authoritative in `references/policies/lifecycle.policy.md` § CHANGELOG 结构契约 格式统一, applying to this repo and governed projects; mechanically enforced by the `changelogCoverage` cluster on the newest section.
-- **Repo-owned accession policy (ADR-0012): decision ≠ delivered change.** Eligibility is by observable impact, not file type. `ADR Accepted` / new Finding / new Research / Plan creation do NOT by themselves produce a CHANGELOG entry. Writing may be deferred to a checkpoint; accounting may not. Released `[1.0.2]` and earlier stay as published (do not restyle to match today's accession). Full execution policy (C1–C5, audience test, reconciliation triggers, release composition, released-section freeze): `repo-workflows/changelog-policy.md` — read it when writing CHANGELOG or closing a checkpoint. Payload `references/policies/lifecycle.policy.md` remains authoritative for the shared format contract governing governed projects.
-- Plans are design docs in `docs/plans/` (single-language, zh-CN canonical); after exit review / closure they move to `docs/plans/archive/` with `status: Archived` — **Plan archive ≠ Release** (ADR-0016). Never deleted. A new plan is written once in `docs/plans/`; on archive it moves to `docs/plans/archive/`.
-- **Every TASK plan declares a `Target`** — `payload` (ships to governed projects: `SKILL.md`, `references/`, `scripts/`, `LICENSE`), `repo-infra` (`docs/`, `tests/`, `package.json`, `.github/`, README/CONTRIBUTING/CHANGELOG/AGENTS.md), or `both`. When `Target: both`, the plan must enumerate the sync points per domain — that enumeration is what stops a cross-domain rule from being updated in one place only. Write filenames outside the Affected Files section without backticks: the delivery gate treats every backticked token inside that section as a delivery declaration.
-- **Every TASK plan carries `status` in frontmatter** — canonical values `Design` / `Active` / `Implemented` / `Completed` / `Archived` (representation authority moves now, ADR-0016; the old body `> **Status:**` blockquote is removed — Gen1 plan-status parsing reports divergence until the Phase 4 parser migration). `Completed` is a short transition during closure reconciliation; leaving Implemented/Completed plans in `docs/plans/` past closure is a lifecycle defect. Gen1 `--release-gate` pending-archive semantics may still assume release-time archive — treat red output as compatibility divergence until Phase 4.
+- Small (single file, no public interface) may skip full lifecycle/CHANGELOG; medium/large follow `references/policies/lifecycle.policy.md` scope tiers.
+- Shared CHANGELOG **format** contract: lifecycle policy § CHANGELOG 结构契约. Repo **accession** (decision ≠ delivered change): `repo-workflows/changelog-policy.md` (ADR-0012).
+- Plans: `docs/plans/` → archive with `status: Archived` (**Plan archive ≠ Release**, ADR-0016). Every TASK plan declares `Target` (`payload` / `repo-infra` / `both`) and frontmatter `status` (`Design` / `Active` / `Implemented` / `Completed` / `Archived`).
 
-## Validation (gate tiering by change scope)
+## Validation
 
-Run the gate group before declaring any task done; run the full group (`npm run check:all`) before audit, and the release-specific gate (`npm run check:skill-release`, which adds the `--release-gate` fail-closed clusters) before release per `repo-workflows/skill-release.md`. Record real output (never claim "should pass"). **Migration Mode (ADR-0014):** **EXITED** (human-approved 2026-09-12). **`v2.0.0` shipped.** CI blocking = `npm run check:must-ship`; Gen1 `npm run check` = observational. 2.x path: [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md) (H2 execution order = decision 14: H2-0 → PLAN-0046 → a→b→c→d; 0/1 may run in parallel, a→b→c must not invert). H2b [PLAN-0048](docs/plans/archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived; next = H2c (awaiting Design); H2a [PLAN-0047](docs/plans/archive/PLAN-0047-h2a-residue-extraction.md) Archived. **No Active plan.**
+**Procedure authority:** [CONTRIBUTING.md](CONTRIBUTING.md) § Validation Requirements (scope table, per-gate evidence tiers, impact-face). Always-on:
 
-**Scope tiering** — match the narrowest entry below by `git diff --name-only` prefix. When scope is uncertain, ESCALATE to the larger scope — never narrow the verification. The entries share the same fail-closed semantics: each gate exits 0 / 1 the same way, only the set of gates that runs changes.
+- Match the narrowest `npm run check:*` scope for the diff; escalate when unsure.
+- Record real output; never claim “should pass”.
+- **CI block = `check:must-ship`**; Gen1 `check` = observational.
+- Horizon pointer: ADR-0025; H2c next; **No Active plan.**
 
-| Scope | When to use | What it runs |
-| --- | --- | --- |
-| `npm run check:docs` | `docs/`, `README.md`, `CONTRIBUTING.md`, `architecture.md` changed | test + parity + consistency + layout |
-| `npm run check:payload` | `references/`, `scripts/`, `SKILL.md`, `LICENSE` changed | test + layout + consistency + role-completeness + hygiene |
-| `npm run check:tests` | `tests/`, `.gitattributes` changed | test + hygiene |
-| `npm run check:full` | default, uncertain scope, or explicit full request | test + parity + layout + consistency + hygiene + role-completeness |
-| `npm run check:all` | audit, or explicit full audit | check + freshness + plan delivery |
+## Reference-closure check
 
-**What each gate checks and what it proves (evidence tiers):**
+Always-on obligation (detail: [CONTRIBUTING.md](CONTRIBUTING.md) § Reference-closure check · `SKILL.md` Audit step 3):
 
-| Gate | Checks | Evidence tier | What pass means |
-| --- | --- | --- | --- |
-| `npm test` | all tests registered by `tests/suites/*.test.js` | mechanical | conditions satisfied for the changed scope |
-| `check-doc-parity.js` | trilingual tree structure (files, headings, tables) | mechanical | trees are structurally parallel (NOT semantic equivalence) |
-| `check-layout-sync.js` | `references/`, `scripts/`, `repo-tools/`, `repo-workflows/` files listed in architecture.md ×3 | mechanical | no file added without a documented home |
-| `check-doc-consistency.js --gate` | 12 cross-document fact clusters (frozen: new checks must create standalone scripts when existing ones cannot host them) | mechanical | declared facts match their sources |
-| `check-coding-hygiene.js --gate` | monolith test registration, suite ownership, residue markers | mechanical | test architecture is intact |
-| `check-role-completeness.js --gate` | every references/scripts/ file classified, no overlap, packaging matches | mechanical | distribution contract is complete |
-| `check-doc-freshness.js` | stale governance docs + translation staleness | mechanical (report only; `--release-gate` blocks stale/draft) | report only; pass ≠ correct, only that no mechanical staleness was detected |
-| `check-plan-delivery.js` | plan declarations vs delivered paths/identifiers | mechanical | no declared file or identifier is missing |
-| `check-roadmap-sync.js` | roadmap index vs plan lifecycle state | mechanical | implemented plans are indexed, archived plans are not linked from active horizons, named entries link their plan |
-| `check-changelog-narration.js` | verification-narration markers in `[Unreleased]` (repo-only, advisory) | mechanical (report only; never blocks) | no listed marker was found — says nothing about whether entries are well written |
-| `verify_governance.js` | governance artifact existence | mechanical | runs in default mode here, fails by design (ADR-0006) |
-
-**Evidence tier definitions:**
-- `mechanical` — marker, structure, path, regex, file existence. Pass = "mechanical condition satisfied", NOT "behavior is correct" or "semantics are accurate".
-- `human-attested` — requires user-in-the-loop or human review (e.g. release approval, translation review, root cause evaluation). Currently no automated gate produces this tier.
-- `unverified claim` — declaration only, no independent verification available (e.g. "regression test was failing before the fix"). Not a gate output.
-
-**Impact-face check** — before touching any public interface/module/file, search its references first (`rg "<name>"`); found files enter the Affected Files list. At task end, compare actual changed files (`git diff --name-only`) against that list: listed-but-unchanged → fix or justify; changed-but-not-listed → explain (or revert if it was a lazy side-edit). Also compare the changed set against the plan's `Target`: a file outside the declared domain is an out-of-domain edit and must be explained or reverted — payload edits smuggled into a `repo-infra` task are exactly how the install payload got broken once.
-
-**Reference-closure check (payload work, and every "is the architecture sound / are the rules mixed up / is the skill actually usable" question)** — the impact-face check above resolves references *inside this repo*. That is not enough for anything that ships: an INSTALLED file is written where `references/workflows/release.md` exists and is READ where it does not. Classifying a file, finding its single source of truth, and getting a green gate are all compatible with the shipped artifact being broken — gates check declarations, paths, structure and markers, never the reference closure. So do not answer structural questions from the directory map; walk the route:
-
-1. **Reference closure** — from each INSTALLED file, enumerate every referenced file, command, directory and script, and ask whether it exists *in a governed project*, not in this repo.
-2. **Stage closure** — per phase, ask whether that phase's own output can satisfy the contract that output declares (the Phase A `AGENTS.md` commanding Phase B scripts is the canonical failure).
-3. **Clean-target verification** — package the tarball, INIT a throwaway project from it, then run the generated rules, installed scripts and sub-skills there. Running the suite in this repo proves nothing about the target.
-4. **Reverse-dependency check** — forbidden edges: governed-project rule → this repo's `docs/`; generated sub-skill → SKILL-INTERNAL script; INSTALLED file → this repo's `package.json`; Phase A artifact → a Phase B/C file.
-
-Defects distribute by resolvability, not by suspicious wording — enumerate and resolve, never sample the lines that "look repo-specific". `scripts/check-doc-consistency.js` is the reference implementation of the stance: it `existsSync`-guards the parity script, no-ops without a glossary, and checks a consent group only when at least one of its paths is present.
+- Impact-face resolves references **in this repo**; shipping requires closure **in a governed project**.
+- Walk: reference closure → stage closure → clean-target INIT verification → reverse-dependency forbid list.
+- Green gates ≠ target-usable. Enumerate and resolve; do not sample “repo-looking” lines.
 
 ## Conventions
 
-- Language policy by audience: agent-facing files (`SKILL.md`, `references/**`, generated artifact bodies) are single-language - never add a second language section. Within `docs/`, language follows knowledge type (not the whole tree): **user-facing product docs** are trilingual and split — the six README/CONTRIBUTING entry files live at the repository root (`README.md`, `README.zh-CN.md`, `README.zh-TW.md`, `CONTRIBUTING.md`, `CONTRIBUTING.zh-CN.md`, `CONTRIBUTING.zh-TW.md`), while the remaining product docs live in `docs/product/{en,zh-CN,zh-TW}/`; **roadmap** (`docs/plans/roadmap/`) is trilingual; **plans / findings / research / design-decisions** are 简体中文 canonical single-language (shared); archived plans (`docs/plans/archive/`) are shared single-language 简体中文. 简体中文 is the canonical source for all trilingual docs; editing one language requires updating the other two in the same change. New terms must be added to `docs/glossary.md` first
-- Distribution roles (use these three names, never the bare word "payload" — it used to mean all three and that ambiguity produced real defects). **The boundary is physical, not declarative**: `repo-tools/package-skill.sh` copies `SKILL.md` + `references/` + `scripts/` + `LICENSE`, so what ships is decided by WHERE a file lives. **INSTALLED** = INIT writes it into the governed project (it appears as a `source` in `references/init-spec.json`); **SKILL-INTERNAL** = travels in the tarball and the skill executor reads it, but INIT never installs it, so a governed project does NOT have it — exactly three files: `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`; **REPO-ONLY** = cannot reach a tarball at all because it lives outside the copied dirs (`repo-tools/`, `repo-workflows/`, `docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md, `.gitattributes`). Three consequences: a SKILL-INTERNAL file must never be cited as a rule source for governed projects; a repo-only file declared as distributed fails `check-role-completeness --gate` (reverse check); and directory placement is the DEFAULT boundary, never proof of audience-correctness — a new file under `references/` or `scripts/` still needs its role declaration, portable content, and target-chain verification. Full table: `docs/product/en/architecture.md` § Three distribution roles
-- Commit messages: Conventional Commits, in English
-- **Moving a file does not move its readers' assumptions** — after any file move (and after every directory split), re-check every hardcoded directory enumeration (`SCAN_DIRS`, `SEARCH_ROOTS`, `DIRS`, role lists, scan sets, search homes): a gate's enumeration silently covers a subset once its target leaves the named tree. Three separate incidents so far — five release version sync points with two verified, the hygiene scan losing the six gates it moved with, and the plan-delivery search losing two trees. Each passed green until an enumeration test was added.
-- Sync group: adding or modifying a sub-skill (in `references/templates/sub-skills.md`) or a check script requires updating, in the same change: `docs/product/{en,zh-CN,zh-TW}/commands.md` (trigger words — user manual duty, see Repository architecture), `docs/product/{en,zh-CN,zh-TW}/validator.md` (if validator behavior), `CHANGELOG.md` (if behavioral) — `check-doc-consistency.js`'s prompt-sync check enforces the commands.md half
-- Releases follow `references/workflows/release.md` for governed-project releases, and `repo-workflows/skill-release.md` for this skill repo's own release. No tag/push/release without explicit approval. **This repo uses skill-release.md** — it is REPO-ONLY (lives under `repo-workflows/`, so it never ships in the tarball). `release.md` stays as the governed-project single source of truth; this repo's release flow is in `skill-release.md` (no `.governance/manifest.json`, no `validator.passed` gate, version consistency across five sync points + tag — package.json, CHANGELOG, SKILL.md frontmatter, init-spec default, generator sentinel — and archive collision rule). Tag-version pairing in manifest examples (a `"tag"` beside a `"version"` must match it) is enforced by the `version_examples` cluster, fail-closed under `--gate`/`--release-gate`.
-- **Content portability — the second axis, distinct from the distribution role above.** The role says where a file GOES; it does not say whether its content HOLDS there. Writing INSTALLED text: every path, command and script it names must exist in a governed project, so reference siblings by the path the TARGET has (`docs/rules/*.md`) or state the fact without a path — never `references/…` (INIT renames it or does not install it), never `npm run …` (no `package.json` there), never this repo's `docs/` tree, and never a trilingual/CI/tooling assumption stated unconditionally. A repo-specific command or path fact belongs in a repo file. Stage-portability counts too: a Phase A artifact may not command a script Phase B installs (the generated `AGENTS.md` prunes per stage and later stages upgrade it in place). Full model, with the four-audience table: `docs/product/en/architecture.md` § The second axis
-- **Roadmap is an index, not a fact source** — the design plans (`docs/plans/`) are the single source of truth for a feature's design, state and acceptance criteria; the roadmap lists a horizon classification and a one-line summary per future item, and every future item links its design plan (or explicitly says *no design plan yet*). A roadmap entry must NEVER restate a plan's detail (validation method, Affected Files, steps) — that is duplicated authority. When a plan is created, archived, or implemented, the roadmap entry is updated in the SAME change: implemented plans move to Done (linking the archive), archived/withdrawn plans are removed from the active horizon, and new plans get a link in their horizon if that horizon is non-empty. Roadmap re-baseline happens at each release per the maintenance rule in `docs/plans/roadmap/en.md`, but **item-level sync happens at plan lifecycle events, not only at release** — an implemented feature that never reached the Done list is a governance defect (the release gates do not catch it: gates verify declarations, not roadmap completeness).
+- **Language:** agent-facing (`SKILL.md`, `references/**`, generated bodies) = single language. Product docs / roadmap trilingual (`docs/product/{en,zh-CN,zh-TW}/` + root README/CONTRIBUTING ×3); plans/findings/research/ADRs = 简体中文 canonical. Edit all three languages together; new terms → `docs/glossary.md` first. Full policy: CONTRIBUTING + SKILL § 语言政策.
+- **Distribution roles + portability axis:** `docs/product/en/architecture.md` § Three distribution roles · § The second axis (never bare “payload”).
+- **Commits:** Conventional Commits, English.
+- **After moves:** re-check hardcoded directory enumerations (`SCAN_DIRS`, role lists, search roots).
+- **Sync group:** sub-skill / check-script changes update `commands.md` (± `validator.md`) + CHANGELOG if behavioral (prompt-sync gate).
+- **Releases:** governed → `references/workflows/release.md`; this repo → `repo-workflows/skill-release.md` (REPO-ONLY). No tag/push/release without approval.
+- **Roadmap is an index:** plans are fact sources; update roadmap in the same change as plan lifecycle events (`docs/plans/roadmap/`).
 
 ## Git Operation Safety Protocol (HIGHEST PRIORITY)
 
 **Sole semantic authority:** [`references/policies/git.policy.md`](references/policies/git.policy.md) (§ 确认范围 / HITL invariants / independent-confirm list). This file is **not** a second authoritative body (ADR-0022 thin entry · ADR-0024 single owner). Load that policy before any Git write. Always-on summary only:
 
 - Read-only git ops are free; `checkout -b` / clean-worktree branch switches are free.
-- One confirmation per change set: echo the full `add → commit → push` command sequence, then take explicit consent; a user write instruction ("push"/"commit") **triggers** the echo — it is **not** consent.
-- Plan approval = intent alignment ≠ commit authorization; task-level phrasing ("wrap it up" / "发布吧") is not a write instruction.
-- Any step fails or push is non-fast-forward → stop and report; never improvise a retry / pull-rebase-and-repush.
+- One confirmation per change set (pre-commit echo; instruction is not consent): echo the full command sequence `add → commit → push`, then take explicit consent; a user write instruction ("push"/"commit") **triggers** the echo — it is **not** consent.
+- Plan approval is intent alignment, not commit authorisation; task-level phrasing ("wrap it up" / "发布吧") is not a write instruction.
+- Any step fails → stop and report, never retry differently; push rejected (non-fast-forward) → stop and report, never pull/rebase.
 - Independent confirmation (not covered by the pre-commit echo): `tag` / `reset` / `rebase` / `revert` / `merge` / force push / `clean` / `rm` / `restore` / `stash` / `pull`; checkout carrying uncommitted changes; amend of an already-pushed commit.
-- Release sequence: a Proposal approved at the Approval Gate covers that release's write ops (see `repo-workflows/skill-release.md`).
+- Release: Proposal at Approval Gate covers the sequence (see `repo-workflows/skill-release.md`).
 - Before confirming, still run: node `repo-tools/check-secrets.js` exit 0; no sensitive/unrelated files staged.
 
 Details, checklists, and branch policy live in `git.policy.md`; on conflict, that file wins.

@@ -180,7 +180,7 @@
       "path": "references/capabilities/change-hygiene.md"
     },
     "reference-closure": {
-      "path": "AGENTS.md",
+      "path": "CONTRIBUTING.md",
       "section": "Reference-closure check"
     },
     "git-write": {
