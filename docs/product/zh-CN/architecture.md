@@ -109,7 +109,11 @@ ai-agent-governance/
 │   │   ├── md-link-facts.js    # 共享 Markdown 链接事实 primitive（extract/resolve/exists）
 │   │   ├── plan-status.js      # ADR-0016 计划 status frontmatter 分类器（PLAN-0048）
 │   │   ├── adr-status.js       # FINDING-0011 ADR Status 字段启发（PLAN-0048）
-│   │   └── secret-scan-facts.js # 共享密钥扫描事实 primitive（模式 / staged / blob）
+│   │   ├── secret-scan-facts.js # 共享密钥扫描事实 primitive（模式 / staged / blob）
+│   │   ├── doc-consistency/
+│   │   │   └── run.js          # EXTRACT 出的 consistency 集群体（PLAN-0055 Stage 3/4S；薄 CLI 保留原名）
+│   │   └── generate/
+│       │   └── run.js          # EXTRACT 出的 INIT 生成器本体（PLAN-0055 Stage 3/4S；SKILL-INTERNAL）
 │   ├── evaluators/
 │   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 密钥保护求值器（CLI 绑定 deny）
 │   │   ├── ctrl-0002-git-write-consent.js   # CTRL-0002 git argv 写同意求值器
@@ -117,9 +121,9 @@ ai-agent-governance/
 │   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 译文新鲜度求值器（--release-gate 阻断）
 │   │   └── ctrl-0006-broken-links.js        # CTRL-0006 相对 Markdown 链接有效性（consistency #4）
 │   ├── check-doc-freshness.js  # 薄 CLI 包装（CTRL-0003 + CTRL-0004；建议性，--release-gate 阻断过时/draft 译文）
-│   ├── check-doc-consistency.js # consistency WRAP（#4 → CTRL-0006；其余集群内联；默认建议性；--gate/--release-gate fail-closed）
+│   ├── check-doc-consistency.js # 薄 consistency CLI → lib/doc-consistency/run.js（#4 → CTRL-0006；默认建议性；--gate/--release-gate fail-closed）
 │   ├── check-plan-sync.js      # 计划与里程碑对账（默认建议性；--release-gate fail-closed；无 DEVELOPMENT_PLAN.md 时 no-op）
-│   ├── generate-governance.js  # INIT 脚本化生成器（SKILL-INTERNAL；规范：references/init-spec.json）
+│   ├── generate-governance.js  # 薄 INIT CLI → lib/generate/run.js（SKILL-INTERNAL；规范：references/init-spec.json）
 │   └── release-manager.js      # plan（只读）+ execute（审批门禁）发布工具
 ├── LICENSE                     # MIT
 │

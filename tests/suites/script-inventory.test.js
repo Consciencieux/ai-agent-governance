@@ -121,6 +121,7 @@ module.exports = function register(test) {
       "scripts/check-doc-consistency.js",
       "scripts/check-doc-freshness.js",
       "scripts/check-secrets.js",
+      "scripts/generate-governance.js",
     ];
     if (wrap.join("|") !== want.join("|")) {
       console.error("  wrap set", wrap, "!==", want);

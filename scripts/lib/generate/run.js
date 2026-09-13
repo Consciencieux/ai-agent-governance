@@ -1,0 +1,751 @@
+// EXTRACTED body of scripts/generate-governance.js (PLAN-0055 Stage 3).
+// SKILL-INTERNAL with scripts/generate-governance.js thin CLI.
+// Gen1 snapshot: tests/archive/gen1-script-impl/generate-governance.monolith.js
+"use strict";
+
+// INIT Scripted Generator — deterministic, snapshot-testable governance scaffolding.
+// Usage:
+//   node scripts/generate-governance.js --target <dir> --project-name <name> [--phase A|B|C] [--dry-run] [--json]
+//   node scripts/generate-governance.js --target <dir> --file <input.json>
+// Exit 0: success · Exit 1: error · Exit 2: usage error
+//
+// Determinism contract (per plan init-scripted-generator.md):
+//   - Same inputs -> byte-identical outputs (no timestamps, no randomness)
+//   - Existing files are SKIPPED, never overwritten (merge-not-overwrite is Phase C)
+//   - The single source of truth for the artifact list is references/init-spec.json
+
+const fs = require("fs");
+const path = require("path");
+
+// scripts/lib/generate/run.js → repo root is three levels up (was one level when body lived in scripts/).
+const SKILL_DIR = path.resolve(__dirname, "../../..");
+const SPEC_PATH = path.join(SKILL_DIR, "references", "init-spec.json");
+const PHASE_ORDER = ["A", "B", "C"];
+
+// Command defaults per stack — used when the caller does not provide explicit
+// test_cmd / lint_cmd / build_cmd. The CI templates (references/workflows/ci.md)
+// were already stack-aware and chose the right runner; the AGENTS.md defaults were
+// hardcoded to npm, which produced broken commands for non-Node projects.
+const STACK_COMMANDS = {
+  "node": { test: "npm test", lint: "npm run lint", build: "npm run build", governance: "npm run governance-check" },
+  "python": { test: "pytest", lint: "ruff check", build: "", governance: "npm run governance-check" },
+  "rust": { test: "cargo test", lint: "cargo clippy", build: "cargo build", governance: "npm run governance-check" },
+  "go": { test: "go test ./...", lint: "go vet", build: "go build ./...", governance: "npm run governance-check" },
+  "java": { test: "mvn test", lint: "mvn checkstyle:check", build: "mvn package", governance: "npm run governance-check" },
+  "cpp": { test: "make test", lint: "", build: "make", governance: "npm run governance-check" },
+  "docs-only": { test: "markdownlint-cli2 **/*.md", lint: "", build: "", governance: "npm run governance-check" },
+};
+
+function usage() {
+  console.log(`Usage:
+  generate-governance.js --target <dir> --project-name <name> [--phase A|B|C] [--dry-run] [--json]
+  generate-governance.js --target <dir> --file <input.json>
+
+Options:
+  --target <dir>        Target project root (must exist or be created)
+  --project-name <name> Project name for AGENTS.md heading
+  --phase <A|B|C>       Phases to generate (default: A)
+  --dry-run             List files that would be created, write nothing
+  --allow-stub          Tolerate not-yet-implemented generators (skip instead of fail)
+  --stack <s>           node|python|rust|go|java|cpp|docs-only (selects the CI template)
+  --ci-platform <p>     github|gitlab|none
+  --maturity <m>        LEVEL_0_EMPTY|LEVEL_1_PROTOTYPE|LEVEL_2_ACTIVE|LEVEL_3_PRODUCTION
+  --doc-root <dir>      Existing documentation root (default docs; e.g. documentation)
+  --force-l3            Write even at LEVEL_3_PRODUCTION (default there is audit-only)
+  --json                Output file list as JSON
+  --file <path>         Read inputs from JSON file
+  --help                Show this help`);
+}
+
+function readJSON(p) {
+  try {
+    return JSON.parse(fs.readFileSync(p, "utf8"));
+  } catch (e) {
+    throw new Error(`generate-governance: cannot read JSON from ${p} (${e.message})`);
+  }
+}
+
+function argValue(args, name) {
+  const i = args.indexOf(name);
+  return i >= 0 && i + 1 < args.length ? args[i + 1] : null;
+}
+
+function writeIfAbsent(filepath, content, mode) {
+  fs.mkdirSync(path.dirname(filepath), { recursive: true });
+  if (fs.existsSync(filepath)) {
+    return { path: filepath, action: "skipped" };
+  }
+  fs.writeFileSync(filepath, content, "utf8");
+  if (mode && process.platform !== "win32") fs.chmodSync(filepath, mode);
+  return { path: filepath, action: "created" };
+}
+
+function ensureDir(dirpath) {
+  const existedBefore = fs.existsSync(dirpath);
+  fs.mkdirSync(dirpath, { recursive: true });
+  const keep = path.join(dirpath, ".gitkeep");
+  const others = fs.readdirSync(dirpath).filter((f) => f !== ".gitkeep");
+  let wroteKeep = false;
+  if (!fs.existsSync(keep) && others.length === 0) {
+    fs.writeFileSync(keep, "", "utf8");
+    wroteKeep = true;
+  }
+  // Report honestly: an already-present directory is a skip, not a creation. Otherwise a
+  // second identical run reports "created N files" and the idempotency claim is unverifiable.
+  return { path: dirpath, action: existedBefore && !wroteKeep ? "skipped" : "created-dir" };
+}
+
+function resolvePlaceholders(content, placeholders, inputs) {
+  let result = content;
+  for (const [key, inputKey] of Object.entries(placeholders || {})) {
+    const val = inputs[inputKey] || "";
+    result = result.split("{{" + key + "}}").join(val);
+  }
+  // A stack without a given step (python has no build, docs-only has no lint) leaves an
+  // empty command, which rendered as an empty inline-code pair — an agent reading
+  // "- Build: ``" receives an instruction with no command. Drop the whole line instead.
+  result = result.replace(/^- [^:\n]+: ``\s*$\n?/gm, "");
+  return result;
+}
+
+// Extract the first complete fenced code block from a markdown template. Matching
+// the opening fence with its own closing fence matters when the surrounding
+// documentation contains a second example block.
+function extractCodeBlock(raw) {
+  const lines = String(raw).replace(/\r\n/g, "\n").split("\n");
+  let opening = null;
+  let openingIndex = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const m = lines[i].trim().match(/^(`{3,})([A-Za-z0-9_-]*)\s*$/);
+    if (m) {
+      opening = m;
+      openingIndex = i;
+      break;
+    }
+  }
+  if (!opening) return raw;
+
+  const closeRe = new RegExp("^`{" + opening[1].length + ",}\\s*$");
+  let closingIndex = -1;
+  for (let i = openingIndex + 1; i < lines.length; i++) {
+    if (closeRe.test(lines[i].trim())) {
+      closingIndex = i;
+      break;
+    }
+  }
+  if (closingIndex < 0) return raw;
+
+  const body = lines.slice(openingIndex + 1, closingIndex);
+  return body.join("\n");
+}
+
+// Stage-conditional template content (N20). A template may wrap clauses in
+//   <!-- phase:A -->  ... <!-- /phase -->      keep in Phase A only
+//   <!-- phase:B+ --> ... <!-- /phase -->      keep from Phase B onward
+//   <!-- phase:C -->  ... <!-- /phase -->      keep in Phase C only
+// Rationale: AGENTS.md is a Phase A artifact, but the gate scripts it commands are
+// installed in Phase B. Emitting those clauses at Phase A produced a project whose own
+// AGENTS.md ordered the agent to run files that do not exist. Unmarked content is
+// stage-neutral and always kept.
+//
+// The grammar is STRICT and unbalanced markers are a hard error, never a silent prune:
+// an unclosed block used to drop the entire rest of the file (taking "never force push"
+// and the protected-file list with it) while still reporting success, and a typo like
+// `phase:A+` used to be accepted and excluded from every stage. A generated governance
+// artifact that is silently truncated is worse than one that fails loudly.
+const PHASE_SPECS = { A: (p) => p === "A", "B+": (p) => p === "B" || p === "C", C: (p) => p === "C" };
+
+function prunePhaseBlocks(body, phase) {
+  const lines = String(body).split("\n");
+  const out = [];
+  const stack = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const open = /^\s*<!--\s*phase:([^\s>]+)\s*-->\s*$/.exec(line);
+    if (open) {
+      const spec = open[1];
+      if (!PHASE_SPECS[spec]) {
+        throw new Error(`unknown phase marker "${spec}" at line ${i + 1} (expected A, B+ or C)`);
+      }
+      stack.push(PHASE_SPECS[spec](phase));
+      continue;
+    }
+    if (/^\s*<!--\s*\/phase\s*-->\s*$/.test(line)) {
+      if (!stack.length) throw new Error(`stray <!-- /phase --> at line ${i + 1}`);
+      stack.pop();
+      continue;
+    }
+    if (stack.every(Boolean)) out.push(line);
+  }
+  if (stack.length) throw new Error(`${stack.length} unclosed <!-- phase:... --> block(s)`);
+  return out.join("\n");
+}
+
+// Phase-conditional artifacts cannot use writeIfAbsent: the file is written once at
+// Phase A and every later stage skips it, so a Phase C project would keep the Phase A
+// rendering forever — permanently missing the gate requirements whose scripts Phase B
+// and C just installed, and permanently displaying the "initialization is incomplete"
+// banner. Measured before this fix: A -> B -> C left the banner in place and
+// check-secrets.js absent from AGENTS.md at Phase C.
+//
+// Upgrade rule: overwrite ONLY when the file on disk is byte-identical to what an
+// EARLIER phase of this same template would have produced (i.e. it is an untouched
+// generated artifact). A user-edited file is never overwritten — it is reported as
+// skipped so the operator can reconcile it by hand. No fingerprint state is stored;
+// the candidate set is just the earlier-phase renderings.
+function writeOrUpgradeStaged(filepath, content, priorRenderings, mode) {
+  if (fs.existsSync(filepath)) {
+    const current = fs.readFileSync(filepath, "utf8");
+    if (current === content) return { path: filepath, action: "skipped" };
+    if (priorRenderings.includes(current)) {
+      fs.writeFileSync(filepath, content, "utf8");
+      if (mode && process.platform !== "win32") fs.chmodSync(filepath, mode);
+      return { path: filepath, action: "upgraded" };
+    }
+    return { path: filepath, action: "skipped", reason: "locally modified — reconcile by hand" };
+  }
+  return writeIfAbsent(filepath, content, mode);
+}
+
+
+function artifactType(artPath) {
+  if (artPath === "AGENTS.md") return "policy";
+  if (artPath.startsWith("docs/rules/")) return "policy";
+  if (artPath === ".gitignore" || artPath === ".env.example" || artPath === ".gitmessage.txt") return "policy";
+  if (artPath === ".governance" || artPath.startsWith(".governance/")) return "state";
+  if (artPath.startsWith(".githooks/")) return "script";
+  if (artPath.startsWith("scripts/")) return "script";
+  if (artPath.startsWith(".github/")) return "ci";
+  return "documentation";
+}
+
+// --- Built-in generators ---
+
+const GITIGNORE_CONTENT = [
+  "# Dependencies",
+  "node_modules/",
+  ".pnpm-store/",
+  "",
+  "# Environment & secrets (never commit real values)",
+  ".env",
+  ".env.*",
+  "!.env.example",
+  "*.key",
+  "*.pem",
+  "*.p12",
+  "*.pfx",
+  "id_rsa",
+  "credentials.json",
+  "secrets.*",
+  "",
+  "# Build output",
+  "dist/",
+  "build/",
+  "coverage/",
+  "*.log",
+  "logs/",
+  "",
+  "# Governance runtime outputs (git-tracked: manifest/state/preflight/git-policy/sync-rules/generated)",
+  ".governance/validation.json",
+  ".governance/drift-report.json",
+  ".governance/release-proposal.json",
+  ".governance/activity.jsonl",
+  ".governance/consent.json",
+  "",
+  "# OS / editor",
+  ".DS_Store",
+  "Thumbs.db",
+  ".idea/",
+  ".vscode/",
+  "",
+].join("\n");
+
+const PREFLIGHT_CONTENT = JSON.stringify({
+  created_at: "",
+  git_status_summary: "",
+  existing_files: [],
+  note: "Fill after Phase 0 inspection (rollback basis). Empty fields = not yet recorded.",
+}, null, 2) + "\n";
+
+function generateState(inputs) {
+  // H2a / FINDING-0029: operational progress dimension is `facet` (ContextFacet).
+  // Dual-write legacy `phase` during the compatibility window; readers MUST prefer
+  // `facet` and fall back to `phase`. INIT Phase A|B|C is a different axis — untouched.
+  const facet = "completed";
+  return JSON.stringify({
+    maturity: inputs.maturity || "LEVEL_0_EMPTY",
+    facet,
+    phase: facet,
+    agent_id: "",
+    task_id: "",
+    task_start_sha: "",
+    locked: null,
+    completed: ["docs", "agents", "rules"],
+    blocked: [],
+    rule_capture: {
+      status: "none",
+      task_id: "",
+      candidates: [],
+    },
+  }, null, 2) + "\n";
+}
+
+// CI workflow generator — selects the matching template from references/workflows/ci.md.
+// The JUDGEMENT (which stack / which platform) comes from inputs (agent detection);
+// the WRITING is mechanical, which is what makes it deterministic.
+const CI_SECTIONS = {
+  node: /## GitHub Actions[^\n]*Node\.js/i,
+  python: /## GitHub Actions[^\n]*Python/i,
+  rust: /## GitHub Actions[^\n]*Rust/i,
+  go: /## GitHub Actions[^\n]*Go（/i,
+  java: /## GitHub Actions[^\n]*Java/i,
+  cpp: /## GitHub Actions[^\n]*C\+\+/i,
+  "docs-only": /## 纯文档项目/,
+  "gitlab-node": /## GitLab CI \(node\)/,
+  "gitlab-python": /## GitLab CI \(python\)/,
+  "gitlab-rust": /## GitLab CI \(rust\)/,
+  "gitlab-go": /## GitLab CI \(go\)/,
+  "gitlab-java": /## GitLab CI \(java\)/,
+  "gitlab-cpp": /## GitLab CI \(cpp\)/i,
+  "gitlab-docs-only": /## GitLab CI \(docs-only\)/,
+};
+
+function extractCiTemplate(ciMd, key) {
+  const re = CI_SECTIONS[key];
+  if (!re) return null;
+  const m = ciMd.match(re);
+  if (!m) return null;
+  const start = m.index;
+  // section body = up to the next "## " heading
+  const rest = ciMd.slice(start + m[0].length);
+  const nextIdx = rest.search(/\r?\n## /);
+  const body = nextIdx >= 0 ? rest.slice(0, nextIdx) : rest;
+  // take the first fenced code block inside the section (the workflow YAML).
+  // CRLF-safe: templates are authored with Windows line endings in this repo.
+  const fence = body.match(/```(?:ya?ml)?\r?\n([\s\S]*?)```/);
+  if (!fence) return null;
+  // normalise to LF so generated CI files are byte-identical across platforms
+  return fence[1].replace(/\r\n/g, "\n");
+}
+
+function generateCi(inputs, skillDir) {
+  const platform = inputs.ci_platform || "github";
+  if (platform === "none") return null; // nothing to write
+  const ciMd = fs.readFileSync(path.join(skillDir, "references", "workflows", "ci.md"), "utf8");
+  const key = platform === "gitlab" ? "gitlab-" + (inputs.stack || "docs-only") : (inputs.stack || "docs-only");
+  const tpl = extractCiTemplate(ciMd, key);
+  if (!tpl) {
+    // A requested platform+stack combination with no template is a GAP, not a "skip".
+    // Returning null here made it indistinguishable from ci_platform=none: the artifact
+    // was dropped from the manifest too, so the project was declared fully governed with
+    // no CI at all and the validator reported a full pass (audit 2026-09-07: gitlab+rust).
+    // Fail loudly so the missing template is fixed instead of silently shipping no CI.
+    throw new Error(
+      "no CI template for platform '" + platform + "' + stack '" + (inputs.stack || "docs-only") + "' (looked for section key '" + key + "' in references/workflows/ci.md). " +
+      "Add the template, choose a supported stack, or pass --ci-platform none to deliberately skip CI."
+    );
+  }
+  return tpl.endsWith("\n") ? tpl : tpl + "\n";
+}
+
+// Sub-skills generator — splits references/templates/sub-skills.md into one file per
+// sub-skill: .governance/generated/skills/<name>/SKILL.md. Each template section is
+// "## N. <name>" followed by a fenced block whose body is the sub-skill file itself.
+function parseSubSkills(md) {
+  const out = [];
+  const lines = md.replace(/\r\n/g, "\n").split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    const h = lines[i].match(/^##\s+\d+\.\s+(\S+)\s*$/);
+    if (!h) continue;
+    const name = h[1];
+    // find the opening fence after the heading
+    let j = i + 1;
+    while (j < lines.length && !/^`{3,}/.test(lines[j])) {
+      if (/^##\s/.test(lines[j])) break; // next section without a fence
+      j++;
+    }
+    if (j >= lines.length || !/^`{3,}/.test(lines[j])) continue;
+    const fence = lines[j].match(/^(`{3,})/)[1];
+    // body until the matching closing fence of the same length
+    const body = [];
+    let k = j + 1;
+    for (; k < lines.length; k++) {
+      if (lines[k].startsWith(fence) && lines[k].trim().length === fence.length) break;
+      body.push(lines[k]);
+    }
+    const bodyText = body.join("\n").replace(/\s+$/, "") + "\n";
+    const descriptionMatch = bodyText.match(/^description:\s*(.+)$/im);
+    const description = descriptionMatch ? descriptionMatch[1].trim() : "";
+    out.push({ name, body: bodyText, description });
+    i = k;
+  }
+  return out;
+}
+
+function generateSkillRegistry(md, phase, targetAbs) {
+  const skills = parseSubSkills(md);
+  const rows = skills.map((sk) => {
+    const marker = sk.description.match(/\s+Triggers on\s+/i);
+    // Registry rows are scanned by modes of widely different capability: keep a short
+    // purpose clause and at most three main triggers; the full description/trigger
+    // inventory lives in the generated SKILL.md itself.
+    const rawPurpose = (marker ? sk.description.slice(0, marker.index) : sk.description).replace(/\|/g, "\\|");
+    // Bound the clause: first sentence when there is one, else a hard character cap —
+    // single-sentence descriptions previously escaped truncation entirely.
+    let purpose = rawPurpose.split(/\.\s/)[0].trim();
+    if (purpose.length > 100) purpose = purpose.slice(0, 97).trimEnd() + "…";
+    if (!purpose) purpose = "Generated project skill";
+    const triggerList = marker ? sk.description.slice(marker.index + marker[0].length).replace(/\|/g, "\\|") : "";
+    // Triggers are separated by "," in some entries and "·" in others: split on both, or
+    // the cap silently no-ops (review: the longest row kept its full 13-trigger inventory).
+    const parts = triggerList.split(/\s*[,·]\s*/).map((t) => t.trim()).filter(Boolean);
+    const triggers = parts.length > 0
+      ? parts.slice(0, 3).join(", ").replace(/[.;·]\s*$/, "") + (parts.length > 3 ? ", …" : "")
+      : "See SKILL.md";
+    return `| ${sk.name} | \.governance/generated/skills/${sk.name}/SKILL.md | ${purpose} | ${triggers} |`;
+  });
+  // The note describes DISK state, not this invocation: a phased init (A then C) leaves
+  // AGENTS.md untouched on the C run (writeIfAbsent skips it), so keying the note on the
+  // current --phase alone would strand a stale "pending" note in a completed project.
+  const skillsWritten = targetAbs
+    ? fs.existsSync(path.join(targetAbs, ".governance", "generated", "skills"))
+    : false;
+  const note = phase === "C" || skillsWritten
+    ? ""
+    : "\n> **Availability:** the skill files under `.governance/generated/skills/` are written by the generator's Phase C — the entries above become loadable after a complete initialization (`--phase C` or one full run). Until then, treat them as reference-only.\n";
+  return [
+    "| Skill | Entry point | Purpose | Triggers |",
+    "| --- | --- | --- | --- |",
+    ...rows,
+    note,
+  ].join("\n");
+}
+
+function generateSubSkills(inputs, skillDir, targetAbs, dirRel) {
+  const md = fs.readFileSync(path.join(skillDir, "references", "templates", "sub-skills.md"), "utf8");
+  const skills = parseSubSkills(md);
+  const written = [];
+  for (const sk of skills) {
+    const rawPath = path.join(targetAbs, dirRel.replace(/\/+$/, ""), sk.name, "SKILL.md");
+    // S12: containment guard — sk.name comes from sub-skills.md (§N. title) and can
+    // contain "../" sequences that escape the target directory. Reject if resolved.
+    if (!path.resolve(rawPath).startsWith(path.resolve(targetAbs) + path.sep)) {
+      console.error("generateSubSkills: sk.name '" + sk.name + "' escapes target directory — skipping");
+      continue;
+    }
+    const r = writeIfAbsent(rawPath, (inputs.doc_root || "docs").replace(/\/+$/, "") !== "docs" ? sk.body.replace(/\bdocs\//g, (inputs.doc_root || "docs").replace(/\/+$/, "") + "/") : sk.body);
+    written.push({ name: sk.name, action: r.action });
+  }
+  return written;
+}
+
+function generateManifest(inputs, spec, entries) {
+  const version = inputs.governance_version || defaultGovernanceVersion(spec);
+  const manifest = {
+    schema_version: "1.0",
+    governance_version: version,
+    doc_root: (inputs.doc_root || "docs").replace(/\/+$/, ""),
+    artifacts: entries,
+  };
+  if (inputs.release_version) {
+    manifest.release = {
+      version: inputs.release_version,
+      tag: "v" + inputs.release_version,
+      validated: inputs.release_validated === true,
+    };
+  }
+  return JSON.stringify(manifest, null, 2) + "\n";
+}
+
+function defaultGovernanceVersion(spec) {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_DIR, "package.json"), "utf8"));
+    if (typeof pkg.version === "string" && pkg.version.length > 0) return pkg.version;
+  } catch {
+    // Fall back to the version declared in the machine-readable spec below.
+  }
+  const fallback = spec && spec.inputs && spec.inputs.governance_version && spec.inputs.governance_version.default;
+  // Last-resort sentinel only: keep it in step with package.json's current version when
+  // touching this file (a stale value here silently exports an outdated governance_version).
+  return typeof fallback === "string" && fallback.length > 0 ? fallback : "2.1.0";
+}
+
+// --- Main ---
+
+function main() {
+  const args = process.argv.slice(2);
+  if (args.includes("--help") || args.includes("-h") || args.length === 0) {
+    usage();
+    process.exit(0);
+  }
+
+  const target = argValue(args, "--target");
+  const projectName = argValue(args, "--project-name");
+  const phase = (argValue(args, "--phase") || "A").toUpperCase();
+  const dryRun = args.includes("--dry-run");
+  const allowStub = args.includes("--allow-stub");
+  const forceL3 = args.includes("--force-l3");
+  const json = args.includes("--json");
+  const file = argValue(args, "--file");
+  const stackArg = argValue(args, "--stack");
+  const ciPlatformArg = argValue(args, "--ci-platform");
+  const maturityArg = argValue(args, "--maturity");
+  const docRootArg = argValue(args, "--doc-root");
+
+  if (!target) { console.error("error: --target is required"); process.exit(2); }
+  if (!projectName && !file) { console.error("error: --project-name is required (or use --file)"); process.exit(2); }
+
+  const spec = readJSON(SPEC_PATH);
+  const subSkillsSource = fs.readFileSync(path.join(SKILL_DIR, "references", "templates", "sub-skills.md"), "utf8");
+  const inputs = file ? readJSON(file) : { project_name: projectName };
+  // Phase: an explicit --phase always wins; otherwise a phase already present in the
+  // input JSON file is respected, falling back to the CLI default (A).
+  if (args.includes("--phase")) inputs.phase = phase;
+  else if (!inputs.phase) inputs.phase = phase;
+  const effectivePhase = inputs.phase;
+  inputs.governance_version = inputs.governance_version || defaultGovernanceVersion(spec);
+  inputs.description = inputs.description || "";
+  inputs.project_name = inputs.project_name || projectName || "";
+  inputs.convention = inputs.convention || "Conventional Commits";
+  inputs.doc_root = inputs.doc_root || "docs";
+  if (stackArg) inputs.stack = stackArg;
+  if (maturityArg) inputs.maturity = maturityArg;
+  if (docRootArg) inputs.doc_root = docRootArg;
+  if (ciPlatformArg) inputs.ci_platform = ciPlatformArg;
+  inputs.stack = inputs.stack || "docs-only";
+  inputs.ci_platform = inputs.ci_platform || "github";
+  // Command defaults are stack-derived, not hardcoded to npm: a Python or Rust project
+  // whose generated AGENTS.md ordered `npm run lint` gave its agent a command that does
+  // not exist there (the CI templates were already stack-aware; these defaults were not).
+  // An explicit test_cmd/lint_cmd/build_cmd from --file always wins over the default.
+  const cmdDefaults = STACK_COMMANDS[inputs.stack] || STACK_COMMANDS["docs-only"];
+  inputs.test_cmd = inputs.test_cmd || cmdDefaults.test;
+  inputs.lint_cmd = inputs.lint_cmd || cmdDefaults.lint;
+  inputs.build_cmd = inputs.build_cmd || cmdDefaults.build;
+  inputs.governance_cmd = inputs.governance_cmd || cmdDefaults.governance;
+inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effectivePhase, path.resolve(target));
+
+  const maxPhaseIdx = PHASE_ORDER.indexOf(effectivePhase);
+  if (maxPhaseIdx < 0) { console.error("error: --phase must be A, B, or C"); process.exit(2); }
+
+  const artifacts = spec.artifacts.filter((a) => {
+    const idx = PHASE_ORDER.indexOf(a.phase);
+    return idx >= 0 && idx <= maxPhaseIdx;
+  });
+
+  const targetAbs = path.resolve(target);
+
+  // ---- Structure-adaptive behaviour (maturity + doc_root) ----
+  // L0/L1 -> full skeleton; L2 -> incremental (only missing items, existing files never
+  // touched); L3 -> audit mode: report what WOULD be created, write nothing unless the
+  // developer explicitly forces it (mirrors SKILL.md's maturity strategy table).
+  const maturity = inputs.maturity || "LEVEL_0_EMPTY";
+  const auditOnly = maturity === "LEVEL_3_PRODUCTION" && !forceL3;
+  const effectiveDryRun = dryRun || auditOnly;
+
+  // Existing doc root adaptation: a project whose documentation lives in e.g.
+  // "documentation/" gets governance docs written there instead of "docs/".
+  const docRoot = (inputs.doc_root || "docs").replace(/\/+$/, "");
+  const remap = (rel) => (docRoot === "docs" ? rel : rel.replace(/^docs(?=\/|$)/, docRoot));
+
+  const results = [];
+  const commonPlaceholders = {
+    "GOVERNANCE_VERSION": "governance_version",
+    "ONE_SENTENCE_DESCRIPTION": "description",
+    "PROJECT_NAME": "project_name",
+  };
+
+  for (const art of artifacts) {
+    if (art.generator === "manifest") continue; // generated last, from actually-created artifacts
+    const artPath = remap(art.path);
+    const targetPath = path.join(targetAbs, artPath);
+    // Containment guard: a crafted --doc-root (e.g. "../../escaped") must not let any
+    // artifact resolve OUTSIDE the target project. path.join resolves "..", so compare the
+    // resolved target against the resolved target root with a trailing separator.
+    if (!targetPath.startsWith(targetAbs + path.sep) && targetPath !== targetAbs) {
+      results.push({ path: artPath, action: "error", error: "path resolves outside target: " + artPath });
+      continue;
+    }
+    if (effectiveDryRun) {
+      results.push({ path: artPath, action: auditOnly && !dryRun ? "audit-would-create" : "would-create", type: art.type });
+      continue;
+    }
+    let result;
+    switch (art.type) {
+      case "copy": {
+        const sourcePath = path.join(SKILL_DIR, art.source);
+        if (!fs.existsSync(sourcePath)) {
+          result = { path: artPath, action: "error", error: "source not found: " + art.source };
+        } else {
+          result = writeIfAbsent(targetPath, fs.readFileSync(sourcePath, "utf8"));
+        }
+        break;
+      }
+      case "template": {
+        const sourcePath = path.join(SKILL_DIR, art.source);
+        if (!fs.existsSync(sourcePath)) {
+          result = { path: artPath, action: "error", error: "source not found: " + art.source };
+        } else {
+          const raw = fs.readFileSync(sourcePath, "utf8");
+          const codeBlock = extractCodeBlock(raw);
+          // A prior-phase rendering must reproduce that phase EXACTLY, including the
+          // phase-dependent skill registry (Phase A/B carry a "reference-only" availability
+          // note that Phase C drops). Rendering priors with the current phase's registry
+          // made the comparison miss, so an A->B->C upgrade kept a stale Phase B body.
+          const renderAt = (ph) => {
+            const scoped = { ...inputs, generated_skill_registry: generateSkillRegistry(subSkillsSource, ph, path.resolve(target)) };
+            let body = resolvePlaceholders(prunePhaseBlocks(codeBlock, ph), art.placeholders, scoped);
+            // S10: when --doc-root is set, remap docs/ paths in template bodies too
+            // (the existing remap() only handles artifact paths, not template body content).
+            // Match docs/ anywhere (not just line-start), avoiding paths like "docs/"
+            // that are already remapped by the artifact path remap().
+            const dr = (inputs.doc_root || "docs").replace(/\/+$/, "");
+            if (dr !== "docs") body = body.replace(/\bdocs\//g, dr + "/");
+            return body;
+          };
+          const executable = artPath === ".githooks/pre-commit" || artPath === ".githooks/commit-msg";
+          const staged = /<!--\s*phase:/.test(codeBlock);
+          try {
+            if (staged) {
+              const priors = PHASE_ORDER.slice(0, PHASE_ORDER.indexOf(effectivePhase)).map(renderAt);
+              result = writeOrUpgradeStaged(targetPath, renderAt(effectivePhase), priors, executable ? 0o755 : null);
+            } else {
+              result = writeIfAbsent(targetPath, renderAt(effectivePhase), executable ? 0o755 : null);
+            }
+          } catch (e) {
+            // A malformed phase marker is a template authoring bug. Report it as a normal
+            // artifact error (with the template path) instead of an uncaught stack trace,
+            // and write nothing: a half-pruned governance file is the worst outcome.
+            result = { path: artPath, action: "error", error: `${art.source}: ${e.message}` };
+          }
+        }
+        break;
+      }
+      case "static": {
+        const content = resolvePlaceholders(art.content || "", commonPlaceholders, inputs);
+        result = writeIfAbsent(targetPath, content);
+        break;
+      }
+      case "dir": {
+        result = ensureDir(targetPath);
+        break;
+      }
+      case "generated": {
+        let content;
+        if (art.generator === "state") content = generateState(inputs);
+        else if (art.generator === "gitignore") content = GITIGNORE_CONTENT;
+        else if (art.generator === "preflight") content = PREFLIGHT_CONTENT;
+        else if (art.generator === "sub-skills") {
+          const written = generateSubSkills(inputs, SKILL_DIR, targetAbs, art.path);
+          if (written.length === 0) {
+            result = { path: artPath, action: "error", error: "no sub-skills parsed from sub-skills.md" };
+          } else {
+            const created = written.filter((w) => w.action === "created").length;
+            result = { path: artPath, action: created > 0 ? "created" : "skipped", note: written.length + " sub-skills (" + created + " created)" };
+          }
+          results.push(result);
+          continue;
+        }
+        else if (art.generator === "ci") {
+          const ci = generateCi(inputs, SKILL_DIR);
+          if (ci === null) {
+            // Only reachable for ci_platform=none now; a missing template throws.
+            result = { path: artPath, action: "skipped", note: "ci_platform=none (CI deliberately not generated)" };
+            results.push(result);
+            continue;
+          }
+          content = ci;
+          // GitLab uses a root-level file instead of .github/workflows/
+          if ((inputs.ci_platform || "github") === "gitlab") {
+            result = writeIfAbsent(path.join(targetAbs, ".gitlab-ci.yml"), content);
+            results.push(result);
+            continue;
+          }
+        }
+        else if (allowStub) {
+          result = { path: artPath, action: "skipped", note: "generator '" + art.generator + "' not yet implemented (--allow-stub)" };
+          results.push(result);
+          continue;
+        } else {
+          // An unimplemented generator is an UNDELIVERED artifact: it must fail loudly,
+          // otherwise "generated, 1 skipped, exit 0" reads as success (this is exactly how
+          // Phase C looked complete while sub-skills generation was never implemented).
+          result = { path: artPath, action: "error", error: "generator '" + art.generator + "' not implemented — pass --allow-stub to proceed without it" };
+          results.push(result);
+          continue;
+        }
+        result = writeIfAbsent(targetPath, content);
+        break;
+      }
+      default:
+        result = { path: artPath, action: "error", error: "unknown type: " + art.type };
+    }
+    results.push(result);
+  }
+
+  // Manifest is generated LAST, listing only artifacts that actually exist on disk
+  // (skipped-because-exists counts as exists; error/stub do not).
+  const manifestSpec = spec.artifacts.find((a) => a.generator === "manifest");
+  if (manifestSpec) {
+    const manifestIdx = PHASE_ORDER.indexOf(manifestSpec.phase);
+    if (manifestIdx >= 0 && manifestIdx <= maxPhaseIdx) {
+      const targetPath = path.join(targetAbs, remap(manifestSpec.path));
+      const entries = spec.artifacts
+        .filter((a) => {
+          const idx = PHASE_ORDER.indexOf(a.phase);
+          return idx >= 0 && idx <= maxPhaseIdx && a !== manifestSpec;
+        })
+        .map((a) => {
+          // the CI artifact's real path depends on the platform (gitlab writes a root file)
+          const platformPath =
+            a.generator === "ci" && (inputs.ci_platform || "github") === "gitlab"
+              ? ".gitlab-ci.yml"
+              : a.path;
+          const rp = remap(platformPath);
+          const isDir = rp.endsWith("/");
+          const p = isDir ? rp.slice(0, -1) : rp;
+          return {
+            name: a.name || path.basename(p),
+            path: p,
+            kind: isDir ? "dir" : "file",
+            type: artifactType(p),
+          };
+        })
+        .filter((e) => {
+          if (dryRun) return true;
+          const p = path.join(targetAbs, e.path);
+          return fs.existsSync(p);
+        });
+      if (effectiveDryRun) {
+        results.push({ path: remap(manifestSpec.path), action: auditOnly && !dryRun ? "audit-would-create" : "would-create", type: "generated" });
+      } else {
+        results.push(writeIfAbsent(targetPath, generateManifest(inputs, spec, entries)));
+      }
+    }
+  }
+
+  if (json) {
+    process.stdout.write(JSON.stringify({ target: targetAbs, phase: effectivePhase, results }, null, 2) + "\n");
+  } else {
+    const created = results.filter((r) => r.action === "created" || r.action === "created-dir").length;
+    const skipped = results.filter((r) => r.action === "skipped").length;
+    const errors = results.filter((r) => r.action === "error").length;
+    if (effectiveDryRun) {
+      const label = auditOnly && !dryRun ? "audit (LEVEL_3_PRODUCTION, nothing written; use --force-l3 to write)" : "dry-run";
+      console.log(label + ": " + results.length + " files would be created in " + targetAbs);
+    } else {
+      console.log("generated " + created + " files, " + skipped + " skipped, " + errors + " errors in " + targetAbs);
+    }
+    if (errors > 0) {
+      results.filter((r) => r.action === "error").forEach((r) => console.error("  error: " + r.path + " — " + r.error));
+    }
+  }
+
+  process.exit(results.some((r) => r.action === "error") ? 1 : 0);
+}
+
+if (require.main === module) {
+  main();
+}
+
+module.exports = { main };

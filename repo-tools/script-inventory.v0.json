@@ -50,31 +50,32 @@
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 44,
+    "total": 46,
     "by_disposition": {
-      "keep": 40,
+      "keep": 41,
       "rewrite": 1,
-      "wrap": 3
+      "wrap": 4
     },
     "by_generation": {
       "gen1_carrier": 14,
-      "gen2_native": 27,
+      "gen2_native": 29,
       "dual_profile": 3
     },
     "by_role": {
       "REPO-ONLY": 21,
-      "INSTALLED": 22,
-      "SKILL-INTERNAL": 1
+      "INSTALLED": 23,
+      "SKILL-INTERNAL": 2
     },
     "by_necessity": {
       "repo_gate": 20,
-      "must_ship": 5,
-      "product_cli": 19
+      "must_ship": 6,
+      "product_cli": 20
     },
     "wrap": [
       "scripts/check-doc-consistency.js",
       "scripts/check-doc-freshness.js",
-      "scripts/check-secrets.js"
+      "scripts/check-secrets.js",
+      "scripts/generate-governance.js"
     ],
     "retire": [],
     "dogfood_installed_from_repo": [],
@@ -97,6 +98,7 @@
         "scripts/check-git-policy.js",
         "scripts/check-secrets.js",
         "scripts/generate-governance.js",
+        "scripts/lib/generate/run.js",
         "scripts/verify_governance.js"
       ],
       "product_cli": [
@@ -110,6 +112,7 @@
         "scripts/check-sibling-closure.js",
         "scripts/check-sync.js",
         "scripts/generate-governance.js",
+        "scripts/lib/doc-consistency/run.js",
         "scripts/migrate-governance.js",
         "scripts/release-manager.js",
         "scripts/verify-governance.js",
@@ -475,9 +478,9 @@
         "commits_after": 2
       },
       "first_seen": "2026-08-16",
-      "last_touch": "2026-09-10",
+      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage4 health=fix_path+drop_dup_invoke (product commands/mdFiles; parity delegated); reorg=extract_queued (monolith); necessity=product_cli",
+      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/doc-consistency/run.js; Gen1 monolith in tests/archive/gen1-script-impl/; necessity=product_cli",
       "necessity": "product_cli"
     },
     {
@@ -654,7 +657,7 @@
       "path": "scripts/generate-governance.js",
       "distribution_role": "SKILL-INTERNAL",
       "generation": "gen1_carrier",
-      "disposition": "keep",
+      "disposition": "wrap",
       "owns": "INIT",
       "baseline": {
         "ref": "v1.0.2",
@@ -662,9 +665,9 @@
         "commits_after": 0
       },
       "first_seen": "2026-08-21",
-      "last_touch": "2026-09-08",
+      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 minimum-necessary: must-ship carrier",
+      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/generate/run.js; Gen1 monolith archived; necessity=must_ship",
       "necessity": "must_ship"
     },
     {
@@ -887,6 +890,40 @@
       "dogfood_from_repo_package_json": true,
       "notes": "PLAN-0055 minimum-necessary: repo_gate (corrected after 1R — REPO-ONLY twin / router, not Gen1 ceremony debt)",
       "necessity": "repo_gate"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/run.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "doc-consistency-clusters",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 Stage3 EXTRACT body for check-doc-consistency; INSTALLED with CLI; further cluster splits allowed without renaming CLI",
+      "necessity": "product_cli"
+    },
+    {
+      "path": "scripts/lib/generate/run.js",
+      "distribution_role": "SKILL-INTERNAL",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "init-generator",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 Stage3 EXTRACT body for generate-governance; SKILL-INTERNAL with thin CLI",
+      "necessity": "must_ship"
     }
   ],
   "adjudication_plan": "PLAN-0055"

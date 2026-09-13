@@ -136,7 +136,11 @@ ai-agent-governance/
 │   │   ├── md-link-facts.js    # shared Markdown-link factual primitives (extract/resolve/exists)
 │   │   ├── plan-status.js      # ADR-0016 plan-status frontmatter classifier (PLAN-0048)
 │   │   ├── adr-status.js       # FINDING-0011 ADR Status-field heuristic (PLAN-0048)
-│   │   └── secret-scan-facts.js # shared secret-scan factual primitives (patterns / staged / blob)
+│   │   ├── secret-scan-facts.js # shared secret-scan factual primitives (patterns / staged / blob)
+│   │   ├── doc-consistency/
+│   │   │   └── run.js          # EXTRACTED consistency clusters (PLAN-0055 Stage 3/4S; thin CLI keeps name)
+│   │   └── generate/
+│       │   └── run.js          # EXTRACTED INIT generator body (PLAN-0055 Stage 3/4S; SKILL-INTERNAL)
 │   ├── evaluators/
 │   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 secret protection evaluator (deny at CLI binding)
 │   │   ├── ctrl-0002-git-write-consent.js   # CTRL-0002 git argv write-consent evaluator
@@ -144,9 +148,9 @@ ai-agent-governance/
 │   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 translation freshness evaluator (--release-gate deny)
 │   │   └── ctrl-0006-broken-links.js        # CTRL-0006 relative markdown link validity (consistency cluster #4)
 │   ├── check-doc-freshness.js  # thin CLI wrapper (CTRL-0003 + CTRL-0004; advisory, --release-gate blocks stale/draft translations)
-│   ├── check-doc-consistency.js # consistency WRAP (cluster #4 → CTRL-0006; other clusters inline; advisory default; --gate/--release-gate fail-closed)
+│   ├── check-doc-consistency.js # thin consistency CLI WRAP → lib/doc-consistency/run.js (cluster #4 → CTRL-0006; advisory default; --gate/--release-gate fail-closed)
 │   ├── check-plan-sync.js      # plan/milestone reconciliation (advisory; --release-gate fail-closed; no-op without DEVELOPMENT_PLAN.md)
-│   ├── generate-governance.js  # INIT scripted generator (SKILL-INTERNAL; spec: references/init-spec.json)
+│   ├── generate-governance.js  # thin INIT CLI → lib/generate/run.js (SKILL-INTERNAL; spec: references/init-spec.json)
 │   └── release-manager.js      # plan (read-only) + execute (approval-gated) release tool
 ├── LICENSE                     # MIT
 │

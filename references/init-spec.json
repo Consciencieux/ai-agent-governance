@@ -10,6 +10,7 @@
       "references/init-spec.json",
       "references/workflows/release.md",
       "scripts/generate-governance.js",
+      "scripts/lib/generate/run.js",
       "references/principles/entry.md",
       "references/principles/instruction-architecture.md",
       "references/principles/document-model.md",
@@ -696,7 +697,14 @@
       "path": "scripts/check-doc-consistency.js",
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
-      "description": "Doc consistency WRAP (cluster #4 → CTRL-0006; other clusters inline; advisory; --gate/--release-gate fail-closed)"
+      "description": "Doc consistency thin CLI WRAP (PLAN-0055 Stage 3 EXTRACT; clusters in lib/doc-consistency/run.js; advisory; --gate/--release-gate fail-closed)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/run.js",
+      "source": "scripts/lib/doc-consistency/run.js",
+      "type": "copy",
+      "description": "Doc consistency cluster body (EXTRACT from Gen1 monolith; required by check-doc-consistency.js)"
     },
     {
       "phase": "C",

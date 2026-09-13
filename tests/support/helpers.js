@@ -28,7 +28,10 @@ const CONSENT_THREE_MARKERS_TEXT =
   "A Proposal approved at the Approval Gate covers the release sequence.\n" +
   "If any step fails, stop and report — never retry differently.\n" +
   "If push is rejected (non-fast-forward), stop and report — never pull/rebase.";
-const TMP_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), "ai-agent-governance-test-"));
+// Keep fixtures inside the workspace: some sandboxes block writes to os.tmpdir()/.git/.
+const TMP_BASE = path.join(SKILL_ROOT, "tests", ".tmp");
+fs.mkdirSync(TMP_BASE, { recursive: true });
+const TMP_ROOT = fs.mkdtempSync(path.join(TMP_BASE, "run-"));
 
 function tmp(name) {
   return fs.mkdtempSync(path.join(TMP_ROOT, `${name}-`));
@@ -139,7 +142,10 @@ function buildI18nFixture(dir, opts = {}) {
 }
 
 function gitInit(dir) {
-  spawnSync("git", ["init", "-q"], { cwd: dir });
+  // Empty template avoids copying sample hooks — some CI/sandbox environments
+  // refuse writes under .git/hooks/ ("Operation not permitted"), which leaves
+  // a half-initialized tree where `git diff --cached` degrades to --no-index.
+  spawnSync("git", ["init", "-q", "--template="], { cwd: dir });
   spawnSync("git", ["config", "user.email", "test@example.com"], { cwd: dir });
   spawnSync("git", ["config", "user.name", "Test"], { cwd: dir });
   write(path.join(dir, ".gitignore"), ".governance/\n");

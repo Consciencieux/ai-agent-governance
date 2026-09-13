@@ -16,9 +16,11 @@ All notable changes to this project will be documented here.
 
 - **PLAN-0055 Stage 1R + Stage 3 (minimum-necessary doctrine)** — Replaced citation-graph “keep” with short lists (`must_ship` ∪ `product_cli` ∪ `repo_gate`); everything else is `debt` by default. Deleted Gen1 ceremony scripts `repo-tools/mutation-probe.js` and `repo-tools/check-changelog-narration.js` (cleared package.json / tests / docs). Inventory gains `necessity` + `summary.short_lists`. Next: remaining `debt` teardown + Stage 4 test prune.
 
-- **PLAN-0055 Stage 4 (unified adjudicate)** — Fact-source test prune (~−37 cases; consent/package.json/secrets catalogs folded). Script Health: `check-doc-consistency` prefers `docs/product/` for prompt_sync + mdFiles, drops embedded parity spawn (`parity: "delegated"`); `check-layout-sync` prefers `docs/product/{lang}/architecture.md` and fixes basename extraction; architecture trees completed. Disposition v2 + Script Health ledger in PLAN-0055. consistency EXTRACT still queued (Stage 3).
+- **PLAN-0055 Stage 4 (unified adjudicate)** — Fact-source test prune (~−37 cases; consent/package.json/secrets catalogs folded). Script Health: `check-doc-consistency` prefers `docs/product/` for prompt_sync + mdFiles, drops embedded parity spawn (`parity: "delegated"`); `check-layout-sync` prefers `docs/product/{lang}/architecture.md` and fixes basename extraction; architecture trees completed. Disposition v2 + Script Health ledger in PLAN-0055. consistency EXTRACT completed in Stage 3/4S.
 
 - **PLAN-0055 Stage 4Q (quarantine + rebuild)** — Moved ~512 Gen1 suite tests to `tests/archive/gen1-suites/` (not loaded). Rebuilt live ~50 tests from script git-birth + `necessity` short lists (`security` / `generator` / `payload` / `repo-gates` / gen2 `routing`+inventories). `check:must-ship` retargeted. Do not re-import archive wholesale.
+
+- **PLAN-0055 Stage 3 / 4S (script quarantine + EXTRACT)** — Same doctrine for `scripts/`: Gen1 monoliths snapshotted under `tests/archive/gen1-script-impl/`. Thin CLIs keep names — `check-doc-consistency.js` → `scripts/lib/doc-consistency/run.js` (INSTALLED); `generate-governance.js` → `scripts/lib/generate/run.js` (SKILL-INTERNAL). `verify_governance` / release / lock / sync snapshotted only (verify stays zero-dep). init-spec + inventory updated.
 
 ### Fixed
 
