@@ -154,6 +154,7 @@ ai-agent-governance/
 │   ├── check-daily-check-surface.js # 日常 npm run check 允許名單門禁（PLAN-0055）
 │   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允許名單資料
 │   ├── check-terminology.js    # repo-owned 術語門禁（從 INSTALLED 一致性檢查器拆出；ADR-0020 首次執行分離）
+│   ├── check-changelog-narration.js  # REPO-ONLY：Unreleased 驗證敘事標記；--gate fail-closed（FINDING-0016）
 │   ├── check-secrets.js        # repo 側 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路徑）
 │   ├── check-must-ship.sh      # Phase 8 必裝機械門禁集合（PLAN-0044 / ADR-0024）
 │   ├── check-must-ship-carriers.js  # 必裝載體存在性（子技能 / 腳本 / SKILL 入口）

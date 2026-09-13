@@ -47,9 +47,9 @@ forbidden narration markers
 
 ## 解决情况
 
-**H2d 切片（2026-09-13 · PLAN-0050 Archived）：** 确认已有机械载体 `repo-tools/check-changelog-narration.js`（示例/叙事边界可检查，而非“是否读了示例”）；`h2d-portability` 存在性表征。不声称全部示例特征已机读化。
+**H2d 切片（2026-09-13 · PLAN-0050）：** 曾有 advisory 载体；PLAN-0055 删除后一度空窗。
 
-**仍开放（Confirmed）：** 把更多可观察示例特征拆成 fail-closed 检查。successor = H3 / 下次 2.x Plan。
+**本切片（2026-09-13）：** 恢复 `repo-tools/check-changelog-narration.js`，将 **1 个可观察示例特征**（`[Unreleased]` 验证叙事标记）改为 **fail-closed**（`--gate`）；经 `repo-tools/check-doc-consistency.js` WRAP 挂入日常 `--gate`。负向 oracle 见 `finding-patch-oracles`。不声称示例百科全机械化。Finding 保持 Confirmed。
 
 
 ## 关联

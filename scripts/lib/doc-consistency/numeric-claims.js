@@ -10,7 +10,7 @@ function runNumericClaims(ctx) {
     issues, gateIssues, anyGate, releaseGate, version, planStatuses,
   } = ctx;
 
-  // ---- 5. numeric claims ----
+  // ---- 5. numeric claims (ADR-0010 entry-layer; --gate/--release-gate fail-closed) ----
   // validator check count: docs must claim the same count as the DEFAULTS array
   const validator = readFile(path.join(ROOT, "scripts", "verify_governance.js")) || readFile(path.join(ROOT, "scripts", "verify-governance.js")) || "";
   const defaultArr = validator.match(/const DEFAULTS = \[([\s\S]*?)\n\];/);
@@ -22,7 +22,11 @@ function runNumericClaims(ctx) {
       if (!c) continue;
       let m;
       while ((m = claimRe.exec(c))) {
-        if (parseInt(m[1]) !== defaultCount) issues.numeric_claims.push(`${f}: claims ${m[1]} checks, source has ${defaultCount}`);
+        if (parseInt(m[1]) !== defaultCount) {
+          const item = `${f}: claims ${m[1]} checks, source has ${defaultCount}`;
+          issues.numeric_claims.push(item);
+          if (anyGate) gateIssues.push({ kind: "numeric_claims", item });
+        }
       }
     }
   }

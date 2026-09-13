@@ -5,8 +5,17 @@
   "plan": "PLAN-0042",
   "finding": "FINDING-0006",
   "enums": {
-    "kind": ["ctrl", "routing", "safety_kernel"],
-    "classification": ["oracle_pair", "characterization_only", "gap", "deferred"]
+    "kind": [
+      "ctrl",
+      "routing",
+      "safety_kernel"
+    ],
+    "classification": [
+      "oracle_pair",
+      "characterization_only",
+      "gap",
+      "deferred"
+    ]
   },
   "rules": [
     "oracle_pair = independent positive (legal→green) + negative (break invariant→red) fixtures; tests must not copy evaluator regex as a second semantics source.",
@@ -16,12 +25,10 @@
     "Important set (frozen): CTRL-0001–0006 + routing integrity + Safety Kernel suite accounting."
   ],
   "summary": {
-    "total": 13,
+    "total": 15,
     "by_classification": {
-      "oracle_pair": 11,
-      "characterization_only": 2,
-      "gap": 0,
-      "deferred": 0
+      "oracle_pair": 13,
+      "characterization_only": 2
     },
     "important_gap": 0
   },
@@ -91,12 +98,13 @@
       "kind": "ctrl",
       "classification": "oracle_pair",
       "positive_tests": [
-        "tests/suites/consistency.test.js::CTRL-0006: valid relative link → evaluateBrokenLinks pass"
+        "tests/suites/repo-gates.test.js::doc-consistency --gate: this repo exits 0 (REPO dogfood)"
       ],
       "negative_tests": [
-        "tests/suites/consistency.test.js::CTRL-0006: missing relative link → evaluateBrokenLinks fail with evidence"
+        "tests/suites/finding-patch-oracles.test.js::CTRL-0006: broken relative link → evaluator fail (0006 negative oracle)",
+        "tests/suites/finding-patch-oracles.test.js::CTRL-0006: broken link enters gateIssues under anyGate (CLI binding)"
       ],
-      "notes": "Evaluator-level oracle; CLI --gate remains advisory (binding ≠ verdict)."
+      "notes": "Evaluator + CLI --gate fail-closed for broken_links (FINDING-0006 slice; binding ≡ verdict under --gate)."
     },
     {
       "id": "routing-positive-resolve",
@@ -162,7 +170,9 @@
       "id": "safety-kernel-security",
       "kind": "safety_kernel",
       "classification": "oracle_pair",
-      "positive_tests": ["tests/suites/security.test.js (suite)"],
+      "positive_tests": [
+        "tests/suites/security.test.js (suite)"
+      ],
       "negative_tests": [
         "tests/suites/security.test.js::check-secrets: staged fake secret exits 1 without leaking the token"
       ],
@@ -178,6 +188,30 @@
       ],
       "negative_tests": [],
       "notes": "Kernel suites retained; per-CTRL oracles live in CTRL-* rows."
+    },
+    {
+      "id": "CTRL-changelog-narration",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/finding-patch-oracles.test.js::changelog narration: clean Unreleased exits 0 under --gate"
+      ],
+      "negative_tests": [
+        "tests/suites/finding-patch-oracles.test.js::changelog narration: mutation-verified in Unreleased fails --gate (0016)"
+      ],
+      "notes": "FINDING-0016: one observable example feature (forbidden Unreleased verification-narration markers) fail-closed. Not full example encyclopedia."
+    },
+    {
+      "id": "CTRL-numeric-claims",
+      "kind": "ctrl",
+      "classification": "oracle_pair",
+      "positive_tests": [
+        "tests/suites/repo-gates.test.js::doc-consistency --gate: this repo exits 0 (REPO dogfood)"
+      ],
+      "negative_tests": [
+        "tests/suites/finding-patch-oracles.test.js::ADR-0010 numeric_claims: wrong N checks enters gateIssues (0017)"
+      ],
+      "notes": "FINDING-0017 / ADR-0010: entry-layer wrong \"N checks\" claims fail-closed under --gate. Not all ADR decisions."
     }
   ]
 }

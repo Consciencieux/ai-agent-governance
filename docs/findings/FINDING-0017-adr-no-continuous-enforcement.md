@@ -38,9 +38,9 @@ ADR 是冻结的决策记录，但没有与之绑定的机械检查（谁负责�
 
 ## 解决情况
 
-**H2d 切片（2026-09-13 · PLAN-0050 Archived）：** 确认已有载体 `repo-tools/check-metadata-projection.js`（ADR 元数据/投影持续门禁之一）；`h2d-portability` 存在性表征。不声称每个可判定 ADR 决策均已绑定负向 oracle。
+**H2d 切片（2026-09-13 · PLAN-0050）：** 曾依赖 `check-metadata-projection.js`（PLAN-0055 已删）。
 
-**仍开放（Confirmed）：** 可判定 ADR 决策 → 机械检查 / 一致性 cluster 全覆盖。successor = H3 / 下次 2.x Plan。
+**本切片（2026-09-13）：** 选 1 条可判定 ADR 决策——ADR-0010「入口层不得写错实现事实数量」——将 `numeric_claims` 簇在 `--gate`/`--release-gate` 下 fail-closed，并补负向 oracle。不声称所有 ADR 全自动执法。Finding 保持 Confirmed。
 
 
 ## 关联

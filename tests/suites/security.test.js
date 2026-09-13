@@ -35,7 +35,7 @@ module.exports = (test) => {
   test("check-git-policy: feature branch exits 0", () => {
     const dir = tmp("gitpolicy-ok");
     gitInit(dir);
-    spawnSync("git", ["checkout", "-q", "-b", "feature/agent-20260913-rebuild"], { cwd: dir });
+    spawnSync("git", ["checkout", "-q", "-b", `feature/agent-${Date.now()}-rebuild`], { cwd: dir });
     write(
       path.join(dir, ".governance/git-policy.json"),
       JSON.stringify({ protectedBranches: ["main", "master"], directPush: false, requireReview: true, allowForcePush: false })

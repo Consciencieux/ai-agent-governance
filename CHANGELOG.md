@@ -6,6 +6,9 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **Finding patches (0006 / 0016 / 0017 / 0007 docs)** — CTRL-0006 broken_links and ADR-0010 numeric_claims fail-closed under `--gate`; restore Unreleased changelog-narration checker as fail-closed (one observable example feature); document FINDING-0007 2.1 delivered vs later boundary (no hooks/`--no-verify` hard claim). Not full oracle/ADR/example mechanization.
+
+
 - **Post-2.1.0 repo hygiene (PLAN-0052 / PLAN-0055)** — Gen1 CI observation job removed; daily `check` allowlisted; H2b/H2c stage parking lot retired (`check:full` ≡ daily); Gen1 test/script archives deleted; doc-consistency split into gate clusters; repo dogfood off INSTALLED WRAP CLIs. `check:must-ship` remains the sole CI block. Plan archive ≠ Release.
 
 - **FINDING-0003 language layering (PLAN-0053)** — Remaining judgment classes labeled `judgment` vs `mechanical` in authority bodies; characterization suite added. Finding → Resolved (no new mechanical checkers; no INSTALLED router).

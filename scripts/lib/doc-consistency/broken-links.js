@@ -10,12 +10,14 @@ function runBrokenLinks(ctx) {
     issues, gateIssues, anyGate, releaseGate, version, planStatuses,
   } = ctx;
 
-  // ---- 4. link validity (CTRL-0006; semantic verdict; this shell keeps it advisory) ----
+  // ---- 4. link validity (CTRL-0006; semantic verdict; --gate/--release-gate fail-closed) ----
   {
     const linkEval = evaluateBrokenLinks({ root: ROOT, facts: createMdLinkFacts(ROOT) });
-    for (const item of linkEval.evidence.broken_links) issues.broken_links.push(item);
+    for (const item of linkEval.evidence.broken_links) {
+      issues.broken_links.push(item);
+      if (anyGate) gateIssues.push({ kind: "broken_links", item });
+    }
   }
-
 }
 
 module.exports = { runBrokenLinks };

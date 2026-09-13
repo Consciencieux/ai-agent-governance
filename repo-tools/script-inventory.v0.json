@@ -50,26 +50,25 @@
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 51,
+    "total": 52,
     "by_disposition": {
-      "keep": 42,
-      "rewrite": 1,
+      "keep": 48,
       "wrap": 4
     },
     "by_generation": {
       "gen1_carrier": 14,
-      "gen2_native": 30,
+      "gen2_native": 35,
       "dual_profile": 3
     },
     "by_role": {
-      "REPO-ONLY": 22,
-      "INSTALLED": 23,
+      "REPO-ONLY": 16,
+      "INSTALLED": 34,
       "SKILL-INTERNAL": 2
     },
     "by_necessity": {
-      "repo_gate": 21,
+      "repo_gate": 15,
       "must_ship": 6,
-      "product_cli": 20
+      "product_cli": 31
     },
     "wrap": [
       "scripts/check-doc-consistency.js",
@@ -85,8 +84,7 @@
       "date": "2026-09-13",
       "note": "Daily check surface frozen; H2b/H2c checkers demoted to check:full; check-daily-check-surface enforces allowlist",
       "retired_deleted": [
-        "repo-tools/mutation-probe.js",
-        "repo-tools/check-changelog-narration.js"
+        "repo-tools/mutation-probe.js"
       ]
     },
     "short_lists": {
@@ -118,6 +116,7 @@
         "scripts/verify_governance.js"
       ],
       "repo_gate": [
+        "repo-tools/check-changelog-narration.js",
         "repo-tools/check-coding-hygiene.js",
         "repo-tools/check-daily-check-surface.js",
         "repo-tools/check-doc-consistency.js",
@@ -1021,6 +1020,23 @@
       "necessity": "product_cli",
       "distribution_role": "INSTALLED",
       "owns": "doc-consistency"
+    },
+    {
+      "path": "repo-tools/check-changelog-narration.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "changelog_narration",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "FINDING-0016 slice: Unreleased verification-narration markers fail-closed under --gate (wired via check-doc-consistency WRAP). Not INSTALLED.",
+      "necessity": "repo_gate"
     }
   ],
   "adjudication_plan": "PLAN-0055"

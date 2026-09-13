@@ -181,6 +181,7 @@ ai-agent-governance/
 │   ├── check-daily-check-surface.js # daily npm run check allowlist gate (PLAN-0055)
 │   ├── daily-check-surface.v0.json # allowlist data for check-daily-check-surface.js
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)
+│   ├── check-changelog-narration.js  # REPO-ONLY: Unreleased verification-narration markers; --gate fail-closed (FINDING-0016)
 │   ├── check-secrets.js        # repo-profile CTRL-0001 CLI (shared evaluator under scripts/; not the skill CLI path)
 │   ├── check-must-ship.sh      # Phase 8 must-ship mechanical gate set (PLAN-0044 / ADR-0024)
 │   ├── check-must-ship-carriers.js  # must-ship carrier presence (sub-skills / scripts / SKILL entry)
