@@ -336,12 +336,12 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 | --- | --- | --- | --- |
 | **H0** 文件與生命週期對帳 | 入口/路線圖/計劃位置與 `v2.0.0` 對齊 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 計劃已歸檔） |
 | **H1** 可重用治理 Skill 提煉 | L1/L2/L3 提取協議 → 乾淨目標驗證；不遷腳本載體 | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** 控制面補完 | 執行序見 ADR-0025 決策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived；**H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**；**H2d** = [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md) **Archived** | **H2d Archived**; next = H3 (far; no Active Plan) |
-| **H3** 執行期與科研 | L3、測量、注意力實驗；不擋 2.1 | 無 Active Plan | 遠 |
+| **H2** 控制面補完 | 執行序見 ADR-0025 決策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived；**H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**；**H2d** = [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md) **Archived** | **H2d Archived**；post-2.1 見 Active |
+| **H3** 執行期與科研 | L3、測量、注意力實驗；不擋 2.1 | Design = [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md)（不升 Active） | 遠 |
 
 ### H0 已完成
 
-**Active** = 無。[PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived**（`v2.1.0`）。H2d 已 Archived；H3 仍為遠。H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**。H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**。
+**Active** = [PLAN-0052](../PLAN-0052-gen1-observation-sunset.md)（Gen1 觀測門禁 sunset）。排隊 Design：[PLAN-0053](../PLAN-0053-v2.1.x-finding-patch-slice.md)（2.1.x Finding 補丁）；[PLAN-0054](../PLAN-0054-h3-runtime-research-design.md)（H3 邊界，遠）。[PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived**（`v2.1.0`）。H2d 已 Archived。H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**。H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**。
 
 已歸檔（H0 帶）：PLAN-0035 / 0036 / 0038-0044；H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)。Plan 保持單檔（`PLAN-xxxx-*.md`）。
 

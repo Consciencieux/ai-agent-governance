@@ -334,12 +334,12 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 | --- | --- | --- | --- |
 | **H0** Documentation and lifecycle truth | Align entry docs / roadmap / plan location with `v2.0.0` | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived** (nine Phase 4–8 plans archived) |
 | **H1** Reusable governance skill extraction | L1/L2/L3 extraction protocol → clean-target validation; do not migrate script carriers | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** Control-plane completion | Execution order: ADR-0025 decision 14 — H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived; **H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**; **H2d** = [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md) **Archived** | **H2d Archived**; next = H3 (far; no Active Plan) |
-| **H3** Runtime and research | L3, measurement, attention experiments; does not block 2.1 | No Active Plan | Far |
+| **H2** Control-plane completion | Execution order: ADR-0025 decision 14 — H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived; **H2c** = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**; **H2d** = [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md) **Archived** | **H2d Archived**; post-2.1 via Active |
+| **H3** Runtime and research | L3, measurement, attention experiments; does not block 2.1 | Design = [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) (not Active) | Far |
 
 ### H0 done
 
-**Active** = none. [PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). H2d Archived; H3 remains far. H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**. H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
+**Active** = [PLAN-0052](../PLAN-0052-gen1-observation-sunset.md) (Gen1 observation-gate sunset). Queued Design: [PLAN-0053](../PLAN-0053-v2.1.x-finding-patch-slice.md) (2.1.x Finding patch); [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) (H3 boundary, far). [PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). H2d Archived. H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**. H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
 
 Archived (H0 band): PLAN-0035 / 0036 / 0038-0044; H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md). Plans stay single files (`PLAN-xxxx-*.md`).
 

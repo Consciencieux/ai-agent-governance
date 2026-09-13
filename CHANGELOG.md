@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Changed
+
+- **PLAN-0052 Active** — Gen1 observation-gate sunset (inventory-gated retire only; must-ship stays sole CI block). Queued Design: PLAN-0053 (2.1.x Finding patch slice), PLAN-0054 (H3 boundary, far; not Active).
+
 ### Fixed
 
 - **Payload REPO-ONLY path leaks** — `SKILL.md` no longer links ADR-0024 or the coverage index via `docs/design-decisions/…` / `repo-tools/…` (absent from the install tarball). Skill executor uses the in-payload capability table + `references/capabilities/`; ADR cited by ID. Regression: `payload` suite source-closure test.
