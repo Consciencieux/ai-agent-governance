@@ -18,6 +18,8 @@ All notable changes to this project will be documented here.
 
 - **PLAN-0055 Stage 4 (unified adjudicate)** — Fact-source test prune (~−37 cases; consent/package.json/secrets catalogs folded). Script Health: `check-doc-consistency` prefers `docs/product/` for prompt_sync + mdFiles, drops embedded parity spawn (`parity: "delegated"`); `check-layout-sync` prefers `docs/product/{lang}/architecture.md` and fixes basename extraction; architecture trees completed. Disposition v2 + Script Health ledger in PLAN-0055. consistency EXTRACT still queued (Stage 3).
 
+- **PLAN-0055 Stage 4Q (quarantine + rebuild)** — Moved ~512 Gen1 suite tests to `tests/archive/gen1-suites/` (not loaded). Rebuilt live ~50 tests from script git-birth + `necessity` short lists (`security` / `generator` / `payload` / `repo-gates` / gen2 `routing`+inventories). `check:must-ship` retargeted. Do not re-import archive wholesale.
+
 ### Fixed
 
 - **Vacuous Gen1 doc gates (PLAN-0055 Stage 4)** — layout-sync and consistency prompt_sync no longer no-op on this repo after the `docs/product/` migration; parity is no longer double-run inside consistency.

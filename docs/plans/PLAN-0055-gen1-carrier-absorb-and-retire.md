@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
-**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说，取代「引用图保活」。Stage 1R+3 完成（已删 mutation-probe / changelog-narration）；**Stage 4 通裁进行中**（测瘦身 + Script Health / 假绿路径修）；consistency EXTRACT 仍挂 Stage 3。0053/0054 保持 Design。）
+**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说。Stage 1R+3 完成；Stage 4 假绿修复 + 初剪完成；**Stage 4Q 封存重建完成**（512 Gen1 测 → `tests/archive/gen1-suites/`；live ≈50 按脚本 git 出生 + necessity 短名单重建）；consistency EXTRACT 仍挂 Stage 3。0053/0054 Design。）
 
 **归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](archive/PLAN-0041-script-inventory.md) 与 [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试保护。
 
@@ -207,9 +207,18 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 - [ ] 继续：对 **product_cli monolith** 做 EXTRACT（先 consistency）；仅当 INIT 允许时缩 INSTALLED 面 — **排队下一刀**
 - [x] 无独立 `necessity=debt` 文件残留
 
-## Stage 4 — 通裁：测瘦身 + Script Health — **进行中**
+## Stage 4 — 通裁：测瘦身 + Script Health — **完成（含 4Q）**
 
-**施工边界：** 删/并测 + 统一 ledger + **已证实假绿路径修复**；consistency 全量 EXTRACT **不在本轮**。
+**施工边界：** 删/并测 + 统一 ledger + **已证实假绿路径修复**；随后 **4Q 封存重建**；consistency 全量 EXTRACT **不在本轮**。
+
+### 4Q 封存重建（2026-09-13）
+
+人类否决「只砍几十个不够」后执行：
+
+1. **封存：** 全部原 `tests/suites/*.test.js`（约 **512** `test()`）→ [`tests/archive/gen1-suites/`](../../tests/archive/gen1-suites/)（含 README：脚本 git 出生表 + 重建规则）。**不**由 `tests/run-tests.js` 加载。
+2. **重建判据：** `necessity` 短名单（must_ship ∪ product_cli ∪ repo_gate）+ **脚本**首次引入 commit（非测试文件出生）+ `testing.policy` 负例活性。
+3. **Live 面（≈50）：** `security` · `generator` · `payload` · `repo-gates` · `routing` · `script-inventory` · `oracle-inventory`。`check:must-ship` 已改挂这些 suite。
+4. **禁止**从 archive 整夹回搬；只允许单条义务最短负例上浮。
 
 ### 4.0 事实源学说
 

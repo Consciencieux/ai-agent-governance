@@ -26,25 +26,16 @@ function test(name, fn) {
   tests.push({ name, fn });
 }
 
+// PLAN-0055 Stage 4Q: Gen1 suites quarantined under tests/archive/gen1-suites/.
+// Live set = fact-source rebuild (must_ship / product_cli / repo_gate + gen2 inventory/routing).
 const SUITES = [
-  "./suites/validator.test.js",
   "./suites/security.test.js",
-  "./suites/consistency.test.js",
-  "./suites/docs.test.js",
-  "./suites/release.test.js",
   "./suites/generator.test.js",
   "./suites/payload.test.js",
-  "./suites/hygiene.test.js",
-  "./suites/sync.test.js",
-  "./suites/plan-delivery.test.js",
+  "./suites/repo-gates.test.js",
   "./suites/routing.test.js",
   "./suites/script-inventory.test.js",
   "./suites/oracle-inventory.test.js",
-  "./suites/principles-extraction.test.js",
-  "./suites/instruction-surface.test.js",
-  "./suites/h2b-checkers.test.js",
-  "./suites/h2c-controls.test.js",
-  "./suites/h2d-portability.test.js",
 ];
 
 // Canonical suite name = path and `.test.js` stripped. This is the ONLY accepted form:

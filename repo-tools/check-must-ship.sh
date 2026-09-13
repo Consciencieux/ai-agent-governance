@@ -9,7 +9,7 @@ echo "== must-ship: JS syntax =="
 # Avoid xargs ARG_MAX / sandbox sysconf failures: check files one-by-one.
 while IFS= read -r -d '' f; do
   node --check "$f"
-done < <(find scripts repo-tools tests -type f -name '*.js' -print0)
+done < <(find scripts repo-tools tests/suites tests/support tests/run-tests.js -type f -name '*.js' -print0)
 
 echo "== must-ship: security =="
 node tests/run-tests.js --suite security
@@ -20,8 +20,14 @@ node tests/run-tests.js --suite generator
 echo "== must-ship: payload =="
 node tests/run-tests.js --suite payload
 
+echo "== must-ship: repo-gates =="
+node tests/run-tests.js --suite repo-gates
+
 echo "== must-ship: oracle-inventory =="
 node tests/run-tests.js --suite oracle-inventory
+
+echo "== must-ship: script-inventory =="
+node tests/run-tests.js --suite script-inventory
 
 echo "== must-ship: routing =="
 node tests/run-tests.js --suite routing
