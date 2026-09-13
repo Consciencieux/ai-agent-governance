@@ -9,7 +9,7 @@ npm test                 # or node tests/run-tests.js
 npm run check:must-ship  # CI blocking gate (must-ship mechanical set)
 ```
 
-CI (ADR-0014 Migration Mode **EXITED**): blocking authority on all branches / PRs is `npm run check:must-ship`. Gen1 `npm run check` is observational (`continue-on-error`) and does not block merge. Releases follow `repo-workflows/skill-release.md`.
+CI (ADR-0014 Migration Mode **EXITED**; PLAN-0052): blocking authority on all branches / PRs is `npm run check:must-ship`. Local `npm run check` remains for maintainers; it is **not** a CI job. Releases follow `repo-workflows/skill-release.md`.
 
 ## Where Things Live
 
@@ -54,7 +54,7 @@ The full repository layout — every directory and its role, down to individual 
 
 ## Validation Requirements
 
-Run the matching gate group before declaring work done; run `npm run check:all` before audit; run `npm run check:skill-release` (adds `--release-gate` fail-closed clusters) before release per `repo-workflows/skill-release.md`. Record real output — never claim "should pass". **CI blocking authority is `npm run check:must-ship`** (ADR-0014 EXITED; ADR-0024). Gen1 `npm run check` is observational.
+Run the matching gate group before declaring work done; run `npm run check:all` before audit; run `npm run check:skill-release` (adds `--release-gate` fail-closed clusters) before release per `repo-workflows/skill-release.md`. Record real output — never claim "should pass". **CI blocking authority is `npm run check:must-ship`** (ADR-0014 EXITED; ADR-0024; PLAN-0052 removed the Gen1 CI observation job).
 
 ### Scope tiering
 
@@ -62,7 +62,7 @@ Match the narrowest row by `git diff --name-only` prefix. When scope is uncertai
 
 | Scope | When to use | What it runs |
 | --- | --- | --- |
-| `npm run check:docs` | `docs/`, `README.md`, `CONTRIBUTING.md`, `architecture.md` changed | test + parity + consistency + layout (+ roadmap/docs-shape/ledger/projection when wired) |
+| `npm run check:docs` | `docs/`, `README.md`, `CONTRIBUTING.md`, `architecture.md` changed | test + parity + consistency + layout |
 | `npm run check:payload` | `references/`, `scripts/`, `SKILL.md`, `LICENSE` changed | test + layout + consistency + role-completeness + hygiene |
 | `npm run check:tests` | `tests/`, `.gitattributes` changed | test + hygiene |
 | `npm run check:full` | default, uncertain scope, or explicit full request | test + parity + layout + consistency + hygiene + role-completeness |

@@ -60,6 +60,7 @@ R1（Policy Structure）：权威事实源（canonical source）已存在于对�
 
 ## 回归保护
 
-- 机械层：`repo-tools/check-metadata-projection.js --gate`
+- 关闭时机械层：`repo-tools/check-metadata-projection.js --gate`
+- **PLAN-0055：** 该脚本已删除；**当前**不以它作为日常/`npm run check` 回归保护。Resolved 保留；重建须另开 Plan。
 - 描述层：`docs/research/RESEARCH-0007`（索引 vs 事实源）
 - 规范层：ADR-0009、ADR-0016

@@ -22,8 +22,6 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 
 1. **SKILL-INTERNAL 文件绝不能被当作被治理项目的规则来源引用**（那里没有这个文件）。子技能与生成的 AGENTS.md 文本只能指向 INSTALLED 路径——`docs/rules/*`、被治理项目自己的 `AGENTS.md`、或复制过去的 `scripts/*`。
 2. **SKILL-INTERNAL 脚本在本仓库形态之外必须 no-op**，因为打包仍会带上它（角色是 SKILL-INTERNAL 的文件随 tarball 走、INIT 不安装）。`check-coding-hygiene.js`（现为 REPO-ONLY，不再打包）的做法是：缺少套件布局时报告 `applicable: false`。
-│   ├── check-daily-check-surface.js # 日常 npm run check 允许名单门禁（PLAN-0055）
-│   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允许名单数据
 
 ### 第二条轴：可移植性（文件"去哪里"与其内容"在那里是否成立"）
 

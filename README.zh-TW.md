@@ -151,7 +151,7 @@ INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳
 
 ## 目前版本
 
-**v2.0** 是可安裝、可在乾淨目標上直接使用的必裝切片：INIT / AUDIT / RELEASE 可跑，本倉 CI 阻斷權威是 `npm run check:must-ship`。Generation 1（1.x）仍是歷史基線。後續工作（PLAN-0037 跨專案提煉等）在 2.0 之後進行。詳見 [CHANGELOG.md](CHANGELOG.md) 與 [docs/plans/roadmap/zh-TW.md](docs/plans/roadmap/zh-TW.md)。
+**v2.1.0** 是目前可安裝產品線（`package.json`）。必裝 INIT / AUDIT / RELEASE 可在乾淨目標上跑；本倉 CI 阻斷權威是 `npm run check:must-ship`。Generation 1（1.x）仍是歷史基線；`v2.0.0` 是 Gen2 必裝凍結點。詳見 [CHANGELOG.md](CHANGELOG.md) 與 [docs/plans/roadmap/zh-TW.md](docs/plans/roadmap/zh-TW.md)。
 
 ## License
 

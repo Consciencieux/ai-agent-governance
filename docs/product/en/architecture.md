@@ -40,10 +40,7 @@ Two rules follow, and both were violated before this table existed:
    project** (it is not there). Sub-skill and generated-AGENTS text may only point at
    INSTALLED paths — `docs/rules/*`, the governed project's own `AGENTS.md`, or copied
    `scripts/*`.
-2. **A SKILL-INTERNAL script must no-op outside this repo's shape** (now REPO-ONLY under repo-tools/, never shipped). `check-coding-hygiene.js` does this by reporting `applicable: false`
-│   ├── check-daily-check-surface.js # daily npm run check allowlist gate (PLAN-0055)
-│   ├── daily-check-surface.v0.json # allowlist data for check-daily-check-surface.js
-   when the suite layout is absent.
+2. **A SKILL-INTERNAL script must no-op outside this repo's shape** (now REPO-ONLY under repo-tools/, never shipped). `check-coding-hygiene.js` does this by reporting `applicable: false` when the suite layout is absent.
 
 ### The second axis: portability (where a file GOES vs whether its content HOLDS there)
 

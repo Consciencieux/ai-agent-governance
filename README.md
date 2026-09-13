@@ -151,7 +151,7 @@ INIT generates a governance skeleton whose exact contract — inputs, artifacts,
 
 ## Current version
 
-**v2.0** is the installable, usable must-ship slice: INIT / AUDIT / RELEASE run on a clean target, and this repo's CI blocking authority is `npm run check:must-ship`. Generation 1 (1.x) remains the historical baseline. Follow-on work (PLAN-0037 extraction and later items) starts after 2.0. See [CHANGELOG.md](CHANGELOG.md) and [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md).
+**v2.1.0** is the current installable product line (`package.json`). Must-ship INIT / AUDIT / RELEASE run on a clean target; this repo's CI blocking authority is `npm run check:must-ship`. Generation 1 (1.x) remains the historical baseline; `v2.0.0` was the Gen2 must-ship freeze. See [CHANGELOG.md](CHANGELOG.md) and [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md).
 
 ## License
 

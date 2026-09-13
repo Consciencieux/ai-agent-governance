@@ -22,8 +22,6 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 
 1. **SKILL-INTERNAL 檔案絕不能被當作被治理專案的規則來源引用**（那裡沒有這個檔案）。子技能與生成的 AGENTS.md 文本只能指向 INSTALLED 路徑——`docs/rules/*`、被治理專案自己的 `AGENTS.md`、或複製過去的 `scripts/*`。
 2. **SKILL-INTERNAL 腳本在本倉庫形態之外必須 no-op**，因為打包仍會帶上它（角色是 SKILL-INTERNAL 的檔案隨 tarball 走、INIT 不安裝）。`check-coding-hygiene.js`（現為 REPO-ONLY，不再打包）的做法是：缺少套件佈局時報告 `applicable: false`。
-│   ├── check-daily-check-surface.js # 日常 npm run check 允許名單門禁（PLAN-0055）
-│   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允許名單資料
 
 ### 第二條軸：可移植性（檔案"去哪裡"與其內容"在那裡是否成立"）
 

@@ -50,7 +50,7 @@ Agent 在 repair 时按主题词 mkdir / 改名 / 新建第二份编号文件，
 
 ## 回归保护
 
-`repo-tools/check-docs-shape.js --gate`（挂入 `npm run check` / `check:docs`）；形状违规机械红，不依赖 Agent 读 README。
+关闭时：`repo-tools/check-docs-shape.js --gate`（曾挂入 `npm run check` / `check:docs`）。**PLAN-0055：** 该脚本已删除；**当前**不以它作为日常回归保护。Resolved 保留；重建须另开 Plan。
 
 ## 证据
 

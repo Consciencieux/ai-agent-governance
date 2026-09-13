@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- Doc truth before H3: CONTRIBUTING/README no longer claim Gen1 CI observation or v2.0-as-current; architecture tree splice fixed; Resolved findings / ADR-0009 note PLAN-0055 removed H2b carriers.
+
 - Skill-release proposal path: `repo-tools/.release/proposal.json`.
 
 - Repo routing loads skill-release, changelog-policy, and engineering-restraint on the matching edit surfaces.

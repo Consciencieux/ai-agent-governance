@@ -33,7 +33,7 @@ generation: cross-generation
 
 | 域 | 索引 | 规则载体 | 强制等级 |
 | --- | --- | --- | --- |
-| 本仓库 | `docs/*/roadmap.md` | `AGENTS.md` | **机械验证**：`repo-tools/check-roadmap-sync.js`，三条可判定关系，`--gate` fail-closed（进 `check` 组，每次验证都跑） |
+| 本仓库 | `docs/*/roadmap.md` | `AGENTS.md` | **语义仍强制**：「索引不是事实源」。原机械载体 `repo-tools/check-roadmap-sync.js` 在 PLAN-0055 已删除；**当前**不以该脚本进 `npm run check`。重建或替代属后续 Plan，不在本 ADR 正文假装仍在跑。 |
 | 被治理项目 | `docs/plans/DEVELOPMENT_PLAN.md` 里程碑 | `references/policies/lifecycle.policy.md` | **分级机械验证**：`scripts/check-plan-sync.js`，同样三条关系，但**默认建议性、仅 `--release-gate` 阻断**，且无该结构时 no-op |
 
 分级的依据：被治理项目由 AI 维护时，「完成任务时同步里程碑」这条纯文档规则同样缺少失败反馈——AI 改了 `TASK_<name>.md` 忘记改 `DEVELOPMENT_PLAN.md`，与本仓库 roadmap 漏同步是同一失效形态，长期看大概率复现。但这不足以支持把每次提交都变成计划治理检查：
@@ -50,7 +50,7 @@ generation: cross-generation
 ## 后果
 
 - roadmap 每个未来条目要么链接其设计计划，要么显式标注"尚无设计计划"；Done 条目链接计划或归档。
-- `check-roadmap-sync.js` 是 REPO-ONLY，被治理项目形态下报 not-applicable 并退出 0。
+- 原 `check-roadmap-sync.js` 曾为 REPO-ONLY；PLAN-0055 删除后，本仓不再声称该路径仍挂日常 `check`。语义义务仍在；机械重建另开 Plan。
 
 ## 代际注记（2026-09-09）
 

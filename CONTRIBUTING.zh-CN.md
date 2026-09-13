@@ -9,7 +9,7 @@ npm test                 # 或 node tests/run-tests.js
 npm run check:must-ship  # CI 阻断门禁（必装机械集合）
 ```
 
-CI（ADR-0014 Migration Mode **已退出**）：所有分支 / PR 的阻断权威是 `npm run check:must-ship`。第一代 `npm run check` 仅作观测（`continue-on-error`），不挡 merge。发布另走 `repo-workflows/skill-release.md`。
+CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR 的阻断权威是 `npm run check:must-ship`。本地仍可跑 `npm run check`，**不是** CI 作业。发布另走 `repo-workflows/skill-release.md`。
 
 ## 各目录用途
 
@@ -54,7 +54,7 @@ CI（ADR-0014 Migration Mode **已退出**）：所有分支 / PR 的阻断权�
 
 ## 验证要求
 
-宣布完成前跑与变更范围匹配的门禁组；巡检前跑 `npm run check:all`；发布前跑 `npm run check:skill-release`（含 `--release-gate` 失败即阻断簇），见 `repo-workflows/skill-release.md`。记录真实输出，禁止声称「应该能过」。**CI 阻断权威 = `npm run check:must-ship`**（ADR-0014 已退出；ADR-0024）。第一代 `npm run check` 仅观测。
+宣布完成前跑与变更范围匹配的门禁组；巡检前跑 `npm run check:all`；发布前跑 `npm run check:skill-release`（含 `--release-gate` 失败即阻断簇），见 `repo-workflows/skill-release.md`。记录真实输出，禁止声称「应该能过」。**CI 阻断权威 = `npm run check:must-ship`**（ADR-0014 已退出；ADR-0024；PLAN-0052 已移除 Gen1 CI 观测作业）。
 
 ### 范围分级
 
@@ -62,7 +62,7 @@ CI（ADR-0014 Migration Mode **已退出**）：所有分支 / PR 的阻断权�
 
 | 范围 | 何时使用 | 运行内容 |
 | --- | --- | --- |
-| `npm run check:docs` | 变更 `docs/`、`README.md`、`CONTRIBUTING.md`、`architecture.md` | test + parity + consistency + layout（及已接入的 roadmap/docs-shape/ledger/projection） |
+| `npm run check:docs` | 变更 `docs/`、`README.md`、`CONTRIBUTING.md`、`architecture.md` | test + parity + consistency + layout |
 | `npm run check:payload` | 变更 `references/`、`scripts/`、`SKILL.md`、`LICENSE` | test + layout + consistency + role-completeness + hygiene |
 | `npm run check:tests` | 变更 `tests/`、`.gitattributes` | test + hygiene |
 | `npm run check:full` | 默认、范围不定、或显式全量 | test + parity + layout + consistency + hygiene + role-completeness |

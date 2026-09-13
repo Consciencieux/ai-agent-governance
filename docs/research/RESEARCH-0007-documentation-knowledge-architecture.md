@@ -162,7 +162,7 @@ Research / Finding
 
 | 关系 | 机械载体 | 状态 |
 | --- | --- | --- |
-| 路线图索引（Roadmap）↔ 计划生命周期（Plan） | `repo-tools/check-roadmap-sync.js` | 失效中（旧路径/旧 section）→ FINDING-0021 |
+| 路线图索引（Roadmap）↔ 计划生命周期（Plan） | `repo-tools/check-roadmap-sync.js` | **已删除**（PLAN-0055）；关闭当时见 FINDING-0021 Resolved。当前无日常机械 carrier，不是「失效中仍挂 check」。 |
 | 计划状态规范（Plan status） | `scripts/check-doc-consistency.js` plan-status 集群 | Gen1 divergence（观测项） |
 | 计划交付声明（Plan delivery） | `repo-tools/check-plan-delivery.js` | 有效 |
 | ADR 状态 | `scripts/check-doc-consistency.js` ADR-status 集群 | 有效 |

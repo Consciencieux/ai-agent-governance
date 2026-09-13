@@ -59,5 +59,6 @@ R4（Enforcement Boundary）：gate 的扫描路径 / section 语义与对象实
 
 ## 回归保护
 
-- 机械层：`repo-tools/check-roadmap-sync.js --gate`（`npm run check` / `check:docs`）。
-- 表征：`tests/suites/h2b-checkers.test.js`。
+- 关闭时机械层：`repo-tools/check-roadmap-sync.js --gate`（曾挂入 `npm run check` / `check:docs`）。
+- **PLAN-0055：** 该脚本已删除；**当前**不以它作为日常/`npm run check` 回归保护。Resolved 状态保留（关闭当时条件已满足）；若要恢复机械保护须另开 Plan，不得在正文假装脚本仍在。
+- 表征：`tests/suites/h2b-checkers.test.js`（若随 PLAN-0055 一并删除，则以当时归档证据为准）。

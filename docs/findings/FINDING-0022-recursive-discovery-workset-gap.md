@@ -56,6 +56,7 @@ R4（Enforcement Boundary）：任务的**完成边界**不要求「每个已知
 
 ## 回归保护
 
-- 机械层：`repo-tools/check-discovery-ledger.js --gate`
+- 关闭时机械层：`repo-tools/check-discovery-ledger.js --gate`
+- **PLAN-0055：** 该脚本已删除；**当前**不以它作为日常/`npm run check` 回归保护。Resolved 保留；重建须另开 Plan。
 - 描述层：`docs/research/RESEARCH-0008-repair-discovery-workset-model.md`
 - 规范层：ADR-0021

@@ -122,14 +122,16 @@ Replacement / decomposition / retirement 的正式判断从 Phase 4 开始，逐
 
 **预检（退出当日）：** `npm run check:must-ship` pass；干净目标 INIT + verify 62/62；Phase 8 EXITED（PLAN-0044）。`v2.0.0` tag 当日未批准。
 
-**CI 落点（`.github/workflows/ci.yml`，随合入 `main` 生效）：**
+**CI 落点（退出当日写入 `.github/workflows/ci.yml`）：**
 
 | 面 | Job | 权威 |
 | --- | --- | --- |
 | 产品阻断 | `must-ship` → `npm run check:must-ship` | **blocking**（所有分支 / PR） |
-| Gen1 兼容探针 | `gen1-observation` → `npm run check` | **observational**（`continue-on-error`） |
+| Gen1 兼容探针 | `gen1-observation` → `npm run check` | **observational**（`continue-on-error`）— 退出当日形态 |
 
 含义（对齐 ADR-0024）：产品分支阻断权威 = 必装机械集合；Gen1 全量红不再挡 merge，也**不**再被当作可发布状态。
+
+**后续修正（PLAN-0052）：** CI 已删除 `gen1-observation` job；阻断权威仍仅为 `check:must-ship`。本地 `npm run check` 可继续跑，但不再是 CI 观测作业。
 
 **仍禁止（直至 skill-release Approval Gate）：** `v2.0.0` tag / GitHub Release / 宣称 2.0 已发布。其余人类项当时见 [PLAN-0045](../plans/archive/PLAN-0045-post-2.0-doc-truth.md)（发布清单已并入该 Plan 正文）。
 
@@ -142,7 +144,7 @@ Migration Mode **已退出**；分发边界仍关闭，直到完成 skill-releas
 自 `v2.0.0` 发布起：
 
 - 分发边界 **已重开**（tag / GitHub Release / 宣称 2.0 已发生）。
-- Mode 退出本身不变：CI 阻断 = `check:must-ship`；Gen1 `npm run check` 仍观测。
+- Mode 退出本身不变：CI 阻断 = `check:must-ship`（PLAN-0052 后不再挂 Gen1 CI 观测 job；本地 `npm run check` 仍可用）。
 - 2.x 顺序权威 = [ADR-0025](ADR-0025-gen2x-product-path.md)；本 ADR 不再描述「下一步是 skill-release」。
 
 ## 参考
