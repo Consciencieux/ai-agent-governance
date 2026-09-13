@@ -130,6 +130,10 @@ function taskClassFromPath(p) {
   const n = normPath(p);
   const base = path.posix.basename(n);
 
+  if (base === "CHANGELOG.md") return "edit_changelog";
+  if (n === "repo-workflows/changelog-policy.md") return "edit_changelog";
+  if (n === "repo-workflows/skill-release.md") return "release";
+
   if (base === "SKILL.md" || base === "AGENTS.md") return "edit_skill_entry";
 
   if (

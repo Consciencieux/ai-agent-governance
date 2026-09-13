@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **Repo routing: skill-release + changelog-policy + engineering-restraint** — `route-task --task release` now binds `repo-workflows/skill-release.md` (not governed `references/workflows/release.md`); `CHANGELOG.md` / changelog-policy path → `edit_changelog`; `edit_scripts` read_set includes engineering-restraint. AGENTS drops false local `.governance/generated/skills` dogfood instruction.
+
 - **Finding patches (0006 / 0016 / 0017 / 0007 docs)** — CTRL-0006 broken_links and ADR-0010 numeric_claims fail-closed under `--gate`; restore Unreleased changelog-narration checker as fail-closed (one observable example feature); document FINDING-0007 2.1 delivered vs later boundary (no hooks/`--no-verify` hard claim). Not full oracle/ADR/example mechanization.
 
 

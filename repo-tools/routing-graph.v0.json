@@ -30,7 +30,8 @@
       "reference-closure",
       "secret-protection",
       "testing-evidence",
-      "security-baseline"
+      "security-baseline",
+      "engineering-restraint"
     ],
     "edit_skill_entry": [
       "change-hygiene",
@@ -96,6 +97,11 @@
     ],
     "research_review": [
       "review-research"
+    ],
+    "edit_changelog": [
+      "change-hygiene",
+      "changelog-policy",
+      "discovery-ledger"
     ]
   },
   "binds": {
@@ -202,7 +208,8 @@
       "path": "repo-tools/check-plan-delivery.js"
     },
     "release-governance": {
-      "path": "references/workflows/release.md"
+      "path": "repo-workflows/skill-release.md",
+      "notes": "REPO construction router: this repo release authority (not governed-project references/workflows/release.md)."
     },
     "review-implementation": {
       "path": "references/templates/sub-skills.md",
@@ -219,6 +226,14 @@
     },
     "review-research": {
       "path": "docs/research/RESEARCH-0012-task-capability-routing.md"
+    },
+    "changelog-policy": {
+      "path": "repo-workflows/changelog-policy.md",
+      "notes": "REPO-ONLY CHANGELOG accession (ADR-0012)."
+    },
+    "engineering-restraint": {
+      "path": "references/capabilities/engineering-restraint.md",
+      "notes": "Judgment leaf; bind on edit_scripts so machinery-test is in read_set before adding gates/scripts."
     }
   }
 }

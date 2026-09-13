@@ -72,6 +72,7 @@ module.exports = function register(test) {
         "secret-protection",
         "testing-evidence",
         "security-baseline",
+        "engineering-restraint",
       ],
       run_set: ["CTRL-0001"],
       defer_set: [],
@@ -217,10 +218,38 @@ module.exports = function register(test) {
         "secret-protection",
         "testing-evidence",
         "security-baseline",
+        "engineering-restraint",
       ],
       run_set: ["CTRL-0001"],
       defer_set: [],
     });
+  });
+
+  test("routing: release authority is skill-release (repo), not governed release.md", () => {
+    const { authorities } = route({ task: "release" }, graph);
+    const rel = authorities.find((a) => a.id === "release-governance");
+    if (!rel || rel.path !== "repo-workflows/skill-release.md") {
+      console.error("  expected skill-release.md binding", rel);
+      return false;
+    }
+    if (/references\/workflows\/release\.md$/.test(rel.path)) {
+      console.error("  must not bind governed-project release.md", rel);
+      return false;
+    }
+    return true;
+  });
+
+  test("detector: CHANGELOG.md → edit_changelog with changelog-policy", () => {
+    const { detection, result } = route({ paths: ["CHANGELOG.md"] }, graph);
+    if (detection.task_class !== "edit_changelog") {
+      console.error("  expected edit_changelog", detection);
+      return false;
+    }
+    if (!result.read_set.includes("changelog-policy")) {
+      console.error("  expected changelog-policy in read_set", result.read_set);
+      return false;
+    }
+    return true;
   });
 
   test("authorities: every keep capability path exists (Phase 5c)", () => {
