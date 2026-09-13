@@ -166,10 +166,10 @@ Deferred by design / 2.0 skill-release:
 - `docs/product/{en,zh-CN,zh-TW}/architecture.md`
 - `docs/findings/FINDING-0003-*.md`
 - `tests/suites/generator.test.js`（Phase 5c 计数对齐）
-- `docs/plans/skill-release-2.0-checklist.md`（2.0 人类门槛索引；非 Phase 8 完成证据）
+- [PLAN-0045](PLAN-0045-post-2.0-doc-truth.md)（2.0 人类门槛索引已并入该正文；非 Phase 8 完成证据）
 
 ## Successor
 
-- **2.0 skill-release**（ADR-0024 可用性门槛；清单：`docs/plans/skill-release-2.0-checklist.md`）
+- **2.0 skill-release**（ADR-0024 可用性门槛；清单已并入 [PLAN-0045](PLAN-0045-post-2.0-doc-truth.md)）
 - PLAN-0037 解冻（仅 2.0 发布之后）
 - FINDING-0003 / 0007 / 0018 按发布门槛关闭或豁免

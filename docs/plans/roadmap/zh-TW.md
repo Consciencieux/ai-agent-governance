@@ -320,7 +320,7 @@ Roadmap 只列順序與施工計劃，不複製 Plan 步驟 / Affected Files / �
 | 項 | 狀態 |
 | --- | --- |
 | 8 重建 mandatory gates | [PLAN-0044](../archive/PLAN-0044-rebuild-mandatory-gates.md) Implemented / EXITED |
-| 2.0 skill-release | **已發佈** `v2.0.0`（清單：[skill-release-2.0-checklist.md](../archive/skill-release-2.0-checklist.md) 歷史） |
+| 2.0 skill-release | **已發佈** `v2.0.0`（清單已併入 [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)） |
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **已解凍為 Active**（2026-09-12）。過濾邊界仍約束提煉產物：禁止把本倉目錄 / CTRL 號 / Phase 劇本当 L1。
 
@@ -339,7 +339,7 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 
 ### H0 已完成
 
-已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045；`mode-exit-proposal` / `skill-release-2.0-checklist` 移入 `docs/plans/archive/`。`docs/plans/` 當前施工計劃僅 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md)。
+已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045。Plan 保持單檔（`PLAN-xxxx-*.md`）。`docs/plans/` 當前施工計劃僅 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md)。
 
 ### H2 輸入（按子帶；不擋已發佈的 2.0）
 

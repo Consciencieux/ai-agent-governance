@@ -6,11 +6,11 @@
 
 ```text
 docs/plans/
-├── README.md                  # 本页：目录内三类内容的管理规则
-├── roadmap/                   # 长期路线图（三语），持续维护，不按普通 Plan 归档
-├── PLAN-xxxx-<slug>.md        # 当前执行计划
+├── README.md                       # 本页：目录内内容的管理规则
+├── roadmap/                        # 长期路线图（三语），持续维护，不按普通 Plan 归档
+├── PLAN-xxxx-<slug>.md             # 当前执行计划（单文件；附属稿同前缀）
 └── archive/
-    └── PLAN-xxxx-<slug>.md    # 已完成/已归档计划
+    └── PLAN-xxxx-<slug>.md         # 已完成/已归档计划（单文件）
 ```
 
 ## 三类内容的定义与边界
@@ -21,9 +21,10 @@ docs/plans/
 | 路线图 | `docs/plans/roadmap/{en,zh-CN,zh-TW}.md` | 项目长期往哪里走？ | 持续修订，不归档 |
 | 归档计划 | `docs/plans/archive/PLAN-xxxx-*.md` | 这个任务最终做成了什么？ | 冻结历史 |
 
-- **`PLAN-xxxx-<slug>.md`**：当前执行中的计划（`Design` / `Active` / `Implemented`；`Completed` 仅作闭包对账的短暂过渡）。
+- **`PLAN-xxxx-<slug>.md`**：当前执行中的计划（`Design` / `Active` / `Implemented`；`Completed` 仅作闭包对账的短暂过渡）。Stage / HITL / 清单写进该文件，禁止再拆附属 md，禁止建 `PLAN-xxxx/` 目录。
+- **不要建 `docs/plans/working/`，也不要建 `docs/plans/PLAN-xxxx/`。** 无编号草稿并入所属 Plan / ADR 正文，或根本不要落盘。
 - **`roadmap/`**：长期架构演进视图（愿景 / 当前状态 / 已知限制 / 目标架构 / 迁移阶段 / 研究目标 / 非目标），三语边界对象。它的修订触发是架构事件，**不按普通 Plan 走 active → archive**。
-- **`archive/`**：已完成 closure 的计划。exit review 通过后从 `docs/plans/` 移入此处并标 `Archived`——**触发是 Plan lifecycle closure，不是 Release**（ADR-0016）。
+- **`archive/`**：已完成 closure 的计划。exit review 通过后从 `docs/plans/` 移入此处并标 `Archived`——**触发是 Plan lifecycle closure，不是 Release**（ADR-0016）。根目录只放 `PLAN-xxxx-*.md`。禁止无编号 proposal、禁止把已归档 Plan 改成文件夹。
 
 ## 归档计划 = 历史执行证据与能力溯源
 
@@ -47,10 +48,12 @@ docs/plans/
 ## 规则
 
 1. **Plan ID 永久不变、不复用**：`PLAN-xxxx` 独立编号，新对象 = 该类型现有 max(编号)+1（统一规则见 ADR-0018 § 决策 3）。编号一旦分配即绑定该对象，撤销/作废不释放编号。
-2. **文件名 = `<ID>-<ascii-slug>.md`**：`PLAN-xxxx-<slug>.md`（英文 ASCII slug，正文用简体中文 canonical）。
+2. **文件名 = `<ID>-<ascii-slug>.md`**：`PLAN-xxxx-<slug>.md`（英文 ASCII slug，正文用简体中文 canonical）。一个 Plan 一个文件。禁止 `docs/plans/PLAN-xxxx/` 目录，禁止 `PLAN-xxxx-stage-*.md` 第二份。
 3. **归档即冻结，且不等待 Release**：exit review / closure reconciliation 通过后即将 Plan 移入 `archive/` 并标 `Archived`（ADR-0016）。`Completed` 不得长期留在 `docs/plans/`。Gen1 release 流程若仍「到 release 才归档」，以本 README + ADR-0016 为权威；旧 checker 红为 compatibility divergence（Phase 4）。
 4. **只归档 Plan**：Finding / Research / ADR **不进入本目录**——它们不因状态变化（Resolved / Superseded）而物理归档，永久留在 `docs/findings/`、`docs/research/`、`docs/design-decisions/` 原位。
 5. **不要在 `roadmap/` 与 `archive/` 之间互相移动**：roadmap 是持续维护的方向文档，不是任务；只有 `PLAN-xxxx` 对象才走 active → archive。
 6. **每个 Plan 声明 `generation`**：`gen1`（Generation-1 历史执行记录）/ `gen2`（Generation-2 计划）。迁移工作（如 2.0 迁移）用 `gen2`，迁移来源在正文背景说明；`migration_from` 是可选项，仅在需要机械查询迁移计划时加。归档不等于能力过时，也不等于产品发布。
 7. **统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `generation`（+ 当前 Plan 的 `target`）；`status` 取值 `Design` / `Active` / `Implemented` / `Completed` / `Archived`（canonical 在 frontmatter，正文不再有 `> **Status:**`）；H1 = `# PLAN-xxxx：中文标题`；空 optional 字段省略。**历史归档 Plan 的 required fields = `id` / `status: Archived` / `generation`（不含 `target`）**——current Plan 与 historical Plan 的必填字段分开定义。
 8. **不重新裁决长期架构**：Plan 的权威是当前施工与验收。ADR 约束只作摘要 + 指针。正文级边界见 ADR-0016 权威矩阵。
+9. **产物跟随 owner（FINDING-0030）**：执行产物写进所属 `PLAN-xxxx-*.md` 或 ADR 正文。禁止 `plans/working/`、禁止 `PLAN-xxxx/` 文件夹、禁止无编号文件进 `archive/`、禁止为同一 Plan 再开一份 md。
+10. **Plan 创建门闩**：只有跨 session、需要执行、需要 owner、需要验证闭环、需要生命周期时才新建 `PLAN-xxxx`。一次性 HITL 提案、发布勾选清单、被否决方向、临时草稿 **不是** Plan：并入所属正文，或不要落盘。

@@ -37,7 +37,7 @@ H0 关闭 → PLAN-0037 由人类解冻 Active   ✓
 
 - [x] PLAN-0035 / 0036 / 0038–0044 → `docs/plans/archive/`，`status: Archived`
 - [x] 引用改到 archive 路径
-- [x] `mode-exit-proposal.md` → `docs/plans/archive/`（非 PLAN）
+- [x] `mode-exit-proposal.md` / `skill-release-2.0-checklist.md`：无编号文件，不是 Plan。HITL 记录并入 [ADR-0014](../../design-decisions/ADR-0014-architecture-migration-mode.md) § Mode 退出处置；发布清单并入本文件下方。不进入 `archive/` 根目录，也不建 Plan 文件夹。
 - [x] 人类解冻 PLAN-0037 → Active（本 H0 闭包的 successor 交接）
 
 ## Discovery Ledger
@@ -58,3 +58,11 @@ Unaccounted:  0
 
 - [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) Active（ADR-0025 H1）
 - H2 另开 Plan
+
+## 并入：2.0 skill-release 清单（原独立文件，不是 Plan）
+
+历史勾选记录。流程权威：`repo-workflows/skill-release.md`。产品定义：ADR-0024。
+
+**已满足（2026-09-12）：** must-ship fail-closed；Mode 退出 + 合入 `main`（PR #8）；干净目标 INIT Phase C + verify 62/62；FINDING-0003 必装阻断面（残留判断型 MUST = later）；FINDING-0007 2.0 切片预检（完整 adapter 矩阵 = later）；FINDING-0018 冻结面随门槛关闭；五同步点 `2.0.0`；annotated tag + GitHub Release + tarball；删除迁移分支。
+
+**明确不做（仍成立）：** Gen1 `npm run check` 全绿作为发布前提；解冻 PLAN-0037（另一次人类 Active）；CONTROL-X / L3 / FINDING-0006 全量 oracle。

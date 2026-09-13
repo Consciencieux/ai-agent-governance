@@ -318,7 +318,7 @@ The Roadmap lists sequence and construction plans only; it does not copy Plan st
 | Item | Status |
 | --- | --- |
 | 8 Rebuild mandatory gates | [PLAN-0044](../archive/PLAN-0044-rebuild-mandatory-gates.md) Implemented / EXITED |
-| 2.0 skill-release | **Shipped** `v2.0.0` (checklist: [skill-release-2.0-checklist.md](../archive/skill-release-2.0-checklist.md) historical) |
+| 2.0 skill-release | **Shipped** `v2.0.0` (checklist merged into [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)) |
 
 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) is **Active** (thawed 2026-09-12). The extraction boundary still constrains outputs: do not promote this repo’s directories / CTRL ids / Phase scripts to L1.
 
@@ -337,7 +337,7 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 
 ### H0 done
 
-Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045; moved `mode-exit-proposal` / `skill-release-2.0-checklist` into `docs/plans/archive/`. The only active construction plan under `docs/plans/` is [PLAN-0037](../PLAN-0037-governance-skill-extraction.md).
+Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045. Plans stay single files (`PLAN-xxxx-*.md`). The only active construction plan under `docs/plans/` is [PLAN-0037](../PLAN-0037-governance-skill-extraction.md).
 
 ### H2 inputs (by sub-band; does not block shipped 2.0)
 
