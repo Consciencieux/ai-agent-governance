@@ -9,7 +9,14 @@
     "skillInternal": [
       "references/init-spec.json",
       "references/workflows/release.md",
-      "scripts/generate-governance.js"
+      "scripts/generate-governance.js",
+      "references/principles/entry.md",
+      "references/principles/instruction-architecture.md",
+      "references/principles/document-model.md",
+      "references/principles/metadata-policy.md",
+      "references/principles/capability-model.md",
+      "references/principles/decision-records.md",
+      "references/principles/migration-method.md"
     ],
     "undecided": {}
   },

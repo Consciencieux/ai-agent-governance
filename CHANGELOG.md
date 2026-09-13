@@ -8,6 +8,13 @@ All notable changes to this project will be documented here.
 
 - **Numbered docs are single files** — do not mint companion RESEARCH IDs or `working/` dumps for construction tables. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. RESEARCH-0014 (extraction draft) withdrawn. Docs shape allowlist outcome is tracked in FINDING-0030 (H2b open; implementation detail not carried in the Finding or README).
 
+- **PLAN-0037 Stage A/B reconciled** — L1/L2 authority is ADR-0020 only (no duplicate extraction files); cascade unwind recorded.
+- **PLAN-0037 Stage C/D complete (H1)** — portable principles pack at `references/principles/` (SKILL-INTERNAL; INIT does not install). Clean-target characterization `principles-extraction` 4/4. Plan Archived; X2 closed. Does not rewrite INSTALLED rule surface or publish a parallel skill package.
+
+### Fixed
+
+- **Git consent summary completeness (`SKILL.md`)** — the always-on summary again carries the mid-sequence failure and push-rejected stop-and-report constraints and states plan approval as intent alignment; `AGENTS.md` release-coverage wording aligned with the INSTALLED template. Authority unchanged: `references/policies/git.policy.md` is the sole semantic authority.
+
 ## [2.0.0] - 2026-09-12
 
 ### Changed

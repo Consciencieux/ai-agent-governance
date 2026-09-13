@@ -17,7 +17,7 @@ for which role a file has:
 | Role | Definition | How to verify | Examples |
 | --- | --- | --- | --- |
 | **INSTALLED** | INIT writes it into the governed project (copy / template / generated). The governed project's agents read it at runtime. | listed as a `source` in `init-spec.json` (see `check-role-completeness.js --gate` for current counts) | `references/policies/coding.policy.md` → `docs/rules/coding.md`; `scripts/check-secrets.js`; `agents-md.template.md` → `AGENTS.md` |
-| **SKILL-INTERNAL** | Ships inside the tarball (packaging copies `references/` + `scripts/` wholesale) and the SKILL EXECUTOR reads it — but INIT never installs it, so a governed project never has this file. | listed in `init-spec.json` `distribution.skillInternal` | exactly three: `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js` |
+| **SKILL-INTERNAL** | Ships inside the tarball (packaging copies `references/` + `scripts/` wholesale) and the SKILL EXECUTOR reads it — but INIT never installs it, so a governed project never has this file. | listed in `init-spec.json` `distribution.skillInternal` | `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`, and `references/principles/*` (portable methodology; PLAN-0037) |
 | **REPO-ONLY** | Never in the tarball at all. Governs work on THIS repository. | outside `references/`/`scripts/`/`SKILL.md`/`LICENSE` | `repo-tools/**`, `repo-workflows/**`, `AGENTS.md`, `docs/**`, `tests/**`, `package.json`, `.github/**`, `.gitattributes` |
 
 Roles are **human decisions, never inferred**: `copy`/`template`/`generated`, renames
@@ -112,6 +112,10 @@ ai-agent-governance/
 │   │   └── governance-files.policy.md   # protected files + .governance git-tracking policy
 │   ├── capabilities/               # Capability leaf authorities (Phase 5c; INIT → docs/rules/capabilities/)
 │   │   ├── discovery-ledger.md / change-hygiene.md / root-cause-repair.md / rule-capture.md
+│   ├── principles/                 # Portable methodology (PLAN-0037; SKILL-INTERNAL — not INIT-installed)
+│   │   ├── entry.md
+│   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
+│   │   ├── capability-model.md / decision-records.md / migration-method.md
 │   └── workflows/
 │       ├── ci.md               # CI templates (capability detection + degradation)
 │       └── release.md          # release preconditions + version consistency (governed projects)

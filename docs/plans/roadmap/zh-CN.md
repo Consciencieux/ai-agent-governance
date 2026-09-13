@@ -296,7 +296,7 @@ Roadmap 不独立定义或裁决 phase order。下表镜像 ADR-0018 的 **已�
 
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**迁移阶段已关闭：** Phase 0–8 EXITED；**`v2.0.0` 已发布**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**当前工作带 = ADR-0025 H1**（[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **Active**）。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已归档。
+**迁移阶段已关闭：** Phase 0–8 EXITED；**`v2.0.0` 已发布**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**当前工作带 = ADR-0025 H1 已完成 → H2 待开 Plan**（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived**）。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已归档。
 
 ## 2.0 已发布（索引）
 
@@ -322,7 +322,7 @@ Roadmap 只列顺序与施工计划，不复制 Plan 步骤 / Affected Files / �
 | 8 重建 mandatory gates | [PLAN-0044](../archive/PLAN-0044-rebuild-mandatory-gates.md) Implemented / EXITED |
 | 2.0 skill-release | **已发布** `v2.0.0`（清单已并入 [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)） |
 
-[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **已解冻为 Active**（2026-09-12）。过滤边界仍约束提炼产物：禁止把本仓目录 / CTRL 号 / Phase 剧本当 L1。
+[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived**（2026-09-13 Stage C/D 完成；`references/principles/` + 干净目标表征 4/4）。过滤边界仍约束后续 H2：禁止把本仓目录 / CTRL 号 / Phase 剧本当 L1。
 
 Phase 5 已 EXITED（索引自 PLAN-0035 / `call-topology.md`，非新裁决）：**5a** 显式映射 → **5b** Dispatcher → **5c** 按 Capability 投影（只改 `AuthorityRef`）。残留叶 / 可选 rename **不**重开 Phase 5。纪律：RESEARCH-0012 § 物理拓扑。
 
@@ -333,13 +333,13 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 | 带 | 一句话 | 施工 | 状态 |
 | --- | --- | --- | --- |
 | **H0** 文档与生命周期对账 | 入口/路线图/计划位置与 `v2.0.0` 对齐 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 计划已归档） |
-| **H1** 可复用治理 Skill 提炼 | L1/L2/L3 提取协议 → 干净目标验证；不迁脚本载体 | [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) | **Active** |
+| **H1** 可复用治理 Skill 提炼 | L1/L2/L3 提取协议 → 干净目标验证；不迁脚本载体 | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
 | **H2** 控制面补完 | 残留抽出 → 检查器/台账 → 机器 Control / CONTROL-X → 载荷调度与可移植性 | 另开 Plan；输入见下表 | 未开工 |
 | **H3** 运行时与科研 | L3、测量、注意力实验；不挡 2.1 | 无 Active Plan | 远 |
 
 ### H0 已完成
 
-已归档 PLAN-0035 / 0036 / 0038–0044 与 PLAN-0045。Plan 保持单文件（`PLAN-xxxx-*.md`）。`docs/plans/` 当前施工计划仅 [PLAN-0037](../PLAN-0037-governance-skill-extraction.md)。
+已归档 PLAN-0035 / 0036 / 0038–0044 与 PLAN-0045。Plan 保持单文件（`PLAN-xxxx-*.md`）。`docs/plans/` 当前无 Active 施工计划（H1 已归档；下一带为 H2，待另开 Plan）。
 
 ### H2 输入（按子带；不挡已发布的 2.0）
 
@@ -358,7 +358,7 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 
 - **本仓**：实验场 + 参考实现 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
 - **已发布 skill（2.0）**：可安装必装切片，不是 PLAN-0037 另开通用包。
-- **2.x 产品主线（H1）**：[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **Active** — 把已验证原则提炼为可复用 skill。
+- **2.x 产品主线（H1）**：[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — 可复用原则包已落地（`references/principles/`）。
 - **H1 纪律（索引 [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 9–13）：** 消费已有 inventory，不新建能力去向表；不删脚本；不把 repo router 写入 INSTALLED；SemVer 不是 Horizon 的别名。
 
 ## Guarantee Levels
@@ -600,7 +600,7 @@ v2.0.0 skill-release — **已发布**（2026-09-12）
         ↓
 H0     文档与生命周期对账 — EXITED / Archived（PLAN-0045）
         ↓
-H1     PLAN-0037 跨项目 portable 提炼 — **current / Active**
+H1     PLAN-0037 跨项目 portable 提炼 — **Archived**（2026-09-13）
         ↓
 H2     控制面补完（ADR-0024 later 机械债）
         ↓

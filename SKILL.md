@@ -15,6 +15,8 @@ description: >-
 
 > **薄入口（ADR-0022 / ADR-0024）：** 本文件是 always-on 路由层——身份、进入模式、优先级、权限摘要与指向 `references/` 的指针。详细政策 / 工作流 / 生命周期正文**不**作为 always-on 全文；按任务加载对应 `references/policies/*`、`references/workflows/*` 与生成子技能。禁止把 lifecycle 全文或全部子技能 checklist 塞进本入口。
 
+> **可复用原则包（PLAN-0037 / ADR-0020）：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树、CTRL 编号或 Phase/PLAN 剧本当 portable L1。
+
 ### 概念总览（Concept Map）
 
 ```
@@ -88,7 +90,7 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 | Dependency Change | confirmation required |
 | Git Commit / Git Push | 一次确认 per 变更集（权威：`references/policies/git.policy.md`） |
 
-**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)（ADR-0024）。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准 ≠ 提交授权；范围外操作各自独立确认；任务级表述不是写指令。冲突时以 `git.policy.md` 为准。
+**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)（ADR-0024）。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准不是提交授权；范围外操作各自独立确认；任务级表述不是写指令；任一步失败 → 停止并报告，不擅自重试或即兴修补；push 被拒（非快进）→ 停止并报告，不自行 pull/rebase。冲突时以 `git.policy.md` 为准。
 
 **发布序列（RELEASE）：** Release Proposal 在 Approval Gate 获批准后，该批准覆盖本次发布序列的全部写操作（见 `references/workflows/release.md`），不再逐步追问。前提：完整 Proposal 已展示且获明确批准、工作区与 HEAD 仍一致。中途任一校验失败 → 停止并重新走 plan。
 

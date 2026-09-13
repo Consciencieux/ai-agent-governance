@@ -13,7 +13,7 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 | 角色 | 定义 | 如何核验 | 例子 |
 | --- | --- | --- | --- |
 | **INSTALLED（安装到被治理项目）** | INIT 把它写进被治理项目（copy / template / generated）。该项目的 Agent 在运行期读它。 | 在 `init-spec.json` 中作为 `source` 出现（当前数量见 `check-role-completeness.js --gate` 输出） | `references/policies/coding.policy.md` → `docs/rules/coding.md`；`scripts/check-secrets.js`；`agents-md.template.md` → `AGENTS.md` |
-| **SKILL-INTERNAL（随 tarball 但不安装）** | 随 tarball 分发（打包整目录复制 `references/` + `scripts/`）且由 **skill 执行器**读取——但 INIT 从不安装它，所以被治理项目里没有这个文件。 | 在 `init-spec.json` 的 `distribution.skillInternal` 中列出 | 恰好三个：`references/init-spec.json`、`references/workflows/release.md`、`scripts/generate-governance.js` |
+| **SKILL-INTERNAL（随 tarball 但不安装）** | 随 tarball 分发（打包整目录复制 `references/` + `scripts/`）且由 **skill 执行器**读取——但 INIT 从不安装它，所以被治理项目里没有这个文件。 | 在 `init-spec.json` 的 `distribution.skillInternal` 中列出 | `references/init-spec.json`、`references/workflows/release.md`、`scripts/generate-governance.js`，以及 `references/principles/*`（可复用方法论；PLAN-0037） |
 | **REPO-ONLY（仅本仓库）** | 完全不进 tarball。约束在本仓库上的工作。 | 在 `references/`/`scripts/`/`SKILL.md`/`LICENSE` 之外 | `repo-tools/**`、`repo-workflows/**`、`AGENTS.md`、`docs/**`、`tests/**`、`package.json`、`.github/**`、`.gitattributes` |
 
 角色是**人的决定，绝不推断**：`copy`/`template`/`generated`、重命名（`lifecycle.policy.md` → `docs/rules/lifecycle.md`、`verify_governance.js` → `verify-governance.js`）、一对多输出（`githooks-template.md` → `pre-commit` + `commit-msg`）以及 内嵌静态内容工件（`type: "static"`），都编码了生成器无法从文件树恢复的契约决定。**可机械化的只是抓漏**：`repo-tools/check-role-completeness.js --gate` 会在出现未分类文件、同时属于两个集合、声明路径已不存在、或角色声明与 `package-skill.sh` 实际打包不符时失败。角色确实未决的文件放进 `distribution.undecided` 并记录待裁定问题，该门禁保持红色直到裁定。最初放进去的两项都已裁定完毕：`governance-files.policy.md` 现作为 `docs/rules/governance-files.md` 安装（那个 INSTALLED 的检查器在运行时读它），`feature-doc.template.md` 现作为 `docs/features/_TEMPLATE.md` 安装（SKILL.md 让 Agent 复制它）。当前 `undecided` 为空，各角色的实时数量以 `check-role-completeness.js --gate` 的输出为准。
@@ -85,6 +85,10 @@ ai-agent-governance/
 │   │   └── governance-files.policy.md   # 受保护文件 + .governance Git 跟踪策略
 │   ├── capabilities/               # Capability 叶权威（Phase 5c；INIT → docs/rules/capabilities/）
 │   │   ├── discovery-ledger.md / change-hygiene.md / root-cause-repair.md / rule-capture.md
+│   ├── principles/                 # 可复用方法论（PLAN-0037；SKILL-INTERNAL — INIT 不安装）
+│   │   ├── entry.md
+│   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
+│   │   ├── capability-model.md / decision-records.md / migration-method.md
 │   └── workflows/
 │       ├── ci.md               # CI 模板（能力检测 + 降级）
 │       └── release.md          # 发布前置检查 + 版本一致性（被治理项目）
