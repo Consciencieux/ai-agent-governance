@@ -18,9 +18,11 @@ All notable changes to this project will be documented here.
 
 - **PLAN-0055 Stage 4 (unified adjudicate)** — Fact-source test prune (~−37 cases; consent/package.json/secrets catalogs folded). Script Health: `check-doc-consistency` prefers `docs/product/` for prompt_sync + mdFiles, drops embedded parity spawn (`parity: "delegated"`); `check-layout-sync` prefers `docs/product/{lang}/architecture.md` and fixes basename extraction; architecture trees completed. Disposition v2 + Script Health ledger in PLAN-0055. consistency EXTRACT completed in Stage 3/4S.
 
-- **PLAN-0055 Stage 4Q (quarantine + rebuild)** — Moved ~512 Gen1 suite tests to `tests/archive/gen1-suites/` (not loaded). Rebuilt live ~50 tests from script git-birth + `necessity` short lists (`security` / `generator` / `payload` / `repo-gates` / gen2 `routing`+inventories). `check:must-ship` retargeted. Do not re-import archive wholesale.
+- **PLAN-0055 Stage 4Q (quarantine + rebuild)** — Moved ~512 Gen1 suite tests out of the live runner and rebuilt ~50 from script git-birth + `necessity` short lists. The Gen1 suite archive under `tests/archive/gen1-suites/` was later deleted (same rewrite-only doctrine as script monoliths).
 
-- **PLAN-0055 Stage 3 / 4S (script quarantine + EXTRACT)** — Same doctrine for `scripts/`: Gen1 monoliths snapshotted under `tests/archive/gen1-script-impl/`. Thin CLIs keep names — `check-doc-consistency.js` → `scripts/lib/doc-consistency/run.js` (INSTALLED); `generate-governance.js` → `scripts/lib/generate/run.js` (SKILL-INTERNAL). `verify_governance` / release / lock / sync snapshotted only (verify stays zero-dep). init-spec + inventory updated.
+- **PLAN-0055 Stage 3 / 4S (script quarantine + EXTRACT)** — Same doctrine for `scripts/`: thin CLIs keep names — `check-doc-consistency.js` → `scripts/lib/doc-consistency/run.js` (INSTALLED); `generate-governance.js` → `scripts/lib/generate/run.js` (SKILL-INTERNAL). Gen1 monolith snapshots under `tests/archive/gen1-script-impl/` were deleted after adjudication (rewrite from current obligations; do not resurrect). init-spec + inventory updated.
+
+- **PLAN-0055 Gen1 archives deleted** — Removed `tests/archive/gen1-script-impl/` and `tests/archive/gen1-suites/` (and empty `tests/archive/`). Git history is the only recovery path. Missing behavior/tests are rewritten against must_ship ∪ product_cli ∪ repo_gate, never re-imported from Gen1 accretion.
 
 ### Fixed
 

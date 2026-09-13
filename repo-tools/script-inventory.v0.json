@@ -480,7 +480,7 @@
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/doc-consistency/run.js; Gen1 monolith in tests/archive/gen1-script-impl/; necessity=product_cli",
+      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/doc-consistency/run.js; Gen1 monolith archive deleted (rewrite-only); necessity=product_cli",
       "necessity": "product_cli"
     },
     {
@@ -667,7 +667,7 @@
       "first_seen": "2026-08-21",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/generate/run.js; Gen1 monolith archived; necessity=must_ship",
+      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/generate/run.js; Gen1 monolith archive deleted (rewrite-only); necessity=must_ship",
       "necessity": "must_ship"
     },
     {

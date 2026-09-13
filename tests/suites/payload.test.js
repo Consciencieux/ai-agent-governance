@@ -1,5 +1,5 @@
 // PLAN-0055 Stage 4Q rebuild — INIT payload integrity (product_cli / must_ship adjacent).
-// Archive: tests/archive/gen1-suites/payload.test.js
+// Gen1 suite archive deleted; extend from current INIT/payload obligations only.
 "use strict";
 
 const { spawnSync } = require("child_process");

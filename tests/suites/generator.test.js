@@ -1,5 +1,5 @@
 // PLAN-0055 Stage 4Q rebuild — must_ship generate-governance.js (born 2026-08-21).
-// Archive: tests/archive/gen1-suites/generator.test.js
+// Gen1 suite archive deleted; extend from current INIT obligations only.
 "use strict";
 
 const { spawnSync } = require("child_process");

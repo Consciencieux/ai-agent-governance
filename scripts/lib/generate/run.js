@@ -1,6 +1,6 @@
 // EXTRACTED body of scripts/generate-governance.js (PLAN-0055 Stage 3).
 // SKILL-INTERNAL with scripts/generate-governance.js thin CLI.
-// Gen1 snapshot: tests/archive/gen1-script-impl/generate-governance.monolith.js
+// Gen1 monolith discarded (PLAN-0055); extend this module from current INIT obligations only.
 "use strict";
 
 // INIT Scripted Generator — deterministic, snapshot-testable governance scaffolding.

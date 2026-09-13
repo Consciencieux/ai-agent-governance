@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
-**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说。Stage 1R+3 完成；Stage 4 假绿修复 + 初剪完成；**Stage 4Q 封存重建完成**；**Stage 3/4S 脚本封存+EXTRACT 完成**（consistency + generate 薄 CLI；monolith → `tests/archive/gen1-script-impl/`）。0053/0054 Design。）
+**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说。Stage 1R+3 完成；Stage 4 假绿修复 + 初剪完成；**Stage 4Q live 测重建完成**（Gen1 suites 曾封存后**已删**）；**Stage 3/4S 脚本 EXTRACT 完成**；**脚本 + 测 monolith/suite 封存均已删除**（缺功能/缺测按现行义务重写，不回捞）。0053/0054 Design。）
 
 **归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](archive/PLAN-0041-script-inventory.md) 与 [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试保护。
 
@@ -198,7 +198,7 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | must_ship | 5 | 必装载体 |
 | product_cli | 19 | INIT/产品 CLI 及支撑 |
 | repo_gate | 16+ | 本仓最小门禁 |
-| debt | 0（纠偏后） | consistency/generate 已 EXTRACT；残留 = verify/release 厚实现（仅快照）与 `run.js` 可再切 cluster |
+| debt | 0（纠偏后） | consistency/generate 已 EXTRACT；monolith 封存已删；残留 = verify/release 厚活体（动则重写/正规 EXTRACT） |
 | retire→deleted | 2 | mutation-probe + changelog-narration |
 
 ## Stage 3 — Retire / EXTRACT
@@ -207,8 +207,8 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 - [x] **product_cli / must_ship monolith EXTRACT（Stage 3/4S）：**
   - `scripts/check-doc-consistency.js` → 薄 CLI + `scripts/lib/doc-consistency/run.js`（INIT copy）
   - `scripts/generate-governance.js` → 薄 CLI + `scripts/lib/generate/run.js`（skillInternal）
-  - Gen1 厚实现封存：`tests/archive/gen1-script-impl/*.monolith.js`（证据；不入门禁）
-  - `verify_governance` / `release-manager` / lock / sync：**仅快照**（verify 保持零依赖 INSTALLED）
+  - Gen1 厚实现曾封存于 `tests/archive/gen1-script-impl/` → **已删**（2026-09-13；git 历史可查；缺功能按现行义务重写，禁止回捞）
+  - `verify_governance` / `release-manager` / lock / sync：活体未拆；需要动时正规 EXTRACT/重写，不恢复 monolith
 - [x] 无独立 `necessity=debt` 文件残留
 - [ ] 可选后续：consistency `run.js` 按 cluster 再切；verify 若要 EXTRACT 须先改 INIT 闭包契约
 
@@ -220,10 +220,10 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 
 人类否决「只砍几十个不够」后执行：
 
-1. **封存：** 全部原 `tests/suites/*.test.js`（约 **512** `test()`）→ [`tests/archive/gen1-suites/`](../../tests/archive/gen1-suites/)（含 README：脚本 git 出生表 + 重建规则）。**不**由 `tests/run-tests.js` 加载。
+1. **曾封存后已删：** 全部原 `tests/suites/*.test.js`（约 **512** `test()`）曾入 `tests/archive/gen1-suites/` → **已删**（2026-09-13；与脚本 monolith 同裁决；git 历史可查）。
 2. **重建判据：** `necessity` 短名单（must_ship ∪ product_cli ∪ repo_gate）+ **脚本**首次引入 commit（非测试文件出生）+ `testing.policy` 负例活性。
 3. **Live 面（≈50）：** `security` · `generator` · `payload` · `repo-gates` · `routing` · `script-inventory` · `oracle-inventory`。`check:must-ship` 已改挂这些 suite。
-4. **禁止**从 archive 整夹回搬；只允许单条义务最短负例上浮。
+4. **禁止**从 git 历史整夹回灌 Gen1 suites；只允许按现行义务新写最短负例。
 
 ### 4.0 事实源学说
 
@@ -268,7 +268,7 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | R4 | inventory | summary 漂移 | **resolved** | total 跟 entries |
 | R5 | finding | 零 retire 错觉 | **resolved** | 已删 2；debt 待拆 |
 | R6 | absorb | dogfood INSTALLED | **resolved** | Stage 2 |
-| R7 | debt | consistency monolith EXTRACT | **resolved** | Stage 3/4S：薄 CLI + lib；monolith → `tests/archive/gen1-script-impl/` |
+| R7 | debt | consistency monolith EXTRACT | **resolved** | Stage 3/4S：薄 CLI + lib；monolith 封存已删（不回捞） |
 | R8 | defect | 假绿路径（prompt_sync / layout-sync；parity 双跑） | **resolved** | Stage 4 fix_path + drop_dup_invoke |
 
 ```text

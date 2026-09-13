@@ -1,6 +1,6 @@
 // EXTRACTED body of scripts/check-doc-consistency.js (PLAN-0055 Stage 3 / R7).
 // INSTALLED via init-spec; thin CLI: scripts/check-doc-consistency.js
-// Gen1 snapshot: tests/archive/gen1-script-impl/check-doc-consistency.monolith.js
+// Gen1 monolith discarded (PLAN-0055); extend this module from current gate obligations only.
 "use strict";
 
 // PAYLOAD SCRIPT — copied into governed projects (references/init-spec.json).

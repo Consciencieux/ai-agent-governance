@@ -26,7 +26,7 @@ function test(name, fn) {
   tests.push({ name, fn });
 }
 
-// PLAN-0055 Stage 4Q: Gen1 suites quarantined under tests/archive/gen1-suites/.
+// PLAN-0055 Stage 4Q: Gen1 suite archive deleted — live suites are the contract; do not resurrect Gen1 accretion.
 // Live set = fact-source rebuild (must_ship / product_cli / repo_gate + gen2 inventory/routing).
 const SUITES = [
   "./suites/security.test.js",
