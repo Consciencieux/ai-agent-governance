@@ -60,7 +60,7 @@ docs/plans/
 
 ## Agent 硬禁止（已付学费 · 本目录）
 
-权威：[FINDING-0030](../findings/FINDING-0030-artifact-placement-routing-gap.md) · [docs/README.md](../README.md) § 已付学费。本夹只强调 Plan 侧，**禁止再发明修复路径**。
+权威：[docs/README.md](../README.md) § 已付学费（事件证据：[FINDING-0030](../findings/FINDING-0030-artifact-placement-routing-gap.md)）。本夹只强调 Plan 侧，**禁止再发明修复路径**。
 
 ```text
 禁止  docs/plans/working/

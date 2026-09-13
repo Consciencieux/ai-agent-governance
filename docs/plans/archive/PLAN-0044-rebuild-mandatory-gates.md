@@ -9,7 +9,7 @@ target: both
 
 > （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
-> **Status: Implemented**（P0–P4 完成。**Phase 8 checkpoint EXITED**。前置：Phase 7 EXITED · [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md) Accepted。Architecture checkpoint ≠ Release；**Phase 8 EXIT ≠ 2.0 skill-release**；PLAN-0037 仍冻结。）
+> 实施记录：P0–P4 完成。**Phase 8 checkpoint EXITED**。前置：Phase 7 EXITED · [ADR-0024](../../design-decisions/ADR-0024-gen2-product-freeze.md) Accepted。Architecture checkpoint ≠ Release；**Phase 8 EXIT ≠ 2.0 skill-release**；PLAN-0037 仍冻结。
 
 在新控制面约束下，**只把 ADR-0024 必装机械控制**的阻断权威交回 CI / release。动机权威：ADR-0018 决策 1 Phase 8 · ADR-0014 Migration Mode 退出前提 · ADR-0024 发布门槛「阻断」条。
 

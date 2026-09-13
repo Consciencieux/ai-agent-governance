@@ -9,7 +9,7 @@ target: both
 
 > （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
-> **Status: Implemented**（P0–P2 完成；P3 可选未做 rename。前置：PLAN-0038 / PLAN-0039 Implemented。边冻结；Slice B 横切已迁出 lifecycle。**Phase 5 checkpoint EXITED**。）
+> 实施记录：P0–P2 完成；P3 可选未做 rename。前置：PLAN-0038 / PLAN-0039 Implemented。边冻结；Slice B 横切已迁出 lifecycle。**Phase 5 checkpoint EXITED**。
 
 纪律权威：`repo-tools/call-topology.md` § 物理拓扑。  
 图权威：人表 `task-capability-map.md` · 机表 `graph.v0.json` · 解析 `repo-tools/lib/routing.js`。

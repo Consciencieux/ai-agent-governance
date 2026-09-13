@@ -165,7 +165,7 @@ Superseded by: Research-007
 
 ## Agent 硬禁止（已付学费 · 本目录）
 
-权威：[FINDING-0030](../findings/FINDING-0030-artifact-placement-routing-gap.md) · [docs/README.md](../README.md)。
+权威：[docs/README.md](../README.md)（事件证据：[FINDING-0030](../findings/FINDING-0030-artifact-placement-routing-gap.md)）。
 
 ```text
 一个 RESEARCH-xxxx = 一个文件

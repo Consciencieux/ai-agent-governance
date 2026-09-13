@@ -9,7 +9,7 @@ target: both
 
 > （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
-> **Status: Implemented**（Phase 5a EXITED。调用拓扑 + 显式 map + 表征套件 + AGENTS 薄指针已落地。Dispatcher / 物理投影已由 PLAN-0039 / PLAN-0040 完成。**Phase 5 checkpoint EXITED**（见 PLAN-0040 § Phase 5 Exit Criteria）。**未** Active PLAN-0037。Architecture checkpoint ≠ Release；归档另按 ADR-0016。）
+> 实施记录：Phase 5a EXITED。调用拓扑 + 显式 map + 表征套件 + AGENTS 薄指针已落地。Dispatcher / 物理投影已由 PLAN-0039 / PLAN-0040 完成。**Phase 5 checkpoint EXITED**（见 PLAN-0040 § Phase 5 Exit Criteria）。**未** Active PLAN-0037。Architecture checkpoint ≠ Release；归档另按 ADR-0016。
 
 把 RESEARCH-0012 的 Task / Capability / Applicability / Routing 工作假设落成 **人工可维护的显式映射 + 表征验证**，使薄入口能消费稳定 read-set。
 

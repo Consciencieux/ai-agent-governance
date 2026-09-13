@@ -9,7 +9,7 @@ target: both
 
 > （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
-> **Status: Implemented**（P0–P4 完成。**Phase 7 checkpoint EXITED**。前置：Phase 6 EXITED · ADR-0024 Accepted。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。）
+> 实施记录：P0–P4 完成。**Phase 7 checkpoint EXITED**。前置：Phase 6 EXITED · ADR-0024 Accepted。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。
 
 把「一个 review-manager 扛全部审查」拆成三类，并让每类有可加载权威与验收面。动机权威：ADR-0018 决策 5 · FINDING-0014。产品边界权威：**必须消费** ADR-0024。
 

@@ -9,7 +9,7 @@ target: repo-infra
 
 > （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
-> **Status: Implemented**（P0–P4 完成。**Phase 6 checkpoint EXITED**。前置：Phase 5 EXITED。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。）
+> 实施记录：P0–P4 完成。**Phase 6 checkpoint EXITED**。前置：Phase 5 EXITED。Architecture checkpoint ≠ Release；PLAN-0037 仍冻结。
 
 把成熟度从「N/N tests passed」改成可点名的 **Rule protection / Negative oracle coverage**。
 

@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0037：可复用治理 Skill 提炼（Governance Skill Extraction）
 
-> **Status: Active**（2026-09-12 人类解冻：「归档，解冻」。Gate 1–3 已满足；[ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) H1 现为当前产品主线。过滤层约束仍生效：禁止把本仓 `docs/`、CTRL 编号、Phase 剧本当 portable invariant。按提取协议 Stage A→D 施工，禁止一次抽象出 skill。**禁止 Archived**，直至 Stage D 验证通过并 exit review。）
+**解冻记录（2026-09-12）**：人类解冻（「归档，解冻」）。Gate 1–3 已满足；[ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) H1 现为当前产品主线。过滤层约束仍生效：禁止把本仓 `docs/`、CTRL 编号、Phase 剧本当 portable invariant。按提取协议 Stage A→D 施工，禁止一次抽象出 skill。**禁止 Archived**，直至 Stage D 验证通过并 exit review。
 
 将 `ai-agent-governance` 中**已验证**的 Gen2 治理原则提炼为可复用 Agent Governance Skill，并显式划分 **L1 invariants / L2 patterns / L3 project customization**。权威边界见 ADR-0020（2026-09-10 修正）。
 

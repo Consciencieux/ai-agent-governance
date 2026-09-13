@@ -9,7 +9,7 @@ target: repo
 
 > （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
-> **Status: Implemented**（L0：机读台账 + 表征。不做目录隔离、不删脚本。）
+> 实施记录（L0）：机读台账 + 表征。不做目录隔离、不删脚本。
 
 ## 目标
 

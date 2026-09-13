@@ -42,7 +42,7 @@ docs/
 7. 机读 JSON / 路由图不是 Research：放 `repo-tools/`，由编号对象引用
 ```
 
-**对象创建（creation gate）**——类型存在不等于允许新建该类型。只有同时满足「跨 session / 需要执行 / 需要 owner / 需要验证闭环 / 需要生命周期」才创建 **PLAN**。一次性 proposal、清单、被否决方向不是 Plan。细则：[FINDING-0030](findings/FINDING-0030-artifact-placement-routing-gap.md) · `docs/plans/README.md`。
+**对象创建（creation gate）**——类型存在不等于允许新建该类型。只有同时满足「跨 session / 需要执行 / 需要 owner / 需要验证闭环 / 需要生命周期」才创建 **PLAN**。一次性 proposal、清单、被否决方向不是 Plan。细则：`docs/plans/README.md` § 规则 10（事件证据：[FINDING-0030](findings/FINDING-0030-artifact-placement-routing-gap.md)）。
 
 ## 类型目录封闭（Closed type tree）
 
@@ -55,7 +55,7 @@ docs/
 新增类型目录 → 先 ADR，再改本页允许的类型树，不是 Agent 当场发明
 ```
 
-**一个编号 = 一个文件。** 机读图 / 台账 JSON 不是 Research，放 `repo-tools/`，由编号对象引用。形状 allowlist 与 md/门禁分层 → [FINDING-0030](findings/FINDING-0030-artifact-placement-routing-gap.md) § 修改方向。
+**一个编号 = 一个文件。** 机读图 / 台账 JSON 不是 Research，放 `repo-tools/`，由编号对象引用。形状 allowlist（H2b，未落地）的 outcome 见 [FINDING-0030](findings/FINDING-0030-artifact-placement-routing-gap.md) § 关闭条件。
 
 ## 文档职责与信息密度（Document Scope）
 

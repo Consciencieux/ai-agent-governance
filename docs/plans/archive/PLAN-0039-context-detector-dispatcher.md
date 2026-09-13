@@ -9,7 +9,7 @@ target: repo-infra
 
 > （已归档。Phase checkpoint EXITED；按 ADR-0016 于 lifecycle closure 移入 archive。Plan archive ≠ Release。）
 
-> **Status: Implemented**（Phase 5b EXITED。共享 `resolve` + Context Detector + `repo-tools/route-task.js` 已落地；消费 PLAN-0038 同一张图。物理投影已由 PLAN-0040 完成。**Phase 5 checkpoint EXITED**（见 PLAN-0040 § Phase 5 Exit Criteria）。**未**另造适用关系；**未** LLM 自动路由；**未** Active PLAN-0037。Architecture checkpoint ≠ Release。）
+> 实施记录：Phase 5b EXITED。共享 `resolve` + Context Detector + `repo-tools/route-task.js` 已落地；消费 PLAN-0038 同一张图。物理投影已由 PLAN-0040 完成。**Phase 5 checkpoint EXITED**（见 PLAN-0040 § Phase 5 Exit Criteria）。**未**另造适用关系；**未** LLM 自动路由；**未** Active PLAN-0037。Architecture checkpoint ≠ Release。
 
 把 5a 的确定性解析（`call-topology.md` L4）做成 **repo-only 可执行入口**：Context Detector 归类任务，Dispatcher 输出 `read_set` / `run_set` / `defer_set` / `unmatched`。
 

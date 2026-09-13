@@ -146,7 +146,7 @@ resolved_in: gen1               # Resolved 时填写（未解决省略）
 
 ## Agent 硬禁止（已付学费 · 本目录）
 
-权威：[FINDING-0030](FINDING-0030-artifact-placement-routing-gap.md) · [docs/README.md](../README.md) § 已付学费。
+权威：[docs/README.md](../README.md) § 已付学费（事件证据：[FINDING-0030](FINDING-0030-artifact-placement-routing-gap.md)）。
 
 ```text
 禁止  findings/active/  findings/archive/  findings/working/
