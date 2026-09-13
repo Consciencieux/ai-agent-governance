@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Changed
+
+- Skill-release sync-point docs: sentinel lives in `scripts/lib/generate/run.js`; Phase 1 no longer points at a removed roadmap Deferred release-safety section.
+
 ## [2.1.1] - 2026-09-14
 
 ### Changed

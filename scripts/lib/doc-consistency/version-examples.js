@@ -76,11 +76,12 @@ function runVersionExamples(ctx) {
     }
     // The two generator sync points live OUTSIDE .md files, which mdFiles() cannot see:
     // `references/init-spec.json` `inputs.governance_version.default` (stamped into every
-    // new governed project's manifest) and `scripts/generate-governance.js`'s fallback
-    // sentinel. Both are skill-release.md Phase 4 step 2 sync points — a release that
-    // bumps them silently changes the version stamped into future INITs. Gate class:
-    // a version sync point must not drift. No-op when either file is absent (a governed
-    // project does not have references/init-spec.json — it is SKILL-INTERNAL).
+    // new governed project's manifest) and `scripts/lib/generate/run.js`'s fallback
+    // sentinel (PLAN-0055 extracted the body out of the thin CLI). Both are
+    // skill-release.md Phase 4 step 2 sync points — a release that bumps them silently
+    // changes the version stamped into future INITs. Gate class: a version sync point
+    // must not drift. No-op when either file is absent (a governed project does not
+    // have references/init-spec.json — it is SKILL-INTERNAL).
     const specPath = path.join(ROOT, "references", "init-spec.json");
     if (fs.existsSync(specPath)) {
       const spec = readFile(specPath);
@@ -93,20 +94,17 @@ function runVersionExamples(ctx) {
         }
       }
     }
-    const genPath = path.join(ROOT, "scripts", "generate-governance.js");
+    const genPath = path.join(ROOT, "scripts", "lib", "generate", "run.js");
     if (fs.existsSync(genPath)) {
       const gen = readFile(genPath);
       if (gen) {
-        // The sentinel is the else-branch of a ternary (`? fallback : "X.Y.Z"`), not a
-        // `fallback:` property. The old pattern (`fallback\s*:\s*"..."`) could never match
-        // it, so this sync point's "mechanical backstop" was vacuous from the day it was
-        // added — v0.15.0 found it while the release itself was in flight (audit
-        // 2026-09-07). Anchor on the ternary that returns it, so an unrelated `: "1.2.3"`
-        // elsewhere in the file cannot be mistaken for the sentinel.
+        // Sentinel lives in defaultGovernanceVersion()'s ternary else-branch
+        // (`? fallback : "X.Y.Z"`). Thin CLI scripts/generate-governance.js has no
+        // literal — scanning it is vacuous after PLAN-0055. Anchor on the ternary.
         const sv = /\?\s*fallback\s*:\s*"(\d+\.\d+\.\d+)"|fallback\s*:\s*"(\d+\.\d+\.\d+)"/.exec(gen);
         const svVal = sv && (sv[1] || sv[2]);
         if (svVal && svVal !== version) {
-          const item = `scripts/generate-governance.js: fallback sentinel ${svVal} != ${version} (release sync point — last-resort default when package.json is unavailable)`;
+          const item = `scripts/lib/generate/run.js: fallback sentinel ${svVal} != ${version} (release sync point — last-resort default when package.json is unavailable)`;
           issues.version_examples.push(item);
           if (anyGate) gateIssues.push({ kind: "version_examples", item });
         }

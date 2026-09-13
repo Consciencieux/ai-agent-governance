@@ -14,7 +14,7 @@
 | `gates.must_ship` | `npm run check:must-ship` 退出码 0（ADR-0024 必装机械阻断） | ❌ 停止 |
 | `tests.required` | `npm test` 退出码 0 | ❌ 停止 |
 | `changelog.required` | CHANGELOG 已记录本次变更 | ⚠️ Blocked |
-| `version.manifest_match_tag` | `package.json` / CHANGELOG / `SKILL.md` frontmatter `version` / `references/init-spec.json` `governance_version.default` / `scripts/generate-governance.js` 哨兵与 tag 一致（无 `.governance/manifest.json`）；`check-doc-consistency.js --gate` 的 `version_examples` 簇机械验证 | ❌ 停止 |
+| `version.manifest_match_tag` | `package.json` / CHANGELOG / `SKILL.md` frontmatter `version` / `references/init-spec.json` `governance_version.default` / `scripts/lib/generate/run.js` 兜底哨兵与 tag 一致（无 `.governance/manifest.json`）；`check-doc-consistency.js --gate` 的 `version_examples` 簇机械验证 | ❌ 停止 |
 | `release.tag_required` | 目标 tag 尚不存在 | ⚠️ Blocked |
 | `release.proposal_approved` | Release Proposal 已生成且开发者已明确批准 | ⚠️ Blocked |
 | `release.review_satisfied` | 高风险 Proposal 的 `reviewStatus` 为 `completed` 或 `explicitly-approved` | ❌ 停止 |
@@ -32,7 +32,7 @@
 - `CHANGELOG.md` 顶部版本节（`[X.Y.Z]`）
 - `SKILL.md` frontmatter `version`
 - `references/init-spec.json` 的 `inputs.governance_version.default`（新 INIT 给被治理项目盖章的版本）
-- `scripts/generate-governance.js` 的兜底哨兵（package.json 不可用时的最后默认值）
+- `scripts/lib/generate/run.js` 的兜底哨兵（package.json 不可用时的最后默认值；薄 CLI `scripts/generate-governance.js` 无此字面量）
 
 + Git tag `v<version>`
 
@@ -45,7 +45,7 @@ AI 分析当前仓库状态：
 - 当前 Git tag / 当前版本号（`git tag -l`、`package.json`）
 - `git log` 与 `git diff`（自上次发布以来的变更）
 - 文件变化、API/interface 变化、用户可见功能变化
-- **已裁定延后的发布安全事项**：读 `docs/plans/roadmap/{en,zh-CN,zh-TW}.md` 的「Deferred release-safety decisions」小节。这些条目记录了「门禁绿灯」实际证明范围之外的已知缺口——发布前必须知道自己在依赖什么、不在依赖什么。它们不阻断发布，但若某条的触发条件已经成立（例如本次发布要求证明评审者身份），应先停下另开 TASK 计划。
+- **已裁定延后的发布安全事项**：本仓 roadmap 已瘦身为索引（ADR-0025），**不再**维护「Deferred release-safety decisions」小节。发布前改为查阅仍 Confirmed、且触及「门禁绿灯未覆盖之证明义务」的 Findings，以及 ADR-0024 `later` 中与本 tag 相关的项。它们不阻断发布；若触发条件已成立，先停下另开 TASK。历史条目只在归档 Plan 正文，不在 roadmap 复述。
 
 运行只读分析工具生成 Proposal：
 
@@ -93,7 +93,7 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
    - 更新 CHANGELOG：`[Unreleased]` → `[X.Y.Z]`（**只改名，不在此步重建空节**——重建见下条红线）
    - 更新 `SKILL.md` frontmatter 的 `version`
    - 更新 `references/init-spec.json` 的 `inputs.governance_version.default`
-   - 更新 `scripts/generate-governance.js` 的兜底哨兵（与上一条共同决定新 INIT 给被治理项目打上的版本号）
+   - 更新 `scripts/lib/generate/run.js` 的兜底哨兵（与上一条共同决定新 INIT 给被治理项目打上的版本号；勿改薄 CLI）
 
    **另外必须更新文档里的版本示例值**（不是同步点，但同一个 `version_examples` 簇会 fail-closed 拦下它们）：任何 `.md` 里形如 `"version": "X.Y.Z"` / `"governance_version": "X.Y.Z"` 的示例——目前分布在 `SKILL.md` 与被治理项目发布流程文档的 manifest 示例块中。它们不是发布状态的一部分，但门禁不区分「示例」与「事实」，一处未改就红。判定方式不靠记忆：`node scripts/check-doc-consistency.js --gate` 会逐条列出 `<file>:<旧版本> != <新版本>`。
 

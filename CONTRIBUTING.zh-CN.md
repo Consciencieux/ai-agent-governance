@@ -39,7 +39,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 
 1. 更新 `CHANGELOG.md`（分类：纯文档 → 不记；修复 → Fixed；新能力 → Added；破坏性 → Changed）
 2. 升 `package.json` 版本（SemVer：破坏性 → MAJOR，新能力 → MINOR，修复 → PATCH）
-3. 保持版本一致：package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` 默认值 · `scripts/generate-governance.js` 哨兵值 · tag
+3. 保持版本一致：package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` 默认值 · `scripts/lib/generate/run.js` 哨兵值 · tag
 4. push 前必须 `npm test`；合入 `main` 前 `npm run check:must-ship` 必须绿
 5. 仅通过 `release-manager` 流程发布（前置检查含 `gates.must_ship` → 版本同步 → 校验 → tag → push → GitHub Release）
 
