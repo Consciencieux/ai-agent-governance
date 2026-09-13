@@ -1,8 +1,9 @@
 ---
 id: FINDING-0011
-status: Confirmed
+status: Resolved
 type: defect
 observed_in: gen1
+resolved_in: gen2
 ---
 
 # FINDING-0011：check-doc-consistency 的 adr_statuses 启发式把正文里的 [Unreleased] 节名误报为「ADR 状态异常」
@@ -49,13 +50,14 @@ ADR 状态字段为 `状态：Accepted`，无异常。误报来自正文中的�
 
 ## 解决情况
 
-（待填。）
+**Resolved（2026-09-13 · PLAN-0048 H2b Stage 1）。** ADR 状态解析抽出为 `scripts/lib/adr-status.js`，并接入 `scripts/check-doc-consistency.js`；判定限定在状态字段，不再全文扫描正文里的 `[Unreleased]` 节名。负向回归在 `tests/suites/h2b-checkers.test.js`。
 
 ## 关联
 
 - ADR-0012
 - GitHub Issue #6
+- PLAN-0048（H2b）
 
 ## 回归保护
 
-一个负向 fixture：ADR 正文包含 `[Unreleased]` 字面引用但状态为 Accepted 时，adr_statuses 不得报 Unreleased。修复后由 `consistency.test.js` 覆盖。
+`tests/suites/h2b-checkers.test.js`：ADR 正文含 `[Unreleased]` 字面引用且状态为 Accepted 时，adr_statuses 不得报 Unreleased。

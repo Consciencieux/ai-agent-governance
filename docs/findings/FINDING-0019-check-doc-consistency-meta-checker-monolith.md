@@ -1,8 +1,9 @@
 ---
 id: FINDING-0019
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen1
+resolved_in: gen2
 ---
 
 # FINDING-0019：check-doc-consistency.js 正在形成巨型元检查器
@@ -42,12 +43,13 @@ observed_in: gen1
 
 ## 解决情况
 
-（待填。纳入 2.0 重构的 Rule Registry / Dispatcher 范围。）
+**Resolved（2026-09-13 · PLAN-0048 H2b Stage 2）。** 增长轴已切断：`plan-status` / `adr-status` 抽出为 `scripts/lib/plan-status.js` 与 `scripts/lib/adr-status.js`；docs-shape / discovery-ledger / metadata-projection 以独立 `repo-tools/` 检查器落地，不再往 `check-doc-consistency.js` 堆新事故 cluster。`tests/suites/h2b-checkers.test.js` 禁止把 Unreleased 全文扫描重新内联进 consistency 单文件。完整 Rule Registry 仍可由 H2c 承接，不挡本 Finding 关闭。
 
 ## 关联
 
 - GitHub Issue #7
+- PLAN-0048（H2b）
 
 ## 回归保护
 
-负向测试：新增一个检查时，若它被判定可归入现有 primitive 却仍追加 cluster，由 review 的 L1/L2 分类（FINDING-0014）捕获；registry 落地后由「机制复用率」指标观测。
+`tests/suites/h2b-checkers.test.js`：禁止 re-inlined Unreleased 全文扫描；新检查默认走独立脚本/primitive，不追加进 consistency monolith。

@@ -1,8 +1,9 @@
 ---
 id: FINDING-0030
-status: Confirmed
+status: Resolved
 type: mechanism-gap
 observed_in: gen2
+resolved_in: gen2
 ---
 
 # FINDING-0030：产物路由缺口（路径乱放 + Plan 吸收知识）
@@ -45,11 +46,11 @@ Agent 在 repair 时按主题词 mkdir / 改名 / 新建第二份编号文件，
 
 ## 解决情况
 
-（部分 · 2026-09-13）1–3 路径已收回；RESEARCH-0014 已删。4 已写入 README。5（H2b）仍 open。
+**Resolved（2026-09-13 · PLAN-0048 H2b Stage 3）。** 关闭条件 1–4 此前已满足（路径收回、无 `working/` / 同号第二份、`repo-tools/` 无施工 md、日常规则在 `docs/README.md`）。§5 现已关闭：`repo-tools/check-docs-shape.js` + `repo-tools/docs-shape-allowlist.v0.json` fail-closed（目录 ∈ 封闭树、文件名模式、ID 唯一）；不做内容分类门禁。
 
 ## 回归保护
 
-（待 H2b）形状违规应被 CI 阻断，而非依赖 Agent 读 README。
+`repo-tools/check-docs-shape.js --gate`（挂入 `npm run check` / `check:docs`）；形状违规机械红，不依赖 Agent 读 README。
 
 ## 证据
 

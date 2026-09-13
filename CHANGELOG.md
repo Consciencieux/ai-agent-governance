@@ -6,13 +6,15 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0048 H2b checkers and ledgers (Archived)** — EXTRACTED `scripts/lib/plan-status.js` / `scripts/lib/adr-status.js` (wired into `scripts/check-doc-consistency.js`); standalone `repo-tools/check-roadmap-sync.js`, `check-discovery-ledger.js` (L2), `check-metadata-projection.js` (navigation-only ADR README), `check-docs-shape.js` + `docs-shape-allowlist.v0.json`. FINDING-0011 / 0019 / 0021 / 0022 / 0024 / 0030 Resolved. Gen1 `npm run check` stays observational; `check:must-ship` remains sole CI block. Next = H2c (awaiting Design).
+
 - **PLAN-0047 H2a residue extract (Archived)** — leftover Capability AuthorityRefs retargeted (5c bodies restored onto instruction-surface cards; no Gen1 directory resplit). `state.json` progress field promoted to `facet` (dual-write legacy `phase`). Script inventory dogfood of INSTALLED CLIs declared `dual_profile` + gate. FINDING-0028 / FINDING-0029 Resolved. `retire` remains empty.
 
 - **PLAN-0046 Archived (H2-front)** — Stage 3 SKILL thinning + Stage 4 Y5 clean-target INIT leaf closure + Y6 trilingual `architecture.md` now-tense (SKILL = thin always-on entry + capability routing). Discovery Ledger Open=0. Plan moved to `docs/plans/archive/`. Next H2 step = H2a (ADR-0025 decision 14). Coverage map remains `repo-tools/instruction-surface-leaves.v0.json` (not a disposition ledger).
 
 - **ADR-0025 H2 execution order** — H2-0 ledger now-tense calibration → PLAN-0046 (H2-front) → H2a–d. Roadmap indexes the order; authority stays in the ADR. PLAN-0046 re-homed to H2-front (not H2d). RESEARCH-0004/0005/0006/0009 now-tense only.
 
-- **Numbered docs are single files** — do not mint companion RESEARCH IDs or `working/` dumps for construction tables. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. RESEARCH-0014 (extraction draft) withdrawn. Docs shape allowlist outcome is tracked in FINDING-0030 (H2b open; implementation detail not carried in the Finding or README).
+- **Numbered docs are single files** — do not mint companion RESEARCH IDs or `working/` dumps for construction tables. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. RESEARCH-0014 (extraction draft) withdrawn. Docs shape allowlist landed under PLAN-0048 (`repo-tools/check-docs-shape.js`); FINDING-0030 Resolved.
 
 - **PLAN-0037 Stage A/B reconciled** — L1/L2 authority is ADR-0020 only (no duplicate extraction files); cascade unwind recorded.
 

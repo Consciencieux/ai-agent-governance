@@ -1,144 +1,129 @@
 #!/usr/bin/env node
-// Roadmap Sync Check — the roadmap is an INDEX; the design plans are the fact source.
-// This check verifies the index did not drift from the plans it indexes.
+// Roadmap Sync Check — roadmap is an INDEX; construction plans are the fact source.
+// PLAN-0048 / FINDING-0021: scan the live Gen2 tree (docs/plans/roadmap/{en,zh-CN,zh-TW}.md).
 //
-// Why this exists: `plan-delivery-anchors` was implemented and the roadmap never learned
-// about it. The rule ("re-baseline the roadmap at each release") existed and was followed
-// as written — it just never covered plan-lifecycle events between releases, and nothing
-// mechanical noticed. Same failure shape as the release sync points that were documented
-// in five places and verified in two.
+// REPO-ONLY. Governed projects without a roadmap → not applicable.
 //
-// REPO-ONLY: lives under repo-tools/, which the packaging step cannot reach. A governed
-// project has no roadmap (its index is the milestone list in docs/plans/DEVELOPMENT_PLAN.md,
-// governed by lifecycle policy text, deliberately NOT by an installed gate — see the
-// index/fact-source ADR).
+// Mechanically decidable relations (Gen2 shape):
+//   1. Every live docs/plans/PLAN-*.md (Design|Active|Implemented|Completed) must be
+//      linked from each present roadmap language file.
+//   2. An archived PLAN-*.md under docs/plans/archive/ must not be labeled **Design** or
+//      **Active** in a roadmap cell that links it (must say Archived, or not claim live).
 //
-// Three mechanically decidable relations, nothing more:
-//   1. implemented plan  -> must appear in the roadmap Done section
-//   2. archived plan     -> must NOT appear in an active horizon (Near-term / Mid-term)
-//   3. active design plan-> if it appears at all, the entry must link the plan file
-//                           (an entry may legitimately be absent: not everything is planned
-//                            on the roadmap, and inventing entries is not this gate's job)
-//
-// Usage:
-//   node repo-tools/check-roadmap-sync.js [--json] [--gate]
-// Exit 0: in sync (or advisory mode). Exit 1: drift found, only with --gate.
+// Usage: node repo-tools/check-roadmap-sync.js [--json] [--gate]
+
+"use strict";
 
 const fs = require("fs");
 const path = require("path");
+const { classifyPlanStatus, isConstructionPlanMarkdown } = require("../scripts/lib/plan-status.js");
 
 const ROOT = process.cwd();
-const ROADMAP = path.join(ROOT, "docs", "en", "roadmap.md");
-const PLAN_DIRS = ["docs/en/plans"];
-const ARCHIVE_DIR = "docs/archive";
+const ROADMAPS = [
+  "docs/plans/roadmap/en.md",
+  "docs/plans/roadmap/zh-CN.md",
+  "docs/plans/roadmap/zh-TW.md",
+];
+const LIVE_PLANS_DIR = "docs/plans";
+const ARCHIVE_DIR = "docs/plans/archive";
 
 function readFileSafe(rel) {
-  try { return fs.readFileSync(path.join(ROOT, rel), "utf8"); } catch { return null; }
-}
-
-// Canonical status keywords (same vocabulary the plan-status cluster uses). The status
-// LINE must be the canonical blockquote-bold form used in the payload classifier —
-// `> **Status: ...**` — within the first 12 lines; a bare `Status: ...` elsewhere was
-// accepted here but read as "unknown" by check-doc-consistency, and vice versa (an
-// audit found the four classifiers disagreeing on the same file).
-function planStatus(content) {
-  const head = content.split(/\r?\n/).slice(0, 12).join("\n");
-  const line = head.match(/^>\s*\*\*\s*(?:Status|状态|狀態)\s*[:：]\s*([^*\n]+)/im);
-  if (!line) return "unknown";
-  const value = line[1].trim();
-  // Order matters: "design plan, not implemented" CONTAINS "implemented". Checking the
-  // negative/design form first is what keeps a design plan from being read as delivered
-  // (this classifier reported exactly that bug on its first run).
-  if (/^(?:archived|已归档|已歸檔)/i.test(value)) return "archived";
-  if (/^(?:design plan, not implemented|设计计划，未实现|設計計劃，未實作)/i.test(value)) return "design";
-  if (/^(?:implemented|已实现|已實作)/i.test(value)) return "implemented";
-  if (/^(?:completed|已完成)/i.test(value)) return "implemented";
-  if (/^active/i.test(value)) return "active";
-  return "unknown";
-}
-
-// Roadmap sections: Done is the completed index; the rest are active horizons.
-function splitSections(md) {
-  const out = {};
-  let current = null;
-  for (const line of md.split(/\r?\n/)) {
-    const h = /^###\s+(.+?)\s*$/.exec(line);
-    if (h) { current = h[1]; out[current] = []; continue; }
-    if (current) out[current].push(line);
+  try {
+    return fs.readFileSync(path.join(ROOT, rel), "utf8");
+  } catch {
+    return null;
   }
-  return out;
+}
+
+function listPlanFiles(dirRel) {
+  const abs = path.join(ROOT, dirRel);
+  if (!fs.existsSync(abs)) return [];
+  return fs
+    .readdirSync(abs)
+    .filter((f) => isConstructionPlanMarkdown(f))
+    .map((f) => dirRel + "/" + f);
+}
+
+function linkedIn(md, planRel) {
+  const base = planRel.split("/").pop();
+  const id = (base.match(/^(PLAN-\d{4})/i) || [])[1];
+  if (!id) return false;
+  // markdown link containing the plan file or id
+  if (md.includes(base)) return true;
+  if (new RegExp("\\]\\([^)]*" + id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "[^)]*\\)").test(md)) return true;
+  return false;
+}
+
+function liveClaimNearLink(md, planRel) {
+  const base = planRel.split("/").pop();
+  const id = (base.match(/^(PLAN-\d{4})/i) || [])[1];
+  if (!id) return false;
+  // Per-occurrence window: from this PLAN-id until the next PLAN-\d{4} on the same line.
+  // Whole-line matching false-positives when a live **Design** plan shares a row with archived ids.
+  const idRe = new RegExp(id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+  for (const line of md.split(/\r?\n/)) {
+    if (!line.includes(id)) continue;
+    idRe.lastIndex = 0;
+    let m;
+    while ((m = idRe.exec(line))) {
+      const rest = line.slice(m.index);
+      const after = rest.slice(id.length);
+      const nextRel = after.search(/PLAN-\d{4}/i);
+      const window = nextRel < 0 ? rest : rest.slice(0, id.length + nextRel);
+      const claimsArchived =
+        /\*\*Archived\*\*|status:\s*Archived|已归档|已歸檔|\bArchived\b/i.test(window);
+      const claimsLive =
+        /\*\*Design\*\*|\*\*Active\*\*|status:\s*Design|status:\s*Active/i.test(window);
+      if (claimsLive && !claimsArchived) return true;
+    }
+  }
+  return false;
 }
 
 function main() {
   const json = process.argv.includes("--json");
   const gate = process.argv.includes("--gate");
-  const issues = { implemented_missing_from_done: [], archived_still_active: [], entry_without_link: [] };
+  const issues = {
+    live_plan_missing_from_roadmap: [],
+    archived_still_claimed_live: [],
+  };
 
-  const roadmap = readFileSafe("docs/en/roadmap.md");
-  if (roadmap === null) {
-    // Not this repo's shape (a governed project has no roadmap): not applicable.
+  const roadmaps = ROADMAPS.map((rel) => ({ rel, text: readFileSafe(rel) })).filter((r) => r.text !== null);
+  if (roadmaps.length === 0) {
     const out = { applicable: false, issues, gatePass: true };
     if (json) process.stdout.write(JSON.stringify(out, null, 2) + "\n");
-    else console.log("✓ roadmap sync: not applicable (no docs/en/roadmap.md)");
+    else console.log("✓ roadmap sync: not applicable (no docs/plans/roadmap/*.md)");
     process.exit(0);
   }
 
-  const sections = splitSections(roadmap);
-  const doneText = (sections["Done"] || []).join("\n");
-  const activeNames = Object.keys(sections).filter((n) => /Near-term|Mid-term|Long-term/i.test(n));
-  const activeText = activeNames.map((n) => sections[n].join("\n")).join("\n");
-
-  // 1 + 3: plans still in the language trees
-  for (const dir of PLAN_DIRS) {
-    const abs = path.join(ROOT, dir);
-    if (!fs.existsSync(abs)) continue;
-    for (const f of fs.readdirSync(abs)) {
-      if (!f.endsWith(".md")) continue;
-      const rel = dir + "/" + f;
-      const content = readFileSafe(rel);
-      if (!content) continue;
-      const status = planStatus(content);
-      const slug = f.replace(/\.md$/, "");
-
-      if (status === "implemented") {
-        // must be indexed in Done (by file link or by slug mention)
-        const indexed = doneText.includes(f) || doneText.includes(slug);
-        if (!indexed) issues.implemented_missing_from_done.push(rel + " — implemented but absent from the roadmap Done section");
-      }
-
-      if (status === "design" || status === "active") {
-        // if an active horizon mentions it, the entry must link the plan file
-        const mentioned = activeText.includes(slug);
-        const linked = new RegExp("\\]\\([^)]*" + slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\.md\\)").test(activeText);
-        if (mentioned && !linked) issues.entry_without_link.push(rel + " — mentioned in an active horizon without a link to the plan file");
+  for (const planRel of listPlanFiles(LIVE_PLANS_DIR)) {
+    const content = readFileSafe(planRel);
+    if (!content) continue;
+    const status = classifyPlanStatus(content);
+    if (status === "unknown" || status === "archived") continue;
+    for (const rm of roadmaps) {
+      if (!linkedIn(rm.text, planRel)) {
+        issues.live_plan_missing_from_roadmap.push(`${planRel} (${status}) not linked from ${rm.rel}`);
       }
     }
   }
 
-  // 2: archived plans must not sit in an active horizon
-  const archAbs = path.join(ROOT, ARCHIVE_DIR);
-  if (fs.existsSync(archAbs)) {
-    for (const f of fs.readdirSync(archAbs)) {
-      if (!f.endsWith(".md") || /^v\d/.test(f)) continue;
-      const slug = f.replace(/\.md$/, "");
-      // Only a LINK to the plan file counts as "listed": a slug mentioned inside prose
-      // (e.g. "review-manager's parallel subagents are its first use case") is a
-      // description, not an index entry. Matching bare slugs produced exactly that false
-      // positive on the first run.
-      const linkedInActive = new RegExp("\\]\\([^)]*" + slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\.md\\)").test(activeText);
-      if (linkedInActive) {
-        issues.archived_still_active.push(ARCHIVE_DIR + "/" + f + " — archived but still linked from an active horizon");
+  for (const planRel of listPlanFiles(ARCHIVE_DIR)) {
+    for (const rm of roadmaps) {
+      if (!linkedIn(rm.text, planRel)) continue;
+      if (liveClaimNearLink(rm.text, planRel)) {
+        issues.archived_still_claimed_live.push(`${planRel} still claimed Design/Active in ${rm.rel}`);
       }
     }
   }
 
-  const all = [...issues.implemented_missing_from_done, ...issues.archived_still_active, ...issues.entry_without_link];
+  const all = [...issues.live_plan_missing_from_roadmap, ...issues.archived_still_claimed_live];
   const gatePass = all.length === 0;
 
   if (json) {
     process.stdout.write(JSON.stringify({ applicable: true, issues, gatePass, total: all.length }, null, 2) + "\n");
   } else if (gatePass) {
-    console.log("✓ roadmap sync: index matches plan lifecycle state");
+    console.log("✓ roadmap sync: live plans indexed; archived plans not claimed live");
   } else {
     for (const [kind, list] of Object.entries(issues)) {
       if (!list.length) continue;

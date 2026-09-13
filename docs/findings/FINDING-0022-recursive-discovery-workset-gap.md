@@ -1,8 +1,9 @@
 ---
 id: FINDING-0022
-status: Confirmed
+status: Resolved
 type: control-gap
 observed_in: gen2
+resolved_in: gen2
 ---
 
 # FINDING-0022：修复过程中已发现问题可能因递归发现丢失（缺持久工作集）
@@ -44,16 +45,17 @@ R4（Enforcement Boundary）：任务的**完成边界**不要求「每个已知
 
 ## 解决情况
 
-（未解决，remediation underway。）ADR-0021（Known-Issue Closure 执行语义，含后继指针/显式 revisit 触发条件要求）与 PLAN-0033（第一代 Discovery Ledger 实现）已建立；正式纳入 TASK Plan 格式与 lifecycle.policy 留待后续阶段。现存实例（PLAN-0032 R24 / PLAN-0033 K5 的 `deferred` / `promoted-to-next-plan`）已标注明确的 Phase 4 planning checkpoint 取回触发条件。
+**Resolved（2026-09-13 · PLAN-0048 H2b Stage 3）。** 任务级宽度控制落地为 L2：`repo-tools/check-discovery-ledger.js` 对 Active 计划内 Discovery Ledger 做 reconcile（Open/Resolved/Unaccounted）。载体仍在 Active TASK 计划内（ADR-0021）；不另造 issue tracker。PLAN-0033 / ADR-0021 语义由本门禁机械兜底。
 
 ## 关联
 
 - PLAN-0033
 - ADR-0021
 - RESEARCH-0008
+- PLAN-0048（H2b）
 
 ## 回归保护
 
+- 机械层：`repo-tools/check-discovery-ledger.js --gate`
 - 描述层：`docs/research/RESEARCH-0008-repair-discovery-workset-model.md`
-- 规范层：ADR-0021（discovery 必须持久捕获；完成要求 zero unaccounted）
-- 实现层：PLAN-0033（append-only Discovery Ledger 演示 + 未来 TASK 计划内嵌）
+- 规范层：ADR-0021

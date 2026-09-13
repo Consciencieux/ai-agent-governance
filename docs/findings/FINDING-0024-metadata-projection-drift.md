@@ -1,8 +1,9 @@
 ---
 id: FINDING-0024
-status: Confirmed
+status: Resolved
 type: mechanism-gap
 observed_in: gen2
+resolved_in: gen2
 ---
 
 # FINDING-0024：权威元数据被多份索引/投影重复，持续漂移
@@ -47,7 +48,7 @@ R1（Policy Structure）：权威事实源（canonical source）已存在于对�
 
 ## 解决情况
 
-（未解决。）表示法归一过程中持续出现投影漂移实例：ADR-0021 index、docs README CHANGELOG 权威指针、ADR-0016 内联 Finding schema（2026-09-10 已删）。实例可修；「投影只读 / 不对账就不得复制 schema」的正式机制仍缺，故本 Finding 保持 Confirmed。
+**Resolved（2026-09-13 · PLAN-0048 H2b Stage 3）。** `repo-tools/check-metadata-projection.js` 将 ADR README 约束为 navigation-only（不对账不得复制 status/generation schema）；权威仍在对象 frontmatter。已知投影漂移类缺陷现有门禁兜底。
 
 ## 关联
 
@@ -55,8 +56,10 @@ R1（Policy Structure）：权威事实源（canonical source）已存在于对�
 - ADR-0016
 - RESEARCH-0007
 - PLAN-0032 R25b / R26
+- PLAN-0048（H2b）
 
 ## 回归保护
 
-- 描述层：`docs/research/RESEARCH-0007`（索引 vs 事实源）。
-- 规范层：ADR-0009、ADR-0016（投影不重述事实源；对象 frontmatter 是权威事实源）。
+- 机械层：`repo-tools/check-metadata-projection.js --gate`
+- 描述层：`docs/research/RESEARCH-0007`（索引 vs 事实源）
+- 规范层：ADR-0009、ADR-0016

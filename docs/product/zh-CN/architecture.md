@@ -101,6 +101,8 @@ ai-agent-governance/
 │   ├── lib/
 │   │   ├── git-facts.js        # 共享 git/path/date 事实 primitive（无 Control 政策）
 │   │   ├── md-link-facts.js    # 共享 Markdown 链接事实 primitive（extract/resolve/exists）
+│   │   ├── plan-status.js      # ADR-0016 计划 status frontmatter 分类器（PLAN-0048）
+│   │   ├── adr-status.js       # FINDING-0011 ADR Status 字段启发（PLAN-0048）
 │   │   └── secret-scan-facts.js # 共享密钥扫描事实 primitive（模式 / staged / blob）
 │   ├── evaluators/
 │   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 密钥保护求值器（CLI 绑定 deny）
@@ -124,6 +126,10 @@ ai-agent-governance/
 │   ├── check-layout-sync.js    # architecture.md 仓库布局 vs 四个受扫描目录（fail-closed 门禁）
 │   ├── check-plan-delivery.js  # 计划声明 vs 实际交付（归档前门禁）
 │   ├── check-roadmap-sync.js   # roadmap 索引 vs 计划生命周期状态（implemented→Done、archived 不在活跃 horizon、条目带链接）
+│   ├── check-docs-shape.js     # FINDING-0030 §5 docs/ 形状白名单 fail-closed（PLAN-0048）
+│   ├── docs-shape-allowlist.v0.json # check-docs-shape.js 白名单数据
+│   ├── check-discovery-ledger.js # FINDING-0022 发现台账 L2（PLAN-0048）
+│   ├── check-metadata-projection.js # FINDING-0024 只读 ADR 索引投影（PLAN-0048）
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）
 │   ├── check-coding-hygiene.js # 编码卫生（测试归属 + 残留标记）
 │   ├── check-terminology.js    # repo-owned 术语门禁（从 INSTALLED 一致性检查器拆出；ADR-0020 首次执行分离）

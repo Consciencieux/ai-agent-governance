@@ -128,6 +128,8 @@ ai-agent-governance/
 │   ├── lib/
 │   │   ├── git-facts.js        # shared git/path/date factual primitives (no Control policy)
 │   │   ├── md-link-facts.js    # shared Markdown-link factual primitives (extract/resolve/exists)
+│   │   ├── plan-status.js      # ADR-0016 plan-status frontmatter classifier (PLAN-0048)
+│   │   ├── adr-status.js       # FINDING-0011 ADR Status-field heuristic (PLAN-0048)
 │   │   └── secret-scan-facts.js # shared secret-scan factual primitives (patterns / staged / blob)
 │   ├── evaluators/
 │   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 secret protection evaluator (deny at CLI binding)
@@ -151,6 +153,10 @@ ai-agent-governance/
 │   ├── check-layout-sync.js    # architecture.md Repository Layout vs the four scanned dirs (fail-closed gate)
 │   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
 │   ├── check-roadmap-sync.js   # roadmap index vs plan lifecycle state (vacuous vs current Roadmap — FINDING-0021; H2b)
+│   ├── check-docs-shape.js     # FINDING-0030 §5 docs/ shape allowlist fail-closed (PLAN-0048)
+│   ├── docs-shape-allowlist.v0.json # allowlist data for check-docs-shape.js
+│   ├── check-discovery-ledger.js # FINDING-0022 Discovery Ledger L2 (PLAN-0048)
+│   ├── check-metadata-projection.js # FINDING-0024 read-only ADR index projection (PLAN-0048)
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)

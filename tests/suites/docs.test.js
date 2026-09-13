@@ -697,22 +697,26 @@ test("sub-skills.md does not tell a governed project to run absent check scripts
 });
 
 // ---------------------------------------------------------------------------
-// Roadmap sync (repo-tools/check-roadmap-sync.js). The roadmap is an INDEX; the design
-// plans are the fact source. `plan-delivery-anchors` was implemented and the roadmap
-// never learned about it — the rule ("re-baseline at each release") was followed as
-// written and still missed it, because nothing mechanical covered plan-lifecycle events.
-// Three decidable relations only; absence from the roadmap is legitimate.
+// Roadmap sync (repo-tools/check-roadmap-sync.js) — Gen2 tree (PLAN-0048 / FINDING-0021).
+// Roadmap lives at docs/plans/roadmap/{en,zh-CN,zh-TW}.md; plans at docs/plans/PLAN-*.md.
+// Three decidable relations: live plans must be linked; archived must not be claimed live;
+// absence of a Design plan from the roadmap is legitimate only when status is not live —
+// Active/Implemented/Completed/Design all count as live for indexing.
 // ---------------------------------------------------------------------------
 
 const ROADMAP_SYNC = path.join(SKILL_ROOT, "repo-tools", "check-roadmap-sync.js");
 
-function roadmapFixture(name, roadmapLines, files) {
+function roadmapFixture(name, { roadmapBody, livePlans = {}, archivedPlans = {} }) {
   const dir = tmp(name);
-  fs.mkdirSync(path.join(dir, "docs", "en", "plans"), { recursive: true });
-  fs.mkdirSync(path.join(dir, "docs", "archive"), { recursive: true });
-  fs.writeFileSync(path.join(dir, "docs", "en", "roadmap.md"), roadmapLines.join("\n"), "utf8");
-  for (const [rel, body] of Object.entries(files)) {
-    fs.writeFileSync(path.join(dir, rel), body, "utf8");
+  fs.mkdirSync(path.join(dir, "docs", "plans", "roadmap"), { recursive: true });
+  fs.mkdirSync(path.join(dir, "docs", "plans", "archive"), { recursive: true });
+  // One language file is enough for the gate to be applicable.
+  fs.writeFileSync(path.join(dir, "docs", "plans", "roadmap", "en.md"), roadmapBody, "utf8");
+  for (const [file, body] of Object.entries(livePlans)) {
+    fs.writeFileSync(path.join(dir, "docs", "plans", file), body, "utf8");
+  }
+  for (const [file, body] of Object.entries(archivedPlans)) {
+    fs.writeFileSync(path.join(dir, "docs", "plans", "archive", file), body, "utf8");
   }
   const r = spawnSync(process.execPath, [ROADMAP_SYNC, "--json", "--gate"], { cwd: dir, encoding: "utf8" });
   let j = null;
@@ -720,37 +724,45 @@ function roadmapFixture(name, roadmapLines, files) {
   return { status: r.status, json: j };
 }
 
-test("roadmap sync: an implemented plan missing from Done fails the gate", () => {
-  const r = roadmapFixture("rms-implemented",
-    ["# Roadmap", "", "### Done", "", "- nothing", "", "### Near-term", "", "- none"],
-    { "docs/en/plans/alpha.md": "# A\n\n> **Status: implemented.**\n" });
-  return r.status === 1 && (r.json.issues.implemented_missing_from_done || []).length === 1;
+test("roadmap sync: a live plan missing from the roadmap fails the gate", () => {
+  const r = roadmapFixture("rms-live-missing", {
+    roadmapBody: "# Roadmap\n\nNo plans linked.\n",
+    livePlans: {
+      "PLAN-9991-alpha.md": "---\nstatus: Active\n---\n\n# Alpha\n",
+    },
+  });
+  return r.status === 1 && (r.json.issues.live_plan_missing_from_roadmap || []).length >= 1;
 });
 
-test("roadmap sync: an archived plan still linked from an active horizon fails", () => {
-  const r = roadmapFixture("rms-archived",
-    ["# Roadmap", "", "### Done", "", "- x", "", "### Near-term", "", "- **Old** — see [plans/beta.md](plans/beta.md)"],
-    { "docs/archive/beta.md": "# B\n\n> **Status: archived.**\n" });
-  return r.status === 1 && (r.json.issues.archived_still_active || []).length === 1;
+test("roadmap sync: an archived plan still claimed Design/Active fails", () => {
+  const r = roadmapFixture("rms-archived-live", {
+    roadmapBody: "# Roadmap\n\n- [PLAN-9992](../archive/PLAN-9992-beta.md) **Active**\n",
+    archivedPlans: {
+      "PLAN-9992-beta.md": "---\nstatus: Archived\n---\n\n# Beta\n",
+    },
+  });
+  return r.status === 1 && (r.json.issues.archived_still_claimed_live || []).length >= 1;
 });
 
-test("roadmap sync: an active-horizon entry naming a plan must link it", () => {
-  const r = roadmapFixture("rms-nolink",
-    ["# Roadmap", "", "### Done", "", "- x", "", "### Near-term", "", "- **Gamma work** — gamma is coming"],
-    { "docs/en/plans/gamma.md": "# G\n\n> **Status: design plan, not implemented.**\n" });
-  return r.status === 1 && (r.json.issues.entry_without_link || []).length === 1;
+test("roadmap sync: a Design plan linked from the roadmap passes", () => {
+  const r = roadmapFixture("rms-design-linked", {
+    roadmapBody: "# Roadmap\n\n- [PLAN-9993](../PLAN-9993-gamma.md) **Design**\n",
+    livePlans: {
+      "PLAN-9993-gamma.md": "---\nstatus: Design\n---\n\n# Gamma\n",
+    },
+  });
+  return r.status === 0 && r.json.gatePass === true;
 });
 
-test("roadmap sync: a linked design plan and an unlisted design plan both pass", () => {
-  const linked = roadmapFixture("rms-linked",
-    ["# Roadmap", "", "### Done", "", "- x", "", "### Near-term", "", "- **Gamma** — [plans/gamma.md](plans/gamma.md)"],
-    { "docs/en/plans/gamma.md": "# G\n\n> **Status: design plan, not implemented.**\n" });
-  const absent = roadmapFixture("rms-absent",
-    ["# Roadmap", "", "### Done", "", "- x", "", "### Near-term", "", "- unrelated"],
-    { "docs/en/plans/delta.md": "# D\n\n> **Status: design plan, not implemented.**\n" });
-  // "design plan, not implemented" must NOT be read as implemented (the substring trap
-  // this classifier fell into on its first run).
-  return linked.status === 0 && absent.status === 0;
+test("roadmap sync: an unlisted Design plan still fails (live must be indexed)", () => {
+  // Gen2 contract (PLAN-0048): every live PLAN-*.md must appear in each present roadmap.
+  const r = roadmapFixture("rms-design-absent", {
+    roadmapBody: "# Roadmap\n\n- unrelated\n",
+    livePlans: {
+      "PLAN-9994-delta.md": "---\nstatus: Design\n---\n\n# Delta\n",
+    },
+  });
+  return r.status === 1 && (r.json.issues.live_plan_missing_from_roadmap || []).length >= 1;
 });
 
 test("roadmap sync: a governed-project shape (no roadmap) is not applicable", () => {

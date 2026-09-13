@@ -296,7 +296,7 @@ Roadmap 不獨立定義或裁決 phase order。下表鏡像 ADR-0018 的 **已�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**遷移階段已關閉：** Phase 0–8 EXITED；**`v2.0.0` 已發佈**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**目前工作帶 = ADR-0025 H2**（H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) **Archived**；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；下一步 H2b）。H1（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)）已 Archived。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已歸檔。
+**遷移階段已關閉：** Phase 0–8 EXITED；**`v2.0.0` 已發佈**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**目前工作帶 = ADR-0025 H2**（H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) **Archived**；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**；下一步 **H2c** 待 Design）。H1（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)）已 Archived。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已歸檔。
 
 ## 2.0 已發佈（索引）
 
@@ -334,12 +334,12 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 | --- | --- | --- | --- |
 | **H0** 文件與生命週期對帳 | 入口/路線圖/計劃位置與 `v2.0.0` 對齊 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 計劃已歸檔） |
 | **H1** 可重用治理 Skill 提煉 | L1/L2/L3 提取協議 → 乾淨目標驗證；不遷腳本載體 | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** 控制面補完 | 執行序見 ADR-0025 決策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) Archived；[PLAN-0048](../PLAN-0048-h2b-checkers-and-ledgers.md)（H2b）**Design** | **H2b Design** |
+| **H2** 控制面補完 | 執行序見 ADR-0025 決策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) / [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) Archived；下一步 **H2c**（待 Design） | **H2c next** |
 | **H3** 執行期與科研 | L3、測量、注意力實驗；不擋 2.1 | 無 Active Plan | 遠 |
 
 ### H0 已完成
 
-已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045。Plan 保持單檔（`PLAN-xxxx-*.md`）。`docs/plans/` 無 Active 施工計劃；H2b = [PLAN-0048](../PLAN-0048-h2b-checkers-and-ledgers.md) **Design**（待人類 Active）。
+已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045。Plan 保持單檔（`PLAN-xxxx-*.md`）。**無 Active 施工計劃**；下一步 = H2c（待 Design）。H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**。
 
 ### H2 輸入（按子帶；不擋已發佈的 2.0）
 
@@ -348,7 +348,7 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 | H2-0 台帳校準 | [RESEARCH-0004](../../research/RESEARCH-0004-architecture-evolution.md) / [0005](../../research/RESEARCH-0005-current-capabilities.md) / [0006](../../research/RESEARCH-0006-generation-1-capability-baseline.md) / [0009](../../research/RESEARCH-0009-agent-instruction-architecture.md) 現在時；roadmap 狀態詞。無獨立 Plan。權威：[ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 決策 14 |
 | H2-front 指令面 | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md)（**Archived**） |
 | H2a 殘留抽出 | [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md)（**Archived**）· 5c leftover Capability 葉 · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md)（L0 台帳 = [PLAN-0041](../archive/PLAN-0041-script-inventory.md)；今日 `retire = ∅`） |
-| H2b 檢查器與台帳 | 剩餘 consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · ADR-0016 parser 遷移 |
+| H2b 檢查器與台帳 | [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md)（**Archived**）· 剩餘 consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · ADR-0016 parser 遷移 |
 | H2c 跨 profile / 機器 Control | [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
 | H2d 載荷調度與可移植性 | [FINDING-0003](../../findings/FINDING-0003-declaration-enforcement-gap.md) 判斷型 MUST · [FINDING-0004](../../findings/FINDING-0004-trigger-coverage-gap.md) · [FINDING-0005](../../findings/FINDING-0005-validation-routing-overhead.md) · [FINDING-0006](../../findings/FINDING-0006-regression-oracle-gap.md) 全量 oracle · [FINDING-0007](../../findings/FINDING-0007-portability-enforcement-boundary.md) adapter · [FINDING-0010](../../findings/FINDING-0010-gitlab-ci-stack-template-mismatch.md) · [FINDING-0012](../../findings/FINDING-0012-lock-not-atomic.md) · Git consent 機械 evaluator · MIGRATE 入口 · [FINDING-0014](../../findings/FINDING-0014-review-manager-layer-mismatch.md) L0–L4 工具 · [FINDING-0016](../../findings/FINDING-0016-canonical-example-not-constraint.md) · [FINDING-0017](../../findings/FINDING-0017-adr-no-continuous-enforcement.md) |
 
@@ -361,7 +361,7 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 - **本倉**：實驗場 + 參考實作 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
 - **已發佈 skill（2.0）**：可安裝必裝切片，不是 PLAN-0037 另開通用包。
 - **2.x 產品主線（H1）**：[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — 可重用原則包已落地（`references/principles/`）。
-- **2.x 下一帶（H2）**：H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../PLAN-0048-h2b-checkers-and-ledgers.md) **Design**（ADR-0025 決策 14）。
+- **2.x 下一帶（H2）**：H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**；下一步 **H2c**（待 Design）（ADR-0025 決策 14）。
 - **H1 紀律（索引 [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 決策 9–13）：** 消費既有 inventory，不新建能力去向表；不刪腳本；不把 repo router 寫入 INSTALLED；SemVer 不是 Horizon 的別名。
 
 ## Guarantee Levels
@@ -605,7 +605,7 @@ H0     文件與生命週期對帳 — EXITED / Archived（PLAN-0045）
         ↓
 H1     PLAN-0037 跨專案 portable 提煉 — **Archived**（2026-09-13）
         ↓
-H2     執行序 ADR-0025：H2-0 → PLAN-0046（Archived）→ PLAN-0047（H2a Archived）→ PLAN-0048（H2b Design）→ c→d
+H2     執行序 ADR-0025：H2-0 → PLAN-0046（Archived）→ PLAN-0047（H2a Archived）→ PLAN-0048（H2b Archived）→ c（待 Design）→d
         ↓
 H3     執行期與科研（L3 / 測量；不擋 2.1）
         ↓

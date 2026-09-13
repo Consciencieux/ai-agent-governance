@@ -1,8 +1,9 @@
 ---
 id: FINDING-0021
-status: Confirmed
+status: Resolved
 type: control-gap
 observed_in: gen2
+resolved_in: gen2
 ---
 
 # FINDING-0021：路线图机械检查失效（check-roadmap-sync.js 对新目录 / 新结构基本 vacuous）
@@ -47,16 +48,16 @@ R4（Enforcement Boundary）：gate 的扫描路径 / section 语义与对象实
 
 ## 解决情况
 
-未解决。`v2.0.0` 之后 Migration Mode 已退出，但本检查器仍 vacuous（旧路径 / 旧 section 语义）。适配属于 ADR-0025 H2b，不是 2.0 发布债。
+**Resolved（2026-09-13 · PLAN-0048 H2b Stage 1）。** `repo-tools/check-roadmap-sync.js` 已按 Gen2 现树重写：扫描 `docs/plans/roadmap/{en,zh-CN,zh-TW}.md`，对齐 plan 生命周期索引语义；不再读 `docs/en/roadmap.md` / 旧 Done·Near-term 分段。vacuous pass 关闭。
 
 ## 关联
 
 - ADR-0014
 - ADR-0015
 - RESEARCH-0007
+- PLAN-0048（H2b）
 
 ## 回归保护
 
-- 描述层：`docs/research/RESEARCH-0007`「机械 carrier」表显式标记本 gate「失效中」。
-- 规范层：ADR-0015 § 决策 6 + ADR-0018 § 决策 6 提供投影与执行的权威纪律。
-- 待落地：真正修复（更新路径/结构，或由 Repo Profile 承接）——后续执行层迁移任务。
+- 机械层：`repo-tools/check-roadmap-sync.js --gate`（`npm run check` / `check:docs`）。
+- 表征：`tests/suites/h2b-checkers.test.js`。

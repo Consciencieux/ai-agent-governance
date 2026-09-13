@@ -62,6 +62,11 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 const { createMdLinkFacts } = require("./lib/md-link-facts.js");
 const { evaluateBrokenLinks } = require("./evaluators/ctrl-0006-broken-links.js");
+const { classifyPlanStatus, isPlanMarkdown } = require("./lib/plan-status.js");
+const { evaluateAdrUnreleasedClaims } = require("./lib/adr-status.js");
+// NOTE (PLAN-0048 / FINDING-0019): plan-status + adr-status heuristics live in scripts/lib/
+// (EXTRACT). New mechanical clusters must not land as inline closures in this file — prefer
+// scripts/lib/* or a standalone repo-tools checker and call it from here.
 
 const ROOT = process.cwd();
 const DOCS = path.join(ROOT, "docs");
@@ -123,27 +128,9 @@ const CONSENT_MARKERS = [
 // protection-floor mention. The single-source-of-truth pointer already exempts deferrals.
 const CLAIMS_PROTECTED_LIST = /(?:以下|下表|下面是|以下为|如下).{0,20}(?:清单|列表|文件)|(?:受保护|protected).{0,20}(?:清单|列表|list).{0,12}(?:如下|以下是|如下表|is|are|为)|(?:following|list(?:ed)? below|protected files? (?:include|are|listed)|清单如下|清单为|list is:)/i;
 
-// #10 plan-status contract: the first Status/状态 line of a TASK plan must LEAD with one
-// canonical keyword. The set is identical across the three language trees and matches the
-// contract in references/policies/lifecycle.policy.md. Anything else is "unknown" —
-// reported, never guessed (the pre-existing prose variants stay visible instead of being
-// silently widened into a match).
-const PLAN_STATUS_LINE = /^>\s*\*\*\s*(?:Status|状态|狀態)\s*[:：]\s*([^*\n]+)/im;
-const PLAN_STATUS_KEYWORDS = [
-  { status: "design", re: /^(?:design plan, not implemented|设计计划，未实现|設計計劃，未實作)/ },
-  { status: "active", re: /^active/i },
-  { status: "implemented", re: /^(?:implemented|已实现|已實作)/ },
-  { status: "completed", re: /^(?:completed|已完成)/i },
-  { status: "archived", re: /^(?:archived|已归档|已歸檔)/ },
-];
-function classifyPlanStatus(content) {
-  const head = content.split(/\r?\n/).slice(0, 12).join("\n");
-  const m = head.match(PLAN_STATUS_LINE);
-  if (!m) return "unknown";
-  const value = m[1].trim();
-  for (const k of PLAN_STATUS_KEYWORDS) if (k.re.test(value)) return k.status;
-  return "unknown";
-}
+// #10 plan-status contract: frontmatter `status:` is authoritative (PLAN-0048 / ADR-0016).
+// Legacy `> **Status:` lines remain a compatibility fallback inside scripts/lib/plan-status.js.
+// Implementation EXTRACTED — do not re-inline the classifier here (FINDING-0019).
 
 function walk(dir, base = dir) {
   const out = [];
@@ -690,6 +677,8 @@ function main() {
     const dir = path.join(DOCS, lang, "plans");
     if (!fs.existsSync(dir)) continue;
     for (const rel of walk(dir)) {
+      if (!isPlanMarkdown(rel)) continue;
+      if (/(?:^|\/)(?:archive|roadmap)\//i.test(rel)) continue;
       const planRel = (path.join("docs", lang, "plans", rel)).replace(/\\/g, "/");
       const c = readFile(path.join(ROOT, planRel));
       if (!c) continue;
@@ -720,6 +709,8 @@ function main() {
         // Status line by design, and treating it as one made --gate fail on a fresh INIT
         // (audit 2026-09-07).
         if (/(?:^|\/)DEVELOPMENT_PLAN\.md$/i.test(rel)) continue;
+        if (!isPlanMarkdown(rel)) continue;
+        if (/(?:^|\/)(?:archive|roadmap)\//i.test(rel)) continue;
         const planRel = (path.join("docs", "plans", rel)).replace(/\\/g, "/");
         const c = readFile(path.join(ROOT, planRel));
         if (!c) continue;
@@ -748,7 +739,7 @@ function main() {
   const archiveDir = path.join(DOCS, "archive");
   if (fs.existsSync(archiveDir)) {
     for (const rel of walk(archiveDir)) {
-      if (!rel.endsWith(".md") || /^README\.md$/i.test(rel)) continue;
+      if (!isPlanMarkdown(rel)) continue;
       const planRel = path.join("docs", "archive", rel).replace(/\\/g, "/");
       const c = readFile(path.join(ROOT, planRel));
       if (!c) continue;
@@ -762,15 +753,14 @@ function main() {
       issues.plans_status_unknown.push(item);
       if (releaseGate) gateIssues.push({ kind: "plans_status_unknown", item });
     }
-  }
-  // Governed projects archive to docs/plans/archive/ (single language), not the
+  }  // Governed projects archive to docs/plans/archive/ (single language), not the
   // trilingual docs/archive/. The scan above no-ops there, so an archived plan in a
   // governed project carrying "implemented" was never checked (audit 2026-09-07).
   {
     const govArchive = path.join(ROOT, "docs", "plans", "archive");
     if (fs.existsSync(govArchive) && !fs.existsSync(archiveDir)) {
       for (const rel of walk(govArchive)) {
-        if (!rel.endsWith(".md") || /^README\.md$/i.test(rel)) continue;
+        if (!isPlanMarkdown(rel)) continue;
         const planRel = path.join("docs", "plans", "archive", rel).replace(/\\/g, "/");
         const c = readFile(path.join(ROOT, planRel));
         if (!c) continue;
@@ -787,17 +777,20 @@ function main() {
     }
   }
 
-  // ---- 3. ADR status sync ----
+  // ---- 3. ADR status sync (FINDING-0011 / PLAN-0048: Status *fields* only) ----
   const changelogText = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
   const releasedVersions = [...changelogText.matchAll(/^## \[(\d+\.\d+\.\d+)\]/gm)].map((m) => m[1]);
   const adrDir = path.join(DOCS, "design-decisions");
   if (fs.existsSync(adrDir)) {
+    const adrBodies = [];
     for (const f of walk(adrDir)) {
+      if (!/^ADR-\d+/i.test(f.split("/").pop() || "")) continue;
       const c = readFile(path.join(adrDir, f));
       if (!c) continue;
-      if (/Unreleased|未发布/i.test(c) && !/Status: (Proposed|Superseded|Deprecated)/.test(c)) {
-        if (releasedVersions.length > 0) issues.adr_statuses.push(`${f}: marked Unreleased but releases exist`);
-      }
+      adrBodies.push({ path: f, content: c });
+    }
+    for (const item of evaluateAdrUnreleasedClaims({ adrBodies, releasedVersions })) {
+      issues.adr_statuses.push(item);
     }
   }
 

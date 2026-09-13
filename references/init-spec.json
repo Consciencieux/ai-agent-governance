@@ -670,6 +670,20 @@
     },
     {
       "phase": "C",
+      "path": "scripts/lib/plan-status.js",
+      "source": "scripts/lib/plan-status.js",
+      "type": "copy",
+      "description": "Shared plan-status classifier (frontmatter status authoritative; PLAN-0048 / ADR-0016)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/adr-status.js",
+      "source": "scripts/lib/adr-status.js",
+      "type": "copy",
+      "description": "Shared ADR Status-field Unreleased heuristic (PLAN-0048 / FINDING-0011)"
+    },
+    {
+      "phase": "C",
       "path": "scripts/evaluators/ctrl-0006-broken-links.js",
       "source": "scripts/evaluators/ctrl-0006-broken-links.js",
       "type": "copy",

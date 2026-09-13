@@ -40,20 +40,21 @@
     "Packaging copies scripts/ wholesale — quarantine inside scripts/ still ships unless packaging changes."
   ],
   "summary": {
-    "total": 32,
+    "total": 37,
     "by_disposition": {
-      "wrap": 3,
-      "keep": 27
+      "keep": 33,
+      "rewrite": 1,
+      "wrap": 3
     },
     "by_generation": {
-      "gen1_carrier": 17,
-      "gen2_native": 12,
+      "gen1_carrier": 16,
+      "gen2_native": 18,
       "dual_profile": 3
     },
     "by_role": {
-      "INSTALLED": 16,
-      "SKILL-INTERNAL": 1,
-      "REPO-ONLY": 13
+      "REPO-ONLY": 18,
+      "INSTALLED": 18,
+      "SKILL-INTERNAL": 1
     },
     "wrap": [
       "scripts/check-doc-consistency.js",
@@ -100,6 +101,22 @@
       "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
     },
     {
+      "path": "repo-tools/check-discovery-ledger.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "FINDING-0022",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0048 / FINDING-0022 Discovery Ledger L2 reconcile"
+    },
+    {
       "path": "repo-tools/check-doc-parity.js",
       "distribution_role": "REPO-ONLY",
       "generation": "gen1_carrier",
@@ -116,6 +133,22 @@
       "notes": "Touched after v1.0.2; still REPO-ONLY gate"
     },
     {
+      "path": "repo-tools/check-docs-shape.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "FINDING-0030",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0048 / FINDING-0030 §5 docs/ shape allowlist fail-closed"
+    },
+    {
       "path": "repo-tools/check-layout-sync.js",
       "distribution_role": "REPO-ONLY",
       "generation": "gen1_carrier",
@@ -130,6 +163,22 @@
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
       "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+    },
+    {
+      "path": "repo-tools/check-metadata-projection.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "FINDING-0024",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0048 / FINDING-0024 read-only ADR index projection"
     },
     {
       "path": "repo-tools/check-must-ship-carriers.js",
@@ -182,18 +231,18 @@
     {
       "path": "repo-tools/check-roadmap-sync.js",
       "distribution_role": "REPO-ONLY",
-      "generation": "gen1_carrier",
-      "disposition": "keep",
-      "owns": null,
+      "generation": "gen2_native",
+      "disposition": "rewrite",
+      "owns": "FINDING-0021",
       "baseline": {
         "ref": "v1.0.2",
         "present": true,
         "commits_after": 0
       },
       "first_seen": "2026-09-06",
-      "last_touch": "2026-09-07",
+      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+      "notes": "PLAN-0048 / FINDING-0021: Gen2 roadmap tree rewrite"
     },
     {
       "path": "repo-tools/check-role-completeness.js",
@@ -500,6 +549,22 @@
       "notes": "SKILL-INTERNAL generator; unchanged since v1.0.2 — still product, not attic"
     },
     {
+      "path": "scripts/lib/adr-status.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "FINDING-0011",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0048 EXTRACT: ADR Status-field Unreleased heuristic"
+    },
+    {
       "path": "scripts/lib/git-facts.js",
       "distribution_role": "INSTALLED",
       "generation": "gen2_native",
@@ -530,6 +595,22 @@
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
       "notes": "Shared facts primitive"
+    },
+    {
+      "path": "scripts/lib/plan-status.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "ADR-0016",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0048 / ADR-0016 plan-status frontmatter parser"
     },
     {
       "path": "scripts/lib/secret-scan-facts.js",

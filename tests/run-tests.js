@@ -43,6 +43,7 @@ const SUITES = [
   "./suites/oracle-inventory.test.js",
   "./suites/principles-extraction.test.js",
   "./suites/instruction-surface.test.js",
+  "./suites/h2b-checkers.test.js",
 ];
 
 // Canonical suite name = path and `.test.js` stripped. This is the ONLY accepted form:
