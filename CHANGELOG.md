@@ -6,39 +6,15 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **PLAN-0053 Archived (candidate A)** — FINDING-0003 closing-condition-3 remainder: remaining judgment classes explicitly labeled `judgment` vs `mechanical` in authority bodies; characterization suite `finding-0003-language`. FINDING-0003 → Resolved (no new mechanical checkers; no INSTALLED router). Plan archive ≠ Release.
+- **Post-2.1.0 repo hygiene (PLAN-0052 / PLAN-0055)** — Gen1 CI observation job removed; daily `check` allowlisted; H2b/H2c stage parking lot retired (`check:full` ≡ daily); Gen1 test/script archives deleted; doc-consistency split into gate clusters; repo dogfood off INSTALLED WRAP CLIs. `check:must-ship` remains the sole CI block. Plan archive ≠ Release.
 
-- **PLAN-0052 Archived** — Gen1 CI observation sunset (exit 4a): Stage 0–1 enumerated and adjudicated the observation surface (zero `retire`; scripts kept); Stage 2 removed the non-blocking `gen1-observation` CI job. `check:must-ship` remains the sole CI block; local `npm run check` still available.
+- **FINDING-0003 language layering (PLAN-0053)** — Remaining judgment classes labeled `judgment` vs `mechanical` in authority bodies; characterization suite added. Finding → Resolved (no new mechanical checkers; no INSTALLED router).
 
-- **PLAN-0055 Active (Stage 0)** — Promoted from Design. Reference graph + draft absorb/keep for 16 `gen1_carrier` and 2 dogfood WRAPS; **zero `retire` yet** (bar B ≠ mass delete). Test baseline ~409 cases / 19 suites. Next: Stage 1 inventory disposition + Test Disposition v1.
-
-- **PLAN-0055 Stage 1** — Final disposition landed in `script-inventory.v0.json` (`summary.total` 37→44 = `entries.length`; `summary.adjudication` absorb=3 wrap CLIs, retire=[]). Test Disposition v1 marks prune/review candidates only (no deletes). Characterization asserts summary sync. Next: Stage 2 dogfood absorb.
-
-- **PLAN-0055 Stage 2** — Absorbed repo dogfood off INSTALLED WRAP CLIs: `package.json` / `AGENTS.md` now call `repo-tools/check-doc-consistency.js` and `repo-tools/check-doc-freshness.js` (thin REPO-ONLY shells over shared `main()`). CTRL-0003/0004/0006 repo bindings retargeted. `summary.dogfood_installed_from_repo=[]`. Skill WRAP paths retained for governed targets; secrets WRAP already paired with `repo-tools/check-secrets.js`.
-
-- **PLAN-0055 Stage 1R + Stage 3 (minimum-necessary doctrine)** — Replaced citation-graph “keep” with short lists (`must_ship` ∪ `product_cli` ∪ `repo_gate`); everything else is `debt` by default. Deleted Gen1 ceremony scripts `repo-tools/mutation-probe.js` and `repo-tools/check-changelog-narration.js` (cleared package.json / tests / docs). Inventory gains `necessity` + `summary.short_lists`. Next: remaining `debt` teardown + Stage 4 test prune.
-
-- **PLAN-0055 Stage 4 (unified adjudicate)** — Fact-source test prune (~−37 cases; consent/package.json/secrets catalogs folded). Script Health: `check-doc-consistency` prefers `docs/product/` for prompt_sync + mdFiles, drops embedded parity spawn (`parity: "delegated"`); `check-layout-sync` prefers `docs/product/{lang}/architecture.md` and fixes basename extraction; architecture trees completed. Disposition v2 + Script Health ledger in PLAN-0055. consistency EXTRACT completed in Stage 3/4S.
-
-- **PLAN-0055 Stage 4Q (quarantine + rebuild)** — Moved ~512 Gen1 suite tests out of the live runner and rebuilt ~50 from script git-birth + `necessity` short lists. The Gen1 suite archive under `tests/archive/gen1-suites/` was later deleted (same rewrite-only doctrine as script monoliths).
-
-- **PLAN-0055 Stage 3 / 4S (script quarantine + EXTRACT)** — Same doctrine for `scripts/`: thin CLIs keep names — `check-doc-consistency.js` → `scripts/lib/doc-consistency/run.js` (INSTALLED); `generate-governance.js` → `scripts/lib/generate/run.js` (SKILL-INTERNAL). Gen1 monolith snapshots under `tests/archive/gen1-script-impl/` were deleted after adjudication (rewrite from current obligations; do not resurrect). init-spec + inventory updated.
-
-- **PLAN-0055 Gen1 archives deleted** — Removed `tests/archive/gen1-script-impl/` and `tests/archive/gen1-suites/` (and empty `tests/archive/`). Git history is the only recovery path. Missing behavior/tests are rewritten against must_ship ∪ product_cli ∪ repo_gate, never re-imported from Gen1 accretion.
-
-- **PLAN-0055 daily-check surface (Stage 4D)** — Slimmed `npm run check` to dogfood + hygiene + role + parity/layout; briefly parked H2b/H2c stage checkers on `check:full`. Added `repo-tools/daily-check-surface.v0.json` + `check-daily-check-surface.js` (allowlist gate). Payload `coding.policy` keeps only engineering-restraint / policy-body restraint — no REPO-ONLY promotion table.
-
-- **PLAN-0055 R10 (doc-consistency gate clusters)** — Split `scripts/lib/doc-consistency/run.js` (~950LOC) into `shared.js` + ten gate modules + thin orchestrator. INIT copy list / architecture layout / inventory updated so INSTALLED require graph stays closed. verify/release/generate EXTRACT deferred (contract-sensitive / medium benefit).
-
-- **PLAN-0055 Stage 4E (stage parking-lot retire)** — Doctrine correction: demote ≠ survival. Deleted H2b/H2c stage checkers and orphan projections (`controls/**`, shape/template/portability/tool-surface/instruction-surface maps, CONTROL-X runner, roadmap-sync). `check:full` now aliases daily `check`. Product CTRL evaluators/CLIs under `scripts/` retained. Plan text amended (not rewritten); Discovery R9 resolved; R10 closed in follow-up (consistency gate-cluster EXTRACT).
-
-- **PLAN-0055 Archived** — Closure of Gen1 carrier re-cut / daily-check freeze / H2b·c stage retire / consistency gate-cluster EXTRACT. verify/release/generate further EXTRACT deferred. No Active Plan; Design queue remains PLAN-0053 / PLAN-0054. Plan archive ≠ Release.
+- **Roadmap rolling index** — Trilingual roadmap slimmed to Now / Near term / Done (one paragraph) / Far (H3); archives stay authoritative.
 
 ### Fixed
 
-- **Vacuous Gen1 doc gates (PLAN-0055 Stage 4)** — layout-sync and consistency prompt_sync no longer no-op on this repo after the `docs/product/` migration; parity is no longer double-run inside consistency.
-
-- **Payload REPO-ONLY path leaks** — `SKILL.md` no longer links ADR-0024 or the coverage index via `docs/design-decisions/…` / `repo-tools/…` (absent from the install tarball). Skill executor uses the in-payload capability table + `references/capabilities/`; ADR cited by ID. Regression: `payload` suite source-closure test.
+- **Vacuous Gen1 doc gates / payload path leaks** — layout-sync and consistency `prompt_sync` no longer no-op after `docs/product/` migration; `SKILL.md` no longer points at REPO-ONLY docs paths absent from the install tarball.
 
 ## [2.1.0] - 2026-09-13
 
