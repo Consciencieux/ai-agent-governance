@@ -1,12 +1,14 @@
 ---
 id: RESEARCH-0004
 status: Active
-version: 3
+version: 4
 ---
 
 # RESEARCH-0004：架构演进
 
-> 记录 ai-agent-governance 的世代演进。每个 Generation 是独立模型，不删除旧记录——演进过程本身就是研究轨迹。v3 修正 Generation 2 描述（不再用已过时的 Rule Registry / Policy Model 字段候选），并补上 Gen1→Gen2 **渐进式旁路迁移（strangler）** 观察模型。规范约束见 ADR-0014 / ADR-0018 / ADR-0020 / ADR-0023；施工见 Active Plan。
+> 记录 ai-agent-governance 的世代演进。每个 Generation 是独立模型，不删除旧记录——演进过程本身就是研究轨迹。v3 修正 Generation 2 描述（不再用已过时的 Rule Registry / Policy Model 字段候选），并补上 Gen1→Gen2 **渐进式旁路迁移（strangler）** 观察模型。规范约束见 ADR-0014 / ADR-0018 / ADR-0020 / ADR-0023 / ADR-0024 / ADR-0025。当前无 Active Plan；2.x 顺序见 ADR-0025。
+
+> **现在时（2026-09-13，v4）：** `v2.0.0` 已发布。Phase 0–8 作为迁移 checkpoint **EXITED**（计划 Archived）。下文「进行中 / migration 分支 / Phase 4–8 将长出」是 v3 观察模型，**不是**今日施工状态。2.x 工作带 = ADR-0025 H2（H2-0 台账校准 → PLAN-0046 Design → H2a–d）。机械阻断权威 = `npm run check:must-ship`。
 
 ## 第 0 代（Generation 0）— 仅提示词治理
 
@@ -68,7 +70,7 @@ CHANGELOG            = 当时发布边界对外宣称交付了什么
 | test 计数、具体跑了什么 gate / exit code | 通常不该写 | 低到中 |
 | 实现过程逐步叙事 | Plan / Git | 通常低 |
 
-## 第二代（Generation 2）— Control Model + 渐进吸收（进行中，2.0 migration）
+## 第二代（Generation 2）— Control Model + 渐进吸收（v2.0.0 已发布；2.x = ADR-0025 H2）
 
 > **v2 原文曾把 Gen2 画成 Rule Registry → Context Detector → Policy Evaluator → Dispatcher，并列出候选 Policy Model 字段（`id/mode/trigger/mechanism`）与 Evidence Model 字段。该草图保留为历史意图；自 v3 起，已接受的语义骨架以 ADR-0023 / ADR-0020 为准，下列为当前观察模型。**
 
@@ -102,18 +104,18 @@ Rule semantics ≠ evaluator ≠ gate ≠ test   （ADR-0023）
 ### 目标执行形态（分阶段长出，非一次写完）
 
 ```text
-Phase 4   Control → primitive / evaluator（机械吸收）
-Phase 5   Context → applicability → Dispatcher → evaluator
-Phase 6   Control → invariant oracles
-Phase 7   Review evaluators（Implementation / System / Research）
-Phase 8   新 control plane → mandatory gates → blocking authority
+Phase 4   Control → primitive / evaluator（机械吸收）     ← checkpoint EXITED
+Phase 5   Context → applicability → Dispatcher → evaluator ← checkpoint EXITED（leftover 叶延后 H2a）
+Phase 6   Control → invariant oracles                     ← checkpoint EXITED（全量 oracle 延后）
+Phase 7   Review evaluators（Implementation / System / Research） ← checkpoint EXITED
+Phase 8   新 control plane → mandatory gates → blocking authority ← checkpoint EXITED；v2.0.0 已发布
 ```
 
-阶段顺序的规范权威在 ADR-0018；此处只描述演化关系。
+阶段顺序的规范权威在 ADR-0018（迁移剧本，已走完）；**发布后顺序**在 ADR-0025。此处只描述演化关系，不把 EXITED Phase 写成待做。
 
 ## Generation 1 → Generation 2 迁移模型（渐进式旁路 / strangler）
 
-当前 migration 分支表现出的不是 big-bang rewrite，而是：
+v2.0.0 发布前，migration 分支表现出的不是 big-bang rewrite，而是（该观察仍成立；今日施工带已切到 ADR-0025 H2）：
 
 ```text
 Gen1 remains protected baseline
@@ -278,4 +280,6 @@ Optional Runtime Adapters
 - Producer/Product：ADR-0020
 - Control Model：ADR-0023 · RESEARCH-0010
 - 机械库存：RESEARCH-0011
-- Phase 4 施工：PLAN-0035
+- Phase 4 施工：PLAN-0035（Archived）
+- 2.0 产品切片：ADR-0024
+- 2.x 工作带：ADR-0025

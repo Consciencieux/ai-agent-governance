@@ -9,7 +9,7 @@ target: both
 
 **状态：** Design（待人类 Active）。不自动开工改写 `AGENTS.md` / `SKILL.md`。
 
-**归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) **H2**（跨 H2d 载荷可调用面 + 入口形态；不吞并 H2a/H2b/H2c 机械债）。
+**归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) **H2-front**（决策 14：薄入口 + must-ship 叶卡，排在 H2a 之前）。**不是** H2d（安装面 router / Narrow ADR 进 INSTALLED）。不吞并 H2-0 台账校准、也不吞并 H2a/H2b/H2c。
 
 **问题（已对齐）：** 机械面已是薄入口 + Task→Capability 查表，但人/Agent 可读指令面仍大量 Gen1 厚入口平面堆规则；可调用能力也未统一写成 2.0 叶文档。FINDING-0015 / ADR-0022 / PLAN-0034 E1 deferred 为同一债。
 

@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 8
+version: 9
 subject_generation: gen1
 ---
 
@@ -25,6 +25,7 @@ subject_generation: gen1
 - v6：Pre-PLAN / non-Plan + INSTALLED **scripts** 反向对账 → mechanical script surface `Unaccounted = 0`
 - v7：INSTALLED **instruction/workflow** 产品面（8 sub-skills + githooks + 非 script init-spec 面）反向对账 → instruction/workflow surface `Unaccounted = 0`
 - v8：第四列投影 ADR-0024（must-ship / repo-keep / later / retire / out）；清单不再 `undecided`。发布含义按 ADR-0024 2026-09-12 修正：must-ship 须在干净目标上跑通，不是「指出载体」。
+- v9（2026-09-13）：现在时校准，不重开基线、不改第四列档位。`v2.0.0` 已发布；WRAP/must-ship 机械层存在；CONTROL-X / 独立 Control 文件仍 `later`（H2c）。consent 行语义权威已单一（`git.policy.md`，ADR-0024 §8）；Ownership 表该格从 `duplicated` 改为 `single`（只动 consent，不扫其他 duplicated 行）。
 
 ## 为什么需要
 
@@ -286,9 +287,9 @@ Instruction/workflow product surface: Unaccounted = 0
 | 已安装控制（Installed controls） | 安装进被治理项目、直接提供 Gen1 mechanical behavior 的控制 | `verify-governance.js`、`check-lock.js`、`check-git-policy.js`、`check-secrets.js`、`check-sync.js`、`check-doc-freshness.js`、`check-doc-consistency.js`、`check-plan-sync.js`、`release-manager.js` |
 | 物化机制（Materialization machinery） | 把 Skill 规范与模板物化为被治理项目工件的机制 | `scripts/generate-governance.js`、`references/init-spec.json`、`references/templates/` |
 | 仓库迁移基础设施（Repo migration infrastructure） | 保护本仓库与迁移过程的仓库侧工具，不等同于已安装控制（Installed controls） | `repo-tools/*`、Migration Safety Kernel |
-| 未来的第二代实现（Future Gen2 implementation） | 尚不存在可当作正式产品实现的 Gen2 mechanical layer；后续实现只能由 Phase 3 的语义/控制模型与 Phase 4 的重构产生 | Rule / Applicability / Evidence / Dispatcher 的未来实现 |
+| 未来的第二代实现（Future Gen2 implementation） | **现在时（2026-09-13）：** WRAP / `check:must-ship` 机械层已随 `v2.0.0` 发布；独立 Control 文件与 CONTROL-X 仍 `later`（H2c），不得把 leftover 拓扑提前写进 Control。下文「尚不存在」仅指 **CONTROL-X / 机读 Control 文件**，不是指 must-ship 载体不存在 | WRAP 已发布；CONTROL-X / 独立 Control 文件仍待 H2c |
 
-因此，旧 JS 被保留并不表示其设计将原样进入 Gen2；同样，旧实现存在缺陷也不自动意味着现在应重写。每项能力必须先在本基线中保留其 provenance；**处置由后续阶段的 ADR / Plan 裁决**，本表只保存待决问题。
+因此，旧 JS 被保留并不表示其设计将原样进入 Gen2；同样，旧实现存在缺陷也不自动意味着现在应重写。每项能力必须先在本基线中保留其 provenance。**产品处置由 ADR-0024 裁决**（本文件第四列是投影，v8 起不再 `undecided`）；本表不再把「待决」当成默认状态。未标 `retire` 的载体不得预删（ADR-0025 决策 10）。
 
 ## 溯源链
 
@@ -485,7 +486,7 @@ duplicated semantic authority —— 同一语义存在两份权威（AGENTS.md 
 repo implementation 直接依赖 mutable working-tree skill implementation
 ```
 
-因此 **Semantic authority state** 与 **Implementation dependency** 是两个不同的问题：consent 这类行是 `authority: duplicated`（两侧实现互不调用也仍然有问题）；Repo 文档一致性是 `impl dependency: repo→skill`（repo 直接跑 skill checker，即使语义单一）。
+因此 **Semantic authority state** 与 **Implementation dependency** 是两个不同的问题。**现在时（2026-09-13）：consent 行已是 `authority: single`**（`git.policy.md` 为唯一语义权威，ADR-0024 §8；AGENTS.md / SKILL.md 仅指针 + always-on 摘要）。下表其他 `duplicated` 行**未**在本校准中扫改。Repo 文档一致性仍是 `impl dependency: repo→skill`（repo 直接跑 skill checker，即使语义单一）。
 
 **关于 `core`**：Semantic owner 判定为 `core` 的 concern（consent、分级发布审查、Rule Capture、确认凭证与变更卫生、evidence tiers、portability、SSOT）当前状态是 **owner identified: core，但 physical canonical source 尚未建立**——它们现在仍以两份语义存在（repo 实现 + skill 实现）。`core` 只是 conceptual shared semantic authority（ADR-0020 § 决策 5），物理 canonical source 由 Phase 3 Governance Core 建立。因此「owner = core」不代表「canonical source physically established: yes」。
 
@@ -514,7 +515,7 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 | 审查机制（Review mechanism；review-manager） | skill | governed projects | —（`.governance/review-evidence-*.md` 是**证据产物**，非机制实现） | sub-skills 模板 review-manager | skill-only | single | none | must-ship |
 | 分级发布审查（release risk tiering） | core | repo；governed projects | `repo-workflows/skill-release.md` | `references/workflows/release.md`（SKILL-INTERNAL） | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
 | 审查后积压修复 | repo | repo | `check-doc-consistency.js` broken-links 集群（共享载体） | — | repo-only | single | repo→skill · accidental | repo-keep（CTRL-0006 链接有效性 must-ship） |
-| Git 写操作确认（consent） | core | repo；governed projects | AGENTS.md § Git Operation Safety Protocol | git.policy.md § 确认范围 + release-manager | shared-semantic | duplicated | none | must-ship；单一权威 git.policy（ADR-0024 §8） |
+| Git 写操作确认（consent） | core | repo；governed projects | AGENTS.md 指针 + always-on 摘要（非第二权威） | git.policy.md § 确认范围 + release-manager | shared-semantic | single | none | must-ship；单一权威 git.policy（ADR-0024 §8） |
 | 确认凭证与变更卫生 | core | repo；governed projects | AGENTS.md 影响面对照 | `stagedDigest` + `.governance/change-hygiene.json` | shared-semantic | duplicated | none | must-ship |
 | 规则捕获（Rule Capture） | core | repo；governed projects | AGENTS.md Rule Capture 条文 | lifecycle.policy § Rule Capture | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
 | 根因修复协议与失败预算 | skill | governed projects；repo | AGENTS.md 原则索引指针 → lifecycle.policy § 根因修复 | lifecycle.policy § 根因修复（INSTALLED） | shared-semantic | single | repo→skill · intentional（repo 消费 skill-owned canonical carrier） | must-ship |
@@ -567,5 +568,6 @@ shared semantic
 ## 维护规则
 
 - 本 RESEARCH 是活文档：产品处置投影 ADR-0024；checker Disposition 投影 PLAN-0035。修订第四列时保留版本演进（不删除历史）。
+- 现在时校准（过期行、载体路径、语义权威格）不重开基线、不预标 `retire`；第四列只随 ADR-0024 本身变动。
 - 新增 Generation-1 能力来源时补充对应行，并立刻在 ADR-0024 取得档位（禁止新行停留 undecided）。
 - 本表不得自行宣布与 ADR-0024 冲突的 MUST。

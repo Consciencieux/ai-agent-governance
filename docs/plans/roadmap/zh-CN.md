@@ -296,7 +296,7 @@ Roadmap 不独立定义或裁决 phase order。下表镜像 ADR-0018 的 **已�
 
 权威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**迁移阶段已关闭：** Phase 0–8 EXITED；**`v2.0.0` 已发布**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**当前工作带 = ADR-0025 H2（Design）**（[PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md)；待人类 Active）。H1（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)）已 Archived。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已归档。
+**迁移阶段已关闭：** Phase 0–8 EXITED；**`v2.0.0` 已发布**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**当前工作带 = ADR-0025 H2**（H2-0 台账校准可立即小批；[PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) **Design**，待人类 Active）。H1（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)）已 Archived。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已归档。
 
 ## 2.0 已发布（索引）
 
@@ -310,16 +310,16 @@ Roadmap 只列顺序与施工计划，不复制 Plan 步骤 / Affected Files / �
 | 1 | [PLAN-0031](../archive/PLAN-0031-producer-product-governance-separation.md) | Archived |
 | 2 | [PLAN-0032](../archive/PLAN-0032-documentation-knowledge-architecture-closure.md) · [PLAN-0033](../archive/PLAN-0033-known-issue-closure.md) | Archived |
 | 3 | [PLAN-0034](../archive/PLAN-0034-governance-core-rule-model.md) · ADR-0023 | Archived；baseline `24021c4` |
-| 4 | [PLAN-0035](../archive/PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../archive/PLAN-0036-payload-discovery-ledger.md) | Implemented / EXITED |
-| 5 | [PLAN-0038](../archive/PLAN-0038-task-capability-routing.md) · [PLAN-0039](../archive/PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../archive/PLAN-0040-capability-physical-projection.md) | Implemented / EXITED（5a 图 · 5b resolve/CLI · 5c P0–P2 投影；leftover 延后） |
-| 6 | [PLAN-0042](../archive/PLAN-0042-invariant-based-testing.md) | Implemented / EXITED（oracle 台账 + 路由负向 + 种子 CTRL；全量机械规则仍延后） |
-| 7 | [PLAN-0043](../archive/PLAN-0043-review-system-redesign.md) | Implemented / EXITED（Impl must-ship；System/Research repo-keep；路由 N4） |
+| 4 | [PLAN-0035](../archive/PLAN-0035-checker-primitive-restructuring.md) · [PLAN-0036](../archive/PLAN-0036-payload-discovery-ledger.md) | Archived（checkpoint EXITED） |
+| 5 | [PLAN-0038](../archive/PLAN-0038-task-capability-routing.md) · [PLAN-0039](../archive/PLAN-0039-context-detector-dispatcher.md) · [PLAN-0040](../archive/PLAN-0040-capability-physical-projection.md) | Archived（checkpoint EXITED；5a 图 · 5b resolve/CLI · 5c P0–P2 投影；leftover 延后） |
+| 6 | [PLAN-0042](../archive/PLAN-0042-invariant-based-testing.md) | Archived（checkpoint EXITED；oracle 台账 + 路由负向 + 种子 CTRL；全量机械规则仍延后） |
+| 7 | [PLAN-0043](../archive/PLAN-0043-review-system-redesign.md) | Archived（checkpoint EXITED；Impl must-ship；System/Research repo-keep；路由 N4） |
 
 ### 发布记录
 
 | 项 | 状态 |
 | --- | --- |
-| 8 重建 mandatory gates | [PLAN-0044](../archive/PLAN-0044-rebuild-mandatory-gates.md) Implemented / EXITED |
+| 8 重建 mandatory gates | [PLAN-0044](../archive/PLAN-0044-rebuild-mandatory-gates.md) Archived（checkpoint EXITED） |
 | 2.0 skill-release | **已发布** `v2.0.0`（清单已并入 [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)） |
 
 [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived**（2026-09-13 Stage C/D 完成；`references/principles/` + 干净目标表征 4/4）。过滤边界仍约束后续 H2：禁止把本仓目录 / CTRL 号 / Phase 剧本当 L1。
@@ -334,7 +334,7 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 | --- | --- | --- | --- |
 | **H0** 文档与生命周期对账 | 入口/路线图/计划位置与 `v2.0.0` 对齐 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 计划已归档） |
 | **H1** 可复用治理 Skill 提炼 | L1/L2/L3 提取协议 → 干净目标验证；不迁脚本载体 | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** 控制面补完 | 先指令面 2.0 对齐（薄入口 + must-ship 能力叶）；H2a–c 机械债另循序 | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) | **Design** |
+| **H2** 控制面补完 | 执行序见 ADR-0025 决策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md)（H2-front） | **Design** |
 | **H3** 运行时与科研 | L3、测量、注意力实验；不挡 2.1 | 无 Active Plan | 远 |
 
 ### H0 已完成
@@ -345,6 +345,8 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 
 | 子带 | 索引（Finding / 残留，非施工步骤） |
 | --- | --- |
+| H2-0 台账校准 | [RESEARCH-0004](../../research/RESEARCH-0004-architecture-evolution.md) / [0005](../../research/RESEARCH-0005-current-capabilities.md) / [0006](../../research/RESEARCH-0006-generation-1-capability-baseline.md) / [0009](../../research/RESEARCH-0009-agent-instruction-architecture.md) 现在时；roadmap 状态词。无独立 Plan。权威：[ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 14 |
+| H2-front 指令面 | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md)（Design；待人类 Active） |
 | H2a 残留抽出 | 5c leftover Capability 叶 · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md)（L0 台账 = [PLAN-0041](../archive/PLAN-0041-script-inventory.md)；今日 `retire = ∅`） |
 | H2b 检查器与台账 | 剩余 consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · ADR-0016 parser 迁移 |
 | H2c 跨 profile / 机器 Control | [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
@@ -603,7 +605,7 @@ H0     文档与生命周期对账 — EXITED / Archived（PLAN-0045）
         ↓
 H1     PLAN-0037 跨项目 portable 提炼 — **Archived**（2026-09-13）
         ↓
-H2     PLAN-0046 指令面 2.0 对齐 — **Design**（待 Active）
+H2     执行序 ADR-0025：H2-0 → PLAN-0046（Design）→ a→b→c→d
         ↓
 H3     运行时与科研（L3 / 测量；不挡 2.1）
         ↓

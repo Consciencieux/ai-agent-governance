@@ -6,10 +6,14 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **PLAN-0046 Design (H2)** — instruction-surface 2.0 alignment plan: thin entry + must-ship capability leaves; consumes RESEARCH-0006 / ADR-0024; does not reopen the baseline as a construction contract. Awaiting human Active.
+- **ADR-0025 H2 execution order** — H2-0 ledger now-tense calibration → PLAN-0046 (H2-front) → H2a–d. Roadmap indexes the order; authority stays in the ADR. PLAN-0046 re-homed to H2-front (not H2d). RESEARCH-0004/0005/0006/0009 now-tense only. Does not Active PLAN-0046; does not pre-mark retire.
+
+- **PLAN-0046 Design (H2-front)** — instruction-surface 2.0 alignment plan: thin entry + must-ship capability leaves; consumes RESEARCH-0006 / ADR-0024; does not reopen the baseline as a construction contract. Awaiting human Active.
+
 - **Numbered docs are single files** — do not mint companion RESEARCH IDs or `working/` dumps for construction tables. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. RESEARCH-0014 (extraction draft) withdrawn. Docs shape allowlist outcome is tracked in FINDING-0030 (H2b open; implementation detail not carried in the Finding or README).
 
 - **PLAN-0037 Stage A/B reconciled** — L1/L2 authority is ADR-0020 only (no duplicate extraction files); cascade unwind recorded.
+
 - **PLAN-0037 Stage C/D complete (H1)** — portable principles pack at `references/principles/` (SKILL-INTERNAL; INIT does not install). Clean-target characterization `principles-extraction` 4/4. Plan Archived; X2 closed. Does not rewrite INSTALLED rule surface or publish a parallel skill package.
 
 ### Fixed

@@ -106,16 +106,42 @@ H2d   判断型 MUST / 锁 / consent evaluator / 安装面 routing
 H3    测量 / 注意力 / L3 runtime（不挡下一次 minor）
 ```
 
+## 后续修正（2026-09-13）：H2 执行顺序（台账校准 + 指令面前置）
+
+本修正不改决策 1–8 的 Horizon，不改决策 5 的 H2a–d **成员**，也不改 ADR-0024 `later`。补的是 **H2 开工怎么排**（审计：机械面已薄路由，指令面仍厚平面；台账现在时脏则后续判断全脏）。触发：对「H2-0 → 0046 → a→b→c→d」建议的对账。
+
+**14. H2 执行序。** 决策 5 的子带仍是 a→b→c→d。其前增加两档，**不是**新 Horizon：
+
+```text
+H2-0   台账校准     RESEARCH-0004/0005/0006/0009 现在时 + roadmap 状态词
+                    不新增权威、不重开基线、不预标 retire
+  ↓（可与下一档并行）
+H2-front 指令面     PLAN-0046（薄入口 + must-ship 叶卡 schema）
+                    Design 直至人类 Active；产出叶 schema，避免 H2a leftover 二次改写
+  ↓
+H2a → H2b → H2c → H2d   （决策 5；不可倒置）
+```
+
+H2-0 与 H2-front **可并行**。**H2a→b→c 不可倒**：b 消费 a 的残留结果；c 不得把未收 leftover 拓扑写进 Control 文件（决策 5 原禁令仍在）。H2-front **不是** H2d：安装面 router / Narrow ADR 进 INSTALLED 仍在 H2d。
+
+**15. H2 开工纪律。**
+
+- 唯一阻断权威 = `npm run check:must-ship`；Gen1 `npm run check` 保持观测，直到 H2b 完成 parser 迁移
+- 不预标 `retire`、不批量删脚本；删除只在 H2a 之后（决策 10）
+- 不建第三份能力去向表；台账 = ADR-0024 处置 + RESEARCH-0006 投影 + `script-inventory.v0.json`
+- 每步一个 Active Plan；Plan archive ≠ Release；SemVer ≠ Horizon
+- PLAN-0046 不自动 Active；FINDING-0004 / 0005 等进 INSTALLED 须 Narrow ADR（H2d 之前）
+
 ## 后果
 
-- Roadmap「当前阶段」= **H1 Active（PLAN-0037）**；H0 已 Archived。
+- Roadmap「当前阶段」= **H2**（H2-0 校准可立即小批；[PLAN-0046](../plans/PLAN-0046-instruction-surface-2.0-alignment.md) **Design**，待人类 Active）。H0 / H1 已 Archived。
 - ADR-0018 继续约束历史 Phase 0–8 与 ID 编号规则；2.x 顺序提问指向本 ADR。
-- PLAN-0037 已由人类解冻 Active（2026-09-12）；本 ADR 仍不是自动解冻机制。
+- PLAN-0037 已 Archived（2026-09-13 Stage D）；本 ADR 仍不是自动解冻 PLAN-0046 的机制。
 - `retire` / `out`（治理评分、`ai-skill-manager`）仍不进入 2.x 施工；脚本面今日 `retire = ∅`。
-- H1 期间对 `scripts/` 的默认动作是 **不动载体**；去向问题问 inventory，不问新表。
+- H2-front 期间对 `scripts/` 的默认动作仍是 **不动载体**；去向问题问 inventory，不问新表。
 
 ## 参考
 
 - ADR-0015 路线图不得裁决阶段顺序 · ADR-0016 Plan 归档 · ADR-0018 迁移路径 · ADR-0020 提炼边界 · ADR-0024 产品冻结与 `later` 成员
-- PLAN-0037 提炼 · PLAN-0045 H0 · PLAN-0035 checker disposition · PLAN-0041 script inventory
+- PLAN-0037 提炼（Archived）· PLAN-0045 H0 · PLAN-0046 H2-front · PLAN-0035 checker disposition · PLAN-0041 script inventory
 - FINDING-0001..0008 / 0010..0017 / 0019 / 0021 / 0022 / 0024..0029（Confirmed 输入，不是本 ADR 关闭）
