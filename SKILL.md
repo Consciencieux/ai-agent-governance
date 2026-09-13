@@ -17,7 +17,7 @@ description: >-
 
 > **可复用原则包（PLAN-0037 / ADR-0020）：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树、CTRL 编号或 Phase/PLAN 剧本当 portable L1。
 
-> **能力叶路由（PLAN-0046 Archived）：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。覆盖索引（非处置权威）：`repo-tools/instruction-surface-leaves.v0.json`。处置仍只认 [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) §4。
+> **能力叶路由（PLAN-0046 Archived）：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + `references/capabilities/` 目录为准；仓库侧覆盖索引是 REPO-ONLY，不随 tarball。处置权威用 ID 指针 **ADR-0024 §4**（不链本仓 `docs/` 路径）。
 
 ### 能力叶快速路由（Capability leaves）
 
@@ -46,7 +46,7 @@ description: >-
 | 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskill-*.md` |
 | Discovery Ledger（later） | `discovery-ledger.md` |
 
-完整清单与 must-ship 覆盖以 `repo-tools/instruction-surface-leaves.v0.json` 为准。
+完整清单以本节路由表与 `references/capabilities/` 目录为准。must-ship 覆盖的仓库侧索引是 REPO-ONLY，不进安装载荷。
 
 ### 概念总览（Concept Map）
 

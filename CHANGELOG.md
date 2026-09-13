@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Payload REPO-ONLY path leaks** — `SKILL.md` no longer links ADR-0024 or the coverage index via `docs/design-decisions/…` / `repo-tools/…` (absent from the install tarball). Skill executor uses the in-payload capability table + `references/capabilities/`; ADR cited by ID. Regression: `payload` suite source-closure test.
+
 ## [2.1.0] - 2026-09-13
 
 ### Changed

@@ -496,6 +496,37 @@ test("payload closure: every relative markdown link stays inside the generated p
   }
   return true;
 });
+
+// Skill-package text may name target-project docs/rules|plans|features|ARCHITECTURE,
+// but must not present this repo's REPO-ONLY trees as loadable paths (tarball has no docs/,
+// repo-tools/, or repo-workflows/). Architecture: skill executor is skill-portable.
+test("payload source: skill package does not name REPO-ONLY trees as loadable paths", () => {
+  const forbidden = /^(?:docs\/(?:design-decisions|research|product|glossary)|repo-tools\/|repo-workflows\/)/;
+  const offenders = [];
+  const roots = [
+    path.join(SKILL_ROOT, "SKILL.md"),
+    ...markdownFiles(path.join(SKILL_ROOT, "references")),
+  ];
+  for (const file of roots) {
+    const rel = path.relative(SKILL_ROOT, file).replace(/\\/g, "/");
+    fs.readFileSync(file, "utf8").split("\n").forEach((line, i) => {
+      for (const m of line.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+        const href = m[1].trim().split("#")[0];
+        if (/^(https?:|mailto:)/.test(href)) continue;
+        if (forbidden.test(href)) offenders.push(`${rel}:${i + 1} -> ](${href})`);
+      }
+      for (const m of line.matchAll(/`([^`]+)`/g)) {
+        const inner = m[1].trim().split(/\s+/)[0];
+        if (forbidden.test(inner)) offenders.push(`${rel}:${i + 1} -> \`${inner}\``);
+      }
+    });
+  }
+  if (offenders.length) {
+    console.error("  REPO-ONLY paths named in skill payload:\n    " + [...new Set(offenders)].join("\n    "));
+    return false;
+  }
+  return true;
+});
 // ---------------------------------------------------------------------------
 // Boundary split (repository-boundary-split plan §5). The distribution boundary is
 // PHYSICAL: package-skill.sh copies whole directories, so what ships is decided by
