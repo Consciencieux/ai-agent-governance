@@ -7,13 +7,13 @@ target: both
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
-**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说。Stage 1R+3 完成；Stage 4 假绿修复 + 初剪完成；**Stage 4Q live 测重建完成**（Gen1 suites 曾封存后**已删**）；**Stage 3/4S 脚本 EXTRACT 完成**；**脚本 + 测 monolith/suite 封存均已删除**（缺功能/缺测按现行义务重写，不回捞）。0053/0054 Design。）
+**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说。Stage 1R+3+4+4Q+4S+**4D+4E** 完成；daily 面 = allowlist；H2b/H2c **停车场已删**（非挂 `check:full` 保活）；`check:full` ≡ daily；CTRL **evaluator 保留**、机读投影不恢复。0053/0054 Design。）
 
 **归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](archive/PLAN-0041-script-inventory.md) 与 [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试保护。
 
 **问题（已对齐 · 重开）：** Gen1 是一套**自洽屎山**——门禁引用脚本、脚本互引、测试锁死引用。用「谁还在引用」裁决必然全员 keep，**看不见过度工程**。正确刀法：先冻结 **2.x 最小必要面**；名单外默认 `debt`；引用只决定**拆线顺序**，不授予生存权。
 
-**不是：** 口径 C 无名单整夹删；用引用图证明「有用」；重开 H2b/H2c；hooks/L3 必装；第三份去向表；跳过 inventory 直接 `rm`。
+**不是：** 口径 C 无名单整夹删；用引用图证明「有用」；重开 H2b/H2c；**用 `check:full` 当阶段门禁收容所（demote ≠ 生存）**；hooks/L3 必装；第三份去向表；跳过 inventory 直接 `rm`；把 REPO-ONLY 晋升表写进 payload `coding.policy`。
 
 ## 一句话目标
 
@@ -25,17 +25,19 @@ target: both
 | --- | --- | --- |
 | **must_ship** | `check-must-ship-carriers.js` 列出的脚本载体 | 生存 |
 | **product_cli** | `references/init-spec.json` 安装的 CLI（及支撑 lib/evaluator） | 生存（可标 monolith 债务，但不因「厚」直接删契约名） |
-| **repo_gate** | `npm run check` + `check:must-ship` + release delivery 链上的 REPO-ONLY | 生存 |
+| **repo_gate** | **daily allowlist**（`daily-check-surface.v0.json` / `short_lists.daily_check`）∪ `check:must-ship` ∪ **release delivery**（plan-delivery / freshness release-gate 等）上的 REPO-ONLY | 生存 |
 | **debt** | 不在上述三集合 | 默认债务；引用无效；排队 extract/retire |
 | **retire** | debt 且本轮选定拆除（无 2.x 最小职责） | inventory → 清引用 → 删文件 → 去条目 |
 
 硬规则：引用图**禁止**单独导致 keep；删前 `disposition=retire`；INSTALLED 删除 = 载荷 breaking（须先改 INIT/契约）；`tests/` 另表。
 
+**Stage 4E 勘误（2026-09-13）：** 出现在 `check:full` / 测试表征 / 文档提及 **不**授予生存权。`check:full` **不是**阶段交付物停车场；4D 曾把 H2b/H2c 降到 full，4E 改为 **retire 删除**。现 `check:full` ≡ `check`（alias）。机读 Control 投影（`repo-tools/controls/**`、registry、CONTROL-X runner）属 H2c 施工面，**删除不恢复**；产品 CTRL evaluator/CLI 仍在 `scripts/`。
+
 ### 冻结短名单（权威副本也在 `summary.short_lists`）
 
 - **must_ship：** `scripts/check-secrets.js` · `check-git-policy.js` · `generate-governance.js` · `verify_governance.js` · `repo-tools/package-skill.sh`
 - **product_cli：** INIT 安装的 `scripts/check-*` / `release-manager` / `migrate-governance` / `verify_*` 等（见 inventory）
-- **repo_gate：** `npm run check` 闭包 + must-ship 机械 + `check-plan-delivery`（见 inventory）
+- **repo_gate：** daily allowlist 闭包 + must-ship 机械 + release delivery（见 inventory / `daily-check-surface.v0.json`）——**不含**已删的 H2b/H2c 阶段门禁
 
 ## 验收面
 
@@ -257,6 +259,26 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 - [x] CHANGELOG + 三语 roadmap 指针
 - [ ] **不**归档 PLAN-0055（可选 cluster 再切 / verify EXTRACT 仍 open；非阻塞）
 
+
+## Stage 4D — daily-check 面冻结（2026-09-13）· **中间态，已被 4E 勘误**
+
+- [x] `npm run check` 缩为 dogfood + hygiene + role + parity/layout + **daily-check-surface** 自检
+- [x] （中间态）H2b/H2c 阶段门禁曾迁至 `npm run check:full` —— **4E 起作废「挂 full = 保活」**
+- [x] 治理主人：`repo-tools/daily-check-surface.v0.json` + inventory `short_lists.daily_check` + 本 Plan 裁决（**不**把晋升表写进 payload `coding.policy`；政策只留 § 工程克制 · 边界三「政策正文克制」）
+- [x] 机械：超名单加入 `scripts.check` → `check-daily-check-surface --gate` 失败
+
+## Stage 4E — 阶段停车场 retire（2026-09-13）· **现行终点**
+
+**学说：** demote ≠ 生存。`check:full` 不得充当 Plan/Finding/阶段交付物收容所；无 2.x 最小职责则 **retire**，不是长期挂 full。
+
+- [x] **删除** H2b/H2c 阶段门禁（曾挂 full）：`check-discovery-ledger` · `check-metadata-projection` · `check-docs-shape` · `check-control-registry` · `check-template-responsibility` · `run-control-x` · `check-roadmap-sync`
+- [x] **删除** 无消费者台账/投影：`docs-shape-allowlist.v0.json` · `template-responsibility.v0.json` · `portability-boundary.v0.json` · `tool-surface-layers.v0.json` · `instruction-surface-leaves.v0.json` · `repo-tools/controls/**` · `repo-tools/contracts/**`
+- [x] **保留** 产品 CTRL：`scripts/evaluators/ctrl-000*.js` + 对应 CLI / INIT 绑定（语义家仍在 policy + ADR-0023；机读投影不恢复）
+- [x] `package.json`：`check:full` ≡ `check`；`check:skill-release` 不再依赖 roadmap-sync / 阶段门禁；移除 `docs:roadmap`
+- [x] inventory / architecture Layout / CONTRIBUTING 门禁表与磁盘对账；AGENTS 原则索引指向 surface JSON（非 payload 政策长文）
+- [x] **R10：** `scripts/lib/doc-consistency/run.js` 按闸门 cluster 再切（shared + 10 gate modules + thin orchestrator）
+- [ ] **可选非阻塞：** `verify_governance` / `release-manager` 动则正规 EXTRACT；`generate/run.js` 按产物簇拆（契约敏感，不开新 Plan 也可在本 Plan 续做）
+
 ## Discovery Ledger
 
 | ID | 类型 | 问题 | 状态 | 处置 |
@@ -266,20 +288,22 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | R2 | constraint | INSTALLED SemVer | **resolved** | product_cli 不因厚而删名 |
 | R3 | tests | testing.policy 活性/事实源 | **resolved** | Stage 4A/B + Disposition v2 + CHANGELOG；残留 = 持续克制非本 Plan 阻塞 |
 | R4 | inventory | summary 漂移 | **resolved** | total 跟 entries |
-| R5 | finding | 零 retire 错觉 | **resolved** | 已删 2；debt 待拆 |
+| R5 | finding | 零 retire 错觉 | **resolved** | 已删 ceremony；4E 续删阶段停车场 |
 | R6 | absorb | dogfood INSTALLED | **resolved** | Stage 2 |
 | R7 | debt | consistency monolith EXTRACT | **resolved** | Stage 3/4S：薄 CLI + lib；monolith 封存已删（不回捞） |
 | R8 | defect | 假绿路径（prompt_sync / layout-sync；parity 双跑） | **resolved** | Stage 4 fix_path + drop_dup_invoke |
+| R9 | doctrine | demote 到 `check:full` 被误读为保活；政策长文淤积 | **resolved** | Stage 4E：停车场删除；`check:full`≡daily；晋升权威 = surface JSON；政策正文克制 |
+| R10 | debt | consistency `run.js` 多闸门仍 ~900LOC | **resolved** | Stage R10：按闸门簇拆到 `scripts/lib/doc-consistency/*`；`run.js` 仅编排 |
 
 ```text
-Total known:  9
-Resolved:     9
+Total known:  11
+Resolved:     11
 Open:         0
 Unaccounted:  0
 ```
 
 ## 参考
 
-- ADR-0025 · FINDING-0028 · PLAN-0041 · PLAN-0052
-- `repo-tools/script-inventory.v0.json` · `tests/suites/script-inventory.test.js`
-- `references/policies/testing.policy.md` · `package.json` · `repo-tools/check-must-ship.sh`
+- ADR-0025 · FINDING-0028 · PLAN-0041 · PLAN-0052 · ADR-0023（Control 模型；投影≠语义家）
+- `repo-tools/script-inventory.v0.json` · `repo-tools/daily-check-surface.v0.json` · `tests/suites/script-inventory.test.js`
+- `references/policies/testing.policy.md` · `references/policies/coding.policy.md` § 工程克制（边界三） · `package.json` · `repo-tools/check-must-ship.sh`

@@ -41,6 +41,8 @@ Two rules follow, and both were violated before this table existed:
    INSTALLED paths — `docs/rules/*`, the governed project's own `AGENTS.md`, or copied
    `scripts/*`.
 2. **A SKILL-INTERNAL script must no-op outside this repo's shape** (now REPO-ONLY under repo-tools/, never shipped). `check-coding-hygiene.js` does this by reporting `applicable: false`
+│   ├── check-daily-check-surface.js # daily npm run check allowlist gate (PLAN-0055)
+│   ├── daily-check-surface.v0.json # allowlist data for check-daily-check-surface.js
    when the suite layout is absent.
 
 ### The second axis: portability (where a file GOES vs whether its content HOLDS there)
@@ -138,7 +140,18 @@ ai-agent-governance/
 │   │   ├── adr-status.js       # FINDING-0011 ADR Status-field heuristic (PLAN-0048)
 │   │   ├── secret-scan-facts.js # shared secret-scan factual primitives (patterns / staged / blob)
 │   │   ├── doc-consistency/
-│   │   │   └── run.js          # EXTRACTED consistency clusters (PLAN-0055 Stage 3/4S; thin CLI keeps name)
+│   │   │   ├── run.js                 # thin orchestrator (PLAN-0055 R10 cluster EXTRACT)
+│   │   │   ├── shared.js              # shared helpers/constants
+│   │   │   ├── changelog-coverage.js  # gate: changelog coverage
+│   │   │   ├── version-examples.js    # gate: version-example sync
+│   │   │   ├── protected-files.js     # gate: protected-files sync
+│   │   │   ├── consent-cluster.js     # gate: consent-cluster sync
+│   │   │   ├── principles-index.js    # gate: principles-index pointers
+│   │   │   ├── plan-status.js         # gate: plan-status / pending-archive
+│   │   │   ├── adr-status.js          # gate: ADR status sync
+│   │   │   ├── broken-links.js        # gate: link validity (CTRL-0006)
+│   │   │   ├── numeric-claims.js      # gate: numeric claims
+│   │   │   └── prompt-sync.js         # gate: prompt sync
 │   │   └── generate/
 │       │   └── run.js          # EXTRACTED INIT generator body (PLAN-0055 Stage 3/4S; SKILL-INTERNAL)
 │   ├── evaluators/
@@ -163,25 +176,10 @@ ai-agent-governance/
 │   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
 │   ├── check-layout-sync.js    # architecture.md Repository Layout vs the four scanned dirs (fail-closed gate)
 │   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
-│   ├── check-roadmap-sync.js   # roadmap index vs plan lifecycle state (vacuous vs current Roadmap — FINDING-0021; H2b)
-│   ├── check-docs-shape.js     # FINDING-0030 §5 docs/ shape allowlist fail-closed (PLAN-0048)
-│   ├── docs-shape-allowlist.v0.json # allowlist data for check-docs-shape.js
-│   ├── check-discovery-ledger.js # FINDING-0022 Discovery Ledger L2 (PLAN-0048)
-│   ├── check-metadata-projection.js # FINDING-0024 read-only ADR index projection (PLAN-0048)
-│   ├── check-control-registry.js # H2c machine-readable Control projections (PLAN-0049)
-│   ├── run-control-x.js        # H2c CONTROL-X dual-profile negative fixture runner (PLAN-0049)
-│   ├── controls/               # REPO-ONLY Control JSON projections (schema authority = ADR-0023)
-│   │   ├── CTRL-0001.json / CTRL-0002.json / CTRL-0003.json / CTRL-0004.json / CTRL-0006.json
-│   │   └── fixtures/
-│   │       └── CTRL-0001.negative.txt
-│   ├── contracts/              # REPO-ONLY sibling-closure dogfood contracts (PLAN-0050)
-│   │   └── SC-CTRL-0002.sibling.json
-│   ├── portability-boundary.v0.json # FINDING-0007 minimal adapter/portability matrix (PLAN-0050)
-│   ├── tool-surface-layers.v0.json # FINDING-0014 L0–L4 tool-surface map (PLAN-0050; L3 not must-install)
-│   ├── check-template-responsibility.js # FINDING-0026 instruction vs template responsibility map (PLAN-0049)
-│   ├── template-responsibility.v0.json # responsibility map data for check-template-responsibility.js
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
+│   ├── check-daily-check-surface.js # daily npm run check allowlist gate (PLAN-0055)
+│   ├── daily-check-surface.v0.json # allowlist data for check-daily-check-surface.js
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)
 │   ├── check-secrets.js        # repo-profile CTRL-0001 CLI (shared evaluator under scripts/; not the skill CLI path)
 │   ├── check-must-ship.sh      # Phase 8 must-ship mechanical gate set (PLAN-0044 / ADR-0024)
@@ -190,7 +188,6 @@ ai-agent-governance/
 │   ├── routing-graph.v0.json   # machine Task→Capability graph (consumed by routing.js; not a Research object)
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
-│   ├── instruction-surface-leaves.v0.json  # PLAN-0046 must-ship leaf coverage map (not a disposition ledger)
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed

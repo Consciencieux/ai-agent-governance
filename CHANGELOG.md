@@ -24,6 +24,12 @@ All notable changes to this project will be documented here.
 
 - **PLAN-0055 Gen1 archives deleted** — Removed `tests/archive/gen1-script-impl/` and `tests/archive/gen1-suites/` (and empty `tests/archive/`). Git history is the only recovery path. Missing behavior/tests are rewritten against must_ship ∪ product_cli ∪ repo_gate, never re-imported from Gen1 accretion.
 
+- **PLAN-0055 daily-check surface (Stage 4D)** — Slimmed `npm run check` to dogfood + hygiene + role + parity/layout; briefly parked H2b/H2c stage checkers on `check:full`. Added `repo-tools/daily-check-surface.v0.json` + `check-daily-check-surface.js` (allowlist gate). Payload `coding.policy` keeps only engineering-restraint / policy-body restraint — no REPO-ONLY promotion table.
+
+- **PLAN-0055 R10 (doc-consistency gate clusters)** — Split `scripts/lib/doc-consistency/run.js` (~950LOC) into `shared.js` + ten gate modules + thin orchestrator. INIT copy list / architecture layout / inventory updated so INSTALLED require graph stays closed. verify/release/generate EXTRACT deferred (contract-sensitive / medium benefit).
+
+- **PLAN-0055 Stage 4E (stage parking-lot retire)** — Doctrine correction: demote ≠ survival. Deleted H2b/H2c stage checkers and orphan projections (`controls/**`, shape/template/portability/tool-surface/instruction-surface maps, CONTROL-X runner, roadmap-sync). `check:full` now aliases daily `check`. Product CTRL evaluators/CLIs under `scripts/` retained. Plan text amended (not rewritten); Discovery R9 resolved; R10 closed in follow-up (consistency gate-cluster EXTRACT).
+
 ### Fixed
 
 - **Vacuous Gen1 doc gates (PLAN-0055 Stage 4)** — layout-sync and consistency prompt_sync no longer no-op on this repo after the `docs/product/` migration; parity is no longer double-run inside consistency.

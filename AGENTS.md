@@ -30,6 +30,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | Payload self-containment | `references/init-spec.json` § invariants | repo |
 | Distribution roles (declared, never inferred) | `references/init-spec.json` § invariants + § distribution · `docs/product/en/architecture.md` § Three distribution roles | repo |
 | Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
+| Repo gate promotion (daily allowlist) | `repo-tools/daily-check-surface.v0.json` · `repo-tools/check-daily-check-surface.js` · PLAN-0055 Stage 4D/4E（**不**进 payload 政策正文；`check:full` ≡ daily，不作停车场） | repo |
 | Reference closure (validate in the execution environment) | this file § Reference-closure check · `CONTRIBUTING.md` § Reference-closure check · `SKILL.md` § Audit 流程 step 3 | both |
 | Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理 · `references/policies/lifecycle.policy.md` § 变更归位与残留清理 | payload |
 | Root-cause repair protocol + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
@@ -62,7 +63,7 @@ Always-on hard rules:
 
 ## Before touching anything
 
-1. Read `docs/product/en/architecture.md` — Repository Layout (layout gate enforces it). **CI block = `npm run check:must-ship`**; Gen1 `npm run check` is local-only (CI observation job removed — PLAN-0052).
+1. Read `docs/product/en/architecture.md` — Repository Layout (layout gate enforces it). **CI block = `npm run check:must-ship`**; local `npm run check` is daily hygiene only (CI observation removed — PLAN-0052); stage/research checkers default to **on-demand or retire** — joining daily requires `daily-check-surface.v0.json` + inventory + Plan adjudication (PLAN-0055 Stage 4D/4E; demote-to-full ≠ survival).
 2. Read [SKILL.md](SKILL.md) (product spec).
 3. Read [CONTRIBUTING.md](CONTRIBUTING.md) and the relevant docs page for the area you change.
 
@@ -75,7 +76,7 @@ Do **not** open the whole governance tree by default (ADR-0022 Context Economy):
 3. Read only `read_set`; run only `run_set`; if unmatched/over budget use `defer_set` — never silently load everything.
 4. Leftover Capability leaves: retarget `AuthorityRef` only — do not rearrange by Gen1 dirs or invent a second lookup model. Plans **must consume** [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) and [`script-inventory.v0.json`](repo-tools/script-inventory.v0.json) — no third destination ledger. 2.x order: [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md). H2d [PLAN-0050](docs/plans/archive/PLAN-0050-h2d-payload-portability.md) **Archived**. [PLAN-0051](docs/plans/archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). [PLAN-0052](docs/plans/archive/PLAN-0052-gen1-observation-sunset.md) **Archived** (Gen1 CI observation sunset). Active Plan: [PLAN-0055](docs/plans/PLAN-0055-gen1-carrier-absorb-and-retire.md) (Stage 1R+3: minimum-necessary; 2 scripts deleted). Queued Design: [PLAN-0053](docs/plans/PLAN-0053-v2.1.x-finding-patch-slice.md), [PLAN-0054](docs/plans/PLAN-0054-h3-runtime-research-design.md) (H3 far).
 
-Instruction-surface leaves: `references/capabilities/` (coverage map: [`instruction-surface-leaves.v0.json`](repo-tools/instruction-surface-leaves.v0.json)). Skill routing table: `SKILL.md` § 能力叶快速路由. This router is **REPO-ONLY**. Characterization: `node tests/run-tests.js --suite routing`.
+Instruction-surface leaves: `references/capabilities/` (coverage map retired with PLAN-0055 Stage 4E — leaf files are the authority; no parallel JSON map). Skill routing table: `SKILL.md` § 能力叶快速路由. This router is **REPO-ONLY**. Characterization: `node tests/run-tests.js --suite routing`.
 
 ## Protected files (governance file protection)
 

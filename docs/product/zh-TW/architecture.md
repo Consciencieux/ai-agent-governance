@@ -22,6 +22,8 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 
 1. **SKILL-INTERNAL 檔案絕不能被當作被治理專案的規則來源引用**（那裡沒有這個檔案）。子技能與生成的 AGENTS.md 文本只能指向 INSTALLED 路徑——`docs/rules/*`、被治理專案自己的 `AGENTS.md`、或複製過去的 `scripts/*`。
 2. **SKILL-INTERNAL 腳本在本倉庫形態之外必須 no-op**，因為打包仍會帶上它（角色是 SKILL-INTERNAL 的檔案隨 tarball 走、INIT 不安裝）。`check-coding-hygiene.js`（現為 REPO-ONLY，不再打包）的做法是：缺少套件佈局時報告 `applicable: false`。
+│   ├── check-daily-check-surface.js # 日常 npm run check 允許名單門禁（PLAN-0055）
+│   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允許名單資料
 
 ### 第二條軸：可移植性（檔案"去哪裡"與其內容"在那裡是否成立"）
 
@@ -111,7 +113,18 @@ ai-agent-governance/
 │   │   ├── adr-status.js       # FINDING-0011 ADR Status 欄位啟發（PLAN-0048）
 │   │   ├── secret-scan-facts.js # 共享密鑰掃描事實 primitive（模式 / staged / blob）
 │   │   ├── doc-consistency/
-│   │   │   └── run.js          # EXTRACT 出的 consistency 集群體（PLAN-0055 Stage 3/4S；薄 CLI 保留原名）
+│   │   │   ├── run.js                 # 薄編排器（PLAN-0055 R10 閘門簇 EXTRACT）
+│   │   │   ├── shared.js              # 共享 helper/常量
+│   │   │   ├── changelog-coverage.js  # 閘門：changelog 覆蓋
+│   │   │   ├── version-examples.js    # 閘門：version-example 同步
+│   │   │   ├── protected-files.js     # 閘門：protected-files 同步
+│   │   │   ├── consent-cluster.js     # 閘門：consent-cluster 同步
+│   │   │   ├── principles-index.js    # 閘門：principles-index 指針
+│   │   │   ├── plan-status.js         # 閘門：plan-status / pending-archive
+│   │   │   ├── adr-status.js          # 閘門：ADR status 同步
+│   │   │   ├── broken-links.js        # 閘門：連結有效性（CTRL-0006）
+│   │   │   ├── numeric-claims.js      # 閘門：numeric claims
+│   │   │   └── prompt-sync.js         # 閘門：prompt sync
 │   │   └── generate/
 │       │   └── run.js          # EXTRACT 出的 INIT 生成器本體（PLAN-0055 Stage 3/4S；SKILL-INTERNAL）
 │   ├── evaluators/
@@ -136,25 +149,10 @@ ai-agent-governance/
 │   ├── check-doc-parity.js     # 三語文件樹平行度（CI + 發佈前置）
 │   ├── check-layout-sync.js    # architecture.md 倉庫佈局 vs 四個受掃描目錄（fail-closed 閘門）
 │   ├── check-plan-delivery.js  # 計劃宣告 vs 實際交付（歸檔前閘門）
-│   ├── check-roadmap-sync.js   # roadmap 索引 vs 計劃生命週期狀態（implemented→Done、archived 不在活躍 horizon、條目帶連結）
-│   ├── check-docs-shape.js     # FINDING-0030 §5 docs/ 形狀白名單 fail-closed（PLAN-0048）
-│   ├── docs-shape-allowlist.v0.json # check-docs-shape.js 白名單資料
-│   ├── check-discovery-ledger.js # FINDING-0022 發現台帳 L2（PLAN-0048）
-│   ├── check-metadata-projection.js # FINDING-0024 唯讀 ADR 索引投影（PLAN-0048）
-│   ├── check-control-registry.js # H2c 機讀 Control 投影（PLAN-0049）
-│   ├── run-control-x.js        # H2c CONTROL-X 雙 profile 負向 fixture runner（PLAN-0049）
-│   ├── controls/               # REPO-ONLY Control JSON 投影（schema 權威 = ADR-0023）
-│   │   ├── CTRL-0001.json / CTRL-0002.json / CTRL-0003.json / CTRL-0004.json / CTRL-0006.json
-│   │   └── fixtures/
-│   │       └── CTRL-0001.negative.txt
-│   ├── contracts/              # REPO-ONLY sibling-closure dogfood 合約（PLAN-0050）
-│   │   └── SC-CTRL-0002.sibling.json
-│   ├── portability-boundary.v0.json # FINDING-0007 最小 adapter/可移植性矩陣（PLAN-0050）
-│   ├── tool-surface-layers.v0.json # FINDING-0014 L0–L4 工具面（PLAN-0050；L3 非必裝）
-│   ├── check-template-responsibility.js # FINDING-0026 指令源 vs 範本責任圖（PLAN-0049）
-│   ├── template-responsibility.v0.json # check-template-responsibility.js 資料
 │   ├── check-role-completeness.js # 分發角色完整性（未分類/重疊/失效路徑/打包邊界 + repo-only 反向檢查）
 │   ├── check-coding-hygiene.js # 編碼衛生（測試歸屬 + 殘留標記）
+│   ├── check-daily-check-surface.js # 日常 npm run check 允許名單門禁（PLAN-0055）
+│   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允許名單資料
 │   ├── check-terminology.js    # repo-owned 術語門禁（從 INSTALLED 一致性檢查器拆出；ADR-0020 首次執行分離）
 │   ├── check-secrets.js        # repo 側 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路徑）
 │   ├── check-must-ship.sh      # Phase 8 必裝機械門禁集合（PLAN-0044 / ADR-0024）
@@ -163,7 +161,6 @@ ai-agent-governance/
 │   ├── routing-graph.v0.json   # 機讀 Task→Capability 圖（routing.js 消費；不是 Research 對象）
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
-│   ├── instruction-surface-leaves.v0.json  # PLAN-0046 must-ship 葉覆蓋圖（非處置台帳）
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # 發佈載荷 tarball 打包
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發

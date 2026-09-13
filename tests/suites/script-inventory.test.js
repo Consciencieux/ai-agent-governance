@@ -130,6 +130,20 @@ module.exports = function register(test) {
     return true;
   });
 
+  test("script-inventory: daily_check short list matches daily-check-surface allowlist", () => {
+    const inv = JSON.parse(fs.readFileSync(INV_PATH, "utf8"));
+    const surface = JSON.parse(
+      fs.readFileSync(path.join(ROOT, "repo-tools", "daily-check-surface.v0.json"), "utf8")
+    );
+    const daily = ((((inv.summary || {}).short_lists || {}).daily_check) || []).slice().sort();
+    const allow = (surface.allowed_node_entrypoints || []).slice().sort();
+    if (daily.join("|") !== allow.join("|")) {
+      console.error("  daily_check", daily, "!== surface", allow);
+      return false;
+    }
+    return true;
+  });
+
   test("script-inventory: package.json dogfood of INSTALLED CLIs is declared dual_profile", () => {
     const inv = JSON.parse(fs.readFileSync(INV_PATH, "utf8"));
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
