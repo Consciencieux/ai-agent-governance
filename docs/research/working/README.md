@@ -6,12 +6,12 @@
 docs/research/working/
 ├── README.md
 ├── routing/                    # Task→Capability 图（RESEARCH-0012 / PLAN-0038–0040）
-│   ├── call-topology.md
-│   ├── task-capability-map.md
-│   ├── graph.v0.json
-│   └── projection-table.md
-└── script-inventory.md         # FINDING-0028 / PLAN-0041
-    script-inventory.v0.json
+├── extraction/                 # PLAN-0037 提炼中间产物（Facts→L1/L2/L3；非 INSTALLED）
+│   ├── stage-a-portable-patterns.md
+│   └── stage-b-reusable-patterns.md
+├── script-inventory.md         # FINDING-0028 / PLAN-0041
+├── oracle-inventory.md
+└── must-ship-gates.md
 ```
 
 | 槽 | 放什么 | 不放什么 |

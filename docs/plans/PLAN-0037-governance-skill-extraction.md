@@ -138,7 +138,7 @@ Skill L1 / L2 / L3     才写成 invariant / pattern / template
 
 Active 时每条候选 invariant 必须能回溯到 Fact 行；缺 Rationale 不得升格为 L1。审查否决复制型/空泛型后再进入 Stage A–D。
 
-这也是本计划 **现在不 Active** 的原因之一：Phase 5 routing 未验证时，Fact 层仍会变（例如「Capability-first」可能被「Task-context routing」修正）；提前抽 Skill 会冻结错误模型。
+这也是本计划曾保持 Design 的原因之一：Phase 5 routing 未验证时，Fact 层会变（例如「Capability-first」可能被「Task-context routing」修正）；提前抽 Skill 会冻结错误模型。Phase 5 EXITED 且 2.0 已发布后，本计划已 Active；Stage A 起按 Facts→Rationale→Patterns 执行。
 
 ## 执行阶段（仅当 Active 后）
 
@@ -147,6 +147,8 @@ Active 后先跑提取协议（Facts → Rationale → Patterns），再写 skil
 ### Stage A — 提取 Hard Invariants（L1）
 
 输出：`Governance invariants`（skill 硬约束，宜可机械检查）
+
+**Stage A 稿：** [`stage-a-portable-patterns.md`](../research/working/extraction/stage-a-portable-patterns.md) — Facts → Rationale → L1/L2/L3 候选。状态：`Provisional-Freeze`（L1；2026-09-13）。**不是** Plan / INSTALLED skill。
 
 至少覆盖：
 
@@ -163,6 +165,8 @@ Active 后先跑提取协议（Facts → Rationale → Patterns），再写 skil
 ### Stage B — 提取 Patterns（L2）
 
 推荐、非强制路径：Research/Finding/ADR/Plan 分离；Capability → Authority → Execution；Progressive disclosure；Discovery Ledger 模式；抽象 migration stages。
+
+**Stage B 稿（2026-09-13）：** [`stage-b-reusable-patterns.md`](../research/working/extraction/stage-b-reusable-patterns.md) — L2-01…11 稳定叙述；O1–O3 已裁定；L1 provisional freeze。**不是** INSTALLED skill。
 
 ### Stage C — 定义 Skill 结构（载荷形状，非本仓路径拷贝）
 
@@ -225,6 +229,8 @@ governance-skill/
 - RESEARCH-0012（前置；routing 验证）
 - `docs/plans/archive/PLAN-0035-…` / `PLAN-0036-…` / `PLAN-0038-…`（前置已归档）
 - roadmap ×3（索引本计划为 H1 Active）
+- `docs/research/working/extraction/stage-a-portable-patterns.md`（Stage A · L1 Provisional-Freeze）
+- `docs/research/working/extraction/stage-b-reusable-patterns.md`（Stage B · L2 Draft）
 - 提炼落地时的 skill 入口与 references（路径 Stage C 定稿）
 - CHANGELOG（行为交付时）
 - 验证用干净目标证据（tests 或记录）
@@ -235,7 +241,7 @@ governance-skill/
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | X0 | observation | design | 过早抽取会固化未验证 routing | skill | high | closed | resolved | — | Phase 5 EXITED + 2.0 后解冻（2026-09-12） |
 | X1 | observation | review | 「不写死」易被读成软建议 | skill | high | closed | resolved | — | ADR-0020 L1 硬约束修正 |
-| X2 | migration_gap | design | 尚无 extraction 执行产物 | both | med | open | — | — | Active 后按 Stage A–D 关闭 |
+| X2 | migration_gap | design | extraction 执行产物未闭合至 Stage D | both | med | open | — | — | Stage A+B 稿已落 `working/extraction/stage-{a,b}-*.md`；Stage D 后关闭 |
 | X3 | observation | review | 一次抽象会复制实现或空泛口号 | skill | high | closed | resolved | — | 本计划 § 提取协议；产物分层 ≠ 提取流程 |
 | X4 | observation | review | 全文 0037 作 2.0 必达项过大且与产品定义重叠 | both | high | closed | resolved | — | 2.0=本仓 Gen2 载荷已发布；A–D 为 2.x H1 |
 | X5 | observation | review | H1 清脚本 / 装 router / 瘦本仓入口 / 新建去向表会偏离提炼 | both | high | closed | resolved | — | ADR-0025 2026-09-13 决策 9–13 |
