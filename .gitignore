@@ -5,6 +5,8 @@ tests/.tmp/
 .governance/validation.json
 .governance/drift-report.json
 .governance/release-proposal.json
+# Skill-repo release scratch
+repo-tools/.release/
 .governance/activity.jsonl
 .env
 .env.*

@@ -34,6 +34,7 @@ const RUNTIME_ARTIFACTS = [
   [".governance/validation.json", ["scripts/verify_governance.js", "references/policies/governance-files.policy.md"]],
   [".governance/drift-report.json", ["scripts/check-doc-consistency.js", "scripts/check-doc-freshness.js"]],
   [".governance/release-proposal.json", ["scripts/release-manager.js", "references/workflows/release.md"]],
+  ["repo-tools/.release/proposal.json", ["scripts/release-manager.js", "repo-workflows/skill-release.md"]],
   [".governance/activity.jsonl", ["references/policies/governance-files.policy.md", "references/templates/sub-skills.md"]],
   [".governance/state.json", ["references/templates/sub-skills.md", "scripts/generate-governance.js"]],
   [".governance/manifest.json", ["scripts/generate-governance.js", "scripts/verify_governance.js"]],

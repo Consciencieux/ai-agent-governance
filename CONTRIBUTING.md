@@ -102,7 +102,7 @@ Enumerate by resolvability; do not sample “repo-looking” lines. Stance refer
 
 ## Commit Conventions
 
-Conventional Commits in English: `feat(scope): subject` / `fix(scope): subject`. Never commit generated runtime outputs (`.governance/validation.json`, `.governance/drift-report.json`, `.governance/release-proposal.json` are git-ignored).
+Conventional Commits in English: `feat(scope): subject` / `fix(scope): subject`. Never commit generated runtime outputs (`.governance/validation.json`, `.governance/drift-report.json`, and for governed projects `.governance/release-proposal.json`; this repo uses `repo-tools/.release/proposal.json` — all git-ignored).
 
 ## AI-Assisted Contributions
 

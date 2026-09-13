@@ -102,7 +102,7 @@ CI（ADR-0014 Migration Mode **已退出**）：所有分支 / PR 的阻斷權�
 
 ## 提交約定
 
-英文 Conventional Commits：`feat(scope): subject` / `fix(scope): subject`。絕不提交產生的運行時輸出（`.governance/validation.json`、`.governance/drift-report.json`、`.governance/release-proposal.json` 已被 git 忽略）。
+英文 Conventional Commits：`feat(scope): subject` / `fix(scope): subject`。絕不提交產生的運行時輸出（`.governance/validation.json`、`.governance/drift-report.json`；被治理專案另有 `.governance/release-proposal.json`；本倉使用 `repo-tools/.release/proposal.json`——均已被 git 忽略）。
 
 ## AI 輔助貢獻
 

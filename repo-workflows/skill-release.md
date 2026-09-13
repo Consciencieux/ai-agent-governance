@@ -22,7 +22,7 @@
 | `sync.passed` | `check-sync.js` 退出码 0 | ❌ 停止 |
 | `plan.delivery_verified` | `check-plan-delivery.js` 退出码 0 | ❌ 停止 |
 
-与被治理项目的差异：无 `validator.passed`。技能仓库没有 `.governance/manifest.json`，也没有软件项目形态的治理工件，`verify_governance.js` 按默认检查必然失败（ADR-0006）——该项由 `tests.required`（`npm test` 退出码 0）替代。注：`.governance/release-proposal.json` 是本流程的运行时产物（git 忽略），与上述「无 manifest」不矛盾。
+与被治理项目的差异：无 `validator.passed`。技能仓库没有 `.governance/manifest.json`，也没有软件项目形态的治理工件，`verify_governance.js` 按默认检查必然失败（ADR-0006）——该项由 `tests.required`（`npm test` 退出码 0）替代。本仓发布暂存：`repo-tools/.release/proposal.json`（git 忽略）。
 
 ## 版本一致性（五个同步点 + tag，无 manifest）
 
@@ -81,7 +81,7 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 
 轻量级门禁**总是自动跑**；高风险清单**明确列举**（见上表），不依赖 AI 自由裁量，边界模糊时**取更高级别**。Proposal JSON 必须包含 `riskLevel`、`reviewRecommendation` 与 `reviewStatus`；高风险执行前 `reviewStatus` 必须为 `completed` 或 `explicitly-approved`，否则 `release-manager execute` 拒绝创建 tag。
 
-批准后把 Proposal 记录到 `.governance/release-proposal.json`。
+批准后把 Proposal 记录到 `repo-tools/.release/proposal.json`（先 `mkdir -p repo-tools/.release`；该目录整树 git 忽略）。
 
 ## Phase 4：Release Execution（执行）
 
@@ -114,11 +114,11 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
 6. **提交 release commit**：`git add`（版本同步、归档与 roadmap 相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 7. **复跑轻量门禁**（release commit 之后、tag 之前）：`npm run check`（exit 0）——确认归档与版本同步的提交内容本身没有破坏任何门禁。
 8. **校验（本仓库以 `npm test` 为准）**：技能仓库的校验义务由第 7 步的 `npm test` + 发布门禁承担。`scripts/verify_governance.js` 在本仓库**预期退出码 1**（无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败——ADR-0006，本仓库不 dogfood 自身框架）。它不是本流程的门禁：**不得为了让它通过而伪造 `.governance/`**，也不得因其非零退出码而中止发布。
-9. **生成/更新 Proposal**：**重新运行 `release-manager plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha` 与 `provenance` 都随 plan 重建。**不得手工编辑 `.governance/release-proposal.json` 只改 `headSha`**：`execute` 会重算 provenance 并拒绝任何被编辑的 proposal（v1.0.1 发布时曾手改 headSha 触发 "proposal provenance does not match" 拒绝）。provenance 绑定的是 plan 当时的 risk/review/version/headSha 字段，release commit 之后必须先 plan 再 execute。
+9. **生成/更新 Proposal**：**重新运行 `release-manager plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha` 与 `provenance` 都随 plan 重建。**不得手工编辑 `repo-tools/.release/proposal.json` 只改 `headSha`**：`execute` 会重算 provenance 并拒绝任何被编辑的 proposal（v1.0.1 发布时曾手改 headSha 触发 "proposal provenance does not match" 拒绝）。provenance 绑定的是 plan 当时的 risk/review/version/headSha 字段，release commit 之后必须先 plan 再 execute。
 10. **创建 annotated tag**：
 
     ```bash
-    node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes
+    node scripts/release-manager.js execute --proposal repo-tools/.release/proposal.json --yes
     ```
 
 11. **推送**：`git push origin main` → `git push origin vX.Y.Z`
@@ -142,4 +142,4 @@ AI 不得自动创建 tag、push tag、创建 release，除非：已生成 Relea
 
 **事务性**：任何前置检查失败 → 在开始写操作之前中止，不触碰仓库。进入写操作后（版本同步 → 归档 → release commit → tag → push → GitHub Release → 资产上传）必须连续完成；任一步失败立即停止，报告 ⚠️/❌ 与已完成/未完成清单，**不得改用别的方式重试**。tag 已创建但 GitHub Release 创建失败 → **不删除 tag、不强制重来**；报告 ⚠️ Blocked，由用户决定补建 release 或清理。
 
-**恢复**：中断后依据 `git log`（release commit / tag 是否已创建、push 是否到达远端）与 `.governance/release-proposal.json`（`headSha` 指向哪个提交）判断已完成步骤，**仅重做未完成部分**——已完成并推送的提交与 tag 绝不重做或强推。技能仓库无 `validation.json`，`git log` + proposal 即恢复依据。
+**恢复**：中断后依据 `git log`（release commit / tag 是否已创建、push 是否到达远端）与 `repo-tools/.release/proposal.json`（`headSha` 指向哪个提交）判断已完成步骤，**仅重做未完成部分**——已完成并推送的提交与 tag 绝不重做或强推。技能仓库无 `validation.json`，`git log` + proposal 即恢复依据。

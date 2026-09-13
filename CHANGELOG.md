@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- Skill-release proposal path: `repo-tools/.release/proposal.json`.
+
 - Repo routing loads skill-release, changelog-policy, and engineering-restraint on the matching edit surfaces.
 
 - Finding patches: broken_links and numeric_claims fail-closed under `--gate`; Unreleased changelog-narration fail-closed; FINDING-0007 delivered/later boundary documented.
@@ -18,7 +20,7 @@ All notable changes to this project will be documented here.
 
 - AGENTS.md trimmed to pointers; status lists stay on the roadmap.
 
-- Dropped tracked `.governance/review-evidence-1.0.0.md`; repo `.governance/` stays release-runtime only.
+- Dropped tracked `.governance/review-evidence-1.0.0.md`.
 
 ### Fixed
 
