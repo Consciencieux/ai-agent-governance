@@ -6,7 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **PLAN-0052 Active** — Gen1 observation-gate sunset (inventory-gated retire only; must-ship stays sole CI block). Queued Design: PLAN-0053 (2.1.x Finding patch slice), PLAN-0054 (H3 boundary, far; not Active).
+- **PLAN-0052 Archived** — Gen1 CI observation sunset (exit 4a): Stage 0–1 enumerated and adjudicated the observation surface (zero `retire`; scripts kept); Stage 2 removed the non-blocking `gen1-observation` CI job. `check:must-ship` remains the sole CI block; local `npm run check` still available.
+- **PLAN-0055 Design** — Gen1 carrier re-adjudication (bar B: absorb useful / `retire` then delete abandoned) plus `tests/` prune plan; queued ahead of PLAN-0053 / PLAN-0054. No Active Plan until human promotes 0055.
 
 ### Fixed
 
