@@ -1,15 +1,15 @@
 ---
 id: PLAN-0055
-status: Active
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
-**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说。Stage 1R+3+4+4Q+4S+**4D+4E** 完成；daily 面 = allowlist；H2b/H2c **停车场已删**（非挂 `check:full` 保活）；`check:full` ≡ daily；CTRL **evaluator 保留**、机读投影不恢复。0053/0054 Design。）
+**状态：** Archived（2026-09-13；本轮脚本重构主线完成：1R+3+4+4Q+4S+4D+4E+R10。daily allowlist 冻结；H2b/H2c 停车场已删；`check:full` ≡ daily；CTRL evaluator 保留、机读投影不恢复。verify/release/generate 再 EXTRACT **延后**，不阻塞归档。Plan archive ≠ Release。0053/0054 仍 Design。）
 
-**归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](archive/PLAN-0041-script-inventory.md) 与 [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试保护。
+**归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](PLAN-0041-script-inventory.md) 与 [PLAN-0052](PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../../references/policies/testing.policy.md) § 测试保护。
 
 **问题（已对齐 · 重开）：** Gen1 是一套**自洽屎山**——门禁引用脚本、脚本互引、测试锁死引用。用「谁还在引用」裁决必然全员 keep，**看不见过度工程**。正确刀法：先冻结 **2.x 最小必要面**；名单外默认 `debt`；引用只决定**拆线顺序**，不授予生存权。
 
@@ -147,7 +147,7 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 
 ## Stage 1 — 裁决落盘 — **完成**（2026-09-13）
 
-- [x] 终裁写入 §1.1 + 更新 [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（`summary.total=44`；`summary.adjudication`；notes）
+- [x] 终裁写入 §1.1 + 更新 [`script-inventory.v0.json`](../../../repo-tools/script-inventory.v0.json)（`summary.total=44`；`summary.adjudication`；notes）
 - [x] Test Disposition v1（§1.2；**仅标记，不删测**）
 - [x] `node tests/run-tests.js --suite script-inventory` 绿（含 `summary.total` 对账表征）
 
@@ -212,7 +212,8 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
   - Gen1 厚实现曾封存于 `tests/archive/gen1-script-impl/` → **已删**（2026-09-13；git 历史可查；缺功能按现行义务重写，禁止回捞）
   - `verify_governance` / `release-manager` / lock / sync：活体未拆；需要动时正规 EXTRACT/重写，不恢复 monolith
 - [x] 无独立 `necessity=debt` 文件残留
-- [ ] 可选后续：consistency `run.js` 按 cluster 再切；verify 若要 EXTRACT 须先改 INIT 闭包契约
+- [x] consistency `run.js` cluster 再切（R10 完成）
+- [x] verify/release/generate 再 EXTRACT：**显式延后**（契约敏感；非本轮阻塞；触碰时另裁）
 
 ## Stage 4 — 通裁：测瘦身 + Script Health — **完成（含 4Q）**
 
@@ -229,7 +230,7 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 
 ### 4.0 事实源学说
 
-权威：[`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试活性 + 事实源规定。
+权威：[`references/policies/testing.policy.md`](../../../references/policies/testing.policy.md) § 测试活性 + 事实源规定。
 
 裁决链：用途 → 事实源（`references/` / SKILL / init-spec / must-ship / inventory / CTRL）→ 活性负例 → 与门禁/更短负例去重。
 
@@ -257,7 +258,7 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 - [x] 全量 test（非沙箱）+ `check:must-ship` 绿
 - [x] inventory `notes` 补 `health=` / `reorg=`（本提交收尾）
 - [x] CHANGELOG + 三语 roadmap 指针
-- [ ] **不**归档 PLAN-0055（可选 cluster 再切 / verify EXTRACT 仍 open；非阻塞）
+- [x] **归档 PLAN-0055**（主线完成；延后项见 Exit）
 
 
 ## Stage 4D — daily-check 面冻结（2026-09-13）· **中间态，已被 4E 勘误**
@@ -277,7 +278,15 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 - [x] `package.json`：`check:full` ≡ `check`；`check:skill-release` 不再依赖 roadmap-sync / 阶段门禁；移除 `docs:roadmap`
 - [x] inventory / architecture Layout / CONTRIBUTING 门禁表与磁盘对账；AGENTS 原则索引指向 surface JSON（非 payload 政策长文）
 - [x] **R10：** `scripts/lib/doc-consistency/run.js` 按闸门 cluster 再切（shared + 10 gate modules + thin orchestrator）
-- [ ] **可选非阻塞：** `verify_governance` / `release-manager` 动则正规 EXTRACT；`generate/run.js` 按产物簇拆（契约敏感，不开新 Plan 也可在本 Plan 续做）
+- [x] **Exit / 延后登记：** `verify_governance` / `release-manager` / `generate/run.js` 再 EXTRACT **不在本 Plan 关闭条件内**；触碰契约或另开 Design/Active 时再做（禁止无消费者回捞 H2c 投影）
+
+
+## Exit（2026-09-13）
+
+- **关闭条件已满足：** 最小必要面冻结；Gen1 archive 删除；daily allowlist + surface 门禁；H2b/H2c 停车场 retire；consistency/generate 薄 CLI + consistency 闸门簇 EXTRACT；Discovery 11/11 resolved。
+- **明确不做（本轮）：** verify/release 正规 EXTRACT；generate 按产物簇再拆；恢复 `repo-tools/controls/**`。
+- **后续入口：** Design [PLAN-0053](../PLAN-0053-v2.1.x-finding-patch-slice.md) / [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md)；脚本再动时消费 `script-inventory.v0.json`，禁第三 ledger。
+- Plan archive ≠ Release（ADR-0016）。
 
 ## Discovery Ledger
 

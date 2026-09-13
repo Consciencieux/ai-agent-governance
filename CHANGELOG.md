@@ -30,6 +30,8 @@ All notable changes to this project will be documented here.
 
 - **PLAN-0055 Stage 4E (stage parking-lot retire)** — Doctrine correction: demote ≠ survival. Deleted H2b/H2c stage checkers and orphan projections (`controls/**`, shape/template/portability/tool-surface/instruction-surface maps, CONTROL-X runner, roadmap-sync). `check:full` now aliases daily `check`. Product CTRL evaluators/CLIs under `scripts/` retained. Plan text amended (not rewritten); Discovery R9 resolved; R10 closed in follow-up (consistency gate-cluster EXTRACT).
 
+- **PLAN-0055 Archived** — Closure of Gen1 carrier re-cut / daily-check freeze / H2b·c stage retire / consistency gate-cluster EXTRACT. verify/release/generate further EXTRACT deferred. No Active Plan; Design queue remains PLAN-0053 / PLAN-0054. Plan archive ≠ Release.
+
 ### Fixed
 
 - **Vacuous Gen1 doc gates (PLAN-0055 Stage 4)** — layout-sync and consistency prompt_sync no longer no-op on this repo after the `docs/product/` migration; parity is no longer double-run inside consistency.
