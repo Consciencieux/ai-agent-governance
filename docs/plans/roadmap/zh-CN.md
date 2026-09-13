@@ -14,7 +14,7 @@
 
 | | |
 | --- | --- |
-| **产品** | `v2.1.0` — INSTALLED 必装切片；CI 阻断 = `npm run check:must-ship` |
+| **产品** | `v2.1.1` — INSTALLED 必装切片；CI 阻断 = `npm run check:must-ship` |
 | **Horizon** | H2 **已完成**；下一施工带 = **H3**（远；默认不挡下一 minor） |
 | **Active Plan** | **无** |
 | **排队 Design** | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) — H3 边界 / 运行时与科研（未升 Active） |

@@ -4,6 +4,8 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-09-14
+
 ### Changed
 
 - Doc truth before H3: CONTRIBUTING/README no longer claim Gen1 CI observation or v2.0-as-current; architecture tree splice fixed; Resolved findings / ADR-0009 note PLAN-0055 removed H2b carriers.

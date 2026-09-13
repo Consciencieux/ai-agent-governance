@@ -14,7 +14,7 @@ Authority for the 2.x path: [ADR-0024](../../design-decisions/ADR-0024-gen2-prod
 
 | | |
 | --- | --- |
-| **Product** | `v2.1.0` — INSTALLED must-ship slice; CI block = `npm run check:must-ship` |
+| **Product** | `v2.1.1` — INSTALLED must-ship slice; CI block = `npm run check:must-ship` |
 | **Horizon** | H2 **complete**; next construction horizon = **H3** (far; does not block the next minor) |
 | **Active Plan** | **None** |
 | **Queued Design** | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) — H3 boundary / runtime & research (not Active) |

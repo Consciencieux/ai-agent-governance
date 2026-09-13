@@ -259,8 +259,8 @@ AI 不得自动创建 tag、自动 push tag、自动创建 release，除非：
 ```json
 {
   "release": {
-    "version": "2.1.0",
-    "tag": "v2.1.0",
+    "version": "2.1.1",
+    "tag": "v2.1.1",
     "validated": false
   }
 }
