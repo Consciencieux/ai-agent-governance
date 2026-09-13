@@ -54,7 +54,7 @@ H0 与 H1 不可对调：过时入口会把后续施工指回已删除的迁移�
 
 | 子带 | 收什么 | 不得做什么 |
 | --- | --- | --- |
-| H2a 残留抽出 | 5c leftover Capability 叶（只改 `AuthorityRef`）；FINDING-0029 lifecycle 残留 / `state.json` phase→facet；FINDING-0028 dogfood / `retire` 隔离 | 重开 Phase 5；按 Gen1 目录骨架细切 |
+| H2a 残留抽出 | 5c leftover Capability 叶（只改 `AuthorityRef`）；FINDING-0029 lifecycle 残留 / `state.json` phase→facet；FINDING-0028 dogfood；**消费** script-inventory（今日 `retire = ∅`，禁止第三份能力去向表） | 重开 Phase 5；按 Gen1 目录骨架细切；H1 期间预标 `retire` 或整夹隔离 |
 | H2b 检查器与台账 | 剩余 consistency clusters · principles-index #9 · FINDING-0011 / 0019 / 0021；Discovery Ledger L2；FINDING-0022 / 0024；ADR-0016 parser 迁移 | 把 Gen1 全量 `npm run check` 改成 CI 阻断 |
 | H2c 跨 profile / 机器 Control | CONTROL-X（FINDING-0001）；独立 machine-readable Control 文件（FINDING-0002 / 0025）；FINDING-0026 指令源 vs 模板 | 在 H1 提取完成前把本仓 CTRL 号写成 portable invariant |
 | H2d 载荷调度与可移植性 | FINDING-0003 判断型 MUST 载体；0004 / 0005 若进 INSTALLED 须 Narrow ADR；0007 adapter 矩阵；0010 GitLab 模板；0012 锁；Git consent 机械 evaluator；MIGRATE 独立入口；0014 L0–L4 工具（repo-keep）；0016 / 0017 | 把 opt-in githooks 或 L3 当作 2.1 必装 |
@@ -65,15 +65,57 @@ H0 与 H1 不可对调：过时入口会把后续施工指回已删除的迁移�
 
 **8. 2.x 发布门槛 ≠ 关闭全部 Confirmed Finding。** `2.0.1` / `2.1.0` 各自用 Active Plan 写验收面。默认：不把 H3、不把 CONTROL-X、不把 PLAN-0037 全文当作每一次 2.x tag 的前置。PLAN-0037 Implemented 之后如何进 SemVer，另开 Plan / 必要时 Narrow ADR，不在本决策预锁 3.0。
 
+## 后续修正（2026-09-13）：H1 施工纪律与脚本去向
+
+本修正不改决策 1–8 的 Horizon 顺序，也不改 ADR-0024 `later` 成员。补的是 **H1 期间允许 / 禁止什么**，以及脚本机械面如何消费已有台账（避免第三份顺序或去向权威）。触发：对「先清 1.0 脚本 / 用 v2.1–v2.3 当施工阶段」的建议做了对账。
+
+**9. H1 只提炼，不迁载体。** PLAN-0037 Active 期间允许 Stage A–D，并**消费**已有台账（ADR-0024 `later`、PLAN-0035 disposition、[`script-inventory.v0.json`](../research/working/script-inventory.v0.json)、RESEARCH-0011）。禁止：
+
+- 清理、删除或整夹隔离 `scripts/` / `repo-tools/`
+- 给 `check-doc-consistency.js` 加规则、例外或 flag（FINDING-0019；属 H2b）
+- 把本仓 Task→Capability router 写入 INSTALLED 默认面（属 H2d，且须 H1 提取完成）
+- 把本仓 `AGENTS.md` / `SKILL.md` 瘦身当作 PLAN-0037 的完成条件（薄入口是提炼产物的 L1，不是本仓入口改写任务）
+- 新建「Gen1 能力 → 2.x 去向」权威表（FINDING-0024）。文件台账 / INSTALLED scripts characterization 的 Unaccounted=0 **不**等于能力终局已定；FINDING-0028 仍 Confirmed
+
+2.0 必装已以 WRAP 发出。再拆这些 WRAP 属于 H2，不是 H1 门槛，也不是「must-ship 再迁移一轮」。
+
+**10. 脚本三类（消费 inventory，不另建 ledger）。** 分类键是 inventory 的 `disposition` / `generation` / `distribution_role`，不是一份新 Markdown 表。
+
+| 类 | 判据（已有字段） | H1 | 以后 |
+| --- | --- | --- | --- |
+| 已进 CTRL 链的 WRAP | `wrap` 且已有 evaluator（secret / freshness / translation freshness / broken links） | 保持 WRAP，不删旧 CLI | H2 继续 EXTRACT 后薄化；旧厚逻辑在替代→验证→观察之后才可退役 |
+| 仍有价值、未拆 | `keep` 的 `gen1_carrier`（含 consistency 剩余 cluster、audit helper、metadata/sync） | 保留；不堆 patch | H2b 按 cluster EXTRACT |
+| 无 2.x 价值 | 仅当 `disposition: retire` | **今日为空**，不得预标 | H2a 才允许标 `retire`，再停用引用并隔离/删除 |
+
+`generate-governance.js` / validator 是产品入口，**不是**已完成的 control-plane vertical；H1 不为它们新分配 CTRL。routing 是 REPO-ONLY 施工器；H1 不装进目标项目。删除永远是最后一步：替代 → 验证 → 观察期 → 删除。
+
+**11. SemVer 不是 Horizon 的别名。** 禁止把 H1/H2/H3 说成 v2.1/v2.2/v2.3 并当作发布门槛（与决策 8 同向；版本号不得成为第二份阶段表）。PLAN-0037 Implemented 之后是否打 `2.1.0`，另开 Plan。H3 不挡下一次 minor。Git consent 机械 evaluator、锁、MIGRATE 入口留在 **H2d**，不升格为 H3。
+
+**12. 双产品保持。** 本仓 = 实验场 + 参考实现；`v2.0.0` = 可安装必装切片；PLAN-0037 = 可复用原则包。H1 完成不把三者合成单一产品。
+
+**13. 新 CTRL 与新文档。** 新 CTRL 仅在 EXTRACT 独立机械能力时分配（PLAN-0035）。H1 不为 later 项新写知识对象当施工日记。H2c 的 Control registry 是本仓机器面；portable skill 只抽 identity · semantic owner · evaluator · binding · evidence 的形状，不抽 `CTRL-NNNN`。
+
+```text
+H1    PLAN-0037；消费已有台账；不删脚本；不装 router
+  ↓
+H2a   leftover 叶 + 仅当 inventory 出现 retire
+H2b   consistency 按 cluster EXTRACT
+H2c   本仓 Control 机读化（非 portable 编号）
+H2d   判断型 MUST / 锁 / consent evaluator / 安装面 routing
+  ↓
+H3    测量 / 注意力 / L3 runtime（不挡下一次 minor）
+```
+
 ## 后果
 
 - Roadmap「当前阶段」= **H1 Active（PLAN-0037）**；H0 已 Archived。
 - ADR-0018 继续约束历史 Phase 0–8 与 ID 编号规则；2.x 顺序提问指向本 ADR。
 - PLAN-0037 已由人类解冻 Active（2026-09-12）；本 ADR 仍不是自动解冻机制。
-- `retire` / `out`（治理评分、`ai-skill-manager`）仍不进入 2.x 施工。
+- `retire` / `out`（治理评分、`ai-skill-manager`）仍不进入 2.x 施工；脚本面今日 `retire = ∅`。
+- H1 期间对 `scripts/` 的默认动作是 **不动载体**；去向问题问 inventory，不问新表。
 
 ## 参考
 
 - ADR-0015 路线图不得裁决阶段顺序 · ADR-0016 Plan 归档 · ADR-0018 迁移路径 · ADR-0020 提炼边界 · ADR-0024 产品冻结与 `later` 成员
-- PLAN-0037 提炼 · PLAN-0045 H0
+- PLAN-0037 提炼 · PLAN-0045 H0 · PLAN-0035 checker disposition · PLAN-0041 script inventory
 - FINDING-0001..0008 / 0010..0017 / 0019 / 0021 / 0022 / 0024..0029（Confirmed 输入，不是本 ADR 关闭）

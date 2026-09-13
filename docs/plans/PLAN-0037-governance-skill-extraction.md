@@ -42,6 +42,11 @@ target: both
 实现自动治理系统 / 全自动 Dispatcher / 知识图谱
 现在立刻改写 INSTALLED 载荷或新建平行 skill 包并发布
 把未验证的 Phase 5 早期模型固化进 skill
+清理 / 删除 / 整夹隔离 Gen1 脚本（ADR-0025 决策 9–10）
+给 check-doc-consistency.js 加规则、例外或 flag（属 H2b）
+把本仓 router 写入 INSTALLED 默认面（属 H2d）
+把本仓 AGENTS.md / SKILL.md 瘦身当作本计划完成条件
+新建「Gen1 能力 → 2.x 去向」权威表（消费 script-inventory，不另建 ledger）
 ```
 
 ## 前置条件（Gate — 转 Active 前须满足）
@@ -145,7 +150,7 @@ Active 后先跑提取协议（Facts → Rationale → Patterns），再写 skil
 
 至少覆盖：
 
-- Entry documents thin（identity · scope · invariants · routing only）
+- Entry documents thin（identity · scope · invariants · routing only；提取原则，不把本仓入口改写列入完成条件）
 - Metadata schema closed（新增字段须 ADR；禁止冗余/正文回填）
 - One canonical owner per fact
 - Document type single responsibility（禁止跨类型混用）
@@ -210,6 +215,7 @@ governance-skill/
 - [ ] Stage D 干净目标验证有真实证据（非宣称）
 - [ ] Discovery Ledger：Open=0；Unaccounted=0；Deferred 有 revisit
 - [ ] 未越权实现「万能平台」或自动治理系统
+- [ ] 未把脚本清理、INSTALLED routing、本仓入口瘦身或第三份能力去向表当作本计划交付（ADR-0025 决策 9–13）
 
 ## 受影响文件
 
@@ -232,12 +238,13 @@ governance-skill/
 | X2 | migration_gap | design | 尚无 extraction 执行产物 | both | med | open | — | — | Active 后按 Stage A–D 关闭 |
 | X3 | observation | review | 一次抽象会复制实现或空泛口号 | skill | high | closed | resolved | — | 本计划 § 提取协议；产物分层 ≠ 提取流程 |
 | X4 | observation | review | 全文 0037 作 2.0 必达项过大且与产品定义重叠 | both | high | closed | resolved | — | 2.0=本仓 Gen2 载荷已发布；A–D 为 2.x H1 |
+| X5 | observation | review | H1 清脚本 / 装 router / 瘦本仓入口 / 新建去向表会偏离提炼 | both | high | closed | resolved | — | ADR-0025 2026-09-13 决策 9–13 |
 
 ## 闭包对账（Active 基线）
 
 ```text
-Total known:  5
-Resolved:     4  (X0, X1, X3, X4)
+Total known:  6
+Resolved:     5  (X0, X1, X3, X4, X5)
 Deferred:     0
 Open:         1  (X2 — Stage A–D 交付后须 0)
 Unaccounted:  0
@@ -247,7 +254,7 @@ Active 期间允许 X2 Open；完成 Stage D 后须 Open=0。
 
 ## 参考
 
-- ADR-0020（skill 提炼边界 · L1/L2/L3）· ADR-0025 H1
+- ADR-0020（skill 提炼边界 · L1/L2/L3）· ADR-0025 H1（含 2026-09-13 决策 9–13）
 - ADR-0018 Phase 5 · ADR-0022 · ADR-0023
 - RESEARCH-0012（前置）
 - PLAN-0035 / PLAN-0036（Phase 4 EXITED；已归档）

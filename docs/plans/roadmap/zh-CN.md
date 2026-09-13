@@ -333,7 +333,7 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 | 带 | 一句话 | 施工 | 状态 |
 | --- | --- | --- | --- |
 | **H0** 文档与生命周期对账 | 入口/路线图/计划位置与 `v2.0.0` 对齐 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 计划已归档） |
-| **H1** 可复用治理 Skill 提炼 | L1/L2/L3 提取协议 → 干净目标验证 | [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) | **Active** |
+| **H1** 可复用治理 Skill 提炼 | L1/L2/L3 提取协议 → 干净目标验证；不迁脚本载体 | [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) | **Active** |
 | **H2** 控制面补完 | 残留抽出 → 检查器/台账 → 机器 Control / CONTROL-X → 载荷调度与可移植性 | 另开 Plan；输入见下表 | 未开工 |
 | **H3** 运行时与科研 | L3、测量、注意力实验；不挡 2.1 | 无 Active Plan | 远 |
 
@@ -345,7 +345,7 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 
 | 子带 | 索引（Finding / 残留，非施工步骤） |
 | --- | --- |
-| H2a 残留抽出 | 5c leftover Capability 叶 · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md)（L0 台账 = [PLAN-0041](../archive/PLAN-0041-script-inventory.md)） |
+| H2a 残留抽出 | 5c leftover Capability 叶 · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md)（L0 台账 = [PLAN-0041](../archive/PLAN-0041-script-inventory.md)；今日 `retire = ∅`） |
 | H2b 检查器与台账 | 剩余 consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · ADR-0016 parser 迁移 |
 | H2c 跨 profile / 机器 Control | [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
 | H2d 载荷调度与可移植性 | [FINDING-0003](../../findings/FINDING-0003-declaration-enforcement-gap.md) 判断型 MUST · [FINDING-0004](../../findings/FINDING-0004-trigger-coverage-gap.md) · [FINDING-0005](../../findings/FINDING-0005-validation-routing-overhead.md) · [FINDING-0006](../../findings/FINDING-0006-regression-oracle-gap.md) 全量 oracle · [FINDING-0007](../../findings/FINDING-0007-portability-enforcement-boundary.md) adapter · [FINDING-0010](../../findings/FINDING-0010-gitlab-ci-stack-template-mismatch.md) · [FINDING-0012](../../findings/FINDING-0012-lock-not-atomic.md) · Git consent 机械 evaluator · MIGRATE 入口 · [FINDING-0014](../../findings/FINDING-0014-review-manager-layer-mismatch.md) L0–L4 工具 · [FINDING-0016](../../findings/FINDING-0016-canonical-example-not-constraint.md) · [FINDING-0017](../../findings/FINDING-0017-adr-no-continuous-enforcement.md) |
@@ -359,6 +359,7 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 - **本仓**：实验场 + 参考实现 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
 - **已发布 skill（2.0）**：可安装必装切片，不是 PLAN-0037 另开通用包。
 - **2.x 产品主线（H1）**：[PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **Active** — 把已验证原则提炼为可复用 skill。
+- **H1 纪律（索引 [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 9–13）：** 消费已有 inventory，不新建能力去向表；不删脚本；不把 repo router 写入 INSTALLED；SemVer 不是 Horizon 的别名。
 
 ## Guarantee Levels
 
@@ -476,6 +477,8 @@ Generation 2 明确不追求：
 - 不把 ADR-0024 `later` 扁平清单当作施工顺序（顺序权威 = ADR-0025）
 - 不跳过 Stage A–D 一次抽象出 portable skill
 - 不把本仓目录名 / CTRL 号 / Phase 剧本当 L1
+- 不在 H1 清理或删除 Gen1 脚本；不把 H1/H2/H3 写成 v2.1/v2.2/v2.3 发布门槛（ADR-0025 决策 9–11）
+- 不新建第三份能力去向表（消费 script-inventory）
 
 ## Success Criteria
 

@@ -331,7 +331,7 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 | Horizon | One line | Construction | Status |
 | --- | --- | --- | --- |
 | **H0** Documentation and lifecycle truth | Align entry docs / roadmap / plan location with `v2.0.0` | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived** (nine Phase 4–8 plans archived) |
-| **H1** Reusable governance skill extraction | L1/L2/L3 extraction protocol → clean-target validation | [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) | **Active** |
+| **H1** Reusable governance skill extraction | L1/L2/L3 extraction protocol → clean-target validation; do not migrate script carriers | [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) | **Active** |
 | **H2** Control-plane completion | Residue extract → checkers/ledgers → machine Controls / CONTROL-X → payload routing and portability | Separate plan; inputs below | Not started |
 | **H3** Runtime and research | L3, measurement, attention experiments; does not block 2.1 | No Active Plan | Far |
 
@@ -343,7 +343,7 @@ Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045; moved `mode-exit-proposal
 
 | Sub-band | Index (Finding / residue, not construction steps) |
 | --- | --- |
-| H2a Residue extract | 5c leftover Capability leaves · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) (L0 inventory = [PLAN-0041](../archive/PLAN-0041-script-inventory.md)) |
+| H2a Residue extract | 5c leftover Capability leaves · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) (L0 inventory = [PLAN-0041](../archive/PLAN-0041-script-inventory.md); `retire = ∅` today) |
 | H2b Checkers and ledgers | Remaining consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · ADR-0016 parser migration |
 | H2c Cross-profile / machine Controls | [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
 | H2d Payload routing and portability | [FINDING-0003](../../findings/FINDING-0003-declaration-enforcement-gap.md) judgmental MUST · [FINDING-0004](../../findings/FINDING-0004-trigger-coverage-gap.md) · [FINDING-0005](../../findings/FINDING-0005-validation-routing-overhead.md) · [FINDING-0006](../../findings/FINDING-0006-regression-oracle-gap.md) full oracles · [FINDING-0007](../../findings/FINDING-0007-portability-enforcement-boundary.md) adapter · [FINDING-0010](../../findings/FINDING-0010-gitlab-ci-stack-template-mismatch.md) · [FINDING-0012](../../findings/FINDING-0012-lock-not-atomic.md) · mechanical Git-consent evaluator · MIGRATE entry · [FINDING-0014](../../findings/FINDING-0014-review-manager-layer-mismatch.md) L0–L4 tooling · [FINDING-0016](../../findings/FINDING-0016-canonical-example-not-constraint.md) · [FINDING-0017](../../findings/FINDING-0017-adr-no-continuous-enforcement.md) |
@@ -357,6 +357,7 @@ Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045; moved `mode-exit-proposal
 - **This repo:** experiment + reference implementation + research provenance ([RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)).
 - **Shipped skill (2.0):** installable must-ship slice, not a separate PLAN-0037 universal pack.
 - **2.x product line (H1):** [PLAN-0037](../PLAN-0037-governance-skill-extraction.md) **Active** — extract verified principles into a reusable skill.
+- **H1 discipline (index of [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) decisions 9–13):** consume the existing inventory; do not create a capability-destination table; do not delete scripts; do not write the repo router into INSTALLED; SemVer is not an alias for Horizon.
 
 ## Guarantee Levels
 
@@ -474,6 +475,8 @@ Generation 2 explicitly does not pursue:
 - treating the flat ADR-0024 `later` list as construction order (order authority = ADR-0025)
 - skipping Stage A–D to emit a one-shot portable skill
 - promoting this repo’s directory names / CTRL ids / Phase scripts to L1
+- sweeping or deleting Gen1 scripts during H1; treating H1/H2/H3 as v2.1/v2.2/v2.3 release gates (ADR-0025 decisions 9–11)
+- creating a third capability-destination table (consume script-inventory)
 
 ## Success Criteria
 
