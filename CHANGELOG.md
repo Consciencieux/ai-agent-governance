@@ -10,7 +10,9 @@ All notable changes to this project will be documented here.
 
 - **FINDING-0003 language layering (PLAN-0053)** — Remaining judgment classes labeled `judgment` vs `mechanical` in authority bodies; characterization suite added. Finding → Resolved (no new mechanical checkers; no INSTALLED router).
 
-- **Roadmap rolling index** — Trilingual roadmap slimmed to Now / Near term / Done (one paragraph) / Far (H3); archives stay authoritative.
+- **Roadmap rolling index** — Trilingual roadmap slimmed to Now / Near term / Done (one paragraph) / Far (H3); archives stay authoritative. Construction discipline authority placed in AGENTS.md + ADR-0025 + lifecycle (roadmap indexes only; not a rule body).
+
+- **AGENTS.md prose trim** — Cut restated procedure paragraphs to one-line pointers; keep principles index + consent markers. Status lists deferred to roadmap.
 
 ### Fixed
 

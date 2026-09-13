@@ -26,9 +26,9 @@
 | 項 | 角色 | 說明 |
 | --- | --- | --- |
 | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) | Design | H3 成員 / 非成員 / 升 Active 前置。只凍結邊界；預設不裝 L3。 |
-| Finding 補丁 | 按需 | 選定後再開 Active Plan 做小切片——不是常駐清掃。最近閉合：[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（Archived）。 |
+| Finding 補丁 | 按需 | 選定後做小切片——不是常駐清掃。最近閉合：[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（Archived）。何時需要 Plan：見 [AGENTS.md](../../../AGENTS.md) 原則索引（Horizon vs 日常小改）。 |
 
-施工**只**走 Active Plan。SemVer ≠ Horizon（[ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md)）。
+SemVer ≠ Horizon。施工規則在 [AGENTS.md](../../../AGENTS.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § 規模分級——**不**寫在本頁。
 
 ## 已完成（一句）
 
@@ -46,5 +46,5 @@ L3 執行期攔截、測量、注意力實驗、可選統一 dispatcher —— �
 4. 方向變更須有 Finding / Research / ADR —— 禁止靜默改路線圖。
 
 ```text
-Research / Findings → ADR → Roadmap（索引）→ Active Plan → 實作
+Research / Findings → ADR → Roadmap（索引）→ 按 AGENTS + ADR-0025 + lifecycle 計劃/實作
 ```

@@ -26,9 +26,9 @@ Open residual themes (not an Active Plan): INSTALLED mechanical dispatcher (FIND
 | Item | Role | Note |
 | --- | --- | --- |
 | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) | Design | H3 membership / non-membership / promote-to-Active gates. Freeze only; no L3 install by default. |
-| Finding patches | On demand | Small 2.1.x slices via a new Active Plan when chosen — not a standing sweep. Latest closed slice: [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) (Archived). |
+| Finding patches | On demand | Selective small slices when chosen — not a standing sweep. Latest closed: [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) (Archived). When a Plan is required: see [AGENTS.md](../../../AGENTS.md) principles index (Horizon vs everyday edits). |
 
-Construction runs **only** through an Active Plan. SemVer ≠ Horizon ([ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md)).
+SemVer ≠ Horizon. Construction rules live in [AGENTS.md](../../../AGENTS.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § scale tier — **not** on this page.
 
 ## Done (one pass)
 
@@ -46,5 +46,5 @@ L3 runtime interception, measurement, attention experiments, optional unified di
 4. Direction changes need Finding / Research / ADR — not a silent roadmap rewrite.
 
 ```text
-Research / Findings → ADR → Roadmap (index) → Active Plan → Implementation
+Research / Findings → ADR → Roadmap (index) → Plan/implement per AGENTS + ADR-0025 + lifecycle
 ```
