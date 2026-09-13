@@ -10,6 +10,7 @@
       "references/init-spec.json",
       "references/workflows/release.md",
       "scripts/generate-governance.js",
+      "scripts/lib/generate/run.js",
       "references/principles/entry.md",
       "references/principles/instruction-architecture.md",
       "references/principles/document-model.md",
@@ -696,7 +697,91 @@
       "path": "scripts/check-doc-consistency.js",
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
-      "description": "Doc consistency WRAP (cluster #4 → CTRL-0006; other clusters inline; advisory; --gate/--release-gate fail-closed)"
+      "description": "Doc consistency thin CLI WRAP (PLAN-0055 Stage 3 EXTRACT; clusters in lib/doc-consistency/run.js; advisory; --gate/--release-gate fail-closed)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/adr-status.js",
+      "source": "scripts/lib/doc-consistency/adr-status.js",
+      "type": "copy",
+      "description": "Doc consistency gate: ADR status sync"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/broken-links.js",
+      "source": "scripts/lib/doc-consistency/broken-links.js",
+      "type": "copy",
+      "description": "Doc consistency gate: link validity (CTRL-0006)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/changelog-coverage.js",
+      "source": "scripts/lib/doc-consistency/changelog-coverage.js",
+      "type": "copy",
+      "description": "Doc consistency gate: changelog coverage"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/consent-cluster.js",
+      "source": "scripts/lib/doc-consistency/consent-cluster.js",
+      "type": "copy",
+      "description": "Doc consistency gate: consent-cluster sync"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/numeric-claims.js",
+      "source": "scripts/lib/doc-consistency/numeric-claims.js",
+      "type": "copy",
+      "description": "Doc consistency gate: numeric claims"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/plan-status.js",
+      "source": "scripts/lib/doc-consistency/plan-status.js",
+      "type": "copy",
+      "description": "Doc consistency gate: plan-status / pending-archive"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/principles-index.js",
+      "source": "scripts/lib/doc-consistency/principles-index.js",
+      "type": "copy",
+      "description": "Doc consistency gate: principles-index pointers"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/prompt-sync.js",
+      "source": "scripts/lib/doc-consistency/prompt-sync.js",
+      "type": "copy",
+      "description": "Doc consistency gate: prompt sync"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/protected-files.js",
+      "source": "scripts/lib/doc-consistency/protected-files.js",
+      "type": "copy",
+      "description": "Doc consistency gate: protected-files sync"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/run.js",
+      "source": "scripts/lib/doc-consistency/run.js",
+      "type": "copy",
+      "description": "Doc consistency thin orchestrator (PLAN-0055 R10 cluster EXTRACT; requires sibling gate modules)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/shared.js",
+      "source": "scripts/lib/doc-consistency/shared.js",
+      "type": "copy",
+      "description": "Doc consistency shared helpers/constants (PLAN-0055 R10)"
+    },
+    {
+      "phase": "C",
+      "path": "scripts/lib/doc-consistency/version-examples.js",
+      "source": "scripts/lib/doc-consistency/version-examples.js",
+      "type": "copy",
+      "description": "Doc consistency gate: version-example sync"
     },
     {
       "phase": "C",

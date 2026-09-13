@@ -81,10 +81,6 @@ Match the narrowest row by `git diff --name-only` prefix. When scope is uncertai
 | `check-role-completeness.js --gate` | role classification / packaging | mechanical | distribution contract complete |
 | `check-doc-freshness.js` | stale docs / translation lag | mechanical (report; `--release-gate` blocks) | no mechanical staleness detected |
 | `check-plan-delivery.js` | plan declarations vs delivered paths | mechanical | declared files/ids present |
-| `check-roadmap-sync.js` | roadmap vs plan lifecycle | mechanical | live plans indexed; archived not claimed live |
-| `check-docs-shape.js` | `docs/` allowlist | mechanical | shape matches allowlist |
-| `check-discovery-ledger.js` | Active plan Discovery Ledger | mechanical | Open count reconciles |
-| `check-metadata-projection.js` | ADR README projection | mechanical | index stays navigation-only |
 | `verify_governance.js` | governance artifact existence | mechanical | default mode here fails by design (ADR-0006) |
 
 Evidence tiers: **mechanical** = marker/path/structure/existence (pass ≠ “behavior correct”); **human-attested** = requires human review (no automated gate emits this today); **unverified claim** = declaration without independent check.

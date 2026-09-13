@@ -31,6 +31,8 @@
 
 **边界二：语义接缝合法。** 允许为当前需求保留清晰的接口边界、模块边界、扩展点和稳定语义；禁止为尚不存在的消费者实现完整抽象层、配置系统、插件机制、恢复链、通用框架或状态机。
 
+**边界三：政策正文克制。** 本文件与同目录政策只承载硬规则与 AuthorityRef；台账、晋升表、命令序列若已有机读主人（JSON/脚本/Plan），**不得**在政策里复述成长文。新增章节须通过机制测试；写不进主人就说明还不该固化成政策。
+
 ## 修改已有代码
 
 执行 Code Modification / Deletion Protection 四步：Context Analysis → Determine Code Ownership → Before Deletion → Breaking Changes（见 AGENTS.md 与 lifecycle.md）。

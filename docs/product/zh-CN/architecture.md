@@ -22,6 +22,8 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 
 1. **SKILL-INTERNAL 文件绝不能被当作被治理项目的规则来源引用**（那里没有这个文件）。子技能与生成的 AGENTS.md 文本只能指向 INSTALLED 路径——`docs/rules/*`、被治理项目自己的 `AGENTS.md`、或复制过去的 `scripts/*`。
 2. **SKILL-INTERNAL 脚本在本仓库形态之外必须 no-op**，因为打包仍会带上它（角色是 SKILL-INTERNAL 的文件随 tarball 走、INIT 不安装）。`check-coding-hygiene.js`（现为 REPO-ONLY，不再打包）的做法是：缺少套件布局时报告 `applicable: false`。
+│   ├── check-daily-check-surface.js # 日常 npm run check 允许名单门禁（PLAN-0055）
+│   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允许名单数据
 
 ### 第二条轴：可移植性（文件"去哪里"与其内容"在那里是否成立"）
 
@@ -109,7 +111,22 @@ ai-agent-governance/
 │   │   ├── md-link-facts.js    # 共享 Markdown 链接事实 primitive（extract/resolve/exists）
 │   │   ├── plan-status.js      # ADR-0016 计划 status frontmatter 分类器（PLAN-0048）
 │   │   ├── adr-status.js       # FINDING-0011 ADR Status 字段启发（PLAN-0048）
-│   │   └── secret-scan-facts.js # 共享密钥扫描事实 primitive（模式 / staged / blob）
+│   │   ├── secret-scan-facts.js # 共享密钥扫描事实 primitive（模式 / staged / blob）
+│   │   ├── doc-consistency/
+│   │   │   ├── run.js                 # 薄编排器（PLAN-0055 R10 闸门簇 EXTRACT）
+│   │   │   ├── shared.js              # 共享 helper/常量
+│   │   │   ├── changelog-coverage.js  # 闸门：changelog 覆盖
+│   │   │   ├── version-examples.js    # 闸门：version-example 同步
+│   │   │   ├── protected-files.js     # 闸门：protected-files 同步
+│   │   │   ├── consent-cluster.js     # 闸门：consent-cluster 同步
+│   │   │   ├── principles-index.js    # 闸门：principles-index 指针
+│   │   │   ├── plan-status.js         # 闸门：plan-status / pending-archive
+│   │   │   ├── adr-status.js          # 闸门：ADR status 同步
+│   │   │   ├── broken-links.js        # 闸门：链接有效性（CTRL-0006）
+│   │   │   ├── numeric-claims.js      # 闸门：numeric claims
+│   │   │   └── prompt-sync.js         # 闸门：prompt sync
+│   │   └── generate/
+│       │   └── run.js          # EXTRACT 出的 INIT 生成器本体（PLAN-0055 Stage 3/4S；SKILL-INTERNAL）
 │   ├── evaluators/
 │   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 密钥保护求值器（CLI 绑定 deny）
 │   │   ├── ctrl-0002-git-write-consent.js   # CTRL-0002 git argv 写同意求值器
@@ -117,9 +134,9 @@ ai-agent-governance/
 │   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 译文新鲜度求值器（--release-gate 阻断）
 │   │   └── ctrl-0006-broken-links.js        # CTRL-0006 相对 Markdown 链接有效性（consistency #4）
 │   ├── check-doc-freshness.js  # 薄 CLI 包装（CTRL-0003 + CTRL-0004；建议性，--release-gate 阻断过时/draft 译文）
-│   ├── check-doc-consistency.js # consistency WRAP（#4 → CTRL-0006；其余集群内联；默认建议性；--gate/--release-gate fail-closed）
+│   ├── check-doc-consistency.js # 薄 consistency CLI → lib/doc-consistency/run.js（#4 → CTRL-0006；默认建议性；--gate/--release-gate fail-closed）
 │   ├── check-plan-sync.js      # 计划与里程碑对账（默认建议性；--release-gate fail-closed；无 DEVELOPMENT_PLAN.md 时 no-op）
-│   ├── generate-governance.js  # INIT 脚本化生成器（SKILL-INTERNAL；规范：references/init-spec.json）
+│   ├── generate-governance.js  # 薄 INIT CLI → lib/generate/run.js（SKILL-INTERNAL；规范：references/init-spec.json）
 │   └── release-manager.js      # plan（只读）+ execute（审批门禁）发布工具
 ├── LICENSE                     # MIT
 │
@@ -132,25 +149,10 @@ ai-agent-governance/
 │   ├── check-doc-parity.js     # 三语文档树平行度（CI + 发布前置）
 │   ├── check-layout-sync.js    # architecture.md 仓库布局 vs 四个受扫描目录（fail-closed 门禁）
 │   ├── check-plan-delivery.js  # 计划声明 vs 实际交付（归档前门禁）
-│   ├── check-roadmap-sync.js   # roadmap 索引 vs 计划生命周期状态（implemented→Done、archived 不在活跃 horizon、条目带链接）
-│   ├── check-docs-shape.js     # FINDING-0030 §5 docs/ 形状白名单 fail-closed（PLAN-0048）
-│   ├── docs-shape-allowlist.v0.json # check-docs-shape.js 白名单数据
-│   ├── check-discovery-ledger.js # FINDING-0022 发现台账 L2（PLAN-0048）
-│   ├── check-metadata-projection.js # FINDING-0024 只读 ADR 索引投影（PLAN-0048）
-│   ├── check-control-registry.js # H2c 机读 Control 投影（PLAN-0049）
-│   ├── run-control-x.js        # H2c CONTROL-X 双 profile 负向 fixture runner（PLAN-0049）
-│   ├── controls/               # REPO-ONLY Control JSON 投影（schema 权威 = ADR-0023）
-│   │   ├── CTRL-0001.json / CTRL-0002.json / CTRL-0003.json / CTRL-0004.json / CTRL-0006.json
-│   │   └── fixtures/
-│   │       └── CTRL-0001.negative.txt
-│   ├── contracts/              # REPO-ONLY sibling-closure dogfood 合同（PLAN-0050）
-│   │   └── SC-CTRL-0002.sibling.json
-│   ├── portability-boundary.v0.json # FINDING-0007 最小 adapter/可移植性矩阵（PLAN-0050）
-│   ├── tool-surface-layers.v0.json # FINDING-0014 L0–L4 工具面（PLAN-0050；L3 非必装）
-│   ├── check-template-responsibility.js # FINDING-0026 指令源 vs 模板责任图（PLAN-0049）
-│   ├── template-responsibility.v0.json # check-template-responsibility.js 数据
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）
 │   ├── check-coding-hygiene.js # 编码卫生（测试归属 + 残留标记）
+│   ├── check-daily-check-surface.js # 日常 npm run check 允许名单门禁（PLAN-0055）
+│   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允许名单数据
 │   ├── check-terminology.js    # repo-owned 术语门禁（从 INSTALLED 一致性检查器拆出；ADR-0020 首次执行分离）
 │   ├── check-secrets.js        # repo 侧 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路径）
 │   ├── check-must-ship.sh      # Phase 8 必装机械门禁集合（PLAN-0044 / ADR-0024）
@@ -159,7 +161,6 @@ ai-agent-governance/
 │   ├── routing-graph.v0.json   # 机读 Task→Capability 图（routing.js 消费；不是 Research 对象）
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
-│   ├── instruction-surface-leaves.v0.json  # PLAN-0046 must-ship 叶覆盖图（非处置台账）
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发

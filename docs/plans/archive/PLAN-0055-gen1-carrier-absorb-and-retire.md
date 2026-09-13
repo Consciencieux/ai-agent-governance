@@ -1,19 +1,19 @@
 ---
 id: PLAN-0055
-status: Active
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
-**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说。Stage 1R+3 完成；Stage 4 假绿修复 + 初剪完成；**Stage 4Q 封存重建完成**（512 Gen1 测 → `tests/archive/gen1-suites/`；live ≈50 按脚本 git 出生 + necessity 短名单重建）；consistency EXTRACT 仍挂 Stage 3。0053/0054 Design。）
+**状态：** Archived（2026-09-13；本轮脚本重构主线完成：1R+3+4+4Q+4S+4D+4E+R10。daily allowlist 冻结；H2b/H2c 停车场已删；`check:full` ≡ daily；CTRL evaluator 保留、机读投影不恢复。verify/release/generate 再 EXTRACT **延后**，不阻塞归档。Plan archive ≠ Release。0053/0054 仍 Design。）
 
-**归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](archive/PLAN-0041-script-inventory.md) 与 [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试保护。
+**归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](PLAN-0041-script-inventory.md) 与 [PLAN-0052](PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../../references/policies/testing.policy.md) § 测试保护。
 
 **问题（已对齐 · 重开）：** Gen1 是一套**自洽屎山**——门禁引用脚本、脚本互引、测试锁死引用。用「谁还在引用」裁决必然全员 keep，**看不见过度工程**。正确刀法：先冻结 **2.x 最小必要面**；名单外默认 `debt`；引用只决定**拆线顺序**，不授予生存权。
 
-**不是：** 口径 C 无名单整夹删；用引用图证明「有用」；重开 H2b/H2c；hooks/L3 必装；第三份去向表；跳过 inventory 直接 `rm`。
+**不是：** 口径 C 无名单整夹删；用引用图证明「有用」；重开 H2b/H2c；**用 `check:full` 当阶段门禁收容所（demote ≠ 生存）**；hooks/L3 必装；第三份去向表；跳过 inventory 直接 `rm`；把 REPO-ONLY 晋升表写进 payload `coding.policy`。
 
 ## 一句话目标
 
@@ -25,17 +25,19 @@ target: both
 | --- | --- | --- |
 | **must_ship** | `check-must-ship-carriers.js` 列出的脚本载体 | 生存 |
 | **product_cli** | `references/init-spec.json` 安装的 CLI（及支撑 lib/evaluator） | 生存（可标 monolith 债务，但不因「厚」直接删契约名） |
-| **repo_gate** | `npm run check` + `check:must-ship` + release delivery 链上的 REPO-ONLY | 生存 |
+| **repo_gate** | **daily allowlist**（`daily-check-surface.v0.json` / `short_lists.daily_check`）∪ `check:must-ship` ∪ **release delivery**（plan-delivery / freshness release-gate 等）上的 REPO-ONLY | 生存 |
 | **debt** | 不在上述三集合 | 默认债务；引用无效；排队 extract/retire |
 | **retire** | debt 且本轮选定拆除（无 2.x 最小职责） | inventory → 清引用 → 删文件 → 去条目 |
 
 硬规则：引用图**禁止**单独导致 keep；删前 `disposition=retire`；INSTALLED 删除 = 载荷 breaking（须先改 INIT/契约）；`tests/` 另表。
 
+**Stage 4E 勘误（2026-09-13）：** 出现在 `check:full` / 测试表征 / 文档提及 **不**授予生存权。`check:full` **不是**阶段交付物停车场；4D 曾把 H2b/H2c 降到 full，4E 改为 **retire 删除**。现 `check:full` ≡ `check`（alias）。机读 Control 投影（`repo-tools/controls/**`、registry、CONTROL-X runner）属 H2c 施工面，**删除不恢复**；产品 CTRL evaluator/CLI 仍在 `scripts/`。
+
 ### 冻结短名单（权威副本也在 `summary.short_lists`）
 
 - **must_ship：** `scripts/check-secrets.js` · `check-git-policy.js` · `generate-governance.js` · `verify_governance.js` · `repo-tools/package-skill.sh`
 - **product_cli：** INIT 安装的 `scripts/check-*` / `release-manager` / `migrate-governance` / `verify_*` 等（见 inventory）
-- **repo_gate：** `npm run check` 闭包 + must-ship 机械 + `check-plan-delivery`（见 inventory）
+- **repo_gate：** daily allowlist 闭包 + must-ship 机械 + release delivery（见 inventory / `daily-check-surface.v0.json`）——**不含**已删的 H2b/H2c 阶段门禁
 
 ## 验收面
 
@@ -145,7 +147,7 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 
 ## Stage 1 — 裁决落盘 — **完成**（2026-09-13）
 
-- [x] 终裁写入 §1.1 + 更新 [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（`summary.total=44`；`summary.adjudication`；notes）
+- [x] 终裁写入 §1.1 + 更新 [`script-inventory.v0.json`](../../../repo-tools/script-inventory.v0.json)（`summary.total=44`；`summary.adjudication`；notes）
 - [x] Test Disposition v1（§1.2；**仅标记，不删测**）
 - [x] `node tests/run-tests.js --suite script-inventory` 绿（含 `summary.total` 对账表征）
 
@@ -198,31 +200,37 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | must_ship | 5 | 必装载体 |
 | product_cli | 19 | INIT/产品 CLI 及支撑 |
 | repo_gate | 16+ | 本仓最小门禁 |
-| debt | 0（纠偏后） | 剩余过度工程主要在 **product_cli 内部 monolith**（consistency ~950LOC） |
+| debt | 0（纠偏后） | consistency/generate 已 EXTRACT；monolith 封存已删；残留 = verify/release 厚活体（动则重写/正规 EXTRACT） |
 | retire→deleted | 2 | mutation-probe + changelog-narration |
 
-## Stage 3 — Retire / EXTRACT 排队
+## Stage 3 — Retire / EXTRACT
 
 - [x] 首刀：mutation-probe + changelog-narration
-- [ ] 继续：对 **product_cli monolith** 做 EXTRACT（先 consistency）；仅当 INIT 允许时缩 INSTALLED 面 — **排队下一刀**
+- [x] **product_cli / must_ship monolith EXTRACT（Stage 3/4S）：**
+  - `scripts/check-doc-consistency.js` → 薄 CLI + `scripts/lib/doc-consistency/run.js`（INIT copy）
+  - `scripts/generate-governance.js` → 薄 CLI + `scripts/lib/generate/run.js`（skillInternal）
+  - Gen1 厚实现曾封存于 `tests/archive/gen1-script-impl/` → **已删**（2026-09-13；git 历史可查；缺功能按现行义务重写，禁止回捞）
+  - `verify_governance` / `release-manager` / lock / sync：活体未拆；需要动时正规 EXTRACT/重写，不恢复 monolith
 - [x] 无独立 `necessity=debt` 文件残留
+- [x] consistency `run.js` cluster 再切（R10 完成）
+- [x] verify/release/generate 再 EXTRACT：**显式延后**（契约敏感；非本轮阻塞；触碰时另裁）
 
 ## Stage 4 — 通裁：测瘦身 + Script Health — **完成（含 4Q）**
 
-**施工边界：** 删/并测 + 统一 ledger + **已证实假绿路径修复**；随后 **4Q 封存重建**；consistency 全量 EXTRACT **不在本轮**。
+**施工边界：** 删/并测 + 统一 ledger + **已证实假绿路径修复**；随后 **4Q 测封存重建** + **4S 脚本封存/EXTRACT**（consistency/generate）。
 
 ### 4Q 封存重建（2026-09-13）
 
 人类否决「只砍几十个不够」后执行：
 
-1. **封存：** 全部原 `tests/suites/*.test.js`（约 **512** `test()`）→ [`tests/archive/gen1-suites/`](../../tests/archive/gen1-suites/)（含 README：脚本 git 出生表 + 重建规则）。**不**由 `tests/run-tests.js` 加载。
+1. **曾封存后已删：** 全部原 `tests/suites/*.test.js`（约 **512** `test()`）曾入 `tests/archive/gen1-suites/` → **已删**（2026-09-13；与脚本 monolith 同裁决；git 历史可查）。
 2. **重建判据：** `necessity` 短名单（must_ship ∪ product_cli ∪ repo_gate）+ **脚本**首次引入 commit（非测试文件出生）+ `testing.policy` 负例活性。
 3. **Live 面（≈50）：** `security` · `generator` · `payload` · `repo-gates` · `routing` · `script-inventory` · `oracle-inventory`。`check:must-ship` 已改挂这些 suite。
-4. **禁止**从 archive 整夹回搬；只允许单条义务最短负例上浮。
+4. **禁止**从 git 历史整夹回灌 Gen1 suites；只允许按现行义务新写最短负例。
 
 ### 4.0 事实源学说
 
-权威：[`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试活性 + 事实源规定。
+权威：[`references/policies/testing.policy.md`](../../../references/policies/testing.policy.md) § 测试活性 + 事实源规定。
 
 裁决链：用途 → 事实源（`references/` / SKILL / init-spec / must-ship / inventory / CTRL）→ 活性负例 → 与门禁/更短负例去重。
 
@@ -237,9 +245,9 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | 同上 · parity spawn | 与 `docs:parity` 双跑 | **drop_dup_invoke** | **已做**：`parity: "delegated"` |
 | `repo-tools/check-layout-sync.js` | 只认 `docs/{lang}/architecture.md` → 本仓 always N/A | **fix_path** | **已做**：优先 `docs/product/`；basename 提取修；架构树补全 |
 | freshness CTRL-0004 | 路径偏 legacy | ledger | 排队（低成本可点状） |
-| consistency monolith | ~950LOC accretion | **extract** | Stage 3 排队 |
+| consistency monolith | ~950LOC accretion | **extract** | **已做**（薄 CLI + `lib/doc-consistency/run.js`；monolith 封存） |
 
-脚本层终裁：`keep_cli` 全部现有 `check-*` 名；**extract** consistency（排队）；无新 absorb/retire。
+脚本层终裁：`keep_cli` 全部现有 `check-*` / generate 名；**extract** consistency+generate **已做**；无新 absorb/retire。
 
 ### 4.2 状态检查表
 
@@ -250,7 +258,35 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 - [x] 全量 test（非沙箱）+ `check:must-ship` 绿
 - [x] inventory `notes` 补 `health=` / `reorg=`（本提交收尾）
 - [x] CHANGELOG + 三语 roadmap 指针
-- [ ] **不**归档 PLAN-0055（R7 EXTRACT 仍 open）
+- [x] **归档 PLAN-0055**（主线完成；延后项见 Exit）
+
+
+## Stage 4D — daily-check 面冻结（2026-09-13）· **中间态，已被 4E 勘误**
+
+- [x] `npm run check` 缩为 dogfood + hygiene + role + parity/layout + **daily-check-surface** 自检
+- [x] （中间态）H2b/H2c 阶段门禁曾迁至 `npm run check:full` —— **4E 起作废「挂 full = 保活」**
+- [x] 治理主人：`repo-tools/daily-check-surface.v0.json` + inventory `short_lists.daily_check` + 本 Plan 裁决（**不**把晋升表写进 payload `coding.policy`；政策只留 § 工程克制 · 边界三「政策正文克制」）
+- [x] 机械：超名单加入 `scripts.check` → `check-daily-check-surface --gate` 失败
+
+## Stage 4E — 阶段停车场 retire（2026-09-13）· **现行终点**
+
+**学说：** demote ≠ 生存。`check:full` 不得充当 Plan/Finding/阶段交付物收容所；无 2.x 最小职责则 **retire**，不是长期挂 full。
+
+- [x] **删除** H2b/H2c 阶段门禁（曾挂 full）：`check-discovery-ledger` · `check-metadata-projection` · `check-docs-shape` · `check-control-registry` · `check-template-responsibility` · `run-control-x` · `check-roadmap-sync`
+- [x] **删除** 无消费者台账/投影：`docs-shape-allowlist.v0.json` · `template-responsibility.v0.json` · `portability-boundary.v0.json` · `tool-surface-layers.v0.json` · `instruction-surface-leaves.v0.json` · `repo-tools/controls/**` · `repo-tools/contracts/**`
+- [x] **保留** 产品 CTRL：`scripts/evaluators/ctrl-000*.js` + 对应 CLI / INIT 绑定（语义家仍在 policy + ADR-0023；机读投影不恢复）
+- [x] `package.json`：`check:full` ≡ `check`；`check:skill-release` 不再依赖 roadmap-sync / 阶段门禁；移除 `docs:roadmap`
+- [x] inventory / architecture Layout / CONTRIBUTING 门禁表与磁盘对账；AGENTS 原则索引指向 surface JSON（非 payload 政策长文）
+- [x] **R10：** `scripts/lib/doc-consistency/run.js` 按闸门 cluster 再切（shared + 10 gate modules + thin orchestrator）
+- [x] **Exit / 延后登记：** `verify_governance` / `release-manager` / `generate/run.js` 再 EXTRACT **不在本 Plan 关闭条件内**；触碰契约或另开 Design/Active 时再做（禁止无消费者回捞 H2c 投影）
+
+
+## Exit（2026-09-13）
+
+- **关闭条件已满足：** 最小必要面冻结；Gen1 archive 删除；daily allowlist + surface 门禁；H2b/H2c 停车场 retire；consistency/generate 薄 CLI + consistency 闸门簇 EXTRACT；Discovery 11/11 resolved。
+- **明确不做（本轮）：** verify/release 正规 EXTRACT；generate 按产物簇再拆；恢复 `repo-tools/controls/**`。
+- **后续入口：** Design [PLAN-0053](../PLAN-0053-v2.1.x-finding-patch-slice.md) / [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md)；脚本再动时消费 `script-inventory.v0.json`，禁第三 ledger。
+- Plan archive ≠ Release（ADR-0016）。
 
 ## Discovery Ledger
 
@@ -261,20 +297,22 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | R2 | constraint | INSTALLED SemVer | **resolved** | product_cli 不因厚而删名 |
 | R3 | tests | testing.policy 活性/事实源 | **resolved** | Stage 4A/B + Disposition v2 + CHANGELOG；残留 = 持续克制非本 Plan 阻塞 |
 | R4 | inventory | summary 漂移 | **resolved** | total 跟 entries |
-| R5 | finding | 零 retire 错觉 | **resolved** | 已删 2；debt 待拆 |
+| R5 | finding | 零 retire 错觉 | **resolved** | 已删 ceremony；4E 续删阶段停车场 |
 | R6 | absorb | dogfood INSTALLED | **resolved** | Stage 2 |
-| R7 | debt | consistency monolith EXTRACT | **open** | CLI keep；EXTRACT 排队 Stage 3 |
+| R7 | debt | consistency monolith EXTRACT | **resolved** | Stage 3/4S：薄 CLI + lib；monolith 封存已删（不回捞） |
 | R8 | defect | 假绿路径（prompt_sync / layout-sync；parity 双跑） | **resolved** | Stage 4 fix_path + drop_dup_invoke |
+| R9 | doctrine | demote 到 `check:full` 被误读为保活；政策长文淤积 | **resolved** | Stage 4E：停车场删除；`check:full`≡daily；晋升权威 = surface JSON；政策正文克制 |
+| R10 | debt | consistency `run.js` 多闸门仍 ~900LOC | **resolved** | Stage R10：按闸门簇拆到 `scripts/lib/doc-consistency/*`；`run.js` 仅编排 |
 
 ```text
-Total known:  9
-Resolved:     8
-Open:         1
+Total known:  11
+Resolved:     11
+Open:         0
 Unaccounted:  0
 ```
 
 ## 参考
 
-- ADR-0025 · FINDING-0028 · PLAN-0041 · PLAN-0052
-- `repo-tools/script-inventory.v0.json` · `tests/suites/script-inventory.test.js`
-- `references/policies/testing.policy.md` · `package.json` · `repo-tools/check-must-ship.sh`
+- ADR-0025 · FINDING-0028 · PLAN-0041 · PLAN-0052 · ADR-0023（Control 模型；投影≠语义家）
+- `repo-tools/script-inventory.v0.json` · `repo-tools/daily-check-surface.v0.json` · `tests/suites/script-inventory.test.js`
+- `references/policies/testing.policy.md` · `references/policies/coding.policy.md` § 工程克制（边界三） · `package.json` · `repo-tools/check-must-ship.sh`

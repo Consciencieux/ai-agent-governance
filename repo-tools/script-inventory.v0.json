@@ -50,39 +50,40 @@
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 44,
+    "total": 51,
     "by_disposition": {
-      "keep": 40,
+      "keep": 42,
       "rewrite": 1,
-      "wrap": 3
+      "wrap": 4
     },
     "by_generation": {
       "gen1_carrier": 14,
-      "gen2_native": 27,
+      "gen2_native": 30,
       "dual_profile": 3
     },
     "by_role": {
-      "REPO-ONLY": 21,
-      "INSTALLED": 22,
-      "SKILL-INTERNAL": 1
+      "REPO-ONLY": 22,
+      "INSTALLED": 23,
+      "SKILL-INTERNAL": 2
     },
     "by_necessity": {
-      "repo_gate": 20,
-      "must_ship": 5,
-      "product_cli": 19
+      "repo_gate": 21,
+      "must_ship": 6,
+      "product_cli": 20
     },
     "wrap": [
       "scripts/check-doc-consistency.js",
       "scripts/check-doc-freshness.js",
-      "scripts/check-secrets.js"
+      "scripts/check-secrets.js",
+      "scripts/generate-governance.js"
     ],
     "retire": [],
     "dogfood_installed_from_repo": [],
     "adjudication": {
       "plan": "PLAN-0055",
-      "stage": "1R+3+4",
+      "stage": "1R+3+4+4Q+4S+daily-check",
       "date": "2026-09-13",
-      "note": "Stage 4: test prune + vacuous path fixes (prompt_sync/layout-sync/parity); consistency EXTRACT still queued",
+      "note": "Daily check surface frozen; H2b/H2c checkers demoted to check:full; check-daily-check-surface enforces allowlist",
       "retired_deleted": [
         "repo-tools/mutation-probe.js",
         "repo-tools/check-changelog-narration.js"
@@ -97,6 +98,7 @@
         "scripts/check-git-policy.js",
         "scripts/check-secrets.js",
         "scripts/generate-governance.js",
+        "scripts/lib/generate/run.js",
         "scripts/verify_governance.js"
       ],
       "product_cli": [
@@ -110,33 +112,46 @@
         "scripts/check-sibling-closure.js",
         "scripts/check-sync.js",
         "scripts/generate-governance.js",
+        "scripts/lib/doc-consistency/run.js",
         "scripts/migrate-governance.js",
         "scripts/release-manager.js",
-        "scripts/verify-governance.js",
         "scripts/verify_governance.js"
       ],
       "repo_gate": [
         "repo-tools/check-coding-hygiene.js",
-        "repo-tools/check-control-registry.js",
-        "repo-tools/check-discovery-ledger.js",
+        "repo-tools/check-daily-check-surface.js",
         "repo-tools/check-doc-consistency.js",
         "repo-tools/check-doc-freshness.js",
         "repo-tools/check-doc-parity.js",
-        "repo-tools/check-docs-shape.js",
         "repo-tools/check-layout-sync.js",
-        "repo-tools/check-metadata-projection.js",
         "repo-tools/check-must-ship-carriers.js",
         "repo-tools/check-must-ship.sh",
         "repo-tools/check-plan-delivery.js",
-        "repo-tools/check-roadmap-sync.js",
         "repo-tools/check-role-completeness.js",
         "repo-tools/check-secrets.js",
-        "repo-tools/check-template-responsibility.js",
         "repo-tools/check-terminology.js",
         "repo-tools/lib/routing.js",
-        "repo-tools/route-task.js",
-        "repo-tools/run-control-x.js"
-      ]
+        "repo-tools/route-task.js"
+      ],
+      "daily_check": [
+        "repo-tools/check-coding-hygiene.js",
+        "repo-tools/check-daily-check-surface.js",
+        "repo-tools/check-doc-consistency.js",
+        "repo-tools/check-doc-parity.js",
+        "repo-tools/check-layout-sync.js",
+        "repo-tools/check-role-completeness.js",
+        "repo-tools/check-terminology.js"
+      ],
+      "check_full": [
+        "repo-tools/check-coding-hygiene.js",
+        "repo-tools/check-daily-check-surface.js",
+        "repo-tools/check-doc-consistency.js",
+        "repo-tools/check-doc-parity.js",
+        "repo-tools/check-layout-sync.js",
+        "repo-tools/check-role-completeness.js",
+        "repo-tools/check-terminology.js"
+      ],
+      "doctrine_note": "daily_check = package.json scripts.check allowlist (check-daily-check-surface). Stage/Plan/Finding checkers are NOT parked on check:full — default on-demand or retire. check:full currently aliases daily check after PLAN-0055 Stage 4E retire of H2b/H2c stage gates."
     }
   },
   "entries": [
@@ -153,23 +168,6 @@
       },
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
-      "necessity": "repo_gate"
-    },
-    {
-      "path": "repo-tools/check-discovery-ledger.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "FINDING-0022",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
       "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
       "necessity": "repo_gate"
@@ -192,23 +190,6 @@
       "necessity": "repo_gate"
     },
     {
-      "path": "repo-tools/check-docs-shape.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "FINDING-0030",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
-      "necessity": "repo_gate"
-    },
-    {
       "path": "repo-tools/check-layout-sync.js",
       "distribution_role": "REPO-ONLY",
       "generation": "gen1_carrier",
@@ -223,74 +204,6 @@
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
       "notes": "PLAN-0055 Stage4 health=fix_path (docs/product architecture preferred; basename extract); reorg=keep_cli; necessity=repo_gate",
-      "necessity": "repo_gate"
-    },
-    {
-      "path": "repo-tools/check-metadata-projection.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "FINDING-0024",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
-      "necessity": "repo_gate"
-    },
-    {
-      "path": "repo-tools/check-control-registry.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "FINDING-0025",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
-      "necessity": "repo_gate"
-    },
-    {
-      "path": "repo-tools/run-control-x.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "FINDING-0001",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
-      "necessity": "repo_gate"
-    },
-    {
-      "path": "repo-tools/check-template-responsibility.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "FINDING-0026",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
       "necessity": "repo_gate"
     },
     {
@@ -340,23 +253,6 @@
       },
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
-      "necessity": "repo_gate"
-    },
-    {
-      "path": "repo-tools/check-roadmap-sync.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "rewrite",
-      "owns": "FINDING-0021",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": true,
-        "commits_after": 0
-      },
-      "first_seen": "2026-09-06",
-      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
       "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
       "necessity": "repo_gate"
@@ -475,9 +371,9 @@
         "commits_after": 2
       },
       "first_seen": "2026-08-16",
-      "last_touch": "2026-09-10",
+      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 Stage4 health=fix_path+drop_dup_invoke (product commands/mdFiles; parity delegated); reorg=extract_queued (monolith); necessity=product_cli",
+      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/doc-consistency/run.js; Gen1 monolith archive deleted (rewrite-only); necessity=product_cli",
       "necessity": "product_cli"
     },
     {
@@ -654,7 +550,7 @@
       "path": "scripts/generate-governance.js",
       "distribution_role": "SKILL-INTERNAL",
       "generation": "gen1_carrier",
-      "disposition": "keep",
+      "disposition": "wrap",
       "owns": "INIT",
       "baseline": {
         "ref": "v1.0.2",
@@ -662,9 +558,9 @@
         "commits_after": 0
       },
       "first_seen": "2026-08-21",
-      "last_touch": "2026-09-08",
+      "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 minimum-necessary: must-ship carrier",
+      "notes": "PLAN-0055 Stage3/4S: thin CLI WRAP; body EXTRACT → scripts/lib/generate/run.js; Gen1 monolith archive deleted (rewrite-only); necessity=must_ship",
       "necessity": "must_ship"
     },
     {
@@ -887,6 +783,244 @@
       "dogfood_from_repo_package_json": true,
       "notes": "PLAN-0055 minimum-necessary: repo_gate (corrected after 1R — REPO-ONLY twin / router, not Gen1 ceremony debt)",
       "necessity": "repo_gate"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/run.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "doc-consistency-clusters",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: thin orchestrator after gate-cluster EXTRACT; siblings are INSTALLED with init-spec",
+      "necessity": "product_cli"
+    },
+    {
+      "path": "scripts/lib/generate/run.js",
+      "distribution_role": "SKILL-INTERNAL",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "init-generator",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 Stage3 EXTRACT body for generate-governance; SKILL-INTERNAL with thin CLI",
+      "necessity": "must_ship"
+    },
+    {
+      "path": "repo-tools/check-daily-check-surface.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "daily-check-surface",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0055: mechanical gate — package.json scripts.check must stay inside daily-check-surface.v0.json / short_lists.daily_check",
+      "necessity": "repo_gate"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/adr-status.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/broken-links.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/changelog-coverage.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/consent-cluster.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/numeric-claims.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/plan-status.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/principles-index.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/prompt-sync.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/protected-files.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/shared.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
+    },
+    {
+      "path": "scripts/lib/doc-consistency/version-examples.js",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "baseline": {
+        "ref": "v2.1.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
+      "necessity": "product_cli",
+      "distribution_role": "INSTALLED",
+      "owns": "doc-consistency"
     }
   ],
   "adjudication_plan": "PLAN-0055"

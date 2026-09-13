@@ -1,6 +1,5 @@
 // PLAN-0055 Stage 4Q rebuild — minimum fail-closed for must_ship / product_cli security surface.
-// Script birth: check-lock 2026-08-13 · check-git-policy 2026-08-13 · check-secrets 2026-08-13.
-// Full Gen1 pattern catalog: tests/archive/gen1-suites/security.test.js
+// Gen1 suite archive deleted; extend from current gate obligations only.
 "use strict";
 
 const { spawnSync } = require("child_process");

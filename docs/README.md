@@ -73,6 +73,7 @@ docs/
 | 对象 | 主职责 | 超出时 |
 | --- | --- | --- |
 | README / 入口 | 导航、定位、下一步 | 机制全文 → 权威对象 + 指针 |
+| `references/policies/**` | 硬规则 + AuthorityRef（随 payload 分发） | 台账/晋升表/命令序列/REPO-ONLY 流程 → 机读主人或 Plan；禁止把本仓卫生写进 payload 政策 |
 | Plan | 执行合同（目标/范围/阶段/验收/状态） | 理论、模式目录、架构规格 → Research / ADR |
 | ADR | Context / Decision / Consequences / Alternatives | 研究过程、施工手册 → Research / Plan |
 | Research | 调查、证据、分析，并给出可引用结论 | 任务状态、MUST 处置 → Plan / ADR |
@@ -95,6 +96,7 @@ docs/
 | 同号再拆 `RESEARCH-0012-foo.md` / 把 JSON 当 Research | 一个编号必须一个文件 | 人读并入那一份；JSON 给代码读 |
 | 把拓扑/台账/审查剧本 md 堆进 `repo-tools/` | 门禁目录不是文档库 | 过程稿不落盘；JSON 跟读它的脚本 |
 | 把内部研究写进 `docs/product/` | 产品文档不是知识对象垃圾桶 | Product 只给用户当前事实；指针回 Research/Plan |
+| 把 REPO-ONLY 仓门禁晋升表写进 `coding.policy.md` | payload 政策变百科；被治理项目背本仓卫生 | 机读主人 + AGENTS 指针；政策只留「正文克制」硬规则 |
 
 **纠偏禁令：** 路径错了，把内容归入**已有类型对象**。禁止用「再加一层目录 / 再加一份 md / 再写一个 Finding」当修复。禁止预建 `skill-extraction/`、`skill-design/`、`docs/gen2/` 这类主题夹。
 

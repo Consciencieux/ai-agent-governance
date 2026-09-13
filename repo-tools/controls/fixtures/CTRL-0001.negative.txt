@@ -1,5 +1,0 @@
-# CONTROL-X fixture template for CTRL-0001.
-# Do NOT put a live-looking key in this tracked file (would trip repo secret gates).
-# run-control-x.js assembles the AWS docs example access-key id at runtime:
-#   prefix AKIA + suffix IOSFODNN7EXAMPLE
-PLACEHOLDER_KEY=REPLACE_AT_RUNTIME
