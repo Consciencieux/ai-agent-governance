@@ -60,7 +60,7 @@ Rule → applicability → mechanism → evidence → decision → boundary 这�
 
 ## 解决情况
 
-（待填。）
+**部分进展（2026-09-13 · PLAN-0049 H2c；状态仍 Confirmed）。** 关闭条件 1 的最小 Control/Policy 身份机读切片已落地（`repo-tools/controls/` + registry gate）。关闭条件 2（统一 Dispatcher）与 3（统一 Evidence Model）**未**在本带关闭——属 H2d / 后续 Plan。本 Finding 保持 Confirmed，直至 Dispatcher + Evidence 链可验证。
 
 ## 关联
 

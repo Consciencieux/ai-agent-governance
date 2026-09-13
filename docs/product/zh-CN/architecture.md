@@ -130,6 +130,11 @@ ai-agent-governance/
 │   ├── docs-shape-allowlist.v0.json # check-docs-shape.js 白名单数据
 │   ├── check-discovery-ledger.js # FINDING-0022 发现台账 L2（PLAN-0048）
 │   ├── check-metadata-projection.js # FINDING-0024 只读 ADR 索引投影（PLAN-0048）
+│   ├── check-control-registry.js # H2c 机读 Control 投影（PLAN-0049）
+│   ├── run-control-x.js        # H2c CONTROL-X 双 profile 负向 fixture runner（PLAN-0049）
+│   ├── controls/               # REPO-ONLY Control JSON 投影（schema 权威 = ADR-0023）
+│   ├── check-template-responsibility.js # FINDING-0026 指令源 vs 模板责任图（PLAN-0049）
+│   ├── template-responsibility.v0.json # check-template-responsibility.js 数据
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）
 │   ├── check-coding-hygiene.js # 编码卫生（测试归属 + 残留标记）
 │   ├── check-terminology.js    # repo-owned 术语门禁（从 INSTALLED 一致性检查器拆出；ADR-0020 首次执行分离）

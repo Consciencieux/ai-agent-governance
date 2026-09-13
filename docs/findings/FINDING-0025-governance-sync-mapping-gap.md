@@ -1,8 +1,9 @@
 ---
 id: FINDING-0025
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen1
+resolved_in: gen2
 ---
 
 # FINDING-0025：治理语义与机械执行缺少显式控制身份 → 多点同步、checker accretion、regression 维护负担
@@ -44,7 +45,7 @@ R1（Policy Structure）：治理语义未以「控制」为单位结构化；�
 
 ## 解决情况
 
-（未解决，remediation planned。）ADR-0018 Phase 3（Rule / Control Model）与 Phase 5（Dispatcher）即为此设计；`RESEARCH-0006` § Generation-1 开发演化特征保留 Git 历史证据。Gen1 JS 冻结（ADR-0014）前该模式仍主导。
+**Resolved（2026-09-13 · PLAN-0049 H2c）。** 显式 Control identity 与 semantics / applicability / evaluator / evidence 关系可从 `repo-tools/controls/CTRL-*.json` 机读追踪；`check-control-registry.js` fail-closed。Markdown / checker / routing / test 投影以 Control identity 为键，不再只靠 ADR 人手抄表。完整 Dispatcher 仍属后续（见 FINDING-0002 剩余关闭条件）。
 
 ## 关联
 

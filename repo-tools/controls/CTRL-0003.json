@@ -1,0 +1,35 @@
+{
+  "identity": "CTRL-0003",
+  "title": "Governance-document freshness",
+  "schema_authority": "docs/design-decisions/ADR-0023-governance-control-model.md",
+  "semantics_ref": {
+    "status": "interim",
+    "path": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+    "note": "Distinct Control from CTRL-0004; shared freshness CLI wrapper does not merge identities."
+  },
+  "applicability": "Routine checks after governance-doc / code activity; default path must not claim deny.",
+  "evaluation_bindings": [
+    {
+      "profile": "skill",
+      "cli": "scripts/check-doc-freshness.js",
+      "evaluator": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+      "enforcement_boundary": "default-invocation",
+      "decision_effect": "advisory"
+    },
+    {
+      "profile": "repo",
+      "cli": "scripts/check-doc-freshness.js",
+      "evaluator": "scripts/evaluators/ctrl-0003-doc-freshness.js",
+      "enforcement_boundary": "default-invocation",
+      "decision_effect": "advisory",
+      "note": "Repo currently invokes the INSTALLED freshness CLI as a dual-profile WRAP; accidental coupling is inventoried, not CONTROL-X eligible until separate repo CLI exists."
+    }
+  ],
+  "evidence": {
+    "characterization": "tests/suites/consistency.test.js"
+  },
+  "control_x": {
+    "eligible": false,
+    "reason": "No separate repo-profile CLI; shared file ≠ CONTROL-X."
+  }
+}

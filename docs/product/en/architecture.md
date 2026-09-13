@@ -157,6 +157,11 @@ ai-agent-governance/
 │   ├── docs-shape-allowlist.v0.json # allowlist data for check-docs-shape.js
 │   ├── check-discovery-ledger.js # FINDING-0022 Discovery Ledger L2 (PLAN-0048)
 │   ├── check-metadata-projection.js # FINDING-0024 read-only ADR index projection (PLAN-0048)
+│   ├── check-control-registry.js # H2c machine-readable Control projections (PLAN-0049)
+│   ├── run-control-x.js        # H2c CONTROL-X dual-profile negative fixture runner (PLAN-0049)
+│   ├── controls/               # REPO-ONLY Control JSON projections (schema authority = ADR-0023)
+│   ├── check-template-responsibility.js # FINDING-0026 instruction vs template responsibility map (PLAN-0049)
+│   ├── template-responsibility.v0.json # responsibility map data for check-template-responsibility.js
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)

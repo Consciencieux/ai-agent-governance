@@ -33,6 +33,7 @@
 | `document-model.md` | 文档类型边界与对象职责 |
 | `metadata-policy.md` | 元数据封闭与预算 |
 | `capability-model.md` | Capability 与 Task→Capability 路由 |
+| `control-shape.md` | Control 最小形状（无本仓编号承诺） |
 | `decision-records.md` | ADR / 决策语义与权威 |
 | `migration-method.md` | 提取与迁移：Facts→Rationale→Pattern→Skill |
 

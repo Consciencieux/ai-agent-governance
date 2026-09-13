@@ -96,10 +96,14 @@ Rule semantics authority（每条 Control）
   = 例如 CTRL-0001 → interim JS（待迁出）
 
 Machine-readable 独立序列化文件
-  = 尚未授权（第二个真实机器 consumer 出现后再定）
+  = **已由 PLAN-0049（H2c）Narrow 授权**：本仓 `repo-tools/controls/CTRL-*.json` 为 slot 投影；schema 权威仍是本 ADR。第二个真实机器 consumer = `repo-tools/check-control-registry.js` + `repo-tools/run-control-x.js`。JSON **不是**第二语义家；不得把本仓 `CTRL-NNNN` 写成 portable / INSTALLED invariant（ADR-0025 决策 13）。
 ```
 
-本 ADR **不是**所有 CTRL 规则语义的正文家。不得因为现有目录叫 `references/` 就把序列化 schema 放进 payload。不得因为目标架构图里有 Governance Core 就新建 `governance-core/` / `controls/` / `rules/`。物理包装等出现**第二个真实机器 consumer**（Dispatcher、CONTROL-X runner、或生成器）再由后续 ADR / Plan 授权。AGENTS / SKILL 若提及本模型，只放指针。
+本 ADR **不是**所有 CTRL 规则语义的正文家。不得因为现有目录叫 `references/` 就把序列化 schema 放进 payload。不得因为目标架构图里有 Governance Core 就新建 `governance-core/`（本仓 `repo-tools/controls/` 是 H2c 授权的 **REPO-ONLY** 投影目录，不是 payload Governance Core）。AGENTS / SKILL 若提及本模型，只放指针。
+
+### 后续修正（2026-09-13）：H2c 机读投影授权
+
+本修正 Narrow 决策 6 的「尚未授权」句：在 PLAN-0049 Active 且 registry / CONTROL-X runner 落地后，本仓机读 Control 文件获授权。决策 1–5、7–9 与 Phase 3 slot 模型不变。portable skill 只抽 identity · semantic owner · evaluator · binding · evidence **形状**，不抽编号。
 
 **7. Applicability 可陈述、不自动路由。** Phase 3 证明：给定一个书面 context，能判断某 Control 是否适用。禁止实现 `context detector → dispatcher → evaluator selection`。
 

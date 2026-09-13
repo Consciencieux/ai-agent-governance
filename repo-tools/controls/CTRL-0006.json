@@ -1,0 +1,35 @@
+{
+  "identity": "CTRL-0006",
+  "title": "Relative markdown link validity",
+  "schema_authority": "docs/design-decisions/ADR-0023-governance-control-model.md",
+  "semantics_ref": {
+    "status": "authoritative",
+    "path": "references/policies/lifecycle.policy.md",
+    "section": "相对 Markdown 链接有效性",
+    "fallback_note": "If section title drifts, treat evaluator + ADR-0023 slice as interim until semantics_ref is re-pointed."
+  },
+  "applicability": "Markdown trees in supported project shapes; empty tree is applicable vacuous pass.",
+  "evaluation_bindings": [
+    {
+      "profile": "skill",
+      "cli": "scripts/check-doc-consistency.js",
+      "evaluator": "scripts/evaluators/ctrl-0006-broken-links.js",
+      "enforcement_boundary": "default / --gate / --release-gate",
+      "decision_effect": "advisory"
+    },
+    {
+      "profile": "repo",
+      "cli": "scripts/check-doc-consistency.js",
+      "evaluator": "scripts/evaluators/ctrl-0006-broken-links.js",
+      "enforcement_boundary": "default / --gate / --release-gate",
+      "decision_effect": "advisory"
+    }
+  ],
+  "evidence": {
+    "characterization": "tests/suites/consistency.test.js"
+  },
+  "control_x": {
+    "eligible": false,
+    "reason": "Single shared CLI path; CONTROL-X reserved for true dual-profile implementations."
+  }
+}

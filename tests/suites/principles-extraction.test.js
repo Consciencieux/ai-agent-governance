@@ -12,6 +12,7 @@ const PRINCIPLE_FILES = [
   "references/principles/document-model.md",
   "references/principles/metadata-policy.md",
   "references/principles/capability-model.md",
+  "references/principles/control-shape.md",
   "references/principles/decision-records.md",
   "references/principles/migration-method.md",
 ];

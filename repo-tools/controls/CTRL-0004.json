@@ -1,0 +1,34 @@
+{
+  "identity": "CTRL-0004",
+  "title": "Translation freshness",
+  "schema_authority": "docs/design-decisions/ADR-0023-governance-control-model.md",
+  "semantics_ref": {
+    "status": "interim",
+    "path": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+    "note": "Same wrapper file as CTRL-0003; two Controls."
+  },
+  "applicability": "Trilingual docs trees at release / --release-gate boundaries.",
+  "evaluation_bindings": [
+    {
+      "profile": "skill",
+      "cli": "scripts/check-doc-freshness.js",
+      "evaluator": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+      "enforcement_boundary": "release-gate",
+      "decision_effect": "deny"
+    },
+    {
+      "profile": "repo",
+      "cli": "scripts/check-doc-freshness.js",
+      "evaluator": "scripts/evaluators/ctrl-0004-translation-freshness.js",
+      "enforcement_boundary": "release-gate",
+      "decision_effect": "deny"
+    }
+  ],
+  "evidence": {
+    "characterization": "tests/suites/consistency.test.js"
+  },
+  "control_x": {
+    "eligible": false,
+    "reason": "Shared CLI file without distinct profile runners; not a dual-implementation CONTROL-X slice."
+  }
+}

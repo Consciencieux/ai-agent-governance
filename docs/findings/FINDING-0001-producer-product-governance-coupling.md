@@ -1,8 +1,9 @@
 ---
 id: FINDING-0001
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen1
+resolved_in: gen2
 ---
 
 # FINDING-0001：生产者 / 产品治理耦合：物理边界已分开，语义与执行仍混杂
@@ -44,7 +45,7 @@ observed_in: gen1
 
 ## 解决情况
 
-（进行中，状态保持 `Confirmed`。2026-09-09：boundary defined / remediation underway——Phase 1（PLAN-0031）定义 Producer/Product 边界与 ownership inventory，确立「共享语义只有一个 authoritative owner」原则；正式 cross-profile closure contract 与 CONTROL-X 落地在 Phase 3+，届时才将本 Finding 置为 `Resolved`。R5 应优先于 R1–R4 处理。）
+**Resolved（2026-09-13 · PLAN-0049 H2c）。** CONTROL-X 第一代机制落地：`repo-tools/run-control-x.js` 用同一 canonical negative fixture 打 skill `scripts/check-secrets.js` 与 repo `repo-tools/check-secrets.js`（CTRL-0001），两侧必须 fail 且不回显秘密。共享契约与 ownership 边界已由 ADR-0020 / ADR-0023 定家；机读 Control 投影在 `repo-tools/controls/`。残余 dogfood / 调度面问题不阻挡本 Finding 关闭条件 3（cross-profile regression exists）。
 
 ## 关联
 

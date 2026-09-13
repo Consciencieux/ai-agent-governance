@@ -1,0 +1,34 @@
+{
+  "identity": "CTRL-0002",
+  "title": "Git write consent",
+  "schema_authority": "docs/design-decisions/ADR-0023-governance-control-model.md",
+  "semantics_ref": {
+    "status": "authoritative",
+    "path": "references/policies/git.policy.md",
+    "section": "确认范围"
+  },
+  "applicability": "Any git write classified by git.policy.md § 确认范围.",
+  "evaluation_bindings": [
+    {
+      "profile": "repo",
+      "cli": null,
+      "evaluator": null,
+      "enforcement_boundary": "agent-protocol / consent-cluster sync points",
+      "decision_effect": "require-review"
+    },
+    {
+      "profile": "skill",
+      "cli": null,
+      "evaluator": null,
+      "enforcement_boundary": "agent-protocol / release-manager sync points",
+      "decision_effect": "require-review"
+    }
+  ],
+  "evidence": {
+    "characterization": "scripts/check-doc-consistency.js consent-cluster (mechanical sync only)"
+  },
+  "control_x": {
+    "eligible": false,
+    "reason": "No dual mechanical CLI evaluator yet; H2d may add consent evaluator. Do not fabricate CONTROL-X without shared fixture runners."
+  }
+}

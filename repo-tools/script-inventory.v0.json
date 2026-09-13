@@ -181,6 +181,54 @@
       "notes": "PLAN-0048 / FINDING-0024 read-only ADR index projection"
     },
     {
+      "path": "repo-tools/check-control-registry.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "FINDING-0025",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0049 / H2c machine-readable Control registry gate"
+    },
+    {
+      "path": "repo-tools/run-control-x.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "FINDING-0001",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0049 / H2c CONTROL-X dual-profile negative fixture runner"
+    },
+    {
+      "path": "repo-tools/check-template-responsibility.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "FINDING-0026",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0049 / FINDING-0026 template responsibility map gate"
+    },
+    {
       "path": "repo-tools/check-must-ship-carriers.js",
       "distribution_role": "REPO-ONLY",
       "generation": "gen2_native",

@@ -1,8 +1,9 @@
 ---
 id: FINDING-0026
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen1
+resolved_in: gen2
 ---
 
 # FINDING-0026：`templates/` 把可执行指令源与物化模板混在同一目录
@@ -54,7 +55,7 @@ Generation-1 按**物理生成方式**给文件归类，而不是按**语义责�
 
 ## 解决情况
 
-（未解决。）问题模型已写入 RESEARCH-0009 v3。仍在 Phase 2：先记录责任边界，不移动 `references/`。处置属于后续阶段（与 ADR-0014 机械冻结、ADR-0018 Phase 4 及以后的 keep / wrap / extract / rewrite / retire 一致）。
+**Resolved（2026-09-13 · PLAN-0049 H2c）。** 责任分类不再依赖「是否被 generator 使用」：`repo-tools/template-responsibility.v0.json` + `check-template-responsibility.js` 按 `instruction_source` / `machine_state_template` / `bootstrap_boilerplate` 对账 `references/templates/*`。本带**不**按 Gen1 骨架 bulk move；instruction capability 发现/路由由既有 capabilities 面承担。目录物理重排不是关闭条件。
 
 ## 关联
 
@@ -67,4 +68,4 @@ Generation-1 按**物理生成方式**给文件归类，而不是按**语义责�
 
 ## 回归保护
 
-当前无机械 gate 检测「目录名是否等于语义责任」——这正是本 Finding 的内容。关闭时需要：instruction source 与 boilerplate 的责任可声明、可对账。把文件挪到更细的 Markdown 目录本身不等于关闭。
+`node repo-tools/check-template-responsibility.js --gate`：`references/templates/*` 必须全部出现在责任图且角色合法；增删模板而未更新图则失败。

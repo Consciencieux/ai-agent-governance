@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0049 H2c Active (in progress)** — Repo-only machine-readable Controls at `repo-tools/controls/` + `check-control-registry.js`; CONTROL-X runner `run-control-x.js` (CTRL-0001 dual-profile negative fixture); `template-responsibility.v0.json` + gate (FINDING-0026); portable `references/principles/control-shape.md` (shape only, no CTRL numbers). FINDING-0001 / 0025 / 0026 Resolved; FINDING-0002 remains Confirmed (Dispatcher/Evidence still open). ADR-0023 decision 6 Narrow. Gen1 `npm run check` stays observational; `check:must-ship` remains sole CI block.
+
 - **AGENTS.md thin entry** — Validation / impact-face / reference-closure detail moved to `CONTRIBUTING.md` (§ Validation Requirements; ×3). `AGENTS.md` keeps always-on invariants + pointers (ADR-0022). Routing graph `reference-closure` AuthorityRef retargeted to CONTRIBUTING. No skill-behavior change.
 
 - **PLAN-0048 H2b checkers and ledgers (Archived)** — EXTRACTED `scripts/lib/plan-status.js` / `scripts/lib/adr-status.js` (wired into `scripts/check-doc-consistency.js`); standalone `repo-tools/check-roadmap-sync.js`, `check-discovery-ledger.js` (L2), `check-metadata-projection.js` (navigation-only ADR README), `check-docs-shape.js` + `docs-shape-allowlist.v0.json`. FINDING-0011 / 0019 / 0021 / 0022 / 0024 / 0030 Resolved. Gen1 `npm run check` stays observational; `check:must-ship` remains sole CI block. Next = H2c (awaiting Design).
