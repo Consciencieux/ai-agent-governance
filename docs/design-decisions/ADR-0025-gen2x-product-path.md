@@ -134,9 +134,9 @@ H2-0 与 H2-front **可并行**。**H2a→b→c 不可倒**：b 消费 a 的残�
 
 ## 后果
 
-- Roadmap「当前阶段」= **H2**（H2-front [PLAN-0046](../plans/archive/PLAN-0046-instruction-surface-2.0-alignment.md) **Archived** 2026-09-13；H2a = [PLAN-0047](../plans/archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；下一步 H2b）。H0 / H1 已 Archived。
+- Roadmap「当前阶段」= **H2**（H2-front [PLAN-0046](../plans/archive/PLAN-0046-instruction-surface-2.0-alignment.md) **Archived** 2026-09-13；H2a = [PLAN-0047](../plans/archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../plans/PLAN-0048-h2b-checkers-and-ledgers.md) **Design**，待人类 Active）。H0 / H1 已 Archived。
 - ADR-0018 继续约束历史 Phase 0–8 与 ID 编号规则；2.x 顺序提问指向本 ADR。
-- PLAN-0037 已 Archived（2026-09-13 Stage D）；PLAN-0046 已 Archived（2026-09-13 Stage 3/4 + Y6）；PLAN-0047 已 Archived（2026-09-13 Stage 0–4）。
+- PLAN-0037 已 Archived（2026-09-13 Stage D）；PLAN-0046 已 Archived（2026-09-13 Stage 3/4 + Y6）；PLAN-0047 已 Archived（2026-09-13 Stage 0–4）；PLAN-0048 已写为 Design（未 Active）。
 - `retire` / `out`（治理评分、`ai-skill-manager`）仍不进入 2.x 施工；脚本面今日 `retire = ∅`。
 - H2-front 期间对 `scripts/` 的默认动作仍是 **不动载体**；去向问题问 inventory，不问新表。
 

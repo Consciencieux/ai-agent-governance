@@ -334,12 +334,12 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 | --- | --- | --- | --- |
 | **H0** 文件與生命週期對帳 | 入口/路線圖/計劃位置與 `v2.0.0` 對齊 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 計劃已歸檔） |
 | **H1** 可重用治理 Skill 提煉 | L1/L2/L3 提取協議 → 乾淨目標驗證；不遷腳本載體 | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** 控制面補完 | 執行序見 ADR-0025 決策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) Archived；[PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md)（H2a）**Archived** | **H2b next** |
+| **H2** 控制面補完 | 執行序見 ADR-0025 決策 14：H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) / [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) Archived；[PLAN-0048](../PLAN-0048-h2b-checkers-and-ledgers.md)（H2b）**Design** | **H2b Design** |
 | **H3** 執行期與科研 | L3、測量、注意力實驗；不擋 2.1 | 無 Active Plan | 遠 |
 
 ### H0 已完成
 
-已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045。Plan 保持單檔（`PLAN-xxxx-*.md`）。`docs/plans/` 無 Active 施工計劃（PLAN-0047 已 Archived）。下一步：H2b。
+已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045。Plan 保持單檔（`PLAN-xxxx-*.md`）。`docs/plans/` 無 Active 施工計劃；H2b = [PLAN-0048](../PLAN-0048-h2b-checkers-and-ledgers.md) **Design**（待人類 Active）。
 
 ### H2 輸入（按子帶；不擋已發佈的 2.0）
 
@@ -361,7 +361,7 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 - **本倉**：實驗場 + 參考實作 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
 - **已發佈 skill（2.0）**：可安裝必裝切片，不是 PLAN-0037 另開通用包。
 - **2.x 產品主線（H1）**：[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — 可重用原則包已落地（`references/principles/`）。
-- **2.x 下一帶（H2）**：H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；下一步 H2b（ADR-0025 決策 14）。
+- **2.x 下一帶（H2）**：H2-front [PLAN-0046](../archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived；H2a = [PLAN-0047](../archive/PLAN-0047-h2a-residue-extraction.md) **Archived**；H2b = [PLAN-0048](../PLAN-0048-h2b-checkers-and-ledgers.md) **Design**（ADR-0025 決策 14）。
 - **H1 紀律（索引 [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 決策 9–13）：** 消費既有 inventory，不新建能力去向表；不刪腳本；不把 repo router 寫入 INSTALLED；SemVer 不是 Horizon 的別名。
 
 ## Guarantee Levels
@@ -605,7 +605,7 @@ H0     文件與生命週期對帳 — EXITED / Archived（PLAN-0045）
         ↓
 H1     PLAN-0037 跨專案 portable 提煉 — **Archived**（2026-09-13）
         ↓
-H2     執行序 ADR-0025：H2-0 → PLAN-0046（Archived）→ PLAN-0047（H2a Archived；下一步 H2b）→ b→c→d
+H2     執行序 ADR-0025：H2-0 → PLAN-0046（Archived）→ PLAN-0047（H2a Archived）→ PLAN-0048（H2b Design）→ c→d
         ↓
 H3     執行期與科研（L3 / 測量；不擋 2.1）
         ↓
