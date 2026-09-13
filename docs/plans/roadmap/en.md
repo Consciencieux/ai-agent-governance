@@ -294,7 +294,7 @@ The Roadmap does not independently define or adjudicate phase order. The table b
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Migration closed:** Phase 0–8 EXITED; **`v2.0.0` shipped** (2026-09-12). Plan archive ≠ Release (ADR-0016). **Current horizon = ADR-0025 H1 complete → H2 pending Plan** ([PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived**). H0 ([PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)) is Archived.
+**Migration closed:** Phase 0–8 EXITED; **`v2.0.0` shipped** (2026-09-12). Plan archive ≠ Release (ADR-0016). **Current horizon = ADR-0025 H2 (Design)** ([PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md); awaiting human Active). H1 ([PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)) is Archived. H0 ([PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)) is Archived.
 
 ## 2.0 shipped (index)
 
@@ -332,12 +332,12 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 | --- | --- | --- | --- |
 | **H0** Documentation and lifecycle truth | Align entry docs / roadmap / plan location with `v2.0.0` | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived** (nine Phase 4–8 plans archived) |
 | **H1** Reusable governance skill extraction | L1/L2/L3 extraction protocol → clean-target validation; do not migrate script carriers | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** Control-plane completion | Residue extract → checkers/ledgers → machine Controls / CONTROL-X → payload routing and portability | Separate plan; inputs below | Not started |
+| **H2** Control-plane completion | Instruction-surface 2.0 first (thin entry + must-ship capability leaves); H2a–c mechanical debt stays sequenced | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) | **Design** |
 | **H3** Runtime and research | L3, measurement, attention experiments; does not block 2.1 | No Active Plan | Far |
 
 ### H0 done
 
-Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045. Plans stay single files (`PLAN-xxxx-*.md`). No Active construction plan under `docs/plans/` (H1 archived; next horizon is H2, pending a new Plan).
+Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045. Plans stay single files (`PLAN-xxxx-*.md`). Construction plan under `docs/plans/`: [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) (**Design**, awaiting Active).
 
 ### H2 inputs (by sub-band; does not block shipped 2.0)
 
@@ -357,6 +357,7 @@ Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045. Plans stay single files (
 - **This repo:** experiment + reference implementation + research provenance ([RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)).
 - **Shipped skill (2.0):** installable must-ship slice, not a separate PLAN-0037 universal pack.
 - **2.x product line (H1):** [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — portable principles pack landed (`references/principles/`).
+- **2.x next band (H2 Design):** [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) — instruction-surface 2.0 alignment (thin entry + must-ship capability leaves); consumes RESEARCH-0006, does not reopen it.
 - **H1 discipline (index of [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) decisions 9–13):** consume the existing inventory; do not create a capability-destination table; do not delete scripts; do not write the repo router into INSTALLED; SemVer is not an alias for Horizon.
 
 ## Guarantee Levels
@@ -600,7 +601,7 @@ H0     Documentation and lifecycle truth — EXITED / Archived (PLAN-0045)
         ↓
 H1     PLAN-0037 cross-project portable extract — **Archived** (2026-09-13)
         ↓
-H2     Control-plane completion (ADR-0024 later mechanical debt)
+H2     PLAN-0046 instruction-surface 2.0 alignment — **Design** (awaiting Active)
         ↓
 H3     Runtime and research (L3 / measurement; does not block 2.1)
         ↓

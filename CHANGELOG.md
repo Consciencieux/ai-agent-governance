@@ -6,6 +6,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0046 Design (H2)** — instruction-surface 2.0 alignment plan: thin entry + must-ship capability leaves; consumes RESEARCH-0006 / ADR-0024; does not reopen the baseline as a construction contract. Awaiting human Active.
 - **Numbered docs are single files** — do not mint companion RESEARCH IDs or `working/` dumps for construction tables. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. RESEARCH-0014 (extraction draft) withdrawn. Docs shape allowlist outcome is tracked in FINDING-0030 (H2b open; implementation detail not carried in the Finding or README).
 
 - **PLAN-0037 Stage A/B reconciled** — L1/L2 authority is ADR-0020 only (no duplicate extraction files); cascade unwind recorded.

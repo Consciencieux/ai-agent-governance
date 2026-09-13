@@ -296,7 +296,7 @@ Roadmap 不獨立定義或裁決 phase order。下表鏡像 ADR-0018 的 **已�
 
 權威：ADR-0018（`docs/design-decisions/ADR-0018-generation-2-dev-path.md`）。
 
-**遷移階段已關閉：** Phase 0–8 EXITED；**`v2.0.0` 已發佈**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**目前工作帶 = ADR-0025 H1 已完成 → H2 待開 Plan**（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived**）。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已歸檔。
+**遷移階段已關閉：** Phase 0–8 EXITED；**`v2.0.0` 已發佈**（2026-09-12）。Plan archive ≠ Release（ADR-0016）。**目前工作帶 = ADR-0025 H2（Design）**（[PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md)；待人類 Active）。H1（[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)）已 Archived。H0（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)）已歸檔。
 
 ## 2.0 已發佈（索引）
 
@@ -334,12 +334,12 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 | --- | --- | --- | --- |
 | **H0** 文件與生命週期對帳 | 入口/路線圖/計劃位置與 `v2.0.0` 對齊 | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived**（九份 Phase 4–8 計劃已歸檔） |
 | **H1** 可重用治理 Skill 提煉 | L1/L2/L3 提取協議 → 乾淨目標驗證；不遷腳本載體 | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** 控制面補完 | 殘留抽出 → 檢查器/台帳 → 機器 Control / CONTROL-X → 載荷調度與可移植性 | 另開 Plan；輸入見下表 | 未開工 |
+| **H2** 控制面補完 | 先指令面 2.0 對齊（薄入口 + must-ship 能力葉）；H2a–c 機械債另循序 | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) | **Design** |
 | **H3** 執行期與科研 | L3、測量、注意力實驗；不擋 2.1 | 無 Active Plan | 遠 |
 
 ### H0 已完成
 
-已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045。Plan 保持單檔（`PLAN-xxxx-*.md`）。`docs/plans/` 當前無 Active 施工計劃（H1 已歸檔；下一帶為 H2，待另開 Plan）。
+已歸檔 PLAN-0035 / 0036 / 0038–0044 與 PLAN-0045。Plan 保持單檔（`PLAN-xxxx-*.md`）。`docs/plans/` 當前施工計劃：[PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md)（**Design**，待 Active）。
 
 ### H2 輸入（按子帶；不擋已發佈的 2.0）
 
@@ -359,6 +359,7 @@ Roadmap 不裁決順序。成員來自 ADR-0024 `later`；順序來自 ADR-0025�
 - **本倉**：實驗場 + 參考實作 + 科研回溯（[RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)）。
 - **已發佈 skill（2.0）**：可安裝必裝切片，不是 PLAN-0037 另開通用包。
 - **2.x 產品主線（H1）**：[PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — 可重用原則包已落地（`references/principles/`）。
+- **2.x 下一帶（H2 Design）**：[PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) — 指令面 2.0 對齊（薄入口 + must-ship 能力葉）；消費 RESEARCH-0006，不重開。
 - **H1 紀律（索引 [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 決策 9–13）：** 消費既有 inventory，不新建能力去向表；不刪腳本；不把 repo router 寫入 INSTALLED；SemVer 不是 Horizon 的別名。
 
 ## Guarantee Levels
@@ -602,7 +603,7 @@ H0     文件與生命週期對帳 — EXITED / Archived（PLAN-0045）
         ↓
 H1     PLAN-0037 跨專案 portable 提煉 — **Archived**（2026-09-13）
         ↓
-H2     控制面補完（ADR-0024 later 機械債）
+H2     PLAN-0046 指令面 2.0 對齊 — **Design**（待 Active）
         ↓
 H3     執行期與科研（L3 / 測量；不擋 2.1）
         ↓
