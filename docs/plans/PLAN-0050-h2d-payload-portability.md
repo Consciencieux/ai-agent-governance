@@ -73,11 +73,11 @@ target: both
 - [x] FINDING-0003 切片：`enforcement-semantics.md` 四值 + judgment/mechanical 分层
 - [x] FINDING-0003 切片：sibling-closure 合同 + `check-sibling-closure.js` + 负向 fixture（Finding 仍 Confirmed：其余 judgment / 条件 3 全表未收）
 
-### Stage 2 — MIGRATE + GitLab + portability 边界 — **进行中**
+### Stage 2 — MIGRATE + GitLab + portability 边界 — **完成**
 
 - [x] MIGRATE 独立入口：`scripts/migrate-governance.js` + SKILL.md 指针 + 表征
-- [ ] FINDING-0010 残留收口
-- [ ] FINDING-0007 最小 adapter 矩阵（可对账）
+- [x] FINDING-0010 残留收口：docs-only GitLab 回归（允许 markdown npx；禁 app-stack `npm run lint/test/build`）
+- [x] FINDING-0007 最小 adapter 矩阵：`repo-tools/portability-boundary.v0.json` + 表征对账（Finding 仍 Confirmed：tool-call hard enforcement = later）
 
 ### Stage 3 — INSTALLED 边界 Narrow + L0–L4 + 0016/0017 切片
 
@@ -99,7 +99,7 @@ target: both
 - [x] 锁行为诚实（原子或显式非原子）可测
 - [x] 至少一条判断型义务有 carrier；enforcement 词汇可陈述（FINDING-0003 整体仍 Confirmed）
 - [x] MIGRATE 入口可发现
-- [ ] 0007 边界可对账
+- [x] 0007 边界可对账（矩阵切片；Finding 整体仍 Confirmed）
 - [ ] 0004/0005 要么 Narrow 后进 INSTALLED，要么可验证地未装
 - [ ] 未把 githooks/L3 当作 2.1 必装；must-ship 仍唯一 CI 阻断
 - [ ] 证据真实（tests + 相关 scope gate / `check:must-ship`）
@@ -114,8 +114,8 @@ target: both
 | D3 | mechanism_gap | CTRL-0002 Git consent evaluator | resolved | evaluator + CLI + CTRL-0002.json + tests |
 | D4 | defect | FINDING-0012 lock 非原子 | resolved | wx agent.lock acquire/release + tests |
 | D5 | architecture_gap | FINDING-0004 / 0005 INSTALLED 边界 | open | Stage 3 Narrow or REPO-ONLY proof |
-| D6 | portability_gap | FINDING-0007 adapter 矩阵 | open | Stage 2 |
-| D7 | defect | FINDING-0010 GitLab 模板残留 | open | Stage 2 |
+| D6 | portability_gap | FINDING-0007 adapter 矩阵 | resolved | portability-boundary.v0.json + h2d characterization; Finding remains Confirmed for tool-call later |
+| D7 | defect | FINDING-0010 GitLab 模板残留 | resolved | docs-only residual regression + non-node stack suite; Finding already Resolved |
 | D8 | product_gap | MIGRATE 独立入口 | resolved | migrate-governance.js + SKILL MIGRATE pointer + tests |
 | D9 | architecture_gap | FINDING-0014 L0–L4 工具面 | open | Stage 3 |
 | D10 | architecture_gap | FINDING-0016 / 0017 切片 | open | Stage 3 or defer+successor |
@@ -123,8 +123,8 @@ target: both
 
 ```text
 Total known:  12
-Resolved:     4
-Open:         8
+Resolved:     6
+Open:         6
 Unaccounted:  0
 ```
 

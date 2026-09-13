@@ -47,9 +47,11 @@ v0.15.0 只修了「generator 选对段」（`gitlab-<stack>` 匹配），没修
 
 ## 解决情况
 
-- `references/workflows/ci.md` 中 GitLab CI 的 python / go / java / cpp / docs-only 段已改为栈原生命令；governance job 统一用 `node:20` 跑校验器（与 rust 段一致）。
-- 表征回归：`tests/suites/security.test.js` — `ci templates: non-node GitLab stacks do not emit npm/npx in stack jobs (FINDING-0010)`。
-- 关闭日：2026-09-13。
+- `references/workflows/ci.md` 中 GitLab CI 的 python / go / java / cpp / rust / docs-only 段已改为栈原生命令；governance job 统一用 `node:20` 跑校验器。
+- 表征回归：`tests/suites/security.test.js`
+  - `ci templates: non-node GitLab stacks do not emit npm/npx in stack jobs (FINDING-0010)`（python/go/java/cpp/rust）
+  - `ci templates: docs-only GitLab allows markdown npx but not npm run lint/test/build (FINDING-0010 residual)`（PLAN-0050 Stage 2 残留收口）
+- 关闭日：2026-09-13；PLAN-0050 残留收口：2026-09-13。
 
 ## 关联
 

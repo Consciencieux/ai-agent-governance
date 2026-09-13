@@ -139,6 +139,7 @@ ai-agent-governance/
 │   ├── run-control-x.js        # H2c CONTROL-X 雙 profile 負向 fixture runner（PLAN-0049）
 │   ├── controls/               # REPO-ONLY Control JSON 投影（schema 權威 = ADR-0023）
 │   ├── contracts/              # REPO-ONLY sibling-closure dogfood 合約（PLAN-0050）
+│   ├── portability-boundary.v0.json # FINDING-0007 最小 adapter/可移植性矩陣（PLAN-0050）
 │   ├── check-template-responsibility.js # FINDING-0026 指令源 vs 模板責任圖（PLAN-0049）
 │   ├── template-responsibility.v0.json # check-template-responsibility.js 資料
 │   ├── check-role-completeness.js # 分發角色完整性（未分類/重疊/失效路徑/打包邊界 + repo-only 反向檢查）

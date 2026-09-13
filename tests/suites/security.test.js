@@ -479,6 +479,48 @@ test("ci templates: non-node GitLab stacks do not emit npm/npx in stack jobs (FI
   return true;
 });
 
+// FINDING-0010 residual (PLAN-0050): docs-only may use npx for markdown tools, but must not run app-stack npm scripts.
+test("ci templates: docs-only GitLab allows markdown npx but not npm run lint/test/build (FINDING-0010 residual)", () => {
+  const d = tmp("ci-gl-docs-only");
+  const r = spawnSync(
+    process.execPath,
+    [
+      GENERATOR,
+      "--target",
+      d,
+      "--project-name",
+      "DocsOnly",
+      "--phase",
+      "C",
+      "--stack",
+      "docs-only",
+      "--ci-platform",
+      "gitlab",
+    ],
+    { encoding: "utf8" }
+  );
+  if (r.status !== 0) {
+    console.error("  generation failed for gitlab+docs-only");
+    return false;
+  }
+  const wf = path.join(d, ".gitlab-ci.yml");
+  if (!fs.existsSync(wf)) {
+    console.error("  missing .gitlab-ci.yml for docs-only");
+    return false;
+  }
+  const body = fs.readFileSync(wf, "utf8");
+  const stackJobs = body.split(/governance\s*:/i)[0] || body;
+  if (/\bnpm\s+run\s+(lint|test|build)\b|\bnpm\s+test\b/.test(stackJobs)) {
+    console.error("  docs-only stack jobs still contain app-stack npm scripts");
+    return false;
+  }
+  if (!/governance\s*:/i.test(body) || !/node:\s*20|image:\s*node:20/i.test(body)) {
+    console.error("  docs-only missing governance job on node:20");
+    return false;
+  }
+  return true;
+});
+
 test("check-secrets: github_pat_ form hits github-token pattern", () => {
   const dir = tmp("secrets-pat2");
   gitInit(dir);

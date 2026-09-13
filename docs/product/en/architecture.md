@@ -166,6 +166,7 @@ ai-agent-governance/
 │   ├── run-control-x.js        # H2c CONTROL-X dual-profile negative fixture runner (PLAN-0049)
 │   ├── controls/               # REPO-ONLY Control JSON projections (schema authority = ADR-0023)
 │   ├── contracts/              # REPO-ONLY sibling-closure dogfood contracts (PLAN-0050)
+│   ├── portability-boundary.v0.json # FINDING-0007 minimal adapter/portability matrix (PLAN-0050)
 │   ├── check-template-responsibility.js # FINDING-0026 instruction vs template responsibility map (PLAN-0049)
 │   ├── template-responsibility.v0.json # responsibility map data for check-template-responsibility.js
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)

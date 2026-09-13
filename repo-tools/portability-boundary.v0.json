@@ -1,0 +1,102 @@
+{
+  "id": "PORTABILITY-BOUNDARY-V0",
+  "version": 0,
+  "authority": "construction",
+  "finding": "FINDING-0007",
+  "plan": "PLAN-0050",
+  "purpose": "Minimal reconcilable adapter/portability boundary matrix. Portable core owns policy semantics; repo-deterministic gates own cross-tool fail-closed when required; host adapters are opt-in interception and are NOT 2.1 must-install.",
+  "layers": [
+    {
+      "id": "portable_core",
+      "role": "policy_semantics",
+      "distribution": [
+        "INSTALLED",
+        "SKILL-INTERNAL"
+      ],
+      "enforcement_class": "judgment_or_declared_mechanical",
+      "notes": "Rules, principles, declared contracts (e.g. sibling-closure). No host API required. Must not claim hard runtime interception."
+    },
+    {
+      "id": "repo_deterministic",
+      "role": "ci_and_cli_gates",
+      "distribution": [
+        "INSTALLED_scripts",
+        "target_ci"
+      ],
+      "enforcement_class": "fail_closed_when_required",
+      "hosts": [
+        "github_actions",
+        "gitlab_ci",
+        "local_node_cli"
+      ],
+      "notes": "verify-governance, check-secrets, required CI jobs, must-ship. Bypass = disable required check / skip CI — not Agent forgetfulness."
+    },
+    {
+      "id": "host_adapter",
+      "role": "runtime_interception",
+      "distribution": "opt_in",
+      "enforcement_class": "host_dependent",
+      "hosts": [
+        "githooks",
+        "cursor_hooks",
+        "claude_hooks",
+        "other_tool_middleware"
+      ],
+      "notes": "before_write / before_shell style interception. Opt-in only; --no-verify / missing hooksPath / absent adapter bypasses. Not a 2.1 must-install."
+    }
+  ],
+  "actions": [
+    {
+      "action": "secret_commit",
+      "portable_core": "security.policy + secret patterns",
+      "repo_deterministic": "check-secrets fail_closed",
+      "host_adapter": "optional_pre_commit",
+      "bypass": "skip_ci_or_no_verify",
+      "hard_across_tools": false,
+      "status": "shipped"
+    },
+    {
+      "action": "git_write_push",
+      "portable_core": "git.policy + CTRL-0002 evaluator (classify only)",
+      "repo_deterministic": "consent CLI does not execute git",
+      "host_adapter": "none_default",
+      "bypass": "agent_skips_consent_protocol",
+      "hard_across_tools": false,
+      "status": "shipped"
+    },
+    {
+      "action": "concurrent_agent_write",
+      "portable_core": "lock policy text",
+      "repo_deterministic": "check-lock wx acquire/release",
+      "host_adapter": "none",
+      "bypass": "ignore_lock_file",
+      "hard_across_tools": false,
+      "status": "shipped"
+    },
+    {
+      "action": "governance_verify_before_done",
+      "portable_core": "lifecycle verify sequence",
+      "repo_deterministic": "verify-governance + CI governance job",
+      "host_adapter": "none_required",
+      "bypass": "skip_required_ci",
+      "hard_across_tools": false,
+      "status": "shipped"
+    },
+    {
+      "action": "tool_call_before_write",
+      "portable_core": "none",
+      "repo_deterministic": "none",
+      "host_adapter": "required_per_host",
+      "bypass": "no_adapter_installed",
+      "hard_across_tools": false,
+      "status": "later"
+    }
+  ],
+  "invariants": [
+    "Portable core never claims host hard enforcement.",
+    "At least one repo_deterministic path exists for secrets and governance verify.",
+    "host_adapter opt-in is not a 2.1 must-install (hooks/L3 remain non-mandatory).",
+    "CTRL numbers are profile bindings, not portable invariants.",
+    "Any action with status=later must not be narrated as shipped hard enforcement."
+  ]
+}

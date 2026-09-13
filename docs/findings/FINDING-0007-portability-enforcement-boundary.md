@@ -42,7 +42,9 @@ enforcement boundary 候选（AI task completion / git hook / pre-push / CI / re
 
 **2.0 切片关闭（2026-09-12 · skill-release）：** ADR-0024 将本 Finding 的 2.0 blocker 收窄为「干净目标上必装 INSTALLED 引用闭合 + INIT/VERIFY 可跑」。证据：打包 → 空仓 INIT Phase C → 8 子技能 → 目标根 verify **62/62**；仓库级 `check:must-ship` fail-closed。**2.0 blocker 切片关闭。**
 
-**仍开放（later，不挡 2.0）：** 跨宿主 tool-call hard enforcement、hooks/`--no-verify`、锁 TOCTOU、Portable Core + Runtime Adapter 分层全文。Finding 整体可保持 Confirmed 直至 later 项有载体；不挡 `v2.0.0`。
+**H2d 切片（2026-09-13 · PLAN-0050）：** 机读最小边界矩阵落地 `repo-tools/portability-boundary.v0.json`（portable_core / repo_deterministic / host_adapter）+ `h2d-portability` 表征对账；`installed-portability` 叶明确禁止把宿主 adapter 叙述成必装 hard enforcement。关闭条件 1–2 的**最小可对账切片**已满足；条件 3（跨工具 deterministic 路径）由 secrets/verify/CI 承担，但不把 hooks 钉成必装。
+
+**仍开放（later，不挡 2.1 必装面）：** 跨宿主 tool-call hard enforcement（矩阵 `tool_call_before_write` = later）、hooks/`--no-verify` 不可绕过、完整 Runtime Adapter 产品化。Finding 整体保持 Confirmed 直至 later 项有载体。
 
 
 ## 关联

@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0050 H2d Stage 2 done** — FINDING-0010 residual closed (docs-only GitLab regression); FINDING-0007 minimal portability/adapter matrix at `repo-tools/portability-boundary.v0.json` (Finding remains Confirmed for tool-call hard enforcement later). Stage 3 next: INSTALLED router Narrow-or-proof, L0–L4, 0016/0017.
+
 - **PLAN-0050 H2d Stage 1 done; Stage 2 underway** — Sibling-closure mechanical carrier (`check-sibling-closure.js` + contracts; negative missing-instance fixture); discoverable MIGRATE entry (`migrate-governance.js` + SKILL pointer). FINDING-0003 remains Confirmed (remaining judgment classes). INSTALLED router still requires Narrow ADR; hooks/L3 not mandatory.
 
 - **PLAN-0050 H2d Active (Stage 1 underway)** — Archived PLAN-0049 (H2c). CTRL-0002 git-write-consent evaluator + `check-git-consent.js`; `check-lock.js` atomic `--acquire/--release` via `agent.lock` (FINDING-0012 Resolved); `enforcement-semantics.md` portable four-value vocabulary (FINDING-0003 slice). INSTALLED router still requires Narrow ADR; hooks/L3 not mandatory.

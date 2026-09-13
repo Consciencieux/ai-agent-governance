@@ -184,4 +184,27 @@ module.exports = function register(test) {
     const body = JSON.parse(r.stdout);
     return body.status === "current";
   });
+
+  test("portability-boundary.v0: layers+actions reconcile FINDING-0007 slice", () => {
+    const p = path.join(ROOT, "repo-tools", "portability-boundary.v0.json");
+    const doc = JSON.parse(fs.readFileSync(p, "utf8"));
+    const layerIds = new Set((doc.layers || []).map((l) => l.id));
+    const requiredLayers = ["portable_core", "repo_deterministic", "host_adapter"];
+    if (!requiredLayers.every((id) => layerIds.has(id))) return false;
+    const host = (doc.layers || []).find((l) => l.id === "host_adapter");
+    if (!host || host.distribution !== "opt_in") return false;
+    const actions = doc.actions || [];
+    const shipped = actions.filter((a) => a.status === "shipped");
+    const later = actions.filter((a) => a.status === "later");
+    if (shipped.length < 3 || later.length < 1) return false;
+    if (!later.every((a) => a.hard_across_tools === false)) return false;
+    const toolCall = actions.find((a) => a.action === "tool_call_before_write");
+    return (
+      toolCall &&
+      toolCall.status === "later" &&
+      Array.isArray(doc.invariants) &&
+      doc.invariants.length >= 3 &&
+      doc.finding === "FINDING-0007"
+    );
+  });
 };
