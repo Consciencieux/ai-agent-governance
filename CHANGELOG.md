@@ -6,9 +6,9 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **ADR-0025 H2 execution order** — H2-0 ledger now-tense calibration → PLAN-0046 (H2-front) → H2a–d. Roadmap indexes the order; authority stays in the ADR. PLAN-0046 re-homed to H2-front (not H2d). RESEARCH-0004/0005/0006/0009 now-tense only. Does not Active PLAN-0046; does not pre-mark retire.
+- **PLAN-0046 Active (H2-front)** — instruction-surface 2.0 alignment started: capability leaves under `references/capabilities/` use Trigger/Authority/Invoke/Verify/Non-goals; coverage map `repo-tools/instruction-surface-leaves.v0.json` (not a third disposition ledger); `SKILL.md` / `AGENTS.md` gain explicit capability routing. Stage 3 entry thinning and clean-target INIT proof remain open.
 
-- **PLAN-0046 Design (H2-front)** — instruction-surface 2.0 alignment plan: thin entry + must-ship capability leaves; consumes RESEARCH-0006 / ADR-0024; does not reopen the baseline as a construction contract. Awaiting human Active.
+- **ADR-0025 H2 execution order** — H2-0 ledger now-tense calibration → PLAN-0046 (H2-front) → H2a–d. Roadmap indexes the order; authority stays in the ADR. PLAN-0046 re-homed to H2-front (not H2d). RESEARCH-0004/0005/0006/0009 now-tense only.
 
 - **Numbered docs are single files** — do not mint companion RESEARCH IDs or `working/` dumps for construction tables. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. RESEARCH-0014 (extraction draft) withdrawn. Docs shape allowlist outcome is tracked in FINDING-0030 (H2b open; implementation detail not carried in the Finding or README).
 

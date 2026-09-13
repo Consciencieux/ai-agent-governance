@@ -294,7 +294,7 @@ The Roadmap does not independently define or adjudicate phase order. The table b
 
 Authority: ADR-0018 (`docs/design-decisions/ADR-0018-generation-2-dev-path.md`).
 
-**Migration closed:** Phase 0–8 EXITED; **`v2.0.0` shipped** (2026-09-12). Plan archive ≠ Release (ADR-0016). **Current horizon = ADR-0025 H2** (H2-0 ledger calibration may start now as a small batch; [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) **Design**, awaiting human Active). H1 ([PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)) is Archived. H0 ([PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)) is Archived.
+**Migration closed:** Phase 0–8 EXITED; **`v2.0.0` shipped** (2026-09-12). Plan archive ≠ Release (ADR-0016). **Current horizon = ADR-0025 H2** (H2-0 ledger calibration may start now as a small batch; [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) **Active**). H1 ([PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md)) is Archived. H0 ([PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)) is Archived.
 
 ## 2.0 shipped (index)
 
@@ -332,19 +332,19 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 | --- | --- | --- | --- |
 | **H0** Documentation and lifecycle truth | Align entry docs / roadmap / plan location with `v2.0.0` | [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) | **Archived** (nine Phase 4–8 plans archived) |
 | **H1** Reusable governance skill extraction | L1/L2/L3 extraction protocol → clean-target validation; do not migrate script carriers | [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) | **Archived** |
-| **H2** Control-plane completion | Execution order: ADR-0025 decision 14 — H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) (H2-front) | **Design** |
+| **H2** Control-plane completion | Execution order: ADR-0025 decision 14 — H2-0 → PLAN-0046 → a→b→c→d | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) (H2-front) | **Active** |
 | **H3** Runtime and research | L3, measurement, attention experiments; does not block 2.1 | No Active Plan | Far |
 
 ### H0 done
 
-Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045. Plans stay single files (`PLAN-xxxx-*.md`). Construction plan under `docs/plans/`: [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) (**Design**, awaiting Active).
+Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045. Plans stay single files (`PLAN-xxxx-*.md`). Construction plan under `docs/plans/`: [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) (**Active**).
 
 ### H2 inputs (by sub-band; does not block shipped 2.0)
 
 | Sub-band | Index (Finding / residue, not a work procedure) |
 | --- | --- |
 | H2-0 Ledger calibration | Now-tense on [RESEARCH-0004](../../research/RESEARCH-0004-architecture-evolution.md) / [0005](../../research/RESEARCH-0005-current-capabilities.md) / [0006](../../research/RESEARCH-0006-generation-1-capability-baseline.md) / [0009](../../research/RESEARCH-0009-agent-instruction-architecture.md); roadmap status words. No standalone Plan. Authority: [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) decision 14 |
-| H2-front Instruction surface | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) (Design; awaiting human Active) |
+| H2-front Instruction surface | [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) (**Active**) |
 | H2a Residue extract | 5c leftover Capability leaves · [FINDING-0029](../../findings/FINDING-0029-lifecycle-name-concept-drift.md) · [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) (L0 inventory = [PLAN-0041](../archive/PLAN-0041-script-inventory.md); `retire = ∅` today) |
 | H2b Checkers and ledgers | Remaining consistency clusters · principles-index #9 · [FINDING-0011](../../findings/FINDING-0011-adr-status-false-positive.md) · [FINDING-0019](../../findings/FINDING-0019-check-doc-consistency-meta-checker-monolith.md) · [FINDING-0021](../../findings/FINDING-0021-roadmap-checker-vacuous.md) · Discovery Ledger L2 · [FINDING-0022](../../findings/FINDING-0022-recursive-discovery-workset-gap.md) · [FINDING-0024](../../findings/FINDING-0024-metadata-projection-drift.md) · ADR-0016 parser migration |
 | H2c Cross-profile / machine Controls | [FINDING-0001](../../findings/FINDING-0001-producer-product-governance-coupling.md) CONTROL-X · [FINDING-0002](../../findings/FINDING-0002-missing-governance-control-plane.md) · [FINDING-0025](../../findings/FINDING-0025-governance-sync-mapping-gap.md) · [FINDING-0026](../../findings/FINDING-0026-templates-instruction-source-mix.md) |
@@ -359,7 +359,7 @@ Archived PLAN-0035 / 0036 / 0038–0044 and PLAN-0045. Plans stay single files (
 - **This repo:** experiment + reference implementation + research provenance ([RESEARCH-0013](../../research/RESEARCH-0013-research-provenance-and-context-economy.md)).
 - **Shipped skill (2.0):** installable must-ship slice, not a separate PLAN-0037 universal pack.
 - **2.x product line (H1):** [PLAN-0037](../archive/PLAN-0037-governance-skill-extraction.md) **Archived** — portable principles pack landed (`references/principles/`).
-- **2.x next band (H2 Design):** [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) — instruction-surface 2.0 alignment (thin entry + must-ship capability leaves); consumes RESEARCH-0006, does not reopen it.
+- **2.x next band (H2 Active):** [PLAN-0046](../PLAN-0046-instruction-surface-2.0-alignment.md) — instruction-surface 2.0 alignment (thin entry + must-ship capability leaves); consumes RESEARCH-0006, does not reopen it.
 - **H1 discipline (index of [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) decisions 9–13):** consume the existing inventory; do not create a capability-destination table; do not delete scripts; do not write the repo router into INSTALLED; SemVer is not an alias for Horizon.
 
 ## Guarantee Levels
@@ -603,7 +603,7 @@ H0     Documentation and lifecycle truth — EXITED / Archived (PLAN-0045)
         ↓
 H1     PLAN-0037 cross-project portable extract — **Archived** (2026-09-13)
         ↓
-H2     Execution order ADR-0025: H2-0 → PLAN-0046 (Design) → a→b→c→d
+H2     Execution order ADR-0025: H2-0 → PLAN-0046 (Active) → a→b→c→d
         ↓
 H3     Runtime and research (L3 / measurement; does not block 2.1)
         ↓

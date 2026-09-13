@@ -111,7 +111,7 @@ ai-agent-governance/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # protected files + .governance git-tracking policy
 │   ├── capabilities/               # Capability leaf authorities (Phase 5c; INIT → docs/rules/capabilities/)
-│   │   ├── discovery-ledger.md / change-hygiene.md / root-cause-repair.md / rule-capture.md
+│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md / subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md / sync-groups.md
 │   ├── principles/                 # Portable methodology (PLAN-0037; SKILL-INTERNAL — not INIT-installed)
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
@@ -163,6 +163,7 @@ ai-agent-governance/
 │   ├── routing-graph.v0.json   # machine Task→Capability graph (consumed by routing.js; not a Research object)
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
+│   ├── instruction-surface-leaves.v0.json  # PLAN-0046 must-ship leaf coverage map (not a disposition ledger)
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed

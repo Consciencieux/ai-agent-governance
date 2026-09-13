@@ -84,7 +84,7 @@ ai-agent-governance/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # 受保护文件 + .governance Git 跟踪策略
 │   ├── capabilities/               # Capability 叶权威（Phase 5c；INIT → docs/rules/capabilities/）
-│   │   ├── discovery-ledger.md / change-hygiene.md / root-cause-repair.md / rule-capture.md
+│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md / subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md / sync-groups.md
 │   ├── principles/                 # 可复用方法论（PLAN-0037；SKILL-INTERNAL — INIT 不安装）
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
@@ -136,6 +136,7 @@ ai-agent-governance/
 │   ├── routing-graph.v0.json   # 机读 Task→Capability 图（routing.js 消费；不是 Research 对象）
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
+│   ├── instruction-surface-leaves.v0.json  # PLAN-0046 must-ship 叶覆盖图（非处置台账）
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
 │   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发

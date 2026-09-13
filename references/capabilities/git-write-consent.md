@@ -1,0 +1,24 @@
+# Git 写授权（consent）
+
+> Capability leaf (`git-write-consent`). Instruction-surface 2.0 card (PLAN-0046).
+> Role: INSTALLED → `docs/rules/capabilities/git-write-consent.md`.
+
+## Trigger
+
+任何不可逆 Git 写（commit/push/tag/reset 等，以权威枚举为准）。
+
+## Authority
+
+`docs/rules/git-policy.md`（唯一语义权威；INIT → `docs/rules/git-policy.md`）。入口只保留指针+always-on 摘要。
+
+## Invoke
+
+按权威：回显完整命令序列 → 等人授 → 再执行；失败即停。计划批准 ≠ Git 授权。
+
+## Verify
+
+无对应人授不得写；中途失败/push 拒绝停止并报告；入口未另立第二份权威正文。
+
+## Non-goals
+
+机械 evaluator 拦 Agent 违规属 later（ADR-0024）；本叶不实现机器拦写。

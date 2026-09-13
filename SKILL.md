@@ -13,9 +13,39 @@ description: >-
 
 本 Skill 只负责治理体系搭建与巡检维护，不写业务代码、技术规范、测试内容。
 
-> **薄入口（ADR-0022 / ADR-0024）：** 本文件是 always-on 路由层——身份、进入模式、优先级、权限摘要与指向 `references/` 的指针。详细政策 / 工作流 / 生命周期正文**不**作为 always-on 全文；按任务加载对应 `references/policies/*`、`references/workflows/*` 与生成子技能。禁止把 lifecycle 全文或全部子技能 checklist 塞进本入口。
+> **薄入口（ADR-0022 / ADR-0024）：** 本文件是 always-on 路由层——身份、进入模式、优先级、权限摘要与指向 `references/` 的指针。详细政策 / 工作流 / 生命周期正文**不**作为 always-on 全文；按任务加载对应 `references/policies/*`、`references/workflows/*`、`references/capabilities/*` 与生成子技能。禁止把 lifecycle 全文或全部子技能 checklist 塞进本入口。
 
 > **可复用原则包（PLAN-0037 / ADR-0020）：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树、CTRL 编号或 Phase/PLAN 剧本当 portable L1。
+
+> **能力叶路由（PLAN-0046 Active）：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。覆盖索引（非处置权威）：`repo-tools/instruction-surface-leaves.v0.json`。处置仍只认 [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) §4。
+
+### 能力叶快速路由（Capability leaves）
+
+| 任务信号 | 加载叶（`references/capabilities/`） |
+| --- | --- |
+| 密钥 / secret scan | `secret-scanning.md` |
+| 分支保护 / force / 直推 | `git-workflow-safety.md` |
+| commit/push/tag 人授 | `git-write-consent.md` |
+| INIT / 生成治理 | `deterministic-init.md` |
+| AUDIT / drift | `audit-drift.md` |
+| RELEASE / 发版 | `release-orchestration.md` · `release-risk-tiering.md` |
+| 治理校验 | `governance-validator.md` |
+| manifest/state 工件 | `governance-state.md` |
+| 证据分层 | `evidence-tiers.md` |
+| INSTALLED 可移植性 | `installed-portability.md` |
+| Rule Capture | `rule-capture.md` |
+| 根因修复 / 失败预算 / 同类闭包 | `root-cause-repair.md` |
+| 变更归位 / 残留清理 | `change-hygiene.md` |
+| 工程克制 | `engineering-restraint.md` |
+| 种子 oracle / 路由完整性 | `seed-oracles.md` |
+| 文档一致性 / 新鲜度 / 计划同步 | `content-consistency.md` · `doc-freshness.md` · `plan-sync.md` |
+| 同步组 | `sync-groups.md` |
+| 确认凭证卫生 | `confirmation-hygiene.md` |
+| SSOT / 门禁修复 | `ssot-repair.md` |
+| Implementation Review | `review-mechanism.md` · `subskill-review-manager.md` |
+| 生成子技能（机制 + 8 叶） | `generated-subskill-lifecycle.md` · `subskill-*.md` |
+
+完整清单与 must-ship 覆盖以 `repo-tools/instruction-surface-leaves.v0.json` 为准。
 
 ### 概念总览（Concept Map）
 

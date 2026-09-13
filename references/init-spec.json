@@ -172,6 +172,209 @@
     },
     {
       "phase": "A",
+      "path": "docs/rules/capabilities/audit-drift.md",
+      "source": "references/capabilities/audit-drift.md",
+      "type": "copy",
+      "description": "Capability leaf (audit-drift) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/confirmation-hygiene.md",
+      "source": "references/capabilities/confirmation-hygiene.md",
+      "type": "copy",
+      "description": "Capability leaf (confirmation-hygiene) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/content-consistency.md",
+      "source": "references/capabilities/content-consistency.md",
+      "type": "copy",
+      "description": "Capability leaf (content-consistency) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/deterministic-init.md",
+      "source": "references/capabilities/deterministic-init.md",
+      "type": "copy",
+      "description": "Capability leaf (deterministic-init) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/doc-freshness.md",
+      "source": "references/capabilities/doc-freshness.md",
+      "type": "copy",
+      "description": "Capability leaf (doc-freshness) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/engineering-restraint.md",
+      "source": "references/capabilities/engineering-restraint.md",
+      "type": "copy",
+      "description": "Capability leaf (engineering-restraint) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/evidence-tiers.md",
+      "source": "references/capabilities/evidence-tiers.md",
+      "type": "copy",
+      "description": "Capability leaf (evidence-tiers) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/generated-subskill-lifecycle.md",
+      "source": "references/capabilities/generated-subskill-lifecycle.md",
+      "type": "copy",
+      "description": "Capability leaf (generated-subskill-lifecycle) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/git-workflow-safety.md",
+      "source": "references/capabilities/git-workflow-safety.md",
+      "type": "copy",
+      "description": "Capability leaf (git-workflow-safety) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/git-write-consent.md",
+      "source": "references/capabilities/git-write-consent.md",
+      "type": "copy",
+      "description": "Capability leaf (git-write-consent) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/governance-state.md",
+      "source": "references/capabilities/governance-state.md",
+      "type": "copy",
+      "description": "Capability leaf (governance-state) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/governance-validator.md",
+      "source": "references/capabilities/governance-validator.md",
+      "type": "copy",
+      "description": "Capability leaf (governance-validator) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/installed-portability.md",
+      "source": "references/capabilities/installed-portability.md",
+      "type": "copy",
+      "description": "Capability leaf (installed-portability) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/plan-sync.md",
+      "source": "references/capabilities/plan-sync.md",
+      "type": "copy",
+      "description": "Capability leaf (plan-sync) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/release-orchestration.md",
+      "source": "references/capabilities/release-orchestration.md",
+      "type": "copy",
+      "description": "Capability leaf (release-orchestration) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/release-risk-tiering.md",
+      "source": "references/capabilities/release-risk-tiering.md",
+      "type": "copy",
+      "description": "Capability leaf (release-risk-tiering) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/review-mechanism.md",
+      "source": "references/capabilities/review-mechanism.md",
+      "type": "copy",
+      "description": "Capability leaf (review-mechanism) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/secret-scanning.md",
+      "source": "references/capabilities/secret-scanning.md",
+      "type": "copy",
+      "description": "Capability leaf (secret-scanning) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/seed-oracles.md",
+      "source": "references/capabilities/seed-oracles.md",
+      "type": "copy",
+      "description": "Capability leaf (seed-oracles) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/ssot-repair.md",
+      "source": "references/capabilities/ssot-repair.md",
+      "type": "copy",
+      "description": "Capability leaf (ssot-repair) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-ci-generator.md",
+      "source": "references/capabilities/subskill-ci-generator.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-ci-generator) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-drift-check.md",
+      "source": "references/capabilities/subskill-drift-check.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-drift-check) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-governance-validator.md",
+      "source": "references/capabilities/subskill-governance-validator.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-governance-validator) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-plan-manager.md",
+      "source": "references/capabilities/subskill-plan-manager.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-plan-manager) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-release-manager.md",
+      "source": "references/capabilities/subskill-release-manager.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-release-manager) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-repository-inspection.md",
+      "source": "references/capabilities/subskill-repository-inspection.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-repository-inspection) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-review-manager.md",
+      "source": "references/capabilities/subskill-review-manager.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-review-manager) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/subskill-state-manager.md",
+      "source": "references/capabilities/subskill-state-manager.md",
+      "type": "copy",
+      "description": "Capability leaf (subskill-state-manager) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/sync-groups.md",
+      "source": "references/capabilities/sync-groups.md",
+      "type": "copy",
+      "description": "Capability leaf (sync-groups) — PLAN-0046 instruction surface"
+    },
+    {
+      "phase": "A",
       "path": "docs/rules/git-policy.md",
       "source": "references/policies/git.policy.md",
       "type": "copy",

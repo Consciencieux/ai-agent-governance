@@ -69,8 +69,8 @@ test("generate-governance: manifest lists created artifacts with correct types",
   const count = (t) => m.artifacts.filter((a) => a.type === t).length;
   const validKinds = m.artifacts.every((a) => a.kind === "file" || a.kind === "dir");
   const agentsType = m.artifacts.find((a) => a.path === "AGENTS.md").type;
-  // Phase 5c projects four Capability leaves under docs/rules/capabilities/ (+4 policy).
-  return count("policy") === 14 && count("script") === 7 && count("state") === 6 && validKinds && agentsType === "policy";
+  // PLAN-0046: must-ship capability leaves expand INSTALLED policy projections under docs/rules/capabilities/.
+  return count("policy") === 43 && count("script") === 7 && count("state") === 6 && validKinds && agentsType === "policy";
 });
 
 test("generate-governance: gitignore covers sensitive filenames", () => {
@@ -126,8 +126,8 @@ test("generate-governance: --json outputs structured result", () => {
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "JsonTest", "--phase", "A", "--json"], { encoding: "utf8" });
   if (r.status !== 0) return false;
   const out = JSON.parse(r.stdout);
-  // Phase A includes the four Capability rule files projected in Phase 5c (+4 vs prior 15).
-  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 19;
+  // PLAN-0046: Phase A results include the expanded capability leaf set (was 19 with four leaves).
+  return out.phase === "A" && Array.isArray(out.results) && out.results.length === 48;
 });
 
 test("generate-governance: missing --project-name exits 2", () => {
