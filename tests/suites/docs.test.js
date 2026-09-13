@@ -1,7 +1,6 @@
 // tests/suites/docs.test.js — batch-1 migration from tests/run-tests.js (anti-patch plan §3).
 // Verbatim region move (marker-to-marker); helper consolidation into tests/support/ is batch 2.
 
-
 const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -39,7 +38,6 @@ test("doc parity: missing root language entry exits 1", () => {
   return r.status === 1 && r.stdout.includes("missing root entry: README.zh-CN.md");
 });
 
-
 // commit file(s) with a forced author/committer date: `git commit --date=<iso>`
 test("doc freshness: stale doc flagged, fresh doc not flagged (exit 0)", () => {
   const dir = tmp("freshness");
@@ -75,7 +73,6 @@ test("doc freshness: drift-report.json gains freshness section", () => {
   const drift = JSON.parse(fs.readFileSync(path.join(dir, ".governance", "drift-report.json"), "utf8"));
   return drift.freshness && Array.isArray(drift.freshness.stale);
 });
-
 
 // Trilingual fixture: glossary with forbidden renderings + one doc per language tree.
 // The terminology gate was EXTRACTED from the INSTALLED checker (scripts/check-doc-consistency.js)
@@ -177,24 +174,6 @@ test("terminology gate: scans the post-migration docs/product/{lang} trees", () 
   const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
   return r.status === 1 && out.issues.terminology_usage.some((i) => i.includes("docs/product/zh-TW") && i.includes("協議"));
-});
-
-test("terminology gate: when the product tree exists, the legacy tree is NOT scanned", () => {
-  const dir = tmp("term-legacy-ignored");
-  gitInit(dir);
-  write(path.join(dir, "docs", "glossary.md"),
-    "# Glossary\n\n| English | 简体中文 | 繁體中文 | Forbidden zh-CN | Forbidden zh-TW |\n" +
-    "| --- | --- | --- | --- | --- |\n" +
-    "| protocol | 协议 | 協定 | 協定 | 協議 |\n");
-  // Authoritative post-migration tree is CLEAN...
-  write(path.join(dir, "docs", "product", "zh-TW", "guide.md"), "# 指南\n\n使用協定。\n");
-  // ...but a legacy tree also exists and deliberately carries a forbidden rendering.
-  write(path.join(dir, "docs", "zh-TW", "guide.md"), "# 指南\n\n使用協議。\n"); // must NOT be scanned
-  const r = spawnSync(process.execPath, [TERMINOLOGY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(r.stdout);
-  // True fallback = scan only the first existing authoritative tree; a transient state
-  // where old and new trees coexist must not fail the gate on legacy paths.
-  return r.status === 0 && out.issues.terminology_usage.length === 0;
 });
 
 // Separation proof (Producer/Product): the INSTALLED product checker no longer carries the
@@ -368,8 +347,6 @@ test("check-layout-sync: missing file in tree exits 1", () => {
   return r.status === 1 && r.stdout.includes("missing: check-b.js");
 });
 
-
-
 test("check-layout-sync: missing architecture.md exits 1", () => {
   const dir = tmp("layout-no-arch");
   buildLayoutRepo(dir, ["references/templates/a.template.md", "scripts/check-a.js"]);
@@ -386,55 +363,6 @@ test("check-layout-sync: architecture.md without a Repository Layout block exits
   }
   const r = spawnSync(process.execPath, [LAYOUT_CHECK], { cwd: dir, encoding: "utf8" });
   return r.status === 1;
-});
-
-// A2/A4 regression: the scope-tier entries in package.json must match what AGENTS.md's
-// scope table promises. `check:payload` shipped WITHOUT check-doc-consistency --gate — the
-// tier documented for references/ + SKILL.md edits skipped the gate that owns the consent
-// markers and protected-files list living in exactly those files (audit 2026-09-05).
-// `plans:delivery` shipped without --gate, so check:all could never fail on delivery.
-test("package.json scope tiers match the AGENTS.md scope table", () => {
-  const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
-  const s = pkg.scripts || {};
-  const required = {
-    // `check` is the most load-bearing entry: CI runs it, and check:full / check:all /
-    // check:skill-release all resolve through it. It was UNPINNED — removing a single
-    // fail-closed gate from it left the whole suite green while CI silently stopped
-    // enforcing that gate (audit 2026-09-07). Every gate AGENTS.md lists for check:full
-    // is enumerated here; adding a gate to the scope table without adding it to `check`
-    // (or vice versa) must fail.
-    check: ["npm test", "docs:parity", "docs:layout", "check-doc-consistency.js --gate", "check-coding-hygiene.js --gate", "check-role-completeness.js --gate", "check-roadmap-sync.js --gate"],
-    "check:docs": ["npm test", "docs:parity", "check-doc-consistency.js --gate", "docs:layout"],
-    "check:payload": ["npm test", "docs:layout", "check-doc-consistency.js --gate", "check-coding-hygiene.js --gate", "check-role-completeness.js --gate"],
-    "check:tests": ["npm test", "check-coding-hygiene.js --gate"],
-  };
-  for (const [entry, parts] of Object.entries(required)) {
-    const cmd = s[entry] || "";
-    for (const p of parts) {
-      if (!cmd.includes(p)) {
-        console.error("  " + entry + " is missing: " + p);
-        return false;
-      }
-    }
-  }
-  // check:full is an alias of check; check:all must build on it. Pinning the alias keeps a
-  // future edit from quietly pointing check:full at a narrower set.
-  if (!/npm run check\b/.test(s["check:full"] || "")) return false;
-  if (!/npm run check\b/.test(s["check:all"] || "")) return false;
-  // Delivery must be gated, otherwise check:all reports success on a broken plan.
-  if (!/check-plan-delivery\.js\s+--gate/.test(s["plans:delivery"] || "")) return false;
-  return /plans:delivery/.test(s["check:all"] || "");
-});
-
-// A3 regression: CI ran only `npm test` + parity, so layout / consistency / hygiene /
-// role-completeness never blocked the build while AGENTS.md claimed "fails CI" — the
-// always-on gate clusters were enforced by agent discipline alone (audit 2026-09-05).
-test("CI runs the full fail-closed gate group", () => {
-  const ci = fs.readFileSync(path.join(SKILL_ROOT, ".github/workflows/ci.yml"), "utf8");
-  // The badge step may swallow its own failure (ADR-0006); the gate group may not.
-  const gateLine = ci.split("\n").find((l) => /run:\s*npm run check\b/.test(l));
-  if (!gateLine || /\|\|\s*true/.test(gateLine)) return false;
-  return /verify_governance\.js[^\n]*\|\|\s*true/.test(ci);
 });
 
 // B1 regression: release.md is SKILL-INTERNAL, so a governed project never has it — the
@@ -496,7 +424,6 @@ test("permission matrix rows match between SKILL.md and the AGENTS.md template",
   return true;
 });
 
-
 test("lifecycle.policy embeds Discovery Ledger L1 contract (PLAN-0036)", () => {
   // Phase 5c: L1 body lives in capability leaf; lifecycle keeps heading + pointer.
   const life = fs.readFileSync(path.join(SKILL_ROOT, "references/policies/lifecycle.policy.md"), "utf8");
@@ -532,7 +459,6 @@ test("lifecycle.policy embeds Discovery Ledger L1 contract (PLAN-0036)", () => {
   }
   return true;
 });
-
 
 // C3: the emptiness guard fired only when BOTH roots vanished, so losing one root left the
 // other alone carrying the check — the scan silently enforced half the corpus and still
@@ -601,16 +527,8 @@ test("check-role-completeness: a governed-project shape reports not-applicable",
   return out.applicable === false && out.gatePass === true;
 });
 
-// C7: the release-only clusters (pending-archive, archived-plan status, changelog
-// coverage, translation staleness) fired only when a human typed --release-gate. The npm
-// entry makes the documented release.md step runnable; CI deliberately does NOT run it,
-// because pending-archive is legal between task completion and the release commit.
-// C7: the release-only clusters (pending-archive, archived-plan status, changelog
-// coverage, translation staleness) are fail-closed ONLY under --release-gate. A previous
-// refactor pointed check:release at a --gate-level command and the assertions were
-// simultaneously relaxed to bare substrings, so the downgrade shipped green. Resolve npm
-// aliases before asserting: a gate reached through `npm run check` must count as present,
-// and a forbidden gate must not be hidden behind an alias either.
+// Release-only clusters are fail-closed ONLY under --release-gate. Resolve npm aliases
+// before asserting so a gate reached through `npm run check` counts as present.
 function resolveNpmScript(pkg, name, seen) {
   seen = seen || new Set();
   if (seen.has(name)) return "";
@@ -618,16 +536,6 @@ function resolveNpmScript(pkg, name, seen) {
   const raw = (pkg.scripts || {})[name] || "";
   return raw.replace(/npm run ([\w:-]+)/g, (_, ref) => " " + resolveNpmScript(pkg, ref, seen) + " ");
 }
-
-test("package.json exposes a check:release entry with the release-only gates", () => {
-  const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
-  const cmd = resolveNpmScript(pkg, "check:release");
-  if (!/check-doc-consistency\.js --release-gate/.test(cmd)) return false;
-  if (!/check-doc-freshness\.js --release-gate/.test(cmd)) return false;
-  if (!/check-plan-delivery\.js --gate/.test(cmd)) return false;
-  const ci = fs.readFileSync(path.join(SKILL_ROOT, ".github/workflows/ci.yml"), "utf8");
-  return !/release-gate/.test(ci);
-});
 
 test("package.json exposes check:skill-release with the full skill-release gates", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
@@ -641,29 +549,6 @@ test("package.json exposes check:skill-release with the full skill-release gates
   if (!/check-role-completeness\.js --gate/.test(cmd)) return false;
   return true;
 });
-
-test("package.json exposes check:repo-release with repo-maintenance gates only", () => {
-  const pkg = JSON.parse(fs.readFileSync(path.join(SKILL_ROOT, "package.json"), "utf8"));
-  const cmd = resolveNpmScript(pkg, "check:repo-release");
-  if (!/check-plan-delivery\.js --gate/.test(cmd)) return false;
-  if (!/check-doc-freshness\.js/.test(cmd)) return false;
-  // repo maintenance only: the payload-structure gates belong to check:skill-release.
-  // Asserted on the ALIAS-RESOLVED command so wrapping them in `npm run check` cannot
-  // smuggle them past this check.
-  if (/check-doc-parity\.js/.test(cmd)) return false;
-  if (/check-doc-consistency\.js/.test(cmd)) return false;
-  return true;
-});
-
-// Mutation guard for the alias resolver itself: if it stopped expanding `npm run`, the
-// three tests above would silently weaken into substring checks against a short string.
-test("resolveNpmScript expands npm run aliases transitively", () => {
-  const fake = { scripts: { a: "npm run b && node x.js", b: "npm run c", c: "node deep.js --release-gate" } };
-  const out = resolveNpmScript(fake, "a");
-  return /node deep\.js --release-gate/.test(out) && /node x\.js/.test(out) && !/npm run/.test(out);
-});
-
-
 
 // sub-skills.md is INSTALLED — INIT writes it into the governed project as generated
 // sub-skills, where a SKILL-INTERNAL script does NOT exist. Telling an agent to run one

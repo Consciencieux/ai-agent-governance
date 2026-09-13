@@ -116,6 +116,7 @@ ai-agent-governance/
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
 │   │   ├── capability-model.md / decision-records.md / migration-method.md
+│   │   ├── control-shape.md / enforcement-semantics.md
 │   ├── contracts/                  # Portable contract examples (INIT may copy into .governance/)
 │   │   └── sibling-closure.example.json
 │   └── workflows/
@@ -138,6 +139,7 @@ ai-agent-governance/
 │   │   └── secret-scan-facts.js # shared secret-scan factual primitives (patterns / staged / blob)
 │   ├── evaluators/
 │   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 secret protection evaluator (deny at CLI binding)
+│   │   ├── ctrl-0002-git-write-consent.js   # CTRL-0002 git argv write-consent evaluator
 │   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 governance-doc freshness evaluator (advisory)
 │   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 translation freshness evaluator (--release-gate deny)
 │   │   └── ctrl-0006-broken-links.js        # CTRL-0006 relative markdown link validity (consistency cluster #4)
@@ -165,7 +167,11 @@ ai-agent-governance/
 │   ├── check-control-registry.js # H2c machine-readable Control projections (PLAN-0049)
 │   ├── run-control-x.js        # H2c CONTROL-X dual-profile negative fixture runner (PLAN-0049)
 │   ├── controls/               # REPO-ONLY Control JSON projections (schema authority = ADR-0023)
+│   │   ├── CTRL-0001.json / CTRL-0002.json / CTRL-0003.json / CTRL-0004.json / CTRL-0006.json
+│   │   └── fixtures/
+│   │       └── CTRL-0001.negative.txt
 │   ├── contracts/              # REPO-ONLY sibling-closure dogfood contracts (PLAN-0050)
+│   │   └── SC-CTRL-0002.sibling.json
 │   ├── portability-boundary.v0.json # FINDING-0007 minimal adapter/portability matrix (PLAN-0050)
 │   ├── tool-surface-layers.v0.json # FINDING-0014 L0–L4 tool-surface map (PLAN-0050; L3 not must-install)
 │   ├── check-template-responsibility.js # FINDING-0026 instruction vs template responsibility map (PLAN-0049)

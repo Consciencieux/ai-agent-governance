@@ -80,9 +80,9 @@
     "dogfood_installed_from_repo": [],
     "adjudication": {
       "plan": "PLAN-0055",
-      "stage": "1R+3",
+      "stage": "1R+3+4",
       "date": "2026-09-13",
-      "note": "Minimum-necessary re-adjudication; Stage 3 deleted mutation-probe + changelog-narration",
+      "note": "Stage 4: test prune + vacuous path fixes (prompt_sync/layout-sync/parity); consistency EXTRACT still queued",
       "retired_deleted": [
         "repo-tools/mutation-probe.js",
         "repo-tools/check-changelog-narration.js"
@@ -222,7 +222,7 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "notes": "PLAN-0055 Stage4 health=fix_path (docs/product architecture preferred; basename extract); reorg=keep_cli; necessity=repo_gate",
       "necessity": "repo_gate"
     },
     {
@@ -477,7 +477,7 @@
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 minimum-necessary: product/INIT CLI (or support lib/evaluator). DEBT/monolith — extract later, not retire while INIT ships CLI.",
+      "notes": "PLAN-0055 Stage4 health=fix_path+drop_dup_invoke (product commands/mdFiles; parity delegated); reorg=extract_queued (monolith); necessity=product_cli",
       "necessity": "product_cli"
     },
     {
@@ -868,7 +868,7 @@
       "first_seen": "2026-09-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "notes": "PLAN-0055 Stage4 health=ok (thin wrap); reorg=keep_cli; necessity=repo_gate",
       "necessity": "repo_gate"
     },
     {

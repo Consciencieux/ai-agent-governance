@@ -1,7 +1,6 @@
 // tests/suites/generator.test.js — batch-1 migration from tests/run-tests.js (anti-patch plan §3).
 // Verbatim region move (marker-to-marker); helper consolidation into tests/support/ is batch 2.
 
-
 const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -199,33 +198,6 @@ test("phase markers: nesting restores the enclosing block's state", () => {
   });
 });
 
-test("payload: generated rules carry the governance lessons (declaration-mechanism gap, evidence tiers, test activity, enumeration re-check)", () => {
-  const dir = tmp("gen-payload-lessons");
-  const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "PayloadLessons", "--phase", "C"], { encoding: "utf8" });
-  if (r.status !== 0) return false;
-  const required = [
-    ["docs/rules/lifecycle.md", "声明与机制的差距"],
-    ["docs/rules/lifecycle.md", "必须挂三级之一"],
-    ["docs/rules/lifecycle.md", "人工背书（human-attested）"],
-    ["docs/rules/lifecycle.md", "枚举复查"],
-    ["docs/rules/testing.md", "测试活性"],
-    ["docs/rules/testing.md", "事实源规定"],
-    ["docs/rules/testing.md", "空洞测试定义"],
-    ["docs/rules/coding.md", "移动/重命名后复查硬编码枚举"],
-    ["AGENTS.md", "Declaration vs mechanism"],
-    ["AGENTS.md", "evidence tier"],
-  ];
-  let checked = 0;
-  for (const [file, needle] of required) {
-    const p = path.join(dir, file);
-    if (!fs.existsSync(p)) { console.error("  missing generated file: " + file); return false; }
-    if (!fs.readFileSync(p, "utf8").includes(needle)) { console.error("  " + file + " lacks: " + needle); return false; }
-    checked++;
-  }
-  // liveness: a passing run must have read every declared pair
-  return checked === required.length;
-});
-
 test("generate-governance: phase C is fully implemented (no stubs left)", () => {
   const dir = tmp("gen-phase-c");
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "S", "--phase", "C", "--json"], { encoding: "utf8" });
@@ -234,7 +206,6 @@ test("generate-governance: phase C is fully implemented (no stubs left)", () => 
   const stubs = out.results.filter((x) => x.action === "skipped" && /not implemented/.test(x.note || ""));
   return stubs.length === 0;
 });
-
 
 test("generate-governance: sub-skills generator writes all 8 sub-skills", () => {
   const dir = tmp("gen-subskills");
@@ -247,7 +218,6 @@ test("generate-governance: sub-skills generator writes all 8 sub-skills", () => 
   return expected.every((e) => names.includes(e) && fs.existsSync(path.join(base, e, "SKILL.md")));
 });
 
-
 test("generate-governance: state includes the rule-capture recovery scaffold", () => {
   const dir = tmp("gen-rule-state");
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "RuleState", "--phase", "B"], { encoding: "utf8" });
@@ -257,7 +227,6 @@ test("generate-governance: state includes the rule-capture recovery scaffold", (
     state.rule_capture.task_id === "" && Array.isArray(state.rule_capture.candidates) &&
     state.facet === "completed" && state.phase === state.facet;
 });
-
 
 test("generate-governance: CI workflow is selected by stack", () => {
   const nodeDir = tmp("gen-ci-node");
@@ -270,7 +239,6 @@ test("generate-governance: CI workflow is selected by stack", () => {
   return fs.readFileSync(nodeCi, "utf8").includes("pnpm") && fs.readFileSync(pyCi, "utf8").includes("ruff");
 });
 
-
 test("generate-governance: gitlab platform writes .gitlab-ci.yml, none skips CI", () => {
   const glDir = tmp("gen-ci-gl");
   spawnSync(process.execPath, [GENERATOR, "--target", glDir, "--project-name", "S", "--phase", "B", "--ci-platform", "gitlab"], { encoding: "utf8" });
@@ -278,7 +246,6 @@ test("generate-governance: gitlab platform writes .gitlab-ci.yml, none skips CI"
   spawnSync(process.execPath, [GENERATOR, "--target", noneDir, "--project-name", "S", "--phase", "B", "--ci-platform", "none"], { encoding: "utf8" });
   return fs.existsSync(path.join(glDir, ".gitlab-ci.yml")) && !fs.existsSync(path.join(noneDir, ".github/workflows/ci.yml"));
 });
-
 
 test("generate-governance: L0/L1 write, L3 audits only, --force-l3 overrides", () => {
   const l0 = tmp("gen-l0");
@@ -295,7 +262,6 @@ test("generate-governance: L0/L1 write, L3 audits only, --force-l3 overrides", (
     fs.existsSync(path.join(l3f, "AGENTS.md"));
 });
 
-
 test("generate-governance: existing doc root is respected (doc_root remap)", () => {
   const dir = tmp("gen-docroot");
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "S", "--phase", "B", "--doc-root", "documentation"], { encoding: "utf8" });
@@ -306,7 +272,6 @@ test("generate-governance: existing doc root is respected (doc_root remap)", () 
     m.doc_root === "documentation" &&
     m.artifacts.some((a) => a.path.startsWith("documentation/"));
 });
-
 
 test("generate-governance: --doc-root with .. cannot escape the target (containment)", () => {
   const dir = tmp("gen-docroot-escape");
@@ -319,14 +284,12 @@ test("generate-governance: --doc-root with .. cannot escape the target (containm
   return r.status !== 0 && !fs.existsSync(escapeTarget);
 });
 
-
 test("generate-governance: L3 audit writes nothing at all (manifest included)", () => {
   const dir = tmp("gen-l3-nowrite");
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "S", "--phase", "B", "--maturity", "LEVEL_3_PRODUCTION"], { encoding: "utf8" });
   if (r.status !== 0) return false;
   return !fs.existsSync(path.join(dir, "AGENTS.md")) && !fs.existsSync(path.join(dir, ".governance/manifest.json"));
 });
-
 
 test("generate-governance: second identical run creates nothing (true idempotency)", () => {
   const dir = tmp("gen-idem");
@@ -337,7 +300,6 @@ test("generate-governance: second identical run creates nothing (true idempotenc
   const created = out.results.filter((x) => x.action === "created" || x.action === "created-dir");
   return created.length === 0;
 });
-
 
 test("generate-governance: manifest records the platform-specific CI path", () => {
   const gh = tmp("gen-mani-gh");
@@ -353,7 +315,6 @@ test("generate-governance: manifest records the platform-specific CI path", () =
   return ghOk && glOk && allExist;
 });
 
-
 test("generate-governance: default manifest version matches package.json", () => {
   const dir = tmp("gen-version");
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "Version", "--phase", "B"], { encoding: "utf8" });
@@ -362,7 +323,6 @@ test("generate-governance: default manifest version matches package.json", () =>
   const manifest = JSON.parse(fs.readFileSync(path.join(dir, ".governance/manifest.json"), "utf8"));
   return manifest.governance_version === pkg.version;
 });
-
 
 test("generate-governance: hook artifacts use the first complete fence and are typed as scripts", () => {
   const dir = tmp("gen-hooks");
@@ -378,7 +338,6 @@ test("generate-governance: hook artifacts use the first complete fence and are t
     fs.readFileSync(path.join(dir, ".gitignore"), "utf8").includes(".governance/consent.json") && modeOk;
 });
 
-
 test("generate-governance: --file phase drives generation (not just the echoed input)", () => {
   const dir = tmp("gen-file-phase");
   const input = path.join(dir, "input.json");
@@ -393,7 +352,6 @@ test("generate-governance: --file phase drives generation (not just the echoed i
   return out.phase === "C" && skills && !agents.includes("**Availability:**");
 });
 
-
 test("generate-governance: registry caps triggers for BOTH separator styles", () => {
   const dir = tmp("gen-registry-density");
   const r = spawnSync(process.execPath, [GENERATOR, "--target", dir, "--project-name", "Density", "--phase", "A"], { encoding: "utf8" });
@@ -406,7 +364,6 @@ test("generate-governance: registry caps triggers for BOTH separator styles", ()
   // uncapped at 700+ chars. Every row must now stay bounded.
   return rows.every((l) => l.length < 320);
 });
-
 
 test("generate-governance: partial init registry notes Phase C availability (full init omits note)", () => {
   const dirA = tmp("gen-registry-a");

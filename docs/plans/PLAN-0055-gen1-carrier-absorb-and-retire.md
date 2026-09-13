@@ -7,7 +7,7 @@ target: both
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
-**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说，取代「引用图保活」。Stage 1R + Stage 3 首刀完成（已删 mutation-probe / changelog-narration）；下一步 consistency EXTRACT / Stage 4。）0053/0054 保持 Design。
+**状态：** Active（2026-09-13；**裁决重开**：最小必要面学说，取代「引用图保活」。Stage 1R+3 完成（已删 mutation-probe / changelog-narration）；**Stage 4 通裁进行中**（测瘦身 + Script Health / 假绿路径修）；consistency EXTRACT 仍挂 Stage 3。0053/0054 保持 Design。）
 
 **归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](archive/PLAN-0041-script-inventory.md) 与 [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试保护。
 
@@ -161,29 +161,22 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 
 > **Stage 1R 勘误：** 上表「retire=∅ / Stage 3 跳过」是引用中心主义产物，已作废。现行权威 = `necessity` + `summary.short_lists`；已删 mutation-probe / changelog-narration。
 
-### 1.2 Test Disposition v1（标记；Stage 4 执行）
+### 1.2 Test Disposition v2（Stage 4 执行表 · 2026-09-13 刷新）
 
-| suite | ~n | 标记 | 备注 |
-| --- | --- | --- | --- |
-| consistency | 73 | **prune-candidate** | 与 docs/payload 门禁镜像重叠优先审 |
-| docs | 56 | **prune-candidate** | 同上 |
-| payload | 43 | **review** | 大；迁徙期路径断言逐簇 |
-| security | 39 | **keep** | 负向必留；禁空洞删 |
-| generator | 34 | **keep** | 对齐 must-ship generator |
-| validator | 26 | **keep** | |
-| hygiene | 21 | **keep** | 含 mutation-probe 表征，与 keep 绑定 |
-| routing | 19 | **keep** | gen2 |
-| release | 18 | **keep** | |
-| plan-delivery | 15 | **keep** | |
-| h2d-portability | 14 | **keep** | |
-| sync | 11 | **keep** | |
-| narration | 9 | **review** | 对照 changelog-narration keep |
-| h2b-checkers | 7 | **keep** | |
-| instruction-surface | 6 | **keep** | |
-| script-inventory | 6→7 | **keep** | 本 Plan 护栏（已加 summary 对账） |
-| h2c-controls | 4 | **keep** | |
-| oracle-inventory | 4 | **keep** | must-ship |
-| principles-extraction | 4 | **keep** | |
+基线（Stage 4 前）：约 **396** `test()` / **18** suite（`narration` 已随 Stage 3 删除）。Stage 4A/B 本轮已删约 **37**；全量（非沙箱）**359/359**（含 hygiene SHA liveness 纠偏）。
+
+| suite | 标记 | 备注 |
+| --- | --- | --- |
+| consistency | **pruned** | 已删 parity 双跑/次候选、consent 组合矩阵多余项、changelog 空白仪式；保留五同步点 1 pass + 1 fail + 双语 + mid-sequence |
+| docs | **pruned** | 已删 legacy 不扫、package.json/CI 串钉群；保留 skill-release 一钉 |
+| payload | **pruned** | 已删 plan-delivery SEARCH_ROOTS 镜像 |
+| security | **pruned** | 已压 pattern 目录；保留 fail-closed 核心；validator 碎测已迁出 |
+| generator | **pruned** | 已删 governance-lessons 子串 |
+| validator / hygiene | **pruned** | 可选 `--help` / SHA liveness 纠偏 |
+| h2d-portability | **pruned** | 已删 existsSync 载体钉 |
+| routing / release / plan-delivery / sync / h2b / h2c / script-inventory / oracle / principles / instruction-surface | **keep** | |
+
+> **已删除行（相对 v1）：** `narration` suite。**不再**把 hygiene 绑到 mutation-probe keep。
 
 ## Stage 2 — 吸收 — **完成**（2026-09-13）
 
@@ -204,33 +197,51 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | --- | --- | --- |
 | must_ship | 5 | 必装载体 |
 | product_cli | 19 | INIT/产品 CLI 及支撑 |
-| repo_gate | 16 | 本仓最小门禁 |
-| debt | 0（纠偏后） | 首轮误伤已升回 repo_gate；剩余过度工程主要在 **product_cli 内部 monolith**（如 consistency ~950LOC） |
-| retire→deleted | 2 | 本轮已拆 |
+| repo_gate | 16+ | 本仓最小门禁 |
+| debt | 0（纠偏后） | 剩余过度工程主要在 **product_cli 内部 monolith**（consistency ~950LOC） |
+| retire→deleted | 2 | mutation-probe + changelog-narration |
 
-**本轮已删：**
+## Stage 3 — Retire / EXTRACT 排队
 
-| 路径 | 理由 |
-| --- | --- |
-| `repo-tools/mutation-probe.js` | 仅 `mutation:probe`；Gen1 自证仪式；不在三短名单 |
-| `repo-tools/check-changelog-narration.js` | 仅 `check:all` advisory；FINDING-0016 已证无效；不在三短名单 |
+- [x] 首刀：mutation-probe + changelog-narration
+- [ ] 继续：对 **product_cli monolith** 做 EXTRACT（先 consistency）；仅当 INIT 允许时缩 INSTALLED 面 — **排队下一刀**
+- [x] 无独立 `necessity=debt` 文件残留
 
-同步：去掉 `package.json` 脚本、narration suite、hygiene 探针表征、架构树/CONTRIBUTING 行；inventory 去条目。
+## Stage 4 — 通裁：测瘦身 + Script Health — **进行中**
 
-**仍为 debt（未删）：** 无独立 debt 文件。过度工程主战场 = `product_cli` 内厚实现（尤其 `scripts/check-doc-consistency.js`）→ EXTRACT，不是先删 CLI 名。
+**施工边界：** 删/并测 + 统一 ledger + **已证实假绿路径修复**；consistency 全量 EXTRACT **不在本轮**。
 
-**仍为 product 但 monolith 债务：** `scripts/check-doc-consistency.js`（~950LOC）— 保留 CLI 名，EXTRACT 另排，不在本刀物理删除。
+### 4.0 事实源学说
 
-## Stage 3 — Retire 执行
+权威：[`references/policies/testing.policy.md`](../../references/policies/testing.policy.md) § 测试活性 + 事实源规定。
 
-- [x] 首刀：mutation-probe + changelog-narration（见上）
-- [ ] 继续：对 **product_cli monolith** 做 EXTRACT（先 consistency）；仅当 INIT 允许时缩 INSTALLED 面
-- [ ] 无独立 `necessity=debt` 文件残留（纠偏后为 0）
+裁决链：用途 → 事实源（`references/` / SKILL / init-spec / must-ship / inventory / CTRL）→ 活性负例 → 与门禁/更短负例去重。
 
-## Stage 4 — 测试瘦身
+**重组默认：** **禁止**把 parity / terminology / layout / roadmap / role **合并回** consistency（FINDING-0019）。干净 = **正交主人 + 去双跑 + 修路径 + EXTRACT 厚实现**。
 
-- [ ] 按 Disposition 对 `prune-candidate` / `review` 删或并；门禁类留替代证据
-- [ ] 全量 test + must-ship；Plan → Archived
+### 4.1 Script Health Disposition
+
+| 脚本 / 面 | 问题 | reorg | 本轮动作 |
+| --- | --- | --- | --- |
+| `scripts/check-doc-consistency.js` · prompt_sync | 读 `docs/{lang}/commands.md`；本仓在 `docs/product/` → 空转 | **fix_path** | **已做**：优先 `docs/product/{lang}/commands.md` |
+| 同上 · `mdFiles()` | product 树不可见 | **fix_path** | **已做**：扫描 `docs/product/{lang}/` |
+| 同上 · parity spawn | 与 `docs:parity` 双跑 | **drop_dup_invoke** | **已做**：`parity: "delegated"` |
+| `repo-tools/check-layout-sync.js` | 只认 `docs/{lang}/architecture.md` → 本仓 always N/A | **fix_path** | **已做**：优先 `docs/product/`；basename 提取修；架构树补全 |
+| freshness CTRL-0004 | 路径偏 legacy | ledger | 排队（低成本可点状） |
+| consistency monolith | ~950LOC accretion | **extract** | Stage 3 排队 |
+
+脚本层终裁：`keep_cli` 全部现有 `check-*` 名；**extract** consistency（排队）；无新 absorb/retire。
+
+### 4.2 状态检查表
+
+- [x] Disposition v2 + Script Health 表落盘
+- [x] **fix_path** layout-sync + prompt_sync + mdFiles
+- [x] **drop_dup_invoke** parity 嵌入 spawn
+- [x] Stage 4A/B 高信心删/并（约 −37）
+- [x] 全量 test（非沙箱）+ `check:must-ship` 绿
+- [x] inventory `notes` 补 `health=` / `reorg=`（本提交收尾）
+- [x] CHANGELOG + 三语 roadmap 指针
+- [ ] **不**归档 PLAN-0055（R7 EXTRACT 仍 open）
 
 ## Discovery Ledger
 
@@ -239,16 +250,17 @@ Test Disposition 表 → Stage 1 落盘（先标记不删）。
 | R0 | process | 双 Active | **resolved** | 0055 独占 |
 | R1 | scope | 引用中心主义假 keep | **resolved** | 改最小必要面 |
 | R2 | constraint | INSTALLED SemVer | **resolved** | product_cli 不因厚而删名 |
-| R3 | tests | testing.policy | open | Stage 4 |
+| R3 | tests | testing.policy 活性/事实源 | **resolved** | Stage 4A/B + Disposition v2 + CHANGELOG；残留 = 持续克制非本 Plan 阻塞 |
 | R4 | inventory | summary 漂移 | **resolved** | total 跟 entries |
 | R5 | finding | 零 retire 错觉 | **resolved** | 已删 2；debt 待拆 |
 | R6 | absorb | dogfood INSTALLED | **resolved** | Stage 2 |
-| R7 | debt | 文件级 debt / monolith | open | debt 文件=0；consistency EXTRACT 待排 |
+| R7 | debt | consistency monolith EXTRACT | **open** | CLI keep；EXTRACT 排队 Stage 3 |
+| R8 | defect | 假绿路径（prompt_sync / layout-sync；parity 双跑） | **resolved** | Stage 4 fix_path + drop_dup_invoke |
 
 ```text
-Total known:  8
-Resolved:     6
-Open:         2
+Total known:  9
+Resolved:     8
+Open:         1
 Unaccounted:  0
 ```
 

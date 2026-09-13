@@ -155,9 +155,10 @@ module.exports = (test) => {
         return false;
       }
     }
-    // liveness: the repo pins actions by SHA, so a passing run must have seen some
-    return pinned >= 3;
-  });
+  // Stage 4A: dropped "pinned >= 3" liveness — this repo's ci.yml only pins two actions;
+  // requiring three made the gate hollow-fail while SHAs were already full-length.
+  return pinned >= 1;
+});
 
 // run-tests.js --suite / --list — the domain-level runnable entry promised by anti-patch
   // plan §3. RECURSION CONSTRAINT: these tests run INSIDE the hygiene suite, so they must

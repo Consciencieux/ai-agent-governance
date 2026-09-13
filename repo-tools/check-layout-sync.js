@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 // Repository Layout Sync Check — fail-closed gate (repo infrastructure, not part of
 // the governed-project payload). Verifies the Repository Layout tree in each of the
-// three docs/{en,zh-CN,zh-TW}/architecture.md files lists every file that actually
-// exists under references/ and scripts/. Prevents the exact regression where new
-// skill files (scripts, templates, spec) were added but the architecture doc stayed
-// stale — so an agent cannot "skip reading the architecture" and silently drift it.
+// three architecture.md files lists every file that actually exists under references/,
+// scripts/, repo-tools/, and repo-workflows/. Prefers docs/product/{lang}/architecture.md
+// (this skill repo); falls back to docs/{lang}/architecture.md (legacy / fixtures).
 //
 // Usage: node repo-tools/check-layout-sync.js [--json]
 // Exit 0: layout is in sync. Exit 1: files missing from the tree (fix the docs).
@@ -91,8 +90,11 @@ function extractTreeFileTokens(architectureMd) {
       }
       const dir = stack[0] || "";
       if (dir && DIRS.includes(dir)) {
-        const pair = dir + "/" + name;
-        tokens.add(name);
+        // listFiles() yields basenames; a single-line "lib/routing.js" under repo-tools/
+        // must contribute basename "routing.js", not only the compound token (PLAN-0055).
+        const base = name.includes("/") ? name.split("/").pop() : name;
+        const pair = dir + "/" + base;
+        tokens.add(base);
         scannedPairs.add(pair);
       } else if (name.includes("/")) {
         // Flat fixture spelling (a tree that renders "references/foo.js" on one line with
@@ -112,6 +114,15 @@ function extractTreeFileTokens(architectureMd) {
   return { tokens, scannedPairs };
 }
 
+/** Prefer docs/product/{lang}/ (skill repo); fall back to docs/{lang}/ (fixtures / legacy). */
+function architecturePath(lang) {
+  const product = path.join(DOCS, "product", lang, "architecture.md");
+  const legacy = path.join(DOCS, lang, "architecture.md");
+  if (fs.existsSync(product)) return product;
+  if (fs.existsSync(legacy)) return legacy;
+  return null;
+}
+
 function main() {
   const json = process.argv.includes("--json");
   const missingByTree = {};
@@ -124,10 +135,12 @@ function main() {
   // disabling the per-directory protection immediately below (audit 2026-09-05).
   // With the docs trees as the marker, a missing `references/` in this repo still reaches
   // that protection and still fails, which is the whole point of it.
-  const treesPresent = TREES.filter((lang) => fs.existsSync(path.join(DOCS, lang, "architecture.md")));
+  // PLAN-0055 Stage 4: prefer docs/product/{lang}/architecture.md so this skill repo is
+  // not always "not applicable" after the product-tree migration.
+  const treesPresent = TREES.filter((lang) => architecturePath(lang) !== null);
   if (treesPresent.length === 0) {
     if (json) process.stdout.write(JSON.stringify({ pass: true, applicable: false, issues: [] }, null, 2) + "\n");
-    else console.log("✓ layout sync: not applicable (no docs/<lang>/architecture.md trees — not this repo's shape)");
+    else console.log("✓ layout sync: not applicable (no docs/product/<lang>/ or docs/<lang>/architecture.md trees — not this repo's shape)");
     process.exit(0);
   }
 
@@ -146,8 +159,8 @@ function main() {
   const actual = new Set(perDir.flatMap((e) => e.files));
 
   for (const lang of TREES) {
-    const file = path.join(DOCS, lang, "architecture.md");
-    if (!fs.existsSync(file)) {
+    const file = architecturePath(lang);
+    if (!file) {
       missingByTree[lang] = ["architecture.md missing"];
       continue;
     }
@@ -183,7 +196,8 @@ function main() {
       console.log(`✓ repository layout in sync (${actual.size} files under ${DIRS.join(", ")} all present in all ${TREES.length} trees)`);
     } else {
       for (const [lang, missing] of Object.entries(missingByTree)) {
-        console.log(`✗ docs/${lang}/architecture.md Repository Layout missing: ${missing.join(", ")}`);
+        const rel = path.relative(ROOT, architecturePath(lang) || path.join(DOCS, "product", lang, "architecture.md"));
+        console.log(`✗ ${rel} Repository Layout missing: ${missing.join(", ")}`);
       }
     }
   }

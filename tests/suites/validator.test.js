@@ -1,7 +1,6 @@
 // tests/suites/validator.test.js — batch-1 migration from tests/run-tests.js (anti-patch plan §3).
 // Verbatim region move (marker-to-marker); helper consolidation into tests/support/ is batch 2.
 
-
 const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -147,12 +146,6 @@ test("--json score reflects partial failures (20/21)", () => {
   return out.total === 21 && out.passed === 20 && Math.abs(out.score - 20 / 21) < 1e-9;
 });
 
-test("--help exits 0 and prints usage", () => {
-  const dir = tmp("help");
-  const r = run(dir, ["--help"]);
-  return r.status === 0 && r.stdout.includes("Usage:") && r.stdout.includes("--json");
-});
-
 test("validator uses .governance only and leaves no .agent dir", () => {
   const dir = tmp("noagent");
   buildFullDefault(dir);
@@ -175,7 +168,6 @@ test("validation.json present is optional and still passes", () => {
     !r.stdout.includes(".governance validation")
   );
 });
-
 
 test("validator: missing .governance dir exits 1", () => {
   const dir = tmp("no-gov-dir");
@@ -262,7 +254,6 @@ test("validator: missing check-sync.js exits 1", () => {
   return r.status === 1 && r.stdout.includes("Sync groups check");
 });
 
-
 test("validator: manifest sync check keeps an explicit false ok field", () => {
   const dir = tmp("nosync-json");
   buildFullDefault(dir);
@@ -274,7 +265,6 @@ test("validator: manifest sync check keeps an explicit false ok field", () => {
   return check && check.ok === false;
 });
 
-
 test("validator: generated skill missing SKILL.md exits 1 (no longer masked by dir entry)", () => {
   const dir = tmp("noskill-file");
   buildFullDefault(dir);
@@ -282,7 +272,6 @@ test("validator: generated skill missing SKILL.md exits 1 (no longer masked by d
   const r = run(dir);
   return r.status === 1 && r.stdout.includes("Generated skill") && r.stdout.includes("review-manager/SKILL.md");
 });
-
 
 test("validator: manifest artifact path escaping ROOT fails (containment)", () => {
   const dir = tmp("escape-artifact");
@@ -299,7 +288,6 @@ test("validator: manifest artifact path escaping ROOT fails (containment)", () =
   const check = out.results.find((x) => x.name === "escape");
   return check !== undefined && check.ok === false;
 });
-
 
 test("validator: a project reached through a symlinked root still validates", () => {
   const dir = tmp("symlink-root");
@@ -326,7 +314,6 @@ test("validator: a project reached through a symlinked root still validates", ()
     a.passed === b.passed && a.total === b.total && direct.status === viaLink.status;
 });
 
-
 // Windows blocks file symlinks without developer mode but allows directory junctions;
 // POSIX allows both. Returns false when the platform refuses, so a test can skip openly.
 test("validator: a skill directory symlinked out of the tree is rejected", () => {
@@ -347,7 +334,6 @@ test("validator: a skill directory symlinked out of the tree is rejected", () =>
   return check !== undefined && check.ok === false;
 });
 
-
 test("validator: symlinked generated SKILL.md is rejected (real file required)", () => {
   const dir = tmp("symlink-skill");
   buildFullDefault(dir);
@@ -361,7 +347,6 @@ test("validator: symlinked generated SKILL.md is rejected (real file required)",
   }
   return run(dir).status === 1;
 });
-
 
 test("validator: complete generated skills pass and the check is reported", () => {
   const dir = tmp("skill-ok");

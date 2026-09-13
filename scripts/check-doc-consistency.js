@@ -257,12 +257,18 @@ function mdFiles() {
   for (const f of top) if (fs.existsSync(path.join(ROOT, f))) out.push(f);
   if (fs.existsSync(DOCS)) {
     for (const lang of ["en", "zh-CN", "zh-TW"]) {
+      // Prefer product trees (this skill repo); also scan legacy docs/{lang}/ for governed /
+      // fixture shapes. PLAN-0055 Stage 4: product migration left mdFiles() blind.
+      const productDir = path.join(DOCS, "product", lang);
+      if (fs.existsSync(productDir)) {
+        for (const rel of walk(productDir)) out.push((path.join("docs", "product", lang, rel)).replace(/\\/g, "/"));
+      }
       const dir = path.join(DOCS, lang);
       if (fs.existsSync(dir)) for (const rel of walk(dir)) out.push((path.join("docs", lang, rel)).replace(/\\/g, "/"));
     }
     for (const rel of walk(DOCS)) {
       const normalized = rel.replace(/\\/g, "/");
-      if (normalized.startsWith("design-decisions/") || normalized.startsWith("archive/")) {
+      if (normalized.startsWith("design-decisions/") || normalized.startsWith("archive/") || normalized.startsWith("plans/")) {
         out.push((path.join("docs", normalized)).replace(/\\/g, "/"));
       }
     }
@@ -834,8 +840,14 @@ function main() {
   }
   if (triggers.size > 0) {
     for (const lang of ["en", "zh-CN", "zh-TW"]) {
-      const cmdPath = path.join(DOCS, lang, "commands.md");
-      const cmd = readFile(cmdPath) || "";
+      // PLAN-0055 Stage 4: this skill repo keeps commands.md under docs/product/{lang}/;
+      // governed projects / fixtures still use docs/{lang}/commands.md. Prefer product.
+      const cmdCandidates = [
+        path.join(DOCS, "product", lang, "commands.md"),
+        path.join(DOCS, lang, "commands.md"),
+      ];
+      const cmdPath = cmdCandidates.find((p) => fs.existsSync(p));
+      const cmd = cmdPath ? (readFile(cmdPath) || "") : "";
       if (!cmd) continue;
       for (const t of triggers) {
         if (!cmd.includes("`" + t + "`")) {
@@ -868,26 +880,12 @@ function main() {
     }
   }
 
-  // ---- 7. trilingual tree parity (delegate) ----
-  // Candidate paths in order (repository-boundary-split plan §4): the skill repo keeps the
-  // parity script under repo-tools/ (REPO-ONLY there); a governed project has neither, so
-  // the delegation no-ops. Probing scripts/ second preserves any layout that still carries
-  // it there — existsSync candidates, never an assumed location.
-  const parityScript = [
-    path.join(ROOT, "repo-tools", "check-doc-parity.js"),
-    path.join(ROOT, "scripts", "check-doc-parity.js"),
-  ].find((p) => fs.existsSync(p));
-  let parityPass = "unavailable"; // never claim a pass we could not verify
-  if (parityScript) {
-    const parity = spawnSync(process.execPath, [parityScript, "--json"], { cwd: ROOT, encoding: "utf8" });
-    try {
-      const p = JSON.parse(parity.stdout);
-      parityPass = p.pass;
-      if (!p.pass) issues.trilingual_trees = p.issues;
-    } catch {
-      parityPass = "error";
-    }
-  }
+  // ---- 7. trilingual tree parity (delegated) ----
+  // PLAN-0055 Stage 4: npm `docs:parity` / `check` already runs repo-tools/check-doc-parity.js
+  // as the owner. Embedding a second spawn here double-read the trees and could leave
+  // consistency --gate green while parity was red if only this CLI ran. Report delegated;
+  // do not re-spawn.
+  const parityPass = "delegated";
 
   const pendingArchive = planStatuses.filter((p) => p.status === "implemented" || p.status === "completed").length;
   const EVIDENCE = {

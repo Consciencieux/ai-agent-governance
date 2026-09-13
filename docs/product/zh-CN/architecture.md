@@ -89,6 +89,7 @@ ai-agent-governance/
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
 │   │   ├── capability-model.md / decision-records.md / migration-method.md
+│   │   ├── control-shape.md / enforcement-semantics.md
 │   ├── contracts/                  # 可移植合同示例（INIT 可复制进 .governance/）
 │   │   └── sibling-closure.example.json
 │   └── workflows/
@@ -111,6 +112,7 @@ ai-agent-governance/
 │   │   └── secret-scan-facts.js # 共享密钥扫描事实 primitive（模式 / staged / blob）
 │   ├── evaluators/
 │   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 密钥保护求值器（CLI 绑定 deny）
+│   │   ├── ctrl-0002-git-write-consent.js   # CTRL-0002 git argv 写同意求值器
 │   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 治理文档新鲜度求值器（建议性）
 │   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 译文新鲜度求值器（--release-gate 阻断）
 │   │   └── ctrl-0006-broken-links.js        # CTRL-0006 相对 Markdown 链接有效性（consistency #4）
@@ -138,7 +140,11 @@ ai-agent-governance/
 │   ├── check-control-registry.js # H2c 机读 Control 投影（PLAN-0049）
 │   ├── run-control-x.js        # H2c CONTROL-X 双 profile 负向 fixture runner（PLAN-0049）
 │   ├── controls/               # REPO-ONLY Control JSON 投影（schema 权威 = ADR-0023）
+│   │   ├── CTRL-0001.json / CTRL-0002.json / CTRL-0003.json / CTRL-0004.json / CTRL-0006.json
+│   │   └── fixtures/
+│   │       └── CTRL-0001.negative.txt
 │   ├── contracts/              # REPO-ONLY sibling-closure dogfood 合同（PLAN-0050）
+│   │   └── SC-CTRL-0002.sibling.json
 │   ├── portability-boundary.v0.json # FINDING-0007 最小 adapter/可移植性矩阵（PLAN-0050）
 │   ├── tool-surface-layers.v0.json # FINDING-0014 L0–L4 工具面（PLAN-0050；L3 非必装）
 │   ├── check-template-responsibility.js # FINDING-0026 指令源 vs 模板责任图（PLAN-0049）

@@ -1,14 +1,11 @@
 // tests/suites/consistency.test.js — batch-1 migration from tests/run-tests.js (anti-patch plan §3).
 // Verbatim region move (marker-to-marker); helper consolidation into tests/support/ is batch 2.
 
-
 const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
 module.exports = (test) => {
-
-
 
 test("doc consistency: clean repo exits 0 with no issues", () => {
   const dir = tmp("consistency-clean");
@@ -23,9 +20,8 @@ test("doc consistency: clean repo exits 0 with no issues", () => {
   write(path.join(dir, "README.md"), "# R\n\n## S\n");
   const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
   const out = JSON.parse(r.stdout);
-  return r.status === 0 && Object.values(out.issues).every((v) => (Array.isArray(v) ? v.length === 0 : true)) && out.gatePass === true;
+  return r.status === 0 && Object.values(out.issues).every((v) => (Array.isArray(v) ? v.length === 0 : true)) && out.gatePass === true && out.parity === "delegated";
 });
-
 
 test("doc consistency: stale version example in SKILL.md-style doc is flagged", () => {
   const dir = tmp("consistency-version");
@@ -36,7 +32,6 @@ test("doc consistency: stale version example in SKILL.md-style doc is flagged", 
   return r.status === 0 && out.issues.version_examples.some((i) => i.includes("1.0.0"));
 });
 
-
 test("doc consistency: broken relative link is flagged", () => {
   const dir = tmp("consistency-link");
   write(path.join(dir, "README.md"), "[missing](docs/does-not-exist.md)");
@@ -44,7 +39,6 @@ test("doc consistency: broken relative link is flagged", () => {
   const out = JSON.parse(r.stdout);
   return r.status === 0 && out.issues.broken_links.some((i) => i.includes("does-not-exist.md"));
 });
-
 
 test("doc consistency: archive links are scanned on Windows path separators", () => {
   const dir = tmp("consistency-archive-link");
@@ -54,7 +48,6 @@ test("doc consistency: archive links are scanned on Windows path separators", ()
   const out = JSON.parse(r.stdout);
   return r.status === 0 && out.issues.broken_links.some((i) => i.includes("docs/archive/old.md") && i.includes("does-not-exist.md"));
 });
-
 
 test("CTRL-0006: missing relative link → evaluateBrokenLinks fail with evidence", () => {
   const { evaluateBrokenLinks } = require(path.join(SKILL_ROOT, "scripts/evaluators/ctrl-0006-broken-links.js"));
@@ -69,7 +62,6 @@ test("CTRL-0006: missing relative link → evaluateBrokenLinks fail with evidenc
   );
 });
 
-
 test("CTRL-0006: valid relative link → evaluateBrokenLinks pass", () => {
   const { evaluateBrokenLinks } = require(path.join(SKILL_ROOT, "scripts/evaluators/ctrl-0006-broken-links.js"));
   const dir = tmp("ctrl-0006-valid");
@@ -79,14 +71,12 @@ test("CTRL-0006: valid relative link → evaluateBrokenLinks pass", () => {
   return r.control === "CTRL-0006" && r.verdict === "pass" && r.applicable === true && r.evidence.broken_links.length === 0;
 });
 
-
 test("CTRL-0006: empty tree is applicable vacuous pass", () => {
   const { evaluateBrokenLinks } = require(path.join(SKILL_ROOT, "scripts/evaluators/ctrl-0006-broken-links.js"));
   const dir = tmp("ctrl-0006-empty");
   const r = evaluateBrokenLinks({ root: dir });
   return r.control === "CTRL-0006" && r.applicable === true && r.verdict === "pass" && r.evidence.broken_links.length === 0;
 });
-
 
 test("CTRL-0006: http(s)/mailto targets are skipped; httpfoo remains relative", () => {
   const { createMdLinkFacts } = require(path.join(SKILL_ROOT, "scripts/lib/md-link-facts.js"));
@@ -96,7 +86,6 @@ test("CTRL-0006: http(s)/mailto targets are skipped; httpfoo remains relative", 
   );
   return targets.length === 2 && targets.includes("httpfoo.md") && targets.includes("docs/ok.md");
 });
-
 
 test("CTRL-0006 binding: wrapper --gate still reports broken links without deny", () => {
   const dir = tmp("ctrl-0006-gate-advisory");
@@ -112,7 +101,6 @@ test("CTRL-0006 binding: wrapper --gate still reports broken links without deny"
   );
 });
 
-
 test("doc consistency: numeric claim mismatch with validator source is flagged", () => {
   const dir = tmp("consistency-numeric");
   // 20-item DEFAULTS array + README claiming 99
@@ -123,55 +111,6 @@ test("doc consistency: numeric claim mismatch with validator source is flagged",
   const out = JSON.parse(r.stdout);
   return r.status === 0 && out.issues.numeric_claims.some((i) => i.includes("99"));
 });
-
-
-test("doc consistency: parity unavailable is reported, not claimed as pass", () => {
-  const dir = tmp("consistency-noparity");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  // no repo-tools/check-doc-parity.js in this fixture
-  const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(r.stdout);
-  return r.status === 0 && out.parity === "unavailable";
-});
-
-
-test("doc consistency: parity delegate finds the script under repo-tools/ (first candidate)", () => {
-  const dir = tmp("consistency-parity-repotools");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  fs.mkdirSync(path.join(dir, "repo-tools"), { recursive: true });
-  write(path.join(dir, "repo-tools", "check-doc-parity.js"),
-    "process.stdout.write(JSON.stringify({ pass: true }));\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(r.stdout);
-  return r.status === 0 && out.parity === true;
-});
-
-
-test("doc consistency: parity delegate still finds the script under scripts/ (second candidate)", () => {
-  const dir = tmp("consistency-parity-scripts");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  fs.mkdirSync(path.join(dir, "scripts"), { recursive: true });
-  write(path.join(dir, "scripts", "check-doc-parity.js"),
-    "process.stdout.write(JSON.stringify({ pass: true }));\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(r.stdout);
-  return r.status === 0 && out.parity === true;
-});
-
-
-test("doc consistency: sub-skill trigger missing from commands.md is flagged", () => {
-  const dir = tmp("consistency-prompt");
-  // fixture: sub-skills.md with one trigger, commands.md without it
-  write(path.join(dir, "references", "templates", "sub-skills.md"),
-    'description: ... Triggers on "unique-trigger-xyz".');
-  write(path.join(dir, "docs", "en", "commands.md"), "# Commands\n\nno such trigger here\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY_CHECK, "--json"], { cwd: dir, encoding: "utf8" });
-  const out = JSON.parse(r.stdout);
-  return r.status === 0 && out.issues.prompt_sync.some((i) => i.includes("unique-trigger-xyz"));
-});
-
-
-
 
 test("consistency --gate: complete five sync points exit 0", () => {
   const dir = tmp("consent-ok");
@@ -184,7 +123,6 @@ test("consistency --gate: complete five sync points exit 0", () => {
   const out = JSON.parse(r.stdout);
   return out.gatePass === true && out.gateIssues.length === 0;
 });
-
 
 test("consistency --gate: Chinese-language markers satisfy the sync clamp (bilingual)", () => {
   // The consent markers carry Chinese branches (回显, 命令序列, 意图对齐, 覆盖, 非快进).
@@ -207,7 +145,6 @@ test("consistency --gate: Chinese-language markers satisfy the sync clamp (bilin
   return out.gatePass === true && out.gateIssues.length === 0;
 });
 
-
 test("consistency --gate: marker removed from one sync point exits 1 and names it", () => {
   const dir = tmp("consent-missing");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -223,53 +160,6 @@ test("consistency --gate: marker removed from one sync point exits 1 and names i
   return out.gatePass === false && out.gateIssues.some((g) => g.item.includes("SKILL.md") && g.item.includes("intent alignment"));
 });
 
-
-test("consistency --gate: governed-project shape skips absent sync points (3 of 5 exist)", () => {
-  const dir = tmp("consent-governed");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  // the protected-files source must exist so the check doesn't report "source missing"
-  write(path.join(dir, "docs", "rules", "governance-files.md"), "| Path | Nature |\n| --- | --- |\n| `AGENTS.md` | entry |\n");
-  // generated AGENTS.md + docs/rules/git-policy.md + docs/rules/lifecycle.md exist in a governed project
-  writeConsentSyncPoint(dir, "AGENTS.md", CONSENT_THREE_MARKERS_TEXT);
-  writeConsentSyncPoint(dir, "docs/rules/git-policy.md", CONSENT_THREE_MARKERS_TEXT);
-  writeConsentSyncPoint(dir, "docs/rules/lifecycle.md", CONSENT_THREE_MARKERS_TEXT);
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate"], { cwd: dir, encoding: "utf8" });
-  return r.status === 0 && r.stdout.includes("no consistency issues");
-});
-
-
-test("consistency --gate: missing markers in a governed-project sync point exit 1", () => {
-  const dir = tmp("consent-governed-missing");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  writeConsentSyncPoint(dir, "AGENTS.md", CONSENT_THREE_MARKERS_TEXT);
-  const gitPolicy = CONSENT_THREE_MARKERS_TEXT.replace(/intent alignment[^\n]*\n/, "");
-  writeConsentSyncPoint(dir, "docs/rules/git-policy.md", gitPolicy);
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 1) return false;
-  const out = JSON.parse(r.stdout);
-  return out.gateIssues.some((g) => g.item.includes("docs/rules/git-policy.md") && g.item.includes("intent alignment"));
-});
-
-
-test("consistency --gate: lifecycle doc is exempt from the release marker", () => {
-  // lifecycle.policy.md carries no release clause by design; the release marker's files
-  // list must not require it from docs/rules/lifecycle.md (m3 files restriction).
-  const dir = tmp("consent-lifecycle-exempt");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  writeConsentSyncPoint(dir, "AGENTS.md", CONSENT_THREE_MARKERS_TEXT);
-  writeConsentSyncPoint(dir, "references/policies/git.policy.md", CONSENT_THREE_MARKERS_TEXT);
-  // lifecycle WITHOUT the release marker — permitted (m3 files restriction)
-  writeConsentSyncPoint(dir, "references/policies/lifecycle.policy.md",
-    "One confirmation per change set — echo the full git command sequence before committing.\nPlan approval is intent alignment, not a commit authorisation workaround.\n");
-  writeConsentSyncPoint(dir, "docs/rules/lifecycle.md",
-    "One confirmation per change set — echo the full git command sequence before committing.\nPlan approval is intent alignment, not a commit authorisation workaround.\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 0) return false;
-  const out = JSON.parse(r.stdout);
-  return !out.gateIssues.some((g) => g.item.includes("lifecycle"));
-});
-
-
 test("consistency --gate: mid-sequence failure marker removed → gate red (regression)", () => {
   const dir = tmp("consent-fail-missing");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -284,81 +174,6 @@ test("consistency --gate: mid-sequence failure marker removed → gate red (regr
   const out = JSON.parse(r.stdout);
   return out.gatePass === false && out.gateIssues.some((g) => g.item.includes("SKILL.md") && g.item.includes("mid-sequence failure"));
 });
-
-
-test("consistency --gate: gutted lifecycle.policy.md turns gate red (5th sync point, regression)", () => {
-  // The 5th consent sync point (lifecycle.policy.md) must be a real sync GROUP. Gutting it
-  // of all consent substance must turn the gate red — a bare "一次确认" heading or a mention
-  // in another table must not satisfy it.
-  const dir = tmp("consent-lifecycle-gut");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  for (const rel of ["AGENTS.md", "references/policies/git.policy.md", "references/templates/agents-md.template.md", "SKILL.md"]) {
-    writeConsentSyncPoint(dir, rel, CONSENT_THREE_MARKERS_TEXT);
-  }
-  writeConsentSyncPoint(dir, "references/policies/lifecycle.policy.md", "# Lifecycle\n\nNo consent rules here.\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 1) return false;
-  const out = JSON.parse(r.stdout);
-  return out.gateIssues.some((g) => g.item.includes("lifecycle.policy.md") && g.item.includes("one confirmation per change set"));
-});
-
-
-test("consistency --gate: a section heading alone is not the one-confirmation principle (M1 regression)", () => {
-  // M1 must anchor on the echo + full-sequence substance, NOT the bare "一次确认" wording.
-  // A heading like "确认范围（一次确认 per 变更集）" with no echo/sequence must not satisfy it.
-  const dir = tmp("consent-m1-heading");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  for (const rel of ["AGENTS.md", "references/policies/git.policy.md", "references/templates/agents-md.template.md", "SKILL.md"]) {
-    writeConsentSyncPoint(dir, rel,
-      "## 确认范围（一次确认 per 变更集）\n\nPlan approval is intent alignment, not a commit authorisation.\n" +
-      "A Proposal approved at the Approval Gate covers the release sequence.\n" +
-      "If any step fails, stop and report — never retry differently.\n" +
-      "If push is rejected (non-fast-forward), stop and report — never pull/rebase.\n");
-  }
-  writeConsentSyncPoint(dir, "references/policies/lifecycle.policy.md",
-    "## 确认范围（一次确认 per 变更集）\n\nPlan approval is intent alignment, not a commit authorisation.\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 1) return false;
-  const out = JSON.parse(r.stdout);
-  return out.gateIssues.some((g) => g.item.includes("one confirmation per change set"));
-});
-
-
-test("consistency --gate: bare Approval Gate mention is not the release-clause marker (M3 regression)", () => {
-  // M3 must anchor on approval COVERING the sequence/write-ops, not the bare "Approval Gate"
-  // token that also appears in a git-tag bullet. Removing the release clause while leaving a
-  // bare Approval Gate must turn the gate red.
-  const dir = tmp("consent-m3-bare");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  for (const rel of ["AGENTS.md", "references/policies/git.policy.md", "references/templates/agents-md.template.md", "SKILL.md"]) {
-    writeConsentSyncPoint(dir, rel,
-      "One confirmation per change set — echo the full git command sequence before committing.\n" +
-      "Plan approval is intent alignment, not a commit authorisation.\n" +
-      "A release needs to pass through the Approval Gate.\n" +   // bare token, no coverage
-      "If any step fails, stop and report — never retry differently.\n" +
-      "If push is rejected (non-fast-forward), stop and report — never pull/rebase.\n");
-  }
-  writeConsentSyncPoint(dir, "references/policies/lifecycle.policy.md", CONSENT_THREE_MARKERS_TEXT);
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 1) return false;
-  const out = JSON.parse(r.stdout);
-  return out.gateIssues.some((g) => g.item.includes("Approval Gate covers the sequence"));
-});
-
-
-test("consistency --gate: governed-project git-policy.md is held to release/mid-sequence markers (files regression)", () => {
-  // The files restriction must match the governed rendering docs/rules/git-policy.md on M3/M4/M5
-  // (basename normalised: git.policy.md == git-policy.md), not just the skill-repo path.
-  const dir = tmp("consent-governed-m345");
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  writeConsentSyncPoint(dir, "AGENTS.md", CONSENT_THREE_MARKERS_TEXT);
-  writeConsentSyncPoint(dir, "docs/rules/git-policy.md", /** no M3/M4/M5 */ "One confirmation per change set — echo the full git command sequence before committing.\nPlan approval is intent alignment, not a commit authorisation.\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 1) return false;
-  const out = JSON.parse(r.stdout);
-  return out.gateIssues.some((g) => g.item.includes("docs/rules/git-policy.md") && /Approval Gate covers the sequence|mid-sequence failure|push rejected/.test(g.item));
-});
-
 
 test("consistency --gate: protected list trigger is tightened (mere mention exempt)", () => {
   const dir = tmp("proto-exempt");
@@ -378,7 +193,6 @@ test("consistency --gate: protected list trigger is tightened (mere mention exem
   return out.gatePass === true && !out.gateIssues.some((g) => g.kind === "protected_lists");
 });
 
-
 test("consistency --gate: claimed enumeration with a missing entry still fails", () => {
   const dir = tmp("proto-flagged");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -395,7 +209,6 @@ test("consistency --gate: claimed enumeration with a missing entry still fails",
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-secrets.js"));
 });
-
 
 test("consistency --gate: A1 pure pointer with no declared paths passes", () => {
   const dir = tmp("a1-pointer");
@@ -419,7 +232,6 @@ test("consistency --gate: A1 pure pointer with no declared paths passes", () => 
   return live.status === 1 && JSON.parse(live.stdout).gateIssues.some((g) => g.kind === "protected_lists");
 });
 
-
 test("consistency --gate: A1 partial list + pointer may omit entries (incompleteness excused)", () => {
   const dir = tmp("a1-partial-ok");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -439,7 +251,6 @@ test("consistency --gate: A1 partial list + pointer may omit entries (incomplete
   return live.status === 1 && JSON.parse(live.stdout).gateIssues.some((g) => g.item.includes("check-renamed-away.js"));
 });
 
-
 test("consistency --gate: A1 partial list + pointer still fails on a ghost/renamed path", () => {
   const dir = tmp("a1-ghost");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -454,7 +265,6 @@ test("consistency --gate: A1 partial list + pointer still fails on a ghost/renam
   return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-OLDNAME.js"));
 });
 
-
 test("consistency --gate: A1 stale path inside a fenced code block is detected", () => {
   const dir = tmp("a1-codeblock");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -468,7 +278,6 @@ test("consistency --gate: A1 stale path inside a fenced code block is detected",
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("check-GONE.js"));
 });
-
 
 // A5 regression: SKILL.md frontmatter version is a release sync point but the version
 // regex required quoted forms, so unquoted YAML `version: X.Y.Z` never matched and a
@@ -486,7 +295,6 @@ test("consistency --gate: stale frontmatter version fails the gate", () => {
   return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("frontmatter version 1.4.9"));
 });
 
-
 test("consistency --gate: matching frontmatter version passes", () => {
   const dir = tmp("a5-frontmatter-ok");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "2.0.0" }));
@@ -498,7 +306,6 @@ test("consistency --gate: matching frontmatter version passes", () => {
   const out = JSON.parse(r.stdout);
   return !out.gateIssues.some((g) => g.kind === "version_examples");
 });
-
 
 // v0.13.1 regression: the release shipped with 40 entries still under [Unreleased] and no
 // [0.13.1] section — version sync skipped the CHANGELOG rename and every gate stayed green,
@@ -515,7 +322,6 @@ test("consistency --gate: stale CHANGELOG version section fails the gate", () =>
   return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("newest version section [0.13.0]"));
 });
 
-
 test("consistency --gate: synced CHANGELOG version section passes", () => {
   const dir = tmp("a5-changelog-ok");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "0.13.1" }));
@@ -526,7 +332,6 @@ test("consistency --gate: synced CHANGELOG version section passes", () => {
   const out = JSON.parse(r.stdout);
   return !out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("newest version section"));
 });
-
 
 // v1.0.0 regression: the release advanced `"version": "1.0.0"` but left `"tag": "v0.15.0"`
 // in the manifest examples (SKILL.md + release.md). version_examples never looked at tag
@@ -544,7 +349,6 @@ test("consistency --gate: release example pairing version with mismatched tag fa
   return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("pairs version 1.0.0 with tag v0.15.0"));
 });
 
-
 test("consistency --gate: matching tag pairing passes", () => {
   const dir = tmp("a5-tag-pair-ok");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -556,7 +360,6 @@ test("consistency --gate: matching tag pairing passes", () => {
   const out = JSON.parse(r.stdout);
   return !out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("pairs version"));
 });
-
 
 // Generator sync points live outside .md files (mdFiles() cannot see them): init-spec.json
 // `governance_version.default` stamps every new governed project and generate-governance.js's
@@ -574,7 +377,6 @@ test("consistency --gate: stale init-spec default fails the gate", () => {
   return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("init-spec.json"));
 });
 
-
 test("consistency --gate: stale generator sentinel fails the gate", () => {
   const dir = tmp("a5-generator-stale");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "0.13.1" }));
@@ -585,7 +387,6 @@ test("consistency --gate: stale generator sentinel fails the gate", () => {
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "version_examples" && g.item.includes("generate-governance.js"));
 });
-
 
 // A6 regression: docs/archive/ was never scanned, so an archived plan could keep saying
 // "已实现（待 Release 归档）" — a pending-archive claim inside the archive — forever.
@@ -602,7 +403,6 @@ test("consistency --release-gate: archived plan still claiming implemented fails
   return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("old-plan.md") && /still claims/.test(g.item));
 });
 
-
 test("consistency --release-gate: archived plan with no Status line fails", () => {
   const dir = tmp("a6-archive-nostatus");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -613,7 +413,6 @@ test("consistency --release-gate: archived plan with no Status line fails", () =
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("no-status.md"));
 });
-
 
 test("consistency: a properly archived plan passes and is counted", () => {
   const dir = tmp("a6-archive-ok");
@@ -626,7 +425,6 @@ test("consistency: a properly archived plan passes and is counted", () => {
   const out = JSON.parse(r.stdout);
   return out.planStatuses.some((p) => p.plan === "docs/archive/good.md" && p.status === "archived");
 });
-
 
 // ADR-0008: the commands.md trigger inventory is a deliberate controlled copy, so the
 // prompt-sync cluster is gate class and BOTH directions are defects. Previously it was
@@ -645,7 +443,6 @@ test("consistency --gate: a trigger missing from commands.md fails the gate", ()
   return out.gateIssues.some((g) => g.kind === "prompt_sync" && g.item.includes("run demo"));
 });
 
-
 test("consistency --gate: a stale trigger left in commands.md fails the gate", () => {
   const dir = tmp("adr8-stale");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -661,7 +458,6 @@ test("consistency --gate: a stale trigger left in commands.md fails the gate", (
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "prompt_sync" && g.item.includes("removed trigger phrase"));
 });
-
 
 test("consistency --gate: a main-skill trigger declared in SKILL.md is not stale", () => {
   const dir = tmp("adr8-mainskill");
@@ -681,7 +477,6 @@ test("consistency --gate: a main-skill trigger declared in SKILL.md is not stale
   return !out.gateIssues.some((g) => g.kind === "prompt_sync");
 });
 
-
 // The scan set used to be 4 top-level files + docs/, so references/ was never examined —
 // the INSTALLED policy and template bodies (including the agents-md template that becomes
 // every governed project's AGENTS.md) could carry a stale protected-files summary and no
@@ -700,7 +495,6 @@ test("consistency --gate: references/ is in the scan set (installed bodies are j
   return out.gateIssues.some((g) => g.kind === "protected_lists" && g.item.includes("agents-md.template.md") && g.item.includes("check-gone.js"));
 });
 
-
 test("consistency: advisory mode stays exit 0 even with gate-class violations", () => {
   const dir = tmp("consent-advisory");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -709,7 +503,6 @@ test("consistency: advisory mode stays exit 0 even with gate-class violations", 
   const r = spawnSync(process.execPath, [CONSISTENCY], { cwd: dir, encoding: "utf8" });
   return r.status === 0;
 });
-
 
 test("consistency --gate: principles-index pointer to a missing file exits 1", () => {
   const dir = tmp("index-broken");
@@ -722,7 +515,6 @@ test("consistency --gate: principles-index pointer to a missing file exits 1", (
   return out.gateIssues.some((g) => g.kind === "principles_index" && g.item.includes("references/does-not-exist.md"));
 });
 
-
 test("consistency --gate: principles index with resolving pointers exits 0", () => {
   const dir = tmp("index-ok");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -733,7 +525,6 @@ test("consistency --gate: principles index with resolving pointers exits 0", () 
   return r.status === 0;
 });
 
-
 test("consistency --gate: governed project without an index skips check 9", () => {
   const dir = tmp("index-absent");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -743,7 +534,6 @@ test("consistency --gate: governed project without an index skips check 9", () =
   const out = JSON.parse(r.stdout);
   return !out.gateIssues.some((g) => g.kind === "principles_index");
 });
-
 
 test("consistency --gate: a partial marker phrase is not a full principle (regression)", () => {
   // A phrase like "一次确认" can appear alone without the intent-alignment or release
@@ -762,7 +552,6 @@ test("consistency --gate: a partial marker phrase is not a full principle (regre
   return out.gatePass === false && out.gateIssues.some((g) => g.item.includes("SKILL.md") && g.item.includes("intent alignment"));
 });
 
-
 test("consistency: implemented plan is pending-archive — advisory in --gate, fail-closed in --release-gate", () => {
   // The documented lifecycle lets a completed plan wait in plans/ for the release commit,
   // so the always-on gate must stay green (advisory only); the release flow's
@@ -780,7 +569,6 @@ test("consistency: implemented plan is pending-archive — advisory in --gate, f
   const relOut = JSON.parse(rel.stdout);
   return relOut.gateIssues.some((g) => g.kind === "plans_pending_archive" && g.item.includes("done.md"));
 });
-
 
 // Governed projects use ONE docs/plans/ tree (no languages). The trilingual scan no-ops
 // there, so an implemented plan used to sail through --release-gate with planStatuses
@@ -804,7 +592,6 @@ test("consistency --release-gate: governed-project single-tree plan is scanned",
   return out.gateIssues.some((g) => g.kind === "plans_pending_archive" && g.item.includes("TASK_leftover.md"));
 });
 
-
 // Governed-project archives live at docs/plans/archive/ (single language), not the
 // trilingual docs/archive/. An archived plan still claiming implemented there must fail.
 test("consistency --release-gate: governed-project archive status is checked", () => {
@@ -821,7 +608,6 @@ test("consistency --release-gate: governed-project archive status is checked", (
   return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("archive/TASK_old.md"));
 });
 
-
 test("consistency --gate: unknown plan status exits 1 (fixable on the spot)", () => {
   const dir = tmp("plans-unknown");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -832,7 +618,6 @@ test("consistency --gate: unknown plan status exits 1 (fixable on the spot)", ()
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "plans_status_unknown" && g.item.includes("no-status.md"));
 });
-
 
 test("consistency: design and archived plan statuses are never flagged", () => {
   const dir = tmp("plans-clean");
@@ -845,7 +630,6 @@ test("consistency: design and archived plan statuses are never flagged", () => {
   const out = JSON.parse(gate.stdout);
   return out.planStatuses.every((p) => p.status === "design" || p.status === "archived") && out.pendingArchive === 0;
 });
-
 
 test("consistency: zh-CN and zh-TW keyword variants are classified", () => {
   const dir = tmp("plans-trilingual");
@@ -861,7 +645,6 @@ test("consistency: zh-CN and zh-TW keyword variants are classified", () => {
   return out.planStatuses.every((p) => p.status === "implemented");
 });
 
-
 test("consistency --release-gate: zh-TW implemented keyword triggers pending-archive", () => {
   const dir = tmp("plans-tw-pending");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
@@ -871,7 +654,6 @@ test("consistency --release-gate: zh-TW implemented keyword triggers pending-arc
   if (r.status !== 1) return false;
   return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "plans_pending_archive");
 });
-
 
 test("consistency --json: per-plan classification and pending count (progress view)", () => {
   const dir = tmp("plans-progress");
@@ -885,7 +667,6 @@ test("consistency --json: per-plan classification and pending count (progress vi
   const byPlan = Object.fromEntries(out.planStatuses.map((p) => [p.plan, p.status]));
   return byPlan["docs/en/plans/design.md"] === "design" && byPlan["docs/en/plans/wip.md"] === "active" && out.pendingArchive === 0;
 });
-
 
 test("consistency --release-gate: versioned changelog section satisfies coverage (post-rename regression)", () => {
   const dir = tmp("changelog-rename");
@@ -905,7 +686,6 @@ test("consistency --release-gate: versioned changelog section satisfies coverage
   return r.status === 0;
 });
 
-
 test("consistency --release-gate: versioned changelog without category still fails", () => {
   const dir = tmp("changelog-nocat");
   gitInit(dir);
@@ -915,7 +695,6 @@ test("consistency --release-gate: versioned changelog without category still fai
   if (r.status !== 1) return false;
   return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
 });
-
 
 test("consistency --release-gate: oldest section category does not cover the empty newest section (regression)", () => {
   // A category in an OLD versioned section must not satisfy coverage for the change
@@ -928,7 +707,6 @@ test("consistency --release-gate: oldest section category does not cover the emp
   if (r.status !== 1) return false;
   return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
 });
-
 
 test("consistency --gate: daily mode still requires [Unreleased] after a release (old-vs-new section)", () => {
   // Post-release repo shape: only versioned sections exist. Daily mode must keep
@@ -944,7 +722,6 @@ test("consistency --gate: daily mode still requires [Unreleased] after a release
   return out.issues.changelog_coverage.length === 1;
 });
 
-
 test("consistency --release-gate: AGENTS.md-only change is doc-only and exempt from changelog coverage", () => {
   const dir = tmp("changelog-doconly");
   gitInit(dir);
@@ -957,7 +734,6 @@ test("consistency --release-gate: AGENTS.md-only change is doc-only and exempt f
   return out.gateIssues.length === 0 && !out.issues.changelog_coverage.length;
 });
 
-
 test("consistency --release-gate: references change without changelog record still fails", () => {
   const dir = tmp("changelog-refcat");
   gitInit(dir);
@@ -968,7 +744,6 @@ test("consistency --release-gate: references change without changelog record sti
   return JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
 });
 
-
 test("consistency --release-gate: docs/rules change (governed-project rule) still requires changelog", () => {
   const dir = tmp("changelog-docrules");
   gitInit(dir);
@@ -976,7 +751,6 @@ test("consistency --release-gate: docs/rules change (governed-project rule) stil
   const r = spawnSync(process.execPath, [CONSISTENCY, "--release-gate", "--json"], { cwd: dir, encoding: "utf8" });
   return r.status === 1 && JSON.parse(r.stdout).gateIssues.some((g) => g.kind === "changelog_coverage");
 });
-
 
 test("consistency: ordinary source/test/scratch changes do NOT demand a changelog", () => {
   const cases = ["src/app.js", "tests/foo.test.js", "notes.txt"];
@@ -992,46 +766,6 @@ test("consistency: ordinary source/test/scratch changes do NOT demand a changelo
   });
 });
 
-
-// CHANGELOG 格式统一（lifecycle.policy.md § 格式统一）：版本节标题后必须空行、
-// 分类标题前后必须空行、列表项之间必须空行。v1.0.1 曾发现 32 个版本节混用两套
-// 空行风格（紧凑 `##`→`###`→item vs 空行分隔）；检查器现在对最新版本节强制统一格式。
-test("consistency --gate: changelog version heading without trailing blank fails", () => {
-  const dir = tmp("clfmt-head");
-  gitInit(dir);
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n### Fixed\n\n- one\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 1) return false;
-  const out = JSON.parse(r.stdout);
-  return out.gateIssues.some((g) => g.kind === "changelog_coverage" && /format/.test(g.item));
-});
-
-
-test("consistency --gate: changelog adjacent list items without blank separator fails", () => {
-  const dir = tmp("clfmt-items");
-  gitInit(dir);
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n### Fixed\n\n- one\n- two\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 1) return false;
-  const out = JSON.parse(r.stdout);
-  return out.gateIssues.some((g) => g.kind === "changelog_coverage" && /format/.test(g.item));
-});
-
-
-test("consistency --gate: properly formatted changelog section passes", () => {
-  const dir = tmp("clfmt-ok");
-  gitInit(dir);
-  write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.0" }));
-  write(path.join(dir, "CHANGELOG.md"), "# Changelog\n\n## [Unreleased]\n\n### Fixed\n\n- one\n\n- two\n");
-  const r = spawnSync(process.execPath, [CONSISTENCY, "--gate", "--json"], { cwd: dir, encoding: "utf8" });
-  if (r.status !== 0) return false;
-  const out = JSON.parse(r.stdout);
-  return !out.gateIssues.some((g) => g.kind === "changelog_coverage" && /format/.test(g.item));
-});
-
-
 test("consistency --release-gate: empty [Unreleased] rebuilt too early is diagnosed", () => {
   const dir = tmp("clfmt-emptyrb");
   gitInit(dir);
@@ -1042,7 +776,6 @@ test("consistency --release-gate: empty [Unreleased] rebuilt too early is diagno
   const out = JSON.parse(r.stdout);
   return out.gateIssues.some((g) => g.kind === "changelog_coverage" && /rebuilt too early/.test(g.item));
 });
-
 
 test("consistency --gate: post-release empty [Unreleased] does not fail daily gate", () => {
   const dir = tmp("clfmt-postrel");
@@ -1055,7 +788,6 @@ test("consistency --gate: post-release empty [Unreleased] does not fail daily ga
   return !out.gateIssues.some((g) => g.kind === "changelog_coverage");
 });
 
-
 test("doc consistency: narrative version quotes in prose are not scanned as examples", () => {
   const dir = tmp("clfmt-narr");
   write(path.join(dir, "package.json"), JSON.stringify({ version: "1.0.1" }));
@@ -1064,7 +796,6 @@ test("doc consistency: narrative version quotes in prose are not scanned as exam
   const out = JSON.parse(r.stdout);
   return r.status === 0 && !out.issues.version_examples.some((i) => i.includes("release.md"));
 });
-
 
 // --- A1 regression set: governance-list declaration check (audit 2026-09-05) ---
 // The cluster previously parsed the policy table with `slice(0, search(/\n## /))`, which

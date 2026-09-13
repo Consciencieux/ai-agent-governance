@@ -16,7 +16,11 @@ All notable changes to this project will be documented here.
 
 - **PLAN-0055 Stage 1R + Stage 3 (minimum-necessary doctrine)** — Replaced citation-graph “keep” with short lists (`must_ship` ∪ `product_cli` ∪ `repo_gate`); everything else is `debt` by default. Deleted Gen1 ceremony scripts `repo-tools/mutation-probe.js` and `repo-tools/check-changelog-narration.js` (cleared package.json / tests / docs). Inventory gains `necessity` + `summary.short_lists`. Next: remaining `debt` teardown + Stage 4 test prune.
 
+- **PLAN-0055 Stage 4 (unified adjudicate)** — Fact-source test prune (~−37 cases; consent/package.json/secrets catalogs folded). Script Health: `check-doc-consistency` prefers `docs/product/` for prompt_sync + mdFiles, drops embedded parity spawn (`parity: "delegated"`); `check-layout-sync` prefers `docs/product/{lang}/architecture.md` and fixes basename extraction; architecture trees completed. Disposition v2 + Script Health ledger in PLAN-0055. consistency EXTRACT still queued (Stage 3).
+
 ### Fixed
+
+- **Vacuous Gen1 doc gates (PLAN-0055 Stage 4)** — layout-sync and consistency prompt_sync no longer no-op on this repo after the `docs/product/` migration; parity is no longer double-run inside consistency.
 
 - **Payload REPO-ONLY path leaks** — `SKILL.md` no longer links ADR-0024 or the coverage index via `docs/design-decisions/…` / `repo-tools/…` (absent from the install tarball). Skill executor uses the in-payload capability table + `references/capabilities/`; ADR cited by ID. Regression: `payload` suite source-closure test.
 
