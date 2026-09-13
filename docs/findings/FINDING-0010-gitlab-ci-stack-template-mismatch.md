@@ -1,6 +1,6 @@
 ---
 id: FINDING-0010
-status: Confirmed
+status: Resolved
 type: defect
 observed_in: gen1
 ---
@@ -47,7 +47,9 @@ v0.15.0 只修了「generator 选对段」（`gitlab-<stack>` 匹配），没修
 
 ## 解决情况
 
-（待填。）
+- `references/workflows/ci.md` 中 GitLab CI 的 python / go / java / cpp / docs-only 段已改为栈原生命令；governance job 统一用 `node:20` 跑校验器（与 rust 段一致）。
+- 表征回归：`tests/suites/security.test.js` — `ci templates: non-node GitLab stacks do not emit npm/npx in stack jobs (FINDING-0010)`。
+- 关闭日：2026-09-13。
 
 ## 关联
 

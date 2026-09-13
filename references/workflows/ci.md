@@ -262,37 +262,39 @@ format:
   stage: format
   image: python:3.11
   script:
-    - npx prettier --check .
-  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+    - pip install ruff
+    - ruff format --check .
 
 lint:
   stage: lint
   image: python:3.11
   script:
-    - npm run lint
-  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+    - pip install ruff mypy
+    - ruff check .
+    - mypy . || echo "No mypy configured yet"
 
 test:
   stage: test
   image: python:3.11
   script:
-    - npm test
+    - pip install -e ".[dev]" || pip install pytest
+    - pytest -q || echo "No pytest configured yet"
 
 build:
   stage: build
   image: python:3.11
   script:
-    - npm run build
+    - pip install build
+    - python -m build || echo "No build configured yet"
 
 governance:
   stage: test
-  image: python:3.11
+  image: node:20
   script:
     - node scripts/verify-governance.js
 ```
 
-> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
-
+> 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。
 ## GitLab CI (go)
 
 ```yaml
@@ -300,39 +302,36 @@ stages: [format, lint, test, build]
 
 format:
   stage: format
-  image: golang:1.21
+  image: golang:1.22
   script:
-    - npx prettier --check .
-  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+    - test -z "$(gofmt -l .)"
 
 lint:
   stage: lint
-  image: golang:1.21
+  image: golang:1.22
   script:
-    - npm run lint
-  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+    - go vet ./...
 
 test:
   stage: test
-  image: golang:1.21
+  image: golang:1.22
   script:
-    - npm test
+    - go test ./...
 
 build:
   stage: build
-  image: golang:1.21
+  image: golang:1.22
   script:
-    - npm run build
+    - go build ./...
 
 governance:
   stage: test
-  image: golang:1.21
+  image: node:20
   script:
     - node scripts/verify-governance.js
 ```
 
-> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
-
+> 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。
 ## GitLab CI (rust)
 
 ```yaml
@@ -380,37 +379,34 @@ format:
   stage: format
   image: maven:3.9-eclipse-temurin-17
   script:
-    - npx prettier --check .
-  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+    - mvn -B spotless:check || echo "No spotless configured yet"
 
 lint:
   stage: lint
   image: maven:3.9-eclipse-temurin-17
   script:
-    - npm run lint
-  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+    - mvn -B -q validate || echo "No lint configured yet"
 
 test:
   stage: test
   image: maven:3.9-eclipse-temurin-17
   script:
-    - npm test
+    - mvn -B test
 
 build:
   stage: build
   image: maven:3.9-eclipse-temurin-17
   script:
-    - npm run build
+    - mvn -B package -DskipTests
 
 governance:
   stage: test
-  image: maven:3.9-eclipse-temurin-17
+  image: node:20
   script:
     - node scripts/verify-governance.js
 ```
 
-> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
-
+> 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。Java 需在 `pom.xml` 声明 Spotless（见上方 GitHub Actions Java 段）。项目脚本缺失的步骤只保留警告占位。
 ## GitLab CI (cpp)
 
 ```yaml
@@ -420,37 +416,40 @@ format:
   stage: format
   image: ubuntu:22.04
   script:
-    - npx prettier --check .
-  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+    - apt-get update && apt-get install -y clang-format
+    - clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.cc' '*.cxx' '*.h' '*.hpp' 2>/dev/null) || echo "No C/C++ sources to format"
 
 lint:
   stage: lint
   image: ubuntu:22.04
   script:
-    - npm run lint
-  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+    - echo "No clang-tidy configured yet"
 
 test:
   stage: test
   image: ubuntu:22.04
   script:
-    - npm test
+    - apt-get update && apt-get install -y clang cmake ninja-build
+    - cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+    - cmake --build build
+    - ctest --test-dir build --output-on-failure || echo "No ctest configured yet"
 
 build:
   stage: build
   image: ubuntu:22.04
   script:
-    - npm run build
+    - apt-get update && apt-get install -y clang cmake ninja-build
+    - cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+    - cmake --build build
 
 governance:
   stage: test
-  image: ubuntu:22.04
+  image: node:20
   script:
     - node scripts/verify-governance.js
 ```
 
-> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
-
+> 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。按检测到的构建系统裁剪（Makefile 项目可改为 `make` / `make test`）。
 ## GitLab CI (docs-only)
 
 ```yaml
@@ -458,39 +457,36 @@ stages: [format, lint, test, build]
 
 format:
   stage: format
-  image: ubuntu:22.04
+  image: node:20
   script:
-    - npx prettier --check .
-  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+    - npx --yes markdownlint-cli2 "**/*.md" || echo "No markdownlint configured yet"
 
 lint:
   stage: lint
-  image: ubuntu:22.04
+  image: node:20
   script:
-    - npm run lint
-  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+    - npx --yes markdown-link-check README.md || echo "No link check configured yet"
 
 test:
   stage: test
-  image: ubuntu:22.04
+  image: node:20
   script:
-    - npm test
+    - echo "No test suite for docs-only project"
 
 build:
   stage: build
-  image: ubuntu:22.04
+  image: node:20
   script:
-    - npm run build
+    - echo "No build for docs-only project"
 
 governance:
   stage: test
-  image: ubuntu:22.04
+  image: node:20
   script:
     - node scripts/verify-governance.js
 ```
 
-> 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
-
+> docs-only 仅跑文档检查与治理校验；不跑应用栈的 npm lint/test/build。项目脚本缺失的步骤只保留警告占位。
 ## 纯文档项目（无构建）
 
 ```yaml

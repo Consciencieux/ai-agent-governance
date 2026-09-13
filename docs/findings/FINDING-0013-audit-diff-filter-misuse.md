@@ -1,6 +1,6 @@
 ---
 id: FINDING-0013
-status: Confirmed
+status: Resolved
 type: defect
 observed_in: gen1
 ---
@@ -47,7 +47,10 @@ git diff --name-only --diff-filter=A 5273488..e9a1984 | Select-String 'plans/'
 
 ## 解决情况
 
-（待填：确认不再复现即可标记 Resolved。）
+- 计数核验已确认 v0.5.1「6 feature plan docs」正确；假性冲突来自方法误用，非 CHANGELOG 漏列。
+- 方法论纪律写入本 Finding 关闭记录与下方回归保护：凡「新增/归属」类审计必须显式 `--diff-filter=A`（或书面声明包含 M/R）。
+- 无独立机械 gate（属审计方法，非产品运行时）；复发靠本条 + 审计检查清单。
+- 关闭日：2026-09-13（已习得 / learned）。
 
 ## 关联
 

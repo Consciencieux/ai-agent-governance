@@ -57,7 +57,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 
 | 路徑 | 職責 | 讀者 | 語言 |
 | --- | --- | --- | --- |
-| `SKILL.md` | Skill 入口 / 產品規範 | agent（skill 使用者） | 單語 |
+| `SKILL.md` | 薄 always-on 入口（身分 · 模式 · 不變量 · 能力路由）。完整政策/工作流正文在 `references/`；must-ship 可呼叫葉卡在 `references/capabilities/`（PLAN-0046）。不是百科。 | agent（skill 使用者） | 單語 |
 | `references/` | **Skill 主體——skill 行為唯一存放處。** INSTALLED 與 SKILL-INTERNAL 混裝（見角色表）。 | agent（skill 使用者） | 單語 |
 | `scripts/` | Skill 執行時腳本。同樣混裝：16 個是 INSTALLED（複製進被治理專案），其餘是只在本倉庫執行的 SKILL-INTERNAL 工具。 | agent/CI | 程式碼 |
 | `LICENSE` | MIT 授權條款——隨 tarball 分發 | 安裝者 | — |
@@ -68,7 +68,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 
 ```
 ai-agent-governance/
-├── SKILL.md                    # skill 入口 / 產品規格
+├── SKILL.md                    # 薄 always-on 入口 + 能力路由（非政策百科）
 ├── references/                 # skill 本體——skill 行為唯一所在地
 │   ├── init-spec.json          # 機器可讀 INIT 規範（generate-governance.js 的單一事實源）
 │   ├── templates/

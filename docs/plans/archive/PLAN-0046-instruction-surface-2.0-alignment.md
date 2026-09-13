@@ -1,13 +1,13 @@
 ---
 id: PLAN-0046
-status: Active
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0046：指令面 2.0 对齐（薄入口 + 可调用能力叶）
 
-**状态：** Active（人类开工 2026-09-13）。
+**状态：** Archived（2026-09-13 exit review）。Stage 3/4 完成；Y0–Y6 全关。Plan archive ≠ Release。
 
 **归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) **H2-front**（决策 14：薄入口 + must-ship 叶卡，排在 H2a 之前）。**不是** H2d（安装面 router / Narrow ADR 进 INSTALLED）。不吞并 H2-0 台账校准、也不吞并 H2a/H2b/H2c。
 
@@ -76,14 +76,14 @@ H2a 残留叶 CTRL 重排 / H2b consistency 大拆 / H2c CONTROL-X 机读化
 - [x] `SKILL.md` / `AGENTS.md` 增加显式 Capability 路由表
 - [x] 删减入口百科正文（策略/执行层 → always-on 不变量 + 指针；路由表对齐 inventory 叶名）
 - [x] 与 `references/principles/entry.md` 指针一致复核
-- [ ] 三语产品文档现在时指针（若声称入口职责）— 延后小批；不阻塞 Stage 4
+- [x] 三语产品文档现在时指针（architecture ×3：SKILL = 薄 always-on 入口 + 能力路由）
 
-### Stage 4 — 验证 — **IN PROGRESS**
+### Stage 4 — 验证 — **DONE**
 
 - [x] 表征测试 `instruction-surface`（schema + must-ship 覆盖 + inventory 闭合）
 - [x] 干净目标：打包 → INIT → 叶引用可解析（Y5；`instruction-surface` 第 6 例）
-- [ ] Discovery Ledger Open=0（或 defer+revisit 显式）— 余 Y6 产品文档现在时
-- [ ] exit review → Implemented → Archived（Plan archive ≠ Release）
+- [x] Discovery Ledger Open=0（Y6 关闭）
+- [x] exit review → Implemented → Archived（Plan archive ≠ Release；2026-09-13）
 
 ## 完成条件（outcome）
 
@@ -103,12 +103,12 @@ H2a 残留叶 CTRL 重排 / H2b consistency 大拆 / H2c CONTROL-X 机读化
 | Y3 | constraint | 不得把 0006 当施工合同重开 | closed | resolved（Out） |
 | Y4 | observation | SKILL 仍含执行层百科；路由表已加但正文未删净 | closed | resolved（执行层改为编排骨架） |
 | Y5 | verification | 干净目标 INIT 叶闭包证据 | closed | resolved（pack → INIT → `docs/rules/capabilities/` schema+portability） |
-| Y6 | observation | 三语产品文档入口职责现在时指针 | open | defer；Stage 4 收口前 revisit |
+| Y6 | observation | 三语产品文档入口职责现在时指针 | closed | resolved（architecture ×3 现在时） |
 
 ```text
 Total known:  7
-Resolved:     6  (Y0–Y5)
-Open:         1  (Y6)
+Resolved:     7  (Y0–Y6)
+Open:         0
 Unaccounted:  0
 ```
 
@@ -130,3 +130,5 @@ Unaccounted:  0
 - FINDING-0015 · FINDING-0024 · FINDING-0026
 - RESEARCH-0006（基线输入）· RESEARCH-0009
 - PLAN-0034 E1 · PLAN-0037 Archived（`references/principles/`）· PLAN-0038/0039/0040（路由已 EXITED）
+
+**闭包记录（2026-09-13）**：Stage 3 入口瘦身 + Stage 4 Y5 干净目标 + Y6 三语 architecture 现在时完成。Discovery Ledger Open=0。exit review 通过 → **Archived**。未开 H2a；未装本仓 router 为 INSTALLED；未改 ADR-0024 处置列。

@@ -17,7 +17,7 @@ description: >-
 
 > **可复用原则包（PLAN-0037 / ADR-0020）：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树、CTRL 编号或 Phase/PLAN 剧本当 portable L1。
 
-> **能力叶路由（PLAN-0046 Active）：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。覆盖索引（非处置权威）：`repo-tools/instruction-surface-leaves.v0.json`。处置仍只认 [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) §4。
+> **能力叶路由（PLAN-0046 Archived）：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。覆盖索引（非处置权威）：`repo-tools/instruction-surface-leaves.v0.json`。处置仍只认 [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) §4。
 
 ### 能力叶快速路由（Capability leaves）
 

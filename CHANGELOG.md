@@ -6,7 +6,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **PLAN-0046 Stage 3/4 progress (H2-front)** — `SKILL.md` policy/execution encyclopedia thinned to always-on invariants + pointers; capability routing table aligned to inventory leaf names. Clean-target INIT leaf closure characterized (`instruction-surface` Y5: package → INIT → `docs/rules/capabilities/` schema + portability). Coverage map remains `repo-tools/instruction-surface-leaves.v0.json` (not a disposition ledger). Open: trilingual product-doc now-tense pointers (Y6).
+- **PLAN-0046 Archived (H2-front)** — Stage 3 SKILL thinning + Stage 4 Y5 clean-target INIT leaf closure + Y6 trilingual `architecture.md` now-tense (SKILL = thin always-on entry + capability routing). Discovery Ledger Open=0. Plan moved to `docs/plans/archive/`. Next H2 step = H2a (ADR-0025 decision 14). Coverage map remains `repo-tools/instruction-surface-leaves.v0.json` (not a disposition ledger).
 
 - **ADR-0025 H2 execution order** — H2-0 ledger now-tense calibration → PLAN-0046 (H2-front) → H2a–d. Roadmap indexes the order; authority stays in the ADR. PLAN-0046 re-homed to H2-front (not H2d). RESEARCH-0004/0005/0006/0009 now-tense only.
 
@@ -17,6 +17,10 @@ All notable changes to this project will be documented here.
 - **PLAN-0037 Stage C/D complete (H1)** — portable principles pack at `references/principles/` (SKILL-INTERNAL; INIT does not install). Clean-target characterization `principles-extraction` 4/4. Plan Archived; X2 closed. Does not rewrite INSTALLED rule surface or publish a parallel skill package.
 
 ### Fixed
+
+- **FINDING-0010** — GitLab multi-stack CI templates (python/go/java/cpp/docs-only) no longer emit npm/npx in stack jobs; governance job uses `node:20`. Regression: `security` suite non-node GitLab stack check.
+
+- **FINDING-0013** — audit methodology closed as learned: added/ownership counts must use `--diff-filter=A` (or explicitly include M/R).
 
 - **Git consent summary completeness (`SKILL.md`)** — the always-on summary again carries the mid-sequence failure and push-rejected stop-and-report constraints and states plan approval as intent alignment; `AGENTS.md` release-coverage wording aligned with the INSTALLED template. Authority unchanged: `references/policies/git.policy.md` is the sole semantic authority.
 

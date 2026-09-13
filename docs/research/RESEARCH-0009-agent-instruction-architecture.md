@@ -20,7 +20,7 @@ version: 5
 
 ## Generation-1 的 `references/` 实际混了什么
 
-当前物理树（2026-09-13）比 v4 多了两棵 SKILL-INTERNAL / INSTALLED 子树；**入口薄化由 PLAN-0046 Active 推进中**：
+当前物理树（2026-09-13）比 v4 多了两棵 SKILL-INTERNAL / INSTALLED 子树；**入口薄化由 PLAN-0046 Archived 推进中**：
 
 ```text
 references/
@@ -32,7 +32,7 @@ references/
 └── init-spec.json   # 物化契约（materialization contract）
 ```
 
-> **现在时：** 本仓 Task→Capability 路由（PLAN-0038/0039/0040）**EXITED**，且是 **REPO-ONLY**。INSTALLED 入口（`SKILL.md`）已按 PLAN-0046 Stage 3 收为 always-on 不变量 + 路由表；must-ship 叶卡与干净目标 INIT 闭包（Y5）已表征。余三语产品文档现在时指针（Y6）。叶卡 schema + 薄入口 = [PLAN-0046](../plans/PLAN-0046-instruction-surface-2.0-alignment.md)（H2-front，**Active**）。目录重排仍不由本 RESEARCH 授权。
+> **现在时：** 本仓 Task→Capability 路由（PLAN-0038/0039/0040）**EXITED**，且是 **REPO-ONLY**。INSTALLED 入口（`SKILL.md`）已按 PLAN-0046 Stage 3 收为 always-on 不变量 + 路由表；must-ship 叶卡与干净目标 INIT 闭包（Y5）已表征。余三语产品文档现在时指针（Y6）。叶卡 schema + 薄入口 = [PLAN-0046](../plans/archive/PLAN-0046-instruction-surface-2.0-alignment.md)（H2-front，**Archived**）。目录重排仍不由本 RESEARCH 授权。
 
 按**实际作用**分，至少是六类完全不同的东西：
 

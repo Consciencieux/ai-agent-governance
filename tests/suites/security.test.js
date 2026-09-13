@@ -450,6 +450,35 @@ test("ci templates: every platform+stack template runs the governance validator"
   return checked === combos.length;
 });
 
+// FINDING-0010: non-Node GitLab stack templates must not emit npm/npx in format/lint/test/build.
+test("ci templates: non-node GitLab stacks do not emit npm/npx in stack jobs (FINDING-0010)", () => {
+  const stacks = ["python", "go", "java", "cpp", "rust"];
+  for (const stack of stacks) {
+    const d = tmp("ci-gl-nonode-" + stack);
+    const r = spawnSync(
+      process.execPath,
+      [GENERATOR, "--target", d, "--project-name", "GlStack", "--phase", "C", "--stack", stack, "--ci-platform", "gitlab"],
+      { encoding: "utf8" }
+    );
+    if (r.status !== 0) {
+      console.error("  generation failed for gitlab+" + stack);
+      return false;
+    }
+    const wf = path.join(d, ".gitlab-ci.yml");
+    if (!fs.existsSync(wf)) {
+      console.error("  missing .gitlab-ci.yml for " + stack);
+      return false;
+    }
+    const body = fs.readFileSync(wf, "utf8");
+    const stackJobs = body.split(/governance\s*:/i)[0] || body;
+    if (/\bnpm\b|\bnpx\b/.test(stackJobs)) {
+      console.error("  gitlab+" + stack + " stack jobs still contain npm/npx");
+      return false;
+    }
+  }
+  return true;
+});
+
 test("check-secrets: github_pat_ form hits github-token pattern", () => {
   const dir = tmp("secrets-pat2");
   gitInit(dir);

@@ -84,7 +84,7 @@ Three rules follow:
 
 | Path | Role | Reader | Language |
 | --- | --- | --- | --- |
-| `SKILL.md` | Skill entry point / product spec | agents (skill users) | single |
+| `SKILL.md` | Thin always-on entry (identity · modes · invariants · capability routing). Full policy/workflow bodies live under `references/`; must-ship callable cards under `references/capabilities/` (PLAN-0046). Not an encyclopedia. | agents (skill users) | single |
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
 | `scripts/` | Skill runtime scripts. Mixed too: 16 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
@@ -95,7 +95,7 @@ Three rules follow:
 
 ```
 ai-agent-governance/
-├── SKILL.md                    # skill entry point / product spec
+├── SKILL.md                    # thin always-on entry + capability routing (not policy encyclopedia)
 ├── references/                 # skill body — the only place skill behavior lives
 │   ├── init-spec.json          # machine-readable INIT spec (source for generate-governance.js)
 │   ├── templates/
