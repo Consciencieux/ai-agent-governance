@@ -154,7 +154,7 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 
 ### MIGRATE
 
-仅当用户明确要求升级时：列清单（校验器缺失项 + CHANGELOG）→ 用户确认 → 补齐工件并更新 `governance_version` → `verify_governance.js` 退出 0。失败保持原版本，禁止半迁移。
+仅当用户明确要求升级时：先跑可发现入口 `node scripts/migrate-governance.js`（对比 `.governance/manifest.json` 的 `governance_version` 与期望版本；exit 0 已对齐 / 2 建议升级 / 1 错误；**不**自动改树）→ 列清单（校验器缺失项 + CHANGELOG）→ 用户确认 → 补齐工件并更新 `governance_version` → `verify_governance.js` 退出 0。失败保持原版本，禁止半迁移。
 
 ### RELEASE
 

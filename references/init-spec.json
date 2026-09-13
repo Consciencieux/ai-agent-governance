@@ -609,6 +609,27 @@
     },
     {
       "phase": "B",
+      "path": "scripts/check-sibling-closure.js",
+      "source": "scripts/check-sibling-closure.js",
+      "type": "copy",
+      "description": "Sibling-instance closure mechanical carrier (FINDING-0003; deny when declared instances missing)"
+    },
+    {
+      "phase": "B",
+      "path": "scripts/migrate-governance.js",
+      "source": "scripts/migrate-governance.js",
+      "type": "copy",
+      "description": "Discoverable MIGRATE entry (version compare + checklist; does not auto-mutate)"
+    },
+    {
+      "phase": "B",
+      "path": ".governance/sibling-closure/SC-EXAMPLE.json",
+      "source": "references/contracts/sibling-closure.example.json",
+      "type": "copy",
+      "description": "Example sibling-closure contract (edit instances for the project)"
+    },
+    {
+      "phase": "B",
       "path": "scripts/check-git-policy.js",
       "source": "scripts/check-git-policy.js",
       "type": "copy",

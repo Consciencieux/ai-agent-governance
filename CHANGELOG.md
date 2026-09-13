@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0050 H2d Stage 1 done; Stage 2 underway** — Sibling-closure mechanical carrier (`check-sibling-closure.js` + contracts; negative missing-instance fixture); discoverable MIGRATE entry (`migrate-governance.js` + SKILL pointer). FINDING-0003 remains Confirmed (remaining judgment classes). INSTALLED router still requires Narrow ADR; hooks/L3 not mandatory.
+
 - **PLAN-0050 H2d Active (Stage 1 underway)** — Archived PLAN-0049 (H2c). CTRL-0002 git-write-consent evaluator + `check-git-consent.js`; `check-lock.js` atomic `--acquire/--release` via `agent.lock` (FINDING-0012 Resolved); `enforcement-semantics.md` portable four-value vocabulary (FINDING-0003 slice). INSTALLED router still requires Narrow ADR; hooks/L3 not mandatory.
 
 - **PLAN-0049 H2c Archived; PLAN-0050 H2d Active** — H2c exit review closed (machine Controls, CONTROL-X, template responsibility). H2d starts: judgment MUST carriers, Git consent evaluator, lock atomicity, MIGRATE entry, portability boundary; INSTALLED router only via Narrow ADR. Opt-in githooks/L3 remain non-mandatory.

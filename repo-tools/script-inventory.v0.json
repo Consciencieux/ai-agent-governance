@@ -739,6 +739,38 @@
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
       "notes": "PLAN-0050 H2d consent evaluator"
+    },
+    {
+      "path": "scripts/check-sibling-closure.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "sibling-closure",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0050 H2d FINDING-0003 mechanical carrier"
+    },
+    {
+      "path": "scripts/migrate-governance.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "migrate",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0050 H2d discoverable MIGRATE entry"
     }
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "SC-EXAMPLE",
+  "marking": "mechanical",
+  "enforcement": "deny",
+  "rule_ref": "references/policies/lifecycle.policy.md#根因修复协议与失败预算",
+  "judgment_origin": "sibling-instance closure",
+  "description": "Example contract for governed projects. Copy into .governance/sibling-closure/ and list paths that must co-exist.",
+  "instances": [
+    { "path": "scripts/check-lock.js", "role": "example" }
+  ]
+}

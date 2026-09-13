@@ -10,6 +10,8 @@ const { spawnSync } = require("child_process");
 const ROOT = path.join(__dirname, "..", "..");
 const CONSENT = path.join(ROOT, "scripts", "check-git-consent.js");
 const LOCK = path.join(ROOT, "scripts", "check-lock.js");
+const SIBLING = path.join(ROOT, "scripts", "check-sibling-closure.js");
+const MIGRATE = path.join(ROOT, "scripts", "migrate-governance.js");
 const {
   evaluateGitWriteConsent,
 } = require(path.join(ROOT, "scripts", "evaluators", "ctrl-0002-git-write-consent.js"));
@@ -95,5 +97,91 @@ module.exports = function register(test) {
     });
     const check = spawnSync(process.execPath, [LOCK], { cwd: dir, encoding: "utf8" });
     return bad.status === 1 && ok.status === 0 && check.status === 0;
+  });
+
+  test("sibling-closure: SC-CTRL-0002 allow when instances present", () => {
+    const r = spawnSync(
+      process.execPath,
+      [SIBLING, "--json", "--dir", path.join(ROOT, "repo-tools", "contracts")],
+      { cwd: ROOT, encoding: "utf8" }
+    );
+    if (r.status !== 0) {
+      console.error(r.stdout || r.stderr);
+      return false;
+    }
+    const body = JSON.parse(r.stdout);
+    return body.decision === "allow" && body.results.some((x) => x.id === "SC-CTRL-0002");
+  });
+
+  test("sibling-closure: missing instance is deny (negative fixture)", () => {
+    const dir = tmp("sib-neg");
+    const cdir = path.join(dir, "contracts");
+    fs.mkdirSync(cdir, { recursive: true });
+    fs.writeFileSync(
+      path.join(cdir, "SC-NEG.json"),
+      JSON.stringify({
+        id: "SC-NEG",
+        marking: "mechanical",
+        enforcement: "deny",
+        instances: [
+          { path: "present.js" },
+          { path: "missing-sibling.js" },
+        ],
+      })
+    );
+    fs.writeFileSync(path.join(dir, "present.js"), "ok\n");
+    const r = spawnSync(
+      process.execPath,
+      [SIBLING, "--json", "--dir", cdir],
+      { cwd: dir, encoding: "utf8" }
+    );
+    if (r.status === 0) {
+      console.error("expected deny");
+      return false;
+    }
+    const body = JSON.parse(r.stdout);
+    return (
+      body.decision === "deny" &&
+      body.results[0].missing.some((m) => m.path === "missing-sibling.js")
+    );
+  });
+
+  test("migrate-governance: upgrade advised when behind", () => {
+    const dir = tmp("mig");
+    fs.mkdirSync(path.join(dir, ".governance"), { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, ".governance", "manifest.json"),
+      JSON.stringify({ governance_version: "1.0.0" })
+    );
+    fs.writeFileSync(path.join(dir, "package.json"), JSON.stringify({ version: "2.0.0" }));
+    const r = spawnSync(process.execPath, [MIGRATE, "--json"], {
+      cwd: dir,
+      encoding: "utf8",
+    });
+    if (r.status !== 2) {
+      console.error(r.stdout || r.stderr);
+      return false;
+    }
+    const body = JSON.parse(r.stdout);
+    return body.status === "upgrade_advised" && body.current === "1.0.0" && body.expect === "2.0.0";
+  });
+
+  test("migrate-governance: current when versions match", () => {
+    const dir = tmp("mig-ok");
+    fs.mkdirSync(path.join(dir, ".governance"), { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, ".governance", "manifest.json"),
+      JSON.stringify({ governance_version: "2.0.0" })
+    );
+    const r = spawnSync(process.execPath, [MIGRATE, "--json", "--expect", "2.0.0"], {
+      cwd: dir,
+      encoding: "utf8",
+    });
+    if (r.status !== 0) {
+      console.error(r.stdout || r.stderr);
+      return false;
+    }
+    const body = JSON.parse(r.stdout);
+    return body.status === "current";
   });
 };

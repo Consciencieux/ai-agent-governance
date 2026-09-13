@@ -1,0 +1,14 @@
+{
+  "id": "SC-CTRL-0002",
+  "marking": "mechanical",
+  "enforcement": "deny",
+  "rule_ref": "references/policies/lifecycle.policy.md#根因修复协议与失败预算",
+  "judgment_origin": "sibling-instance closure (FINDING-0003)",
+  "description": "CTRL-0002 consent surface siblings must remain co-present after EXTRACT/WRAP changes.",
+  "instances": [
+    { "path": "scripts/check-git-consent.js", "role": "cli" },
+    { "path": "scripts/evaluators/ctrl-0002-git-write-consent.js", "role": "evaluator" },
+    { "path": "repo-tools/controls/CTRL-0002.json", "role": "control-projection" },
+    { "path": "references/capabilities/git-write-consent.md", "role": "capability-leaf" }
+  ]
+}

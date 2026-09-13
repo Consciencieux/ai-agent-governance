@@ -59,7 +59,7 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 | --- | --- | --- | --- |
 | `SKILL.md` | 薄 always-on 入口（身份 · 模式 · 不变量 · 能力路由）。完整政策/工作流正文在 `references/`；must-ship 可调用叶卡在 `references/capabilities/`（PLAN-0046）。不是百科。 | agent（skill 使用者） | 单语 |
 | `references/` | **Skill 主体——skill 行为唯一存放处。** INSTALLED 与 SKILL-INTERNAL 混装（见角色表）。 | agent（skill 使用者） | 单语 |
-| `scripts/` | Skill 运行时脚本。同样混装：16 个是 INSTALLED（复制进被治理项目），其余是只在本仓库运行的 SKILL-INTERNAL 工具。 | agent/CI | 代码 |
+| `scripts/` | Skill 运行时脚本。INSTALLED 与 SKILL-INTERNAL 混装（当前数量见 `check-role-completeness.js --gate`）。INSTALLED 脚本复制进被治理项目。 | agent/CI | 代码 |
 | `LICENSE` | MIT 许可证——随 tarball 分发 | 安装者 | — |
 | `docs/` | **项目知识。REPO-ONLY。** 开发者维护，供开发者与在本仓库工作的 Agent 读取：如何使用 skill（`commands.md` 触发词）、设计计划（`plans/`）、findings 档案（`findings/`）、研究知识库（`research/`）、路线图、术语表。 | 开发者 + Agent | 按知识类型：Product/Roadmap 三语；Plan/Finding/Research/ADR 简中 canonical |
 | `tests/`、`package.json`、`.github/`、`CHANGELOG.md`、`README*.md`、`CONTRIBUTING*.md`、`AGENTS.md`、`.gitattributes` | REPO-ONLY 基础设施：CI、发布流程、变更日志、贡献指南 | 仓库维护者 | 按文件 |
@@ -89,6 +89,8 @@ ai-agent-governance/
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
 │   │   ├── capability-model.md / decision-records.md / migration-method.md
+│   ├── contracts/                  # 可移植合同示例（INIT 可复制进 .governance/）
+│   │   └── sibling-closure.example.json
 │   └── workflows/
 │       ├── ci.md               # CI 模板（能力检测 + 降级）
 │       └── release.md          # 发布前置检查 + 版本一致性（被治理项目）
@@ -96,6 +98,8 @@ ai-agent-governance/
 │   ├── verify_governance.js    # 校验引擎（manifest 驱动路径 + governance_version）
 │   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
 │   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
+│   ├── check-sibling-closure.js # sibling-instance 闭包载体（已声明合同；FINDING-0003）
+│   ├── migrate-governance.js # 可发现 MIGRATE 入口（版本对比 + 清单；不自动改树）
 │   ├── check-git-policy.js     # Git 工作流门禁（受保护分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # skill 侧 CTRL-0001 CLI WRAP（暂存区扫描；绝不打印密钥）
 │   ├── check-sync.js           # 同步组门禁（watch/require 对照，exit 1）
@@ -134,6 +138,7 @@ ai-agent-governance/
 │   ├── check-control-registry.js # H2c 机读 Control 投影（PLAN-0049）
 │   ├── run-control-x.js        # H2c CONTROL-X 双 profile 负向 fixture runner（PLAN-0049）
 │   ├── controls/               # REPO-ONLY Control JSON 投影（schema 权威 = ADR-0023）
+│   ├── contracts/              # REPO-ONLY sibling-closure dogfood 合同（PLAN-0050）
 │   ├── check-template-responsibility.js # FINDING-0026 指令源 vs 模板责任图（PLAN-0049）
 │   ├── template-responsibility.v0.json # check-template-responsibility.js 数据
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）

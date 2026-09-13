@@ -45,11 +45,16 @@ observed_in: gen1
 
 ## 解决情况
 
-**进展（2026-09-13 · PLAN-0050）：** portable `references/principles/enforcement-semantics.md` 落地四值语义与 judgment/mechanical 分层。具体判断型规则的可判定 carrier 仍 Open（本 Finding 保持 Confirmed）。
+**进展（2026-09-13 · PLAN-0050 第二刀）：**
+- **关闭条件 1（切片）：** `scripts/check-sibling-closure.js` + 合同模型（`instances[].path`）+ 本仓 dogfood `repo-tools/contracts/SC-CTRL-0002.sibling.json`；负向：缺 sibling → deny。INIT 安装示例合同到 `.governance/sibling-closure/`。
+- **关闭条件 2：** portable `references/principles/enforcement-semantics.md` 四值语义 + judgment/mechanical 分层。
+- **关闭条件 3（部分）：** `root-cause-repair.md` 同类实例闭包已标 **judgment**；仅对**已声明合同**使用 mechanical deny 措辞，未声明合同不得冒充机械绿灯。其余 7 类 judgment 子句的规范语言分层仍 Open。
+
+本 Finding **保持 Confirmed**（条件 3 未全收；另 7 类 judgment 无 carrier）。不宣称 Resolved。
 
 **必装阻断面已闭合（2026-09-12 · PLAN-0044 Implemented / Phase 8 EXITED / ADR-0024）：** `npm run check:must-ship` + migration CI blocking + skill-release `gates.must_ship` + carriers 将密钥/Git policy/生成器/payload/种子 oracle/路由/八叶与 SKILL 入口纳入 fail-closed 集合（见 RESEARCH-0011 § Must-ship）。对 2.0 而言，本 Finding 的 **blocker 切片**已满足；残留判断型 MUST 记 `later`，不挡 2.0（Proposal 须写明边界）。
 
-**仍开放（非 2.0 blocker）：** 判断型 MUST（sibling closure、machinery test 等）无机械 carrier；enforcement 四值语义未统一；规范语言分层未完成。本 Finding 保持 Confirmed，直至关闭条件 1–3 有可检查载体。不宣称本 Finding Resolved。
+**仍开放（非 2.0 blocker）：** 其余 judgment 类（machinery test、双域对称、control-plane tracing 等）无机械 carrier；规范语言全表分层未完成。
 
 ## 关联
 

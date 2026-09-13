@@ -66,15 +66,16 @@ target: both
 - [x] 人类 Active（「开始H2d」；H2c 已 Archived）
 - [x] 首刀文件落点：`scripts/evaluators/ctrl-0002-git-write-consent.js` · `scripts/check-git-consent.js` · `scripts/check-lock.js` acquire/release · `references/principles/enforcement-semantics.md`
 
-### Stage 1 — Consent + Lock + MUST 载体 — **进行中**
+### Stage 1 — Consent + Lock + MUST 载体 — **完成**
 
-- [x] CTRL-0002 机械 evaluator + Control 投影更新 + 表征（`h2d-portability` 6/6）
+- [x] CTRL-0002 机械 evaluator + Control 投影更新 + 表征（`h2d-portability`）
 - [x] FINDING-0012 锁：`agent.lock` wx acquire/release + 测试
-- [x] FINDING-0003 切片：`enforcement-semantics.md` 四值 + judgment/mechanical 分层（carrier 实例后续刀）
+- [x] FINDING-0003 切片：`enforcement-semantics.md` 四值 + judgment/mechanical 分层
+- [x] FINDING-0003 切片：sibling-closure 合同 + `check-sibling-closure.js` + 负向 fixture（Finding 仍 Confirmed：其余 judgment / 条件 3 全表未收）
 
-### Stage 2 — MIGRATE + GitLab + portability 边界
+### Stage 2 — MIGRATE + GitLab + portability 边界 — **进行中**
 
-- [ ] MIGRATE 独立入口（可发现、可测）
+- [x] MIGRATE 独立入口：`scripts/migrate-governance.js` + SKILL.md 指针 + 表征
 - [ ] FINDING-0010 残留收口
 - [ ] FINDING-0007 最小 adapter 矩阵（可对账）
 
@@ -94,10 +95,11 @@ target: both
 
 ## 完成条件（outcome）
 
-- [ ] CTRL-0002 有机械 evaluator 证据（非仅协议）
-- [ ] 锁行为诚实（原子或显式非原子）可测
-- [ ] 至少一条判断型义务有 carrier；enforcement 词汇可陈述
-- [ ] MIGRATE 入口可发现；0007 边界可对账
+- [x] CTRL-0002 有机械 evaluator 证据（非仅协议）
+- [x] 锁行为诚实（原子或显式非原子）可测
+- [x] 至少一条判断型义务有 carrier；enforcement 词汇可陈述（FINDING-0003 整体仍 Confirmed）
+- [x] MIGRATE 入口可发现
+- [ ] 0007 边界可对账
 - [ ] 0004/0005 要么 Narrow 后进 INSTALLED，要么可验证地未装
 - [ ] 未把 githooks/L3 当作 2.1 必装；must-ship 仍唯一 CI 阻断
 - [ ] 证据真实（tests + 相关 scope gate / `check:must-ship`）
@@ -108,21 +110,21 @@ target: both
 | --- | --- | --- | --- | --- |
 | D0 | constraint | 禁止 hooks/L3 钉成 2.1 必装；禁止升 Gen1 check | open | observe through Stage 4 |
 | D1 | constraint | 无 Narrow ADR 禁止装 INSTALLED router | open | observe |
-| D2 | architecture_gap | FINDING-0003 judgment MUST carrier（切片） | open | enforcement vocab landed; concrete judgment carrier still open |
+| D2 | architecture_gap | FINDING-0003 judgment MUST carrier（切片） | resolved | enforcement vocab + sibling-closure checker/contracts; Finding remains Confirmed for remaining judgment classes |
 | D3 | mechanism_gap | CTRL-0002 Git consent evaluator | resolved | evaluator + CLI + CTRL-0002.json + tests |
 | D4 | defect | FINDING-0012 lock 非原子 | resolved | wx agent.lock acquire/release + tests |
 | D5 | architecture_gap | FINDING-0004 / 0005 INSTALLED 边界 | open | Stage 3 Narrow or REPO-ONLY proof |
 | D6 | portability_gap | FINDING-0007 adapter 矩阵 | open | Stage 2 |
 | D7 | defect | FINDING-0010 GitLab 模板残留 | open | Stage 2 |
-| D8 | product_gap | MIGRATE 独立入口 | open | Stage 2 |
+| D8 | product_gap | MIGRATE 独立入口 | resolved | migrate-governance.js + SKILL MIGRATE pointer + tests |
 | D9 | architecture_gap | FINDING-0014 L0–L4 工具面 | open | Stage 3 |
 | D10 | architecture_gap | FINDING-0016 / 0017 切片 | open | Stage 3 or defer+successor |
 | D11 | constraint | 禁第三份去向表；禁 CTRL 号进 portable | open | observe |
 
 ```text
 Total known:  12
-Resolved:     2
-Open:         10
+Resolved:     4
+Open:         8
 Unaccounted:  0
 ```
 

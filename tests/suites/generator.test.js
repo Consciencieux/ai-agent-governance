@@ -70,7 +70,8 @@ test("generate-governance: manifest lists created artifacts with correct types",
   const validKinds = m.artifacts.every((a) => a.kind === "file" || a.kind === "dir");
   const agentsType = m.artifacts.find((a) => a.path === "AGENTS.md").type;
   // PLAN-0046: must-ship capability leaves expand INSTALLED policy projections under docs/rules/capabilities/.
-  return count("policy") === 43 && count("script") === 7 && count("state") === 6 && validKinds && agentsType === "policy";
+  // PLAN-0050: +check-git-consent / CTRL-0002 evaluator (H2d Stage 1) + sibling-closure / migrate scripts + SC-EXAMPLE state.
+  return count("policy") === 43 && count("script") === 11 && count("state") === 7 && validKinds && agentsType === "policy";
 });
 
 test("generate-governance: gitignore covers sensitive filenames", () => {

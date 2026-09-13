@@ -86,7 +86,7 @@ Three rules follow:
 | --- | --- | --- | --- |
 | `SKILL.md` | Thin always-on entry (identity · modes · invariants · capability routing). Full policy/workflow bodies live under `references/`; must-ship callable cards under `references/capabilities/` (PLAN-0046). Not an encyclopedia. | agents (skill users) | single |
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
-| `scripts/` | Skill runtime scripts. Mixed too: 16 are INSTALLED (copied into governed projects), the rest are SKILL-INTERNAL tools that only ever run here. | agents/CI | code |
+| `scripts/` | Skill runtime scripts. Mixed INSTALLED + SKILL-INTERNAL (current counts: `check-role-completeness.js --gate`). INSTALLED scripts are copied into governed projects. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
 | `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | mixed by knowledge type: product/roadmap trilingual; plans/findings/research/ADR canonical Chinese |
 | `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `README*.md`, `CONTRIBUTING*.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
@@ -116,6 +116,8 @@ ai-agent-governance/
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
 │   │   ├── capability-model.md / decision-records.md / migration-method.md
+│   ├── contracts/                  # Portable contract examples (INIT may copy into .governance/)
+│   │   └── sibling-closure.example.json
 │   └── workflows/
 │       ├── ci.md               # CI templates (capability detection + degradation)
 │       └── release.md          # release preconditions + version consistency (governed projects)
@@ -123,6 +125,8 @@ ai-agent-governance/
 │   ├── verify_governance.js    # validator (manifest-driven paths + governance_version)
 │   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
 │   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
+│   ├── check-sibling-closure.js # sibling-instance closure carrier (declared contracts; FINDING-0003)
+│   ├── migrate-governance.js # discoverable MIGRATE entry (version compare + checklist; no auto-mutate)
 │   ├── check-git-policy.js     # Git workflow gate (protected branch + directPush=false → exit 1)
 │   ├── check-secrets.js        # skill-profile CTRL-0001 CLI WRAP (staged diff; never prints the secret)
 │   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
@@ -161,6 +165,7 @@ ai-agent-governance/
 │   ├── check-control-registry.js # H2c machine-readable Control projections (PLAN-0049)
 │   ├── run-control-x.js        # H2c CONTROL-X dual-profile negative fixture runner (PLAN-0049)
 │   ├── controls/               # REPO-ONLY Control JSON projections (schema authority = ADR-0023)
+│   ├── contracts/              # REPO-ONLY sibling-closure dogfood contracts (PLAN-0050)
 │   ├── check-template-responsibility.js # FINDING-0026 instruction vs template responsibility map (PLAN-0049)
 │   ├── template-responsibility.v0.json # responsibility map data for check-template-responsibility.js
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
