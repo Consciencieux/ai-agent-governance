@@ -1,6 +1,6 @@
 ---
 id: FINDING-0003
-status: Confirmed
+status: Resolved
 type: control-gap
 observed_in: gen1
 ---
@@ -45,21 +45,24 @@ observed_in: gen1
 
 ## 解决情况
 
-**进展（2026-09-13 · PLAN-0050 第二刀）：**
-- **关闭条件 1（切片）：** `scripts/check-sibling-closure.js` + 合同模型（`instances[].path`）+ 本仓 dogfood `repo-tools/contracts/SC-CTRL-0002.sibling.json`；负向：缺 sibling → deny。INIT 安装示例合同到 `.governance/sibling-closure/`。
+**进展（2026-09-13 · PLAN-0053 候选 A）：**
+- **关闭条件 3（余量收口）：** 其余 judgment 类在权威正文显式标 `judgment`，并与已有 `mechanical` 边界区分——① 机制测试（`coding.policy`）② 双域对称 ④ 控制面追查 ⑤ 证据档 ⑥ 失败预算 ⑦ Rule Capture ⑧ 影响面/引用搜索；③ sibling 维持 judgment + declared-contract mechanical。表征：`tests/suites/finding-0003-language.test.js`。
+- **关闭条件 1–2：** 仍以 PLAN-0050 切片为准（sibling 合同 + `enforcement-semantics` 四值）。
+
+**状态：Resolved（2026-09-13）** — 三条关闭条件均已满足。Resolved ≠ 为其余 7 类补齐机械 carrier；无 carrier 的义务继续以 **judgment** 执行，禁止把门禁绿误读成判断已完成。
+
+**历史（2026-09-13 · PLAN-0050 第二刀）：**
+- **关闭条件 1（切片）：** `scripts/check-sibling-closure.js` + 合同模型（`instances[].path`）+ 本仓 dogfood；负向：缺 sibling → deny。
 - **关闭条件 2：** portable `references/principles/enforcement-semantics.md` 四值语义 + judgment/mechanical 分层。
-- **关闭条件 3（部分）：** `root-cause-repair.md` 同类实例闭包已标 **judgment**；仅对**已声明合同**使用 mechanical deny 措辞，未声明合同不得冒充机械绿灯。其余 7 类 judgment 子句的规范语言分层仍 Open。
+- **关闭条件 3（当时部分）：** sibling 闭包已标 judgment；仅对已声明合同使用 mechanical deny。
 
-本 Finding **保持 Confirmed**（条件 3 未全收；另 7 类 judgment 无 carrier）。不宣称 Resolved。
-
-**必装阻断面已闭合（2026-09-12 · PLAN-0044 Implemented / Phase 8 EXITED / ADR-0024）：** `npm run check:must-ship` + migration CI blocking + skill-release `gates.must_ship` + carriers 将密钥/Git policy/生成器/payload/种子 oracle/路由/八叶与 SKILL 入口纳入 fail-closed 集合（见 RESEARCH-0011 § Must-ship）。对 2.0 而言，本 Finding 的 **blocker 切片**已满足；残留判断型 MUST 记 `later`，不挡 2.0（Proposal 须写明边界）。
-
-**仍开放（非 2.0 blocker）：** 其余 judgment 类（machinery test、双域对称、control-plane tracing 等）无机械 carrier；规范语言全表分层未完成。
+**必装阻断面（2026-09-12 · PLAN-0044 / ADR-0024）：** `npm run check:must-ship` 等 fail-closed 集合对 2.0 blocker 切片仍有效；与本条 Resolved 独立。
 
 ## 关联
 
-- GitHub Issue #5
+- GitHub Issue #5 · PLAN-0050 · PLAN-0053
 
 ## 回归保护
 
-一个负向 fixture：删除一个 sibling 实例 → checker 必须变红。机械规则必须有负向 oracle。
+- 负向 fixture：删除一个 sibling 实例 → checker 必须变红。
+- 语言分层表征：八类 judgment 标记不得从权威正文回退（`finding-0003-language` suite）。

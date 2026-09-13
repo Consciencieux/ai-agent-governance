@@ -341,7 +341,7 @@ Roadmap 不裁决顺序。成员来自 ADR-0024 `later`；顺序来自 ADR-0025�
 
 ### H0 已完成
 
-**无 Active Plan。** [PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md) **Archived**（Gen1 carrier 重裁 / daily-check 冻结 / H2b·c 阶段 retire / consistency gate-cluster EXTRACT）。排队 Design：[PLAN-0053](../PLAN-0053-v2.1.x-finding-patch-slice.md)（2.1.x Finding 补丁）；[PLAN-0054](../PLAN-0054-h3-runtime-research-design.md)（H3 边界，远）。[PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md) **Archived**（Gen1 CI 观测 sunset）。[PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived**（`v2.1.0`）。H2d 已 Archived。
+**无 Active Plan。** [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) **Archived**（FINDING-0003 judgment 规范语言分层；Finding Resolved）。[PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md) **Archived**。排队 Design：[PLAN-0054](../PLAN-0054-h3-runtime-research-design.md)（H3 边界，远）。[PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md) **Archived**（Gen1 CI 观测 sunset）。[PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived**（`v2.1.0`）。H2d 已 Archived。
 
 已归档（H0 带）：PLAN-0035 / 0036 / 0038-0044；H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md)。Plan 保持单文件（`PLAN-xxxx-*.md`）。
 

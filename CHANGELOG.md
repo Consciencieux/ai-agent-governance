@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0053 Archived (candidate A)** — FINDING-0003 closing-condition-3 remainder: remaining judgment classes explicitly labeled `judgment` vs `mechanical` in authority bodies; characterization suite `finding-0003-language`. FINDING-0003 → Resolved (no new mechanical checkers; no INSTALLED router). Plan archive ≠ Release.
+
 - **PLAN-0052 Archived** — Gen1 CI observation sunset (exit 4a): Stage 0–1 enumerated and adjudicated the observation surface (zero `retire`; scripts kept); Stage 2 removed the non-blocking `gen1-observation` CI job. `check:must-ship` remains the sole CI block; local `npm run check` still available.
 
 - **PLAN-0055 Active (Stage 0)** — Promoted from Design. Reference graph + draft absorb/keep for 16 `gen1_carrier` and 2 dogfood WRAPS; **zero `retire` yet** (bar B ≠ mass delete). Test baseline ~409 cases / 19 suites. Next: Stage 1 inventory disposition + Test Disposition v1.

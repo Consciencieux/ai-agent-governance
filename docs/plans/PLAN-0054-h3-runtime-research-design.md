@@ -33,7 +33,7 @@ target: both
 
 - Gen1 观测门禁 sunset → [PLAN-0052](archive/PLAN-0052-gen1-observation-sunset.md)（Archived）
 - Gen1 carrier 重裁 / 测试瘦身 → [PLAN-0055](archive/PLAN-0055-gen1-carrier-absorb-and-retire.md)（已 Archived；优先于 0053 的前置已落地）
-- FINDING-0003 规范语言分层等 2.1.x 补丁 → [PLAN-0053](PLAN-0053-v2.1.x-finding-patch-slice.md)
+- FINDING-0003 规范语言分层等 2.1.x 补丁 → [PLAN-0053](archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（已 Archived；Finding Resolved）
 - 已交付的 must-ship / consent / lock / sibling-closure / MIGRATE / portability 矩阵（H2）
 - 把 H3 写成 v2.2/v2.3 发布门槛（ADR-0025 决策 11）
 

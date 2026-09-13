@@ -339,7 +339,7 @@ The Roadmap does not adjudicate order. Members come from ADR-0024 `later`; order
 
 ### H0 done
 
-**No Active Plan.** [PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md) **Archived** (Gen1 carrier re-cut / daily-check freeze / H2b·c stage retire / consistency gate-cluster EXTRACT). Queued Design: [PLAN-0053](../PLAN-0053-v2.1.x-finding-patch-slice.md) (2.1.x Finding patch); [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) (H3 boundary, far). [PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md) **Archived** (Gen1 CI observation sunset). [PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). H2d Archived. H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**. H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
+**No Active Plan.** [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) **Archived** (FINDING-0003 judgment-language layering; Finding Resolved). [PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md) **Archived**. Queued Design: [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) (H3 boundary, far). [PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md) **Archived** (Gen1 CI observation sunset). [PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). H2d Archived. H2c = [PLAN-0049](../archive/PLAN-0049-h2c-machine-controls.md) **Archived**. H2b = [PLAN-0048](../archive/PLAN-0048-h2b-checkers-and-ledgers.md) **Archived**.
 
 Archived (H0 band): PLAN-0035 / 0036 / 0038-0044; H0 = [PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md). Plans stay single files (`PLAN-xxxx-*.md`).
 
