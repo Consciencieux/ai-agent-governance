@@ -89,6 +89,20 @@ module.exports = function register(test) {
     return true;
   });
 
+  test("script-inventory: summary.total matches entries.length (PLAN-0055 R4)", () => {
+    const inv = JSON.parse(fs.readFileSync(INV_PATH, "utf8"));
+    if (!inv.summary || inv.summary.total !== inv.entries.length) {
+      console.error(
+        "  summary.total",
+        inv.summary && inv.summary.total,
+        "!== entries.length",
+        inv.entries.length
+      );
+      return false;
+    }
+    return true;
+  });
+
   test("script-inventory: wrap CLIs are the known Phase-4 shells", () => {
     const inv = JSON.parse(fs.readFileSync(INV_PATH, "utf8"));
     const wrap = inv.entries.filter((e) => e.disposition === "wrap").map((e) => e.path).sort();

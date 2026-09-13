@@ -45,7 +45,7 @@ Where each principle authoritatively lives. Pointers only — never restate the 
 | 2.x product path (post-2.0 horizons) | `docs/design-decisions/ADR-0025-gen2x-product-path.md` · this file § Task→Capability routing | repo |
 | Artifact placement and object creation (owner routing) | `docs/README.md` § 东西放哪里 · § 类型目录封闭 · § 文档职责与信息密度（incident evidence only：`docs/findings/FINDING-0030-artifact-placement-routing-gap.md`） | repo |
 
-Always-on honesty gates for this index (consent / protected-files / principles-index / plan-status / prompt-sync / frontmatter-version) run via `node scripts/check-doc-consistency.js --gate`. Terminology gate: `node repo-tools/check-terminology.js` (REPO-OWNED; ADR-0020). Pending-archive / archived-plan-status / changelog-coverage fail-closed only under `--release-gate` (`repo-workflows/skill-release.md`).
+Always-on honesty gates for this index (consent / protected-files / principles-index / plan-status / prompt-sync / frontmatter-version) run via `node repo-tools/check-doc-consistency.js --gate` (REPO-ONLY profile; PLAN-0055 Stage 2). Terminology gate: `node repo-tools/check-terminology.js` (REPO-OWNED; ADR-0020). Pending-archive / archived-plan-status / changelog-coverage fail-closed only under `--release-gate` (`repo-workflows/skill-release.md`).
 
 ## Repository architecture
 
@@ -73,7 +73,7 @@ Do **not** open the whole governance tree by default (ADR-0022 Context Economy):
 1. Classify → `task_class` (+ optional facets), **or** run Detector/CLI.
 2. Prefer `node repo-tools/route-task.js --task <class> …` or `--path <file>…` (impl: `repo-tools/lib/routing.js`; graph: `repo-tools/routing-graph.v0.json`). Map: [`RESEARCH-0012`](docs/research/RESEARCH-0012-task-capability-routing.md).
 3. Read only `read_set`; run only `run_set`; if unmatched/over budget use `defer_set` — never silently load everything.
-4. Leftover Capability leaves: retarget `AuthorityRef` only — do not rearrange by Gen1 dirs or invent a second lookup model. Plans **must consume** [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) and [`script-inventory.v0.json`](repo-tools/script-inventory.v0.json) — no third destination ledger. 2.x order: [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md). H2d [PLAN-0050](docs/plans/archive/PLAN-0050-h2d-payload-portability.md) **Archived**. [PLAN-0051](docs/plans/archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). [PLAN-0052](docs/plans/archive/PLAN-0052-gen1-observation-sunset.md) **Archived** (Gen1 CI observation sunset). No Active Plan. Queued Design: [PLAN-0055](docs/plans/PLAN-0055-gen1-carrier-absorb-and-retire.md) (priority), [PLAN-0053](docs/plans/PLAN-0053-v2.1.x-finding-patch-slice.md), [PLAN-0054](docs/plans/PLAN-0054-h3-runtime-research-design.md) (H3 far).
+4. Leftover Capability leaves: retarget `AuthorityRef` only — do not rearrange by Gen1 dirs or invent a second lookup model. Plans **must consume** [ADR-0024](docs/design-decisions/ADR-0024-gen2-product-freeze.md) and [`script-inventory.v0.json`](repo-tools/script-inventory.v0.json) — no third destination ledger. 2.x order: [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md). H2d [PLAN-0050](docs/plans/archive/PLAN-0050-h2d-payload-portability.md) **Archived**. [PLAN-0051](docs/plans/archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`). [PLAN-0052](docs/plans/archive/PLAN-0052-gen1-observation-sunset.md) **Archived** (Gen1 CI observation sunset). Active Plan: [PLAN-0055](docs/plans/PLAN-0055-gen1-carrier-absorb-and-retire.md) (Stage 2 done). Queued Design: [PLAN-0053](docs/plans/PLAN-0053-v2.1.x-finding-patch-slice.md), [PLAN-0054](docs/plans/PLAN-0054-h3-runtime-research-design.md) (H3 far).
 
 Instruction-surface leaves: `references/capabilities/` (coverage map: [`instruction-surface-leaves.v0.json`](repo-tools/instruction-surface-leaves.v0.json)). Skill routing table: `SKILL.md` § 能力叶快速路由. This router is **REPO-ONLY**. Characterization: `node tests/run-tests.js --suite routing`.
 
@@ -94,7 +94,7 @@ Summary: changing `SKILL.md`, `references/policies/**`, `references/templates/**
 - Match the narrowest `npm run check:*` scope for the diff; escalate when unsure.
 - Record real output; never claim “should pass”.
 - **CI block = `check:must-ship`**; Gen1 `check` = local-only (CI observation removed — PLAN-0052).
-- Horizon pointer: ADR-0025; H2d [PLAN-0050](docs/plans/archive/PLAN-0050-h2d-payload-portability.md) **Archived**; [PLAN-0051](docs/plans/archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`); [PLAN-0052](docs/plans/archive/PLAN-0052-gen1-observation-sunset.md) **Archived**. No Active Plan. Design queue: PLAN-0055 (priority) / PLAN-0053 / PLAN-0054 (H3 far).
+- Horizon pointer: ADR-0025; H2d [PLAN-0050](docs/plans/archive/PLAN-0050-h2d-payload-portability.md) **Archived**; [PLAN-0051](docs/plans/archive/PLAN-0051-v2.1.0-release-acceptance.md) **Archived** (`v2.1.0`); [PLAN-0052](docs/plans/archive/PLAN-0052-gen1-observation-sunset.md) **Archived**. Active Plan: PLAN-0055 (Stage 2 done). Design queue: PLAN-0053 / PLAN-0054 (H3 far).
 
 ## Reference-closure check
 

@@ -94,4 +94,8 @@ function main() {
   process.exit(blocking ? 1 : 0);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = { main };

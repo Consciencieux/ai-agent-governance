@@ -944,4 +944,8 @@ function main() {
   process.exit(anyGate && gateIssues.length > 0 ? 1 : 0);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = { main };

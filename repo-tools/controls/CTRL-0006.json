@@ -19,10 +19,11 @@
     },
     {
       "profile": "repo",
-      "cli": "scripts/check-doc-consistency.js",
+      "cli": "repo-tools/check-doc-consistency.js",
       "evaluator": "scripts/evaluators/ctrl-0006-broken-links.js",
       "enforcement_boundary": "default / --gate / --release-gate",
-      "decision_effect": "advisory"
+      "decision_effect": "advisory",
+      "note": "PLAN-0055 Stage 2: repo profile CLI separated from INSTALLED WRAP."
     }
   ],
   "evidence": {
@@ -30,6 +31,6 @@
   },
   "control_x": {
     "eligible": false,
-    "reason": "Single shared CLI path; CONTROL-X reserved for true dual-profile implementations."
+    "reason": "Repo CLI now distinct (PLAN-0055); CONTROL-X still deferred until negative fixture parity is declared."
   }
 }

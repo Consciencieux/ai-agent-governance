@@ -37,23 +37,24 @@
     "Changed WRAP CLIs stay on path; semantics live in evaluators/lib.",
     "Only disposition=retire may move to a quarantine tree; none in v0.",
     "No third Task→Capability lookup model; inventory is file identity, not routing.",
-    "Packaging copies scripts/ wholesale — quarantine inside scripts/ still ships unless packaging changes."
+    "Packaging copies scripts/ wholesale — quarantine inside scripts/ still ships unless packaging changes.",
+    "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 37,
+    "total": 46,
     "by_disposition": {
-      "keep": 33,
+      "keep": 42,
       "rewrite": 1,
       "wrap": 3
     },
     "by_generation": {
       "gen1_carrier": 16,
-      "gen2_native": 18,
+      "gen2_native": 27,
       "dual_profile": 3
     },
     "by_role": {
-      "REPO-ONLY": 18,
-      "INSTALLED": 18,
+      "REPO-ONLY": 23,
+      "INSTALLED": 22,
       "SKILL-INTERNAL": 1
     },
     "wrap": [
@@ -62,10 +63,27 @@
       "scripts/check-secrets.js"
     ],
     "retire": [],
-    "dogfood_installed_from_repo": [
-      "scripts/check-doc-consistency.js",
-      "scripts/check-doc-freshness.js"
-    ]
+    "dogfood_installed_from_repo": [],
+    "adjudication": {
+      "plan": "PLAN-0055",
+      "stage": 2,
+      "date": "2026-09-13",
+      "absorb": [
+        "scripts/check-doc-consistency.js",
+        "scripts/check-doc-freshness.js",
+        "scripts/check-secrets.js"
+      ],
+      "absorb_done": {
+        "dogfood_shifted_to": [
+          "repo-tools/check-doc-consistency.js",
+          "repo-tools/check-doc-freshness.js"
+        ],
+        "secrets_repo_cli": "repo-tools/check-secrets.js",
+        "installed_dogfood_remaining": []
+      },
+      "retire": [],
+      "note": "Stage 2: repo package.json no longer dogfoods INSTALLED doc CLIs; skill WRAP paths retained"
+    }
   },
   "entries": [
     {
@@ -82,7 +100,7 @@
       "first_seen": "2026-09-07",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+      "notes": "PLAN-0055 Stage 1 keep: REPO-ONLY narration gate on check:all; not must-ship; still independent value"
     },
     {
       "path": "repo-tools/check-coding-hygiene.js",
@@ -98,7 +116,7 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+      "notes": "PLAN-0055 Stage 1 keep: owner of check / check:payload / check:tests hygiene gate"
     },
     {
       "path": "repo-tools/check-discovery-ledger.js",
@@ -130,7 +148,7 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": true,
-      "notes": "Touched after v1.0.2; still REPO-ONLY gate"
+      "notes": "PLAN-0055 Stage 1 keep: owner of docs:parity"
     },
     {
       "path": "repo-tools/check-docs-shape.js",
@@ -162,7 +180,7 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+      "notes": "PLAN-0055 Stage 1 keep: owner of docs:layout"
     },
     {
       "path": "repo-tools/check-metadata-projection.js",
@@ -274,7 +292,7 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": true,
-      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+      "notes": "PLAN-0055 Stage 1 keep: plans:delivery + release gates"
     },
     {
       "path": "repo-tools/check-roadmap-sync.js",
@@ -306,7 +324,7 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-06",
       "dogfood_from_repo_package_json": true,
-      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+      "notes": "PLAN-0055 Stage 1 keep: role-completeness on check / check:payload"
     },
     {
       "path": "repo-tools/check-secrets.js",
@@ -370,7 +388,7 @@
       "first_seen": "2026-09-08",
       "last_touch": "2026-09-08",
       "dogfood_from_repo_package_json": false,
-      "notes": "REPO-ONLY gate; default keep (unchanged-since-baseline ≠ retire)"
+      "notes": "PLAN-0055 Stage 1 keep: on-demand assertion probe (mutation:probe); not a sunset fixture"
     },
     {
       "path": "repo-tools/package-skill.sh",
@@ -386,7 +404,7 @@
       "first_seen": "2026-09-05",
       "last_touch": "2026-09-06",
       "dogfood_from_repo_package_json": false,
-      "notes": "Copies entire scripts/; quarantine under scripts/ would still ship"
+      "notes": "PLAN-0055 Stage 1 keep: must-ship packaging carrier; copies scripts/ wholesale"
     },
     {
       "path": "repo-tools/route-task.js",
@@ -417,8 +435,8 @@
       },
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-10",
-      "dogfood_from_repo_package_json": true,
-      "notes": "WRAP/monolith residue; dogfooded by repo npm check; H2a: dual_profile — INSTALLED WRAP + explicit repo package.json dogfood (FINDING-0028)"
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 Stage 2 absorb done: INSTALLED skill WRAP retained for governed targets; repo package.json now calls repo-tools/ twin (no longer dogfood)"
     },
     {
       "path": "scripts/check-doc-freshness.js",
@@ -433,8 +451,8 @@
       },
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-10",
-      "dogfood_from_repo_package_json": true,
-      "notes": "WRAP CLI; dogfooded by repo npm check:*; H2a: dual_profile — INSTALLED WRAP + explicit repo package.json dogfood (FINDING-0028)"
+      "dogfood_from_repo_package_json": false,
+      "notes": "PLAN-0055 Stage 2 absorb done: INSTALLED skill WRAP retained for governed targets; repo package.json now calls repo-tools/ twin (no longer dogfood)"
     },
     {
       "path": "scripts/check-git-policy.js",
@@ -450,7 +468,7 @@
       "first_seen": "2026-08-13",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": false,
-      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+      "notes": "PLAN-0055 Stage 1 keep: INSTALLED product + must-ship carrier"
     },
     {
       "path": "scripts/check-lock.js",
@@ -466,7 +484,7 @@
       "first_seen": "2026-08-13",
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
-      "notes": "Unchanged since v1.0.2; still INSTALLED product; PLAN-0050 atomic acquire/release via agent.lock wx"
+      "notes": "PLAN-0055 Stage 1 keep: INSTALLED lock product (PLAN-0050 atomic acquire)"
     },
     {
       "path": "scripts/check-plan-sync.js",
@@ -482,7 +500,7 @@
       "first_seen": "2026-09-06",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": false,
-      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+      "notes": "PLAN-0055 Stage 1 keep: INSTALLED plan-sync product"
     },
     {
       "path": "scripts/check-secrets.js",
@@ -498,7 +516,7 @@
       "first_seen": "2026-08-13",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
-      "notes": "Skill-profile WRAP CLI; evaluator under scripts/evaluators/"
+      "notes": "PLAN-0055 Stage 2: skill WRAP confirmed thin (evaluator CTRL-0001); repo already uses repo-tools/check-secrets.js — no package.json dogfood"
     },
     {
       "path": "scripts/check-sync.js",
@@ -514,7 +532,7 @@
       "first_seen": "2026-08-21",
       "last_touch": "2026-09-05",
       "dogfood_from_repo_package_json": false,
-      "notes": "Unchanged since v1.0.2; still INSTALLED product"
+      "notes": "PLAN-0055 Stage 1 keep: INSTALLED sync-groups product"
     },
     {
       "path": "scripts/evaluators/ctrl-0001-secret-protection.js",
@@ -594,7 +612,7 @@
       "first_seen": "2026-08-21",
       "last_touch": "2026-09-08",
       "dogfood_from_repo_package_json": false,
-      "notes": "SKILL-INTERNAL generator; unchanged since v1.0.2 — still product, not attic"
+      "notes": "PLAN-0055 Stage 1 keep: SKILL-INTERNAL generator + must-ship"
     },
     {
       "path": "scripts/lib/adr-status.js",
@@ -690,7 +708,7 @@
       "first_seen": "2026-08-12",
       "last_touch": "2026-09-07",
       "dogfood_from_repo_package_json": false,
-      "notes": "INSTALLED release executor"
+      "notes": "PLAN-0055 Stage 1 keep: INSTALLED release executor"
     },
     {
       "path": "scripts/verify_governance.js",
@@ -706,7 +724,7 @@
       "first_seen": "2026-08-10",
       "last_touch": "2026-09-08",
       "dogfood_from_repo_package_json": false,
-      "notes": "INSTALLED rename target verify-governance.js"
+      "notes": "PLAN-0055 Stage 1 keep: INSTALLED validator + must-ship"
     },
     {
       "path": "scripts/check-git-consent.js",
@@ -771,6 +789,39 @@
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
       "notes": "PLAN-0050 H2d discoverable MIGRATE entry"
+    },
+    {
+      "path": "repo-tools/check-doc-consistency.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0006+clusters",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0055 Stage 2: REPO-ONLY profile CLI; delegates to scripts/check-doc-consistency.js main()"
+    },
+    {
+      "path": "repo-tools/check-doc-freshness.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "CTRL-0003+CTRL-0004",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-13",
+      "last_touch": "2026-09-13",
+      "dogfood_from_repo_package_json": true,
+      "notes": "PLAN-0055 Stage 2: REPO-ONLY profile CLI; delegates to scripts/check-doc-freshness.js main()"
     }
-  ]
+  ],
+  "adjudication_plan": "PLAN-0055"
 }

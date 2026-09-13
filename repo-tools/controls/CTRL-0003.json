@@ -18,11 +18,11 @@
     },
     {
       "profile": "repo",
-      "cli": "scripts/check-doc-freshness.js",
+      "cli": "repo-tools/check-doc-freshness.js",
       "evaluator": "scripts/evaluators/ctrl-0003-doc-freshness.js",
       "enforcement_boundary": "default-invocation",
       "decision_effect": "advisory",
-      "note": "Repo currently invokes the INSTALLED freshness CLI as a dual-profile WRAP; accidental coupling is inventoried, not CONTROL-X eligible until separate repo CLI exists."
+      "note": "PLAN-0055 Stage 2: repo profile CLI separated from INSTALLED WRAP."
     }
   ],
   "evidence": {
@@ -30,6 +30,6 @@
   },
   "control_x": {
     "eligible": false,
-    "reason": "No separate repo-profile CLI; shared file ≠ CONTROL-X."
+    "reason": "Repo CLI now distinct (PLAN-0055); CONTROL-X still deferred until negative fixture parity is declared."
   }
 }

@@ -7,7 +7,12 @@ All notable changes to this project will be documented here.
 ### Changed
 
 - **PLAN-0052 Archived** — Gen1 CI observation sunset (exit 4a): Stage 0–1 enumerated and adjudicated the observation surface (zero `retire`; scripts kept); Stage 2 removed the non-blocking `gen1-observation` CI job. `check:must-ship` remains the sole CI block; local `npm run check` still available.
-- **PLAN-0055 Design** — Gen1 carrier re-adjudication (bar B: absorb useful / `retire` then delete abandoned) plus `tests/` prune plan; queued ahead of PLAN-0053 / PLAN-0054. No Active Plan until human promotes 0055.
+
+- **PLAN-0055 Active (Stage 0)** — Promoted from Design. Reference graph + draft absorb/keep for 16 `gen1_carrier` and 2 dogfood WRAPS; **zero `retire` yet** (bar B ≠ mass delete). Test baseline ~409 cases / 19 suites. Next: Stage 1 inventory disposition + Test Disposition v1.
+
+- **PLAN-0055 Stage 1** — Final disposition landed in `script-inventory.v0.json` (`summary.total` 37→44 = `entries.length`; `summary.adjudication` absorb=3 wrap CLIs, retire=[]). Test Disposition v1 marks prune/review candidates only (no deletes). Characterization asserts summary sync. Next: Stage 2 dogfood absorb.
+
+- **PLAN-0055 Stage 2** — Absorbed repo dogfood off INSTALLED WRAP CLIs: `package.json` / `AGENTS.md` now call `repo-tools/check-doc-consistency.js` and `repo-tools/check-doc-freshness.js` (thin REPO-ONLY shells over shared `main()`). CTRL-0003/0004/0006 repo bindings retargeted. `summary.dogfood_installed_from_repo=[]`. Skill WRAP paths retained for governed targets; secrets WRAP already paired with `repo-tools/check-secrets.js`. Next: Stage 4 test prune (Stage 3 skipped — retire still empty).
 
 ### Fixed
 

@@ -18,10 +18,11 @@
     },
     {
       "profile": "repo",
-      "cli": "scripts/check-doc-freshness.js",
+      "cli": "repo-tools/check-doc-freshness.js",
       "evaluator": "scripts/evaluators/ctrl-0004-translation-freshness.js",
       "enforcement_boundary": "release-gate",
-      "decision_effect": "deny"
+      "decision_effect": "deny",
+      "note": "PLAN-0055 Stage 2: repo profile CLI separated from INSTALLED WRAP."
     }
   ],
   "evidence": {
@@ -29,6 +30,6 @@
   },
   "control_x": {
     "eligible": false,
-    "reason": "Shared CLI file without distinct profile runners; not a dual-implementation CONTROL-X slice."
+    "reason": "Repo CLI now distinct (PLAN-0055); CONTROL-X still deferred until negative fixture parity is declared."
   }
 }
