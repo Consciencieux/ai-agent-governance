@@ -20,19 +20,19 @@ version: 5
 
 ## Generation-1 的 `references/` 实际混了什么
 
-当前物理树（2026-09-13）比 v4 多了两棵 SKILL-INTERNAL 子树；**INSTALLED 指令面仍厚平面**：
+当前物理树（2026-09-13）比 v4 多了两棵 SKILL-INTERNAL / INSTALLED 子树；**入口薄化由 PLAN-0046 Active 推进中**：
 
 ```text
 references/
 ├── policies/        # 规范语义（INIT 复制为 docs/rules）
 ├── principles/      # H1 可复用原则包（SKILL-INTERNAL；INIT 不安装）
-├── capabilities/    # 部分能力叶（SKILL-INTERNAL；schema 未统一为 2.0 叶卡）
+├── capabilities/    # 2.0 能力叶卡（INSTALLED → docs/rules/capabilities/；PLAN-0046）
 ├── templates/       # 生成产物模板 + 子技能源文件，职责混杂
 ├── workflows/       # CI / release 程序
 └── init-spec.json   # 物化契约（materialization contract）
 ```
 
-> **现在时：** 本仓 Task→Capability 路由（PLAN-0038/0039/0040）**EXITED**，且是 **REPO-ONLY**。INSTALLED 入口（`SKILL.md` / 生成 `AGENTS.md`）仍是 Gen1 厚平面。叶卡 schema + 薄入口 = [PLAN-0046](../plans/PLAN-0046-instruction-surface-2.0-alignment.md)（H2-front，Design）。目录重排仍不由本 RESEARCH 授权。
+> **现在时：** 本仓 Task→Capability 路由（PLAN-0038/0039/0040）**EXITED**，且是 **REPO-ONLY**。INSTALLED 入口（`SKILL.md`）已按 PLAN-0046 Stage 3 收为 always-on 不变量 + 路由表；must-ship 叶卡与干净目标 INIT 闭包（Y5）已表征。余三语产品文档现在时指针（Y6）。叶卡 schema + 薄入口 = [PLAN-0046](../plans/PLAN-0046-instruction-surface-2.0-alignment.md)（H2-front，**Active**）。目录重排仍不由本 RESEARCH 授权。
 
 按**实际作用**分，至少是六类完全不同的东西：
 

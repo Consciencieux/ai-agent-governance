@@ -1,12 +1,14 @@
 // PLAN-0046 — instruction-surface 2.0 characterization:
 // leaf schema, must-ship coverage inventory, no third disposition ledger.
 
+const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
 const INV = path.join(SKILL_ROOT, "repo-tools/instruction-surface-leaves.v0.json");
 const CAP_DIR = path.join(SKILL_ROOT, "references/capabilities");
 const ADR24 = path.join(SKILL_ROOT, "docs/design-decisions/ADR-0024-gen2-product-freeze.md");
+const TAR = path.join(SKILL_ROOT, "dist", "ai-agent-governance-skill.tar.gz");
 
 module.exports = (test) => {
   test("instruction-surface: inventory loads and lists leaves", () => {
@@ -87,6 +89,79 @@ module.exports = (test) => {
     if (!/references\/capabilities\//.test(agents) && !/instruction-surface-leaves/.test(agents)) {
       console.error("  AGENTS.md missing capabilities/ or inventory pointer");
       return false;
+    }
+    return true;
+  });
+
+  // Y5 — clean-target leaf closure: package ships leaves; INIT installs them under
+  // docs/rules/capabilities/ with required sections; bodies stay payload-portable.
+  test("instruction-surface: clean-target INIT installs capability leaves (Y5)", () => {
+    const inv = JSON.parse(fs.readFileSync(INV, "utf8"));
+    const sh = findBashShell();
+    if (!sh) return "skip: no bash for package-skill.sh";
+
+    const pack = spawnSync(sh, ["repo-tools/package-skill.sh", "0.0.0-surface-y5"], {
+      cwd: SKILL_ROOT,
+      encoding: "utf8",
+    });
+    if (pack.status !== 0) {
+      console.error("  package failed: " + (pack.stderr || pack.stdout || "").slice(0, 500));
+      return false;
+    }
+    if (!fs.existsSync(TAR)) {
+      console.error("  missing tarball " + TAR);
+      return false;
+    }
+    const listing = spawnSync("tar", ["-tzf", TAR], { encoding: "utf8" });
+    if (listing.status !== 0) {
+      console.error("  tar list failed");
+      return false;
+    }
+    const members = new Set(
+      listing.stdout.split(/\r?\n/).filter(Boolean).map((m) => m.replace(/^\.\//, ""))
+    );
+    for (const leaf of inv.leaves) {
+      if (!members.has(leaf.path)) {
+        console.error("  tarball missing " + leaf.path);
+        return false;
+      }
+    }
+
+    const dir = tmp("instruction-surface-y5");
+    const g = spawnSync(
+      process.execPath,
+      [GENERATOR, "--target", dir, "--project-name", "SurfaceY5", "--phase", "C"],
+      { encoding: "utf8" }
+    );
+    if (g.status !== 0) {
+      console.error("  INIT failed: " + (g.stderr || g.stdout || "").slice(0, 500));
+      return false;
+    }
+
+    const installedRoot = path.join(dir, "docs/rules/capabilities");
+    if (!fs.existsSync(installedRoot)) {
+      console.error("  INIT did not create docs/rules/capabilities/");
+      return false;
+    }
+    const leak = /references\/|repo-tools\/|SKILL\.md|npm run /;
+    for (const leaf of inv.leaves) {
+      const base = path.basename(leaf.path);
+      const dest = path.join(installedRoot, base);
+      if (!fs.existsSync(dest)) {
+        console.error("  INIT missing installed leaf " + base);
+        return false;
+      }
+      const body = fs.readFileSync(dest, "utf8");
+      for (const sec of inv.required_sections) {
+        if (!body.includes(sec)) {
+          console.error("  installed " + base + " missing " + sec);
+          return false;
+        }
+      }
+      if (leak.test(body)) {
+        console.error("  installed " + base + " leaks non-portable paths");
+        return false;
+      }
     }
     return true;
   });

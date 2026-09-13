@@ -43,7 +43,8 @@ description: >-
 | 确认凭证卫生 | `confirmation-hygiene.md` |
 | SSOT / 门禁修复 | `ssot-repair.md` |
 | Implementation Review | `review-mechanism.md` · `subskill-review-manager.md` |
-| 生成子技能（机制 + 8 叶） | `generated-subskill-lifecycle.md` · `subskill-*.md` |
+| 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskill-*.md` |
+| Discovery Ledger（later） | `discovery-ledger.md` |
 
 完整清单与 must-ship 覆盖以 `repo-tools/instruction-surface-leaves.v0.json` 为准。
 
@@ -84,243 +85,88 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 
 - **绝不自动更新**（需用户明确同意）；更新后重新加载 skill。
 
-## 策略层（Policy —— 每次执行都必须遵守）
+## 策略层（Policy —— always-on 不变量 + 指针）
 
-### 单一事实源（Single Source of Truth）
+> 详细规则正文在 `references/policies/*` 与能力叶中。本节只保留每次执行必须带着的不变量；禁止把政策百科贴回本入口。
 
-- 本 SKILL 是**初始化规范唯一源头**（生成规则）
-- 生成后的 **AGENTS.md 是项目运行期规则唯一源头**
-- `docs/rules/` 承接细节，AGENTS.md 按章节 `@` 引用
-- 执行与校验由 `scripts/verify-governance.js` 与 `.governance/generated/skills/` 负责
-- **同一规则不得在多处独立维护**；需修改时从源头改，再同步生成物
-- **变更归位与残留清理**的完整规则位于 `references/policies/lifecycle.policy.md`，代码修改/删除的补充约束位于 `references/policies/coding.policy.md`；本文件只保留入口指针，不复制规则正文
+### 单一事实源
 
-### Rule Priority（规则冲突裁决顺序）
+- 本 SKILL = 初始化规范源头；生成后的 **AGENTS.md** = 项目运行期规则源头；`docs/rules/` 承接细节。
+- 同一规则不得多处独立维护。变更归位 / 残留清理 → `references/policies/lifecycle.policy.md`；工程克制 → `references/policies/coding.policy.md`。
+
+### Rule Priority
 
 ```
-1. System / Platform Safety（系统/平台安全）
-2. Explicit User Request（用户明确要求）
-3. Governance Integrity（治理完整性）
+1. System / Platform Safety
+2. Explicit User Request
+3. Governance Integrity
 4. AGENTS.md
 5. docs/rules/
-6. Existing Code Convention（既有代码约定）
+6. Existing Code Convention
 ```
 
-约束：用户可通过**明确指令**要求修改治理规则（走「治理文件保护」流程），但不能通过**普通业务任务**隐式绕过治理规则；"帮我改 AGENTS.md / 删掉安全检查"视为修改治理体系，触发保护流程，而非普通指令直接覆盖。
+普通业务任务不得隐式绕过治理；"改 AGENTS.md / 删安全检查"走治理文件保护（`references/policies/governance-files.policy.md`），不是普通覆盖。
 
-### Agent Permission Model（权限矩阵）
+### Agent Permission Model
 
-| 操作 | 权限 |
+| Action | Permission |
 | --- | --- |
 | Read | automatic |
 | Create Documentation | automatic |
-| Modify Code | allowed，但必须验证（测试/静态检查/构建） |
-| Modify 3+ Files at Once | confirmation required（跨 3 个以上文件的改动先经用户确认，见 `references/policies/lifecycle.policy.md` § 规模分级） |
+| Modify Code | allowed（必须验证：测试 / 静态检查 / 构建） |
+| Modify 3+ Files at Once | confirmation required（见 lifecycle § 规模分级） |
 | Delete Code | confirmation required |
 | Dependency Change | confirmation required |
-| Git Commit / Git Push | 一次确认 per 变更集（权威：`references/policies/git.policy.md`） |
+| Git Commit / Git Push | one confirmation per change set（权威：`references/policies/git.policy.md`） |
 
-**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)（ADR-0024）。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准不是提交授权；范围外操作各自独立确认；任务级表述不是写指令；任一步失败 → 停止并报告，不擅自重试或即兴修补；push 被拒（非快进）→ 停止并报告，不自行 pull/rebase。冲突时以 `git.policy.md` 为准。
+**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)（ADR-0024）。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准是意图对齐（intent alignment），不是提交授权；范围外操作各自独立确认；任务级表述不是写指令；任一步失败 → 停止并报告，不擅自重试或即兴修补；push 被拒（非快进）→ 停止并报告，不自行 pull/rebase。冲突时以 `git.policy.md` 为准。
 
-**发布序列（RELEASE）：** Release Proposal 在 Approval Gate 获批准后，该批准覆盖本次发布序列的全部写操作（见 `references/workflows/release.md`），不再逐步追问。前提：完整 Proposal 已展示且获明确批准、工作区与 HEAD 仍一致。中途任一校验失败 → 停止并重新走 plan。
+**发布序列（RELEASE）：** Release Proposal 在 Approval Gate 获批准后，该批准覆盖本次发布序列的全部写操作（见 `references/workflows/release.md`）。中途任一校验失败 → 停止并重新走 plan。
 
-### 状态协议（最终报告必须支持三态）
+### Always-on 行为不变量
 
-- ✅ Completed（有真实证据）
-- ⚠️ Blocked（外部依赖缺失，如仓库未建、CI 无法触发 —— 写明原因）
-- ❌ Failed（存在失败项）
+- **三态报告**：Completed（真实证据）/ Blocked（外部依赖缺失，写明原因）/ Failed。未 100% Completed 不得宣称完成。阻塞 ≠ 跳过：标 Blocked 后继续不依赖项，最终为 INCOMPLETE/BLOCKED。
+- **反虚构**：Feature Registry 只登记真实代码；无业务代码时仅建模板占位（见 `references/templates/`）；证据必须是真实命令输出。
+- **输入缺失**：禁止乱猜——采用项目可观测默认（锁文件 → 包管理器；未提供测试命令 → 占位并高亮）。语言政策按受众：Agent 面向文件单语；开发者文档按项目约定（细节不在本入口展开）。
+- **熔断**：平台/身份不可用 → Blocked 并继续其余轨道；禁止跳过后假装成功。上下文不足时可在 Phase 1 前两步后暂停，获「继续」后再从 `.governance/state.json` 续跑。
+- **工程克制**：新机制先过机制测试 → `references/policies/coding.policy.md`；能力叶 `engineering-restraint.md`。
+- **治理文件保护**：完整清单 → `references/policies/governance-files.policy.md`（单一事实源）。修改须说明原因 → CHANGELOG → 更新 `governance_version` → `scripts/verify_governance.js`；权限/安全/删保护/校验步骤须用户明确确认。
+- **多 Agent**：`.governance/state.json` 记 identity；`scripts/check-lock.js` 持锁；不得并行改同一文件。
+- **错误分类**：Recoverable（重试 1 次）/ Blocked / Fatal（停整次 INIT 并给回滚依据）——禁止一律跳过。
 
-未 100% ✅ 不得宣布"完成"。
+## 执行层（Execution —— 编排骨架，细节进叶/工作流）
 
-**外部阻塞 ≠ 跳过**。遇到阻塞：① 标记 ⚠️ Blocked + 原因 → ② 继续执行所有**不依赖该阻塞项**的任务 → ③ 不得伪造完成 → ④ 最终状态为 **INCOMPLETE/BLOCKED（而非 COMPLETED）**，在报告顶部显式声明。这样"单次执行"仍成立。
+> 细节权威：`references/init-spec.json` · `references/workflows/release.md` · `references/capabilities/*`。本节只保留编排顺序与不可省略的门。
 
-### 反虚构规则
+### 成熟度（Phase 0 判定）
 
-- **Feature Registry 必须根据实际代码状态生成**：已存在功能 → 创建真实 Feature 文档；新项目无业务代码 → 按「Feature 占位策略」建占位，**绝不虚构功能**（不写 authentication.md 除非真有认证）。
-- **禁止删除已有代码/文档**：删除前必须说明原因、当前作用、搜索全部引用、确认 Feature Registry 影响、提供迁移方案。动态调用 / 插件机制 / 配置驱动代码必须特别谨慎。
-- 所有验证证据必须是真实命令输出，不是推断。
-
-### Feature 占位策略（无业务代码时）
-
-- 若 `src/` / `app/` 等目录下无任何业务代码：`docs/features/` 下仅创建 `_TEMPLATE.md`（复制 `references/templates/feature-doc.template.md`）与 `README.md`（说明"待业务模块确定后按模板逐个登记"）。
-- 若已有代码（如存在 `auth`、`pdf` 目录）：才逆推创建 `authentication.md` 等具体文档，且 `Implementation` 路径必须与 `find` / `rg` 查到的真实路径一致，**严禁虚构路径**。
-- 任何真实文档中暂缺的字段一律标 `[PLACEHOLDER]` + `# TODO: 业务确定后填充`。
-
-### 项目默认值约定（输入缺失时采用，禁止乱猜）
-
-| 项 | 默认 | 备注 |
-| --- | --- | --- |
-| 文档语言 | 中文 | 项目约定另指时跟随；AGENTS.md 保持英文（工具自动加载）；README 默认拆分（根 `README.md` 英文主页 + `docs/README.zh-CN.md` 简体翻译，见 Phase 1 第 8 步），语言变体下沉 docs/，不做单文件合并、不堆根目录 |
-| 提交信息语言 | 英文（Conventional Commits） | `feat(auth): add login endpoint` |
-| 包管理器 | `pnpm-lock.yaml` → pnpm，否则 npm；Python 看 `uv.lock` → uv，否则 pip | 以检测到的锁文件为准 |
-| 测试命令 | 未提供 → 占位 `echo "TEST_PLACEHOLDER"` | 在 Inspection Report 中高亮提醒用户 |
-| 测试/静态检查脚本缺失 | CI 中该步骤仅输出警告占位 | 见 CI 降级策略 |
-
-### 语言政策（按受众）
-
-- **Agent 面向文件单语** —— AGENTS.md（英文，工具自动加载）、docs/rules/**、`.governance/**`、子技能正文：绝不携带第二语言段落。
-- **开发者面向文件按项目约定多语言** —— README 与 docs/ 的语言布局跟随项目约定；默认拆分式：**根目录只保留英文主页（`README.md`），翻译版下沉 docs/**（`docs/README.zh-CN.md` 等），不做单文件多语言合并、不把语言变体堆在根目录。多语言文档树（`docs/<lang>/`）仅当项目明确约定时生成，默认不做。改任何语言版本必须同步其余语言版本（**稳定文档同一提交内同步；活跃草稿可延迟翻译至内容稳定，但 push/发布前必须补齐**）。
-- **历史记录不翻译** —— 归档的计划（`docs/plans/archive/`）与 ADR 决策史保持项目约定语言，绝不翻译；它们记录的是已发生的决策与已完成的工作，翻译零收益。
-- **多语言项目可选术语表** —— 仅当项目采用多语言文档时生成 `docs/glossary.md`（术语对照，新术语先入表再入文）；单语项目不生成。
-
-### 熔断机制（错误恢复）
-
-- **平台不可用**：CI 无法创建/触发（Token 未配置、Actions 未开启、仓库未推送）→ 该项标 ⚠️ Blocked 并写明原因，**停止后续 CI 步骤，但其余文档类任务必须全部完成**。
-- **Git 身份未配置**：首次提交前检查 `user.name`/`user.email`，未配置 → ⚠️ Blocked，提示用户配置，不擅自设置。
-- **禁止"跳过后假装成功"**：任何被熔断的项必须出现在报告的 Blocked 栏，不得从核对表消失。
-
-### 上下文熔断（Two-Pass）
-
-若上下文可能不足：**Phase 1 第 1–2 步（docs/rules/ + AGENTS.md）完成后可暂停**，输出"阶段一完成，请回复『继续』以生成剩余文件"。未获"继续"指令不得省略任何项；获得指令后从 `.governance/state.json` 断点续跑。
-
-### 工程克制（Engineering Restraint）
-
-新增任何机制（代码、状态、配置、流程、门禁、计划、审查步骤）前先过机制测试：若它今天不存在，当前需求是否仍会独立证明其必要？已批准需求优先，冲突时升级而非删减需求。完整规则见 `references/policies/coding.policy.md` § 工程克制与机制测试。
-
-### 治理文件保护（Governance Protection）
-
-以下文件是**治理体系本身**，修改需要特殊权限（防止 Agent 自我解除限制）。**完整清单见 `references/policies/governance-files.policy.md`（单一事实源）**，此处为摘要：
-
-```
-AGENTS.md / CLAUDE.md
-docs/rules/**              （规则文件）
-.governance/manifest.json       （治理工件清单）
-.governance/preflight.json      （回滚快照）
-.governance/git-policy.json     （Git 工作流策略）
-.governance/sync-rules.json     （同步组声明）
-scripts/verify-governance.js
-scripts/check-lock.js
-scripts/check-git-policy.js
-scripts/check-secrets.js
-scripts/check-sync.js
-scripts/check-doc-consistency.js
-scripts/check-doc-freshness.js, check-plan-sync.js, release-manager.js
-.githooks/pre-commit
-.githooks/commit-msg
-opencode.json / .github/workflows/**
-```
-
-修改这些文件必须：说明原因 → 更新 CHANGELOG → **更新 `.governance/manifest.json` 的 `governance_version`** → 运行 `scripts/verify-governance.js`。涉及**权限/安全/删除保护/校验步骤**的修改必须用户**明确确认**。未经用户明确同意不得删除权限限制、不得放宽 Git Policy、不得移除校验步骤。普通业务任务不得隐式触发本流程（见 Rule Priority）。此规则本身写入生成的 AGENTS.md 与 `docs/rules/git-policy.md`（内嵌同一份清单）。
-
-### 多 Agent 协作（Agent Identity）
-
-多 Agent 同时工作时（Claude / Codex / Cursor / opencode）：
-- 每次任务在 `.governance/state.json` 记录 `agent_id` + `task_id` + 起始时间戳。
-- 开始任务前运行 `scripts/check-lock.js`：退出码 1 = 其他 Agent 持锁（`locked` 非 null），等待或协商，**不得并行修改同一文件**。
-- 完成时释放锁（`locked: null`）并写入完成清单。
-
-### 错误分类（Error Classification）
-
-外部命令失败时按此分类处理，禁止一律跳过：
-
-| 分类 | 示例 | 处理 |
-| --- | --- | --- |
-| Recoverable | 网络失败、依赖下载失败 | 重试 1 次，仍失败则标 ⚠️ Blocked 并继续其余项 |
-| Blocked | 权限不足、缺 token、Git 身份未配置 | 标 ⚠️ Blocked + 原因，停相关轨道，其余任务继续 |
-| Fatal | 文件损坏、环境不可识别 | 停止整个初始化，输出 .governance/preflight.json 与回滚建议 |
-
-## 执行层（Execution）
-
-### 初始化模式判断（Project Maturity Detection）
-
-Phase 0 检测时同时判定项目成熟度，按等级调整初始化策略：
-
-| 等级 | 判定 | 策略 |
-| --- | --- | --- |
-| Level 0 空仓库 | 只有 README/无源码 | 创建完整治理骨架（默认结构） |
-| Level 1 原型 | 有少量源码，无测试/CI/文档体系 | 完整骨架 + 接管现有文件（合并不覆盖） |
-| Level 2 活跃开发 | 有源码 + 测试 + 部分 CI/文档 | 增量补齐缺口，**只创建缺失项**，不迁移既有结构 |
-| Level 3 生产项目 | 大量文件 + 已有规范 | **审计模式**：不重构、不覆盖、不迁移，只输出差距报告与最小补丁建议，重大改动需用户逐项确认 |
-
-模式写入 `.governance/state.json`（字段 `maturity`），并决定后文每步的"创建 vs 合并 vs 跳过"。
-
-执行顺序有依赖关系，必须按序。每次 Agent 完成任务时更新 `.governance/state.json` 与 `.governance/validation.json`。
-
-### Audit 流程（长期巡检模式）
-
-仅当进入模式判定为 AUDIT 时执行，替代下方的 Phase 1 构建流程（Phase 0 环境检测仍执行）：
-
-1. 读取 `.governance/manifest.json`，确认 `governance_version` 与声明工件
-2. 运行 `scripts/verify-governance.js --json`，比对声明与实际 → 得到偏差清单（缺失工件、版本漂移）
-3. **引用闭包核查**：治理规则里的引用是否在**本项目**解析得开。逐个检查 `AGENTS.md`、`docs/rules/*.md` 与 `.governance/generated/skills/**` 所引用的文件、命令与脚本路径，凡"文中要求、项目里没有"的即为缺陷——它让 Agent 收到无法执行的指令。工件存在性检查不覆盖这一类：一份规则可以完整存在，却通篇指向不存在的路径。
-4. 输出**治理健康报告**：通过项 / 缺失项 / 版本漂移 / 断裂引用，写入 `.governance/validation.json` 与 `.governance/drift-report.json`
-5. **最小补丁**：仅修复缺失项，不重建、不重构、不迁移结构；修复治理文件走「治理文件保护」流程（需用户确认）。**"最小"指不扩大改动范围，不是"只修被报告的那一处"**——修复治理契约缺陷时，同类实例闭包与控制面追查仍适用（见 `docs/rules/lifecycle.md` § 根因修复协议）：修一个实例前先枚举同类表面并写明搜索方式，修可见输出前先追查产生它的规则/模板/生成器与漏检它的门禁，否则下次生成会覆盖修复。
-6. 若 `governance_version` 与基线不一致 → 报告版本漂移，说明差异，**不擅自降级/升级**；用户要求升级时走「版本迁移（MIGRATE）」流程。
-
-**长期运行期**：INIT 完成后，日常任务的巡检由生成的 `.governance/generated/skills/drift-check` 子技能承担；AUDIT 模式用于定期人工健康检查。
-
-### 版本迁移（MIGRATE）
-
-被治理项目的 `governance_version` 落后于当前 skill 版本时，用户明确要求升级才执行（**绝不自动升级/降级**）：
-
-1. **生成迁移清单**：
-   - 运行 `scripts/verify-governance.js --json` → 缺失工件清单（新版本新增的 required artifact 会在此列出）
-   - 对照目标版本 CHANGELOG 的 Added / Changed 条目 → 规则与模板变更清单（每个版本的 Changed 条目就是迁移依据）
-2. **展示给用户确认**：新增文件 / 变更文件 / 规则变化 / 行为变化（如新门禁：check-git-policy、内容校验），逐项列出
-3. **执行迁移（用户确认后）**：
-   - 补齐缺失工件：复制新脚本（如 `scripts/check-git-policy.js`）、生成新模板（如 `.governance/git-policy.json`）、更新规则文件（`docs/rules/*`）
-   - 更新 `.governance/manifest.json` 的 `governance_version` → 目标版本
-   - CHANGELOG 记录迁移（`Changed`）
-4. **验证**：`scripts/verify-governance.js` 退出码必须为 0
-5. **安全规则**：迁移是写操作（需用户确认）；跨多个版本迁移时必须覆盖中间版本的工件变化；迁移失败 → 保持原版本，报告 ⚠️/❌，不得留下半迁移状态
-
-### Release 流程（版本发布模式）
-
-仅当进入模式判定为 RELEASE 时执行（Phase 0 环境检测仍执行）。发布由生成的 `release-manager` 子技能承担，详细规范见 `references/workflows/release.md`（单一事实源）：
-
-1. **前置检查**（release_requirements，全部通过才允许发布）：工作区干净 / 测试通过 / CHANGELOG 已更新 / 版本一致（package.json · CHANGELOG · `manifest.governance_version` · tag）/ 目标 tag 不存在 / Proposal 已批准 / 校验器通过。任一失败 → 输出 ⚠️/❌ 清单并停止。
-2. **分析 + Release Proposal（Human-in-the-Loop）**：分析变更（`git log`/`git diff`、API/用户可见变化），运行 `scripts/release-manager.js plan --json ...`（只读）生成 Proposal（当前版本 / 推荐版本 / 类型 / 理由 / Release Notes），展示给开发者并**等待明确确认**；写操作（tag/push/gh release）在批准前一律禁止。不确定性（Potential Breaking/Feature）→ 暂停请求确认；0.x 版本不自动升 1.0.0（详见 `references/workflows/release.md`）。
-3. **版本同步 + 归档计划**：`package.json` → CHANGELOG（`[Unreleased]` 移入 `[X.Y.Z]`）→ `.governance/manifest.json` 的 `governance_version` 与 `release` 字段；完成里程碑聚合写入 `docs/plans/archive/vX.Y.Z.md`、已完成 `TASK_<name>.md` 原样移入 `docs/plans/archive/`（保留原文不删除）。
-4. **提交 release commit**：`git add`（版本同步与归档文件）→ `git commit -m "release: vX.Y.Z - <summary>"`（版本与归档同一提交）→ 校验（`verify-governance.js` 退出码 0）。
-5. **打 tag**：更新 Proposal 的 `headSha` 为新 HEAD → `scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes`（annotated tag 指向 release commit；重新验证工作区干净 + HEAD 一致）。
-6. **推送与 GitHub Release**：`git push origin main` → `git push origin vX.Y.Z` → `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`（写操作均需用户确认；gh 未装/未登录 → ⚠️ Blocked 并提示）。
-7. **收尾**：`manifest.release.validated` 置 `true`，重跑校验并写入 `validation.json`。
-
-### Phase 0：环境检测（Repository Inspection）
-
-不创建任何文件之前，先分析现状。检查：目录结构、已有文档、语言、包管理器、构建工具、测试框架、静态检查工具、Git 状态、已有 CI、已有 AI 指南文件。同时判定**项目成熟度**（见初始化模式判断）。
-
-约束：不覆盖重要文件；目标文件已存在则先分析再合并/更新；不删除已有配置；识别缺失自动化能力；不用假设模板。
-
-输出 Repository Inspection Report（JSON）：
-
-```json
-{
-  "projectType": "",
-  "language": "",
-  "packageManager": "",
-  "buildTool": "",
-  "testFramework": "",
-  "linter": "",
-  "gitRepo": true,
-  "maturity": "LEVEL_0_EMPTY",
-  "existingDocRoot": "docs",
-  "ci": "",
-  "existingDocs": [],
-  "missingAutomation": [],
-  "plannedChanges": []
-}
-```
-
-若 `.governance/state.json` 已存在（上次运行留下），先读取并**从断点续跑**，保持幂等，不重复已完成的项。
-
-开始写入前先记录 `.governance/preflight.json`（Git 状态摘要 + 已存在文件清单 + 时间戳），作为回滚依据（见 .governance/ 机器可读状态）。
-
-### Phase 1：治理体系构建（生成器执行 + Agent 判断与确认门）
-
-**写文件的活全部交给生成器**，Agent 只负责判断、确认与人工兜底。产物清单与生成规则的单一事实源是 `references/init-spec.json`（**本节不复述工件列表**，避免双源漂移）。
-
-**1. Agent 判断（Phase 0 的检测结论 → 生成器输入）**
-
-| 输入 | 判断依据 |
+| 等级 | 策略 |
 | --- | --- |
-| `--project-name` | 仓库名/package 名 |
-| `--maturity` | Project Maturity Detection 结论（L0/L1/L2/L3） |
-| `--doc-root` | 既有文档根（`docs`、`documentation`、monorepo 布局等）——**适配现有体系，禁止创建第二个平行文档中心** |
-| `--stack` | 检测到的主栈（node/python/rust/go/java/cpp/docs-only），决定 CI 模板 |
-| `--ci-platform` | 检测到的 CI 平台（github/gitlab/none） |
+| L0 / L1 | 完整骨架（合并不覆盖） |
+| L2 | 只补缺失项 |
+| L3 | 默认审计：不重构不迁移；写入需强制标志 + 用户确认 |
 
-**2. 运行生成器**
+写入 `.governance/state.json` 的 `maturity`。执行有序；每步更新 `state.json` / `validation.json`。
+
+### AUDIT
+
+进入 AUDIT 时替代 Phase 1 构建（Phase 0 仍跑）。骨架：读 manifest → `scripts/verify_governance.js` `--json` → **引用闭包**（规则所引路径须在本项目可解析）→ 健康报告 → 最小补丁（不扩大范围；同类闭包 / 控制面追查见 lifecycle + 叶 `root-cause-repair.md` / `audit-drift.md`）。版本漂移只报告，不擅自升降；升级走 MIGRATE。日常巡检由生成的 `drift-check` 子技能承担。
+
+### MIGRATE
+
+仅当用户明确要求升级时：列清单（校验器缺失项 + CHANGELOG）→ 用户确认 → 补齐工件并更新 `governance_version` → `verify_governance.js` 退出 0。失败保持原版本，禁止半迁移。
+
+### RELEASE
+
+权威：`references/workflows/release.md` + 叶 `release-orchestration.md`。骨架：前置检查全过 → Proposal（HITL）→ 版本同步/归档 → release commit → tag → push / GitHub Release → 收尾。写操作须经 Approval Gate；细节不在本入口复述。
+
+### Phase 0：环境检测
+
+写任何文件前：目录 / 文档 / 语言 / 包管理器 / 构建 / 测试 / lint / Git / CI / 既有 AI 指南 → 判定成熟度 → Inspection Report（JSON）→ 如有 `state.json` 则断点续跑 → 写入前记 `preflight.json`。不覆盖重要文件；不用假设模板。
+
+### Phase 1：构建（生成器 + Agent 门）
+
+**写文件交给生成器**；产物清单唯一权威 = `references/init-spec.json`（不复述工件表）。叶：`deterministic-init.md`。
 
 ```bash
 node scripts/generate-governance.js --target <项目根> --phase C \
@@ -328,89 +174,25 @@ node scripts/generate-governance.js --target <项目根> --phase C \
   --stack <栈> --ci-platform <平台>
 ```
 
-- 幂等：已存在文件**跳过不覆盖**，可反复运行
-- 成熟度策略由生成器执行：L0/L1 全量生成；L2 只补缺失项；**L3 默认审计模式（只报告不写）**，需 `--force-l3` 才写入
-- `--dry-run` 先看清单；`--json` 输出机器可读结果
-- 任何未实现的生成器都会 **exit 1**（不静默跳过），除非显式 `--allow-stub`
+- 幂等跳过已存在文件；L3 默认只报告；`--dry-run` / `--json`；未实现生成器 exit 1（除非显式允许 stub）
+- Agent 兜底：工具入口适配、README 合并、Feature/ARCHITECTURE 真实内容、CI 降级占位、L2/L3 合并（合并不覆盖）——反虚构与确认门仍适用
+- 确认门：依赖变更 · Git 身份 · CI 首次推送 · L3 写入 · 跨 3+ 文件额外改动
 
-**3. Agent 兜底（生成器不做判断的部分）**
+### 状态工件（指针）
 
-- **CLAUDE.md 与各工具入口**：按检测到的工具生成（`.cursor/rules/*.mdc`、`.github/copilot-instructions.md`、`opencode.json` 的 `skills.paths`）；`.cursorrules` 已弃用，不再生成
-- **README 语言布局**：按语言政策决定是否生成 `docs/README.zh-CN.md` 等变体；**已有 README 只补文档索引与徽章，合并不覆盖**
-- **Feature Registry 内容**：生成器只建目录与占位，**真实功能条目由 Agent 按登记判定补写**（反虚构：不得登记不存在的功能）
-- **ARCHITECTURE.md 实质内容**：生成器给骨架，Agent 必须填真实架构与组件登记（校验器会拒绝未填的模板骨架）
-- **CI 管线降级**：项目缺失的脚本对应步骤保留 `echo "No <tool> configured yet"`，**不得强行编写无法执行的命令**
-- **L2/L3 既有内容合并**：生成器跳过已存在文件后，Agent 负责把治理要求合并进既有文件（合并不覆盖）
+期望态 / 当前态 / 观测态 / 预检：`.governance/{manifest,state,validation,preflight}.json`（+ 运行时 `drift-report` / `release-proposal`，非 required）。字段与跟踪策略见叶 `governance-state.md` 与 `references/init-spec.json`。`phase` ∈ lifecycle 六阶段 + `completed|blocked|failed`；断点续跑不得跳步或重跑已完成项。
 
-**4. 确认门（必须用户明确同意）**
+### Phase 2：校验
 
-- 依赖变更 · Git 身份未配置 · CI 首次推送 · L3 项目写入（`--force-l3`）· 跨 3 个以上文件的额外改动
-
-### .governance/ 机器可读状态
-
-- `manifest.json` —— **唯一索引 / 期望态**：声明全部治理工件（AGENTS.md、CHANGELOG.md、ARCHITECTURE、features、plans、rules、.gitignore、.env.example、CI、scripts/verify-governance.js、.governance/* 等），含**实际路径**、文件系统类型 `kind`（file/dir）与语义类型 `type`（policy/documentation/script/ci/state）+ 版本。`schema_version` 是**数据格式版本**，`governance_version` 是**治理框架版本**，二者分离。**校验脚本以它声明的路径为准**，结构适配场景下改动此处即可；`artifacts` 必须覆盖全部治理工件（不限于文档），否则校验会漏项：
-
-```json
-{
-  "schema_version": "1.0",
-  "governance_version": "2.0.0",
-  "release": { "version": "2.0.0", "tag": "v2.0.0", "validated": false },
-  "doc_root": "docs",
-  "artifacts": [
-    { "name": "AGENTS.md", "path": "AGENTS.md", "kind": "file", "type": "policy" },
-    { "name": "Feature registry", "path": "docs/features", "kind": "dir", "type": "documentation" },
-    { "name": "CI workflow", "path": ".github/workflows", "kind": "dir", "type": "ci" }
-  ]
-}
-```
-
-> `release`（可选）把发布本身纳入治理对象：`version` 与 `governance_version` 一致，`tag` 为 `v<version>`，`validated` 发布通过校验后置 `true`（见 `references/workflows/release.md`）。
-
-> 分层语义：`manifest.json` = 期望态（desired state），`state.json` = 当前态（current state），`validation.json` = 观测态（observed state）。
-> `type` 是治理语义元数据，用于分类与报告，**不参与文件系统校验**（文件系统判断只看 `kind`）。
-
-**Git 跟踪策略**：`manifest.json`、`state.json`、`generated/` 必须提交（治理即代码）；`validation.json`、`drift-report.json`、`release-proposal.json` 为临时运行输出，忽略（见 `.gitignore` 与 `references/policies/governance-files.policy.md`）。
-
-- `state.json` —— 当前任务/成熟度/Agent 身份/阶段（示例）：
-
-```json
-{
-  "maturity": "LEVEL_0_EMPTY",
-  "phase": "implement",
-  "agent_id": "",
-  "task_id": "",
-  "locked": null,
-  "completed": ["docs", "agents", "rules"],
-  "blocked": ["github_permission"]
-}
-```
-
-- `validation.json` —— 最近一次治理校验结果（逐项 ✅/❌ + 时间戳）。**运行时输出**：由 AUDIT/校验产生，被 git 忽略、**不作为 required artifact**（fresh-checkout CI 不依赖它）
-- `release-proposal.json` —— 最近一次 Release Proposal（审批证据）。**运行时输出**：由 RELEASE 的 Approval Gate 产生，被 git 忽略、**不作为 required artifact**
-- `preflight.json` —— **初始化前快照**（回滚依据）：`git status` 摘要、已存在文件清单、时间戳。失败/Fatal 时输出 "Rollback recommended" 并给出如何恢复（如 `git checkout` 已改动文件、删除本次新建清单）。
-
-**状态机**：`state.json` 的 `phase` 取值 = 生命周期六阶段 `understand / plan / implement / validate / synchronize / report` + 终止态 `completed / blocked / failed`。任意阶段异常 → `blocked`/`failed`；崩溃/中断后恢复时先读 `phase` 确定断点，**不得重跑已完成项**，也不得跳步。
-
-### Phase 2：校验（Governance Validator）
-
-运行项目内的 `scripts/verify-governance.js`，把真实输出记录进 `validation.json` 与最终报告。
-
-> 校验项集合由 `verify-governance.js` 定义，可能随 schema 版本演进，**以校验器实际输出为准**。`validation.json` / `drift-report.json` 是**运行时输出，不作为 required artifact**（fresh-checkout CI 必须无它们也通过）。当前默认项：
-
-```
-AGENTS.md / CHANGELOG.md / CHANGELOG format / docs/ARCHITECTURE.md / docs/features/ / docs/plans/ /
-docs/rules/ / .gitignore / .env.example / CI workflow / scripts/verify-governance.js / scripts/check-lock.js /
-scripts/check-git-policy.js / scripts/check-secrets.js / scripts/check-sync.js / .governance/ 目录 / manifest.json / state.json /
-preflight.json / git-policy.json / governance_version
-```
+`scripts/verify_governance.js` → 真实输出写入 `validation.json` 与报告。校验项以校验器输出为准（叶 `governance-validator.md`）。
 
 ### Phase 3：交付报告
 
-输出**完成度核对表**：每项 `✅/⚠️/❌` + 证据命令 + 输出摘录；列出新建文件清单；无法完成的项明确原因。报告前先跑 `verify-governance.js` 确认退出码为 0。
+完成度核对表（✅/⚠️/❌ + 证据）；报告前校验器退出码须为 0。
 
 ## Definition of Done
 
 - 全部治理项 ✅，或 ⚠️ Blocked 且原因明确
-- `scripts/verify-governance.js` 退出码 0
+- `scripts/verify_governance.js` 退出码 0
 - `validation.json` 已更新
 - 报告包含真实证据，无虚构

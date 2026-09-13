@@ -71,43 +71,44 @@ H2a 残留叶 CTRL 重排 / H2b consistency 大拆 / H2c CONTROL-X 机读化
 - [x] architecture ×3 布局树列出新叶
 - [ ] Authority 路径抽检（脚本/政策名与磁盘一致）— 持续
 
-### Stage 3 — 入口改写 — **IN PROGRESS**
+### Stage 3 — 入口改写 — **DONE（首版）**
 
 - [x] `SKILL.md` / `AGENTS.md` 增加显式 Capability 路由表
-- [ ] 继续删减入口百科正文（迁叶 / 留 always-on）
-- [ ] 与 `references/principles/entry.md` 指针一致复核
-- [ ] 三语产品文档现在时指针（若声称入口职责）
+- [x] 删减入口百科正文（策略/执行层 → always-on 不变量 + 指针；路由表对齐 inventory 叶名）
+- [x] 与 `references/principles/entry.md` 指针一致复核
+- [ ] 三语产品文档现在时指针（若声称入口职责）— 延后小批；不阻塞 Stage 4
 
 ### Stage 4 — 验证 — **IN PROGRESS**
 
 - [x] 表征测试 `instruction-surface`（schema + must-ship 覆盖 + inventory 闭合）
-- [ ] 干净目标：打包 → INIT → 叶引用可解析
-- [ ] Discovery Ledger Open=0（或 defer+revisit 显式）
+- [x] 干净目标：打包 → INIT → 叶引用可解析（Y5；`instruction-surface` 第 6 例）
+- [ ] Discovery Ledger Open=0（或 defer+revisit 显式）— 余 Y6 产品文档现在时
 - [ ] exit review → Implemented → Archived（Plan archive ≠ Release）
 
 ## 完成条件（outcome）
 
-- [ ] Always-on 入口不再承载完整政策/能力百科；路由表可解析到叶
+- [x] Always-on 入口不再承载完整政策/能力百科；路由表可解析到叶
 - [x] 每个 ADR-0024 must-ship 能力有且仅有一条 2.0 叶卡权威说明（Trigger/Authority/Invoke/Verify/Non-goals）— 以 inventory 为准
 - [x] RESEARCH-0006 / ADR-0024 未被本计划改写为第二处置源
 - [x] 未借机清理 scripts/、未装本仓 router 为 INSTALLED 默认、未做 H2a–c 大爆炸
-- [ ] 干净目标证据真实（非宣称）
+- [x] 干净目标证据真实（非宣称）— Y5 表征测试
 
 ## Discovery Ledger（Active 维护）
 
 | ID | 类型 | 问题 | 状态 | 处置 |
 | --- | --- | --- | --- | --- |
-| Y0 | observation | 入口厚平面 vs 机械薄路由（FINDING-0015） | open | Stage 3 继续瘦身 |
+| Y0 | observation | 入口厚平面 vs 机械薄路由（FINDING-0015） | closed | resolved（Stage 3 瘦身：策略/执行层改为指针） |
 | Y1 | migration_gap | must-ship 缺少 2.0 叶卡 | closed | resolved（32 叶 + inventory） |
-| Y2 | observation | PLAN-0034 E1 完整瘦身曾 deferred | open | 本计划 Stage 3 收口 |
+| Y2 | observation | PLAN-0034 E1 完整瘦身曾 deferred | closed | resolved（本计划 Stage 3 收口） |
 | Y3 | constraint | 不得把 0006 当施工合同重开 | closed | resolved（Out） |
-| Y4 | observation | SKILL 仍含执行层百科；路由表已加但正文未删净 | open | Stage 3 |
-| Y5 | verification | 干净目标 INIT 叶闭包证据 | open | Stage 4 |
+| Y4 | observation | SKILL 仍含执行层百科；路由表已加但正文未删净 | closed | resolved（执行层改为编排骨架） |
+| Y5 | verification | 干净目标 INIT 叶闭包证据 | closed | resolved（pack → INIT → `docs/rules/capabilities/` schema+portability） |
+| Y6 | observation | 三语产品文档入口职责现在时指针 | open | defer；Stage 4 收口前 revisit |
 
 ```text
-Total known:  6
-Resolved:     2  (Y1, Y3)
-Open:         4  (Y0, Y2, Y4, Y5)
+Total known:  7
+Resolved:     6  (Y0–Y5)
+Open:         1  (Y6)
 Unaccounted:  0
 ```
 

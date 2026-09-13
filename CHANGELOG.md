@@ -6,7 +6,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **PLAN-0046 Active (H2-front)** — instruction-surface 2.0 alignment started: capability leaves under `references/capabilities/` use Trigger/Authority/Invoke/Verify/Non-goals; coverage map `repo-tools/instruction-surface-leaves.v0.json` (not a third disposition ledger); `SKILL.md` / `AGENTS.md` gain explicit capability routing. Stage 3 entry thinning and clean-target INIT proof remain open.
+- **PLAN-0046 Stage 3/4 progress (H2-front)** — `SKILL.md` policy/execution encyclopedia thinned to always-on invariants + pointers; capability routing table aligned to inventory leaf names. Clean-target INIT leaf closure characterized (`instruction-surface` Y5: package → INIT → `docs/rules/capabilities/` schema + portability). Coverage map remains `repo-tools/instruction-surface-leaves.v0.json` (not a disposition ledger). Open: trilingual product-doc now-tense pointers (Y6).
 
 - **ADR-0025 H2 execution order** — H2-0 ledger now-tense calibration → PLAN-0046 (H2-front) → H2a–d. Roadmap indexes the order; authority stays in the ADR. PLAN-0046 re-homed to H2-front (not H2d). RESEARCH-0004/0005/0006/0009 now-tense only.
 
