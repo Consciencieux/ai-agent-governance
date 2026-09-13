@@ -6,7 +6,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- **Numbered docs are single files** — construction text lives in that one RESEARCH/ADR/Finding. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. Do not park markdown inventories next to the checkers.
+- **Numbered docs are single files** — do not mint companion RESEARCH IDs or `working/` dumps for construction tables. `repo-tools/` holds gates, CLIs, and JSON the code actually loads. RESEARCH-0014 (extraction draft) withdrawn. Docs shape allowlist direction is in FINDING-0030 (H2b open; not expanded in README).
 
 ## [2.0.0] - 2026-09-12
 

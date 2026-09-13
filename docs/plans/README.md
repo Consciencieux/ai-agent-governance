@@ -55,7 +55,7 @@ docs/plans/
 6. **每个 Plan 声明 `generation`**：`gen1`（Generation-1 历史执行记录）/ `gen2`（Generation-2 计划）。迁移工作（如 2.0 迁移）用 `gen2`，迁移来源在正文背景说明；`migration_from` 是可选项，仅在需要机械查询迁移计划时加。归档不等于能力过时，也不等于产品发布。
 7. **统一 envelope（表示法归一，ADR-0016）**：frontmatter = `id` / `status` / `generation`（+ 当前 Plan 的 `target`）；`status` 取值 `Design` / `Active` / `Implemented` / `Completed` / `Archived`（canonical 在 frontmatter，正文不再有 `> **Status:**`）；H1 = `# PLAN-xxxx：中文标题`；空 optional 字段省略。**历史归档 Plan 的 required fields = `id` / `status: Archived` / `generation`（不含 `target`）**——current Plan 与 historical Plan 的必填字段分开定义。
 8. **不重新裁决长期架构**：Plan 的权威是当前施工与验收。ADR 约束只作摘要 + 指针。正文级边界见 ADR-0016 权威矩阵。
-9. **产物跟随类型 + owner（FINDING-0030）**：Plan = 执行合同（状态 / 输入输出 / 验收）。生成的知识进 Research 或 ADR，Plan 只引用。禁止把 L1/L2 目录、系统模型写进 Plan。禁止 `plans/working/`、禁止 `PLAN-xxxx/` 文件夹、禁止无编号文件进 `archive/`、禁止 `PLAN-xxxx-stage-*.md`。
+9. **产物跟随类型 + owner（FINDING-0030）**：Plan = 执行合同。过程稿 / 施工表默认不落盘。禁止把 L1/L2 目录、系统模型写进 Plan，也禁止为此新开 RESEARCH 编号。禁止 `plans/working/`、禁止 `PLAN-xxxx/` 文件夹、禁止无编号文件进 `archive/`、禁止 `PLAN-xxxx-stage-*.md`。
 10. **Plan 创建门闩**：只有跨 session、需要执行、需要 owner、需要验证闭环、需要生命周期时才新建 `PLAN-xxxx`。一次性 HITL 提案、发布勾选清单、被否决方向、临时草稿 **不是** Plan：并入所属正文，或不要落盘。
 
 ## Agent 硬禁止（已付学费 · 本目录）

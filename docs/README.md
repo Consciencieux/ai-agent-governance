@@ -34,7 +34,7 @@ docs/
 
 ```text
 1. Plan 正文只保留执行合同（目标 / 阶段 / 验收 / 状态 / ledger）
-2. 提炼知识（Facts / Pattern / L1 候选 / 系统模型）→ Research
+2. 过程稿 / 施工表 **默认不落盘**。不是 Plan、不是 Research、不是 repo-tools 说明书。需要长期保留的结论写进**已有**编号对象；不要为 Stage 产物新开 RESEARCH 编号。
 3. 产生新的问题记录           → Finding
 4. 产生长期设计决定           → ADR
 5. 临时草稿 / HITL 勾选       → 并入所属 Plan 或 ADR 正文，不要新文件
@@ -55,7 +55,7 @@ docs/
 新增类型目录 → 先 ADR，再改本页允许的类型树，不是 Agent 当场发明
 ```
 
-**一个编号 = 一个文件。** 机读图 / 台账 JSON 不是 Research，放 `repo-tools/`，由编号对象引用。
+**一个编号 = 一个文件。** 机读图 / 台账 JSON 不是 Research，放 `repo-tools/`，由编号对象引用。形状 allowlist 与 md/门禁分层 → [FINDING-0030](findings/FINDING-0030-artifact-placement-routing-gap.md) § 修改方向。
 
 ## 文档职责与信息密度（Document Scope）
 
@@ -86,14 +86,14 @@ docs/
 
 | 做过的错 | 为什么错 | 以后必须 |
 | --- | --- | --- |
-| Stage 稿进 `research/working/extraction/` | `working/` 是冻结施工槽，不是知识类型 | 提炼知识 → `RESEARCH-xxxx` |
+| Stage 稿进 `research/working/extraction/` 或新开 RESEARCH-0014 | `working/` 不是类型；过程稿也不是 Research | 过程稿不落盘；结论进已有编号对象 |
 | 建 `docs/plans/working/` | 生命周期槽被当成类型 | 禁止该路径；Plan 只有单文件 |
 | 建 `docs/plans/PLAN-xxxx/`（含拆已归档 PLAN-0044/0045） | 别的 Plan 都是单文件；文件夹比无编号更乱 | 永远 `PLAN-xxxx-<slug>.md` |
 | 再拆 `PLAN-xxxx-stage-*.md` | 第二份 Plan 文件 | 禁止；状态写进那一个 Plan |
 | 「Stage 写进 Plan 正文」把 Facts/L1–L3 全文塞进 Plan | Plan 变成百科；违反单一权威与 Context Economy | Plan = 执行合同（约数百行）；知识只引用 |
 | 无编号 `*-proposal.md` / `*-checklist.md` 丢进 `plans/archive/` | HITL / 清单不是 Plan | 并入所属 Plan 或 ADR，或不要落盘 |
 | 同号再拆 `RESEARCH-0012-foo.md` / 把 JSON 当 Research | 一个编号必须一个文件 | 人读并入那一份；JSON 给代码读 |
-| 把拓扑/台账/审查剧本 md 堆进 `repo-tools/` | 门禁目录不是文档库 | 施工说明进所属 RESEARCH；`repo-tools/` 只留脚本和它读的 JSON |
+| 把拓扑/台账/审查剧本 md 堆进 `repo-tools/` | 门禁目录不是文档库 | 过程稿不落盘；JSON 跟读它的脚本 |
 | 把内部研究写进 `docs/product/` | 产品文档不是知识对象垃圾桶 | Product 只给用户当前事实；指针回 Research/Plan |
 
 **纠偏禁令：** 路径错了，把内容归入**已有类型对象**。禁止用「再加一层目录 / 再加一份 md / 再写一个 Finding」当修复。禁止预建 `skill-extraction/`、`skill-design/`、`docs/gen2/` 这类主题夹。
