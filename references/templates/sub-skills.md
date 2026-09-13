@@ -97,16 +97,17 @@ description: Use at the end of any agent task to persist progress into .governan
 
 # State Manager
 
-State machine: `understand → plan → implement → validate → synchronize → report`, plus terminal states `completed / blocked / failed`. Any phase failure → `blocked`/`failed`. On crash/recovery, read `phase` to find the resume point — never re-run completed items, never skip phases.
+State machine: `understand → plan → implement → validate → synchronize → report`, plus terminal states `completed / blocked / failed`. Any facet failure → `blocked`/`failed`. On crash/recovery, read `facet` (legacy alias: `phase`) to find the resume point — never re-run completed items, never skip facets. `facet` is a ContextFacet on the operational lifecycle (FINDING-0029 / ADR-0022); it is not a capability taxonomy axis and is not INIT Phase A|B|C.
 
 At the end of every task (or on interruption), update `.governance/state.json`:
 
 ```json
-{"maturity":"","phase":"","agent_id":"","task_id":"","locked":null,"completed":[],"blocked":[],"task_start_sha":"","updatedAt":"<ISO>","rule_capture":{"status":"none","task_id":"","candidates":[]}}
+{"maturity":"","facet":"","phase":"","agent_id":"","task_id":"","locked":null,"completed":[],"blocked":[],"task_start_sha":"","updatedAt":"<ISO>","rule_capture":{"status":"none","task_id":"","candidates":[]}}
 ```
 
 - `maturity`: LEVEL_0_EMPTY / LEVEL_1_PROTOTYPE / LEVEL_2_ACTIVE / LEVEL_3_PRODUCTION
-- `phase`: one of the lifecycle phases above (understand / plan / implement / validate / synchronize / report / completed / blocked / failed)
+- `facet`: one of the lifecycle facets above (understand / plan / implement / validate / synchronize / report / completed / blocked / failed). Writers MUST set `facet`; during the H2a compatibility window they MAY dual-write the same value to legacy `phase`. Readers MUST prefer `facet` and fall back to `phase` when `facet` is absent.
+- `phase`: legacy alias of `facet` (do not treat as a second dimension)
 - `agent_id` / `task_id`: identify the working agent; used for multi-agent locking
 - `locked`: set while actively modifying a file; null when done
 - `completed`: list of done items (docs, agents, rules, security, ci, state)

@@ -46,9 +46,9 @@
       "keep": 27
     },
     "by_generation": {
-      "gen1_carrier": 19,
-      "gen2_native": 10,
-      "dual_profile": 1
+      "gen1_carrier": 17,
+      "gen2_native": 12,
+      "dual_profile": 3
     },
     "by_role": {
       "INSTALLED": 16,
@@ -310,7 +310,7 @@
     {
       "path": "scripts/check-doc-consistency.js",
       "distribution_role": "INSTALLED",
-      "generation": "gen1_carrier",
+      "generation": "dual_profile",
       "disposition": "wrap",
       "owns": "CTRL-0006+clusters",
       "baseline": {
@@ -321,12 +321,12 @@
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": true,
-      "notes": "WRAP/monolith residue; dogfooded by repo npm check"
+      "notes": "WRAP/monolith residue; dogfooded by repo npm check; H2a: dual_profile — INSTALLED WRAP + explicit repo package.json dogfood (FINDING-0028)"
     },
     {
       "path": "scripts/check-doc-freshness.js",
       "distribution_role": "INSTALLED",
-      "generation": "gen1_carrier",
+      "generation": "dual_profile",
       "disposition": "wrap",
       "owns": "CTRL-0003+CTRL-0004",
       "baseline": {
@@ -337,7 +337,7 @@
       "first_seen": "2026-08-16",
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": true,
-      "notes": "WRAP CLI; dogfooded by repo npm check:*"
+      "notes": "WRAP CLI; dogfooded by repo npm check:*; H2a: dual_profile — INSTALLED WRAP + explicit repo package.json dogfood (FINDING-0028)"
     },
     {
       "path": "scripts/check-git-policy.js",

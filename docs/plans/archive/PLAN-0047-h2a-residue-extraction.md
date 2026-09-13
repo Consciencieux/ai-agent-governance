@@ -1,13 +1,15 @@
 ---
 id: PLAN-0047
-status: Design
+status: Archived
 generation: gen2
 target: both
 ---
 
 # PLAN-0047：H2a 残留抽出（AuthorityRef 重指向 · lifecycle 辨析 · 脚本 dogfood）
 
-**状态：** Design（2026-09-13）。**禁止口头开工**——须人类显式 Active 后才进入施工（ADR-0018 决策 7 · ADR-0025 决策 2）。
+> **Status: Archived
+
+**状态：** Archived（2026-09-13 exit review）。Stage 0–4 完成；A0–A5 全关。Plan archive ≠ Release。
 
 **归属：** [ADR-0025](../design-decisions/ADR-0025-gen2x-product-path.md) **H2a**（决策 5 + 决策 14：H2-0 → PLAN-0046 → **a**→b→c→d）。前置 H2-front [PLAN-0046](archive/PLAN-0046-instruction-surface-2.0-alignment.md) 已 Archived。
 
@@ -52,61 +54,61 @@ H2b consistency 大拆 · H2c CONTROL-X / 机器 Control · H2d INSTALLED router
 
 ## 阶段
 
-### Stage 0 — 契约冻结 — **Design 中**
+### Stage 0 — 契约冻结 — **完成**
 
-- [ ] leftover 叶清单定稿（相对 PLAN-0040 Deferred / 路由图 AuthorityRef 抽检）
-- [ ] `state.json` facet 字段名与兼容策略（读旧写新 / 双读窗口）草案
-- [ ] dogfood 声明形状（inventory 字段 vs package.json 注解）选定一种，不双源
-- [ ] 人类 Active
+- [x] leftover 叶清单定稿：`change-hygiene` / `discovery-ledger` / `root-cause-repair` / `rule-capture`（恢复 5c 正文 + Authority→本叶）；`ssot-repair` → root-cause-repair；`installed-portability` → 本叶契约
+- [x] `state.json` 字段 = `facet`；兼容窗口双写 `phase`；读者 `facet ?? phase`
+- [x] dogfood 声明形状 = inventory `dogfood_from_repo_package_json` + `generation: dual_profile`（不双源）
+- [x] 人类 Active（「开始」）
 
-### Stage 1 — leftover AuthorityRef — Active 后
+### Stage 1 — leftover AuthorityRef — **完成**
 
-- [ ] 抽检并改写 leftover 叶 AuthorityRef
-- [ ] 路由 / init-spec / 表征测试闭合
-- [ ] 禁止目录大挪移（除非单一 AuthorityRef 目标文件更名且全引用更新）
+- [x] 抽检并改写 leftover 叶 AuthorityRef；恢复被 PLAN-0046 薄卡冲掉的 5c 权威正文
+- [x] 路由图 Authority 路径保持指向 capabilities/*；表征测试通过
+- [x] 未按 Gen1 目录骨架细切 / 未重开 Phase 5
 
-### Stage 2 — FINDING-0029 — Active 后
+### Stage 2 — FINDING-0029 — **完成**
 
-- [ ] 三义辨析进入原则/政策指针（不复制百科）
-- [ ] `state.json` phase→facet
-- [ ] 生成模板 / INIT 产物同步
+- [x] lifecycle 生长禁令 + ADR-0022 三义可引用；FINDING-0029 Resolved
+- [x] `state.json` phase→facet（双写兼容）
+- [x] generator + sub-skills 模板 + SKILL 指针同步
 
-### Stage 3 — FINDING-0028 dogfood — Active 后
+### Stage 3 — FINDING-0028 dogfood — **完成**
 
-- [ ] inventory 字段完备性门禁（相对关闭条件）
-- [ ] 本仓 check 脚本路径 dogfood 拆分或 dual_profile 显式
-- [ ] 确认 `retire = ∅`；若出现非空 retire，另开切片写删除条件——**本计划默认不删**
+- [x] dogfood 门禁测试（package.json 调用的 INSTALLED 必须 dual_profile + 声明）
+- [x] check-doc-consistency / check-doc-freshness → dual_profile
+- [x] `retire = ∅` 保持；未删脚本
 
-### Stage 4 — 验证与闭包 — Active 后
+### Stage 4 — 验证与闭包 — **完成**
 
-- [ ] Discovery Ledger Open=0（或 defer+revisit 显式）
-- [ ] FINDING-0028 / 0029：Resolved 或书面「剩余为何不挡 H2b」
-- [ ] exit review → Implemented → Archived（Plan archive ≠ Release）
-- [ ] Roadmap / AGENTS 现在时 → 下一步 H2b
+- [x] Discovery Ledger Open=0（A0–A5 closed）
+- [x] FINDING-0028 / 0029：Resolved
+- [x] exit review → Implemented → Archived（Plan archive ≠ Release）
+- [x] Roadmap / AGENTS 现在时 → 下一步 H2b
 
 ## 完成条件（outcome）
 
-- [ ] leftover Capability 叶 AuthorityRef 可解析且无「钉死在错误 lifecycle 坐标」的新增
-- [ ] FINDING-0029 辨析可引用；`state.json` 以 facet 为权威阶段维度（或兼容窗口有截止日期）
-- [ ] FINDING-0028：不可再靠猜测区分遗留/新建（inventory + dogfood 声明）；今日仍无 retire 删除义务
-- [ ] 未新建第三份能力去向表；未预标 retire；未跳进 H2b/c/d
-- [ ] 证据真实（表征测试 / 干净抽检），非宣称
+- [x] leftover Capability 叶 AuthorityRef 可解析且无「钉死在错误 lifecycle 坐标」的新增
+- [x] FINDING-0029 辨析可引用；`state.json` 以 facet 为权威阶段维度（或兼容窗口有截止日期）
+- [x] FINDING-0028：不可再靠猜测区分遗留/新建（inventory + dogfood 声明）；今日仍无 retire 删除义务
+- [x] 未新建第三份能力去向表；未预标 retire；未跳进 H2b/c/d
+- [x] 证据真实（表征测试 / 干净抽检），非宣称
 
 ## Discovery Ledger（Active 后维护；Design 预置）
 
 | ID | 类型 | 问题 | 状态 | 处置 |
 | --- | --- | --- | --- | --- |
-| A0 | constraint | 不得重开 Phase 5 / 按 Gen1 骨架细切 | open | Stage 0 Out |
-| A1 | migration_gap | 5c leftover AuthorityRef 未收 | open | Stage 1 |
-| A2 | architecture_gap | FINDING-0029 lifecycle 三义 + phase 坐标 | open | Stage 2 |
-| A3 | architecture_gap | FINDING-0028 dogfood / dual_profile | open | Stage 3 |
-| A4 | constraint | retire=∅；禁第三份去向表 | open | 全程消费 script-inventory |
-| A5 | constraint | 未收 leftover 不得写进 H2c Control | open | ADR-0025 决策 5 |
+| A0 | constraint | 不得重开 Phase 5 / 按 Gen1 骨架细切 | closed | observed |
+| A1 | migration_gap | 5c leftover AuthorityRef 未收 | closed | resolved |
+| A2 | architecture_gap | FINDING-0029 lifecycle 三义 + phase 坐标 | closed | resolved |
+| A3 | architecture_gap | FINDING-0028 dogfood / dual_profile | closed | resolved |
+| A4 | constraint | retire=∅；禁第三份去向表 | closed | observed |
+| A5 | constraint | 未收 leftover 不得写进 H2c Control | closed | observed |
 
 ```text
 Total known:  6
-Resolved:     0
-Open:         6  (A0–A5)
+Resolved:     6  (A0–A5)
+Open:         0
 Unaccounted:  0
 ```
 

@@ -1,6 +1,6 @@
 ---
 id: FINDING-0028
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen2
 ---
@@ -92,3 +92,7 @@ observed_in: gen2
 ## 回归保护
 
 （部分满足，Finding **未**关闭）L0：`tests/suites/script-inventory.test.js` — 缺登记则红；v0 禁止非空 `retire`。关闭仍需：dogfood 拆分或显式 dual_profile 声明门禁；`retire` 删除条件与引用清零。
+
+## 关闭记录
+
+**Resolved（2026-09-13 · PLAN-0047 H2a Stage 3）。** L0 台账（PLAN-0041）保留为唯一脚本身份面；本仓 `package.json` 对 INSTALLED CLI 的 dogfood 现以 `dogfood_from_repo_package_json` + `generation: dual_profile` 显式声明，并由 `tests/suites/script-inventory.test.js` 门禁。今日 `retire = ∅`，不删脚本、不预标 retire。剩余「按 retire 隔离/删除」仅当 inventory 非空 retire 时另开切片——不挡 H2b。

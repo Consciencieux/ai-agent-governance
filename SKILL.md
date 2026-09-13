@@ -180,7 +180,7 @@ node scripts/generate-governance.js --target <项目根> --phase C \
 
 ### 状态工件（指针）
 
-期望态 / 当前态 / 观测态 / 预检：`.governance/{manifest,state,validation,preflight}.json`（+ 运行时 `drift-report` / `release-proposal`，非 required）。字段与跟踪策略见叶 `governance-state.md` 与 `references/init-spec.json`。`phase` ∈ lifecycle 六阶段 + `completed|blocked|failed`；断点续跑不得跳步或重跑已完成项。
+期望态 / 当前态 / 观测态 / 预检：`.governance/{manifest,state,validation,preflight}.json`（+ 运行时 `drift-report` / `release-proposal`，非 required）。字段与跟踪策略见叶 `governance-state.md` 与 `references/init-spec.json`。`facet` ∈ lifecycle 六阶段 + `completed|blocked|failed`（兼容窗口可读遗留字段 `phase`）；断点续跑不得跳步或重跑已完成项。
 
 ### Phase 2：校验
 

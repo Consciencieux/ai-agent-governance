@@ -1,6 +1,6 @@
 ---
 id: FINDING-0029
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen1
 ---
@@ -70,3 +70,7 @@ observed_in: gen1
 - ADR-0022 含三义边界窄修正，且 AGENTS / 薄入口不复述冲突定义；
 - 新增 INSTALLED 横切不得只写进 lifecycle Phase 小节而无 Capability `AuthorityRef`；
 - 表征或审查清单抽查：不得把 INSTALL/UPDATE/ROLLBACK 写回本仓 lifecycle 交付范围。
+
+## 关闭记录
+
+**Resolved（2026-09-13 · PLAN-0047 H2a Stage 2）。** ADR-0022 三义窄修正已落地；`lifecycle.policy.md` 顶部生长禁令固定义项 C 为编排骨架；Slice B leftover 权威正文恢复到 Capability 叶且 Authority 指向本叶（不再循环钉 lifecycle）；`.governance/state.json` 进度维升格为 `facet`（兼容窗口双写遗留 `phase`）。义项 A 仍不回归本仓。历史 lifecycle 正文允许残留，但不得再按错误坐标新增横切。

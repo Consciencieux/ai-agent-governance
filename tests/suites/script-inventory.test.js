@@ -103,4 +103,39 @@ module.exports = function register(test) {
     }
     return true;
   });
+
+  test("script-inventory: package.json dogfood of INSTALLED CLIs is declared dual_profile", () => {
+    const inv = JSON.parse(fs.readFileSync(INV_PATH, "utf8"));
+    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
+    const scriptText = JSON.stringify(pkg.scripts || {});
+    const called = new Set();
+    for (const m of scriptText.matchAll(/(?:node\s+)?(scripts\/[^"'\s]+\.js)/g)) called.add(m[1]);
+    const byPath = new Map(inv.entries.map((e) => [e.path, e]));
+    for (const p of called) {
+      const e = byPath.get(p);
+      if (!e) {
+        console.error("  package.json calls uninventoried", p);
+        return false;
+      }
+      if (e.distribution_role !== "INSTALLED") continue;
+      if (!e.dogfood_from_repo_package_json) {
+        console.error("  INSTALLED dogfood undeclared:", p);
+        return false;
+      }
+      if (e.generation !== "dual_profile") {
+        console.error("  INSTALLED dogfood must be dual_profile:", p, e.generation);
+        return false;
+      }
+    }
+    const summary = (inv.summary && inv.summary.dogfood_installed_from_repo) || [];
+    const expected = [...called].filter((p) => {
+      const e = byPath.get(p);
+      return e && e.distribution_role === "INSTALLED";
+    }).sort();
+    if (summary.slice().sort().join("|") !== expected.join("|")) {
+      console.error("  summary.dogfood_installed_from_repo", summary, "!==", expected);
+      return false;
+    }
+    return true;
+  });
 };

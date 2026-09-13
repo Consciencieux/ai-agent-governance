@@ -253,7 +253,8 @@ test("generate-governance: state includes the rule-capture recovery scaffold", (
   if (r.status !== 0) return false;
   const state = JSON.parse(fs.readFileSync(path.join(dir, ".governance/state.json"), "utf8"));
   return state.rule_capture && state.rule_capture.status === "none" &&
-    state.rule_capture.task_id === "" && Array.isArray(state.rule_capture.candidates);
+    state.rule_capture.task_id === "" && Array.isArray(state.rule_capture.candidates) &&
+    state.facet === "completed" && state.phase === state.facet;
 });
 
 

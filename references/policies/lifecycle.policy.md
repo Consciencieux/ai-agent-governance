@@ -1,5 +1,7 @@
 # Agent Operating Lifecycle（规则详解）
 
+> **生长禁令（FINDING-0029 / ADR-0022）：** 本文件是操作编排骨架（义项 C），不是政策仓库。新横切规则默认进入 `docs/rules/capabilities/` / Control / 适用图；禁止向本文件某 Phase 新增大段横切正文。义项 A（Skill 安装生命周期）不回归本仓；义项 B（INIT/AUDIT/RELEASE）不并入本文件。`state.json` 的进度维是 **facet**（ContextFacet），不是能力分类轴。
+
 AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 AI Agent 执行任何开发任务时必须遵循。
 
 ## 规模分级（按规则判定，不由 AI 自判）

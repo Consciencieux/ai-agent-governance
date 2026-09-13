@@ -9,7 +9,7 @@
 
 ## Authority
 
-`docs/rules/lifecycle.md` 中 SSOT / 根因修复相关条款 + 门禁修复纪律。
+`docs/rules/capabilities/root-cause-repair.md`（根因 / 双域对称 / 控制面追查）+ 本叶 Invoke 纪律。禁止把 lifecycle 编排骨架当作 SSOT 正文权威。
 
 ## Invoke
 

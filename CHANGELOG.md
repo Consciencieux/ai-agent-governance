@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- **PLAN-0047 H2a residue extract (Archived)** — leftover Capability AuthorityRefs retargeted (5c bodies restored onto instruction-surface cards; no Gen1 directory resplit). `state.json` progress field promoted to `facet` (dual-write legacy `phase`). Script inventory dogfood of INSTALLED CLIs declared `dual_profile` + gate. FINDING-0028 / FINDING-0029 Resolved. `retire` remains empty.
+
 - **PLAN-0046 Archived (H2-front)** — Stage 3 SKILL thinning + Stage 4 Y5 clean-target INIT leaf closure + Y6 trilingual `architecture.md` now-tense (SKILL = thin always-on entry + capability routing). Discovery Ledger Open=0. Plan moved to `docs/plans/archive/`. Next H2 step = H2a (ADR-0025 decision 14). Coverage map remains `repo-tools/instruction-surface-leaves.v0.json` (not a disposition ledger).
 
 - **ADR-0025 H2 execution order** — H2-0 ledger now-tense calibration → PLAN-0046 (H2-front) → H2a–d. Roadmap indexes the order; authority stays in the ADR. PLAN-0046 re-homed to H2-front (not H2d). RESEARCH-0004/0005/0006/0009 now-tense only.
