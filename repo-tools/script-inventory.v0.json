@@ -124,7 +124,7 @@
         "repo-tools/check-doc-parity.js",
         "repo-tools/check-layout-sync.js",
         "repo-tools/check-must-ship-carriers.js",
-        "repo-tools/check-must-ship.sh",
+        "repo-tools/check-must-ship.js",
         "repo-tools/check-plan-delivery.js",
         "repo-tools/check-role-completeness.js",
         "repo-tools/check-secrets.js",
@@ -223,7 +223,7 @@
       "necessity": "repo_gate"
     },
     {
-      "path": "repo-tools/check-must-ship.sh",
+      "path": "repo-tools/check-must-ship.js",
       "distribution_role": "REPO-ONLY",
       "generation": "gen2_native",
       "disposition": "keep",
@@ -234,9 +234,9 @@
         "commits_after": null
       },
       "first_seen": "2026-09-12",
-      "last_touch": "2026-09-12",
+      "last_touch": "2026-09-14",
       "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
+      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery; Node carrier for Windows portability (replaces check-must-ship.sh)",
       "necessity": "repo_gate"
     },
     {

@@ -154,7 +154,7 @@ ai-agent-governance/
 │   ├── check-terminology.js    # repo-owned 术语门禁（从 INSTALLED 一致性检查器拆出；ADR-0020 首次执行分离）
 │   ├── check-changelog-narration.js  # REPO-ONLY：Unreleased 验证叙事标记；--gate fail-closed（FINDING-0016）
 │   ├── check-secrets.js        # repo 侧 CTRL-0001 CLI（共享 scripts/ 下 evaluator；不是 skill CLI 路径）
-│   ├── check-must-ship.sh      # Phase 8 必装机械门禁集合（PLAN-0044 / ADR-0024）
+│   ├── check-must-ship.js      # Phase 8 必装机械门禁集合（PLAN-0044 / ADR-0024）
 │   ├── check-must-ship-carriers.js  # 必装载体存在性（子技能 / 脚本 / SKILL 入口）
 │   ├── lib/routing.js          # Phase 5b 共享 resolve + Context Detector（PLAN-0039）
 │   ├── routing-graph.v0.json   # 机读 Task→Capability 图（routing.js 消费；不是 Research 对象）

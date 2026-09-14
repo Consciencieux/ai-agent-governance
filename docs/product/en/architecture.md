@@ -180,7 +180,7 @@ ai-agent-governance/
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)
 │   ├── check-changelog-narration.js  # REPO-ONLY: Unreleased verification-narration markers; --gate fail-closed (FINDING-0016)
 │   ├── check-secrets.js        # repo-profile CTRL-0001 CLI (shared evaluator under scripts/; not the skill CLI path)
-│   ├── check-must-ship.sh      # Phase 8 must-ship mechanical gate set (PLAN-0044 / ADR-0024)
+│   ├── check-must-ship.js      # Phase 8 must-ship mechanical gate set (PLAN-0044 / ADR-0024)
 │   ├── check-must-ship-carriers.js  # must-ship carrier presence (sub-skills / scripts / SKILL entry)
 │   ├── lib/routing.js          # Phase 5b shared resolve + Context Detector (PLAN-0039)
 │   ├── routing-graph.v0.json   # machine Task→Capability graph (consumed by routing.js; not a Research object)
