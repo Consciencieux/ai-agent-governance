@@ -20,6 +20,10 @@ All notable changes to this project will be documented here.
 
 - Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.
 
+- Branch workflow is a **conditional** obligation: invent a feature branch only when `check-git-policy.js` actually exits 1; missing `.governance/git-policy.json` means stay on the current branch. `gh pr create` only when the user asked. GitHub’s post-push PR URL is not consent.
+
+- Git consent: after write-instruction or IDE confirm, execute immediately; post-hoc report (files / hash) is enough — no mandatory pre-echo of the full git sequence. `pull` stays independently confirmed.
+
 - Release friction: skill-release and governed `release.md` push the approved branch (not hard-coded `main`); GitHub Release optional for governed projects; skill payload tarball prefers `.github/workflows/skill-payload-release.yml` on tag (local `package-skill.sh` remains fallback).
 
 - README Quick Start (en / zh-CN / zh-TW): per-agent skill discovery paths, tarball-only install (no full-repo clone), init prompt in the target project; align `docs/product/*/skill-discovery.md`.

@@ -30,7 +30,8 @@
 
 ## 自动执行（无需确认）
 
-- `git checkout -b <branch>` / 干净工作区切换分支（与分支工作流一致，不打断任务开始）
+- 干净工作区切换到**已存在**的分支
+- `git checkout -b <branch>` **仅当** `scripts/check-git-policy.js` 实际 exit 1（受保护分支且 `directPush=false`），或用户明确要求建分支。禁止为「看起来更合规」自行开分支。
 
 ## 禁止自动执行
 
@@ -46,7 +47,7 @@
 - 用户对 Git 写操作的**明确写指令**（例如：「commit 这些改动」「提交并推送」「push」指向当前变更集），或
 - IDE / 宿主对「暂存 + 提交 + 推送」确认条（或等价 Diff 确认 UI）的一次明确同意
 
-以上任一即是该变更集的确认。**回显完整命令序列是执行记录**（文件清单、各 commit 消息、目标 remote/branch），不是第二次等待闸门——不得在已获上述人授后再要求「再确认一次」才执行。
+以上任一即是该变更集的确认。人授后**直接执行**，不得再要求「再确认一次」。执行后在回复中留下简短记录（文件清单、各 commit 消息、目标 remote/branch、hash）即可——**禁止**把执行前完整命令回显当成硬义务或第二次闸门。
 
 **什么不算确认：**
 
@@ -57,7 +58,7 @@
 
 **通用硬约束（每次变更集都适用）：**
 
-- 执行前须回显完整命令序列；执行不得偏离已回显序列
+- 执行不得偏离已获人授的变更集（暂存哪些文件、各 commit 消息、目标 remote/branch）
 - 任一步失败 → 停止并报告，不得改用其他方式重试、不得即兴修补，重新取得确认后继续
 - push 被拒（non-fast-forward）→ 停止并报告，不得擅自 pull/rebase 后再推
 - 有疑问时，**永远先问**
@@ -94,13 +95,14 @@ push/PR 前必须确认：
 
 ## 分支工作流（Branch Workflow）
 
-策略由 `.governance/git-policy.json` 定义（默认：`protectedBranches: ["main","master"]`、`directPush: false`、`requireReview: true`、`allowForcePush: false`）。Agent 处理开发任务时：
+策略由 `.governance/git-policy.json` 定义（INIT 产品默认：`protectedBranches: ["main","master"]`、`directPush: false`、`requireReview: true`、`allowForcePush: false`）。**缺该文件 ≠ 启用该默认剧本。** 本 skill 分发仓无此文件。开始写之前跑 `scripts/check-git-policy.js`，按**实际退出码**办事，禁止把模板默认当成无条件流程。
 
-- **开始前**：运行 `scripts/check-git-policy.js`；当前分支在受保护列表且 `directPush=false` → 退出码 1，**必须先创建特性分支**再修改/提交。
-- **分支命名**：服从**当前仓库约定**（CONTRIBUTING / 既有分支模型 / 团队规范）。禁止把某一固定模式（例如历史示例 `feature/agent-<date>-*`）写成跨项目硬规则。
-- **流程**：建分支 → 实现 → 测试 → commit → push 分支 → 创建 PR → 人工批准 → 合入受保护分支。
-- **禁止**：`directPush=false` 时在受保护分支上直接提交/推送；force push 一律禁止（`allowForcePush=false`）。
-- **小型改动豁免**：单文件、纯文档/typo 级修改且不涉及受保护分支的可跳过分支直接提交，但必须在报告中说明；涉及受保护分支的修改一律走分支流程。
+- **文件缺席或 exit 0**：留在用户当前分支（含 `main`）。禁止为合规自行 `checkout -b`。禁止自行 `gh pr create`。
+- **仅当 exit 1**（当前分支在 `protectedBranches` 且 `directPush=false`）：必须先建特性分支再修改/提交。命名服从**当前仓库约定**（禁止把某一固定模式写成跨项目硬规则）。
+- **创建 PR 永远不是 Agent 默认**：未听到「开 PR / create PR / 提 PR」→ 禁止 `gh pr create`。push 后 GitHub 打印的 “Create a pull request by visiting” **不是**人授、也不是义务。
+- **写操作触发面**（与 § 确认范围一致）：「CI 红了」「修一下」≠ commit/push；修完先报告，等人授再写。
+- **禁止**：`directPush=false` 且门禁阻断时在受保护分支上直接提交/推送；force push 一律禁止（`allowForcePush=false`）。
+- **小型改动豁免**：单文件、纯文档/typo 级修改且不涉及受保护分支的可跳过分支直接提交，但必须在报告中说明；门禁 exit 1 时无豁免。
 - **与发布流程的关系**：RELEASE 模式按项目的发布流程走 tag/push，不受本分支工作流约束（发布是受控的、需批准的写操作）。生成的 `release-manager` 子技能承载该流程。
 
 ## 治理文件保护

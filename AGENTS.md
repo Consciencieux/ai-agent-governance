@@ -97,10 +97,11 @@ Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 
 Always-on (markers only; details in policy):
 
-- Read-only free; `checkout -b` / clean switch free.
-- One confirmation per change set: explicit write instruction (“push” / “commit these”) or IDE stage+commit+push confirm **is** consent; echo full `add → commit → push` sequence as execution record (not a second wait). Ambiguous task-level phrasing is not consent.
-- Plan approval is intent alignment, not commit authorisation; “wrap it up” / “发布吧” are not write instructions.
+- Read-only free. Clean switch to an **existing** branch is free. `checkout -b` only when `check-git-policy.js` exits 1 **or** the user asked for a new branch — never invent a branch “for compliance”.
+- One confirmation per change set covers `add → commit → push`: explicit write instruction (“push” / “commit these”) or IDE stage+commit+push confirm **is** consent. After that, execute; report files / messages / hash afterward — do not ritualize a pre-echo or a second wait. Ambiguous task-level phrasing is not consent.
+- Plan approval is intent alignment, not commit authorisation; “wrap it up” / “发布吧” / “CI 红了” are not write instructions.
 - Any step fails → stop and report, never retry differently; push rejected (non-fast-forward) → stop and report, never pull/rebase.
 - Independent confirm: `tag` / `reset` / `rebase` / `revert` / `merge` / force-push / `clean` / `rm` / `restore` / `stash` / `pull`; dirty checkout; amend of pushed commit.
+- Do **not** `gh pr create` unless the user said “开 PR” / “create PR”. GitHub’s post-push PR URL is not consent.
 - Release: Proposal at Approval Gate covers the sequence (`repo-workflows/skill-release.md`).
 - Before commit: `node repo-tools/check-secrets.js` exit 0; no secrets/unrelated files staged.

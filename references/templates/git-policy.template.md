@@ -23,6 +23,7 @@ INIT 时复制为 `<project>/.governance/git-policy.json`，替换 `{{...}}` 占
 ## 生成规则
 
 - 分支命名服从**当前仓库约定**（写入生成的 AGENTS.md / `docs/rules/git-policy.md` 时引用项目 CONTRIBUTING 或既有模型；禁止把某一固定模式写成跨项目硬规则）
+- 本 JSON 的 INIT 默认（`directPush: false`）只约束**装了该文件的被治理项目**，且仅当 `check-git-policy.js` exit 1 时强制建特性分支。它不是「Agent 必须自行开 PR」的授权。创建 PR 仍须用户明确指令（见 `references/policies/git.policy.md`「分支工作流」）。
 - 小型改动豁免：单文件、纯文档/typo 级修改且不涉及受保护分支的，可跳过分支直接提交，但必须在报告中说明（见 `references/policies/git.policy.md`「分支工作流」）
-- 运行时门禁：`scripts/check-git-policy.js` 读取本文件，在受保护分支且 `directPush=false` 时退出码 1（提示先建分支）；`scripts/verify-governance.js` 校验本文件存在且字段合法
+- 运行时门禁：`scripts/check-git-policy.js` 读取本文件，在受保护分支且 `directPush=false` 时退出码 1（提示先建分支）；文件缺失则放行。`scripts/verify-governance.js` 校验本文件存在且字段合法（INIT 后的被治理项目）
 - 修改本文件属于治理文件变更（走「治理文件保护」流程），并同步更新 `docs/rules/git-policy.md` 的对应描述

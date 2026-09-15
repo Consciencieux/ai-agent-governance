@@ -107,11 +107,12 @@ Secrets, unrelated refactors, restructuring without cause, skipping Definition o
 Note: users may request governance changes via explicit instruction (through the Governance File Protection flow), but ordinary tasks may not implicitly bypass governance rules. "Edit AGENTS.md" triggers the protection flow, not a normal override.
 
 ## Git Write Policy
-- Auto: `git status`, `git diff`, `git add <specific files>`, `git checkout -b` / clean worktree switches
+- Auto: `git status`, `git diff`, `git add <specific files>`, clean switch to an **existing** branch. `git checkout -b` only when `check-git-policy.js` exits 1 or the user asked for a new branch.
 - Confirm (destructive / out-of-sequence): `git add .`, `git rm`, `git restore`, `git tag`, `git reset`, `git rebase`, `git revert`, `git merge`, `git stash`, `git pull` (can trigger merge/rebase), `git clean`, `git commit --amend` of a pushed commit (counts as force push), checkout carrying uncommitted changes
-- **One confirmation per change set.** An explicit write instruction ("push", "commit these changes") or an IDE stage+commit+push confirm bar **is** consent for that change set. Echo the full git command sequence (files to add, each commit message with its type prefix, push target) as the execution record — not a second wait. No per-step re-asking.
+- **One confirmation per change set** covering `add → commit → push`. An explicit write instruction ("push", "commit these changes") or an IDE stage+commit+push confirm bar **is** consent. After consent, execute; report files, messages, and hash afterward. No pre-echo ritual and no second wait.
 - **Plan approval is intent alignment** — aligning "what to change / how", not a commit authorisation. Size tiering decides whether a plan document is written, never whether the user confirms the commit.
-- **Hard constraints:** the echo IS the sequence (never deviate from it); a step fails → stop and report (never retry differently, never improvise); push rejected (non-fast-forward) → stop and report (never pull/rebase yourself); task-level phrasing ("wrap it up", "finish the task") is NOT a write instruction; ambiguous ("提交一下") → ask first.
+- **Hard constraints:** do not deviate from the consented change set; a step fails → stop and report (never retry differently, never improvise); push rejected (non-fast-forward) → stop and report (never pull/rebase yourself); task-level phrasing ("wrap it up", "finish the task") is NOT a write instruction; ambiguous ("提交一下") → ask first.
+- Do **not** `gh pr create` unless the user said "开 PR" / "create PR". A GitHub post-push PR URL is not consent.
 <!-- phase:B+ -->
 - Before any `git commit`: run `node scripts/check-secrets.js` — exit 0 required (never commit secret-like material). After a sync-group-triggering change, run `node scripts/check-sync.js` — exit 0 required (watch/require pairs must be reconciled).
 <!-- /phase -->
@@ -120,13 +121,12 @@ Note: users may request governance changes via explicit instruction (through the
 
 ## Git Workflow Governance
 <!-- phase:B+ -->
-- Before starting work run `scripts/check-git-policy.js`; on a protected branch with `directPush: false` (see `.governance/git-policy.json`), create a feature branch first (name per this repo's branch convention — not a fixed cross-project pattern).
+- Before starting work run `scripts/check-git-policy.js`. Create a feature branch **only if that command exits 1** (protected branch + `directPush: false`). Name per this repo's convention. Missing `.governance/git-policy.json` → stay on the current branch; do not invent a branch.
 <!-- /phase -->
 <!-- phase:A -->
-- On a protected branch, create a feature branch before implementing (name per this repo's convention). (The mechanical branch check arrives with the gate scripts in the next initialization stage.)
+- If the project later installs git-policy and the gate blocks the current branch, create a feature branch first (name per this repo's convention). Until then, stay on the current branch.
 <!-- /phase -->
-- Flow: feature branch → implement → test → commit → push branch → PR → human approval → merge into the protected branch.
-- Never force push; never push directly to protected branches. Small single-file doc/typo changes may skip the branch, but must be reported.
+- Never force push. Do not `gh pr create` unless the user asked. Small single-file doc/typo changes on a non-protected branch may skip a feature branch, but must be reported.
 
 ## Governance File Protection
 The protected files list is:
