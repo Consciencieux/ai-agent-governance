@@ -20,6 +20,7 @@ Run these bare, without wrapping:
 - Lint: `{{LINT_CMD}}`
 - Build: `{{BUILD_CMD}}`
 - Governance check: `{{npm run governance-check | uv run scripts/check_governance.py | ...}}`
+- File-size budget (advisory): `node scripts/check-file-size-budget.js` (`--gate` fails on review tier; propose split, wait for human confirmation — never auto-split)
 
 ## Documentation Map
 Docs live under `docs/`; agents discover new files by listing the directory.
@@ -142,6 +143,8 @@ The protected files list is:
 - `scripts/check-lock.js`
 - `scripts/check-git-policy.js`
 - `scripts/check-secrets.js`
+- `scripts/check-sibling-closure.js`
+- `scripts/check-file-size-budget.js`
 - `scripts/lib/secret-scan-facts.js`
 - `scripts/evaluators/ctrl-0001-secret-protection.js`
 - `scripts/check-sync.js`

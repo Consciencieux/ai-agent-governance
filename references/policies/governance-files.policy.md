@@ -18,6 +18,8 @@
 | `scripts/check-lock.js` | 锁检查 |
 | `scripts/check-git-policy.js` | Git 策略门禁 |
 | `scripts/check-secrets.js` | skill 侧 CTRL-0001 密钥扫描 CLI WRAP |
+| `scripts/check-sibling-closure.js` | 同类实例闭包机械载体 |
+| `scripts/check-file-size-budget.js` | 文件行数预算报告（soft/review；人确认后拆分） |
 | `scripts/lib/secret-scan-facts.js` | 密钥扫描共享事实 primitive |
 | `scripts/evaluators/ctrl-0001-secret-protection.js` | CTRL-0001 密钥保护求值器 |
 | `scripts/check-sync.js` | 同步组门禁 |

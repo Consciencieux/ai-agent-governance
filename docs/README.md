@@ -94,7 +94,9 @@ docs/
 
 **处置：** 超 soft/review → Agent 向开发者汇报（路径、行数、档位）并提出拆分方案 → **人确认后再改**。行数只是信号；是否拆看职责密度、Context Economy、单一事实源。
 
-机械载体（REPO-ONLY）：`node repo-tools/check-file-size-budget.js`（`npm run check:file-size`）。默认顾问；`--gate` 仅对 **review** 档失败。不进 skill 载荷、不进 daily `npm run check`（须单独晋升）。
+机械载体（REPO-ONLY 本仓）：`node repo-tools/check-file-size-budget.js`（`npm run check:file-size`）。默认顾问；`--gate` 仅对 **review** 档失败。不进 daily `npm run check`（须单独晋升）。
+
+**Skill / 被治理项目（INSTALLED）：** `node scripts/check-file-size-budget.js`（INIT Phase B 拷贝）；政策见 `docs/rules/coding.md` § 文件行数预算；可选覆盖 `.governance/file-size-budget.json`。处置协议相同（汇报 + 方案 + 人确认）；禁止自动硬拆。
 
 ## 已付学费（同一缺陷的历史实例）
 

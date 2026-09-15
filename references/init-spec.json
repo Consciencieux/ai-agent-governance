@@ -624,6 +624,13 @@
     },
     {
       "phase": "B",
+      "path": "scripts/check-file-size-budget.js",
+      "source": "scripts/check-file-size-budget.js",
+      "type": "copy",
+      "description": "File-size budget reporter (soft/review; --gate fails on review; no auto-split)"
+    },
+    {
+      "phase": "B",
       "path": "scripts/migrate-governance.js",
       "source": "scripts/migrate-governance.js",
       "type": "copy",

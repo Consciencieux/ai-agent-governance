@@ -121,6 +121,7 @@ ai-agent-governance/
 │   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
 │   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
 │   ├── check-sibling-closure.js # sibling-instance 閉包載體（已宣告合約；FINDING-0003）
+│   ├── check-file-size-budget.js # 檔案行數預算報告（soft/review；人確認後拆分）
 │   ├── migrate-governance.js # 可發現 MIGRATE 入口（版本對比 + 清單；不自動改樹）
 │   ├── check-git-policy.js     # Git 工作流程閘門（受保護分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # skill 側 CTRL-0001 CLI WRAP（暫存區掃描；絕不列印密鑰）

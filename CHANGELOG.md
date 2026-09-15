@@ -10,6 +10,8 @@ All notable changes to this project will be documented here.
 
 - Repo-only advisory file-size budgets: `repo-tools/check-file-size-budget.js` / `npm run check:file-size` (layered soft/review thresholds; human-confirmed split protocol; not on daily `check`).
 
+- INSTALLED file-size budget reporter: `scripts/check-file-size-budget.js` (INIT Phase B); portable defaults in `docs/rules/coding.md`; optional `.governance/file-size-budget.json`; engineering-restraint + capability-enforcement obligations.
+
 ### Changed
 
 - References taxonomy (ADR-0026): instruction sources live in `references/instruction/`; subskill leaf cards in `references/capabilities/subskills/`; `templates/` is materialization only.

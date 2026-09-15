@@ -148,6 +148,7 @@ ai-agent-governance/
 │   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
 │   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
 │   ├── check-sibling-closure.js # sibling-instance closure carrier (declared contracts; FINDING-0003)
+│   ├── check-file-size-budget.js # file-size budget reporter (soft/review; human-confirmed split)
 │   ├── migrate-governance.js # discoverable MIGRATE entry (version compare + checklist; no auto-mutate)
 │   ├── check-git-policy.js     # Git workflow gate (protected branch + directPush=false → exit 1)
 │   ├── check-secrets.js        # skill-profile CTRL-0001 CLI WRAP (staged diff; never prints the secret)

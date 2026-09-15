@@ -49,26 +49,26 @@
     "necessity=retire ⇒ disposition=retire; file may be deleted only after refs cleared.",
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
-    "summary": {
-    "total": 53,
+  "summary": {
+    "total": 54,
     "by_disposition": {
-      "keep": 49,
+      "keep": 50,
       "wrap": 4
     },
     "by_generation": {
       "gen1_carrier": 14,
-      "gen2_native": 36,
+      "gen2_native": 37,
       "dual_profile": 3
     },
     "by_role": {
       "REPO-ONLY": 17,
-      "INSTALLED": 34,
+      "INSTALLED": 35,
       "SKILL-INTERNAL": 2
     },
     "by_necessity": {
       "repo_gate": 16,
       "must_ship": 6,
-      "product_cli": 31
+      "product_cli": 32
     },
     "wrap": [
       "scripts/check-doc-consistency.js",
@@ -102,6 +102,7 @@
       "product_cli": [
         "scripts/check-doc-consistency.js",
         "scripts/check-doc-freshness.js",
+        "scripts/check-file-size-budget.js",
         "scripts/check-git-consent.js",
         "scripts/check-git-policy.js",
         "scripts/check-lock.js",
@@ -1055,6 +1056,23 @@
       "dogfood_from_repo_package_json": true,
       "notes": "Advisory line-count budgets (docs/README). npm run check:file-size; not on daily check surface. --gate fails only on review tier. No auto-split.",
       "necessity": "repo_gate"
+    },
+    {
+      "path": "scripts/check-file-size-budget.js",
+      "distribution_role": "INSTALLED",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "file_size_budget",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-15",
+      "last_touch": "2026-09-15",
+      "dogfood_from_repo_package_json": false,
+      "notes": "INSTALLED file-size budget reporter; INIT Phase B copy; soft/review; --gate on review; no auto-split",
+      "necessity": "product_cli"
     }
   ],
   "adjudication_plan": "PLAN-0055"
