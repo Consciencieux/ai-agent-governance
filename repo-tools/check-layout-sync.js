@@ -10,6 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { spawnSync } = require("child_process");
 
 const ROOT = process.cwd();
 const DOCS = path.join(ROOT, "docs");
@@ -24,7 +25,16 @@ const DIRS = ["references", "scripts", "repo-tools", "repo-workflows"];
 
 function pairFrom(dir, name) { return dir + "/" + name; }
 
-function listFiles(dir) {
+function isGitIgnored(relPosix) {
+  // Match CI (clean tree): local gitignored scratch must not green the gate.
+  const r = spawnSync("git", ["check-ignore", "-q", "--", relPosix], {
+    cwd: ROOT,
+    encoding: "utf8",
+  });
+  return r.status === 0;
+}
+
+function listFiles(dir, relBase) {
   let entries;
   try {
     entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -33,8 +43,10 @@ function listFiles(dir) {
   }
   const out = [];
   for (const e of entries) {
-    const p = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...listFiles(p));
+    const abs = path.join(dir, e.name);
+    const rel = path.posix.join(relBase, e.name);
+    if (isGitIgnored(rel)) continue;
+    if (e.isDirectory()) out.push(...listFiles(abs, rel));
     else out.push(e.name); // basename is enough: no collisions across references/ + scripts/
   }
   return out;
@@ -148,7 +160,7 @@ function main() {
   // `scripts/` alone carrying the check, so the scan silently enforced HALF the corpus and
   // still printed a confident green line with a plausible file count. Each configured root
   // must contribute files (audit 2026-09-05).
-  const perDir = DIRS.map((d) => ({ dir: d, files: listFiles(path.join(ROOT, d)) }));
+  const perDir = DIRS.map((d) => ({ dir: d, files: listFiles(path.join(ROOT, d), d) }));
   const emptyDirs = perDir.filter((e) => e.files.length === 0).map((e) => e.dir);
   if (emptyDirs.length > 0) {
     const msg = `no files found under ${emptyDirs.join(", ")} — layout scan would cover only part of the tree`;

@@ -211,8 +211,7 @@ ai-agent-governance/
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
-│   ├── package-skill.sh        # release payload tarball packaging
-│   └── .release/proposal.json  # gitignored skill-release scratch (not tracked)
+│   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
 │   ├── changelog-policy.md      # repo CHANGELOG policy (REPO-ONLY; AGENTS 放指针)
 │   └── skill-release.md        # skill repo release flow (five version sync points + tag, tarball build)
@@ -246,5 +245,7 @@ ai-agent-governance/
     └── suites/                 # domain suites (validator, security, consistency, docs,
                                 # release, generator, payload, hygiene) — see anti-patch plan §3
 ```
+
+Release scratch `repo-tools/.release/proposal.json` is gitignored (see `repo-workflows/skill-release.md`) and is intentionally **not** listed in the tree above — layout-sync only tracks committed paths.
 
 Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations. `repo-tools/` and `repo-workflows/` are REPO-ONLY by directory: the packaging step copies only the four payload items, so nothing under them can reach a tarball.

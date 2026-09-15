@@ -14,6 +14,7 @@ module.exports = (test) => {
       console.error("  layout-sync still vacuous on docs/product shape");
       return false;
     }
+    if (r.status !== 0) console.error(out.trim() || `layout-sync exited ${r.status}`);
     return r.status === 0;
   });
 

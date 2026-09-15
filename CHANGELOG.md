@@ -12,6 +12,10 @@ All notable changes to this project will be documented here.
 
 - INSTALLED file-size budget reporter: `scripts/check-file-size-budget.js` (INIT Phase B); portable defaults in `docs/rules/coding.md`; optional `.governance/file-size-budget.json`; engineering-restraint + capability-enforcement obligations.
 
+### Fixed
+
+- Layout-sync CI false green: do not document gitignored `repo-tools/.release/proposal.json` in architecture trees; `check-layout-sync.js` skips gitignored paths so local scratch cannot mask CI.
+
 ### Changed
 
 - Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.

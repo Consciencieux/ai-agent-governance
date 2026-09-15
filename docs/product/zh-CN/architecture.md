@@ -184,8 +184,7 @@ ai-agent-governance/
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
-│   ├── package-skill.sh        # 发布载荷 tarball 打包
-│   └── .release/proposal.json  # gitignored 技能发布草稿（不入库）
+│   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发
 │   ├── changelog-policy.md      # 本仓 CHANGELOG 政策（REPO-ONLY）
 │   └── skill-release.md        # 技能仓库发布流程（版本五个同步点 + tag、tarball 构建）
@@ -219,5 +218,7 @@ ai-agent-governance/
     └── suites/                 # 领域套件（validator、security、consistency、docs、
                                 # release、generator、payload、hygiene）——见反补丁计划 §3
 ```
+
+发布草稿 `repo-tools/.release/proposal.json` 已 gitignore（见 `repo-workflows/skill-release.md`），**故意不**写入上方布局树——layout-sync 只跟踪入库路径。
 
 安装载荷 = `SKILL.md` + `references/` + `scripts/` + `LICENSE` 四项。分割线以下（`docs/`、`tests/`、`package.json`、`.github/`、README、CONTRIBUTING、CHANGELOG、AGENTS.md）是仓库基础设施——不得复制进 skill 安装目录。`repo-tools/` 与 `repo-workflows/` 按目录即为 REPO-ONLY：打包步骤只复制以上四项，它们不可能进入 tarball。
