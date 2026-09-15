@@ -20,6 +20,7 @@ const REQUIRED_FILES = [
   "references/workflows/release.md",
   "references/instruction/sub-skills.md",
   "references/init-spec.json",
+  "references/capabilities/enforcement.v0.json",
   "SKILL.md",
   "repo-tools/package-skill.sh",
   "repo-workflows/skill-release.md",

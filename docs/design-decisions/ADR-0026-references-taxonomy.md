@@ -19,7 +19,7 @@ generation: gen2
 ```text
 1. 语义责任 → 目录
 2. 分发角色 → 只写 init-spec（INSTALLED | SKILL-INTERNAL），禁止从路径推断
-3. 兑现方式 → 标签 / 叶头（mechanical | judgment | hybrid），禁止 references/mechanical/
+3. 兑现方式 → INSTALLED JSON 义务行（见下），禁止 references/mechanical/，禁止叶卡 dual-write
 4. 物化机制 → init-spec 的 copy | template | generated | static
 ```
 
@@ -35,7 +35,20 @@ generation: gen2
 | 可复用方法论（INIT 不装） | `references/principles/` |
 | 可复制合同示例 | `references/contracts/` |
 
-**3. 兑现方式必须可陈述，但不是分类标准。** 声称 fail-closed 必须能指出 carrier（enforcement-semantics）。无 carrier 的 MUST 标 `judgment`。同一文件允许 hybrid。不按机械/文档拆文件或拆夹。
+**3. 兑现方式必须可陈述，但不是目录轴。** FINDING-0003 的观察（文档 MUST ≠ 脚本拒绝）仍成立；把「没脚本 / 要人批 / 天生不能判」捆成同一个 `judgment` **不**成立。
+
+权威载体：INSTALLED `docs/rules/capability-enforcement.json`（源：`references/capabilities/enforcement.v0.json`）。按 **义务行** 分类，禁止整文件一个 enum，禁止能力叶 `## Enforcement` 再写一份清单。
+
+义务四类（与 enforcement-semantics 的 allow/deny/warn/require_review **正交**——后者是检查结果语义）：
+
+| 类 | 含义 |
+| --- | --- |
+| `mechanical` | 已有 carrier；结果可为 deny/warn/allow |
+| `require_review` | 人必须动作；不是「Agent 自觉」 |
+| `unmechanized` | 可以不撒谎地做成 mechanical，当前无 carrier（`mechanizable: true`） |
+| `inherent_judgment` | 任何 deny 都会测到代理指标（`mechanizable: false`） |
+
+声称 fail-closed 必须能指出 carrier。同一叶允许多行。不按机械/文档拆文件或拆夹。门禁只对账「叶集合 ≡ JSON」与 mechanical 路径存在；**不**证明 Agent 遵守了后两类。
 
 **4. 模板只是物化机制，不是知识类。** `templates/` 不得再收指令源。INIT 目标路径（`AGENTS.md`、`.governance/generated/skills/`、`docs/rules/capabilities/*.md`）不随 source 目录改名而改。
 
@@ -44,6 +57,7 @@ generation: gen2
 - 作者先问「这是什么责任」，再声明角色与门禁。
 - ADR-0022「`templates/` 按生成方式分类不可长期接受」由本决策落地；物理拆分见 PLAN-0056。
 - 不授权按 enforcement 重排树，不授权拆 `instruction/sub-skills.md` 聚合正文（FINDING-0015 另开）。
+- 2026-09-15 窄修正：Q3 权威从「散文标签 / 叶头」改为 INSTALLED JSON 四类义务行（PLAN-0057）。不授权把 `unmechanized` 在本带做成新 checker，也不授权为 `inherent_judgment` 写 deny 脚本。
 
 ## 参考
 

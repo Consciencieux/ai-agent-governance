@@ -2,6 +2,7 @@
 
 > Capability leaf (`subskill-plan-manager`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/subskill-plan-manager.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 
@@ -18,6 +19,7 @@ TASK 计划创建/状态流转。
 ## Verify
 
 计划状态字符合契约；不在此叶做归档权威。
+
 
 ## Non-goals
 

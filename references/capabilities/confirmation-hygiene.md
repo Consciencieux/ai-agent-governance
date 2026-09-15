@@ -2,6 +2,7 @@
 
 > Capability leaf (`confirmation-hygiene`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/confirmation-hygiene.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 

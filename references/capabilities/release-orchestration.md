@@ -2,6 +2,7 @@
 
 > Capability leaf (`release-orchestration`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/release-orchestration.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 
@@ -18,6 +19,7 @@ release workflow（项目内发布流程权威） + `scripts/release-manager.js`
 ## Verify
 
 无批准不写 tag；provenance 与 HEAD 一致；校验器通过。
+
 
 ## Non-goals
 

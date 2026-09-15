@@ -2,6 +2,7 @@
 
 > Capability leaf (`subskill-review-manager`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/subskill-review-manager.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 
@@ -18,6 +19,7 @@
 ## Verify
 
 与 review-mechanism 叶一致的完成证据。
+
 
 ## Non-goals
 

@@ -85,6 +85,7 @@ ai-agent-governance/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # 受保護檔案 + .governance Git 追蹤策略
 │   ├── capabilities/               # Capability 葉權威（Phase 5c；INIT → docs/rules/capabilities/）
+│   │   ├── enforcement.v0.json     # 義務分類庫存（INIT → docs/rules/capability-enforcement.json）
 │   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md

@@ -2,6 +2,7 @@
 
 > Capability leaf (`discovery-ledger`). Instruction-surface 2.0 card (PLAN-0046) + 5c authority body restored (PLAN-0047 H2a).
 > Role: INSTALLED → `docs/rules/capabilities/discovery-ledger.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 > Disposition: ADR-0024 `later` for L2 mechanization; L1 INSTALLED contract remains.
 
 ## Trigger

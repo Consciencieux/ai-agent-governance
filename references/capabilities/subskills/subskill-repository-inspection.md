@@ -2,6 +2,7 @@
 
 > Capability leaf (`subskill-repository-inspection`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/subskill-repository-inspection.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 
@@ -18,6 +19,7 @@
 ## Verify
 
 产出可被 ci-generator 等下游消费的勘察结果。
+
 
 ## Non-goals
 

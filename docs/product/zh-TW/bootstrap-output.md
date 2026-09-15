@@ -14,6 +14,7 @@ INIT 腳本化生成器（`scripts/generate-governance.js`）為被治理專案�
 | docs/rules/coding.md | references/policies/coding.policy.md |
 | docs/rules/testing.md | references/policies/testing.policy.md |
 | docs/rules/governance-files.md | references/policies/governance-files.policy.md |
+| docs/rules/capability-enforcement.json | references/capabilities/enforcement.v0.json |
 | AGENTS.md | references/instruction/agents-md.template.md（佔位符已解析） |
 | CHANGELOG.md | 靜態（Keep a Changelog，含 Unreleased 段） |
 | README.md | 靜態引導 + 文件索引 |

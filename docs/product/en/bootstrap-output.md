@@ -14,6 +14,7 @@ The INIT scripted generator (`scripts/generate-governance.js`) produces a determ
 | docs/rules/coding.md | references/policies/coding.policy.md |
 | docs/rules/testing.md | references/policies/testing.policy.md |
 | docs/rules/governance-files.md | references/policies/governance-files.policy.md |
+| docs/rules/capability-enforcement.json | references/capabilities/enforcement.v0.json |
 | AGENTS.md | references/instruction/agents-md.template.md (placeholders resolved) |
 | CHANGELOG.md | static (Keep a Changelog, Unreleased section) |
 | README.md | static bootstrap with documentation index |

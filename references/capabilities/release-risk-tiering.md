@@ -2,6 +2,7 @@
 
 > Capability leaf (`release-risk-tiering`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/release-risk-tiering.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 
@@ -18,6 +19,7 @@ release workflow（项目内发布流程权威） 风险分级（单一权威；
 ## Verify
 
 分级结果进入 Proposal；高风险缺审查证据不得继续。
+
 
 ## Non-goals
 

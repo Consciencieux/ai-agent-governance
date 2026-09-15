@@ -28,6 +28,7 @@ const SUITES = [
   "oracle-inventory",
   "script-inventory",
   "routing",
+  "capability-enforcement",
 ];
 
 function fail(msg, code = 1) {

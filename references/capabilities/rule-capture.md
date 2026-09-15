@@ -2,6 +2,7 @@
 
 > Capability leaf (`rule-capture`). Instruction-surface 2.0 card (PLAN-0046) + 5c authority body restored (PLAN-0047 H2a).
 > Role: INSTALLED → `docs/rules/capabilities/rule-capture.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 

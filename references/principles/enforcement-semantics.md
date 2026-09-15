@@ -14,6 +14,7 @@
 - 在 policy 或 principles 中维护小表：规则类 → enforcement 值 → carrier
 - Agent 协议路径标 `require_review`，不要假装 `deny`
 - 机械 classifier（如 git consent 分类）输出「需要人授」时，人授仍由协议完成
+- 兑现**分类**（mechanical / require_review / unmechanized / inherent_judgment）与上列四值正交；分类权威是 INSTALLED `capability-enforcement.json`，不是叶卡散文
 
 ## Project Customization（L3）
 

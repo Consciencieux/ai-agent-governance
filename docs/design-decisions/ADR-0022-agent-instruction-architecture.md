@@ -113,7 +113,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 ## 后续修正（2026-09-15）：`templates/` 分类落地
 
-本修正是对 2026-09-10 修正第 4 条（`templates/` 按生成方式分类不可长期接受）的 **Narrow amendment**。分类标准与目录合同见 [ADR-0026](ADR-0026-references-taxonomy.md)。自本修正起：可执行指令源在 `references/instruction/`；`templates/` 只收留物化模板。兑现方式仍不是目录轴。
+本修正是对 2026-09-10 修正第 4 条（`templates/` 按生成方式分类不可长期接受）的 **Narrow amendment**。分类标准与目录合同见 [ADR-0026](ADR-0026-references-taxonomy.md)。自本修正起：可执行指令源在 `references/instruction/`；`templates/` 只收留物化模板。兑现方式仍不是目录轴；义务分类权威见 ADR-0026（INSTALLED JSON，不是叶卡 Enforcement 节）。
 
 ## 后果
 

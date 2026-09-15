@@ -2,6 +2,7 @@
 
 > Capability leaf (`subskill-governance-validator`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/subskill-governance-validator.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 
@@ -18,6 +19,7 @@
 ## Verify
 
 校验结果可报告；与 scripts 校验器行为一致。
+
 
 ## Non-goals
 

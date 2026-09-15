@@ -2,6 +2,7 @@
 
 > Capability leaf (`seed-oracles`). Instruction-surface 2.0 card (PLAN-0046).
 > Role: INSTALLED → `docs/rules/capabilities/seed-oracles.md`.
+> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
 
 ## Trigger
 
@@ -18,6 +19,7 @@
 ## Verify
 
 库存声明与实现一致；种子负向仍红/绿符合预期。
+
 
 ## Non-goals
 

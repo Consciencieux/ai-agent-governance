@@ -32,7 +32,7 @@ SemVer ≠ Horizon。施工规则在 [AGENTS.md](../../../AGENTS.md) / [ADR-0025
 
 ## 已完成（一句）
 
-迁移 Phase 0–8 EXITED → `v2.0.0` 发布 → H0–H2 Archived（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) … [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md)）→ `v2.1.0`（[PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md)）→ Gen1 观测 sunset / carrier 重裁（[PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md)、[PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md)）→ FINDING-0003 判断语言分层（[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)）→ `references/` 分类（[PLAN-0056](../archive/PLAN-0056-references-taxonomy.md) / ADR-0026）。**Plan archive ≠ Release。** 全文见 `docs/plans/archive/`。
+迁移 Phase 0–8 EXITED → `v2.0.0` 发布 → H0–H2 Archived（[PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) … [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md)）→ `v2.1.0`（[PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md)）→ Gen1 观测 sunset / carrier 重裁（[PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md)、[PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md)）→ FINDING-0003 判断语言分层（[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)）→ `references/` 分类（[PLAN-0056](../archive/PLAN-0056-references-taxonomy.md) / ADR-0026）→ 兑现分类库存（[PLAN-0057](../archive/PLAN-0057-capability-enforcement-inventory.md)）。**Plan archive ≠ Release。** 全文见 `docs/plans/archive/`。
 
 ## 远景（H3）
 

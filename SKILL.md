@@ -46,7 +46,7 @@ description: >-
 | 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskills/subskill-*.md` |
 | Discovery Ledger（later） | `discovery-ledger.md` |
 
-完整清单以本节路由表与 `references/capabilities/` 目录为准。must-ship 覆盖的仓库侧索引是 REPO-ONLY，不进安装载荷。
+完整清单以本节路由表与 `references/capabilities/` 目录为准。兑现分类唯一事实源：`references/capabilities/enforcement.v0.json`（INIT → `docs/rules/capability-enforcement.json`）。must-ship 覆盖的仓库侧索引是 REPO-ONLY，不进安装载荷。
 
 ### 概念总览（Concept Map）
 
