@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Added
+
+- FINDING-0031 (Confirmed): citing Resolved/Accepted authority must not substitute for a user-requested re-judgment; conversational control gap (no mechanical carrier).
+
 ### Changed
 
 - References taxonomy (ADR-0026): instruction sources live in `references/instruction/`; subskill leaf cards in `references/capabilities/subskills/`; `templates/` is materialization only.
