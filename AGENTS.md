@@ -98,9 +98,9 @@ Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 Always-on (markers only; details in policy):
 
 - Read-only free; `checkout -b` / clean switch free.
-- One confirmation per change set (pre-commit echo; instruction is not consent): echo full command sequence `add → commit → push`, then explicit consent — user “push”/“commit” **triggers** echo, is **not** consent.
+- One confirmation per change set: explicit write instruction (“push” / “commit these”) or IDE stage+commit+push confirm **is** consent; echo full `add → commit → push` sequence as execution record (not a second wait). Ambiguous task-level phrasing is not consent.
 - Plan approval is intent alignment, not commit authorisation; “wrap it up” / “发布吧” are not write instructions.
 - Any step fails → stop and report, never retry differently; push rejected (non-fast-forward) → stop and report, never pull/rebase.
 - Independent confirm: `tag` / `reset` / `rebase` / `revert` / `merge` / force-push / `clean` / `rm` / `restore` / `stash` / `pull`; dirty checkout; amend of pushed commit.
 - Release: Proposal at Approval Gate covers the sequence (`repo-workflows/skill-release.md`).
-- Before confirm: `node repo-tools/check-secrets.js` exit 0; no secrets/unrelated files staged.
+- Before commit: `node repo-tools/check-secrets.js` exit 0; no secrets/unrelated files staged.

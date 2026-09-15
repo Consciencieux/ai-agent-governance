@@ -41,7 +41,7 @@ The full repository layout — every directory and its role, down to individual 
 2. Bump `package.json` version (SemVer: breaking → MAJOR, feature → MINOR, fix → PATCH)
 3. Keep version consistency: package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` default · `scripts/lib/generate/run.js` sentinel · tag
 4. Run `npm test` before pushing; `npm run check:must-ship` must be green before merging to `main`
-5. Release only with the `release-manager` flow (preconditions include `gates.must_ship` → version sync → archive → validate → tag → push → GitHub Release)
+5. Release only with the `release-manager` flow (preconditions include `gates.must_ship` → version sync → archive → validate → tag → push approved branch + tag → GitHub Release notes; skill tarball preferably via tag CI)
 
 ## Development Workflow
 

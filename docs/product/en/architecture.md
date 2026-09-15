@@ -239,7 +239,7 @@ ai-agent-governance/
 ├── AGENTS.md                   # agent guidelines for working on this repo
 ├── CHANGELOG.md                # release history
 ├── package.json                # npm scripts (test, check)
-├── .github/                    # CI workflows
+├── .github/                    # CI: must-ship gate + skill-payload-release on version tags
 └── tests/
     ├── run-tests.js            # single discovery entry: runner + summary only
     ├── support/helpers.js      # shared fixtures, git helpers, script paths, temp-root lifecycle

@@ -212,7 +212,7 @@ ai-agent-governance/
 ├── AGENTS.md                   # 本倉庫的 Agent 工作指南
 ├── CHANGELOG.md                # 發佈歷史
 ├── package.json                # npm 腳本（test、check）
-├── .github/                    # CI 工作流程
+├── .github/                    # CI：must-ship 閘門 + 版本 tag 時 skill-payload-release
 └── tests/
     ├── run-tests.js            # 單一發現入口：僅 runner + 彙總
     ├── support/helpers.js      # 共享 fixture、git 輔助、腳本路徑常數、暫存根生命週期

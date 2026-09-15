@@ -90,15 +90,29 @@ initialize project governance
 
 ## 快速开始
 
-将 skill 安装到你的编码 Agent 发现 skill 的位置——使用发布载荷 tarball：
+**1. 安装发布载荷**（不要 `git clone` 本仓库）到你的 Agent **实际会扫描**的 skill 目录。
+
+| Agent | 常见安装路径 |
+| --- | --- |
+| Cursor | 项目：`.cursor/skills/ai-agent-governance/` · 或个人 Agent Store 的 `skills/` |
+| Claude Code / opencode（共享） | `~/.agents/skills/ai-agent-governance/` 或项目 `.agents/skills/…` |
+| Claude Code | `.claude/skills/ai-agent-governance/` |
+| 仅 opencode | `.opencode/skills/ai-agent-governance/` |
+
+示例（共享 `.agents` 路径——按上表换成你的目录）：
 
 ```bash
-mkdir -p ~/.agents/skills/ai-agent-governance
-curl -L https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz \
-  | tar -xz -C ~/.agents/skills/ai-agent-governance
+DEST=~/.agents/skills/ai-agent-governance
+mkdir -p "$DEST"
+curl -fsSL -o /tmp/ai-agent-governance-skill.tar.gz \
+  https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz
+# 可选：对照 Release Notes 中的 SHA-256 校验后再解压
+tar -xzf /tmp/ai-agent-governance-skill.tar.gz -C "$DEST"
 ```
 
-这是聊天提示词，不是 shell 命令。在你的 AI 编码 Agent 聊天中提问：
+**不要**把本仓库整仓 clone 进 skills 目录——会带上不属于安装载荷的 `docs/`、`tests/` 等。完整发现说明：[docs/product/zh-CN/skill-discovery.md](docs/product/zh-CN/skill-discovery.md)。
+
+**2. 打开你要治理的那个项目**，在编码 Agent 对话里发送下面这句提示词（不是 shell 命令）：
 
 ```text
 initialize project governance
@@ -151,7 +165,7 @@ INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚
 
 ## 当前版本
 
-**v2.1.0** 是当前可安装产品线（`package.json`）。必装 INIT / AUDIT / RELEASE 可在干净目标上跑；本仓 CI 阻断权威是 `npm run check:must-ship`。Generation 1（1.x）仍是历史基线；`v2.0.0` 是 Gen2 必装冻结点。详见 [CHANGELOG.md](CHANGELOG.md) 与 [docs/plans/roadmap/zh-CN.md](docs/plans/roadmap/zh-CN.md)。
+从 [Releases → latest](https://github.com/Consciencieux/ai-agent-governance/releases/latest) 安装（`ai-agent-governance-skill.tar.gz`）。源码树版本见 `package.json` / `SKILL.md`。必装 INIT / AUDIT / RELEASE 可在干净目标上跑；本仓 CI 阻断权威是 `npm run check:must-ship`。详见 [CHANGELOG.md](CHANGELOG.md) 与 [docs/plans/roadmap/zh-CN.md](docs/plans/roadmap/zh-CN.md)。
 
 ## License
 

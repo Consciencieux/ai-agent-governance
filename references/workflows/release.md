@@ -196,8 +196,18 @@ Proceed with release?
  ```
 
  `--yes` 是开发者批准的记录标记；**没有 `--yes` 该工具拒绝一切写操作**（等价于手工 `git tag -a vX.Y.Z -m "Release vX.Y.Z: <summary>"`）。execute 会再次检查工作区干净且 HEAD == proposal `headSha`。
-9. **推送**：`git push origin main` → `git push origin vX.Y.Z`（写操作均需用户确认，见权限）。
-10. **创建 Release**：GitHub 项目执行 `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`（gh 未登录/未安装 → ⚠️ Blocked，提示用户）。
+9. **推送**：推送**当前已批准发布的分支**与 tag（写操作均需用户确认，见权限）。不要写死 `main`：
+
+    ```bash
+    BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+    git push -u origin "HEAD:refs/heads/${BRANCH}"
+    git push origin "vX.Y.Z"
+    ```
+
+    推荐：合入默认分支后再发版。无远程托管 / 不使用 GitHub Releases 时，推送 annotated tag 即为发布完成的最低标准。
+
+10. **托管 Release（可选）**：仅当项目使用 **GitHub Releases** 时执行 `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`。`gh` 未登录/未安装、或项目在 GitLab/其他托管且不以 GitHub Release 为交付面 → 跳过本步并在报告中说明（tag 已推即算发布面达成）。有项目自有产物时再 `gh release upload`（或等价上传）；无产物则跳过。
+
 11. **更新状态**：把 `.governance/manifest.json` 的 `release.validated` 置为 `true`，重新校验并记录到 `validation.json`。
 
 ## 安全规则
@@ -244,14 +254,15 @@ AI 不得自动创建 tag、自动 push tag、自动创建 release，除非：
 
 - 任何前置检查失败 → 在**开始写操作之前**中止，不触碰仓库（不版本同步、不 commit、不 tag、不 push）。
 - 批准后、执行前的工作区/HEAD 意外变化 → 取消流程，重新 plan。
-- 进入写操作后（版本同步 → 归档 → release commit → tag → push → GitHub Release）必须连续完成；任一步失败立即停止，报告 ⚠️/❌ 与已完成/未完成清单。
-- tag 已创建但 GitHub Release 创建失败 → **不删除 tag、不强制重来**；报告 ⚠️ Blocked，说明差异（tag 已推、release 待建），由用户决定补建 release 或清理。
+- 进入写操作后（版本同步 → 归档 → release commit → tag → push 分支与 tag → 可选 GitHub Release / 产物上传）必须连续完成；任一步失败立即停止，报告 ⚠️/❌ 与已完成/未完成清单。
+- tag 已创建但托管 Release 创建失败 → **不删除 tag、不强制重来**；报告 ⚠️ Blocked，说明差异（tag 已推、release 待建），由用户决定补建或清理。
 - 恢复：依据 `.governance/validation.json` 与 `git log` 判断已完成步骤，仅重做未完成部分。
 
 ## 权限
 
 - 分析（`plan`）为只读操作，可自动执行。
-- Git tag / push / gh release create 均为**写操作**：仅在 Proposal 已生成且开发者**明确批准**后执行（批准覆盖本次 release 序列的全部写操作）；任何写操作执行前仍须向用户说明。
+- Git tag / push 为**写操作**：仅在 Proposal 已生成且开发者**明确批准**后执行（批准覆盖本次 release 序列的全部写操作）；任何写操作执行前仍须向用户说明。
+- `gh release create` **仅当**项目以 GitHub Releases 为交付面时执行；否则跳过并说明。
 - 修改 `references/workflows/release.md`、manifest 的 `release` 字段走「治理文件保护」流程。
 
 ## manifest release 字段

@@ -109,7 +109,7 @@ Note: users may request governance changes via explicit instruction (through the
 ## Git Write Policy
 - Auto: `git status`, `git diff`, `git add <specific files>`, `git checkout -b` / clean worktree switches
 - Confirm (destructive / out-of-sequence): `git add .`, `git rm`, `git restore`, `git tag`, `git reset`, `git rebase`, `git revert`, `git merge`, `git stash`, `git pull` (can trigger merge/rebase), `git clean`, `git commit --amend` of a pushed commit (counts as force push), checkout carrying uncommitted changes
-- **One confirmation per change set.** After any task, before committing: echo the full git command sequence (files to add, each commit message with its type prefix, push target), wait for one explicit confirmation covering `add` → `commit` → `push`. A user's write instruction ("push", "commit these changes") triggers this echo — it is NOT the consent itself. No per-step re-asking.
+- **One confirmation per change set.** An explicit write instruction ("push", "commit these changes") or an IDE stage+commit+push confirm bar **is** consent for that change set. Echo the full git command sequence (files to add, each commit message with its type prefix, push target) as the execution record — not a second wait. No per-step re-asking.
 - **Plan approval is intent alignment** — aligning "what to change / how", not a commit authorisation. Size tiering decides whether a plan document is written, never whether the user confirms the commit.
 - **Hard constraints:** the echo IS the sequence (never deviate from it); a step fails → stop and report (never retry differently, never improvise); push rejected (non-fast-forward) → stop and report (never pull/rebase yourself); task-level phrasing ("wrap it up", "finish the task") is NOT a write instruction; ambiguous ("提交一下") → ask first.
 <!-- phase:B+ -->
@@ -120,10 +120,10 @@ Note: users may request governance changes via explicit instruction (through the
 
 ## Git Workflow Governance
 <!-- phase:B+ -->
-- Before starting work run `scripts/check-git-policy.js`; on a protected branch with `directPush: false` (see `.governance/git-policy.json`), create a feature branch `feature/agent-<YYYYMMDD>-<summary>` first.
+- Before starting work run `scripts/check-git-policy.js`; on a protected branch with `directPush: false` (see `.governance/git-policy.json`), create a feature branch first (name per this repo's branch convention — not a fixed cross-project pattern).
 <!-- /phase -->
 <!-- phase:A -->
-- On a protected branch, create a feature branch `feature/agent-<YYYYMMDD>-<summary>` before implementing. (The mechanical branch check arrives with the gate scripts in the next initialization stage.)
+- On a protected branch, create a feature branch before implementing (name per this repo's convention). (The mechanical branch check arrives with the gate scripts in the next initialization stage.)
 <!-- /phase -->
 - Flow: feature branch → implement → test → commit → push branch → PR → human approval → merge into the protected branch.
 - Never force push; never push directly to protected branches. Small single-file doc/typo changes may skip the branch, but must be reported.
@@ -169,5 +169,5 @@ The protected files list is:
 Modifying any of them requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
 
 ## Mandatory Pre-commit Checklist
-Changes that require a CHANGELOG entry per the change-classification rules (bug fix → Fixed, new capability → Added, architecture/behavior/breaking → Changed) must be recorded before push/PR. Doc-only edits need no entry, and small changes (per the scope tier: single file, <50 lines, no public-interface change) are collected by the release flow instead. No CHANGELOG update for a required change → no push.
+Before commit/push: secrets scan exit 0; no unrelated files staged; required tests/gates recorded. CHANGELOG: follow project accession (writing may be deferred to a checkpoint; accounting may not). Do not treat "every push must edit CHANGELOG" as a hard gate. Doc-only / presentation-only edits normally need no entry.
 ```

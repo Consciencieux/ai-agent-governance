@@ -118,7 +118,7 @@ Governance Spec → Governance Engine → Runtime Contract → Coding Agents
 | Dependency Change | confirmation required |
 | Git Commit / Git Push | one confirmation per change set（权威：`references/policies/git.policy.md`） |
 
-**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准是意图对齐（intent alignment），不是提交授权；范围外操作各自独立确认；任务级表述不是写指令；任一步失败 → 停止并报告，不擅自重试或即兴修补；push 被拒（非快进）→ 停止并报告，不自行 pull/rebase。冲突时以 `git.policy.md` 为准。
+**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)。摘要：一次确认覆盖 add → commit → push；明确写指令或 IDE 暂存+提交+推送确认条即是该变更集人授；回显命令序列是执行记录而非第二次闸门；计划批准是意图对齐（intent alignment），不是提交授权；范围外操作各自独立确认；任务级表述不是写指令；任一步失败 → 停止并报告，不擅自重试或即兴修补；push 被拒（非快进）→ 停止并报告，不自行 pull/rebase。冲突时以 `git.policy.md` 为准。
 
 **发布序列（RELEASE）：** Release Proposal 在 Approval Gate 获批准后，该批准覆盖本次发布序列的全部写操作（见 `references/workflows/release.md`）。中途任一校验失败 → 停止并重新走 plan。
 

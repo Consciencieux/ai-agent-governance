@@ -35,13 +35,13 @@ const CONSENT_SYNC_GROUPS = [
 // "git-policy.md" never matched the literal "git.policy.md".
 const consentBasename = (s) => path.basename(s).replace(/[ .-]/g, "").toLowerCase();
 const CONSENT_MARKERS = [
-  // Universal: every sync point must state the one-confirmation principle (the pre-commit
-  // echo is the single authorisation point; a user's write instruction triggers the echo
-  // but is NOT the consent itself) and the intent-alignment demotion of plan approval.
+  // Universal: every sync point must state one-confirmation + echo of the full sequence
+  // (echo is the execution record; explicit write instruction or IDE confirm IS consent)
+  // and the intent-alignment demotion of plan approval.
   // M1 anchors on the echo + full-sequence substance, NOT the bare "一次确认" wording: a
   // section heading like "确认范围（一次确认 per 变更集）" would otherwise satisfy the
   // marker while the substantive rule it heads was deleted (false negative found by review).
-  { name: "one confirmation per change set (pre-commit echo; instruction is not consent)", re: /^(?=[\s\S]*(?:回显|echo))(?=[\s\S]*(?:命令序列|command sequence|add.{0,25}commit.{0,25}push))/i, files: null },
+  { name: "one confirmation per change set (echo sequence; explicit write or IDE confirm is consent)", re: /^(?=[\s\S]*(?:回显|echo))(?=[\s\S]*(?:命令序列|command sequence|add.{0,25}commit.{0,25}push))/i, files: null },
   { name: "plan approval is intent alignment, not commit authorisation", re: /intent alignment|意图对齐|不是提交授权|不是提交确认/i, files: null },
   // Release alignment point — lifecycle.policy.md is a lifecycle doc and carries no
   // release-approval clause by design; only files that own release flow must state it.

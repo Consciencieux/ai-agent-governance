@@ -269,9 +269,9 @@ Only after explicit approval:
 6. Run `node scripts/verify-governance.js`; exit code must be 0.
 7. Refresh the proposal: **re-run `node scripts/release-manager.js plan`** (HEAD has advanced to the release commit) so `headSha`, `recommended` and `provenance` are rebuilt together into `.governance/release-proposal.json`. NEVER hand-edit that JSON to change `headSha`/`recommended`: `execute` recomputes `provenance` (bound to current/recommended/releaseType/riskLevel/reviewRecommendation/reviewStatus/headSha) and rejects any edited proposal. Run plan first, then execute.
 8. `node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes` (creates the annotated tag; `--yes` is the recorded approval — without it the tool refuses all writes; it re-verifies clean tree + `headSha`).
-9. `git push origin main` → `git push origin vX.Y.Z` — write operations, user confirmation required.
-10. `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`. gh missing/unauthenticated → ⚠️ Blocked with reason.
-11. Package and attach the distributable when the project ships one (use the project's own packaging command, e.g. an npm script or build task), then attach it: `gh release upload vX.Y.Z <artifact>`; verify the uploaded asset is listed on the release. Skip when the project publishes no artifact.
+9. Push the **approved release branch** (not a hard-coded `main`) and the tag: `git push -u origin HEAD:refs/heads/$(git rev-parse --abbrev-ref HEAD)` then `git push origin vX.Y.Z`. Prefer merging to the default branch first. Write operations still require user confirmation.
+10. **Optional GitHub Release:** only if the project uses GitHub Releases — `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`. Skip (and say so) when `gh` is missing/unauthenticated, or the host is not GitHub Releases; an annotated tag on the remote is enough.
+11. Package and attach a distributable only when the project ships one (project packaging command → `gh release upload` or host equivalent). Skip when there is no artifact.
 12. Set `manifest.release.validated` to `true`, re-run validator, record into `.governance/validation.json`.
 
 ## Uncertainty
@@ -284,7 +284,7 @@ If you cannot determine whether a change is breaking or a feature: mark it Poten
 
 ## Permissions
 
-`plan` is read-only and may run automatically. Git tag, push, and `gh release create` are write operations — they run ONLY after an explicit developer approval (the approval covers this release's write sequence); state intent and wait for confirmation. Modifying this sub-skill or manifest `release` fields follows the Governance File Protection flow.
+`plan` is read-only and may run automatically. Git tag and push are write operations — they run ONLY after an explicit developer approval (the approval covers this release's write sequence); state intent and wait for confirmation. `gh release create` is optional and only when the project uses GitHub Releases. Modifying this sub-skill or manifest `release` fields follows the Governance File Protection flow.
 ````
 
 ---

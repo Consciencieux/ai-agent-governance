@@ -14,6 +14,12 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.
+
+- Release friction: skill-release and governed `release.md` push the approved branch (not hard-coded `main`); GitHub Release optional for governed projects; skill payload tarball prefers `.github/workflows/skill-payload-release.yml` on tag (local `package-skill.sh` remains fallback).
+
+- README Quick Start (en / zh-CN / zh-TW): per-agent skill discovery paths, tarball-only install (no full-repo clone), init prompt in the target project; align `docs/product/*/skill-discovery.md`.
+
 - References taxonomy (ADR-0026): instruction sources live in `references/instruction/`; subskill leaf cards in `references/capabilities/subskills/`; `templates/` is materialization only.
 
 - Obligation classification (PLAN-0057): INSTALLED `docs/rules/capability-enforcement.json` is the sole inventory of mechanical / require_review / unmechanized / inherent_judgment rows; capability leaves must not dual-write `## Enforcement` lists.

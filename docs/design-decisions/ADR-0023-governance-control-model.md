@@ -125,7 +125,7 @@ Machine-readable 独立序列化文件
 
 | Slot / 投影 | Phase 3 记录 |
 | --- | --- |
-| semantics_ref | **规则语义权威**：`references/policies/git.policy.md` § 确认范围。`AGENTS.md` § Git Operation Safety Protocol 是 repo 入口指针/投影，不得作第二权威（现状 duplicated；本 ADR 定家，不在本阶段合并正文） |
+| semantics_ref | **规则语义权威**：`references/policies/git.policy.md` § 确认范围。`AGENTS.md` / `SKILL.md` 仅指针 + always-on 摘要，不得作第二权威（现在时：authority single；ADR-0024 §8） |
 | applicability | 任何 git 写操作（按该节分类） |
 | evaluation_binding | repo/skill × consent cluster / release-manager × 已编码同步点 → deny；repo/skill × `none`（Agent 遵守） × 协议路径 → require-review / 不得执行（L0） |
 | guarantee（派生） | 机械覆盖点偏 L1；协议主体 L0 |
