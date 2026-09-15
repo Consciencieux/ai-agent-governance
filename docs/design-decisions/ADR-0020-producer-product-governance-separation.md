@@ -64,6 +64,11 @@ I2. Shared semantic truth MUST have one authoritative owner.
 I3. A repo implementation and a skill implementation MUST NOT be treated as the same
     implementation merely because semantics are shared.
 I4. Product packaging MUST NOT contain repo-only governance.
+I5. Skill payload text (SKILL.md + references/ + scripts/) MUST NOT embed this repo's
+    construction-knowledge IDs (PLAN-* / ADR-* / FINDING-* / RESEARCH-*) or require
+    governed projects to resolve this repo's docs/ tree. Repo-only tests MUST NOT force
+    those IDs into INSTALLED authority bodies. CTRL-* product control ids remain allowed.
+    Operational map: docs/product/*/architecture.md § Third axis.
 ```
 
 **4. Cross-profile closure contract（Deliverable D）。**
@@ -84,6 +89,10 @@ shared control
 - fixture reuse 是强制要求：禁止为 repo 与 skill 各写一套语义不同的 fixture。
 
 **5. `owner: core` 仅是 Phase 1 分类词汇。** `core` 在此处是 **conceptual shared semantic authority**，不是 Phase 3 Governance Core 的物理实现或 schema 承诺。正式 Control / slot 规范由 ADR-0023 决定（本条原承诺「Phase 3 再定 schema」由该 ADR 履行）。括号内预告字段名（`owner` / `consumers` / `applies_when` / `evaluator` / `effect` / `boundary`）不再视为未来机器键。
+
+## 后续修正（2026-09-15）：I5 — 载荷正文不得嵌入本仓施工知识 ID
+
+对不变量 I4 的收紧：不仅「打包不得含 repo-only 治理工具」，**skill 载荷正文**（`SKILL.md` + `references/` + `scripts/`）也不得嵌入本仓 `PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`，不得要求被治理项目解析本仓 `docs/`。`tests/` 为 REPO-ONLY，不得用门禁把上述 ID 焊进 INSTALLED 权威。产品侧 `CTRL-*` 控制名除外。操作地图：`docs/product/*/architecture.md` § Third axis。
 
 ## 后果
 

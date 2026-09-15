@@ -4,10 +4,10 @@ INIT 时复制为 `<project>/.governance/git-policy.json`，替换 `{{...}}` 占
 
 ```json
 {
-  "protectedBranches": ["main", "master"],
-  "directPush": false,
-  "requireReview": true,
-  "allowForcePush": false
+ "protectedBranches": ["main", "master"],
+ "directPush": false,
+ "requireReview": true,
+ "allowForcePush": false
 }
 ```
 

@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
+// Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
 // INSTALLED with siblings listed in references/init-spec.json — keep require graph closed.
 "use strict";
 const fs = require("fs");
@@ -8,7 +8,7 @@ const { createMdLinkFacts } = require("../md-link-facts.js");
 const { evaluateBrokenLinks } = require("../../evaluators/ctrl-0006-broken-links.js");
 const { classifyPlanStatus, isPlanMarkdown } = require("../plan-status.js");
 const { evaluateAdrUnreleasedClaims } = require("../adr-status.js");
-// NOTE (PLAN-0048 / FINDING-0019): plan-status + adr-status heuristics live in scripts/lib/
+// NOTE ( / ): plan-status + adr-status heuristics live in scripts/lib/
 // (EXTRACT). New mechanical clusters must not land as inline closures in this file — prefer
 // scripts/lib/* or a standalone repo-tools checker and call it from here.
 
@@ -72,9 +72,9 @@ const CONSENT_MARKERS = [
 // protection-floor mention. The single-source-of-truth pointer already exempts deferrals.
 const CLAIMS_PROTECTED_LIST = /(?:以下|下表|下面是|以下为|如下).{0,20}(?:清单|列表|文件)|(?:受保护|protected).{0,20}(?:清单|列表|list).{0,12}(?:如下|以下是|如下表|is|are|为)|(?:following|list(?:ed)? below|protected files? (?:include|are|listed)|清单如下|清单为|list is:)/i;
 
-// #10 plan-status contract: frontmatter `status:` is authoritative (PLAN-0048 / ADR-0016).
+// #10 plan-status contract: frontmatter `status:` is authoritative ( / ).
 // Legacy `> **Status:` lines remain a compatibility fallback inside scripts/lib/plan-status.js.
-// Implementation EXTRACTED — do not re-inline the classifier here (FINDING-0019).
+// Implementation EXTRACTED — do not re-inline the classifier here.
 
 function walk(dir, base = dir) {
   const out = [];
@@ -202,7 +202,7 @@ function mdFiles() {
   if (fs.existsSync(DOCS)) {
     for (const lang of ["en", "zh-CN", "zh-TW"]) {
       // Prefer product trees (this skill repo); also scan legacy docs/{lang}/ for governed /
-      // fixture shapes. PLAN-0055 Stage 4: product migration left mdFiles() blind.
+      // fixture shapes. Stage 4: product migration left mdFiles blind.
       const productDir = path.join(DOCS, "product", lang);
       if (fs.existsSync(productDir)) {
         for (const rel of walk(productDir)) out.push((path.join("docs", "product", lang, rel)).replace(/\\/g, "/"));

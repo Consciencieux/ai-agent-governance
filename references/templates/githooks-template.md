@@ -32,9 +32,9 @@ set -eu
 
 CONSENT_FILE=".governance/consent.json"
 
-fail() {
-  echo "pre-commit: $*" >&2
-  exit 1
+fail {
+ echo "pre-commit: $*" >&2
+ exit 1
 }
 
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || fail "cannot locate the repository root"
@@ -46,11 +46,11 @@ command -v node >/dev/null 2>&1 || fail "node is required to validate $CONSENT_F
 HOOK_MODE="pre-commit"
 MESSAGE_FILE=""
 case "${0##*/}" in
-  commit-msg)
-    [ "$#" -eq 1 ] || fail "commit-msg requires Git's message-file argument"
-    HOOK_MODE="commit-msg"
-    MESSAGE_FILE="$1"
-    ;;
+ commit-msg)
+ [ "$#" -eq 1 ] || fail "commit-msg requires Git's message-file argument"
+ HOOK_MODE="commit-msg"
+ MESSAGE_FILE="$1"
+ ;;
 esac
 
 node - "$HOOK_MODE" "$CONSENT_FILE" "$MESSAGE_FILE" <<'NODE'
@@ -63,35 +63,35 @@ const consentFile = args[1];
 const messageFile = args[2];
 
 function fail(message) {
-  process.stderr.write(`pre-commit: ${message}\n`);
-  process.exit(1);
+ process.stderr.write(`pre-commit: ${message}\n`);
+ process.exit(1);
 }
 
 let consent;
 try {
-  consent = JSON.parse(fs.readFileSync(consentFile, "utf8"));
+ consent = JSON.parse(fs.readFileSync(consentFile, "utf8"));
 } catch (error) {
-  fail(`cannot read or parse ${consentFile}; refusing to proceed`);
+ fail(`cannot read or parse ${consentFile}; refusing to proceed`);
 }
 
 if (!consent || !Array.isArray(consent.staged) || !consent.staged.every((p) => typeof p === "string")) {
-  fail(`${consentFile} must contain a staged filename array`);
+ fail(`${consentFile} must contain a staged filename array`);
 }
 
 const messages = Array.isArray(consent.message) ? consent.message : [consent.message];
 if (!messages.length || !messages.every((m) => typeof m === "string" && m.length > 0)) {
-  fail(`${consentFile} must contain a non-empty message or message array`);
+ fail(`${consentFile} must contain a non-empty message or message array`);
 }
 
 function normalizePaths(paths) {
-  return paths.map((p) => p.replace(/\\/g, "/")).sort();
+ return paths.map((p) => p.replace(/\\/g, "/")).sort;
 }
 
 const staged = spawnSync("git", ["-c", "core.quotePath=false", "diff", "--cached", "--name-only", "-z"], { encoding: "buffer" });
 if (staged.status !== 0) fail("cannot inspect the staged file list");
 const currentFiles = staged.stdout.toString("utf8").split("\0").filter(Boolean);
 if (JSON.stringify(normalizePaths(consent.staged)) !== JSON.stringify(normalizePaths(currentFiles))) {
-  fail("staged files differ from the confirmed command sequence; re-confirm and update consent.json");
+ fail("staged files differ from the confirmed command sequence; re-confirm and update consent.json");
 }
 
 // Content binding. The file list alone does not prove the approved CONTENT is what gets
@@ -102,33 +102,33 @@ if (JSON.stringify(normalizePaths(consent.staged)) !== JSON.stringify(normalizeP
 // check have no digest, and making it mandatory would break every governed project on
 // upgrade. Absent digest keeps the old, weaker guarantee; present digest is fail-closed.
 if (Object.prototype.hasOwnProperty.call(consent, "stagedDigest")) {
-  if (typeof consent.stagedDigest !== "string" || !consent.stagedDigest) {
-    fail(`${consentFile} stagedDigest must be a non-empty string`);
-  }
-  const diff = spawnSync("git", ["-c", "core.quotePath=false", "diff", "--cached"], { encoding: "buffer" });
-  if (diff.status !== 0) fail("cannot inspect the staged diff for digest verification");
-  const actualDigest = require("crypto").createHash("sha256").update(diff.stdout).digest("hex");
-  if (actualDigest !== consent.stagedDigest) {
-    fail("staged content changed after confirmation (digest mismatch); re-confirm and update consent.json");
-  }
+ if (typeof consent.stagedDigest !== "string" || !consent.stagedDigest) {
+ fail(`${consentFile} stagedDigest must be a non-empty string`);
+ }
+ const diff = spawnSync("git", ["-c", "core.quotePath=false", "diff", "--cached"], { encoding: "buffer" });
+ if (diff.status !== 0) fail("cannot inspect the staged diff for digest verification");
+ const actualDigest = require("crypto").createHash("sha256").update(diff.stdout).digest("hex");
+ if (actualDigest !== consent.stagedDigest) {
+ fail("staged content changed after confirmation (digest mismatch); re-confirm and update consent.json");
+ }
 }
 
 if (mode === "commit-msg") {
-  if (!messageFile) fail("commit-msg did not receive a message file");
-  let actual;
-  try {
-    actual = fs.readFileSync(messageFile, "utf8");
-  } catch (error) {
-    fail("cannot read the proposed commit message");
-  }
-  // Git comments are not part of the commit message a user confirms. Keep the
-  // comparison exact for message text while ignoring Git's trailing blank lines.
-  actual = actual.replace(/\r\n/g, "\n").split("\n").filter((line) => !line.startsWith("#")).join("\n").replace(/\n+$/, "");
-  const matches = messages.some((expected) => {
-    const normalized = expected.replace(/\r\n/g, "\n").replace(/\n+$/, "");
-    return normalized === actual;
-  });
-  if (!matches) fail("commit message differs from the confirmed message; re-confirm before committing");
+ if (!messageFile) fail("commit-msg did not receive a message file");
+ let actual;
+ try {
+ actual = fs.readFileSync(messageFile, "utf8");
+ } catch (error) {
+ fail("cannot read the proposed commit message");
+ }
+ // Git comments are not part of the commit message a user confirms. Keep the
+ // comparison exact for message text while ignoring Git's trailing blank lines.
+ actual = actual.replace(/\r\n/g, "\n").split("\n").filter((line) => !line.startsWith("#")).join("\n").replace(/\n+$/, "");
+ const matches = messages.some((expected) => {
+ const normalized = expected.replace(/\r\n/g, "\n").replace(/\n+$/, "");
+ return normalized === actual;
+ });
+ if (!matches) fail("commit message differs from the confirmed message; re-confirm before committing");
 }
 NODE
 
@@ -139,8 +139,8 @@ exit 0
 
 ```json
 {
-  "staged": ["src/file with space.ts", "文档/说明.md"],
-  "message": ["fix(scope): update the governed files"]
+ "staged": ["src/file with space.ts", "文档/说明.md"],
+ "message": ["fix(scope): update the governed files"]
 }
 ```
 

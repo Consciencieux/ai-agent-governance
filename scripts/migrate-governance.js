@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-// PAYLOAD SCRIPT — discoverable MIGRATE / upgrade entry (PLAN-0050 / H2d).
+// PAYLOAD SCRIPT — discoverable MIGRATE / upgrade entry ( / H2d).
 // Self-contained: Node builtins only.
 //
-// Compares .governance/manifest.json governance_version to an expected version
+// Compares.governance/manifest.json governance_version to an expected version
 // (package.json version of the skill/repo, or --expect). Prints a migration
 // checklist; does not auto-mutate the tree.
 //
 // Usage:
-//   node scripts/migrate-governance.js [--json] [--expect <semver>]
+// node scripts/migrate-governance.js [--json] [--expect <semver>]
 // Exit: 0 up-to-date · 2 upgrade advised · 1 error
 
 "use strict";

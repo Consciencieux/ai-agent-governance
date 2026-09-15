@@ -17,7 +17,7 @@ for which role a file has:
 | Role | Definition | How to verify | Examples |
 | --- | --- | --- | --- |
 | **INSTALLED** | INIT writes it into the governed project (copy / template / generated). The governed project's agents read it at runtime. | listed as a `source` in `init-spec.json` (see `check-role-completeness.js --gate` for current counts) | `references/policies/coding.policy.md` → `docs/rules/coding.md`; `scripts/check-secrets.js`; `agents-md.template.md` → `AGENTS.md` |
-| **SKILL-INTERNAL** | Ships inside the tarball (packaging copies `references/` + `scripts/` wholesale) and the SKILL EXECUTOR reads it — but INIT never installs it, so a governed project never has this file. | listed in `init-spec.json` `distribution.skillInternal` | `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`, and `references/principles/*` (portable methodology; PLAN-0037) |
+| **SKILL-INTERNAL** | Ships inside the tarball (packaging copies `references/` + `scripts/` wholesale) and the SKILL EXECUTOR reads it — but INIT never installs it, so a governed project never has this file. | listed in `init-spec.json` `distribution.skillInternal` | `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`, and `references/principles/*` (portable methodology) |
 | **REPO-ONLY** | Never in the tarball at all. Governs work on THIS repository. | outside `references/`/`scripts/`/`SKILL.md`/`LICENSE` | `repo-tools/**`, `repo-workflows/**`, `AGENTS.md`, `docs/**`, `tests/**`, `package.json`, `.github/**`, `.gitattributes` |
 
 Roles are **human decisions, never inferred**: `copy`/`template`/`generated`, renames
@@ -79,11 +79,28 @@ Three rules follow:
    (`<!-- phase:A -->` / `<!-- phase:B+ -->` / `<!-- phase:C -->`) and later stages
    upgrade the file in place, so the rules a project holds always match the scripts it has.
 
+### Third axis: construction provenance (repo knowledge vs skill contract)
+
+Distribution says *where a file is delivered*. Portability says *whether named paths hold*.
+This axis says *which knowledge system owns the text*. Roles alone do not stop repo
+construction IDs from leaking into skill payload.
+
+| Belongs to | Lives in | May cite | Must not appear in skill payload (`SKILL.md` + `references/` + `scripts/`) |
+| --- | --- | --- | --- |
+| **This repo (producer)** | `docs/` (plans, findings, ADR, research, product, roadmap), `tests/`, `repo-tools/`, `repo-workflows/`, this repo's `AGENTS.md` / `CHANGELOG.md` / CI | `PLAN-*`, `ADR-*`, `FINDING-*`, `RESEARCH-*`, repo paths, npm scripts | — (repo files may cite freely) |
+| **Skill product** | Tarball: `SKILL.md` + `references/` + `scripts/` + `LICENSE`. After INIT: governed-project paths such as `docs/rules/*`, copied `scripts/*`, `AGENTS.md` | Product language (`judgment` / `mechanical`, CTRL-* seed controls, install paths) | `PLAN-*`, `ADR-*`, `FINDING-*`, `RESEARCH-*`, pointers into this repo's `docs/` tree |
+
+Hard rules:
+
+1. **`tests/` is REPO-ONLY.** It never ships in the skill tarball. A repo test must not force INSTALLED / payload text to embed Finding/Plan/ADR IDs (that re-couples producer docs into product).
+2. **CTRL-*** IDs are product control names (seed oracles), not the repo Finding system — allowed in payload when they name a shipped control.
+3. **Decision record for this boundary:** [ADR-0020](../../design-decisions/ADR-0020-producer-product-governance-separation.md) invariant I5. This page is the operational map; ADR-0020 is the decision.
+
 ### Directory Roles
 
 | Path | Role | Reader | Language |
 | --- | --- | --- | --- |
-| `SKILL.md` | Thin always-on entry (identity · modes · invariants · capability routing). Full policy/workflow bodies live under `references/`; must-ship callable cards under `references/capabilities/` (PLAN-0046). Not an encyclopedia. | agents (skill users) | single |
+| `SKILL.md` | Thin always-on entry (identity · modes · invariants · capability routing). Full policy/workflow bodies live under `references/`; must-ship callable cards under `references/capabilities/`. Not an encyclopedia. | agents (skill users) | single |
 | `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
 | `scripts/` | Skill runtime scripts. Mixed INSTALLED + SKILL-INTERNAL (current counts: `check-role-completeness.js --gate`). INSTALLED scripts are copied into governed projects. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |

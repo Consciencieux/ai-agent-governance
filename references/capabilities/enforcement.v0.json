@@ -1,783 +1,783 @@
 {
-  "id": "CAPABILITY-ENFORCEMENT-V0",
-  "version": 0,
-  "authority": "classification",
-  "installed_path": "docs/rules/capability-enforcement.json",
-  "notes": [
-    "Sole source for obligation classification. Capability markdown must not list ## Enforcement rows or Classification dual-write.",
-    "leaf is the authoring path under references/capabilities/ (INIT copies this file to docs/rules/capability-enforcement.json).",
-    "scope=repo_only carriers exist only in the skill distribution repo; they are absent after INIT.",
-    "mode is classification; result is enforcement-semantics allow/deny/warn/require_review.",
-    "A green completeness gate does not prove agents complied with unmechanized or inherent_judgment rows."
-  ],
-  "enums": {
-    "mode": [
-      "mechanical",
-      "require_review",
-      "unmechanized",
-      "inherent_judgment"
-    ],
-    "result": [
-      "allow",
-      "deny",
-      "warn",
-      "require_review"
-    ],
-    "scope": [
-      "installed",
-      "repo_only"
-    ]
-  },
-  "entries": [
-    {
-      "id": "audit-drift",
-      "leaf": "references/capabilities/audit-drift.md",
-      "obligations": [
-        {
-          "id": "declared-drift-scripts",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/verify_governance.js",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "no-unauthorized-rebuild",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "change-hygiene",
-      "leaf": "references/capabilities/change-hygiene.md",
-      "obligations": [
-        {
-          "id": "unresolved-ledger-count",
-          "mode": "unmechanized",
-          "result": "deny",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "current-layer-clean",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "confirmation-hygiene",
-      "leaf": "references/capabilities/confirmation-hygiene.md",
-      "obligations": [
-        {
-          "id": "digest-fields-present",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "coding-hygiene-when-declared",
-          "mode": "mechanical",
-          "result": "warn",
-          "carrier": "repo-tools/check-coding-hygiene.js",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
-          "id": "human-understood-consent",
-          "mode": "require_review",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "content-consistency",
-      "leaf": "references/capabilities/content-consistency.md",
-      "obligations": [
-        {
-          "id": "gate-clusters",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-doc-consistency.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "deterministic-init",
-      "leaf": "references/capabilities/deterministic-init.md",
-      "obligations": [
-        {
-          "id": "byte-identical-trees",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/generate-governance.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "discovery-ledger",
-      "leaf": "references/capabilities/discovery-ledger.md",
-      "obligations": [
-        {
-          "id": "unaccounted-zero-table",
-          "mode": "unmechanized",
-          "result": "deny",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "honest-disposition",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "doc-freshness",
-      "leaf": "references/capabilities/doc-freshness.md",
-      "obligations": [
-        {
-          "id": "release-gate-stale",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-doc-freshness.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "engineering-restraint",
-      "leaf": "references/capabilities/engineering-restraint.md",
-      "obligations": [
-        {
-          "id": "machinery-test",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "evidence-tiers",
-      "leaf": "references/capabilities/evidence-tiers.md",
-      "obligations": [
-        {
-          "id": "changelog-narration-island",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/check-changelog-narration.js",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
-          "id": "report-tier-schema",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "tier-used-correctly",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "generated-subskill-lifecycle",
-      "leaf": "references/capabilities/generated-subskill-lifecycle.md",
-      "obligations": [
-        {
-          "id": "eight-leaves-materialize",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "git-workflow-safety",
-      "leaf": "references/capabilities/git-workflow-safety.md",
-      "obligations": [
-        {
-          "id": "protected-branch-direct-push",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-git-policy.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "git-write-consent",
-      "leaf": "references/capabilities/git-write-consent.md",
-      "obligations": [
-        {
-          "id": "argv-classifier",
-          "mode": "mechanical",
-          "result": "warn",
-          "carrier": "scripts/check-git-consent.js",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "human-consent-before-write",
-          "mode": "require_review",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "governance-state",
-      "leaf": "references/capabilities/governance-state.md",
-      "obligations": [
-        {
-          "id": "declared-state-files",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/verify_governance.js",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "no-parallel-state-files",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "governance-validator",
-      "leaf": "references/capabilities/governance-validator.md",
-      "obligations": [
-        {
-          "id": "missing-required-artifact",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/verify_governance.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "installed-portability",
-      "leaf": "references/capabilities/installed-portability.md",
-      "obligations": [
-        {
-          "id": "role-completeness",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/check-role-completeness.js",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
-          "id": "payload-require-graph",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "tests/suites/payload.test.js",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
-          "id": "target-resolvable-refs",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "plan-sync",
-      "leaf": "references/capabilities/plan-sync.md",
-      "obligations": [
-        {
-          "id": "development-plan-sync",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-plan-sync.js",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "repo-plan-delivery",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/check-plan-delivery.js",
-          "scope": "repo_only",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "release-orchestration",
-      "leaf": "references/capabilities/release-orchestration.md",
-      "obligations": [
-        {
-          "id": "validator-before-tag",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/verify_governance.js",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "hitl-before-tag",
-          "mode": "require_review",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "release-risk-tiering",
-      "leaf": "references/capabilities/release-risk-tiering.md",
-      "obligations": [
-        {
-          "id": "high-risk-review-evidence",
-          "mode": "require_review",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        },
-        {
-          "id": "tier-on-proposal",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "review-mechanism",
-      "leaf": "references/capabilities/review-mechanism.md",
-      "obligations": [
-        {
-          "id": "report-path-exists",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "must-fix-closed",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "root-cause-repair",
-      "leaf": "references/capabilities/root-cause-repair.md",
-      "obligations": [
-        {
-          "id": "declared-sibling-paths",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-sibling-closure.js",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "negative-oracle-for-claimed-gate",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/oracle-inventory.v0.json",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
-          "id": "failure-attempt-counter",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "affected-vs-diff",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "declared-dual-domain-pairs",
-          "mode": "unmechanized",
-          "result": "deny",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "enumeration-complete",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        },
-        {
-          "id": "control-plane-closed",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        },
-        {
-          "id": "third-failure-new-plan",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        },
-        {
-          "id": "dual-domain-thought",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        },
-        {
-          "id": "search-actually-happened",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "rule-capture",
-      "leaf": "references/capabilities/rule-capture.md",
-      "obligations": [
-        {
-          "id": "phase-5a-confirm-by-id",
-          "mode": "require_review",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        },
-        {
-          "id": "post-write-gates",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/verify_governance.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "secret-scanning",
-      "leaf": "references/capabilities/secret-scanning.md",
-      "obligations": [
-        {
-          "id": "staged-secret-deny",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-secrets.js",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "rotation-after-leak",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "seed-oracles",
-      "leaf": "references/capabilities/seed-oracles.md",
-      "obligations": [
-        {
-          "id": "oracle-inventory-gap",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/oracle-inventory.v0.json",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
-          "id": "routing-characterization",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "tests/suites/routing.test.js",
-          "scope": "repo_only",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "ssot-repair",
-      "leaf": "references/capabilities/ssot-repair.md",
-      "obligations": [
-        {
-          "id": "authority-meaning-correct",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "sync-groups",
-      "leaf": "references/capabilities/sync-groups.md",
-      "obligations": [
-        {
-          "id": "declared-members-present",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-sync.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "subskill-ci-generator",
-      "leaf": "references/capabilities/subskills/subskill-ci-generator.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "blocked-reason-adequate",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "subskill-drift-check",
-      "leaf": "references/capabilities/subskills/subskill-drift-check.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "subskill-governance-validator",
-      "leaf": "references/capabilities/subskills/subskill-governance-validator.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "subskill-plan-manager",
-      "leaf": "references/capabilities/subskills/subskill-plan-manager.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "subskill-release-manager",
-      "leaf": "references/capabilities/subskills/subskill-release-manager.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "subskill-repository-inspection",
-      "leaf": "references/capabilities/subskills/subskill-repository-inspection.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "subskill-review-manager",
-      "leaf": "references/capabilities/subskills/subskill-review-manager.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "subskill-state-manager",
-      "leaf": "references/capabilities/subskills/subskill-state-manager.md",
-      "obligations": [
-        {
-          "id": "template-section",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    }
-  ]
+ "id": "CAPABILITY-ENFORCEMENT-V0",
+ "version": 0,
+ "authority": "classification",
+ "installed_path": "docs/rules/capability-enforcement.json",
+ "notes": [
+ "Sole source for obligation classification. Capability markdown must not list ## Enforcement rows or Classification dual-write.",
+ "leaf is the authoring path under references/capabilities/ (INIT copies this file to docs/rules/capability-enforcement.json).",
+ "scope=repo_only carriers exist only in the skill distribution repo; they are absent after INIT.",
+ "mode is classification; result is enforcement-semantics allow/deny/warn/require_review.",
+ "A green completeness gate does not prove agents complied with unmechanized or inherent_judgment rows."
+ ],
+ "enums": {
+ "mode": [
+ "mechanical",
+ "require_review",
+ "unmechanized",
+ "inherent_judgment"
+ ],
+ "result": [
+ "allow",
+ "deny",
+ "warn",
+ "require_review"
+ ],
+ "scope": [
+ "installed",
+ "repo_only"
+ ]
+ },
+ "entries": [
+ {
+ "id": "audit-drift",
+ "leaf": "references/capabilities/audit-drift.md",
+ "obligations": [
+ {
+ "id": "declared-drift-scripts",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/verify_governance.js",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "no-unauthorized-rebuild",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "change-hygiene",
+ "leaf": "references/capabilities/change-hygiene.md",
+ "obligations": [
+ {
+ "id": "unresolved-ledger-count",
+ "mode": "unmechanized",
+ "result": "deny",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "current-layer-clean",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "confirmation-hygiene",
+ "leaf": "references/capabilities/confirmation-hygiene.md",
+ "obligations": [
+ {
+ "id": "digest-fields-present",
+ "mode": "unmechanized",
+ "result": "warn",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "coding-hygiene-when-declared",
+ "mode": "mechanical",
+ "result": "warn",
+ "carrier": "repo-tools/check-coding-hygiene.js",
+ "scope": "repo_only",
+ "mechanizable": true
+ },
+ {
+ "id": "human-understood-consent",
+ "mode": "require_review",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "content-consistency",
+ "leaf": "references/capabilities/content-consistency.md",
+ "obligations": [
+ {
+ "id": "gate-clusters",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/check-doc-consistency.js",
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "deterministic-init",
+ "leaf": "references/capabilities/deterministic-init.md",
+ "obligations": [
+ {
+ "id": "byte-identical-trees",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/generate-governance.js",
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "discovery-ledger",
+ "leaf": "references/capabilities/discovery-ledger.md",
+ "obligations": [
+ {
+ "id": "unaccounted-zero-table",
+ "mode": "unmechanized",
+ "result": "deny",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "honest-disposition",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "doc-freshness",
+ "leaf": "references/capabilities/doc-freshness.md",
+ "obligations": [
+ {
+ "id": "release-gate-stale",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/check-doc-freshness.js",
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "engineering-restraint",
+ "leaf": "references/capabilities/engineering-restraint.md",
+ "obligations": [
+ {
+ "id": "machinery-test",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "evidence-tiers",
+ "leaf": "references/capabilities/evidence-tiers.md",
+ "obligations": [
+ {
+ "id": "changelog-narration-island",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "repo-tools/check-changelog-narration.js",
+ "scope": "repo_only",
+ "mechanizable": true
+ },
+ {
+ "id": "report-tier-schema",
+ "mode": "unmechanized",
+ "result": "warn",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "tier-used-correctly",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "generated-subskill-lifecycle",
+ "leaf": "references/capabilities/generated-subskill-lifecycle.md",
+ "obligations": [
+ {
+ "id": "eight-leaves-materialize",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "git-workflow-safety",
+ "leaf": "references/capabilities/git-workflow-safety.md",
+ "obligations": [
+ {
+ "id": "protected-branch-direct-push",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/check-git-policy.js",
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "git-write-consent",
+ "leaf": "references/capabilities/git-write-consent.md",
+ "obligations": [
+ {
+ "id": "argv-classifier",
+ "mode": "mechanical",
+ "result": "warn",
+ "carrier": "scripts/check-git-consent.js",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "human-consent-before-write",
+ "mode": "require_review",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "governance-state",
+ "leaf": "references/capabilities/governance-state.md",
+ "obligations": [
+ {
+ "id": "declared-state-files",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/verify_governance.js",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "no-parallel-state-files",
+ "mode": "unmechanized",
+ "result": "warn",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "governance-validator",
+ "leaf": "references/capabilities/governance-validator.md",
+ "obligations": [
+ {
+ "id": "missing-required-artifact",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/verify_governance.js",
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "installed-portability",
+ "leaf": "references/capabilities/installed-portability.md",
+ "obligations": [
+ {
+ "id": "role-completeness",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "repo-tools/check-role-completeness.js",
+ "scope": "repo_only",
+ "mechanizable": true
+ },
+ {
+ "id": "payload-require-graph",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "tests/suites/payload.test.js",
+ "scope": "repo_only",
+ "mechanizable": true
+ },
+ {
+ "id": "target-resolvable-refs",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "plan-sync",
+ "leaf": "references/capabilities/plan-sync.md",
+ "obligations": [
+ {
+ "id": "development-plan-sync",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/check-plan-sync.js",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "repo-plan-delivery",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "repo-tools/check-plan-delivery.js",
+ "scope": "repo_only",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "release-orchestration",
+ "leaf": "references/capabilities/release-orchestration.md",
+ "obligations": [
+ {
+ "id": "validator-before-tag",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/verify_governance.js",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "hitl-before-tag",
+ "mode": "require_review",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "release-risk-tiering",
+ "leaf": "references/capabilities/release-risk-tiering.md",
+ "obligations": [
+ {
+ "id": "high-risk-review-evidence",
+ "mode": "require_review",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ },
+ {
+ "id": "tier-on-proposal",
+ "mode": "unmechanized",
+ "result": "warn",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "review-mechanism",
+ "leaf": "references/capabilities/review-mechanism.md",
+ "obligations": [
+ {
+ "id": "report-path-exists",
+ "mode": "unmechanized",
+ "result": "warn",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "must-fix-closed",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "root-cause-repair",
+ "leaf": "references/capabilities/root-cause-repair.md",
+ "obligations": [
+ {
+ "id": "declared-sibling-paths",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/check-sibling-closure.js",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "negative-oracle-for-claimed-gate",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "repo-tools/oracle-inventory.v0.json",
+ "scope": "repo_only",
+ "mechanizable": true
+ },
+ {
+ "id": "failure-attempt-counter",
+ "mode": "unmechanized",
+ "result": "warn",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "affected-vs-diff",
+ "mode": "unmechanized",
+ "result": "warn",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "declared-dual-domain-pairs",
+ "mode": "unmechanized",
+ "result": "deny",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "enumeration-complete",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ },
+ {
+ "id": "control-plane-closed",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ },
+ {
+ "id": "third-failure-new-plan",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ },
+ {
+ "id": "dual-domain-thought",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ },
+ {
+ "id": "search-actually-happened",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "rule-capture",
+ "leaf": "references/capabilities/rule-capture.md",
+ "obligations": [
+ {
+ "id": "phase-5a-confirm-by-id",
+ "mode": "require_review",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ },
+ {
+ "id": "post-write-gates",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/verify_governance.js",
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "secret-scanning",
+ "leaf": "references/capabilities/secret-scanning.md",
+ "obligations": [
+ {
+ "id": "staged-secret-deny",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/check-secrets.js",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "rotation-after-leak",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "seed-oracles",
+ "leaf": "references/capabilities/seed-oracles.md",
+ "obligations": [
+ {
+ "id": "oracle-inventory-gap",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "repo-tools/oracle-inventory.v0.json",
+ "scope": "repo_only",
+ "mechanizable": true
+ },
+ {
+ "id": "routing-characterization",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "tests/suites/routing.test.js",
+ "scope": "repo_only",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "ssot-repair",
+ "leaf": "references/capabilities/ssot-repair.md",
+ "obligations": [
+ {
+ "id": "authority-meaning-correct",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "sync-groups",
+ "leaf": "references/capabilities/sync-groups.md",
+ "obligations": [
+ {
+ "id": "declared-members-present",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "scripts/check-sync.js",
+ "scope": "installed",
+ "mechanizable": true
+ }
+ ]
+ },
+ {
+ "id": "subskill-ci-generator",
+ "leaf": "references/capabilities/subskills/subskill-ci-generator.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "blocked-reason-adequate",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "subskill-drift-check",
+ "leaf": "references/capabilities/subskills/subskill-drift-check.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "subskill-governance-validator",
+ "leaf": "references/capabilities/subskills/subskill-governance-validator.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "subskill-plan-manager",
+ "leaf": "references/capabilities/subskills/subskill-plan-manager.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "subskill-release-manager",
+ "leaf": "references/capabilities/subskills/subskill-release-manager.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "subskill-repository-inspection",
+ "leaf": "references/capabilities/subskills/subskill-repository-inspection.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "subskill-review-manager",
+ "leaf": "references/capabilities/subskills/subskill-review-manager.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ },
+ {
+ "id": "subskill-state-manager",
+ "leaf": "references/capabilities/subskills/subskill-state-manager.md",
+ "obligations": [
+ {
+ "id": "template-section",
+ "mode": "mechanical",
+ "result": "deny",
+ "carrier": "references/instruction/sub-skills.md",
+ "scope": "installed",
+ "mechanizable": true
+ },
+ {
+ "id": "loaded-in-task",
+ "mode": "inherent_judgment",
+ "result": "require_review",
+ "carrier": null,
+ "scope": "installed",
+ "mechanizable": false
+ }
+ ]
+ }
+ ]
 }

@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
+// Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
 // INSTALLED with siblings listed in references/init-spec.json — keep require graph closed.
 "use strict";
 function runPromptSync(ctx) {
@@ -11,7 +11,7 @@ function runPromptSync(ctx) {
   } = ctx;
 
   // ---- 6. prompt sync (gate class; sub-skill triggers <-> commands.md) ----
-  // ADR-0008: the trigger inventory in commands.md is a DELIBERATE, controlled copy (users
+  // : the trigger inventory in commands.md is a DELIBERATE, controlled copy (users
   // discover sub-skills from the manual), with sub-skills.md staying the authority. Because
   // the copy is mandated, BOTH directions are defects: a trigger missing from a language
   // tree hides a skill from users, and a trigger left behind after removal advertises one
@@ -27,7 +27,7 @@ function runPromptSync(ctx) {
   }
   if (triggers.size > 0) {
     for (const lang of ["en", "zh-CN", "zh-TW"]) {
-      // PLAN-0055 Stage 4: this skill repo keeps commands.md under docs/product/{lang}/;
+      // Stage 4: this skill repo keeps commands.md under docs/product/{lang}/;
       // governed projects / fixtures still use docs/{lang}/commands.md. Prefer product.
       const cmdCandidates = [
         path.join(DOCS, "product", lang, "commands.md"),

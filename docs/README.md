@@ -254,4 +254,4 @@ ADR 定约束，Roadmap 投影/呈现顺序，Plan 负责施工；阶段顺序�
 - 系统模型与实验 → `docs/research/`（管理规则：`docs/research/README.md`）
 - 架构决策 → `docs/design-decisions/`（管理规则：`docs/design-decisions/README.md`）
 - 术语 → `docs/glossary.md`
-- 仓库布局（安装载荷 vs 仓库基础设施）→ `docs/product/en/architecture.md`
+- 仓库布局（安装载荷 vs 仓库基础设施；施工出处第三轴）→ `docs/product/en/architecture.md`

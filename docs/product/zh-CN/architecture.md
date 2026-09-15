@@ -13,7 +13,7 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
 | 角色 | 定义 | 如何核验 | 例子 |
 | --- | --- | --- | --- |
 | **INSTALLED（安装到被治理项目）** | INIT 把它写进被治理项目（copy / template / generated）。该项目的 Agent 在运行期读它。 | 在 `init-spec.json` 中作为 `source` 出现（当前数量见 `check-role-completeness.js --gate` 输出） | `references/policies/coding.policy.md` → `docs/rules/coding.md`；`scripts/check-secrets.js`；`agents-md.template.md` → `AGENTS.md` |
-| **SKILL-INTERNAL（随 tarball 但不安装）** | 随 tarball 分发（打包整目录复制 `references/` + `scripts/`）且由 **skill 执行器**读取——但 INIT 从不安装它，所以被治理项目里没有这个文件。 | 在 `init-spec.json` 的 `distribution.skillInternal` 中列出 | `references/init-spec.json`、`references/workflows/release.md`、`scripts/generate-governance.js`，以及 `references/principles/*`（可复用方法论；PLAN-0037） |
+| **SKILL-INTERNAL（随 tarball 但不安装）** | 随 tarball 分发（打包整目录复制 `references/` + `scripts/`）且由 **skill 执行器**读取——但 INIT 从不安装它，所以被治理项目里没有这个文件。 | 在 `init-spec.json` 的 `distribution.skillInternal` 中列出 | `references/init-spec.json`、`references/workflows/release.md`、`scripts/generate-governance.js`，以及 `references/principles/*`（可复用方法论） |
 | **REPO-ONLY（仅本仓库）** | 完全不进 tarball。约束在本仓库上的工作。 | 在 `references/`/`scripts/`/`SKILL.md`/`LICENSE` 之外 | `repo-tools/**`、`repo-workflows/**`、`AGENTS.md`、`docs/**`、`tests/**`、`package.json`、`.github/**`、`.gitattributes` |
 
 角色是**人的决定，绝不推断**：`copy`/`template`/`generated`、重命名（`lifecycle.policy.md` → `docs/rules/lifecycle.md`、`verify_governance.js` → `verify-governance.js`）、一对多输出（`githooks-template.md` → `pre-commit` + `commit-msg`）以及 内嵌静态内容工件（`type: "static"`），都编码了生成器无法从文件树恢复的契约决定。**可机械化的只是抓漏**：`repo-tools/check-role-completeness.js --gate` 会在出现未分类文件、同时属于两个集合、声明路径已不存在、或角色声明与 `package-skill.sh` 实际打包不符时失败。角色确实未决的文件放进 `distribution.undecided` 并记录待裁定问题，该门禁保持红色直到裁定。最初放进去的两项都已裁定完毕：`governance-files.policy.md` 现作为 `docs/rules/governance-files.md` 安装（那个 INSTALLED 的检查器在运行时读它），`feature-doc.template.md` 现作为 `docs/features/_TEMPLATE.md` 安装（SKILL.md 让 Agent 复制它）。当前 `undecided` 为空，各角色的实时数量以 `check-role-completeness.js --gate` 的输出为准。
@@ -53,11 +53,27 @@ skill 的行为（运行模式 INIT/AUDIT/RELEASE、生命周期管线、设计�
    按阶段裁剪其条款（`<!-- phase:A -->` / `<!-- phase:B+ -->` / `<!-- phase:C -->`），后续阶段
    原地升级该文件，使项目持有的规则始终与其拥有的脚本相匹配。
 
+### 第三条轴：施工出处（仓库知识 vs skill 合同）
+
+分发角色回答*文件投递到哪里*；可移植性回答*命名路径是否成立*。本轴回答*正文属于哪套知识系统*。
+仅有角色表拦不住本仓施工 ID 渗进 skill 载荷。
+
+| 归属 | 落点 | 可引用 | 不得出现在 skill 载荷（`SKILL.md` + `references/` + `scripts/`） |
+| --- | --- | --- | --- |
+| **本仓库（生产者）** | `docs/`（plans / findings / ADR / research / product / roadmap）、`tests/`、`repo-tools/`、`repo-workflows/`、本仓 `AGENTS.md` / `CHANGELOG.md` / CI | `PLAN-*`、`ADR-*`、`FINDING-*`、`RESEARCH-*`、本仓路径、npm scripts | —（仓库文件可自由引用） |
+| **Skill 产品** | tarball：`SKILL.md` + `references/` + `scripts/` + `LICENSE`。INIT 后：被治理项目路径如 `docs/rules/*`、已复制 `scripts/*`、`AGENTS.md` | 产品语言（`judgment` / `mechanical`、CTRL-* 种子控制、安装路径） | `PLAN-*`、`ADR-*`、`FINDING-*`、`RESEARCH-*`、指向本仓 `docs/` 树的指针 |
+
+硬规则：
+
+1. **`tests/` 是 REPO-ONLY。** 永不进 skill tarball。仓库测试**不得**迫使 INSTALLED / 载荷正文嵌入 Finding/Plan/ADR ID（否则等于把生产者文档系统焊回产品）。
+2. **CTRL-*** 是产品侧控制名（种子 oracle），不是本仓 Finding 系统——在载荷里命名已交付控制时允许。
+3. **边界决策记录：** [ADR-0020](../../design-decisions/ADR-0020-producer-product-governance-separation.md) 不变量 I5。本页是操作地图；ADR-0020 是决策。
+
 ### 目录职责
 
 | 路径 | 职责 | 读者 | 语言 |
 | --- | --- | --- | --- |
-| `SKILL.md` | 薄 always-on 入口（身份 · 模式 · 不变量 · 能力路由）。完整政策/工作流正文在 `references/`；must-ship 可调用叶卡在 `references/capabilities/`（PLAN-0046）。不是百科。 | agent（skill 使用者） | 单语 |
+| `SKILL.md` | 薄 always-on 入口（身份 · 模式 · 不变量 · 能力路由）。完整政策/工作流正文在 `references/`；must-ship 可调用叶卡在 `references/capabilities/`。不是百科。 | agent（skill 使用者） | 单语 |
 | `references/` | **Skill 主体——skill 行为唯一存放处。** INSTALLED 与 SKILL-INTERNAL 混装（见角色表）。 | agent（skill 使用者） | 单语 |
 | `scripts/` | Skill 运行时脚本。INSTALLED 与 SKILL-INTERNAL 混装（当前数量见 `check-role-completeness.js --gate`）。INSTALLED 脚本复制进被治理项目。 | agent/CI | 代码 |
 | `LICENSE` | MIT 许可证——随 tarball 分发 | 安装者 | — |

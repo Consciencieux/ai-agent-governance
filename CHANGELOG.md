@@ -16,6 +16,8 @@ All notable changes to this project will be documented here.
 
 - INSTALLED capability leaves: strip producer construction provenance (PLAN/ADR/FINDING headers and body pointers, Role/Disposition/Classification dual-write); inventory `leaf` stays authoring paths under `references/capabilities/` (including `subskills/`).
 
+- Producer/product content boundary (ADR-0020 I5): skill payload (`SKILL.md` + `references/` + `scripts/`) must not embed this repo's `PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*` IDs; operational map in `docs/product/*/architecture.md` § Third axis; `tests/` remain REPO-ONLY and must not force those IDs into INSTALLED bodies.
+
 - `check:must-ship` runs via Node (`repo-tools/check-must-ship.js`) instead of bash, so the CI local gate works on Windows without Git Bash/WSL.
 
 - Skill-release sync-point docs: sentinel lives in `scripts/lib/generate/run.js`; Phase 1 no longer points at a removed roadmap Deferred release-safety section.

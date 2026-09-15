@@ -6,13 +6,13 @@
 // updates TASK_<name>.md and forgets DEVELOPMENT_PLAN.md, and nothing notices until someone
 // reads both. The skill repository hit this exact class three times (release sync points
 // verified in two of five places; a roadmap that never learned about an implemented plan;
-// gate scan lists left behind by a file move). See ADR-0009 for the index/fact-source
+// gate scan lists left behind by a file move). See for the index/fact-source
 // boundary and why the two domains get different enforcement levels.
 //
 // Deliberately NARROW. Three mechanically decidable relations, nothing semantic:
-//   1. implemented/completed TASK plan  -> some milestone line mentions it
-//   2. archived TASK plan               -> no ACTIVE (unchecked) milestone still points at it
-//   3. milestone naming a TASK plan     -> that plan file must exist
+// 1. implemented/completed TASK plan -> some milestone line mentions it
+// 2. archived TASK plan -> no ACTIVE (unchecked) milestone still points at it
+// 3. milestone naming a TASK plan -> that plan file must exist
 // NOT checked (documentation-level judgement, left to humans): whether a milestone's
 // description is accurate, whether the task is genuinely done, whether the link is
 // semantically the right plan.
@@ -22,7 +22,7 @@
 // It never forces a project into the skill's directory layout.
 //
 // Usage:
-//   node scripts/check-plan-sync.js [--json] [--release-gate]
+// node scripts/check-plan-sync.js [--json] [--release-gate]
 // Exit 0: in sync, advisory mode, or not applicable.
 // Exit 1: drift found AND --release-gate was passed. Default mode never blocks a commit —
 // this is a release/audit reconciliation, not a per-commit gate.
@@ -40,7 +40,7 @@ function readSafe(rel) {
 }
 
 // Canonical status vocabulary from the lifecycle policy, on the canonical status LINE
-// (`> **Status: ...**` blockquote-bold within the first 12 lines). A loose substring
+// (`> **Status:...**` blockquote-bold within the first 12 lines). A loose substring
 // search ("Status:" anywhere) classified a colon-outside-bold or plain-line form as
 // implemented here while check-doc-consistency read the same file as unknown — four
 // classifiers disagreeing on one plan is the divergence class this vocabulary exists
@@ -58,7 +58,7 @@ function planStatus(content) {
   return "unknown";
 }
 
-// A milestone line: "- [ ] M1: ..." (pending) or "- [x] M1: ..." (done)
+// A milestone line: "- [ ] M1:..." (pending) or "- [x] M1:..." (done)
 function parseMilestones(indexContent) {
   const out = [];
   for (const line of indexContent.split(/\r?\n/)) {

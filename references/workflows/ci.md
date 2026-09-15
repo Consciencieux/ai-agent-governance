@@ -14,32 +14,32 @@
 ```yaml
 name: CI
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: latest
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm format
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test
-      - run: pnpm build
-      - run: node scripts/verify-governance.js
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist
+ ci:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - uses: pnpm/action-setup@v4
+ with:
+ version: latest
+ - uses: actions/setup-node@v4
+ with:
+ node-version: 20
+ cache: pnpm
+ - run: pnpm install --frozen-lockfile
+ - run: pnpm format
+ - run: pnpm lint
+ - run: pnpm typecheck
+ - run: pnpm test
+ - run: pnpm build
+ - run: node scripts/verify-governance.js
+ - uses: actions/upload-artifact@v4
+ with:
+ name: dist
+ path: dist
 ```
 
 > Node/TS：Prettier 默认值即可运行（2 空格、单引号、80 列）；如需定制，项目根放 `.prettierrc`（可选，非强制生成）。
@@ -49,31 +49,31 @@ jobs:
 ```yaml
 name: CI
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11", "3.12"]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - run: pip install -e ".[dev]"
-      - run: ruff format --check .
-      - run: ruff check .
-      - run: mypy .
-      - run: pytest -q
-      - run: python -m build
-      - run: node scripts/verify-governance.js
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist-${{ matrix.python-version }}
-          path: dist
+ ci:
+ runs-on: ubuntu-latest
+ strategy:
+ matrix:
+ python-version: ["3.11", "3.12"]
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-python@v5
+ with:
+ python-version: ${{ matrix.python-version }}
+ - run: pip install -e ".[dev]"
+ - run: ruff format --check .
+ - run: ruff check .
+ - run: mypy .
+ - run: pytest -q
+ - run: python -m build
+ - run: node scripts/verify-governance.js
+ - uses: actions/upload-artifact@v4
+ with:
+ name: dist-${{ matrix.python-version }}
+ path: dist
 ```
 
 > Python：ruff 默认（black 风格、line-length 88）即可运行；如需定制，在 `pyproject.toml` 的 `[tool.ruff]` 配置（可选，非强制生成）。
@@ -83,23 +83,23 @@ jobs:
 ```yaml
 name: CI
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo fmt --check
-      - run: cargo clippy -- -D warnings
-      - run: cargo test
-      - run: cargo build --release
-      - run: node scripts/verify-governance.js
+ ci:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - uses: dtolnay/rust-toolchain@stable
+ with:
+ components: rustfmt, clippy
+ - uses: Swatinem/rust-cache@v2
+ - run: cargo fmt --check
+ - run: cargo clippy -- -D warnings
+ - run: cargo test
+ - run: cargo build --release
+ - run: node scripts/verify-governance.js
 ```
 
 ## GitHub Actions — Go（gofmt + go vet）
@@ -107,23 +107,23 @@ jobs:
 ```yaml
 name: CI
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "stable"
-          cache: true
-      - run: gofmt -l .
-      - run: go vet ./...
-      - run: go test ./...
-      - run: go build ./...
-      - run: node scripts/verify-governance.js
+ ci:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-go@v5
+ with:
+ go-version: "stable"
+ cache: true
+ - run: gofmt -l .
+ - run: go vet ./...
+ - run: go test ./...
+ - run: go build ./...
+ - run: node scripts/verify-governance.js
 ```
 
 ## GitHub Actions — Java（Maven + Spotless）
@@ -131,27 +131,27 @@ jobs:
 ```yaml
 name: CI
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "21"
-          cache: maven
-      - run: mvn -B spotless:check
-      - run: mvn -B test
-      - run: mvn -B package -DskipTests
-      - run: node scripts/verify-governance.js
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: target/*.jar
+ ci:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-java@v4
+ with:
+ distribution: temurin
+ java-version: "21"
+ cache: maven
+ - run: mvn -B spotless:check
+ - run: mvn -B test
+ - run: mvn -B package -DskipTests
+ - run: node scripts/verify-governance.js
+ - uses: actions/upload-artifact@v4
+ with:
+ name: dist
+ path: target/*.jar
 ```
 
 > Java（Maven）：`spotless:check` **必须在 `pom.xml` 中声明插件与风格，否则 CI 无法运行**。INIT 时写入（google-java-format）：
@@ -159,38 +159,38 @@ jobs:
 ```xml
 <!-- pom.xml：加入 <build><plugins> -->
 <plugin>
-  <groupId>com.diffplug.spotless</groupId>
-  <artifactId>spotless-maven-plugin</artifactId>
-  <version>2.43.0</version>
-  <configuration>
-    <java>
-      <googleJavaFormat/>
-    </java>
-  </configuration>
+ <groupId>com.diffplug.spotless</groupId>
+ <artifactId>spotless-maven-plugin</artifactId>
+ <version>2.43.0</version>
+ <configuration>
+ <java>
+ <googleJavaFormat/>
+ </java>
+ </configuration>
 </plugin>
 ```
 
-> Gradle 项目改用 `com.diffplug.spotless` 插件 + `googleJavaFormat()` 配置，CI 步骤替换为 `./gradlew spotlessCheck`。
+> Gradle 项目改用 `com.diffplug.spotless` 插件 + `googleJavaFormat` 配置，CI 步骤替换为 `./gradlew spotlessCheck`。
 
 ## GitHub Actions — C++（clang-format + CMake + CTest）
 
 ```yaml
 name: CI
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: sudo apt-get update && sudo apt-get install -y clang clang-tools cmake ninja-build
-      - run: clang-format --dry-run --Werror --recursive src/ include/ tests/
-      - run: cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
-      - run: cmake --build build
-      - run: ctest --test-dir build --output-on-failure
-      - run: node scripts/verify-governance.js
+ ci:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - run: sudo apt-get update && sudo apt-get install -y clang clang-tools cmake ninja-build
+ - run: clang-format --dry-run --Werror --recursive src/ include/ tests/
+ - run: cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+ - run: cmake --build build
+ - run: ctest --test-dir build --output-on-failure
+ - run: node scripts/verify-governance.js
 ```
 
 > 按检测到的构建系统选择：CMake 用上例；Makefile 项目把 build 步骤替换为 `make` / `make test`。`clang-tidy` 需 `compile_commands.json`（CMake 加 `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`），可选。
@@ -219,36 +219,36 @@ Standard: Latest
 stages: [format, lint, test, build]
 
 format:
-  stage: format
-  image: node:20
-  script:
-    - npx prettier --check .
-  # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
+ stage: format
+ image: node:20
+ script:
+ - npx prettier --check .
+ # Python: ruff format --check . | Rust: cargo fmt --check | Go: gofmt -l . | Java: mvn -B spotless:check | C++: clang-format --dry-run --Werror
 
 lint:
-  stage: lint
-  image: node:20
-  script:
-    - npm run lint
-  # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
+ stage: lint
+ image: node:20
+ script:
+ - npm run lint
+ # Rust: cargo clippy -- -D warnings | Python: ruff check . | Go: go vet ./...
 
 test:
-  stage: test
-  image: node:20
-  script:
-    - npm test
+ stage: test
+ image: node:20
+ script:
+ - npm test
 
 build:
-  stage: build
-  image: node:20
-  script:
-    - npm run build
+ stage: build
+ image: node:20
+ script:
+ - npm run build
 
 governance:
-  stage: test
-  image: node:20
-  script:
-    - node scripts/verify-governance.js
+ stage: test
+ image: node:20
+ script:
+ - node scripts/verify-governance.js
 ```
 
 > 按检测到的包管理器/栈替换 image 与 script（包管理器以锁文件为准）；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。治理门禁 job 与 GitHub Actions 版一致。
@@ -259,39 +259,39 @@ governance:
 stages: [format, lint, test, build]
 
 format:
-  stage: format
-  image: python:3.11
-  script:
-    - pip install ruff
-    - ruff format --check .
+ stage: format
+ image: python:3.11
+ script:
+ - pip install ruff
+ - ruff format --check .
 
 lint:
-  stage: lint
-  image: python:3.11
-  script:
-    - pip install ruff mypy
-    - ruff check .
-    - mypy . || echo "No mypy configured yet"
+ stage: lint
+ image: python:3.11
+ script:
+ - pip install ruff mypy
+ - ruff check .
+ - mypy . || echo "No mypy configured yet"
 
 test:
-  stage: test
-  image: python:3.11
-  script:
-    - pip install -e ".[dev]" || pip install pytest
-    - pytest -q || echo "No pytest configured yet"
+ stage: test
+ image: python:3.11
+ script:
+ - pip install -e ".[dev]" || pip install pytest
+ - pytest -q || echo "No pytest configured yet"
 
 build:
-  stage: build
-  image: python:3.11
-  script:
-    - pip install build
-    - python -m build || echo "No build configured yet"
+ stage: build
+ image: python:3.11
+ script:
+ - pip install build
+ - python -m build || echo "No build configured yet"
 
 governance:
-  stage: test
-  image: node:20
-  script:
-    - node scripts/verify-governance.js
+ stage: test
+ image: node:20
+ script:
+ - node scripts/verify-governance.js
 ```
 
 > 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。
@@ -301,34 +301,34 @@ governance:
 stages: [format, lint, test, build]
 
 format:
-  stage: format
-  image: golang:1.22
-  script:
-    - test -z "$(gofmt -l .)"
+ stage: format
+ image: golang:1.22
+ script:
+ - test -z "$(gofmt -l .)"
 
 lint:
-  stage: lint
-  image: golang:1.22
-  script:
-    - go vet ./...
+ stage: lint
+ image: golang:1.22
+ script:
+ - go vet ./...
 
 test:
-  stage: test
-  image: golang:1.22
-  script:
-    - go test ./...
+ stage: test
+ image: golang:1.22
+ script:
+ - go test ./...
 
 build:
-  stage: build
-  image: golang:1.22
-  script:
-    - go build ./...
+ stage: build
+ image: golang:1.22
+ script:
+ - go build ./...
 
 governance:
-  stage: test
-  image: node:20
-  script:
-    - node scripts/verify-governance.js
+ stage: test
+ image: node:20
+ script:
+ - node scripts/verify-governance.js
 ```
 
 > 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 降级策略」）。
@@ -338,34 +338,34 @@ governance:
 stages: [format, lint, test, build]
 
 format:
-  stage: format
-  image: rust:1.75
-  script:
-    - cargo fmt --check
+ stage: format
+ image: rust:1.75
+ script:
+ - cargo fmt --check
 
 lint:
-  stage: lint
-  image: rust:1.75
-  script:
-    - cargo clippy -- -D warnings
+ stage: lint
+ image: rust:1.75
+ script:
+ - cargo clippy -- -D warnings
 
 test:
-  stage: test
-  image: rust:1.75
-  script:
-    - cargo test
+ stage: test
+ image: rust:1.75
+ script:
+ - cargo test
 
 build:
-  stage: build
-  image: rust:1.75
-  script:
-    - cargo build --release
+ stage: build
+ image: rust:1.75
+ script:
+ - cargo build --release
 
 governance:
-  stage: test
-  image: node:20
-  script:
-    - node scripts/verify-governance.js
+ stage: test
+ image: node:20
+ script:
+ - node scripts/verify-governance.js
 ```
 
 > 治理门禁 job 使用 node image（校验器是 Node 脚本），其余 job 用栈镜像；项目脚本缺失的步骤只保留 `echo "No <tool> configured yet"` 警告（见 SKILL.md「CI 管线降级」）。
@@ -376,34 +376,34 @@ governance:
 stages: [format, lint, test, build]
 
 format:
-  stage: format
-  image: maven:3.9-eclipse-temurin-17
-  script:
-    - mvn -B spotless:check || echo "No spotless configured yet"
+ stage: format
+ image: maven:3.9-eclipse-temurin-17
+ script:
+ - mvn -B spotless:check || echo "No spotless configured yet"
 
 lint:
-  stage: lint
-  image: maven:3.9-eclipse-temurin-17
-  script:
-    - mvn -B -q validate || echo "No lint configured yet"
+ stage: lint
+ image: maven:3.9-eclipse-temurin-17
+ script:
+ - mvn -B -q validate || echo "No lint configured yet"
 
 test:
-  stage: test
-  image: maven:3.9-eclipse-temurin-17
-  script:
-    - mvn -B test
+ stage: test
+ image: maven:3.9-eclipse-temurin-17
+ script:
+ - mvn -B test
 
 build:
-  stage: build
-  image: maven:3.9-eclipse-temurin-17
-  script:
-    - mvn -B package -DskipTests
+ stage: build
+ image: maven:3.9-eclipse-temurin-17
+ script:
+ - mvn -B package -DskipTests
 
 governance:
-  stage: test
-  image: node:20
-  script:
-    - node scripts/verify-governance.js
+ stage: test
+ image: node:20
+ script:
+ - node scripts/verify-governance.js
 ```
 
 > 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。Java 需在 `pom.xml` 声明 Spotless（见上方 GitHub Actions Java 段）。项目脚本缺失的步骤只保留警告占位。
@@ -413,40 +413,40 @@ governance:
 stages: [format, lint, test, build]
 
 format:
-  stage: format
-  image: ubuntu:22.04
-  script:
-    - apt-get update && apt-get install -y clang-format
-    - clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.cc' '*.cxx' '*.h' '*.hpp' 2>/dev/null) || echo "No C/C++ sources to format"
+ stage: format
+ image: ubuntu:22.04
+ script:
+ - apt-get update && apt-get install -y clang-format
+ - clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.cc' '*.cxx' '*.h' '*.hpp' 2>/dev/null) || echo "No C/C++ sources to format"
 
 lint:
-  stage: lint
-  image: ubuntu:22.04
-  script:
-    - echo "No clang-tidy configured yet"
+ stage: lint
+ image: ubuntu:22.04
+ script:
+ - echo "No clang-tidy configured yet"
 
 test:
-  stage: test
-  image: ubuntu:22.04
-  script:
-    - apt-get update && apt-get install -y clang cmake ninja-build
-    - cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
-    - cmake --build build
-    - ctest --test-dir build --output-on-failure || echo "No ctest configured yet"
+ stage: test
+ image: ubuntu:22.04
+ script:
+ - apt-get update && apt-get install -y clang cmake ninja-build
+ - cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+ - cmake --build build
+ - ctest --test-dir build --output-on-failure || echo "No ctest configured yet"
 
 build:
-  stage: build
-  image: ubuntu:22.04
-  script:
-    - apt-get update && apt-get install -y clang cmake ninja-build
-    - cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
-    - cmake --build build
+ stage: build
+ image: ubuntu:22.04
+ script:
+ - apt-get update && apt-get install -y clang cmake ninja-build
+ - cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+ - cmake --build build
 
 governance:
-  stage: test
-  image: node:20
-  script:
-    - node scripts/verify-governance.js
+ stage: test
+ image: node:20
+ script:
+ - node scripts/verify-governance.js
 ```
 
 > 非 Node 栈的 format/lint/test/build 使用该栈命令；治理校验器是 Node 脚本，故 governance job 使用 `node:20`。按检测到的构建系统裁剪（Makefile 项目可改为 `make` / `make test`）。
@@ -456,34 +456,34 @@ governance:
 stages: [format, lint, test, build]
 
 format:
-  stage: format
-  image: node:20
-  script:
-    - npx --yes markdownlint-cli2 "**/*.md" || echo "No markdownlint configured yet"
+ stage: format
+ image: node:20
+ script:
+ - npx --yes markdownlint-cli2 "**/*.md" || echo "No markdownlint configured yet"
 
 lint:
-  stage: lint
-  image: node:20
-  script:
-    - npx --yes markdown-link-check README.md || echo "No link check configured yet"
+ stage: lint
+ image: node:20
+ script:
+ - npx --yes markdown-link-check README.md || echo "No link check configured yet"
 
 test:
-  stage: test
-  image: node:20
-  script:
-    - echo "No test suite for docs-only project"
+ stage: test
+ image: node:20
+ script:
+ - echo "No test suite for docs-only project"
 
 build:
-  stage: build
-  image: node:20
-  script:
-    - echo "No build for docs-only project"
+ stage: build
+ image: node:20
+ script:
+ - echo "No build for docs-only project"
 
 governance:
-  stage: test
-  image: node:20
-  script:
-    - node scripts/verify-governance.js
+ stage: test
+ image: node:20
+ script:
+ - node scripts/verify-governance.js
 ```
 
 > docs-only 仅跑文档检查与治理校验；不跑应用栈的 npm lint/test/build。项目脚本缺失的步骤只保留警告占位。
@@ -492,20 +492,20 @@ governance:
 ```yaml
 name: CI
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npx markdownlint-cli2 "**/*.md"
-      - run: npx markdown-link-check README.md docs/**/*.md
-      - run: node scripts/verify-governance.js
+ ci:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-node@v4
+ with:
+ node-version: 20
+ - run: npx markdownlint-cli2 "**/*.md"
+ - run: npx markdown-link-check README.md docs/**/*.md
+ - run: node scripts/verify-governance.js
 ```
 
 ## 配套
@@ -517,38 +517,38 @@ jobs:
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+ - package-ecosystem: "npm"
+ directory: "/"
+ schedule:
+ interval: "weekly"
+ - package-ecosystem: "github-actions"
+ directory: "/"
+ schedule:
+ interval: "weekly"
 ```
 
 ```yaml
 # 可选：治理门禁 job
 governance:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - run: node scripts/verify-governance.js
-    - name: Governance badge endpoint
-      run: |
-        node scripts/verify-governance.js --json > governance-report.json || true
-        node -e "
-          const r = require('./governance-report.json');
-          const pct = r.total ? Math.round(r.passed / r.total * 100) : 0;
-          const color = pct === 100 ? 'green' : pct >= 80 ? 'yellow' : 'red';
-          require('fs').writeFileSync('governance-badge.json', JSON.stringify({
-            schemaVersion: 1, label: 'governance', message: r.passed + '/' + r.total, color
-          }));
-        "
-    - uses: actions/upload-artifact@v4
-      with:
-        name: governance-badge
-        path: governance-badge.json
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - run: node scripts/verify-governance.js
+ - name: Governance badge endpoint
+ run: |
+ node scripts/verify-governance.js --json > governance-report.json || true
+ node -e "
+ const r = require('./governance-report.json');
+ const pct = r.total ? Math.round(r.passed / r.total * 100) : 0;
+ const color = pct === 100 ? 'green' : pct >= 80 ? 'yellow' : 'red';
+ require('fs').writeFileSync('governance-badge.json', JSON.stringify({
+ schemaVersion: 1, label: 'governance', message: r.passed + '/' + r.total, color
+ }));
+ "
+ - uses: actions/upload-artifact@v4
+ with:
+ name: governance-badge
+ path: governance-badge.json
 ```
 
 > 徽章端点为 shields.io `endpoint` 格式（`label=governance`、`message=N/M`、绿/黄/红按通过率）。托管方式自选（Gist / GH Pages / 静态托管），本模板只交付工件生成。`--json` 的 `score` 字段（passed/total，等权 v1）供看板/徽章消费。

@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
+// Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
 // INSTALLED with siblings listed in references/init-spec.json — keep require graph closed.
 "use strict";
 function runChangelogCoverage(ctx) {

@@ -2,7 +2,7 @@
 name: ai-agent-governance
 version: 2.1.1
 description: >-
-  Use when initializing, retrofitting, auditing, OR releasing a project's AI-agent governance framework. Init mode: one-shot bootstrap of AGENTS.md, feature registry, lifecycle, CI validation, security baseline. Audit mode: health-check an already-governed project, detect drift vs .governance/manifest.json, apply minimal fixes. Release mode: version-synced, validated releases via the generated release-manager sub-skill. Triggers on "initialize project governance", "initialize governance", "setup project for AI agents", "create AGENTS.md framework", "audit governance", "governance health check", "fix governance drift", "release", "publish version", "check skill update", "update this skill". Also loads the generated sub-skills in .governance/generated/skills for ongoing agent work. Do NOT use for normal development tasks.
+ Use when initializing, retrofitting, auditing, OR releasing a project's AI-agent governance framework. Init mode: one-shot bootstrap of AGENTS.md, feature registry, lifecycle, CI validation, security baseline. Audit mode: health-check an already-governed project, detect drift vs .governance/manifest.json, apply minimal fixes. Release mode: version-synced, validated releases via the generated release-manager sub-skill. Triggers on "initialize project governance", "initialize governance", "setup project for AI agents", "create AGENTS.md framework", "audit governance", "governance health check", "fix governance drift", "release", "publish version", "check skill update", "update this skill". Also loads the generated sub-skills in .governance/generated/skills for ongoing agent work. Do NOT use for normal development tasks.
 ---
 
 # Governance Bootstrap
@@ -13,11 +13,11 @@ description: >-
 
 本 Skill 只负责治理体系搭建与巡检维护，不写业务代码、技术规范、测试内容。
 
-> **薄入口（ADR-0022 / ADR-0024）：** 本文件是 always-on 路由层——身份、进入模式、优先级、权限摘要与指向 `references/` 的指针。详细政策 / 工作流 / 生命周期正文**不**作为 always-on 全文；按任务加载对应 `references/policies/*`、`references/workflows/*`、`references/capabilities/*` 与生成子技能。禁止把 lifecycle 全文或全部子技能 checklist 塞进本入口。
+> **薄入口：** 本文件是 always-on 路由层——身份、进入模式、优先级、权限摘要与指向 `references/` 的指针。详细政策 / 工作流 / 生命周期正文**不**作为 always-on 全文；按任务加载对应 `references/policies/*`、`references/workflows/*`、`references/capabilities/*` 与生成子技能。禁止把 lifecycle 全文或全部子技能 checklist 塞进本入口。
 
-> **可复用原则包（PLAN-0037 / ADR-0020）：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树、CTRL 编号或 Phase/PLAN 剧本当 portable L1。
+> **可复用原则包：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树、CTRL 编号或 Phase/PLAN 剧本当 portable L1。
 
-> **能力叶路由（PLAN-0046 Archived）：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + `references/capabilities/` 目录为准；仓库侧覆盖索引是 REPO-ONLY，不随 tarball。处置权威用 ID 指针 **ADR-0024 §4**（不链本仓 `docs/` 路径）。
+> **能力叶路由：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + `references/capabilities/` 目录为准；仓库侧覆盖索引是 REPO-ONLY，不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链本仓 `docs/` 路径）。
 
 ### 能力叶快速路由（Capability leaves）
 
@@ -51,16 +51,15 @@ description: >-
 ### 概念总览（Concept Map）
 
 ```
-Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agents
-  .governance/       SKILL.md             AGENTS.md/CLAUDE.md      Claude / Cursor /
-  manifest.json      (INIT/AUDIT/         (每个 Agent 会话        Codex / opencode
-  (期望态)            RELEASE 编排)         开始时读的行为契约)
+Governance Spec → Governance Engine → Runtime Contract → Coding Agents
+ .governance/ SKILL.md AGENTS.md/CLAUDE.md Claude / Cursor /
+ manifest.json (INIT/AUDIT/ (每个 Agent 会话 Codex / opencode
+ (期望态) RELEASE 编排) 开始时读的行为契约)
 ```
 
 - **期望态（Spec）** —— `.governance/manifest.json` 声明全部治理工件与版本，是"治理即代码"的单一索引。
 - **引擎（Engine）** —— 本 SKILL 按 INIT / AUDIT / RELEASE 模式生成并维护这套体系。
 - **运行时契约（Runtime Contract）** —— 生成的 AGENTS.md 与各工具适配器是每个 Agent 会话开始时读取的行为规则。
-
 
 ## 进入模式（Entry Mode）
 
@@ -79,9 +78,9 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 - 本 skill 的版本记录在 SKILL.md frontmatter 的 `version` 字段；发布时与 `package.json` / CHANGELOG / `references/init-spec.json` 的 `governance_version.default` / `scripts/lib/generate/run.js` 的兜底哨兵 / Git tag 同步（本 skill 仓库自身的发布流程见其 skill-release.md；被治理项目的版本一致性规则见 `references/workflows/release.md`）。
 - 用户说 "check skill update" / "update this skill" 时，Agent 执行：
 
-  1. 读取本地 `version`
-  2. 查询上游最新 release（`gh release view` 或 fetch `https://api.github.com/repos/Consciencieux/ai-agent-governance/releases/latest`）
-  3. 比较并报告：本地版本 vs 最新版本、CHANGELOG 差异摘要、更新方式（当前为手动 clone；完整自动化 INSTALL → UPDATE → ROLLBACK 属独立的 ai-skill-manager 项目（本仓库不交付；策划记录见原计划归档））
+ 1. 读取本地 `version`
+ 2. 查询上游最新 release（`gh release view` 或 fetch `https://api.github.com/repos/Consciencieux/ai-agent-governance/releases/latest`）
+ 3. 比较并报告：本地版本 vs 最新版本、CHANGELOG 差异摘要、更新方式（当前为手动 clone；完整自动化 INSTALL → UPDATE → ROLLBACK 属独立的 ai-skill-manager 项目（本仓库不交付；策划记录见原计划归档））
 
 - **绝不自动更新**（需用户明确同意）；更新后重新加载 skill。
 
@@ -119,7 +118,7 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 | Dependency Change | confirmation required |
 | Git Commit / Git Push | one confirmation per change set（权威：`references/policies/git.policy.md`） |
 
-**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)（ADR-0024）。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准是意图对齐（intent alignment），不是提交授权；范围外操作各自独立确认；任务级表述不是写指令；任一步失败 → 停止并报告，不擅自重试或即兴修补；push 被拒（非快进）→ 停止并报告，不自行 pull/rebase。冲突时以 `git.policy.md` 为准。
+**Git 写授权（指针，非第二份正文）：** 语义唯一权威为 [`references/policies/git.policy.md`](references/policies/git.policy.md)。摘要：提交前回显完整命令序列，用户确认一次覆盖 add → commit → push；用户写指令触发回显而非确认本身；计划批准是意图对齐（intent alignment），不是提交授权；范围外操作各自独立确认；任务级表述不是写指令；任一步失败 → 停止并报告，不擅自重试或即兴修补；push 被拒（非快进）→ 停止并报告，不自行 pull/rebase。冲突时以 `git.policy.md` 为准。
 
 **发布序列（RELEASE）：** Release Proposal 在 Approval Gate 获批准后，该批准覆盖本次发布序列的全部写操作（见 `references/workflows/release.md`）。中途任一校验失败 → 停止并重新走 plan。
 
@@ -170,8 +169,8 @@ Governance Spec  →  Governance Engine  →  Runtime Contract  →  Coding Agen
 
 ```bash
 node scripts/generate-governance.js --target <项目根> --phase C \
-  --project-name <名称> --maturity <等级> --doc-root <文档根> \
-  --stack <栈> --ci-platform <平台>
+ --project-name <名称> --maturity <等级> --doc-root <文档根> \
+ --stack <栈> --ci-platform <平台>
 ```
 
 - 幂等跳过已存在文件；L3 默认只报告；`--dry-run` / `--json`；未实现生成器 exit 1（除非显式允许 stub）

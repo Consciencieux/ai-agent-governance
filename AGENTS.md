@@ -42,7 +42,7 @@ Pointers only. **payload** = ships with skill; **repo** = this repository only.
 | CHANGELOG content boundary | `references/policies/lifecycle.policy.md` · `repo-workflows/changelog-policy.md` | both |
 | Agent instruction architecture | [ADR-0022](docs/design-decisions/ADR-0022-agent-instruction-architecture.md) · RESEARCH-0009 | both |
 | Task→Capability routing | RESEARCH-0012 · `repo-tools/routing-graph.v0.json` · `repo-tools/route-task.js` | repo |
-| Producer/product separation | [ADR-0020](docs/design-decisions/ADR-0020-producer-product-governance-separation.md) | repo |
+| Producer/product separation | [ADR-0020](docs/design-decisions/ADR-0020-producer-product-governance-separation.md) · [architecture.md](docs/product/en/architecture.md) § Third axis (I5) | repo |
 | Governance Control Model | [ADR-0023](docs/design-decisions/ADR-0023-governance-control-model.md) · RESEARCH-0010 | repo |
 | 2.x product path | [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md) | repo |
 | Artifact placement | `docs/README.md` § 东西放哪里 · FINDING-0030 | repo |

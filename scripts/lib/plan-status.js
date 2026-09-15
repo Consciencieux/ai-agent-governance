@@ -1,5 +1,5 @@
 "use strict";
-// Shared plan-status classification (PLAN-0048 / ADR-0016 parser migration).
+// Shared plan-status classification ( / parser migration).
 // Frontmatter `status:` is authoritative when present; legacy `> **Status:` lines remain
 // a compatibility fallback. Callers must not invent a third vocabulary.
 

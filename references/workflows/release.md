@@ -8,17 +8,17 @@ Release 是治理生命周期（Design → Implement → Validate → Release �
 
 ```
 Analyze
-   |
-   v
+ |
+ v
 Release Proposal
-   |
-   v
+ |
+ v
 Developer Approval
-   |
-   v
+ |
+ v
 Create Git Tag
-   |
-   v
+ |
+ v
 Create Release
 ```
 
@@ -191,11 +191,11 @@ Proceed with release?
 7. **生成/更新 Proposal**：**重新运行 `scripts/release-manager.js plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha`、`recommended` 与 `provenance` 都随 plan 重建，写入 `.governance/release-proposal.json`。**不得手工编辑该 JSON 只改 `headSha` 或 `recommended`**：`execute` 会重算 provenance（绑定 current/recommended/releaseType/riskLevel/reviewRecommendation/reviewStatus/headSha）并拒绝任何被编辑的 proposal（v1.0.1 与本流程都曾踩过"手改 headSha 触发 provenance does not match"）。release commit 之后必须先 plan 再 execute。
 8. **创建 annotated tag**：
 
-   ```bash
-   node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes
-   ```
+ ```bash
+ node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes
+ ```
 
-   `--yes` 是开发者批准的记录标记；**没有 `--yes` 该工具拒绝一切写操作**（等价于手工 `git tag -a vX.Y.Z -m "Release vX.Y.Z: <summary>"`）。execute 会再次检查工作区干净且 HEAD == proposal `headSha`。
+ `--yes` 是开发者批准的记录标记；**没有 `--yes` 该工具拒绝一切写操作**（等价于手工 `git tag -a vX.Y.Z -m "Release vX.Y.Z: <summary>"`）。execute 会再次检查工作区干净且 HEAD == proposal `headSha`。
 9. **推送**：`git push origin main` → `git push origin vX.Y.Z`（写操作均需用户确认，见权限）。
 10. **创建 Release**：GitHub 项目执行 `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`（gh 未登录/未安装 → ⚠️ Blocked，提示用户）。
 11. **更新状态**：把 `.governance/manifest.json` 的 `release.validated` 置为 `true`，重新校验并记录到 `validation.json`。
@@ -258,11 +258,11 @@ AI 不得自动创建 tag、自动 push tag、自动创建 release，除非：
 
 ```json
 {
-  "release": {
-    "version": "2.1.1",
-    "tag": "v2.1.1",
-    "validated": false
-  }
+ "release": {
+ "version": "2.1.1",
+ "tag": "v2.1.1",
+ "validated": false
+ }
 }
 ```
 

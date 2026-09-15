@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4Q rebuild — INIT payload integrity (product_cli / must_ship adjacent).
+// INIT payload integrity (product_cli / must_ship adjacent).
 // Gen1 suite archive deleted; extend from current INIT/payload obligations only.
 "use strict";
 
@@ -69,6 +69,32 @@ module.exports = (test) => {
         console.error(`  ${target} MODULE_NOT_FOUND in governed project`);
         return false;
       }
+    }
+    return true;
+  });
+
+  test("payload: no producer construction IDs (PLAN/ADR/FINDING/RESEARCH) in skill payload", () => {
+    const ID = /\b(PLAN|ADR|FINDING|RESEARCH)-\d+\b/;
+    const offenders = [];
+    const roots = [
+      path.join(SKILL_ROOT, "SKILL.md"),
+      path.join(SKILL_ROOT, "references"),
+      path.join(SKILL_ROOT, "scripts"),
+    ];
+    function walk(p) {
+      const st = fs.statSync(p);
+      if (st.isFile()) {
+        if (!/\.(md|js|json)$/.test(p)) return;
+        const body = fs.readFileSync(p, "utf8");
+        if (ID.test(body)) offenders.push(path.relative(SKILL_ROOT, p).split(path.sep).join("/"));
+        return;
+      }
+      for (const name of fs.readdirSync(p)) walk(path.join(p, name));
+    }
+    for (const r of roots) walk(r);
+    if (offenders.length) {
+      console.error("  producer IDs in skill payload (ADR-0020 I5):\n    " + offenders.join("\n    "));
+      return false;
     }
     return true;
   });

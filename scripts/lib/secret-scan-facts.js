@@ -3,7 +3,7 @@
 // Patterns, placeholder recognition, staged-diff / blob scanning.
 // No profile binding, no advisory/deny, no CLI formatting, no Control identity.
 // Node builtins only. Pattern table here is interim mechanical specimen;
-// long-term semantics_ref must leave evaluator/CLI (ADR-0023).
+// long-term semantics_ref must leave evaluator/CLI.
 
 "use strict";
 

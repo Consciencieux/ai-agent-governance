@@ -2,7 +2,7 @@
   "$schema": "init-spec-v1",
   "description": "Machine-readable specification for the INIT scripted generator. SKILL.md references this file; never restate its contents in prose. Single source of truth for what the generator produces.",
   "invariants": {
-    "copied_scripts_are_self_contained": "Artifacts of type 'copy' under scripts/ are copied into governed projects FILE BY FILE. Self-contained means the INSTALLED dependency graph closes: Node builtins are always allowed; a relative require() is allowed only when it resolves to another artifact source listed here (and thus actually copied by INIT). Forbidden: require of undeclared siblings, skill-repo-only files, or undeclared external runtime packages. A shared helper that is not listed as a copy source breaks every governed project (historical defect: scripts/_lib.js). Enforced by the 'payload:' tests in tests/suites/payload.test.js (static require-graph closure + INIT write check + end-to-end module resolution).",
+    "copied_scripts_are_self_contained": "Artifacts of type 'copy' under scripts/ are copied into governed projects FILE BY FILE. Self-contained means the INSTALLED dependency graph closes: Node builtins are always allowed; a relative require is allowed only when it resolves to another artifact source listed here (and thus actually copied by INIT). Forbidden: require of undeclared siblings, skill-repo-only files, or undeclared external runtime packages. A shared helper that is not listed as a copy source breaks every governed project (historical defect: scripts/_lib.js). Enforced by the 'payload:' tests in tests/suites/payload.test.js (static require-graph closure + INIT write check + end-to-end module resolution).",
     "distribution_roles_are_declared_not_inferred": "Every file under references/ and scripts/ has exactly one distribution role. INSTALLED = it appears as an artifact 'source' below (INIT writes it into the governed project). SKILL-INTERNAL = it is listed in distribution.skillInternal (it travels in the tarball because packaging copies references/ and scripts/ wholesale, but INIT never installs it, so a governed project does NOT have it). Roles are HUMAN decisions and must never be inferred from directory or filename: copy/template/generated, renames (lifecycle.policy.md -> docs/rules/lifecycle.md, verify_governance.js -> verify-governance.js), one-to-many outputs (githooks-template.md -> pre-commit + commit-msg) and static inline content all encode contract decisions a generator cannot recover. Enforced by repo-tools/check-role-completeness.js: no unclassified file, no file in both sets, no declared path that does not exist, and the tarball's file set must match the union of both roles."
   },
   "distribution": {
@@ -31,7 +31,7 @@
     },
     "B": {
       "name": "config, state and scripts",
-      "description": "Config files (.gitignore, .env.example, .gitmessage), CI workflow selected by stack/platform, .governance/ state files, scripts copies. Sub-skills generation is Phase C.",
+      "description": "Config files (.gitignore,.env.example,.gitmessage), CI workflow selected by stack/platform,.governance/ state files, scripts copies. Sub-skills generation is Phase C.",
       "shipped": "v0.9.0"
     },
     "C": {
@@ -134,7 +134,7 @@
         "none"
       ],
       "default": "github",
-      "description": "Detected CI platform; github -> .github/workflows/ci.yml, gitlab -> .gitlab-ci.yml, none -> skipped"
+      "description": "Detected CI platform; github ->.github/workflows/ci.yml, gitlab ->.gitlab-ci.yml, none -> skipped"
     }
   },
   "artifacts": [
@@ -157,7 +157,7 @@
       "path": "docs/rules/capability-enforcement.json",
       "source": "references/capabilities/enforcement.v0.json",
       "type": "copy",
-      "description": "Obligation classification inventory (INSTALLED; ADR-0026 Q3)"
+      "description": "Obligation classification inventory (INSTALLED; Q3)"
     },
     {
       "phase": "A",
@@ -185,203 +185,203 @@
       "path": "docs/rules/capabilities/audit-drift.md",
       "source": "references/capabilities/audit-drift.md",
       "type": "copy",
-      "description": "Capability leaf (audit-drift) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (audit-drift) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/confirmation-hygiene.md",
       "source": "references/capabilities/confirmation-hygiene.md",
       "type": "copy",
-      "description": "Capability leaf (confirmation-hygiene) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (confirmation-hygiene) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/content-consistency.md",
       "source": "references/capabilities/content-consistency.md",
       "type": "copy",
-      "description": "Capability leaf (content-consistency) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (content-consistency) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/deterministic-init.md",
       "source": "references/capabilities/deterministic-init.md",
       "type": "copy",
-      "description": "Capability leaf (deterministic-init) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (deterministic-init) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/doc-freshness.md",
       "source": "references/capabilities/doc-freshness.md",
       "type": "copy",
-      "description": "Capability leaf (doc-freshness) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (doc-freshness) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/engineering-restraint.md",
       "source": "references/capabilities/engineering-restraint.md",
       "type": "copy",
-      "description": "Capability leaf (engineering-restraint) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (engineering-restraint) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/evidence-tiers.md",
       "source": "references/capabilities/evidence-tiers.md",
       "type": "copy",
-      "description": "Capability leaf (evidence-tiers) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (evidence-tiers) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/generated-subskill-lifecycle.md",
       "source": "references/capabilities/generated-subskill-lifecycle.md",
       "type": "copy",
-      "description": "Capability leaf (generated-subskill-lifecycle) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (generated-subskill-lifecycle) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/git-workflow-safety.md",
       "source": "references/capabilities/git-workflow-safety.md",
       "type": "copy",
-      "description": "Capability leaf (git-workflow-safety) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (git-workflow-safety) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/git-write-consent.md",
       "source": "references/capabilities/git-write-consent.md",
       "type": "copy",
-      "description": "Capability leaf (git-write-consent) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (git-write-consent) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/governance-state.md",
       "source": "references/capabilities/governance-state.md",
       "type": "copy",
-      "description": "Capability leaf (governance-state) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (governance-state) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/governance-validator.md",
       "source": "references/capabilities/governance-validator.md",
       "type": "copy",
-      "description": "Capability leaf (governance-validator) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (governance-validator) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/installed-portability.md",
       "source": "references/capabilities/installed-portability.md",
       "type": "copy",
-      "description": "Capability leaf (installed-portability) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (installed-portability) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/plan-sync.md",
       "source": "references/capabilities/plan-sync.md",
       "type": "copy",
-      "description": "Capability leaf (plan-sync) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (plan-sync) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/release-orchestration.md",
       "source": "references/capabilities/release-orchestration.md",
       "type": "copy",
-      "description": "Capability leaf (release-orchestration) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (release-orchestration) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/release-risk-tiering.md",
       "source": "references/capabilities/release-risk-tiering.md",
       "type": "copy",
-      "description": "Capability leaf (release-risk-tiering) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (release-risk-tiering) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/review-mechanism.md",
       "source": "references/capabilities/review-mechanism.md",
       "type": "copy",
-      "description": "Capability leaf (review-mechanism) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (review-mechanism) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/secret-scanning.md",
       "source": "references/capabilities/secret-scanning.md",
       "type": "copy",
-      "description": "Capability leaf (secret-scanning) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (secret-scanning) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/seed-oracles.md",
       "source": "references/capabilities/seed-oracles.md",
       "type": "copy",
-      "description": "Capability leaf (seed-oracles) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (seed-oracles) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/ssot-repair.md",
       "source": "references/capabilities/ssot-repair.md",
       "type": "copy",
-      "description": "Capability leaf (ssot-repair) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (ssot-repair) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-ci-generator.md",
       "source": "references/capabilities/subskills/subskill-ci-generator.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-ci-generator) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-ci-generator) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-drift-check.md",
       "source": "references/capabilities/subskills/subskill-drift-check.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-drift-check) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-drift-check) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-governance-validator.md",
       "source": "references/capabilities/subskills/subskill-governance-validator.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-governance-validator) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-governance-validator) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-plan-manager.md",
       "source": "references/capabilities/subskills/subskill-plan-manager.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-plan-manager) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-plan-manager) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-release-manager.md",
       "source": "references/capabilities/subskills/subskill-release-manager.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-release-manager) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-release-manager) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-repository-inspection.md",
       "source": "references/capabilities/subskills/subskill-repository-inspection.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-repository-inspection) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-repository-inspection) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-review-manager.md",
       "source": "references/capabilities/subskills/subskill-review-manager.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-review-manager) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-review-manager) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-state-manager.md",
       "source": "references/capabilities/subskills/subskill-state-manager.md",
       "type": "copy",
-      "description": "Capability leaf (subskill-state-manager) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (subskill-state-manager) — instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/sync-groups.md",
       "source": "references/capabilities/sync-groups.md",
       "type": "copy",
-      "description": "Capability leaf (sync-groups) — PLAN-0046 instruction surface"
+      "description": "Capability leaf (sync-groups) — instruction surface"
     },
     {
       "phase": "A",
@@ -416,7 +416,7 @@
       "path": "docs/rules/governance-files.md",
       "source": "references/policies/governance-files.policy.md",
       "type": "copy",
-      "description": "Protected-files list and .governance/ git-tracking policy — the single source of truth that the installed scripts/check-doc-consistency.js reads at runtime, so it must exist inside the governed project (not only in the skill tarball)"
+      "description": "Protected-files list and.governance/ git-tracking policy — the single source of truth that the installed scripts/check-doc-consistency.js reads at runtime, so it must exist inside the governed project (not only in the skill tarball)"
     },
     {
       "phase": "A",
@@ -447,7 +447,7 @@
       "path": "CHANGELOG.md",
       "source": null,
       "type": "static",
-      "content": "# Changelog\n\nAll notable changes to this project will be documented here.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n## [Unreleased]\n\n### Added\n\n- Initial governance framework (ai-agent-governance v{{GOVERNANCE_VERSION}})\n",
+      "content": "# Changelog All notable changes to this project will be documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). ## [Unreleased] ### Added - Initial governance framework (ai-agent-governance v{{GOVERNANCE_VERSION}})",
       "description": "Keep a Changelog format"
     },
     {
@@ -455,7 +455,7 @@
       "path": "README.md",
       "source": null,
       "type": "static",
-      "content": "# {{PROJECT_NAME}}\n\n<!-- One-sentence description -->\n\n## Documentation Index\n\n- [AGENTS.md](AGENTS.md) — AI agent guidelines\n- [Architecture](docs/ARCHITECTURE.md) — system architecture + ADRs + component registry\n- [Features](docs/features/) — feature registry\n- [Development Plan](docs/plans/DEVELOPMENT_PLAN.md) — milestones\n- [Changelog](CHANGELOG.md) — completed changes\n\n## Getting Started\n\n<!-- Build/run instructions -->\n",
+      "content": "# {{PROJECT_NAME}} <!-- One-sentence description --> ## Documentation Index - [AGENTS.md](AGENTS.md) — AI agent guidelines\n- [Architecture](docs/ARCHITECTURE.md) — system architecture + ADRs + component registry\n- [Features](docs/features/) — feature registry\n- [Development Plan](docs/plans/DEVELOPMENT_PLAN.md) — milestones\n- [Changelog](CHANGELOG.md) — completed changes ## Getting Started <!-- Build/run instructions -->",
       "description": "README bootstrap with doc index (language layout stays agent-driven, Phase C)"
     },
     {
@@ -487,7 +487,7 @@
       "path": "docs/plans/DEVELOPMENT_PLAN.md",
       "source": null,
       "type": "static",
-      "content": "# Development Plan\n\n## Milestones\n\n<!-- [] = pending, [x] = completed -->\n\n- [ ] M1: Governance framework initialized\n\n## Task Template\n\nUse `docs/plans/TASK_<name>.md` for medium/large changes (see Lifecycle Phase 2).\n",
+      "content": "# Development Plan ## Milestones <!-- [] = pending, [x] = completed --> - [ ] M1: Governance framework initialized ## Task Template Use `docs/plans/TASK_<name>.md` for medium/large changes (see Lifecycle Phase 2).",
       "description": "Milestone plan with checkboxes"
     },
     {
@@ -495,7 +495,7 @@
       "path": "docs/ARCHITECTURE.md",
       "source": null,
       "type": "static",
-      "content": "# Architecture\n\n## Overview\n\n{{ONE_SENTENCE_DESCRIPTION}}\n\n## Data Flow\n\n<!-- Describe how data flows through the system -->\n\n## Component Registry\n\n| Component | Responsibility | Dependencies | Entry |\n| --- | --- | --- | --- |\n| <!-- add rows as components are registered --> | | | |\n\n## Architecture Decision Records\n\n<!-- Record significant architectural decisions here -->\n",
+      "content": "# Architecture ## Overview {{ONE_SENTENCE_DESCRIPTION}} ## Data Flow <!-- Describe how data flows through the system --> ## Component Registry | Component | Responsibility | Dependencies | Entry |\n| --- | --- | --- | --- |\n| <!-- add rows as components are registered --> | | | | ## Architecture Decision Records <!-- Record significant architectural decisions here -->",
       "description": "System architecture + ADR + component registry"
     },
     {
@@ -531,7 +531,7 @@
       "type": "generated",
       "generator": "ci",
       "name": "CI workflow",
-      "description": "CI pipeline selected from ci.md by stack + ci_platform (gitlab writes .gitlab-ci.yml instead; ci_platform=none skips)"
+      "description": "CI pipeline selected from ci.md by stack + ci_platform (gitlab writes.gitlab-ci.yml instead; ci_platform=none skips)"
     },
     {
       "phase": "B",
@@ -546,7 +546,7 @@
       "path": ".governance/README.md",
       "source": null,
       "type": "static",
-      "content": "# .governance/ — machine-readable governance state\n\n- `manifest.json` — desired state: declared artifacts, paths, versions. Git-tracked.\n- `state.json` — current state: maturity, phase, agent identity. Git-tracked.\n- `git-policy.json` — Git workflow policy (protected branches, direct push, review). Git-tracked.\n- `sync-rules.json` — sync groups declaration (watch/require pairs). Git-tracked.\n- `preflight.json` — pre-INIT snapshot (rollback basis). Git-tracked.\n- `validation.json` / `drift-report.json` / `release-proposal.json` / `activity.jsonl` / `consent.json` — runtime outputs, git-ignored.\n\nUsage: see the project AGENTS.md and `docs/rules/`.\n",
+      "content": "#.governance/ — machine-readable governance state - `manifest.json` — desired state: declared artifacts, paths, versions. Git-tracked.\n- `state.json` — current state: maturity, phase, agent identity. Git-tracked.\n- `git-policy.json` — Git workflow policy (protected branches, direct push, review). Git-tracked.\n- `sync-rules.json` — sync groups declaration (watch/require pairs). Git-tracked.\n- `preflight.json` — pre-INIT snapshot (rollback basis). Git-tracked.\n- `validation.json` / `drift-report.json` / `release-proposal.json` / `activity.jsonl` / `consent.json` — runtime outputs, git-ignored. Usage: see the project AGENTS.md and `docs/rules/`.",
       "description": "Explains each state file and git tracking strategy"
     },
     {
@@ -599,7 +599,7 @@
       "path": "scripts/check-lock.js",
       "source": "scripts/check-lock.js",
       "type": "copy",
-      "description": "Lock check + atomic acquire/release (CTRL companion for FINDING-0012)"
+      "description": "Lock check + atomic acquire/release (CTRL companion for)"
     },
     {
       "phase": "B",
@@ -620,7 +620,7 @@
       "path": "scripts/check-sibling-closure.js",
       "source": "scripts/check-sibling-closure.js",
       "type": "copy",
-      "description": "Sibling-instance closure mechanical carrier (FINDING-0003; deny when declared instances missing)"
+      "description": "Sibling-instance closure mechanical carrier (deny when declared instances missing)"
     },
     {
       "phase": "B",
@@ -704,7 +704,7 @@
       "path": "scripts/check-doc-consistency.js",
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
-      "description": "Doc consistency thin CLI WRAP (PLAN-0055 Stage 3 EXTRACT; clusters in lib/doc-consistency/run.js; advisory; --gate/--release-gate fail-closed)"
+      "description": "Doc consistency thin CLI WRAP ( Stage 3 EXTRACT; clusters in lib/doc-consistency/run.js; advisory; --gate/--release-gate fail-closed)"
     },
     {
       "phase": "C",
@@ -774,14 +774,14 @@
       "path": "scripts/lib/doc-consistency/run.js",
       "source": "scripts/lib/doc-consistency/run.js",
       "type": "copy",
-      "description": "Doc consistency thin orchestrator (PLAN-0055 R10 cluster EXTRACT; requires sibling gate modules)"
+      "description": "Doc consistency thin orchestrator ( R10 cluster EXTRACT; requires sibling gate modules)"
     },
     {
       "phase": "C",
       "path": "scripts/lib/doc-consistency/shared.js",
       "source": "scripts/lib/doc-consistency/shared.js",
       "type": "copy",
-      "description": "Doc consistency shared helpers/constants (PLAN-0055 R10)"
+      "description": "Doc consistency shared helpers/constants ( R10)"
     },
     {
       "phase": "C",
@@ -802,14 +802,14 @@
       "path": "scripts/lib/plan-status.js",
       "source": "scripts/lib/plan-status.js",
       "type": "copy",
-      "description": "Shared plan-status classifier (frontmatter status authoritative; PLAN-0048 / ADR-0016)"
+      "description": "Shared plan-status classifier (frontmatter status authoritative; /)"
     },
     {
       "phase": "C",
       "path": "scripts/lib/adr-status.js",
       "source": "scripts/lib/adr-status.js",
       "type": "copy",
-      "description": "Shared ADR Status-field Unreleased heuristic (PLAN-0048 / FINDING-0011)"
+      "description": "Shared ADR Status-field Unreleased heuristic"
     },
     {
       "phase": "C",
