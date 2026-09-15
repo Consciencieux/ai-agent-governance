@@ -1,171 +1,117 @@
 # AI Agent Governance
 
-> 面向 AI 編碼 Agent 的倉庫原生治理系統。
-> 將 AI Agent 行為視為倉庫基礎設施。
+> 面向 AI 編碼 Agent 的倉庫原生治理系統——規則、校驗與發佈控制存在於倉庫中，而非對話上下文。
 
 [![CI](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Consciencieux/ai-agent-governance)](https://github.com/Consciencieux/ai-agent-governance/releases)
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
-## 它是什麼
-
-AI Agent Governance 不是單純的提示詞包（prompt pack），也不是 `AGENTS.md` 產生器。它將 Agent 行為、倉庫約束與驗證機制轉化為受追蹤、持續校驗的倉庫基礎設施——治理存在於倉庫中，而非只存在於對話上下文或文件中。
-
-## 為什麼存在
-
-AI 編碼 Agent 在倉庫中行動很快，但不會自動繼承工程上下文、架構約束或維護機制。失敗鏈是真實的：
-
-```
-agent 修改程式碼
-→ 忘記同步相關檔案
-→ 繞過規則
-→ 破壞倉庫狀態
-→ 下一個 Agent 從被破壞的狀態繼續
-→ 問題持續擴大
-```
-
-本專案源自一個真實的多 Agent GitHub 協作工作流，在那裡僅靠 prompt 的協調反覆無法保全倉庫約束與狀態一致性。它已從一份小型 Agent 指令演化為倉庫級治理系統。
-
-## 如何運作
-
-治理生命週期在倉庫內部運行，跨越五個階段：
-
-| 階段 | 會發生什麼 |
-| --- | --- |
-| INIT | 檢查環境，產生規則、`AGENTS.md`、功能登錄、CI 與校驗器，然後記錄初始狀態。 |
-| OPERATE | 產生的 `AGENTS.md` 與子技能治理每一次 Agent 會話；按專案鎖序列化多 Agent 工作。 |
-| VALIDATE | 零依賴校驗器檢查倉庫健康；漂移偵測對比清單（期望態）與現實（觀測態）。 |
-| AUDIT | 巡檢彙總活動記錄並驗證全部治理事實——從文件一致性到規則捕獲。 |
-| RELEASE | 人在環流程分析變更歷史、提出 SemVer 版本並發佈——基於證據，而非虛構。 |
-
-這些階段背後的 Spec / Status / Health 狀態模型記錄在 [docs/product/zh-TW/governance-model.md](docs/product/zh-TW/governance-model.md)。
-
-這是倉庫級治理生命週期。Agent 單次任務的六階段操作生命週期單獨記錄在 [docs/product/zh-TW/lifecycle.md](docs/product/zh-TW/lifecycle.md)。
-
-```
-   AI Agent
-      │
-      ▼
- 治理規則               規則 · 策略 · Agent 指引
-      │
-      ▼
- 倉庫狀態               期望態 · 當前態 · 倉庫知識
-      │
-      ▼
- 驗證                   校驗 · 漂移偵測 · 測試 · 巡檢
-      │
-      ▼
- 人工受控發佈            評審 · 批准 · 版本化
-      │
-      └──────────────► 回到倉庫
-```
-
-## 它治理什麼
-
-| 領域 | 範例 |
-| --- | --- |
-| Agent 行為 | 權限矩陣、多 Agent 鎖、規則優先序 |
-| 倉庫狀態 | 清單（期望態）· 狀態（當前態）· 校驗（觀測態） |
-| 文件與知識 | 功能登錄、計劃、規則、翻譯新鮮度 |
-| Git 操作 | 保護分支、基於分支的開發、受控回滾 |
-| 發佈 | SemVer 提案、人工審批、標籤版本一致性 |
-
-## 它有何不同
-
-| 維度 | 含義 |
-| --- | --- |
-| 倉庫原生 | 治理存在倉庫中，而非對話上下文或外部平台 |
-| 生命週期驅動 | 規則在整個專案生命週期中被維護與被巡檢 |
-| 失敗時預設阻斷 | 當承諾的機制實際未運行時，閘門中止流程 |
-| 工具中立 | 核心說 `AGENTS.md`；按工具轉接器服務特定 Agent |
-
-透過一次初始化建立治理環境，並透過持續驗證維持其完整性與一致性：
-
-```
-initialize project governance
-```
-
-完整可用提示詞清單見 [docs/product/zh-TW/commands.md](docs/product/zh-TW/commands.md)。
-
 ## 快速開始
 
-**1. 安裝發布載荷**（不要 `git clone` 本倉庫）到你的 Agent **實際會掃描**的 skill 目錄。
+**1. 安裝發佈載荷**到你的 Agent 技能目錄（不要 git clone 本倉庫）：
 
-| Agent | 常見安裝路徑 |
+| Agent | 安裝路徑 |
 | --- | --- |
-| Cursor | 專案：`.cursor/skills/ai-agent-governance/` · 或個人 Agent Store 的 `skills/` |
+| Cursor | `.cursor/skills/ai-agent-governance/` 或個人 Agent Store 的 `skills/` |
 | Claude Code / opencode（共用） | `~/.agents/skills/ai-agent-governance/` 或專案 `.agents/skills/…` |
-| Claude Code | `.claude/skills/ai-agent-governance/` |
+| 僅 Claude Code | `.claude/skills/ai-agent-governance/` |
 | 僅 opencode | `.opencode/skills/ai-agent-governance/` |
 
-範例（共用 `.agents` 路徑——按上表換成你的目錄）：
-
 ```bash
+# 範例：共用 ~/.agents 路徑——按上表換成你的目錄
 DEST=~/.agents/skills/ai-agent-governance
 mkdir -p "$DEST"
 curl -fsSL -o /tmp/ai-agent-governance-skill.tar.gz \
   https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz
-# 可選：對照 Release Notes 中的 SHA-256 校驗後再解壓
+# 校驗（SHA-256 在 Release Notes 中）：
+# shasum -a 256 /tmp/ai-agent-governance-skill.tar.gz
 tar -xzf /tmp/ai-agent-governance-skill.tar.gz -C "$DEST"
 ```
 
-**不要**把本倉庫整倉 clone 進 skills 目錄——會帶上不屬於安裝載荷的 `docs/`、`tests/` 等。完整發現說明：[docs/product/zh-TW/skill-discovery.md](docs/product/zh-TW/skill-discovery.md)。
+**不要**把本倉庫整倉 clone 進技能目錄——安裝載荷只包含 `SKILL.md` + `references/` + `scripts/` + `LICENSE`。完整發現說明：[skill-discovery.md](docs/product/zh-TW/skill-discovery.md)。
 
-**2. 打開你要治理的那個專案**，在編碼 Agent 對話裡發送下面這句提示詞（不是 shell 命令）：
+**2. 打開你要治理的那個專案**，在編碼 Agent 對話裡發送：
 
 ```text
 initialize project governance
 ```
 
-**之前** —— 一個普通專案：
+**3. 初始化之後**，常用後續操作：
+
+| 提示詞 | 功能 |
+| --- | --- |
+| `audit governance` | 對已治理專案做健康檢查，偵測漂移 |
+| `release` | 人在環版本發佈，附帶證據 |
+| `governance check` | 快速校驗 |
+
+完整提示詞清單 → [commands.md](docs/product/zh-TW/commands.md)。
+
+## 它做什麼
+
+AI 編碼 Agent 行動很快，但不會自動繼承架構約束、同步規則或維護流程。修改悄悄退化；下一個 Agent 從退化狀態繼續。
+
+本專案在你的倉庫內部生成一套治理環境——受追蹤的規則、自動校驗、漂移偵測與人工受控的發佈流程——讓約束在 Agent 會話之間持續有效。
+
+## INIT 生成什麼
+
+一個治理骨架（代表性路徑——[完整帶註解清單](docs/product/zh-TW/bootstrap-output.md)）：
 
 ```text
 my-project/
-├── src/
-└── package.json
-```
-
-**之後** —— 治理環境被建立（代表性結構）：
-
-```text
-my-project/
-├── AGENTS.md
+├── AGENTS.md                      # Agent 規則（從範本生成）
+├── CHANGELOG.md
 ├── docs/
 │   ├── ARCHITECTURE.md
-│   ├── plans/
-│   └── rules/
+│   ├── features/                  # 功能登錄
+│   ├── plans/                     # 開發計劃
+│   └── rules/                     # 治理規則（生命週期、Git、安全……）
 ├── .governance/
-├── scripts/
-└── .github/workflows/
+│   ├── manifest.json              # 期望態
+│   ├── state.json                 # 當前態
+│   └── generated/skills/          # 持續工作的子技能
+├── scripts/                       # 校驗器、密鑰掃描、發佈管理
+└── .github/workflows/ci.yml       # CI 閘門
 ```
 
-完整帶註解的初始化輸出：[docs/product/zh-TW/bootstrap-output.md](docs/product/zh-TW/bootstrap-output.md)。
+具體契約（輸入、工件、腳本、規則）由 [init-spec.json](references/init-spec.json) 與 [sub-skills.md](references/instruction/sub-skills.md) 定義。
 
-## 產生的環境
+## 治理生命週期
 
-INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](references/init-spec.json) 與 [references/instruction/sub-skills.md](references/instruction/sub-skills.md) 定義。
+| 階段 | 會發生什麼 |
+| --- | --- |
+| **INIT** | 檢查環境 → 產生規則、AGENTS.md、功能登錄、CI、校驗器 → 記錄初始狀態 |
+| **OPERATE** | 產生的規則與子技能治理每一次 Agent 會話；按專案鎖序列化多 Agent 工作 |
+| **VALIDATE** | 零依賴校驗器檢查倉庫健康；漂移偵測對比期望態與現實 |
+| **AUDIT** | 彙總活動記錄，驗證全部治理事實 |
+| **RELEASE** | 人在環：分析變更 → SemVer 提案 → 審批 → 帶證據發佈 |
+
+狀態模型：[governance-model.md](docs/product/zh-TW/governance-model.md)。Agent 六階段操作生命週期：[lifecycle.md](docs/product/zh-TW/lifecycle.md)。
+
+## 核心特性
+
+- **倉庫原生** —— 治理存在於倉庫中，與程式碼一起版本化
+- **生命週期驅動** —— 規則在整個專案生命週期中被維護與審計
+- **失敗時預設阻斷** —— 承諾的機制未運行時，閘門中止流程
+- **工具中立** —— 核心說 `AGENTS.md`；按工具轉接器服務 Cursor、Claude Code、opencode、Codex
 
 ## 文件
 
-- [docs/README.md](docs/README.md) — 文件知識體系：文件類型邊界、語言政策、生命週期總覽
-- [docs/product/zh-TW/skill-discovery.md](docs/product/zh-TW/skill-discovery.md) — Agent 如何發現並觸發 skill
-- [docs/product/zh-TW/commands.md](docs/product/zh-TW/commands.md) — 完整提示詞清單與運行時元件
-- [docs/product/zh-TW/bootstrap-output.md](docs/product/zh-TW/bootstrap-output.md) — 完整帶註解的初始化輸出
-- [docs/product/zh-TW/governance-model.md](docs/product/zh-TW/governance-model.md) — Spec / Status / Health 狀態模型
-- [docs/product/zh-TW/architecture.md](docs/product/zh-TW/architecture.md) — 倉庫佈局與三種分發角色
-- [docs/product/zh-TW/anti-regression.md](docs/product/zh-TW/anti-regression.md) — 防亂改機制完整明細
-- [docs/product/zh-TW/lifecycle.md](docs/product/zh-TW/lifecycle.md) — Agent 六階段操作生命週期
-- [docs/product/zh-TW/validator.md](docs/product/zh-TW/validator.md) — 校驗器用法與檢查項
-- [docs/plans/roadmap/zh-TW.md](docs/plans/roadmap/zh-TW.md) — 帶狀態與設計文件的路線圖
-- [docs/design-decisions/](docs/design-decisions/) — 架構決策記錄（ADR，簡體中文）
-- [docs/glossary.md](docs/glossary.md) — 三語術語對照表
-- [CONTRIBUTING.zh-TW.md](CONTRIBUTING.zh-TW.md) — 開發指南
-- [CHANGELOG.md](CHANGELOG.md) — 發佈歷史
+- [commands.md](docs/product/zh-TW/commands.md) — 完整提示詞清單
+- [bootstrap-output.md](docs/product/zh-TW/bootstrap-output.md) — 帶註解的 INIT 輸出
+- [governance-model.md](docs/product/zh-TW/governance-model.md) — Spec / Status / Health 狀態模型
+- [architecture.md](docs/product/zh-TW/architecture.md) — 倉庫佈局與分發角色
+- [lifecycle.md](docs/product/zh-TW/lifecycle.md) — Agent 操作生命週期
+- [validator.md](docs/product/zh-TW/validator.md) — 校驗器用法與檢查項
+- [anti-regression.md](docs/product/zh-TW/anti-regression.md) — 防亂改機制
+- [skill-discovery.md](docs/product/zh-TW/skill-discovery.md) — Agent 如何發現 skill
+- [docs/README.md](docs/README.md) — 文件知識體系
+- [glossary.md](docs/glossary.md) — 三語術語對照表
+- [路線圖](docs/plans/roadmap/zh-TW.md) · [設計決策](docs/design-decisions/) · [CHANGELOG](CHANGELOG.md)
 
-## 目前版本
+## 貢獻
 
-從 [Releases → latest](https://github.com/Consciencieux/ai-agent-governance/releases/latest) 安裝（`ai-agent-governance-skill.tar.gz`）。原始碼樹版本見 `package.json` / `SKILL.md`。必裝 INIT / AUDIT / RELEASE 可在乾淨目標上跑；本倉 CI 阻斷權威是 `npm run check:must-ship`。詳見 [CHANGELOG.md](CHANGELOG.md) 與 [docs/plans/roadmap/zh-TW.md](docs/plans/roadmap/zh-TW.md)。
+參見 [CONTRIBUTING.zh-TW.md](CONTRIBUTING.zh-TW.md)。本倉 CI 阻斷權威：`npm run check:must-ship`。
 
 ## License
 

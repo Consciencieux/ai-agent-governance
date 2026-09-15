@@ -1,171 +1,117 @@
 # AI Agent Governance
 
-> A repository-native governance system for AI coding agents.
-> Treat AI agent behavior as repository infrastructure.
+> Repository-native governance for AI coding agents — rules, validation and release controls that live in the repo, not in chat context.
 
 [![CI](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/Consciencieux/ai-agent-governance/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Consciencieux/ai-agent-governance)](https://github.com/Consciencieux/ai-agent-governance/releases)
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
-## What it is
-
-AI Agent Governance is not just a prompt pack or an `AGENTS.md` generator. It turns agent behavior, repository constraints, and verification mechanisms into tracked, continuously validated repository infrastructure — governance that lives in the repository rather than only in chat context or documentation.
-
-## Why this exists
-
-AI coding agents act on a repository quickly, but they do not automatically inherit engineering context, architecture constraints, or maintenance mechanisms. The failure chain is real:
-
-```
-an agent changes code
-→ forgets to synchronize related files
-→ bypasses the rules
-→ degrades repository state
-→ the next agent continues from the degraded state
-→ the problem grows
-```
-
-This project originated from a real multi-agent GitHub collaboration workflow where prompt-only coordination repeatedly failed to preserve repository constraints and state consistency. It has since evolved from a small agent instruction into a repository-level governance system.
-
-## How it works
-
-The governance lifecycle runs inside the repository, across five stages:
-
-| Stage | What happens |
-| --- | --- |
-| INIT | Inspect the environment, generate rules, `AGENTS.md`, feature registry, CI and validator, then record initial state. |
-| OPERATE | The generated `AGENTS.md` and sub-skills govern every agent session; a per-project lock serializes multi-agent work. |
-| VALIDATE | A zero-dependency validator checks repository health; drift detection compares manifest (desired) against reality (observed). |
-| AUDIT | Audit aggregates the activity trail and validates all governance facts — from doc consistency to rule capture. |
-| RELEASE | A human-in-the-loop flow analyzes change history, proposes a SemVer version, and publishes — with evidence, not fabrication. |
-
-The Spec / Status / Health state model behind these stages is documented in [docs/product/en/governance-model.md](docs/product/en/governance-model.md).
-
-This is the repository-level governance lifecycle. The per-task agent operating lifecycle (six phases) is documented separately in [docs/product/en/lifecycle.md](docs/product/en/lifecycle.md).
-
-```
-   AI Agent
-      │
-      ▼
- Governance Rules          rules · policies · agent guidance
-      │
-      ▼
- Repository State          desired state · current state · repository knowledge
-      │
-      ▼
- Verification              validation · drift detection · testing · audit
-      │
-      ▼
- Human-controlled Release  review · approval · versioning
-      │
-      └──────────────► back into the repository
-```
-
-## What it governs
-
-| Domain | Examples |
-| --- | --- |
-| Agent behavior | permission matrix, multi-agent locking, rule priority |
-| Repository state | manifest (desired) · state (current) · validation (observed) |
-| Docs & knowledge | feature registry, plans, rules, translation freshness |
-| Git operations | protected branches, branch-based development, controlled rollback |
-| Release | SemVer proposal, human approval, tag-version consistency |
-
-## What makes it different
-
-| Dimension | Meaning |
-| --- | --- |
-| Repository-native | governance lives in the repo, not in chat context or an external platform |
-| Lifecycle-based | rules are maintained and audited across the whole project lifecycle |
-| Fail-closed | gates stop the flow when a promised mechanism did not actually run |
-| Tool-neutral | the core speaks `AGENTS.md`; per-tool adapters serve specific agents |
-
-Through one initialization the governance environment is established; continuous validation keeps it intact and consistent.
-
-```
-initialize project governance
-```
-
-See [docs/product/en/commands.md](docs/product/en/commands.md) for the complete list of available prompts.
-
 ## Quick Start
 
-**1. Install the release payload** (not a git clone of this repo) into a directory your agent actually scans for skills.
+**1. Install the skill payload** into your agent's skill directory (not a git clone):
 
-| Agent | Typical install path |
+| Agent | Install path |
 | --- | --- |
-| Cursor | Project: `.cursor/skills/ai-agent-governance/` · or your personal Agent Store `skills/` |
+| Cursor | `.cursor/skills/ai-agent-governance/` or personal Agent Store `skills/` |
 | Claude Code / opencode (shared) | `~/.agents/skills/ai-agent-governance/` or project `.agents/skills/…` |
-| Claude Code | `.claude/skills/ai-agent-governance/` |
-| opencode-only | `.opencode/skills/ai-agent-governance/` |
-
-Example (shared `.agents` path — swap the directory for your agent from the table):
+| Claude Code only | `.claude/skills/ai-agent-governance/` |
+| opencode only | `.opencode/skills/ai-agent-governance/` |
 
 ```bash
+# Example: shared ~/.agents path — swap the directory for your agent
 DEST=~/.agents/skills/ai-agent-governance
 mkdir -p "$DEST"
 curl -fsSL -o /tmp/ai-agent-governance-skill.tar.gz \
   https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz
-# Optional: verify SHA-256 from the Release notes, then:
+# Verify (SHA-256 is in the Release notes):
+# shasum -a 256 /tmp/ai-agent-governance-skill.tar.gz
 tar -xzf /tmp/ai-agent-governance-skill.tar.gz -C "$DEST"
 ```
 
-Do **not** clone this repository into a skills folder — that pulls `docs/`, `tests/`, and other repo infrastructure that is not the install payload. Full discovery notes: [docs/product/en/skill-discovery.md](docs/product/en/skill-discovery.md).
+Do **not** clone this repository into a skills folder — only the tarball payload (`SKILL.md` + `references/` + `scripts/` + `LICENSE`) is the install artifact. Full discovery notes: [skill-discovery.md](docs/product/en/skill-discovery.md).
 
-**2. In the project you want to govern**, open your coding agent chat and send this prompt (not a shell command):
+**2. In the project you want to govern**, open your coding agent and send:
 
 ```text
 initialize project governance
 ```
 
-**Before** — a plain project:
+**3. After initialization**, common follow-ups:
+
+| Prompt | What it does |
+| --- | --- |
+| `audit governance` | Health-check a governed project, detect drift |
+| `release` | Human-in-the-loop versioned release with evidence |
+| `governance check` | Quick validation pass |
+
+Full prompt list → [commands.md](docs/product/en/commands.md).
+
+## What It Does
+
+AI coding agents act fast but don't automatically inherit architecture constraints, sync rules, or maintenance workflows. Changes degrade silently; the next agent continues from the degraded state.
+
+This project generates a governance environment inside your repository — tracked rules, automated validation, drift detection, and a human-controlled release flow — so that constraints survive across agent sessions.
+
+## What INIT Generates
+
+A governance skeleton (representative paths — [full annotated list](docs/product/en/bootstrap-output.md)):
 
 ```text
 my-project/
-├── src/
-└── package.json
-```
-
-**After** — the governance environment is established (representative structure):
-
-```text
-my-project/
-├── AGENTS.md
+├── AGENTS.md                      # agent rules (from template)
+├── CHANGELOG.md
 ├── docs/
 │   ├── ARCHITECTURE.md
-│   ├── plans/
-│   └── rules/
+│   ├── features/                  # feature registry
+│   ├── plans/                     # development plans
+│   └── rules/                     # governance rules (lifecycle, git, security, …)
 ├── .governance/
-├── scripts/
-└── .github/workflows/
+│   ├── manifest.json              # desired state
+│   ├── state.json                 # current state
+│   └── generated/skills/          # sub-skills for ongoing agent work
+├── scripts/                       # validators, secret scanner, release manager
+└── .github/workflows/ci.yml       # CI gate
 ```
 
-Complete annotated initialization output: [docs/product/en/bootstrap-output.md](docs/product/en/bootstrap-output.md).
+The exact contract (inputs, artifacts, scripts, rules) is defined in [init-spec.json](references/init-spec.json) and [sub-skills.md](references/instruction/sub-skills.md).
 
-## Generated Environment
+## Governance Lifecycle
 
-INIT generates a governance skeleton whose exact contract — inputs, artifacts, installed scripts, rule files and generated sub-skills — is defined in [references/init-spec.json](references/init-spec.json) and [references/instruction/sub-skills.md](references/instruction/sub-skills.md).
+| Stage | What happens |
+| --- | --- |
+| **INIT** | Inspect environment → generate rules, AGENTS.md, feature registry, CI, validators → record initial state |
+| **OPERATE** | Generated rules and sub-skills govern every agent session; per-project lock serializes multi-agent work |
+| **VALIDATE** | Zero-dependency validator checks repo health; drift detection compares manifest vs reality |
+| **AUDIT** | Aggregate activity trail, validate all governance facts |
+| **RELEASE** | Human-in-the-loop: analyze changes → SemVer proposal → approval → publish with evidence |
+
+State model: [governance-model.md](docs/product/en/governance-model.md). Agent operating lifecycle (6 phases): [lifecycle.md](docs/product/en/lifecycle.md).
+
+## Key Properties
+
+- **Repository-native** — governance lives in the repo, versioned alongside code
+- **Lifecycle-based** — rules are maintained and audited across the whole project lifecycle
+- **Fail-closed** — gates block when a required mechanism did not actually run
+- **Tool-neutral** — core speaks `AGENTS.md`; per-tool adapters serve Cursor, Claude Code, opencode, Codex
 
 ## Documentation
 
-- [docs/README.md](docs/README.md) — documentation knowledge architecture: doc-type boundaries, language policy, lifecycle overview
-- [docs/product/en/skill-discovery.md](docs/product/en/skill-discovery.md) — how agents discover and trigger the skill
-- [docs/product/en/commands.md](docs/product/en/commands.md) — complete prompt list and runtime components
-- [docs/product/en/bootstrap-output.md](docs/product/en/bootstrap-output.md) — complete annotated initialization output
-- [docs/product/en/governance-model.md](docs/product/en/governance-model.md) — the Spec / Status / Health state model
-- [docs/product/en/architecture.md](docs/product/en/architecture.md) — repository layout and three distribution roles
-- [docs/product/en/anti-regression.md](docs/product/en/anti-regression.md) — anti-regression mechanisms in full
-- [docs/product/en/lifecycle.md](docs/product/en/lifecycle.md) — the 6-phase agent operating lifecycle
-- [docs/product/en/validator.md](docs/product/en/validator.md) — validator usage and checks
-- [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md) — roadmap with status and design docs
-- [docs/design-decisions/](docs/design-decisions/) — architecture decision records (简体中文)
-- [docs/glossary.md](docs/glossary.md) — trilingual terminology table
-- [CONTRIBUTING.md](CONTRIBUTING.md) — development guide
-- [CHANGELOG.md](CHANGELOG.md) — release history
+- [commands.md](docs/product/en/commands.md) — all available prompts
+- [bootstrap-output.md](docs/product/en/bootstrap-output.md) — annotated INIT output
+- [governance-model.md](docs/product/en/governance-model.md) — Spec / Status / Health state model
+- [architecture.md](docs/product/en/architecture.md) — repository layout and distribution roles
+- [lifecycle.md](docs/product/en/lifecycle.md) — agent operating lifecycle
+- [validator.md](docs/product/en/validator.md) — validator usage and checks
+- [anti-regression.md](docs/product/en/anti-regression.md) — anti-regression mechanisms
+- [skill-discovery.md](docs/product/en/skill-discovery.md) — how agents discover the skill
+- [docs/README.md](docs/README.md) — documentation knowledge architecture
+- [glossary.md](docs/glossary.md) — trilingual terminology table
+- [roadmap](docs/plans/roadmap/en.md) · [design decisions](docs/design-decisions/) · [CHANGELOG](CHANGELOG.md)
 
-## Current version
+## Contributing
 
-Install from [Releases → latest](https://github.com/Consciencieux/ai-agent-governance/releases/latest) (`ai-agent-governance-skill.tar.gz`). Source line version is in `package.json` / `SKILL.md`. Must-ship INIT / AUDIT / RELEASE run on a clean target; this repo's CI blocking authority is `npm run check:must-ship`. See [CHANGELOG.md](CHANGELOG.md) and [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md). CI blocking authority for this repo: `npm run check:must-ship`.
 
 ## License
 
