@@ -71,10 +71,11 @@ ai-agent-governance/
 ├── SKILL.md                    # 薄 always-on 入口 + 能力路由（非政策百科）
 ├── references/                 # skill 本體——skill 行為唯一所在地
 │   ├── init-spec.json          # 機器可讀 INIT 規範（generate-governance.js 的單一事實源）
-│   ├── templates/
-│   │   ├── agents-md.template.md   # AGENTS.md 範本
+│   ├── instruction/                # 可執行指令源（ADR-0026；不是 templates）
+│   │   ├── agents-md.template.md   # AGENTS.md 運行時合同源
+│   │   └── sub-skills.md           # 生成 skill 的來源；每個會變成 .governance/generated/skills/<name>/SKILL.md
+│   ├── templates/                  # 只收留物化範本（bootstrap / machine-state）
 │   │   ├── feature-doc.template.md # Feature 文件範本（含反虛構規則）
-│   │   ├── sub-skills.md           # 生成 skill 的來源；每個會變成 .governance/generated/skills/<name>/SKILL.md，不是腳本
 │   │   ├── env-example.template.md # .env.example 範本（佔位符、按依賴裁剪）
 │   │   ├── gitmessage.template.md  # .gitmessage.txt 範本（提交約定）
 │   │   ├── git-policy.template.md  # .governance/git-policy.json 範本（Git 工作流程策略）
@@ -84,7 +85,10 @@ ai-agent-governance/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # 受保護檔案 + .governance Git 追蹤策略
 │   ├── capabilities/               # Capability 葉權威（Phase 5c；INIT → docs/rules/capabilities/）
-│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md / subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md / sync-groups.md
+│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / sync-groups.md
+│   │   └── subskills/
+│   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
+│   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md
 │   ├── principles/                 # 可重用方法論（PLAN-0037；SKILL-INTERNAL — INIT 不安裝）
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
@@ -161,7 +165,8 @@ ai-agent-governance/
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
-│   └── package-skill.sh        # 發佈載荷 tarball 打包
+│   ├── package-skill.sh        # 發佈載荷 tarball 打包
+│   └── .release/proposal.json  # gitignored 技能發佈草稿（不入庫）
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發
 │   ├── changelog-policy.md      # 本倉 CHANGELOG 政策（REPO-ONLY）
 │   └── skill-release.md        # 技能倉庫發佈流程（版本五個同步點 + tag、tarball 建置）

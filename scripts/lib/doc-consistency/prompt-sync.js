@@ -17,7 +17,7 @@ function runPromptSync(ctx) {
   // tree hides a skill from users, and a trigger left behind after removal advertises one
   // that no longer exists. Previously this cluster was advisory and one-directional, so
   // AGENTS.md's "enforces" claim was not backed by anything.
-  const subSkills = readFile(path.join(ROOT, "references", "templates", "sub-skills.md")) || "";
+  const subSkills = readFile(path.join(ROOT, "references", "instruction", "sub-skills.md")) || "";
   const triggers = new Set();
   for (const line of subSkills.split("\n")) {
     if (!line.includes("Triggers on")) continue;

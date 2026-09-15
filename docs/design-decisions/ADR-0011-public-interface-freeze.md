@@ -24,7 +24,7 @@ generation: cross-generation
 
 | 类别 | 事实源 | 破坏性变更的含义 |
 | --- | --- | --- |
-| 子技能触发词 | `references/templates/sub-skills.md` | 改名或删除会让用户既有的调用方式失效 |
+| 子技能触发词 | `references/instruction/sub-skills.md` | 改名或删除会让用户既有的调用方式失效 |
 | INSTALLED 脚本的命令行接口 | 各脚本自身 | 删 flag、改语义、改退出码约定会让被治理项目的自动化断裂 |
 | INIT 契约（输入与产物） | `references/init-spec.json` | 改输入名、删产物、改产物路径会让既有项目无法升级 |
 | 被治理项目的规则文件路径 | `references/init-spec.json` | 路径变动会让规则引用与 Agent 指令断链 |

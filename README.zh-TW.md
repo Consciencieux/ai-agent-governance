@@ -130,7 +130,7 @@ my-project/
 
 ## 產生的環境
 
-INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](references/init-spec.json) 與 [references/templates/sub-skills.md](references/templates/sub-skills.md) 定義。
+INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](references/init-spec.json) 與 [references/instruction/sub-skills.md](references/instruction/sub-skills.md) 定義。
 
 ## 文件
 

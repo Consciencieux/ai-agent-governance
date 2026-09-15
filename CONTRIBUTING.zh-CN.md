@@ -24,7 +24,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 **新文件放哪里？** 先判断知识类型，再决定路径和语言（不要先按语言选目录）：
 
 - 仓库知识对象（产品 / 研究 / 发现 / 决策 / 路线图 / 计划 / 术语）→ `docs/README.md` 的路由表
-- 技能安装产物与物化源 → `SKILL.md`、`references/`、`scripts/`，按 `docs/product/zh-CN/architecture.md` 的分发角色放置。**不要**把「生成机制」当成进入 `references/` 的分类标准；`references/templates/` 只是物化模板的当前位置，可执行指令源与 boilerplate 不是同一类（FINDING-0026）
+- 技能安装产物与物化源 → `SKILL.md`、`references/`、`scripts/`，按 `docs/product/zh-CN/architecture.md` 的分发角色放置。目录按语义责任分类（ADR-0026）：指令源在 `references/instruction/`；`references/templates/` 只收留物化模板。
 - 测试、CI 等开发基础设施 → `tests/`、`.github/` 等
 
 ## 语言政策（按受众）

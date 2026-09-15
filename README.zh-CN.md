@@ -130,7 +130,7 @@ my-project/
 
 ## 生成的环境
 
-INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚本、规则文件与生成的子技能）由 [references/init-spec.json](references/init-spec.json) 与 [references/templates/sub-skills.md](references/templates/sub-skills.md) 定义。
+INIT 生成一个治理骨架，其具体契约（输入、工件、安装的脚本、规则文件与生成的子技能）由 [references/init-spec.json](references/init-spec.json) 与 [references/instruction/sub-skills.md](references/instruction/sub-skills.md) 定义。
 
 ## 文档
 

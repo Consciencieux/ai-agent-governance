@@ -111,6 +111,10 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 **生长规则（收紧既有第 3 条）：** 新横切规则默认进入 Capability / Control / 适用图；禁止向 `lifecycle.policy.md` 某 Phase 新增大段横切正文。可迁移的规则语义保留；错误的是「按 Phase 堆政策」的生长轴，不是「文件内每一句皆废」。残留抽出走既有 5c leftover / 后继 Plan，不另开并行「推翻 lifecycle」阶段。
 
+## 后续修正（2026-09-15）：`templates/` 分类落地
+
+本修正是对 2026-09-10 修正第 4 条（`templates/` 按生成方式分类不可长期接受）的 **Narrow amendment**。分类标准与目录合同见 [ADR-0026](ADR-0026-references-taxonomy.md)。自本修正起：可执行指令源在 `references/instruction/`；`templates/` 只收留物化模板。兑现方式仍不是目录轴。
+
 ## 后果
 
 - 入口文档（`SKILL.md` / `AGENTS.md` / README）瘦身为路由层，领域规则下放子技能 / 领域文件。
@@ -126,7 +130,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 - 运行模型（描述层）：`docs/research/RESEARCH-0009-agent-instruction-architecture.md`
 - 入口层文档边界（前身）：ADR-0010
 - 静态 prompt 注意力负担：FINDING-0015
-- `templates/` 指令源与物化模板混置：FINDING-0026
+- `templates/` 指令源与物化模板混置：FINDING-0026；分类落地：ADR-0026
 - `lifecycle` 一名三义与错误生长轴：FINDING-0029
 - Known-Issue Closure（零注意力执行语义）：ADR-0021
 - 知识对象模型（当前/历史隔离、知识≠执行）：RESEARCH-0007 / ADR-0016

@@ -24,7 +24,7 @@ The full repository layout — every directory and its role, down to individual 
 **Where does a new file go?** Judge the knowledge type first, then the path and language (do not pick a language directory first):
 
 - Repository knowledge objects (Product / Research / Finding / ADR / Roadmap / Plan / Glossary) → the routing table in `docs/README.md`
-- Skill install artifacts and materialization sources → `SKILL.md`, `references/`, `scripts/`, placed by distribution role in `docs/product/en/architecture.md`. Being a generator input is **not** a semantic class; `references/templates/` is the current home of materialization templates, not a license to treat executable instruction sources as templates (FINDING-0026)
+- Skill install artifacts and materialization sources → `SKILL.md`, `references/`, `scripts/`, placed by distribution role in `docs/product/en/architecture.md`. Directory class follows semantic responsibility (ADR-0026): instruction sources live in `references/instruction/`; `references/templates/` is materialization only.
 - Tests, CI and other development infrastructure → `tests/`, `.github/`, …
 
 ## Language Policy (by audience)

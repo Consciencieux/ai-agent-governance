@@ -23,7 +23,7 @@ const DOCS = path.join(ROOT, "docs");
 const CONSENT_SYNC_GROUPS = [
   ["AGENTS.md"],
   ["references/policies/git.policy.md", "docs/rules/git-policy.md"],
-  ["references/templates/agents-md.template.md"],
+  ["references/instruction/agents-md.template.md"],
   ["references/policies/lifecycle.policy.md", "docs/rules/lifecycle.md"],
   ["SKILL.md"],
 ];
@@ -50,7 +50,7 @@ const CONSENT_MARKERS = [
   // artifacts mention ("由 RELEASE 的 Approval Gate 产生") both carry the token but state
   // nothing about coverage — deleting the real release clause left the gate green (review).
   { name: "release: Proposal at Approval Gate covers the sequence", re: /^(?=[\s\S]*(?:Approval Gate|获批准|获批))(?=[\s\S]*(?:covers?\s+[^.\n]{0,40}(?:sequence|write\s*ops?)|覆盖[^。\n]{0,30}(?:序列|写操作|发布序列)))/i,
-    files: ["AGENTS.md", "references/policies/git.policy.md", "references/templates/agents-md.template.md", "SKILL.md"] },
+    files: ["AGENTS.md", "references/policies/git.policy.md", "references/instruction/agents-md.template.md", "SKILL.md"] },
   // Universal hard constraints — the echo IS the sequence and execution never deviates;
   // any step fails → stop and report (never retry differently); push rejected →
   // stop and report (never pull/rebase). lifecycle doc carries no git sequence by design —
@@ -60,9 +60,9 @@ const CONSENT_MARKERS = [
   // check fails mid-sequence"), so broad terms would let a removed failure clause pass via
   // the other clause's wording (both found as false negatives by regression).
   { name: "mid-sequence failure: stop and report, never retry differently", re: /Any step fails|a step fails|任一步失败/i, 
-    files: ["AGENTS.md", "references/policies/git.policy.md", "references/templates/agents-md.template.md", "SKILL.md"] },
+    files: ["AGENTS.md", "references/policies/git.policy.md", "references/instruction/agents-md.template.md", "SKILL.md"] },
   { name: "push rejected (non-fast-forward): stop and report, never pull/rebase", re: /non-fast-forward|push rejected|push 被拒|非快进|pull\/rebase|不自行 pull|不得擅自 pull/i,
-    files: ["AGENTS.md", "references/policies/git.policy.md", "references/templates/agents-md.template.md", "SKILL.md"] },
+    files: ["AGENTS.md", "references/policies/git.policy.md", "references/instruction/agents-md.template.md", "SKILL.md"] },
 ];
 
 // #2 trigger tightening: a document is only held to the full protected-files list when it

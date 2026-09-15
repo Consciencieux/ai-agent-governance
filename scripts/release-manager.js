@@ -4,7 +4,7 @@
 // (READ-ONLY, never writes). execute: create the annotated git tag AFTER developer approval
 // (--yes), re-verifying state first. It does NOT create GitHub Releases, package assets, or
 // push branches — those are orchestrated by the release-manager sub-skill
-// (references/templates/sub-skills.md §6) with human approval.
+// (references/instruction/sub-skills.md §6) with human approval.
 
 const fs = require("fs");
 const { spawnSync } = require("child_process");

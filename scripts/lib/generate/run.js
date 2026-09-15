@@ -348,7 +348,7 @@ function generateCi(inputs, skillDir) {
   return tpl.endsWith("\n") ? tpl : tpl + "\n";
 }
 
-// Sub-skills generator — splits references/templates/sub-skills.md into one file per
+// Sub-skills generator — splits references/instruction/sub-skills.md into one file per
 // sub-skill: .governance/generated/skills/<name>/SKILL.md. Each template section is
 // "## N. <name>" followed by a fenced block whose body is the sub-skill file itself.
 function parseSubSkills(md) {
@@ -422,7 +422,7 @@ function generateSkillRegistry(md, phase, targetAbs) {
 }
 
 function generateSubSkills(inputs, skillDir, targetAbs, dirRel) {
-  const md = fs.readFileSync(path.join(skillDir, "references", "templates", "sub-skills.md"), "utf8");
+  const md = fs.readFileSync(path.join(skillDir, "references", "instruction", "sub-skills.md"), "utf8");
   const skills = parseSubSkills(md);
   const written = [];
   for (const sk of skills) {
@@ -496,7 +496,7 @@ function main() {
   if (!projectName && !file) { console.error("error: --project-name is required (or use --file)"); process.exit(2); }
 
   const spec = readJSON(SPEC_PATH);
-  const subSkillsSource = fs.readFileSync(path.join(SKILL_DIR, "references", "templates", "sub-skills.md"), "utf8");
+  const subSkillsSource = fs.readFileSync(path.join(SKILL_DIR, "references", "instruction", "sub-skills.md"), "utf8");
   const inputs = file ? readJSON(file) : { project_name: projectName };
   // Phase: an explicit --phase always wins; otherwise a phase already present in the
   // input JSON file is respected, falling back to the CLI default (A).

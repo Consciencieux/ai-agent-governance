@@ -59,7 +59,7 @@ references/
 `sub-skills.md` 出现在 `templates/` 本身就是架构味道。`init-spec.json` 对它的定义是：
 
 ```text
-source: references/templates/sub-skills.md
+source: references/instruction/sub-skills.md
 type: generated
 generator: sub-skills
 → .governance/generated/skills/

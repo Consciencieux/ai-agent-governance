@@ -32,7 +32,7 @@ SemVer ≠ Horizon. Construction rules live in [AGENTS.md](../../../AGENTS.md) /
 
 ## Done (one pass)
 
-Migration Phase 0–8 EXITED → `v2.0.0` shipped → H0–H2 Archived ([PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) … [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md)) → `v2.1.0` ([PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md)) → Gen1 observation sunset / carrier re-cut ([PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md), [PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md)) → FINDING-0003 judgment-language layering ([PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)). **Plan archive ≠ Release.** Full bodies: `docs/plans/archive/`.
+Migration Phase 0–8 EXITED → `v2.0.0` shipped → H0–H2 Archived ([PLAN-0045](../archive/PLAN-0045-post-2.0-doc-truth.md) … [PLAN-0050](../archive/PLAN-0050-h2d-payload-portability.md)) → `v2.1.0` ([PLAN-0051](../archive/PLAN-0051-v2.1.0-release-acceptance.md)) → Gen1 observation sunset / carrier re-cut ([PLAN-0052](../archive/PLAN-0052-gen1-observation-sunset.md), [PLAN-0055](../archive/PLAN-0055-gen1-carrier-absorb-and-retire.md)) → FINDING-0003 judgment-language layering ([PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)) → `references/` taxonomy ([PLAN-0056](../archive/PLAN-0056-references-taxonomy.md) / ADR-0026). **Plan archive ≠ Release.** Full bodies: `docs/plans/archive/`.
 
 ## Far (H3)
 

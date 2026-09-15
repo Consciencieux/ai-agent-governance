@@ -56,7 +56,7 @@ Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 - Skill behavior → `references/` (+ `SKILL.md` entry; `CHANGELOG.md` if behavioral). Docs never change skill behavior.
 - `docs/` = documentation. Sole copy exception: trigger sync → `docs/product/*/commands.md` (ADR-0008).
 - Generated skills ≠ scripts — in a **governed project**, load `.governance/generated/skills/<name>/SKILL.md` (INSTALLED). This skill-distribution repo does not dogfood that tree; do not invent it here.
-- Classification: behavior → `references/`; knowledge → `docs/`; one ID = one file (`docs/README.md`).
+- Classification: behavior → `references/` (directory = semantic responsibility, [ADR-0026](docs/design-decisions/ADR-0026-references-taxonomy.md)); knowledge → `docs/`; one ID = one file (`docs/README.md`).
 - Three-layer: executor → `SKILL.md`; governed rules → `references/policies/`; this repo → this file.
 - This repo’s release scratch is `repo-tools/.release/proposal.json` (gitignored).
 

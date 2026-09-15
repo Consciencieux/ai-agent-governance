@@ -42,8 +42,8 @@ description: >-
 | 同步组 | `sync-groups.md` |
 | 确认凭证卫生 | `confirmation-hygiene.md` |
 | SSOT / 门禁修复 | `ssot-repair.md` |
-| Implementation Review | `review-mechanism.md` · `subskill-review-manager.md` |
-| 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskill-*.md` |
+| Implementation Review | `review-mechanism.md` · `subskills/subskill-review-manager.md` |
+| 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskills/subskill-*.md` |
 | Discovery Ledger（later） | `discovery-ledger.md` |
 
 完整清单以本节路由表与 `references/capabilities/` 目录为准。must-ship 覆盖的仓库侧索引是 REPO-ONLY，不进安装载荷。

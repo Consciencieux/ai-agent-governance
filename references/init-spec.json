@@ -316,56 +316,56 @@
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-ci-generator.md",
-      "source": "references/capabilities/subskill-ci-generator.md",
+      "source": "references/capabilities/subskills/subskill-ci-generator.md",
       "type": "copy",
       "description": "Capability leaf (subskill-ci-generator) — PLAN-0046 instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-drift-check.md",
-      "source": "references/capabilities/subskill-drift-check.md",
+      "source": "references/capabilities/subskills/subskill-drift-check.md",
       "type": "copy",
       "description": "Capability leaf (subskill-drift-check) — PLAN-0046 instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-governance-validator.md",
-      "source": "references/capabilities/subskill-governance-validator.md",
+      "source": "references/capabilities/subskills/subskill-governance-validator.md",
       "type": "copy",
       "description": "Capability leaf (subskill-governance-validator) — PLAN-0046 instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-plan-manager.md",
-      "source": "references/capabilities/subskill-plan-manager.md",
+      "source": "references/capabilities/subskills/subskill-plan-manager.md",
       "type": "copy",
       "description": "Capability leaf (subskill-plan-manager) — PLAN-0046 instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-release-manager.md",
-      "source": "references/capabilities/subskill-release-manager.md",
+      "source": "references/capabilities/subskills/subskill-release-manager.md",
       "type": "copy",
       "description": "Capability leaf (subskill-release-manager) — PLAN-0046 instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-repository-inspection.md",
-      "source": "references/capabilities/subskill-repository-inspection.md",
+      "source": "references/capabilities/subskills/subskill-repository-inspection.md",
       "type": "copy",
       "description": "Capability leaf (subskill-repository-inspection) — PLAN-0046 instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-review-manager.md",
-      "source": "references/capabilities/subskill-review-manager.md",
+      "source": "references/capabilities/subskills/subskill-review-manager.md",
       "type": "copy",
       "description": "Capability leaf (subskill-review-manager) — PLAN-0046 instruction surface"
     },
     {
       "phase": "A",
       "path": "docs/rules/capabilities/subskill-state-manager.md",
-      "source": "references/capabilities/subskill-state-manager.md",
+      "source": "references/capabilities/subskills/subskill-state-manager.md",
       "type": "copy",
       "description": "Capability leaf (subskill-state-manager) — PLAN-0046 instruction surface"
     },
@@ -421,7 +421,7 @@
     {
       "phase": "A",
       "path": "AGENTS.md",
-      "source": "references/templates/agents-md.template.md",
+      "source": "references/instruction/agents-md.template.md",
       "type": "template",
       "placeholders": {
         "PROJECT_NAME": "project_name",
@@ -828,7 +828,7 @@
     {
       "phase": "C",
       "path": ".governance/generated/skills/",
-      "source": "references/templates/sub-skills.md",
+      "source": "references/instruction/sub-skills.md",
       "type": "generated",
       "generator": "sub-skills",
       "description": "Generated sub-skills written by the Phase C sub-skills generator"

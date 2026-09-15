@@ -55,12 +55,15 @@ Generation-1 按**物理生成方式**给文件归类，而不是按**语义责�
 
 ## 解决情况
 
-**Resolved（2026-09-13 · PLAN-0049 H2c）。** 责任分类不再依赖「是否被 generator 使用」：`repo-tools/template-responsibility.v0.json` + `check-template-responsibility.js` 按 `instruction_source` / `machine_state_template` / `bootstrap_boilerplate` 对账 `references/templates/*`。本带**不**按 Gen1 骨架 bulk move；instruction capability 发现/路由由既有 capabilities 面承担。目录物理重排不是关闭条件。
+**Resolved（2026-09-13 · PLAN-0049 H2c）。** 责任分类不再依赖「是否被 generator 使用」。PLAN-0049 的责任图载体已随 PLAN-0055 删除。
+
+**物理拆分（2026-09-15 · PLAN-0056 / ADR-0026）。** 指令源现位于 `references/instruction/`（`agents-md.template.md`、`sub-skills.md`）；`references/templates/` 只收留物化模板。关闭条件 1–2 现有目录合同；条件 3 仍由 `references/capabilities/`（含 `subskills/`）路由，不拆 `sub-skills.md` 聚合正文。
 
 ## 关联
 
 - RESEARCH-0009
 - ADR-0022
+- ADR-0026
 - FINDING-0015
 - FINDING-0002
 - FINDING-0025
@@ -68,4 +71,4 @@ Generation-1 按**物理生成方式**给文件归类，而不是按**语义责�
 
 ## 回归保护
 
-`node repo-tools/check-template-responsibility.js --gate`：`references/templates/*` 必须全部出现在责任图且角色合法；增删模板而未更新图则失败。
+目录本身分责（ADR-0026）：`references/instruction/` vs `references/templates/`。INIT `source` 必须与文件存在对账（`check-role-completeness.js --gate`）。不恢复已删的 `check-template-responsibility.js`。

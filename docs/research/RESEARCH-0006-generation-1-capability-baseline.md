@@ -179,7 +179,7 @@ migration decision.
 
 ### INSTALLED instruction/workflow 产品面反向清单（v7）
 
-仅登记独立 capability，不复制正文。事实源：`init-spec` 非 script artifacts + `references/templates/sub-skills.md`（8 个生成技能）+ githooks。
+仅登记独立 capability，不复制正文。事实源：`init-spec` 非 script artifacts + `references/instruction/sub-skills.md`（8 个生成技能）+ githooks。
 
 #### Generated sub-skills（必须逐能力记账，禁止只写「lifecycle」）
 
@@ -419,7 +419,7 @@ Checker 层 KEEP/WRAP/EXTRACT 仍只在 PLAN-0035，与本列正交。ADR-0014 �
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 审查管理器（Review manager） | PLAN-0007 | `references/templates/sub-skills.md` 第 8 节 | `must-ship` Implementation Review；Phase 7 可换载体 |
+| 审查管理器（Review manager） | PLAN-0007 | `references/instruction/sub-skills.md` 第 8 节 | `must-ship` Implementation Review；Phase 7 可换载体 |
 | 分级审查门禁 | PLAN-0009 | `references/workflows/release.md` 风险分级 | `must-ship` 发布风险分级；权威单一（ADR-0020） |
 | 审查后积压修复 | PLAN-0015 | broken-links 集群 + consistency | 作历史证据；链接有效性已 CTRL-0006 `must-ship` |
 | 提交确认政策（Consent；提交前一次确认） | PLAN-0013 | release-manager consent + git.policy | `must-ship` HITL 不变量；手续按 ADR-0024 §8 削薄；单一权威 git.policy |

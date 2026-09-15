@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- References taxonomy (ADR-0026): instruction sources live in `references/instruction/`; subskill leaf cards in `references/capabilities/subskills/`; `templates/` is materialization only.
+
 - `check:must-ship` runs via Node (`repo-tools/check-must-ship.js`) instead of bash, so the CI local gate works on Windows without Git Bash/WSL.
 
 - Skill-release sync-point docs: sentinel lives in `scripts/lib/generate/run.js`; Phase 1 no longer points at a removed roadmap Deferred release-safety section.

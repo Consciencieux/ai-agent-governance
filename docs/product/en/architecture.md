@@ -97,10 +97,11 @@ ai-agent-governance/
 ├── SKILL.md                    # thin always-on entry + capability routing (not policy encyclopedia)
 ├── references/                 # skill body — the only place skill behavior lives
 │   ├── init-spec.json          # machine-readable INIT spec (source for generate-governance.js)
-│   ├── templates/
-│   │   ├── agents-md.template.md   # AGENTS.md template
+│   ├── instruction/                # executable instruction sources (ADR-0026; not templates)
+│   │   ├── agents-md.template.md   # AGENTS.md runtime contract source
+│   │   └── sub-skills.md           # source for generated skills; each becomes .governance/generated/skills/<name>/SKILL.md
+│   ├── templates/                  # materialization only (bootstrap / machine-state)
 │   │   ├── feature-doc.template.md # feature doc template (anti-fabrication rules)
-│   │   ├── sub-skills.md           # source for generated skills; each becomes .governance/generated/skills/<name>/SKILL.md, not a script
 │   │   ├── env-example.template.md # .env.example template (placeholders, dependency-trimmed)
 │   │   ├── gitmessage.template.md  # .gitmessage.txt template (commit conventions)
 │   │   ├── git-policy.template.md  # .governance/git-policy.json template (Git workflow policy)
@@ -110,7 +111,10 @@ ai-agent-governance/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # protected files + .governance git-tracking policy
 │   ├── capabilities/               # Capability leaf authorities (Phase 5c; INIT → docs/rules/capabilities/)
-│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md / subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md / sync-groups.md
+│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / sync-groups.md
+│   │   └── subskills/
+│   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
+│   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md
 │   ├── principles/                 # Portable methodology (PLAN-0037; SKILL-INTERNAL — not INIT-installed)
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
@@ -187,7 +191,8 @@ ai-agent-governance/
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
-│   └── package-skill.sh        # release payload tarball packaging
+│   ├── package-skill.sh        # release payload tarball packaging
+│   └── .release/proposal.json  # gitignored skill-release scratch (not tracked)
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
 │   ├── changelog-policy.md      # repo CHANGELOG policy (REPO-ONLY; AGENTS 放指针)
 │   └── skill-release.md        # skill repo release flow (five version sync points + tag, tarball build)

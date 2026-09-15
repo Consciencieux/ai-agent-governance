@@ -130,7 +130,7 @@ Complete annotated initialization output: [docs/product/en/bootstrap-output.md](
 
 ## Generated Environment
 
-INIT generates a governance skeleton whose exact contract — inputs, artifacts, installed scripts, rule files and generated sub-skills — is defined in [references/init-spec.json](references/init-spec.json) and [references/templates/sub-skills.md](references/templates/sub-skills.md).
+INIT generates a governance skeleton whose exact contract — inputs, artifacts, installed scripts, rule files and generated sub-skills — is defined in [references/init-spec.json](references/init-spec.json) and [references/instruction/sub-skills.md](references/instruction/sub-skills.md).
 
 ## Documentation
 
