@@ -35,7 +35,7 @@ Pointers only. **payload** = ships with skill; **repo** = this repository only.
 | Distribution roles (declared, never inferred) | `references/init-spec.json` · `docs/product/en/architecture.md` § Three distribution roles | repo |
 | Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
 | Repo gate promotion (daily allowlist) | `repo-tools/daily-check-surface.v0.json` · `repo-tools/check-daily-check-surface.js` | repo |
-| Reference closure | `CONTRIBUTING.md` § Reference-closure check · `SKILL.md` Audit step 3 | both |
+| Reference closure | `references/policies/testing.policy.md` § 引用闭合 · `SKILL.md` Audit step 3 | both |
 | Change placement and residue cleanup | `references/policies/coding.policy.md` · `references/policies/lifecycle.policy.md` | payload |
 | Root-cause repair + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
 | Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 · ADR-0021 | payload |
@@ -80,7 +80,7 @@ Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 - CHANGELOG format: lifecycle § 结构契约; repo accession: `repo-workflows/changelog-policy.md` (ADR-0012).
 - Plans: `docs/plans/` → `status: Archived` (archive ≠ Release, ADR-0016); declare `Target` + status.
 - Validate: [CONTRIBUTING.md](CONTRIBUTING.md) § Validation — narrowest `check:*`; real output; never “should pass”.
-- Reference-closure: CONTRIBUTING § Reference-closure · SKILL Audit step 3 — green gates ≠ target-usable.
+- Reference-closure: `references/policies/testing.policy.md` § 引用闭合 · SKILL Audit step 3 — green gates ≠ target-usable.
 
 ## Conventions
 

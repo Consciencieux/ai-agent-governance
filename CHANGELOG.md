@@ -40,6 +40,8 @@ All notable changes to this project will be documented here.
 
 - Skill-release sync-point docs: sentinel lives in `scripts/lib/generate/run.js`; Phase 1 no longer points at a removed roadmap Deferred release-safety section.
 
+- Reference closure: canonical protocol restored as `references/policies/testing.policy.md` § 引用闭合 (generalized for both profiles after the CONTRIBUTING simplification); `AGENTS.md` principles index and always-on pointer updated.
+
 ## [2.1.1] - 2026-09-14
 
 ### Changed
