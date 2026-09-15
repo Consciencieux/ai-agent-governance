@@ -15,7 +15,7 @@ description: >-
 
 > **薄入口：** 本文件是 always-on 路由层——身份、进入模式、优先级、权限摘要与指向 `references/` 的指针。详细政策 / 工作流 / 生命周期正文**不**作为 always-on 全文；按任务加载对应 `references/policies/*`、`references/workflows/*`、`references/capabilities/*` 与生成子技能。禁止把 lifecycle 全文或全部子技能 checklist 塞进本入口。
 
-> **可复用原则包：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树、CTRL 编号或 Phase/PLAN 剧本当 portable L1。
+> **可复用原则包：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树或 Phase/PLAN 剧本当 portable L1。INSTALLED 权威正文不得嵌入 skill 仓施工 ID（`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`）；已交付的 `CTRL-*` 控制名除外。
 
 > **能力叶路由：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + `references/capabilities/` 目录为准；仓库侧覆盖索引是 REPO-ONLY，不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链本仓 `docs/` 路径）。
 

@@ -67,6 +67,7 @@ Match the narrowest row by `git diff --name-only` prefix. When scope is uncertai
 | `npm run check:tests` | `tests/`, `.gitattributes` changed | test + hygiene |
 | `npm run check:full` | default, uncertain scope, or explicit full request | test + parity + layout + consistency + hygiene + role-completeness |
 | `npm run check:all` | audit, or explicit full audit | check + freshness + plan delivery |
+| `npm run check:file-size` | file-size / obesity smell, or audit | advisory line budgets (`--gate` fails on review tier only); not on daily `check` |
 | `npm run check:must-ship` | merge / release CI | must-ship mechanical set only |
 
 ### What each gate proves (evidence tiers)
@@ -81,6 +82,7 @@ Match the narrowest row by `git diff --name-only` prefix. When scope is uncertai
 | `check-role-completeness.js --gate` | role classification / packaging | mechanical | distribution contract complete |
 | `check-doc-freshness.js` | stale docs / translation lag | mechanical (report; `--release-gate` blocks) | no mechanical staleness detected |
 | `check-plan-delivery.js` | plan declarations vs delivered paths | mechanical | declared files/ids present |
+| `check-file-size-budget.js` | soft/review line budgets by object class | advisory (mechanical count; human decides split) | over soft/review listed; not a split verdict |
 | `verify_governance.js` | governance artifact existence | mechanical | default mode here fails by design (ADR-0006) |
 
 Evidence tiers: **mechanical** = marker/path/structure/existence (pass ≠ “behavior correct”); **human-attested** = requires human review (no automated gate emits this today); **unverified claim** = declaration without independent check.

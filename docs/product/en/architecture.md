@@ -197,6 +197,7 @@ ai-agent-governance/
 │   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
 │   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
 │   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
+│   ├── check-file-size-budget.js # advisory line-count budgets (soft/review; human-confirmed split)
 │   ├── check-daily-check-surface.js # daily npm run check allowlist gate (PLAN-0055)
 │   ├── daily-check-surface.v0.json # allowlist data for check-daily-check-surface.js
 │   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)

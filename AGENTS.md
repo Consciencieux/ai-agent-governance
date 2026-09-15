@@ -4,6 +4,10 @@ Guidelines for agents on this **skill distribution repo** (not a governed produc
 
 Thin entry ([ADR-0022](docs/design-decisions/ADR-0022-agent-instruction-architecture.md)): invariants + routing only — **do not** restate linked authorities here.
 
+**Always-on — producer ≠ skill product:** Skill payload (`SKILL.md` + `references/` + `scripts/`) MUST NOT embed this repo's construction IDs (`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`), and REPO-ONLY `tests/` MUST NOT require those IDs in INSTALLED bodies. `CTRL-*` product controls are allowed. Map: [architecture.md](docs/product/en/architecture.md) § Third axis · [ADR-0020](docs/design-decisions/ADR-0020-producer-product-governance-separation.md) I5. Gate: `payload` suite (no producer IDs).
+
+**Always-on — file size budget (advisory):** Line count is a smell, not a verdict. Over soft/review → report + propose a split plan; **do not** auto-trim or hard-split without explicit human confirmation. Map: [docs/README.md](docs/README.md) § 顾问级行数预算. Carrier: `node repo-tools/check-file-size-budget.js` (`npm run check:file-size`).
+
 ## Governance principles index
 
 Pointers only. **payload** = ships with skill; **repo** = this repository only.
@@ -46,6 +50,7 @@ Pointers only. **payload** = ships with skill; **repo** = this repository only.
 | Governance Control Model | [ADR-0023](docs/design-decisions/ADR-0023-governance-control-model.md) · RESEARCH-0010 | repo |
 | 2.x product path | [ADR-0025](docs/design-decisions/ADR-0025-gen2x-product-path.md) | repo |
 | Artifact placement | `docs/README.md` § 东西放哪里 · FINDING-0030 | repo |
+| File size budget (advisory) | `docs/README.md` § 顾问级行数预算 · `repo-tools/check-file-size-budget.js` | repo |
 
 Index honesty gates: `node repo-tools/check-doc-consistency.js --gate`. Terminology: `node repo-tools/check-terminology.js`. Release-only: pending-archive / changelog-coverage via `repo-workflows/skill-release.md`.
 
@@ -54,6 +59,7 @@ Index honesty gates: `node repo-tools/check-doc-consistency.js --gate`. Terminol
 Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 
 - Skill behavior → `references/` (+ `SKILL.md` entry; `CHANGELOG.md` if behavioral). Docs never change skill behavior.
+- Producer/product: payload text ≠ this repo's docs/findings/plans/ADR system (always-on I5 above). `docs/` / `tests/` / `repo-tools/` = REPO-ONLY.
 - `docs/` = documentation. Sole copy exception: trigger sync → `docs/product/*/commands.md` (ADR-0008).
 - Generated skills ≠ scripts — in a **governed project**, load `.governance/generated/skills/<name>/SKILL.md` (INSTALLED). This skill-distribution repo does not dogfood that tree; do not invent it here.
 - Classification: behavior → `references/` (directory = semantic responsibility, [ADR-0026](docs/design-decisions/ADR-0026-references-taxonomy.md); obligation class = INSTALLED `capability-enforcement.json`); knowledge → `docs/`; one ID = one file (`docs/README.md`).

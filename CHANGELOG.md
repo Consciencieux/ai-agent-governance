@@ -8,6 +8,8 @@ All notable changes to this project will be documented here.
 
 - FINDING-0031 (Confirmed): citing Resolved/Accepted authority must not substitute for a user-requested re-judgment; conversational control gap (no mechanical carrier).
 
+- Repo-only advisory file-size budgets: `repo-tools/check-file-size-budget.js` / `npm run check:file-size` (layered soft/review thresholds; human-confirmed split protocol; not on daily `check`).
+
 ### Changed
 
 - References taxonomy (ADR-0026): instruction sources live in `references/instruction/`; subskill leaf cards in `references/capabilities/subskills/`; `templates/` is materialization only.
@@ -16,7 +18,7 @@ All notable changes to this project will be documented here.
 
 - INSTALLED capability leaves: strip producer construction provenance (PLAN/ADR/FINDING headers and body pointers, Role/Disposition/Classification dual-write); inventory `leaf` stays authoring paths under `references/capabilities/` (including `subskills/`).
 
-- Producer/product content boundary (ADR-0020 I5): skill payload (`SKILL.md` + `references/` + `scripts/`) must not embed this repo's `PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*` IDs; operational map in `docs/product/*/architecture.md` § Third axis; `tests/` remain REPO-ONLY and must not force those IDs into INSTALLED bodies.
+- Producer/product content boundary (ADR-0020 I5): skill payload (`SKILL.md` + `references/` + `scripts/`) must not embed this repo's `PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*` IDs; operational map in `docs/product/*/architecture.md` § Third axis; `tests/` remain REPO-ONLY and must not force those IDs into INSTALLED bodies. Judgment-language suite renamed to `judgment-language.test.js`. Always-on hard rule in this repo's `AGENTS.md`; one-line boundary in `SKILL.md`.
 
 - `check:must-ship` runs via Node (`repo-tools/check-must-ship.js`) instead of bash, so the CI local gate works on Windows without Git Bash/WSL.
 

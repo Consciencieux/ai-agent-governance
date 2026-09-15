@@ -170,6 +170,7 @@ ai-agent-governance/
 │   ├── check-plan-delivery.js  # 计划声明 vs 实际交付（归档前门禁）
 │   ├── check-role-completeness.js # 分发角色完整性（未分类/重叠/失效路径/打包边界 + repo-only 反向检查）
 │   ├── check-coding-hygiene.js # 编码卫生（测试归属 + 残留标记）
+│   ├── check-file-size-budget.js # 顾问级行数预算（soft/review；人确认后拆分）
 │   ├── check-daily-check-surface.js # 日常 npm run check 允许名单门禁（PLAN-0055）
 │   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允许名单数据
 │   ├── check-terminology.js    # repo-owned 术语门禁（从 INSTALLED 一致性检查器拆出；ADR-0020 首次执行分离）

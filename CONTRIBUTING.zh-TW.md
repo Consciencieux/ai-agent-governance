@@ -67,6 +67,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 | `npm run check:tests` | 變更 `tests/`、`.gitattributes` | test + hygiene |
 | `npm run check:full` | 預設、範圍不定、或顯式全量 | test + parity + layout + consistency + hygiene + role-completeness |
 | `npm run check:all` | 巡檢或顯式全量巡檢 | check + freshness + plan delivery |
+| `npm run check:file-size` | 檔案肥胖訊號 / 巡檢 | 顧問級行數預算（`--gate` 僅 review 檔失敗）；不在日常 `check` |
 | `npm run check:must-ship` | 合入 / 發佈 CI | 僅 must-ship 機械集合 |
 
 ### 各閘門證明什麼（證據分層）
@@ -81,6 +82,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 | `check-role-completeness.js --gate` | 角色分類 / 打包 | mechanical | 分發契約完整 |
 | `check-doc-freshness.js` | 陳舊文件 / 譯文落後 | mechanical（報告；`--release-gate` 阻斷） | 未檢出機械陳舊 |
 | `check-plan-delivery.js` | 計劃聲明 vs 交付路徑 | mechanical | 聲明檔案/識別存在 |
+| `check-file-size-budget.js` | soft/review 行數預算（依物件類） | advisory（機械計數；是否拆分由人定） | 列出超 soft/review；不是拆分裁決 |
 | `verify_governance.js` | 治理產物存在性 | mechanical | 本倉預設模式按設計失敗（ADR-0006） |
 
 證據分層：**mechanical** = 標記/路徑/結構/存在（通過 ≠「行為正確」）；**human-attested** = 需人工（目前無自動閘門產出）；**unverified claim** = 僅聲明、無獨立核驗。

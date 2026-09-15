@@ -49,24 +49,24 @@
     "necessity=retire ⇒ disposition=retire; file may be deleted only after refs cleared.",
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
-  "summary": {
-    "total": 52,
+    "summary": {
+    "total": 53,
     "by_disposition": {
-      "keep": 48,
+      "keep": 49,
       "wrap": 4
     },
     "by_generation": {
       "gen1_carrier": 14,
-      "gen2_native": 35,
+      "gen2_native": 36,
       "dual_profile": 3
     },
     "by_role": {
-      "REPO-ONLY": 16,
+      "REPO-ONLY": 17,
       "INSTALLED": 34,
       "SKILL-INTERNAL": 2
     },
     "by_necessity": {
-      "repo_gate": 15,
+      "repo_gate": 16,
       "must_ship": 6,
       "product_cli": 31
     },
@@ -122,6 +122,7 @@
         "repo-tools/check-doc-consistency.js",
         "repo-tools/check-doc-freshness.js",
         "repo-tools/check-doc-parity.js",
+        "repo-tools/check-file-size-budget.js",
         "repo-tools/check-layout-sync.js",
         "repo-tools/check-must-ship-carriers.js",
         "repo-tools/check-must-ship.js",
@@ -1036,6 +1037,23 @@
       "last_touch": "2026-09-13",
       "dogfood_from_repo_package_json": false,
       "notes": "FINDING-0016 slice: Unreleased verification-narration markers fail-closed under --gate (wired via check-doc-consistency WRAP). Not INSTALLED.",
+      "necessity": "repo_gate"
+    },
+    {
+      "path": "repo-tools/check-file-size-budget.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "file_size_budget",
+      "baseline": {
+        "ref": "v1.0.2",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-15",
+      "last_touch": "2026-09-15",
+      "dogfood_from_repo_package_json": true,
+      "notes": "Advisory line-count budgets (docs/README). npm run check:file-size; not on daily check surface. --gate fails only on review tier. No auto-split.",
       "necessity": "repo_gate"
     }
   ],
