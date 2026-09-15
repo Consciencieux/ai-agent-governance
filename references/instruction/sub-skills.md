@@ -4,8 +4,8 @@
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.json",
-  "skills": { "paths": [".governance/generated/skills"] }
+ "$schema": "https://opencode.ai/config.json",
+ "skills": { "paths": [".governance/generated/skills"] }
 }
 ```
 
@@ -97,7 +97,7 @@ description: Use at the end of any agent task to persist progress into .governan
 
 # State Manager
 
-State machine: `understand → plan → implement → validate → synchronize → report`, plus terminal states `completed / blocked / failed`. Any facet failure → `blocked`/`failed`. On crash/recovery, read `facet` (legacy alias: `phase`) to find the resume point — never re-run completed items, never skip facets. `facet` is a ContextFacet on the operational lifecycle (FINDING-0029 / ADR-0022); it is not a capability taxonomy axis and is not INIT Phase A|B|C.
+State machine: `understand → plan → implement → validate → synchronize → report`, plus terminal states `completed / blocked / failed`. Any facet failure → `blocked`/`failed`. On crash/recovery, read `facet` (legacy alias: `phase`) to find the resume point — never re-run completed items, never skip facets. `facet` is a ContextFacet on the operational lifecycle; it is not a capability taxonomy axis and is not INIT Phase A|B|C.
 
 At the end of every task (or on interruption), update `.governance/state.json`:
 
@@ -144,12 +144,12 @@ description: Use to detect governance drift in this repo — compare declared ar
 1. Run: `node scripts/verify-governance.js --json`
 2. Read `.governance/manifest.json`: `governance_version` + declared `artifacts`
 3. Compute drift:
-   - missing artifacts: declared in manifest but absent on disk (from validator results)
-   - version drift: `governance_version` now vs last recorded in `.governance/validation.json`
+ - missing artifacts: declared in manifest but absent on disk (from validator results)
+ - version drift: `governance_version` now vs last recorded in `.governance/validation.json`
 4. Write `.governance/drift-report.json`:
-   ```json
-   {"timestamp":"<ISO>","governance_version":"<X>","missing":[],"versionDrift":false}
-   ```
+ ```json
+ {"timestamp":"<ISO>","governance_version":"<X>","missing":[],"versionDrift":false}
+ ```
 5. Propose minimal fixes only — no rebuild, no restructure, no migration. Governance-file changes require user confirmation (see Governance File Protection).
 
 **activity-report mode** — aggregate the audit trail (`.governance/activity.jsonl`):
@@ -167,9 +167,9 @@ description: Use to detect governance drift in this repo — compare declared ar
 4. Mandatory-doc pair (`docs/ARCHITECTURE.md`, `CHANGELOG.md`) reported first; feature docs (`docs/features/`) included
 5. Translation freshness (trilingual trees only; 简体中文 is the source): per source/translation pair compare last commit times — source committed after the translation (or source carrying uncommitted edits) → `stale`; source+translation edited in the same uncommitted changeset → in flight, not stale; `<!-- i18n-status: draft -->` marks in-flight work; `<!-- i18n-reviewed: <sha> -->` records a human verdict that covers the source's current state (a marker that no longer covers it goes stale again)
 6. Append the result to `.governance/drift-report.json` (nested under `freshness` and `translationFreshness`):
-   ```json
-   {"freshness": {"stale": ["docs/ARCHITECTURE.md"], "veryStale": []}, "translationFreshness": {"stale": [], "draft": []}}
-   ```
+ ```json
+ {"freshness": {"stale": ["docs/ARCHITECTURE.md"], "veryStale": []}, "translationFreshness": {"stale": [], "draft": []}}
+ ```
 7. Default mode exits 0 — freshness is advisory (stable low-commit projects may show stale docs). The release form `node scripts/check-doc-freshness.js --release-gate` FAILS (exit 1) when a translation is `stale` or `draft` — the release-manager sub-skill runs it as a Phase 4 release gate
 
 **consistency mode** — flag cross-document contradictions. Run `node scripts/check-doc-consistency.js --json` (or `npm run governance-consistency` if registered):
@@ -269,9 +269,9 @@ Only after explicit approval:
 6. Run `node scripts/verify-governance.js`; exit code must be 0.
 7. Refresh the proposal: **re-run `node scripts/release-manager.js plan`** (HEAD has advanced to the release commit) so `headSha`, `recommended` and `provenance` are rebuilt together into `.governance/release-proposal.json`. NEVER hand-edit that JSON to change `headSha`/`recommended`: `execute` recomputes `provenance` (bound to current/recommended/releaseType/riskLevel/reviewRecommendation/reviewStatus/headSha) and rejects any edited proposal. Run plan first, then execute.
 8. `node scripts/release-manager.js execute --proposal .governance/release-proposal.json --yes` (creates the annotated tag; `--yes` is the recorded approval — without it the tool refuses all writes; it re-verifies clean tree + `headSha`).
-9. `git push origin main` → `git push origin vX.Y.Z` — write operations, user confirmation required.
-10. `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`. gh missing/unauthenticated → ⚠️ Blocked with reason.
-11. Package and attach the distributable when the project ships one (use the project's own packaging command, e.g. an npm script or build task), then attach it: `gh release upload vX.Y.Z <artifact>`; verify the uploaded asset is listed on the release. Skip when the project publishes no artifact.
+9. Push the **approved release branch** (not a hard-coded `main`) and the tag: `git push -u origin HEAD:refs/heads/$(git rev-parse --abbrev-ref HEAD)` then `git push origin vX.Y.Z`. Prefer merging to the default branch first. Write operations still require user confirmation.
+10. **Optional GitHub Release:** only if the project uses GitHub Releases — `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`. Skip (and say so) when `gh` is missing/unauthenticated, or the host is not GitHub Releases; an annotated tag on the remote is enough.
+11. Package and attach a distributable only when the project ships one (project packaging command → `gh release upload` or host equivalent). Skip when there is no artifact.
 12. Set `manifest.release.validated` to `true`, re-run validator, record into `.governance/validation.json`.
 
 ## Uncertainty
@@ -284,7 +284,7 @@ If you cannot determine whether a change is breaking or a feature: mark it Poten
 
 ## Permissions
 
-`plan` is read-only and may run automatically. Git tag, push, and `gh release create` are write operations — they run ONLY after an explicit developer approval (the approval covers this release's write sequence); state intent and wait for confirmation. Modifying this sub-skill or manifest `release` fields follows the Governance File Protection flow.
+`plan` is read-only and may run automatically. Git tag and push are write operations — they run ONLY after an explicit developer approval (the approval covers this release's write sequence); state intent and wait for confirmation. `gh release create` is optional and only when the project uses GitHub Releases. Modifying this sub-skill or manifest `release` fields follows the Governance File Protection flow.
 ````
 
 ---
@@ -350,12 +350,12 @@ Archiving happens at RELEASE (release-manager), NOT here.
 ````
 ## 8. review-manager
 
-> **Phase 7 边界（PLAN-0043 / ADR-0024）：** 本子技能 = **Implementation Review only**（must-ship）。不负责 System Review（架构 / control topology）或 Research Review（评价与研究主张）。后两类是 repo-keep，默认不进入 INSTALLED 子技能。触发「全面审查」若实为架构/研究问题，应改走 `system_review` / `research_review`，而不是扩大下面五域。
+> **Phase 7 边界：** 本子技能 = **Implementation Review only**（must-ship）。不负责 System Review（架构 / control topology）或 Research Review（评价与研究主张）。后两类是 repo-keep，默认不进入 INSTALLED 子技能。触发「全面审查」若实为架构/研究问题，应改走 `system_review` / `research_review`，而不是扩大下面五域。
 
 ````
 ---
 name: review-manager
-description: Perform a review across two independent dimensions — depth (lightweight quick pass vs full audit: line-by-line, dev-plan cross-reference, execution-level verification, distrust-of-gates) and scope (the change set by default, a specified path, or the whole project). Triggers on "review this" · "review the changes" · "audit recent changes" · "review my changes" · "审核一下" (light/change-set) · "deep review" · "full review" · "全面审查" · "彻底审查" · "逐行审查" (full/change-set) · "review the whole project" · "全项目审核" (light/whole-project) · "audit everything" · "全项目彻查" (full/whole-project); append a path argument to scope it (review <path> / deep review <path> / 审核 <路径>). Implementation Review only — not System/Research review (ADR-0024 repo-keep; RESEARCH-0012).
+description: Perform a review across two independent dimensions — depth (lightweight quick pass vs full audit: line-by-line, dev-plan cross-reference, execution-level verification, distrust-of-gates) and scope (the change set by default, a specified path, or the whole project). Triggers on "review this" · "review the changes" · "audit recent changes" · "review my changes" · "审核一下" (light/change-set) · "deep review" · "full review" · "全面审查" · "彻底审查" · "逐行审查" (full/change-set) · "review the whole project" · "全项目审核" (light/whole-project) · "audit everything" · "全项目彻查" (full/whole-project); append a path argument to scope it (review <path> / deep review <path> / 审核 <路径>). Implementation Review only — not System/Research review (those stay repo-keep).
 ---
 
 # Review Manager
@@ -383,9 +383,9 @@ Both modes run the same 5 domains (fixed, no dynamic expansion in v1):
 ## Lightweight workflow
 
 1. **Determine scope** — resolve the scope dimension first, then collect files:
-   - **Change set (default)** — `git diff <baseline>..HEAD` + `git status --porcelain` (uncommitted); baseline defaults to the last review point (manually specified in v1, no auto-recording). Includes directly affected files (tests affected by changed scripts, generated artifacts affected by changed policies).
-   - **Specified path** — every file under the given path glob including subdirectories, **not limited to what changed**.
-   - **Whole project** — all repository files, **excluding** `node_modules/`, build output, `.git/`.
+ - **Change set (default)** — `git diff <baseline>..HEAD` + `git status --porcelain` (uncommitted); baseline defaults to the last review point (manually specified in v1, no auto-recording). Includes directly affected files (tests affected by changed scripts, generated artifacts affected by changed policies).
+ - **Specified path** — every file under the given path glob including subdirectories, **not limited to what changed**.
+ - **Whole project** — all repository files, **excluding** `node_modules/`, build output, `.git/`.
 2. **Dispatch parallel subagents** — the 5 fixed domains above, one pass each.
 3. **Summarize** — sorted by severity (severe / general / trivial), each with file path + line number + evidence.
 4. **Fix** — severe and general must be fixed; trivial items reported for the user to decide.

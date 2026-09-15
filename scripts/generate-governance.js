@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// INIT Scripted Generator — thin CLI (PLAN-0055 Stage 3 EXTRACT).
+// INIT Scripted Generator — thin CLI ( Stage 3 EXTRACT).
 // External CLI unchanged. Implementation: scripts/lib/generate/run.js
-// Gen1 monolith discarded (PLAN-0055): rewrite from current obligations; do not resurrect accretion.
+// Gen1 monolith discarded : rewrite from current obligations; do not resurrect accretion.
 
 "use strict";
 

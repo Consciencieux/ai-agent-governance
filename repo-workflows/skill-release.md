@@ -121,18 +121,32 @@ node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"typ
     node scripts/release-manager.js execute --proposal repo-tools/.release/proposal.json --yes
     ```
 
-11. **推送**：`git push origin main` → `git push origin vX.Y.Z`
-12. **创建 Release**：`gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`
-13. **打包并上传技能载荷资产**：
+11. **推送**：推送**当前已批准发布的分支**（通常是合入后的默认分支），不要写死 `main`：
 
     ```bash
-    bash repo-tools/package-skill.sh vX.Y.Z
-    gh release upload vX.Y.Z dist/ai-agent-governance-skill.tar.gz
+    BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+    # 若处于 detached HEAD，先检出默认分支或带 release commit 的分支再推
+    git push -u origin "HEAD:refs/heads/${BRANCH}"
+    git push origin "vX.Y.Z"
     ```
+
+    推荐流程：特性分支 → PR → 合入默认分支 → 在默认分支上完成 release commit / tag → 再推送。禁止 force-push 受保护分支。
+
+12. **创建 GitHub Release（说明文字）**：`gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`（可暂不附资产）。`gh` 未登录/未安装 → ⚠️ Blocked。
+
+13. **技能载荷 tarball（优先 CI）**：
+
+    - **默认**：推送 tag 后由 `.github/workflows/skill-payload-release.yml` 在 Linux 上运行 `repo-tools/package-skill.sh`，并将 `dist/ai-agent-governance-skill.tar.gz` 上传到该 Release（避免本机 macOS 打包引入 `._*` 元数据）。
+    - **回退（CI 不可用时）**：本机执行：
+
+      ```bash
+      bash repo-tools/package-skill.sh vX.Y.Z
+      gh release upload vX.Y.Z dist/ai-agent-governance-skill.tar.gz --clobber
+      ```
 
     校验两项，缺一不可：
     - **内容白名单**：`tar -tzf` 列出的内容只含载荷（`SKILL.md` + `references/` + `scripts/` + `LICENSE`），不得含 `docs/`、`tests/`、`README` 等基础设施文件。
-    - **校验和**：记录 tarball 的 SHA-256（`shasum -a 256 dist/ai-agent-governance-skill.tar.gz`），随 Release Notes 一并发布，供安装方核对下载完整性。
+    - **校验和**：记录 tarball 的 SHA-256（`shasum -a 256 dist/ai-agent-governance-skill.tar.gz`），写入 Release Notes，供安装方核对。
 
 ## 安全规则
 
@@ -140,6 +154,6 @@ AI 不得自动创建 tag、push tag、创建 release，除非：已生成 Relea
 
 批准后、执行前，必须重新检查 git HEAD 与 git status。任一变化 → 取消流程，重新 plan。
 
-**事务性**：任何前置检查失败 → 在开始写操作之前中止，不触碰仓库。进入写操作后（版本同步 → 归档 → release commit → tag → push → GitHub Release → 资产上传）必须连续完成；任一步失败立即停止，报告 ⚠️/❌ 与已完成/未完成清单，**不得改用别的方式重试**。tag 已创建但 GitHub Release 创建失败 → **不删除 tag、不强制重来**；报告 ⚠️ Blocked，由用户决定补建 release 或清理。
+**事务性**：任何前置检查失败 → 在开始写操作之前中止，不触碰仓库。进入写操作后（版本同步 → 归档 → release commit → tag → push 分支与 tag → GitHub Release 说明 → 资产由 CI 或本机回退上传）必须连续完成；任一步失败立即停止，报告 ⚠️/❌ 与已完成/未完成清单，**不得改用别的方式重试**。tag 已创建但 GitHub Release / 资产上传失败 → **不删除 tag、不强制重来**；报告 ⚠️ Blocked，由用户决定补建 release、等 CI、或本机回退上传。
 
 **恢复**：中断后依据 `git log`（release commit / tag 是否已创建、push 是否到达远端）与 `repo-tools/.release/proposal.json`（`headSha` 指向哪个提交）判断已完成步骤，**仅重做未完成部分**——已完成并推送的提交与 tag 绝不重做或强推。技能仓库无 `validation.json`，`git log` + proposal 即恢复依据。

@@ -1,18 +1,18 @@
-// EXTRACTED body of scripts/generate-governance.js (PLAN-0055 Stage 3).
+// EXTRACTED body of scripts/generate-governance.js ( Stage 3).
 // SKILL-INTERNAL with scripts/generate-governance.js thin CLI.
-// Gen1 monolith discarded (PLAN-0055); extend this module from current INIT obligations only.
+// Gen1 monolith discarded ; extend this module from current INIT obligations only.
 "use strict";
 
 // INIT Scripted Generator — deterministic, snapshot-testable governance scaffolding.
 // Usage:
-//   node scripts/generate-governance.js --target <dir> --project-name <name> [--phase A|B|C] [--dry-run] [--json]
-//   node scripts/generate-governance.js --target <dir> --file <input.json>
+// node scripts/generate-governance.js --target <dir> --project-name <name> [--phase A|B|C] [--dry-run] [--json]
+// node scripts/generate-governance.js --target <dir> --file <input.json>
 // Exit 0: success · Exit 1: error · Exit 2: usage error
 //
 // Determinism contract (per plan init-scripted-generator.md):
-//   - Same inputs -> byte-identical outputs (no timestamps, no randomness)
-//   - Existing files are SKIPPED, never overwritten (merge-not-overwrite is Phase C)
-//   - The single source of truth for the artifact list is references/init-spec.json
+// - Same inputs -> byte-identical outputs (no timestamps, no randomness)
+// - Existing files are SKIPPED, never overwritten (merge-not-overwrite is Phase C)
+// - The single source of truth for the artifact list is references/init-spec.json
 
 const fs = require("fs");
 const path = require("path");
@@ -140,9 +140,9 @@ function extractCodeBlock(raw) {
 }
 
 // Stage-conditional template content (N20). A template may wrap clauses in
-//   <!-- phase:A -->  ... <!-- /phase -->      keep in Phase A only
-//   <!-- phase:B+ --> ... <!-- /phase -->      keep from Phase B onward
-//   <!-- phase:C -->  ... <!-- /phase -->      keep in Phase C only
+// <!-- phase:A -->... <!-- /phase --> keep in Phase A only
+// <!-- phase:B+ -->... <!-- /phase --> keep from Phase B onward
+// <!-- phase:C -->... <!-- /phase --> keep in Phase C only
 // Rationale: AGENTS.md is a Phase A artifact, but the gate scripts it commands are
 // installed in Phase B. Emitting those clauses at Phase A produced a project whose own
 // AGENTS.md ordered the agent to run files that do not exist. Unmarked content is
@@ -268,7 +268,7 @@ const PREFLIGHT_CONTENT = JSON.stringify({
 }, null, 2) + "\n";
 
 function generateState(inputs) {
-  // H2a / FINDING-0029: operational progress dimension is `facet` (ContextFacet).
+  // H2a / : operational progress dimension is `facet` (ContextFacet).
   // Dual-write legacy `phase` during the compatibility window; readers MUST prefer
   // `facet` and fall back to `phase`. INIT Phase A|B|C is a different axis — untouched.
   const facet = "completed";
@@ -348,8 +348,8 @@ function generateCi(inputs, skillDir) {
   return tpl.endsWith("\n") ? tpl : tpl + "\n";
 }
 
-// Sub-skills generator — splits references/templates/sub-skills.md into one file per
-// sub-skill: .governance/generated/skills/<name>/SKILL.md. Each template section is
+// Sub-skills generator — splits references/instruction/sub-skills.md into one file per
+// sub-skill:.governance/generated/skills/<name>/SKILL.md. Each template section is
 // "## N. <name>" followed by a fenced block whose body is the sub-skill file itself.
 function parseSubSkills(md) {
   const out = [];
@@ -422,7 +422,7 @@ function generateSkillRegistry(md, phase, targetAbs) {
 }
 
 function generateSubSkills(inputs, skillDir, targetAbs, dirRel) {
-  const md = fs.readFileSync(path.join(skillDir, "references", "templates", "sub-skills.md"), "utf8");
+  const md = fs.readFileSync(path.join(skillDir, "references", "instruction", "sub-skills.md"), "utf8");
   const skills = parseSubSkills(md);
   const written = [];
   for (const sk of skills) {
@@ -496,7 +496,7 @@ function main() {
   if (!projectName && !file) { console.error("error: --project-name is required (or use --file)"); process.exit(2); }
 
   const spec = readJSON(SPEC_PATH);
-  const subSkillsSource = fs.readFileSync(path.join(SKILL_DIR, "references", "templates", "sub-skills.md"), "utf8");
+  const subSkillsSource = fs.readFileSync(path.join(SKILL_DIR, "references", "instruction", "sub-skills.md"), "utf8");
   const inputs = file ? readJSON(file) : { project_name: projectName };
   // Phase: an explicit --phase always wins; otherwise a phase already present in the
   // input JSON file is respected, falling back to the CLI default (A).
@@ -596,9 +596,9 @@ inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effecti
             const scoped = { ...inputs, generated_skill_registry: generateSkillRegistry(subSkillsSource, ph, path.resolve(target)) };
             let body = resolvePlaceholders(prunePhaseBlocks(codeBlock, ph), art.placeholders, scoped);
             // S10: when --doc-root is set, remap docs/ paths in template bodies too
-            // (the existing remap() only handles artifact paths, not template body content).
+            // (the existing remap only handles artifact paths, not template body content).
             // Match docs/ anywhere (not just line-start), avoiding paths like "docs/"
-            // that are already remapped by the artifact path remap().
+            // that are already remapped by the artifact path remap.
             const dr = (inputs.doc_root || "docs").replace(/\/+$/, "");
             if (dr !== "docs") body = body.replace(/\bdocs\//g, dr + "/");
             return body;
@@ -655,7 +655,7 @@ inputs.generated_skill_registry = generateSkillRegistry(subSkillsSource, effecti
             continue;
           }
           content = ci;
-          // GitLab uses a root-level file instead of .github/workflows/
+          // GitLab uses a root-level file instead of.github/workflows/
           if ((inputs.ci_platform || "github") === "gitlab") {
             result = writeIfAbsent(path.join(targetAbs, ".gitlab-ci.yml"), content);
             results.push(result);

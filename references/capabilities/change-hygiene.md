@@ -1,8 +1,5 @@
 # 变更归位与残留清理
 
-> Capability leaf (`change-hygiene`). Instruction-surface 2.0 card (PLAN-0046) + 5c authority body restored (PLAN-0047 H2a).
-> Role: INSTALLED → `docs/rules/capabilities/change-hygiene.md`.
-
 ## Trigger
 
 删除/重命名/迁移/弃用 API 或治理表面；宣称清理完成前。

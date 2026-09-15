@@ -1,8 +1,5 @@
 # 证据分层
 
-> Capability leaf (`evidence-tiers`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/evidence-tiers.md`.
-
 ## Trigger
 
 声称完成、门禁叙事、审计报告、测试证明。

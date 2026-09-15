@@ -1,8 +1,5 @@
 # AUDIT / drift 巡检
 
-> Capability leaf (`audit-drift`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/audit-drift.md`.
-
 ## Trigger
 
 已有 manifest；用户说 audit / 健康检查 / drift。

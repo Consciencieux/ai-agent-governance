@@ -79,7 +79,24 @@ docs/
 | Research | 调查、证据、分析，并给出可引用结论 | 任务状态、MUST 处置 → Plan / ADR |
 | Finding | 观察到的问题与证据 | 施工步骤 → Plan |
 
-**现在不做行数门禁**（避免为过线硬拆）。语义规则在此；肥胖复发再考虑 advisory。
+### 顾问级行数预算（信号，不是证明）
+
+行数超限往往意味着职责混杂，但**不是**「过线就一定错」。禁止为过线自动硬拆或大删。
+
+| 对象 | soft | review | 备注 |
+| --- | --- | --- | --- |
+| 薄入口（`AGENTS.md` / `SKILL.md`） | 250 | 350 | 与薄入口原则一致 |
+| 工作权威（`references/policies` · `capabilities` · `instruction`、`docs/product` 的 `.md`） | 400 | 500 | 机读库存 JSON（如 `enforcement.v0.json`）不按此档计量 |
+| Research / ADR / Finding 正文 | 600 | 800 | 允许证据，禁止百科化施工 |
+| 生产脚本（`scripts/**`、`repo-tools/**`） | 600 | 800 | |
+| 测试 suite（`tests/suites/**`） | 400 | 600 | |
+| `CHANGELOG.md`、`docs/plans/archive/**`、`tests/.tmp/**` | 豁免 | — | 历史/生成物 |
+
+**处置：** 超 soft/review → Agent 向开发者汇报（路径、行数、档位）并提出拆分方案 → **人确认后再改**。行数只是信号；是否拆看职责密度、Context Economy、单一事实源。
+
+机械载体（REPO-ONLY 本仓）：`node repo-tools/check-file-size-budget.js`（`npm run check:file-size`）。默认顾问；`--gate` 仅对 **review** 档失败。不进 daily `npm run check`（须单独晋升）。
+
+**Skill / 被治理项目（INSTALLED）：** `node scripts/check-file-size-budget.js`（INIT Phase B 拷贝）；政策见 `docs/rules/coding.md` § 文件行数预算；可选覆盖 `.governance/file-size-budget.json`。处置协议相同（汇报 + 方案 + 人确认）；禁止自动硬拆。
 
 ## 已付学费（同一缺陷的历史实例）
 
@@ -254,4 +271,4 @@ ADR 定约束，Roadmap 投影/呈现顺序，Plan 负责施工；阶段顺序�
 - 系统模型与实验 → `docs/research/`（管理规则：`docs/research/README.md`）
 - 架构决策 → `docs/design-decisions/`（管理规则：`docs/design-decisions/README.md`）
 - 术语 → `docs/glossary.md`
-- 仓库布局（安装载荷 vs 仓库基础设施）→ `docs/product/en/architecture.md`
+- 仓库布局（安装载荷 vs 仓库基础设施；施工出处第三轴）→ `docs/product/en/architecture.md`

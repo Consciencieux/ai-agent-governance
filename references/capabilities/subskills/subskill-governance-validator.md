@@ -1,8 +1,5 @@
 # 子技能：governance-validator
 
-> Capability leaf (`subskill-governance-validator`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-governance-validator.md`.
-
 ## Trigger
 
 编排/调用治理校验器的 Agent 任务。

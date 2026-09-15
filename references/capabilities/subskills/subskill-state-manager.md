@@ -1,8 +1,5 @@
 # 子技能：state-manager
 
-> Capability leaf (`subskill-state-manager`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-state-manager.md`.
-
 ## Trigger
 
 治理状态读写、Rule Capture 运行脚手架。

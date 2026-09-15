@@ -1,8 +1,5 @@
 # 子技能：repository-inspection
 
-> Capability leaf (`subskill-repository-inspection`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-repository-inspection.md`.
-
 ## Trigger
 
 需要仓库/环境/栈勘察输入时。

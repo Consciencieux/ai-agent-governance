@@ -1,7 +1,7 @@
 # 可复用治理原则（Portable Governance Principles）
 
 > SKILL-INTERNAL。随技能包分发，供 skill 执行器按需加载。INIT **不**写入被治理项目。
-> 权威边界：ADR-0020 L1/L2/L3。本目录是方法论，不是本仓 `docs/` 树的拷贝。
+> 权威边界：可复用 L1/L2/L3。本目录是方法论，不是本仓 `docs/` 树的拷贝。
 
 ## 何时加载
 

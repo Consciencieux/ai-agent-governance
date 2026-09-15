@@ -13,7 +13,7 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
 | 角色 | 定義 | 如何核驗 | 例子 |
 | --- | --- | --- | --- |
 | **INSTALLED（安裝到被治理專案）** | INIT 把它寫進被治理專案（copy / template / generated）。該專案的 Agent 在執行期讀它。 | 在 `init-spec.json` 中作為 `source` 出現（當前數量見 `check-role-completeness.js --gate` 輸出） | `references/policies/coding.policy.md` → `docs/rules/coding.md`；`scripts/check-secrets.js`；`agents-md.template.md` → `AGENTS.md` |
-| **SKILL-INTERNAL（隨 tarball 但不安裝）** | 隨 tarball 分發（打包整目錄複製 `references/` + `scripts/`）且由 **skill 執行器**讀取——但 INIT 從不安裝它，所以被治理專案裡沒有這個檔案。 | 在 `init-spec.json` 的 `distribution.skillInternal` 中列出 | `references/init-spec.json`、`references/workflows/release.md`、`scripts/generate-governance.js`，以及 `references/principles/*`（可重用方法論；PLAN-0037） |
+| **SKILL-INTERNAL（隨 tarball 但不安裝）** | 隨 tarball 分發（打包整目錄複製 `references/` + `scripts/`）且由 **skill 執行器**讀取——但 INIT 從不安裝它，所以被治理專案裡沒有這個檔案。 | 在 `init-spec.json` 的 `distribution.skillInternal` 中列出 | `references/init-spec.json`、`references/workflows/release.md`、`scripts/generate-governance.js`，以及 `references/principles/*`（可重用方法論） |
 | **REPO-ONLY（僅本倉庫）** | 完全不進 tarball。約束在本倉庫上的工作。 | 在 `references/`/`scripts/`/`SKILL.md`/`LICENSE` 之外 | `repo-tools/**`、`repo-workflows/**`、`AGENTS.md`、`docs/**`、`tests/**`、`package.json`、`.github/**`、`.gitattributes` |
 
 角色是**人的決定，絕不推斷**：`copy`/`template`/`generated`、重命名（`lifecycle.policy.md` → `docs/rules/lifecycle.md`、`verify_governance.js` → `verify-governance.js`）、一對多輸出（`githooks-template.md` → `pre-commit` + `commit-msg`）以及 內嵌靜態內容工件（`type: "static"`），都編碼了生成器無法從檔案樹恢復的契約決定。**可機械化的只是抓漏**：`repo-tools/check-role-completeness.js --gate` 會在出現未分類檔案、同時屬於兩個集合、聲明路徑已不存在、或角色聲明與 `package-skill.sh` 實際打包不符時失敗。角色確實未決的檔案放進 `distribution.undecided` 並記錄待裁定問題，該閘門保持紅色直到裁定。最初放進去的兩項都已裁定完畢：`governance-files.policy.md` 現作為 `docs/rules/governance-files.md` 安裝（那個 INSTALLED 的檢查器在執行時讀它），`feature-doc.template.md` 現作為 `docs/features/_TEMPLATE.md` 安裝（SKILL.md 讓 Agent 複製它）。當前 `undecided` 為空，各角色的即時數量以 `check-role-completeness.js --gate` 的輸出為準。
@@ -53,11 +53,27 @@ skill 的行為（執行模式 INIT/AUDIT/RELEASE、生命週期管線、設計�
    按階段裁剪其條款（`<!-- phase:A -->` / `<!-- phase:B+ -->` / `<!-- phase:C -->`），後續階段
    原地升級該檔案，使專案持有的規則始終與其擁有的腳本相匹配。
 
+### 第三條軸：施工出處（倉庫知識 vs skill 合同）
+
+分發角色回答*檔案投遞到哪裡*；可移植性回答*命名路徑是否成立*。本軸回答*正文屬於哪套知識系統*。
+僅有角色表攔不住本倉施工 ID 滲進 skill 載荷。
+
+| 歸屬 | 落點 | 可引用 | 不得出現在 skill 載荷（`SKILL.md` + `references/` + `scripts/`） |
+| --- | --- | --- | --- |
+| **本倉庫（生產者）** | `docs/`（plans / findings / ADR / research / product / roadmap）、`tests/`、`repo-tools/`、`repo-workflows/`、本倉 `AGENTS.md` / `CHANGELOG.md` / CI | `PLAN-*`、`ADR-*`、`FINDING-*`、`RESEARCH-*`、本倉路徑、npm scripts | —（倉庫檔案可自由引用） |
+| **Skill 產品** | tarball：`SKILL.md` + `references/` + `scripts/` + `LICENSE`。INIT 後：被治理專案路徑如 `docs/rules/*`、已複製 `scripts/*`、`AGENTS.md` | 產品語言（`judgment` / `mechanical`、CTRL-* 種子控制、安裝路徑） | `PLAN-*`、`ADR-*`、`FINDING-*`、`RESEARCH-*`、指向本倉 `docs/` 樹的指標 |
+
+硬規則：
+
+1. **`tests/` 是 REPO-ONLY。** 永不進 skill tarball。倉庫測試**不得**迫使 INSTALLED / 載荷正文嵌入 Finding/Plan/ADR ID（否則等於把生產者文件系統焊回產品）。
+2. **CTRL-*** 是產品側控制名（種子 oracle），不是本倉 Finding 系統——在載荷裡命名已交付控制時允許。
+3. **邊界決策記錄：** [ADR-0020](../../design-decisions/ADR-0020-producer-product-governance-separation.md) 不變量 I5。本頁是操作地圖；ADR-0020 是決策。
+
 ### 目錄職責
 
 | 路徑 | 職責 | 讀者 | 語言 |
 | --- | --- | --- | --- |
-| `SKILL.md` | 薄 always-on 入口（身分 · 模式 · 不變量 · 能力路由）。完整政策/工作流正文在 `references/`；must-ship 可呼叫葉卡在 `references/capabilities/`（PLAN-0046）。不是百科。 | agent（skill 使用者） | 單語 |
+| `SKILL.md` | 薄 always-on 入口（身分 · 模式 · 不變量 · 能力路由）。完整政策/工作流正文在 `references/`；must-ship 可呼叫葉卡在 `references/capabilities/`。不是百科。 | agent（skill 使用者） | 單語 |
 | `references/` | **Skill 主體——skill 行為唯一存放處。** INSTALLED 與 SKILL-INTERNAL 混裝（見角色表）。 | agent（skill 使用者） | 單語 |
 | `scripts/` | Skill 執行時腳本。INSTALLED 與 SKILL-INTERNAL 混裝（當前數量見 `check-role-completeness.js --gate`）。INSTALLED 腳本複製進被治理專案。 | agent/CI | 程式碼 |
 | `LICENSE` | MIT 授權條款——隨 tarball 分發 | 安裝者 | — |
@@ -71,10 +87,11 @@ ai-agent-governance/
 ├── SKILL.md                    # 薄 always-on 入口 + 能力路由（非政策百科）
 ├── references/                 # skill 本體——skill 行為唯一所在地
 │   ├── init-spec.json          # 機器可讀 INIT 規範（generate-governance.js 的單一事實源）
-│   ├── templates/
-│   │   ├── agents-md.template.md   # AGENTS.md 範本
+│   ├── instruction/                # 可執行指令源（ADR-0026；不是 templates）
+│   │   ├── agents-md.template.md   # AGENTS.md 運行時合同源
+│   │   └── sub-skills.md           # 生成 skill 的來源；每個會變成 .governance/generated/skills/<name>/SKILL.md
+│   ├── templates/                  # 只收留物化範本（bootstrap / machine-state）
 │   │   ├── feature-doc.template.md # Feature 文件範本（含反虛構規則）
-│   │   ├── sub-skills.md           # 生成 skill 的來源；每個會變成 .governance/generated/skills/<name>/SKILL.md，不是腳本
 │   │   ├── env-example.template.md # .env.example 範本（佔位符、按依賴裁剪）
 │   │   ├── gitmessage.template.md  # .gitmessage.txt 範本（提交約定）
 │   │   ├── git-policy.template.md  # .governance/git-policy.json 範本（Git 工作流程策略）
@@ -84,7 +101,11 @@ ai-agent-governance/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md   # 受保護檔案 + .governance Git 追蹤策略
 │   ├── capabilities/               # Capability 葉權威（Phase 5c；INIT → docs/rules/capabilities/）
-│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md / subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md / sync-groups.md
+│   │   ├── enforcement.v0.json     # 義務分類庫存（INIT → docs/rules/capability-enforcement.json）
+│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / sync-groups.md
+│   │   └── subskills/
+│   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
+│   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md
 │   ├── principles/                 # 可重用方法論（PLAN-0037；SKILL-INTERNAL — INIT 不安裝）
 │   │   ├── entry.md
 │   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
@@ -100,6 +121,7 @@ ai-agent-governance/
 │   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
 │   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
 │   ├── check-sibling-closure.js # sibling-instance 閉包載體（已宣告合約；FINDING-0003）
+│   ├── check-file-size-budget.js # 檔案行數預算報告（soft/review；人確認後拆分）
 │   ├── migrate-governance.js # 可發現 MIGRATE 入口（版本對比 + 清單；不自動改樹）
 │   ├── check-git-policy.js     # Git 工作流程閘門（受保護分支 + directPush=false → exit 1）
 │   ├── check-secrets.js        # skill 側 CTRL-0001 CLI WRAP（暫存區掃描；絕不列印密鑰）
@@ -149,6 +171,7 @@ ai-agent-governance/
 │   ├── check-plan-delivery.js  # 計劃宣告 vs 實際交付（歸檔前閘門）
 │   ├── check-role-completeness.js # 分發角色完整性（未分類/重疊/失效路徑/打包邊界 + repo-only 反向檢查）
 │   ├── check-coding-hygiene.js # 編碼衛生（測試歸屬 + 殘留標記）
+│   ├── check-file-size-budget.js # 顧問級行數預算（soft/review；人確認後拆分）
 │   ├── check-daily-check-surface.js # 日常 npm run check 允許名單門禁（PLAN-0055）
 │   ├── daily-check-surface.v0.json # check-daily-check-surface.js 允許名單資料
 │   ├── check-terminology.js    # repo-owned 術語門禁（從 INSTALLED 一致性檢查器拆出；ADR-0020 首次執行分離）
@@ -161,7 +184,8 @@ ai-agent-governance/
 │   ├── script-inventory.v0.json
 │   ├── oracle-inventory.v0.json
 │   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
-│   └── package-skill.sh        # 發佈載荷 tarball 打包
+│   ├── package-skill.sh        # 發佈載荷 tarball 打包
+│   └── .release/proposal.json  # gitignored 技能發佈草稿（不入庫）
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發
 │   ├── changelog-policy.md      # 本倉 CHANGELOG 政策（REPO-ONLY）
 │   └── skill-release.md        # 技能倉庫發佈流程（版本五個同步點 + tag、tarball 建置）
@@ -188,7 +212,7 @@ ai-agent-governance/
 ├── AGENTS.md                   # 本倉庫的 Agent 工作指南
 ├── CHANGELOG.md                # 發佈歷史
 ├── package.json                # npm 腳本（test、check）
-├── .github/                    # CI 工作流程
+├── .github/                    # CI：must-ship 閘門 + 版本 tag 時 skill-payload-release
 └── tests/
     ├── run-tests.js            # 單一發現入口：僅 runner + 彙總
     ├── support/helpers.js      # 共享 fixture、git 輔助、腳本路徑常數、暫存根生命週期

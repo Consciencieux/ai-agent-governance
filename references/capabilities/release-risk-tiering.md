@@ -1,15 +1,12 @@
 # 分级发布审查
 
-> Capability leaf (`release-risk-tiering`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/release-risk-tiering.md`.
-
 ## Trigger
 
 RELEASE 风险分级、是否要求深度审查。
 
 ## Authority
 
-release workflow（项目内发布流程权威） 风险分级（单一权威；ADR-0020）。
+release workflow（项目内发布流程权威）风险分级（单一权威）。
 
 ## Invoke
 

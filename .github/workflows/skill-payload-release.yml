@@ -1,0 +1,50 @@
+name: Skill payload release
+
+# On annotated version tags, build the install tarball on Linux and attach it to
+# the GitHub Release. Prefer this over packaging on a maintainer Mac (AppleDouble).
+# HITL still owns Analyze → Approval → tag/push; this job only packages assets.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
+        with:
+          node-version: 20
+
+      - name: Package skill payload
+        run: bash repo-tools/package-skill.sh "${GITHUB_REF_NAME#v}"
+
+      - name: Upload tarball to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          ASSET="dist/ai-agent-governance-skill.tar.gz"
+          SHA="$(sha256sum "$ASSET" | awk '{print $1}')"
+          {
+            echo "### Skill payload"
+            echo ""
+            echo "- Asset: \`ai-agent-governance-skill.tar.gz\`"
+            echo "- SHA-256: \`$SHA\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$ASSET" --clobber
+          else
+            gh release create "$TAG" "$ASSET" \
+              --title "$TAG" \
+              --notes "$(printf '%s\n\n### Skill payload\n\n- Asset: `ai-agent-governance-skill.tar.gz`\n- SHA-256: `%s`\n' \
+                "Skill payload for ${TAG}." "$SHA")"
+          fi

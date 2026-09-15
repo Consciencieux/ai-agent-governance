@@ -24,7 +24,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 **新檔案放哪裡？** 先判斷知識類型，再決定路徑和語言（不要先按語言選目錄）：
 
 - 倉庫知識物件（產品 / 研究 / 發現 / 決策 / 路線圖 / 計畫 / 術語）→ `docs/README.md` 的路由表
-- 技能安裝產物與物化源 → `SKILL.md`、`references/`、`scripts/`，按 `docs/product/zh-TW/architecture.md` 的分發角色放置。**不要**把「產生機制」當成進入 `references/` 的分類標準；`references/templates/` 只是物化範本的目前位置，可執行指令源與 boilerplate 不是同一類（FINDING-0026）
+- 技能安裝產物與物化源 → `SKILL.md`、`references/`、`scripts/`，按 `docs/product/zh-TW/architecture.md` 的分發角色放置。目錄按語義責任分類（ADR-0026）：指令源在 `references/instruction/`；`references/templates/` 只收留物化範本。
 - 測試、CI 等開發基礎設施 → `tests/`、`.github/` 等
 
 ## 語言政策（按受眾）
@@ -41,7 +41,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 2. 升 `package.json` 版本（SemVer：破壞性 → MAJOR，新能力 → MINOR，修復 → PATCH）
 3. 保持版本一致：package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` 預設值 · `scripts/lib/generate/run.js` 哨兵值 · tag
 4. push 前必須 `npm test`；合入 `main` 前 `npm run check:must-ship` 必須綠
-5. 僅透過 `release-manager` 流程發佈（前置檢查含 `gates.must_ship` → 版本同步 → 校驗 → tag → push → GitHub Release）
+5. 僅透過 `release-manager` 流程發佈（前置檢查含 `gates.must_ship` → 版本同步 → 校驗 → tag → 推送已批准分支與 tag → GitHub Release 說明；技能 tarball 優先由 tag CI 上傳）
 
 ## 開發工作流
 
@@ -67,6 +67,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 | `npm run check:tests` | 變更 `tests/`、`.gitattributes` | test + hygiene |
 | `npm run check:full` | 預設、範圍不定、或顯式全量 | test + parity + layout + consistency + hygiene + role-completeness |
 | `npm run check:all` | 巡檢或顯式全量巡檢 | check + freshness + plan delivery |
+| `npm run check:file-size` | 檔案肥胖訊號 / 巡檢 | 顧問級行數預算（`--gate` 僅 review 檔失敗）；不在日常 `check` |
 | `npm run check:must-ship` | 合入 / 發佈 CI | 僅 must-ship 機械集合 |
 
 ### 各閘門證明什麼（證據分層）
@@ -81,6 +82,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 | `check-role-completeness.js --gate` | 角色分類 / 打包 | mechanical | 分發契約完整 |
 | `check-doc-freshness.js` | 陳舊文件 / 譯文落後 | mechanical（報告；`--release-gate` 阻斷） | 未檢出機械陳舊 |
 | `check-plan-delivery.js` | 計劃聲明 vs 交付路徑 | mechanical | 聲明檔案/識別存在 |
+| `check-file-size-budget.js` | soft/review 行數預算（依物件類） | advisory（機械計數；是否拆分由人定） | 列出超 soft/review；不是拆分裁決 |
 | `verify_governance.js` | 治理產物存在性 | mechanical | 本倉預設模式按設計失敗（ADR-0006） |
 
 證據分層：**mechanical** = 標記/路徑/結構/存在（通過 ≠「行為正確」）；**human-attested** = 需人工（目前無自動閘門產出）；**unverified claim** = 僅聲明、無獨立核驗。

@@ -1,15 +1,12 @@
 # RELEASE 编排 + 人类批准
 
-> Capability leaf (`release-orchestration`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/release-orchestration.md`.
-
 ## Trigger
 
 用户说 release/publish；版本推进。
 
 ## Authority
 
-release workflow（项目内发布流程权威） + `scripts/release-manager.js`（tag executor）+ ADR-0004 HITL。
+release workflow（项目内发布流程权威） + `scripts/release-manager.js`（tag executor）+ 人类在环（HITL）批准。
 
 ## Invoke
 

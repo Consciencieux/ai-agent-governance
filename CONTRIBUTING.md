@@ -24,7 +24,7 @@ The full repository layout — every directory and its role, down to individual 
 **Where does a new file go?** Judge the knowledge type first, then the path and language (do not pick a language directory first):
 
 - Repository knowledge objects (Product / Research / Finding / ADR / Roadmap / Plan / Glossary) → the routing table in `docs/README.md`
-- Skill install artifacts and materialization sources → `SKILL.md`, `references/`, `scripts/`, placed by distribution role in `docs/product/en/architecture.md`. Being a generator input is **not** a semantic class; `references/templates/` is the current home of materialization templates, not a license to treat executable instruction sources as templates (FINDING-0026)
+- Skill install artifacts and materialization sources → `SKILL.md`, `references/`, `scripts/`, placed by distribution role in `docs/product/en/architecture.md`. Directory class follows semantic responsibility (ADR-0026): instruction sources live in `references/instruction/`; `references/templates/` is materialization only.
 - Tests, CI and other development infrastructure → `tests/`, `.github/`, …
 
 ## Language Policy (by audience)
@@ -41,7 +41,7 @@ The full repository layout — every directory and its role, down to individual 
 2. Bump `package.json` version (SemVer: breaking → MAJOR, feature → MINOR, fix → PATCH)
 3. Keep version consistency: package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` default · `scripts/lib/generate/run.js` sentinel · tag
 4. Run `npm test` before pushing; `npm run check:must-ship` must be green before merging to `main`
-5. Release only with the `release-manager` flow (preconditions include `gates.must_ship` → version sync → archive → validate → tag → push → GitHub Release)
+5. Release only with the `release-manager` flow (preconditions include `gates.must_ship` → version sync → archive → validate → tag → push approved branch + tag → GitHub Release notes; skill tarball preferably via tag CI)
 
 ## Development Workflow
 
@@ -67,6 +67,7 @@ Match the narrowest row by `git diff --name-only` prefix. When scope is uncertai
 | `npm run check:tests` | `tests/`, `.gitattributes` changed | test + hygiene |
 | `npm run check:full` | default, uncertain scope, or explicit full request | test + parity + layout + consistency + hygiene + role-completeness |
 | `npm run check:all` | audit, or explicit full audit | check + freshness + plan delivery |
+| `npm run check:file-size` | file-size / obesity smell, or audit | advisory line budgets (`--gate` fails on review tier only); not on daily `check` |
 | `npm run check:must-ship` | merge / release CI | must-ship mechanical set only |
 
 ### What each gate proves (evidence tiers)
@@ -81,6 +82,7 @@ Match the narrowest row by `git diff --name-only` prefix. When scope is uncertai
 | `check-role-completeness.js --gate` | role classification / packaging | mechanical | distribution contract complete |
 | `check-doc-freshness.js` | stale docs / translation lag | mechanical (report; `--release-gate` blocks) | no mechanical staleness detected |
 | `check-plan-delivery.js` | plan declarations vs delivered paths | mechanical | declared files/ids present |
+| `check-file-size-budget.js` | soft/review line budgets by object class | advisory (mechanical count; human decides split) | over soft/review listed; not a split verdict |
 | `verify_governance.js` | governance artifact existence | mechanical | default mode here fails by design (ADR-0006) |
 
 Evidence tiers: **mechanical** = marker/path/structure/existence (pass ≠ “behavior correct”); **human-attested** = requires human review (no automated gate emits this today); **unverified claim** = declaration without independent check.

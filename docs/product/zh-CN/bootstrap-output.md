@@ -14,7 +14,8 @@ INIT 脚本化生成器（`scripts/generate-governance.js`）为被治理项目�
 | docs/rules/coding.md | references/policies/coding.policy.md |
 | docs/rules/testing.md | references/policies/testing.policy.md |
 | docs/rules/governance-files.md | references/policies/governance-files.policy.md |
-| AGENTS.md | references/templates/agents-md.template.md（占位符已解析） |
+| docs/rules/capability-enforcement.json | references/capabilities/enforcement.v0.json |
+| AGENTS.md | references/instruction/agents-md.template.md（占位符已解析） |
 | CHANGELOG.md | 静态（Keep a Changelog，含 Unreleased 段） |
 | README.md | 静态引导 + 文档索引 |
 | docs/features/ | 目录占位 + _TEMPLATE.md（功能模板，含反虚构规则） |
@@ -42,7 +43,7 @@ INIT 脚本化生成器（`scripts/generate-governance.js`）为被治理项目�
 | .github/workflows/ci.yml（或 .gitlab-ci.yml） | 从 references/workflows/ci.md 按输入选择 |
 | scripts/check-doc-freshness.js（+ lib/git-facts.js、evaluators/ctrl-0003-doc-freshness.js、evaluators/ctrl-0004-translation-freshness.js）+ check-doc-consistency.js（+ lib/md-link-facts.js、evaluators/ctrl-0006-broken-links.js） | 从本 skill 原样复制 |
 | scripts/release-manager.js | 从本 skill 原样复制（生成的 release-manager 子技能会调用它） |
-| .governance/generated/skills/ | 从 references/templates/sub-skills.md 生成 |
+| .governance/generated/skills/ | 从 references/instruction/sub-skills.md 生成 |
 | .githooks/pre-commit + .githooks/commit-msg | references/templates/githooks-template.md；可执行、可选启用，INIT 不自动启用 |
 
 ## 确定性与验证

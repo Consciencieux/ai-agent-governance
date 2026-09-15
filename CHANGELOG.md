@@ -4,7 +4,29 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Added
+
+- FINDING-0031 (Confirmed): citing Resolved/Accepted authority must not substitute for a user-requested re-judgment; conversational control gap (no mechanical carrier).
+
+- Repo-only advisory file-size budgets: `repo-tools/check-file-size-budget.js` / `npm run check:file-size` (layered soft/review thresholds; human-confirmed split protocol; not on daily `check`).
+
+- INSTALLED file-size budget reporter: `scripts/check-file-size-budget.js` (INIT Phase B); portable defaults in `docs/rules/coding.md`; optional `.governance/file-size-budget.json`; engineering-restraint + capability-enforcement obligations.
+
 ### Changed
+
+- Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.
+
+- Release friction: skill-release and governed `release.md` push the approved branch (not hard-coded `main`); GitHub Release optional for governed projects; skill payload tarball prefers `.github/workflows/skill-payload-release.yml` on tag (local `package-skill.sh` remains fallback).
+
+- README Quick Start (en / zh-CN / zh-TW): per-agent skill discovery paths, tarball-only install (no full-repo clone), init prompt in the target project; align `docs/product/*/skill-discovery.md`.
+
+- References taxonomy (ADR-0026): instruction sources live in `references/instruction/`; subskill leaf cards in `references/capabilities/subskills/`; `templates/` is materialization only.
+
+- Obligation classification (PLAN-0057): INSTALLED `docs/rules/capability-enforcement.json` is the sole inventory of mechanical / require_review / unmechanized / inherent_judgment rows; capability leaves must not dual-write `## Enforcement` lists.
+
+- INSTALLED capability leaves: strip producer construction provenance (PLAN/ADR/FINDING headers and body pointers, Role/Disposition/Classification dual-write); inventory `leaf` stays authoring paths under `references/capabilities/` (including `subskills/`).
+
+- Producer/product content boundary (ADR-0020 I5): skill payload (`SKILL.md` + `references/` + `scripts/`) must not embed this repo's `PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*` IDs; operational map in `docs/product/*/architecture.md` § Third axis; `tests/` remain REPO-ONLY and must not force those IDs into INSTALLED bodies. Judgment-language suite renamed to `judgment-language.test.js`. Always-on hard rule in this repo's `AGENTS.md`; one-line boundary in `SKILL.md`.
 
 - `check:must-ship` runs via Node (`repo-tools/check-must-ship.js`) instead of bash, so the CI local gate works on Windows without Git Bash/WSL.
 

@@ -1,11 +1,8 @@
 # 种子负向 oracle 与路由完整性
 
-> Capability leaf (`seed-oracles`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/seed-oracles.md`.
-
 ## Trigger
 
-改门禁/路由/安全内核；发布 must-ship；PLAN-0042 相关回归。
+改门禁/路由/安全内核；发布 must-ship；种子负向 / 路由完整性回归。
 
 ## Authority
 
@@ -21,4 +18,4 @@
 
 ## Non-goals
 
-不承诺 FINDING-0006 全量 oracle（later）。
+不承诺全量负向 oracle 覆盖（后续增量）。

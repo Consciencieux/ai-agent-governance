@@ -212,7 +212,7 @@
       "notes": "REPO construction router: this repo release authority (not governed-project references/workflows/release.md)."
     },
     "review-implementation": {
-      "path": "references/templates/sub-skills.md",
+      "path": "references/instruction/sub-skills.md",
       "section": "review-manager"
     },
     "security-baseline": {

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// PAYLOAD SCRIPT — sibling-instance closure carrier (FINDING-0003 / PLAN-0050).
+// PAYLOAD SCRIPT — sibling-instance closure carrier ( / ).
 // Self-contained: Node builtins only.
 //
 // Reads one or more sibling-closure contracts (JSON). Each contract declares
 // instances that must all exist (paths relative to cwd). Missing instance → deny.
 //
 // Usage:
-//   node scripts/check-sibling-closure.js [--json] [--contract <file>]...
-//   node scripts/check-sibling-closure.js --dir <dir>
-// Default dir: .governance/sibling-closure
+// node scripts/check-sibling-closure.js [--json] [--contract <file>]...
+// node scripts/check-sibling-closure.js --dir <dir>
+// Default dir:.governance/sibling-closure
 // Exit 0 allow · 1 deny (missing/invalid) · 2 no contracts found (warn / require_review)
 
 "use strict";

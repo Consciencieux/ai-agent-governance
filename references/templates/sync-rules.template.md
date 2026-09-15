@@ -4,11 +4,11 @@ INIT 时复制为 `<project>/.governance/sync-rules.json`，替换 `{{...}}` 占
 
 ```json
 {
-  "syncGroups": [
-    { "name": "api-architecture", "watch": ["src/**", "lib/**", "app/**", "apps/**", "services/**", "packages/**", "modules/**"], "require": ["docs/ARCHITECTURE.md", "CHANGELOG.md"] },
-    { "name": "rules-summary", "watch": ["docs/rules/**"], "require": ["AGENTS.md"] },
-    { "name": "feature-registry", "watch": ["src/**", "app/**", "apps/**", "services/**", "packages/**"], "require": ["docs/features/"] }
-  ]
+ "syncGroups": [
+ { "name": "api-architecture", "watch": ["src/**", "lib/**", "app/**", "apps/**", "services/**", "packages/**", "modules/**"], "require": ["docs/ARCHITECTURE.md", "CHANGELOG.md"] },
+ { "name": "rules-summary", "watch": ["docs/rules/**"], "require": ["AGENTS.md"] },
+ { "name": "feature-registry", "watch": ["src/**", "app/**", "apps/**", "services/**", "packages/**"], "require": ["docs/features/"] }
+ ]
 }
 ```
 

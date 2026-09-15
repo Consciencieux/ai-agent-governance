@@ -1,8 +1,5 @@
 # 规则捕获（Rule Capture）
 
-> Capability leaf (`rule-capture`). Instruction-surface 2.0 card (PLAN-0046) + 5c authority body restored (PLAN-0047 H2a).
-> Role: INSTALLED → `docs/rules/capabilities/rule-capture.md`.
-
 ## Trigger
 
 任务中出现持久性行为要求候选；Phase 5a/5b/5c。
@@ -11,7 +8,7 @@
 
 本叶为权威正文（INIT → `docs/rules/capabilities/rule-capture.md`）。`docs/rules/lifecycle.md` 仅保留编排指针，不再承载本横切正文。
 
-> **Enforcement：** Phase 5a 内容裁定与「是否持久」为 **judgment** / `require_review`（FINDING-0003 类 ⑦ Rule Capture）——须开发者按 ID 确认；**无**脚本代裁。5b/5c 中「文件是否写入 / 门禁 exit」可为 **mechanical** 观测，但不得把门禁绿当成裁定已发生。
+> **Enforcement：** Phase 5a 内容裁定与「是否持久」为 **judgment** / `require_review`——须开发者按 ID 确认；**无**脚本代裁。5b/5c 中「文件是否写入 / 门禁 exit」可为 **mechanical** 观测，但不得把门禁绿当成裁定已发生。
 
 任务中只收集开发者明确提出的持久性行为要求，不收集系统指令、问题、任务专属验收标准、临时 workaround、秘密或凭据。候选必须有唯一 ID（`rc-<task_id>-<序号>`）、规范化文本、作用域、初始分类、理由和目标章节；重复出现只能提高优先级，不能单独升级为持久规则。
  - **Phase 5a 裁定门** — **judgment**：在写入前给出 `persistent / one-off / unclear` 清单。明确的一次性要求只报告、不写入、不计入待决；持久和模糊项必须由开发者按 ID 确认或改判，省略项不默认同意。规则内容裁定不等于 Git 提交/推送确认。

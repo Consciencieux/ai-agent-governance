@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: thin orchestrator — gate bodies live in sibling modules.
+// Stage 4E+/R10: thin orchestrator — gate bodies live in sibling modules.
 // INSTALLED via init-spec; thin CLI: scripts/check-doc-consistency.js
 // Gen1 monolith discarded; cluster files are the extension points (not this shell).
 "use strict";

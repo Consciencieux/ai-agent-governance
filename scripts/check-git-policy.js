@@ -4,7 +4,7 @@
 // Git Policy Check — read-only. Verifies the current branch/state against .governance/git-policy.json.
 // Usage: node scripts/check-git-policy.js [--json]
 // Exit 0: safe to proceed. Exit 1: currently on a protected branch with directPush=false —
-// create a feature branch (feature/agent-<date>-<summary>) before modifying/committing.
+// create a feature branch (name per repo convention) before modifying/committing.
 
 const fs = require("fs");
 const path = require("path");
@@ -113,7 +113,7 @@ if (!baseline.ok) {
 if (branchBlocked) {
   console.error(
     `BLOCKED: current branch "${branch}" is protected and directPush=false — ` +
-      `create a feature branch (feature/agent-<date>-<summary>) before modifying/committing`
+      `create a feature branch (per this repo's naming convention) before modifying/committing`
   );
   process.exit(1);
 }

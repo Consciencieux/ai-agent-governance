@@ -1,8 +1,5 @@
 # 子技能：drift-check
 
-> Capability leaf (`subskill-drift-check`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-drift-check.md`.
-
 ## Trigger
 
 日常 drift/freshness/consistency 巡检。

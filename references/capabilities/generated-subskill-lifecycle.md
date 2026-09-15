@@ -1,8 +1,5 @@
 # 生成子技能机制
 
-> Capability leaf (`generated-subskill-lifecycle`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/generated-subskill-lifecycle.md`.
-
 ## Trigger
 
 INIT 生成/刷新 `.governance/generated/skills/`；改 sub-skills 模板。

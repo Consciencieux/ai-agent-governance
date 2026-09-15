@@ -90,15 +90,29 @@ initialize project governance
 
 ## 快速開始
 
-將 skill 安裝到你的編碼 Agent 發現 skill 的位置——使用發布載荷 tarball：
+**1. 安裝發布載荷**（不要 `git clone` 本倉庫）到你的 Agent **實際會掃描**的 skill 目錄。
+
+| Agent | 常見安裝路徑 |
+| --- | --- |
+| Cursor | 專案：`.cursor/skills/ai-agent-governance/` · 或個人 Agent Store 的 `skills/` |
+| Claude Code / opencode（共用） | `~/.agents/skills/ai-agent-governance/` 或專案 `.agents/skills/…` |
+| Claude Code | `.claude/skills/ai-agent-governance/` |
+| 僅 opencode | `.opencode/skills/ai-agent-governance/` |
+
+範例（共用 `.agents` 路徑——按上表換成你的目錄）：
 
 ```bash
-mkdir -p ~/.agents/skills/ai-agent-governance
-curl -L https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz \
-  | tar -xz -C ~/.agents/skills/ai-agent-governance
+DEST=~/.agents/skills/ai-agent-governance
+mkdir -p "$DEST"
+curl -fsSL -o /tmp/ai-agent-governance-skill.tar.gz \
+  https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz
+# 可選：對照 Release Notes 中的 SHA-256 校驗後再解壓
+tar -xzf /tmp/ai-agent-governance-skill.tar.gz -C "$DEST"
 ```
 
-這是聊天提示詞，不是 shell 命令。在你的 AI 編碼 Agent 聊天中提問：
+**不要**把本倉庫整倉 clone 進 skills 目錄——會帶上不屬於安裝載荷的 `docs/`、`tests/` 等。完整發現說明：[docs/product/zh-TW/skill-discovery.md](docs/product/zh-TW/skill-discovery.md)。
+
+**2. 打開你要治理的那個專案**，在編碼 Agent 對話裡發送下面這句提示詞（不是 shell 命令）：
 
 ```text
 initialize project governance
@@ -130,7 +144,7 @@ my-project/
 
 ## 產生的環境
 
-INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](references/init-spec.json) 與 [references/templates/sub-skills.md](references/templates/sub-skills.md) 定義。
+INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳本、規則檔案與產生的子技能）由 [references/init-spec.json](references/init-spec.json) 與 [references/instruction/sub-skills.md](references/instruction/sub-skills.md) 定義。
 
 ## 文件
 
@@ -151,7 +165,7 @@ INIT 產生一個治理骨架，其具體契約（輸入、工件、安裝的腳
 
 ## 目前版本
 
-**v2.1.0** 是目前可安裝產品線（`package.json`）。必裝 INIT / AUDIT / RELEASE 可在乾淨目標上跑；本倉 CI 阻斷權威是 `npm run check:must-ship`。Generation 1（1.x）仍是歷史基線；`v2.0.0` 是 Gen2 必裝凍結點。詳見 [CHANGELOG.md](CHANGELOG.md) 與 [docs/plans/roadmap/zh-TW.md](docs/plans/roadmap/zh-TW.md)。
+從 [Releases → latest](https://github.com/Consciencieux/ai-agent-governance/releases/latest) 安裝（`ai-agent-governance-skill.tar.gz`）。原始碼樹版本見 `package.json` / `SKILL.md`。必裝 INIT / AUDIT / RELEASE 可在乾淨目標上跑；本倉 CI 阻斷權威是 `npm run check:must-ship`。詳見 [CHANGELOG.md](CHANGELOG.md) 與 [docs/plans/roadmap/zh-TW.md](docs/plans/roadmap/zh-TW.md)。
 
 ## License
 

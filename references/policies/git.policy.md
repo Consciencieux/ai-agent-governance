@@ -1,6 +1,6 @@
 # Git Write Policy（分层权限）
 
-本文件是 AI Agent Git 操作边界的**唯一语义权威**（ADR-0024）。`AGENTS.md` / `SKILL.md` 只保留指针与 always-on 摘要，禁止第二份权威正文。
+本文件是 AI Agent Git 操作边界的**唯一语义权威**。`AGENTS.md` / `SKILL.md` 只保留指针与 always-on 摘要，禁止第二份权威正文。
 
 ## 允许自动执行（无需确认）
 
@@ -39,23 +39,30 @@
 
 ## 确认范围（一次确认 per 变更集）
 
-**提交前回显完整 git 命令序列，用户确认一次，覆盖 add → commit → push。** 这是唯一的确认点，与任务规模无关——小改动也不例外。
+**一次确认覆盖该变更集的 add → commit → push。** 与任务规模无关——小改动也不例外。
 
-- 任何任务完成、提交之前，必须回显：暂存哪些文件、每个 commit 的消息（类型含在消息前缀）、目标 remote/branch。
-- 用户说 "push"、"commit 这些改动"、"提交并推送" 等写指令时，触发回显；**指令不是确认本身**——回显后仍需等待用户一次明确确认。
-- **计划批准 = 意图对齐**：中/大型任务的 Phase 2 计划批准只对齐"改什么、怎么改"，不是提交确认。用户批了计划不代表提交自动通过。
-- 规模分级决定"要不要写 TASK 计划文档"，不决定"要不要给用户确认"。
-- 用户说"完成任务"、"wrap it up"、"发布吧"这类**任务级**表述时，**不得**据此提交或推送——它们不是写操作指令。
-- 有疑问时，**永远先问**。
+**什么算确认（人授）：**
+
+- 用户对 Git 写操作的**明确写指令**（例如：「commit 这些改动」「提交并推送」「push」指向当前变更集），或
+- IDE / 宿主对「暂存 + 提交 + 推送」确认条（或等价 Diff 确认 UI）的一次明确同意
+
+以上任一即是该变更集的确认。**回显完整命令序列是执行记录**（文件清单、各 commit 消息、目标 remote/branch），不是第二次等待闸门——不得在已获上述人授后再要求「再确认一次」才执行。
+
+**什么不算确认：**
+
+- 计划批准 = 意图对齐（「改什么、怎么改」），不是提交授权
+- 规模分级只决定要不要写 TASK 计划文档，不决定要不要人授
+- 任务级表述（「完成任务」「wrap it up」「发布吧」）不是写操作指令——不得据此提交或推送
+- 歧义指令（「提交一下」等）→ 先问，不适用自动执行
 
 **通用硬约束（每次变更集都适用）：**
 
-- 回显必须是完整命令序列（暂存文件、每个提交消息、目标 remote/branch）；执行不得偏离已确认序列。
-- 任一步失败 → 停止并报告，不得改用其他方式重试、不得即兴修补，重新取得确认后继续。
-- push 被拒（non-fast-forward）→ 停止并报告，不得擅自 pull/rebase 后再推。
-- 歧义指令（"提交一下"这类中文表述）→ 不适用自动回显，先问。
+- 执行前须回显完整命令序列；执行不得偏离已回显序列
+- 任一步失败 → 停止并报告，不得改用其他方式重试、不得即兴修补，重新取得确认后继续
+- push 被拒（non-fast-forward）→ 停止并报告，不得擅自 pull/rebase 后再推
+- 有疑问时，**永远先问**
 
-**独立确认（不覆盖于提交前确认，需各自单独确认）：**
+**独立确认（不覆盖于变更集确认，需各自单独确认）：**
 
 - `tag`、`reset`、`rebase`、`revert`、`merge`、force push、`clean`、`rm`、`restore`、`stash`、`pull`（`pull` 可触发 merge/rebase）
 - `checkout` 携带未提交改动切换分支
@@ -66,11 +73,13 @@
 ## Mandatory Pre-commit Checklist
 
 push/PR 前必须确认：
-- [ ] `node scripts/check-secrets.js` 退出码 0（`git commit` 确认前必须；命中 → 清理暂存区后重跑）
-- [ ] CHANGELOG.md 已更新（未更新禁止 push）
-- [ ] 测试/静态检查/构建已通过并记录输出
+
+- [ ] `node scripts/check-secrets.js` 退出码 0（`git commit` 前必须；命中 → 清理暂存区后重跑）
 - [ ] 无敏感信息（密钥、token）进入提交
 - [ ] 无无关文件被 `git add`（检查 `git status` / `git diff --cached`）
+- [ ] 测试/静态检查/构建按项目约定已通过并记录输出（不得声称「应该过」）
+
+**CHANGELOG：** 写入遵循项目 CHANGELOG 政策（被治理项目：`docs/rules/lifecycle.md` 结构契约与内容边界；本 skill 分发仓另有 repo accession 文档，不在此复述路径）。**禁止**把「每次 push 必须改 CHANGELOG」当作硬门槛——写成可推迟到 checkpoint；对账不可推迟。行为变更是否需要条目，按该政策准入判定，不在本文件复述。
 
 ## 首次提交前
 
@@ -88,7 +97,7 @@ push/PR 前必须确认：
 策略由 `.governance/git-policy.json` 定义（默认：`protectedBranches: ["main","master"]`、`directPush: false`、`requireReview: true`、`allowForcePush: false`）。Agent 处理开发任务时：
 
 - **开始前**：运行 `scripts/check-git-policy.js`；当前分支在受保护列表且 `directPush=false` → 退出码 1，**必须先创建特性分支**再修改/提交。
-- **分支命名**：`feature/agent-<YYYYMMDD>-<summary>`。
+- **分支命名**：服从**当前仓库约定**（CONTRIBUTING / 既有分支模型 / 团队规范）。禁止把某一固定模式（例如历史示例 `feature/agent-<date>-*`）写成跨项目硬规则。
 - **流程**：建分支 → 实现 → 测试 → commit → push 分支 → 创建 PR → 人工批准 → 合入受保护分支。
 - **禁止**：`directPush=false` 时在受保护分支上直接提交/推送；force push 一律禁止（`allowForcePush=false`）。
 - **小型改动豁免**：单文件、纯文档/typo 级修改且不涉及受保护分支的可跳过分支直接提交，但必须在报告中说明；涉及受保护分支的修改一律走分支流程。

@@ -1,8 +1,5 @@
 # 子技能：plan-manager
 
-> Capability leaf (`subskill-plan-manager`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-plan-manager.md`.
-
 ## Trigger
 
 TASK 计划创建/状态流转。

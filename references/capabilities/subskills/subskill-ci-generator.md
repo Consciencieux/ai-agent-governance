@@ -1,8 +1,5 @@
 # 子技能：ci-generator
 
-> Capability leaf (`subskill-ci-generator`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-ci-generator.md`.
-
 ## Trigger
 
 从 inspection 输入物化 CI。

@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
+// Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
 // INSTALLED with siblings listed in references/init-spec.json — keep require graph closed.
 "use strict";
 function runVersionExamples(ctx) {
@@ -25,7 +25,7 @@ function runVersionExamples(ctx) {
       // agree (`tag` = `"v" + version`). The v1.0.0 release kept `"tag": "v0.15.0"`
       // beside `"version": "1.0.0"` in the manifest examples (SKILL.md S3.2, release.md
       // S5) and shipped green — version_examples only compared against the current
-      // version, never the adjacent tag. Match only INSIDE `{ ... }` object blocks with
+      // version, never the adjacent tag. Match only INSIDE `{... }` object blocks with
       // `"version"` and `"tag"` as neighbouring slots: a narrative HISTORY quote
       // (release.md S2 "v1.0.0 曾保留 …" describes the bug, it does not assert it) lives
       // in prose without an object block and must never be paired — first run of this
@@ -74,10 +74,10 @@ function runVersionExamples(ctx) {
         if (anyGate) gateIssues.push({ kind: "version_examples", item });
       }
     }
-    // The two generator sync points live OUTSIDE .md files, which mdFiles() cannot see:
+    // The two generator sync points live OUTSIDE.md files, which mdFiles cannot see:
     // `references/init-spec.json` `inputs.governance_version.default` (stamped into every
     // new governed project's manifest) and `scripts/lib/generate/run.js`'s fallback
-    // sentinel (PLAN-0055 extracted the body out of the thin CLI). Both are
+    // sentinel ( extracted the body out of the thin CLI). Both are
     // skill-release.md Phase 4 step 2 sync points — a release that bumps them silently
     // changes the version stamped into future INITs. Gate class: a version sync point
     // must not drift. No-op when either file is absent (a governed project does not
@@ -98,9 +98,9 @@ function runVersionExamples(ctx) {
     if (fs.existsSync(genPath)) {
       const gen = readFile(genPath);
       if (gen) {
-        // Sentinel lives in defaultGovernanceVersion()'s ternary else-branch
+        // Sentinel lives in defaultGovernanceVersion's ternary else-branch
         // (`? fallback : "X.Y.Z"`). Thin CLI scripts/generate-governance.js has no
-        // literal — scanning it is vacuous after PLAN-0055. Anchor on the ternary.
+        // literal — scanning it is vacuous after. Anchor on the ternary.
         const sv = /\?\s*fallback\s*:\s*"(\d+\.\d+\.\d+)"|fallback\s*:\s*"(\d+\.\d+\.\d+)"/.exec(gen);
         const svVal = sv && (sv[1] || sv[2]);
         if (svVal && svVal !== version) {

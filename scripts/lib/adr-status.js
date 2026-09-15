@@ -1,5 +1,5 @@
 "use strict";
-// ADR status heuristic (PLAN-0048 / FINDING-0011).
+// ADR status heuristic ( / ).
 // Only Status *fields* count — body mentions of CHANGELOG `[Unreleased]` must not trip.
 
 const { parseFrontmatterField } = require("./plan-status");

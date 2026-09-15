@@ -1,6 +1,6 @@
 # Agent Operating Lifecycle（规则详解）
 
-> **生长禁令（FINDING-0029 / ADR-0022）：** 本文件是操作编排骨架（义项 C），不是政策仓库。新横切规则默认进入 `docs/rules/capabilities/` / Control / 适用图；禁止向本文件某 Phase 新增大段横切正文。义项 A（Skill 安装生命周期）不回归本仓；义项 B（INIT/AUDIT/RELEASE）不并入本文件。`state.json` 的进度维是 **facet**（ContextFacet），不是能力分类轴。
+> **生长禁令：** 本文件是操作编排骨架（义项 C），不是政策仓库。新横切规则默认进入 `docs/rules/capabilities/` / Control / 适用图；禁止向本文件某 Phase 新增大段横切正文。义项 A（Skill 安装生命周期）不回归本仓；义项 B（INIT/AUDIT/RELEASE）不并入本文件。`state.json` 的进度维是 **facet**（ContextFacet），不是能力分类轴。
 
 AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 AI Agent 执行任何开发任务时必须遵循。
 
@@ -57,7 +57,7 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 - 不随意改变目录结构
 - 保持向后兼容
 - 新增代码必须同步登记（见 New Code Registration）
-- **引用搜索（改前必做）** — **judgment**（FINDING-0003 类 ⑧ impact-face / 引用搜索）：是否已搜、动态/配置加载是否说明、影响面是否完整，属判断义务；**无**机械 carrier 证明「搜索真的发生过」。清单上的路径存在与否可另做 **mechanical** 观测，不得把「Affected Files 非空」当成搜索已充分。修改任何公开接口/函数/模块/文件**之前**（不仅是删除），先搜索谁引用它（`rg "<名称>"` 全仓 + 配置/动态调用/插件机制），引用到的文件**自动加入** Affected Files 清单；搜索不到的引用（如配置文件里按名字加载的模块）在报告中说明。影响面是**搜出来的，不是想出来的**。
+- **引用搜索（改前必做）** — **judgment**：是否已搜、动态/配置加载是否说明、影响面是否完整，属判断义务；**无**机械 carrier 证明「搜索真的发生过」。清单上的路径存在与否可另做 **mechanical** 观测，不得把「Affected Files 非空」当成搜索已充分。修改任何公开接口/函数/模块/文件**之前**（不仅是删除），先搜索谁引用它（`rg "<名称>"` 全仓 + 配置/动态调用/插件机制），引用到的文件**自动加入** Affected Files 清单；搜索不到的引用（如配置文件里按名字加载的模块）在报告中说明。影响面是**搜出来的，不是想出来的**。
 - **发现先登记** —— 实现中新发现问题：先写入本任务 Discovery Ledger，再决定 fix-now 或其它 disposition；禁止只留在对话上下文。
 
 ### 变更归位与残留清理（Change Hygiene）
@@ -68,13 +68,13 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 
 **权威正文：** `docs/rules/capabilities/root-cause-repair.md`。
 
-含同类实例闭包、控制面追查与失败预算；细则与 **judgment / mechanical** 分层见该叶（FINDING-0003）。
+含同类实例闭包、控制面追查与失败预算；细则与 **judgment / mechanical** 分层见该叶。
 
 ## Phase 4 — Validate（验证）
 
 完成后必须按标准验证序列执行并记录**真实输出**（不是"应该没问题"）。命令按 AGENTS.md 的 Development Commands 裸命令运行，输出摘录进任务报告。
 
-**证据要求** — **judgment**（FINDING-0003 类 ⑤ evidence tiers）：选用哪一档、摘录是否充分、能否声称「验证完成」，属判断义务。门禁 exit code 本身是 **mechanical** 观测，但**挂档与叙事**不得把 mechanical 绿升格为 human-attested 或行为正确。每项验证结果必须附**证据** —— 实际运行的裸命令 + 真实输出摘录（关键行），不得只写"✓ 通过/测试通过"。无法提供输出摘录的"通过"视为未验证。
+**证据要求** — **judgment**：选用哪一档、摘录是否充分、能否声称「验证完成」，属判断义务。门禁 exit code 本身是 **mechanical** 观测，但**挂档与叙事**不得把 mechanical 绿升格为 human-attested 或行为正确。每项验证结果必须附**证据** —— 实际运行的裸命令 + 真实输出摘录（关键行），不得只写"✓ 通过/测试通过"。无法提供输出摘录的"通过"视为未验证。
 
 **证据等级（每个"✓ 通过"必须挂三级之一，否则不得声称验证完成）：**
 
@@ -122,9 +122,9 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 **中/大型**改动完成后必须同步（**小型改动跳过本阶段**，见规模分级与 Change Classification）：
 
 - **同步组对照（必做）** —— 读取 `.governance/sync-rules.json`（项目同步组声明），逐组对照本次实际改动：
-  - watch 命中且 require 未更新 → ❌ 漏同步，补齐后才算完成
-  - watch 未命中 → ⚠️ not-applicable（无同步义务），报告中标注即可
-  - 逐组报告 ✅ 已同步 / ⚠️ 不适用（同步组声明见 `.governance/sync-rules.json`）
+ - watch 命中且 require 未更新 → ❌ 漏同步，补齐后才算完成
+ - watch 未命中 → ⚠️ not-applicable（无同步义务），报告中标注即可
+ - 逐组报告 ✅ 已同步 / ⚠️ 不适用（同步组声明见 `.governance/sync-rules.json`）
 - **机械验证（gate）** —— 在中/大型改动声明完成前运行 `node scripts/check-sync.js`（默认 gate 模式；exit 0 = 通过、exit 1 = 漏同步组）；`--advisory` 模式仅报告不阻断；详见 `scripts/check-sync.js` 与 `.governance/sync-rules.json`
 - **规则捕获（Rule Capture）** —— **权威正文：** `docs/rules/capabilities/rule-capture.md`。Phase 5a/5b/5c 裁定与写入流程见该叶；此处不复述。
 - **文档引用规则、不复述规则** —— 同步知识时，`docs/` 里的内容（README、feature 文档、架构文档）只能**引用** `docs/rules/**` 与 AGENTS.md 中的规则（文件 + 章节指针），不得把规则原文复制进项目知识文档。规则变更 → 只改 `docs/rules/**`（单一事实源）；文档随之更新为引用，不复制。判断标准：这条内容"Agent 必须遵守" → 规则，进 `docs/rules/`；"只是帮助理解" → 知识，进 `docs/` 引用规则。
@@ -132,7 +132,7 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 - 更新 Feature Registry（docs/features/，如涉及功能）
 - 更新 Architecture Documentation（如架构变化）
 - 更新 `docs/plans/DEVELOPMENT_PLAN.md`：勾选对应里程碑、更新状态标记与验收结果（如存在对应里程碑）；归档在发布（RELEASE）时统一执行（见发布流程）
-  - **里程碑是索引，不是事实源**：里程碑清单只表达状态（勾选、验收结果），不复述 TASK 计划的设计、验证方式或 Affected Files——那些以 `docs/plans/TASK_<name>.md` 为单一事实源。每个里程碑应能指向其拥有的 TASK 计划（有则写明文件名）；计划新建、实现完成或归档时，在同一变更集内同步里程碑条目，不留到发布才对账。本约束的可判定部分由 `scripts/check-plan-sync.js` 机械对账（默认建议性，`--release-gate` 在发布时 fail-closed）：已实现计划有对应里程碑、归档计划不被未勾选里程碑指向、里程碑指名的计划文件存在。里程碑描述是否准确、任务是否真正完成、链接是否语义正确仍属人工判断，不机械化。
+ - **里程碑是索引，不是事实源**：里程碑清单只表达状态（勾选、验收结果），不复述 TASK 计划的设计、验证方式或 Affected Files——那些以 `docs/plans/TASK_<name>.md` 为单一事实源。每个里程碑应能指向其拥有的 TASK 计划（有则写明文件名）；计划新建、实现完成或归档时，在同一变更集内同步里程碑条目，不留到发布才对账。本约束的可判定部分由 `scripts/check-plan-sync.js` 机械对账（默认建议性，`--release-gate` 在发布时 fail-closed）：已实现计划有对应里程碑、归档计划不被未勾选里程碑指向、里程碑指名的计划文件存在。里程碑描述是否准确、任务是否真正完成、链接是否语义正确仍属人工判断，不机械化。
 - 已完成任务的 `TASK_<name>.md`：把文档顶部 `## Status` 更新为 `Completed` 并附完成日期；归档仍在发布（RELEASE）时统一执行
 - **归档不翻译** —— 归档的计划（`docs/plans/archive/`）与 ADR 决策史保持项目约定语言原样，绝不翻译——它们记录的是已发生的决策与已完成的工作，翻译零收益。
 
@@ -183,7 +183,7 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 
 ```text
 - **新增能力**（`scripts/check-sync.js`，INSTALLED）—— 新增一个只读的同步组检查；被治理项目可据此核对同步声明，失败时退出码非零。
-- **修复缺陷**（plan: PLAN-0010）—— 修复 `check-sync.js` 把 `"locked": false` 误判为持锁的问题；之前会错误阻塞本可放行的操作。
+- **修复缺陷**（示例：修复持锁误判）—— 修复 `check-sync.js` 把 `"locked": false` 误判为持锁的问题；之前会错误阻塞本可放行的操作。
 - **规则变更**（`lifecycle.policy.md`，INSTALLED）—— 根因修复协议新增双域对称要求；修复治理缺陷时须检查另一域的对应实现（详见规则文件）。
 ```
 
@@ -195,14 +195,13 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 
 反例的问题：把 5 个独立变更塞进一条（违反"一条 = 一个变更"）；"经变异验证""回归测试覆盖"是验证叙事（违反"不记录验证过程"）；根因细节（`readJSON` 堆栈不可读）应留在计划/审计记录，CHANGELOG 只记"修了 X，影响 Y"。
 
-
 ## Phase 6 — Report（报告）
 
 最终输出：修改文件列表、新增功能列表、删除/重命名/替换/弃用内容列表、已捕获规则、一次性要求、未决候选、兼容项及退出条件、迁移/回滚结果、验证结果和文档更新情况。报告中的规则候选使用 ID 和规范化摘要，不复制秘密或整段对话；Phase 6 不再触发新的规则写入。
 
 对于 Change Hygiene，报告必须说明：当前层未解释命中数、兼容层保留项及其退出条件、历史层命中是否仅为历史记录、未解决影响面以及 `git diff --name-only` 与 Affected Files/Target 的对照结果。
 
-**影响面对照（必做）** — **judgment**（FINDING-0003 类 ⑧）：逐条归因（漏改 / 未预判 / 合理）由 Agent/人裁定；`git diff` 与清单的集合差本身可 **mechanical** 列出，但「是否可宣称影响面已闭合」仍是 judgment。把实际改动文件（`git diff --name-only`）与任务开始时的 Affected Files 清单逐条对照：
+**影响面对照（必做）** — **judgment**：逐条归因（漏改 / 未预判 / 合理）由 Agent/人裁定；`git diff` 与清单的集合差本身可 **mechanical** 列出，但「是否可宣称影响面已闭合」仍是 judgment。把实际改动文件（`git diff --name-only`）与任务开始时的 Affected Files 清单逐条对照：
 
 - 清单里有但实际没改 → ❌ **漏文件**，补改或逐条说明不动的理由
 - 实际改了但清单里没有 → ⚠️ **未预判改动**，说明原因（新发现的必要改动 / 偷懒的顺手改）

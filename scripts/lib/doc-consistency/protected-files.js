@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
+// Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
 // INSTALLED with siblings listed in references/init-spec.json — keep require graph closed.
 "use strict";
 function runProtectedFiles(ctx) {
@@ -34,7 +34,7 @@ function runProtectedFiles(ctx) {
   const tableRe = /^\|\s*`([^`]+)`\s*\|/gm;
   let tm;
   // Parse ONLY the protected-files table. The document has two tables: the protected-files
-  // list under "## 受保护文件" and a git-tracking table under "## .governance/ Git 跟踪策略";
+  // list under "## 受保护文件" and a git-tracking table under "##.governance/ Git 跟踪策略";
   // entries like "docs/plans/archive/" from the second would otherwise be demanded from
   // every AGENTS.md summary (found by review).
   //
@@ -122,7 +122,7 @@ function runProtectedFiles(ctx) {
       // drift unchecked (audit 2026-09-05).
       //
       // Scope: the ENUMERATION BLOCK, not the whole section. A protection section also
-      // discusses state files and workflow prose ("写入 .governance/state.json"), and
+      // discusses state files and workflow prose ("写入.governance/state.json"), and
       // those mentions are not claims about the protected list — judging them produced
       // false "stale entry" reports on first run.
       const declared = new Set();
@@ -130,13 +130,13 @@ function runProtectedFiles(ctx) {
         const t = String(raw || "").trim().replace(/[`*]/g, "").replace(/[，,。.;；]$/, "");
         if (!t) return;
         // Take the path-looking head of the line: entries carry trailing prose
-        // ("scripts/check-lock.js  （锁检查）") that must not become part of the token.
+        // ("scripts/check-lock.js （锁检查）") that must not become part of the token.
         const head = t.split(/[\s（(]/)[0];
         if (head && GOVERNANCE_SHAPED.test(head)) declared.add(head);
       };
       // The enumeration block: every fenced block / table / list run that follows the
       // enumeration claim inside the claim section — plus the claim's own prose line, which
-      // is how the INSTALLED agents-md template writes its list ("Modifying A, B, C ...
+      // is how the INSTALLED agents-md template writes its list ("Modifying A, B, C...
       // requires:"). Parsing only fenced/table/unordered-list forms left three shapes
       // invisible, and an unparsed shape does not merely skip Rule 4: it also collapses
       // Rule 3, because `declared.size === 0` reads as "declares nothing" (review finding).

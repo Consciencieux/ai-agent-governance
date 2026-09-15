@@ -1,8 +1,5 @@
 # Implementation Review 机制
 
-> Capability leaf (`review-mechanism`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/review-mechanism.md`.
-
 ## Trigger
 
 发布/高风险变更需要 Implementation Review；用户触发 review-manager。

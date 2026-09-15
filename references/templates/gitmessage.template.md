@@ -4,7 +4,7 @@ INIT 时复制为 `<project>/.gitmessage.txt` 并配置为仓库级默认（`git
 
 ```
 # <type>(<scope>): <subject>
-# |<----  Using a Maximum Of 50 Characters  ---->|
+# |<---- Using a Maximum Of 50 Characters ---->|
 #
 # type: feat / fix / docs / refactor / test / ci / chore
 # scope: optional module name (e.g. auth, ci, docs)

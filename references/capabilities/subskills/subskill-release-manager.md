@@ -1,8 +1,5 @@
 # 子技能：release-manager
 
-> Capability leaf (`subskill-release-manager`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-release-manager.md`.
-
 ## Trigger
 
 被治理项目发布编排（HITL）。

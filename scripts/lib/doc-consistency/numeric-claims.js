@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
+// Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
 // INSTALLED with siblings listed in references/init-spec.json — keep require graph closed.
 "use strict";
 function runNumericClaims(ctx) {
@@ -10,7 +10,7 @@ function runNumericClaims(ctx) {
     issues, gateIssues, anyGate, releaseGate, version, planStatuses,
   } = ctx;
 
-  // ---- 5. numeric claims (ADR-0010 entry-layer; --gate/--release-gate fail-closed) ----
+  // ---- 5. numeric claims ( entry-layer; --gate/--release-gate fail-closed) ----
   // validator check count: docs must claim the same count as the DEFAULTS array
   const validator = readFile(path.join(ROOT, "scripts", "verify_governance.js")) || readFile(path.join(ROOT, "scripts", "verify-governance.js")) || "";
   const defaultArr = validator.match(/const DEFAULTS = \[([\s\S]*?)\n\];/);

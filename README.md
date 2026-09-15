@@ -90,15 +90,29 @@ See [docs/product/en/commands.md](docs/product/en/commands.md) for the complete 
 
 ## Quick Start
 
-Install the skill where your coding agent discovers skills — use the release payload tarball:
+**1. Install the release payload** (not a git clone of this repo) into a directory your agent actually scans for skills.
+
+| Agent | Typical install path |
+| --- | --- |
+| Cursor | Project: `.cursor/skills/ai-agent-governance/` · or your personal Agent Store `skills/` |
+| Claude Code / opencode (shared) | `~/.agents/skills/ai-agent-governance/` or project `.agents/skills/…` |
+| Claude Code | `.claude/skills/ai-agent-governance/` |
+| opencode-only | `.opencode/skills/ai-agent-governance/` |
+
+Example (shared `.agents` path — swap the directory for your agent from the table):
 
 ```bash
-mkdir -p ~/.agents/skills/ai-agent-governance
-curl -L https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz \
-  | tar -xz -C ~/.agents/skills/ai-agent-governance
+DEST=~/.agents/skills/ai-agent-governance
+mkdir -p "$DEST"
+curl -fsSL -o /tmp/ai-agent-governance-skill.tar.gz \
+  https://github.com/Consciencieux/ai-agent-governance/releases/latest/download/ai-agent-governance-skill.tar.gz
+# Optional: verify SHA-256 from the Release notes, then:
+tar -xzf /tmp/ai-agent-governance-skill.tar.gz -C "$DEST"
 ```
 
-This is a chat prompt, not a shell command. In your AI coding agent chat, ask:
+Do **not** clone this repository into a skills folder — that pulls `docs/`, `tests/`, and other repo infrastructure that is not the install payload. Full discovery notes: [docs/product/en/skill-discovery.md](docs/product/en/skill-discovery.md).
+
+**2. In the project you want to govern**, open your coding agent chat and send this prompt (not a shell command):
 
 ```text
 initialize project governance
@@ -130,7 +144,7 @@ Complete annotated initialization output: [docs/product/en/bootstrap-output.md](
 
 ## Generated Environment
 
-INIT generates a governance skeleton whose exact contract — inputs, artifacts, installed scripts, rule files and generated sub-skills — is defined in [references/init-spec.json](references/init-spec.json) and [references/templates/sub-skills.md](references/templates/sub-skills.md).
+INIT generates a governance skeleton whose exact contract — inputs, artifacts, installed scripts, rule files and generated sub-skills — is defined in [references/init-spec.json](references/init-spec.json) and [references/instruction/sub-skills.md](references/instruction/sub-skills.md).
 
 ## Documentation
 
@@ -151,7 +165,7 @@ INIT generates a governance skeleton whose exact contract — inputs, artifacts,
 
 ## Current version
 
-**v2.1.0** is the current installable product line (`package.json`). Must-ship INIT / AUDIT / RELEASE run on a clean target; this repo's CI blocking authority is `npm run check:must-ship`. Generation 1 (1.x) remains the historical baseline; `v2.0.0` was the Gen2 must-ship freeze. See [CHANGELOG.md](CHANGELOG.md) and [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md).
+Install from [Releases → latest](https://github.com/Consciencieux/ai-agent-governance/releases/latest) (`ai-agent-governance-skill.tar.gz`). Source line version is in `package.json` / `SKILL.md`. Must-ship INIT / AUDIT / RELEASE run on a clean target; this repo's CI blocking authority is `npm run check:must-ship`. See [CHANGELOG.md](CHANGELOG.md) and [docs/plans/roadmap/en.md](docs/plans/roadmap/en.md).
 
 ## License
 

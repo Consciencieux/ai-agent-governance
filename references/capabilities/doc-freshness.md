@@ -1,8 +1,5 @@
 # 文档新鲜度（被治理项目面）
 
-> Capability leaf (`doc-freshness`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/doc-freshness.md`.
-
 ## Trigger
 
 治理文档过期、译文滞后、发布新鲜度门禁。

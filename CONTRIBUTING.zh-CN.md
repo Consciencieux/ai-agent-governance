@@ -24,7 +24,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 **新文件放哪里？** 先判断知识类型，再决定路径和语言（不要先按语言选目录）：
 
 - 仓库知识对象（产品 / 研究 / 发现 / 决策 / 路线图 / 计划 / 术语）→ `docs/README.md` 的路由表
-- 技能安装产物与物化源 → `SKILL.md`、`references/`、`scripts/`，按 `docs/product/zh-CN/architecture.md` 的分发角色放置。**不要**把「生成机制」当成进入 `references/` 的分类标准；`references/templates/` 只是物化模板的当前位置，可执行指令源与 boilerplate 不是同一类（FINDING-0026）
+- 技能安装产物与物化源 → `SKILL.md`、`references/`、`scripts/`，按 `docs/product/zh-CN/architecture.md` 的分发角色放置。目录按语义责任分类（ADR-0026）：指令源在 `references/instruction/`；`references/templates/` 只收留物化模板。
 - 测试、CI 等开发基础设施 → `tests/`、`.github/` 等
 
 ## 语言政策（按受众）
@@ -41,7 +41,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 2. 升 `package.json` 版本（SemVer：破坏性 → MAJOR，新能力 → MINOR，修复 → PATCH）
 3. 保持版本一致：package.json · CHANGELOG · SKILL.md frontmatter · `references/init-spec.json` 默认值 · `scripts/lib/generate/run.js` 哨兵值 · tag
 4. push 前必须 `npm test`；合入 `main` 前 `npm run check:must-ship` 必须绿
-5. 仅通过 `release-manager` 流程发布（前置检查含 `gates.must_ship` → 版本同步 → 校验 → tag → push → GitHub Release）
+5. 仅通过 `release-manager` 流程发布（前置检查含 `gates.must_ship` → 版本同步 → 校验 → tag → 推送已批准分支与 tag → GitHub Release 说明；技能 tarball 优先由 tag CI 上传）
 
 ## 开发工作流
 
@@ -67,6 +67,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 | `npm run check:tests` | 变更 `tests/`、`.gitattributes` | test + hygiene |
 | `npm run check:full` | 默认、范围不定、或显式全量 | test + parity + layout + consistency + hygiene + role-completeness |
 | `npm run check:all` | 巡检或显式全量巡检 | check + freshness + plan delivery |
+| `npm run check:file-size` | 文件肥胖信号 / 巡检 | 顾问级行数预算（`--gate` 仅 review 档失败）；不在日常 `check` |
 | `npm run check:must-ship` | 合入 / 发布 CI | 仅 must-ship 机械集合 |
 
 ### 各门禁证明什么（证据分层）
@@ -81,6 +82,7 @@ CI（ADR-0014 Migration Mode **已退出**；PLAN-0052）：所有分支 / PR �
 | `check-role-completeness.js --gate` | 角色分类 / 打包 | mechanical | 分发契约完整 |
 | `check-doc-freshness.js` | 陈旧文档 / 译文滞后 | mechanical（报告；`--release-gate` 阻断） | 未检出机械陈旧 |
 | `check-plan-delivery.js` | 计划声明 vs 交付路径 | mechanical | 声明文件/标识存在 |
+| `check-file-size-budget.js` | soft/review 行数预算（按对象类） | advisory（机械计数；是否拆分由人定） | 列出超 soft/review；不是拆分裁决 |
 | `verify_governance.js` | 治理产物存在性 | mechanical | 本仓默认模式按设计失败（ADR-0006） |
 
 证据分层：**mechanical** = 标记/路径/结构/存在（通过 ≠「行为正确」）；**human-attested** = 需人工（当前无自动门禁产出）；**unverified claim** = 仅声明、无独立核验。

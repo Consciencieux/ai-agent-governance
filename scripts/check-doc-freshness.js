@@ -5,7 +5,7 @@
 // Relative requires must close under INSTALLED copy list (see init-spec invariants).
 //
 // Evaluators return semantic verdict only. This wrapper applies profile × boundary
-// bindings (ADR-0023): default → advisory; --release-gate + CTRL-0004 fail → deny.
+// bindings : default → advisory; --release-gate + CTRL-0004 fail → deny.
 // Exit code: 0 in default advisory mode. With --release-gate, stale/draft TRANSLATIONS
 // exit 1. CTRL-0003 findings never flip the process exit code on this CLI.
 

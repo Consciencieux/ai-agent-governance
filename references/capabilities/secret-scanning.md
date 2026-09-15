@@ -1,8 +1,5 @@
 # 密钥扫描
 
-> Capability leaf (`secret-scanning`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/secret-scanning.md`.
-
 ## Trigger
 
 暂存区/提交前/CI；用户说「扫密钥」「secret scan」；发布预检。

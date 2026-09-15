@@ -18,8 +18,9 @@ const REQUIRED_FILES = [
   "scripts/verify_governance.js",
   "references/policies/git.policy.md",
   "references/workflows/release.md",
-  "references/templates/sub-skills.md",
+  "references/instruction/sub-skills.md",
   "references/init-spec.json",
+  "references/capabilities/enforcement.v0.json",
   "SKILL.md",
   "repo-tools/package-skill.sh",
   "repo-workflows/skill-release.md",
@@ -59,13 +60,23 @@ for (const re of REQUIRED_SKILL_MARKERS) {
 }
 
 const subSkills = fs.readFileSync(
-  path.join(ROOT, "references/templates/sub-skills.md"),
+  path.join(ROOT, "references/instruction/sub-skills.md"),
   "utf8"
 );
 for (const name of REQUIRED_SUBSKILLS) {
   if (!new RegExp(`^name:\\s*${name}\\s*$`, "m").test(subSkills)) {
     fail(`sub-skills.md missing leaf: ${name}`);
   }
+}
+
+const instructionDir = path.join(ROOT, "references", "instruction");
+const instructionFiles = fs.readdirSync(instructionDir).filter((n) => !n.startsWith("."));
+const allowedInstruction = new Set(["agents-md.template.md", "sub-skills.md"]);
+for (const n of instructionFiles) {
+  if (!allowedInstruction.has(n)) fail(`references/instruction/ extra file (boilerplate belongs in templates/): ${n}`);
+}
+for (const n of allowedInstruction) {
+  if (!instructionFiles.includes(n)) fail(`references/instruction/ missing ${n}`);
 }
 
 // AUDIT / drift entry: SKILL AUDIT mode + drift-check leaf (already checked).

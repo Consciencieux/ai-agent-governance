@@ -1,4 +1,4 @@
-// PLAN-0055 Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
+// Stage 4E+/R10: doc-consistency gate cluster (EXTRACT from run.js).
 // INSTALLED with siblings listed in references/init-spec.json — keep require graph closed.
 "use strict";
 function runAdrStatus(ctx) {
@@ -10,7 +10,7 @@ function runAdrStatus(ctx) {
     issues, gateIssues, anyGate, releaseGate, version, planStatuses,
   } = ctx;
 
-  // ---- 3. ADR status sync (FINDING-0011 / PLAN-0048: Status *fields* only) ----
+  // ---- 3. ADR status sync ( / : Status *fields* only) ----
   const changelogText = readFile(path.join(ROOT, "CHANGELOG.md")) || "";
   const releasedVersions = [...changelogText.matchAll(/^## \[(\d+\.\d+\.\d+)\]/gm)].map((m) => m[1]);
   const adrDir = path.join(DOCS, "design-decisions");

@@ -1,8 +1,5 @@
 # 子技能：review-manager
 
-> Capability leaf (`subskill-review-manager`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-review-manager.md`.
-
 ## Trigger
 
 同 review-mechanism；优先作为生成子技能入口的显式叶。

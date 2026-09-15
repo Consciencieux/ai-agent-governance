@@ -12,7 +12,7 @@ generation: cross-generation
 ADR-0009 确立了「索引不是事实源」：roadmap/里程碑是索引，计划是事实源。但同一边界在入口层文档（README/CONTRIBUTING）上从未被声明——直到 v1.0 文档重写，现场证据才集中出现：
 
 - README 曾维护「38 个触发器」「21 项检查」「9 行 prompt 场景表」等高频变化事实；`numeric_claims` 门禁专为 README/CONTRIBUTING 的 `N checks` 数字设防（`scripts/check-doc-consistency.js` 扫这两个文件比对 DEFAULTS 计数）——这本身就是「README 被当作事实源后需要机械兜底」的实证。
-- v1.0.0 重写时作出的一系列决策，其实都是同一原则的现场执行：删掉完整 prompt 表（权威归 `commands.md`）、不写触发器数字、契约摘要链接权威源（`references/init-spec.json`、`references/templates/sub-skills.md`）、保留概念闭环 ASCII 图而丢弃具体模块/目录架构图。
+- v1.0.0 重写时作出的一系列决策，其实都是同一原则的现场执行：删掉完整 prompt 表（权威归 `commands.md`）、不写触发器数字、契约摘要链接权威源（`references/init-spec.json`、`references/instruction/sub-skills.md`）、保留概念闭环 ASCII 图而丢弃具体模块/目录架构图。
 - 被治理项目的同类风险同样存在：README 若维护「测试数量、检查项数量、近期目标」，随版本演化必然漂移——这正是本 skill 治理的「状态漂移」在文档层面的同构复现。
 
 ## 决策

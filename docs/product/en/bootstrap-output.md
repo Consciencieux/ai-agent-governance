@@ -14,7 +14,8 @@ The INIT scripted generator (`scripts/generate-governance.js`) produces a determ
 | docs/rules/coding.md | references/policies/coding.policy.md |
 | docs/rules/testing.md | references/policies/testing.policy.md |
 | docs/rules/governance-files.md | references/policies/governance-files.policy.md |
-| AGENTS.md | references/templates/agents-md.template.md (placeholders resolved) |
+| docs/rules/capability-enforcement.json | references/capabilities/enforcement.v0.json |
+| AGENTS.md | references/instruction/agents-md.template.md (placeholders resolved) |
 | CHANGELOG.md | static (Keep a Changelog, Unreleased section) |
 | README.md | static bootstrap with documentation index |
 | docs/features/ | dir placeholder + _TEMPLATE.md (feature template with anti-fabrication rules) |
@@ -42,7 +43,7 @@ The INIT scripted generator (`scripts/generate-governance.js`) produces a determ
 | .github/workflows/ci.yml (or .gitlab-ci.yml) | selected from references/workflows/ci.md |
 | scripts/check-doc-freshness.js (+ lib/git-facts.js, evaluators/ctrl-0003-doc-freshness.js, evaluators/ctrl-0004-translation-freshness.js) + check-doc-consistency.js (+ lib/md-link-facts.js, evaluators/ctrl-0006-broken-links.js) | copied verbatim from this skill |
 | scripts/release-manager.js | copied verbatim from this skill (the generated release-manager sub-skill invokes it) |
-| .governance/generated/skills/ | generated from references/templates/sub-skills.md |
+| .governance/generated/skills/ | generated from references/instruction/sub-skills.md |
 | .githooks/pre-commit + .githooks/commit-msg | references/templates/githooks-template.md; executable, opt-in, never enabled by INIT |
 
 ## Determinism and validation
