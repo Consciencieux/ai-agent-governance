@@ -1,9 +1,5 @@
 # Git 工作流安全
 
-> Capability leaf (`git-workflow-safety`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/git-workflow-safety.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 分支保护、直推/force 到受保护分支、CI 分支策略校验。

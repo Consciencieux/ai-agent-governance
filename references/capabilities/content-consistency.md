@@ -1,9 +1,5 @@
 # 内容一致性
 
-> Capability leaf (`content-consistency`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/content-consistency.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 改交叉文档事实、版本示例、触发词、受保护清单等一致性簇。

@@ -1,9 +1,5 @@
 # INSTALLED 内容可移植性
 
-> Capability leaf (`installed-portability`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/installed-portability.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 编写/审查 INSTALLED 规则、生成 AGENTS、模板路径引用。

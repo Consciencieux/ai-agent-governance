@@ -1,5 +1,6 @@
-// PLAN-0057 — capability enforcement JSON completeness.
+// Capability enforcement JSON completeness (PLAN-0057).
 // Does NOT prove agents complied with unmechanized / inherent_judgment rows.
+// leaf = authoring path under references/capabilities/ (matches on-disk source tree).
 "use strict";
 
 const fs = require("fs");
@@ -30,6 +31,10 @@ module.exports = function register(test) {
       console.error("  empty entries");
       return false;
     }
+    if (inv.plan || inv.adr) {
+      console.error("  INSTALLED inventory must not ship plan/adr provenance fields");
+      return false;
+    }
     return true;
   });
 
@@ -42,15 +47,28 @@ module.exports = function register(test) {
       console.error("  on disk but not in inventory:\n    " + missing.join("\n    "));
       return false;
     }
+    const extra = [...declared].filter((p) => !onDisk.includes(p));
+    if (extra.length) {
+      console.error("  in inventory but not on disk:\n    " + extra.join("\n    "));
+      return false;
+    }
     return true;
   });
 
-  test("capability-enforcement: every declared leaf exists; no ## Enforcement dual-write", () => {
+  test("capability-enforcement: leaf paths are authoring sources; no Classification dual-write / PLAN-0057 leak", () => {
     const inv = JSON.parse(fs.readFileSync(INV, "utf8"));
     for (const e of inv.entries) {
+      if (!e.leaf || !e.leaf.startsWith("references/capabilities/")) {
+        console.error("  leaf must be authoring path under references/capabilities/:", e.id, e.leaf);
+        return false;
+      }
+      if (e.leaf.startsWith("docs/rules/")) {
+        console.error("  leaf must not use INSTALLED path:", e.id, e.leaf);
+        return false;
+      }
       const abs = path.join(ROOT, e.leaf);
       if (!fs.existsSync(abs)) {
-        console.error("  missing leaf", e.leaf);
+        console.error("  missing leaf file", e.leaf);
         return false;
       }
       const body = fs.readFileSync(abs, "utf8");
@@ -58,11 +76,23 @@ module.exports = function register(test) {
         console.error("  dual-write ## Enforcement in", e.leaf);
         return false;
       }
+      if (/Classification \(after INIT\)/.test(body)) {
+        console.error("  Classification dual-write in", e.leaf);
+        return false;
+      }
+      if (/\b(PLAN|ADR|FINDING)-\d+\b/.test(body)) {
+        console.error("  producer PLAN/ADR/FINDING id leak in INSTALLED leaf", e.leaf);
+        return false;
+      }
+      if (/Instruction-surface|Role:\s*INSTALLED|Disposition:\s*ADR-/.test(body)) {
+        console.error("  producer construction header leak in INSTALLED leaf", e.leaf);
+        return false;
+      }
     }
     return true;
   });
 
-  test("capability-enforcement: obligation rows valid; mechanical carriers exist", () => {
+  test("capability-enforcement: obligation rows valid; mechanical carriers exist in this repo", () => {
     const inv = JSON.parse(fs.readFileSync(INV, "utf8"));
     const ids = new Set();
     for (const e of inv.entries) {
@@ -95,6 +125,8 @@ module.exports = function register(test) {
             console.error("  mechanical missing carrier", e.id, o.id);
             return false;
           }
+          // Completeness gate runs in the skill repo: carriers must exist here.
+          // scope=repo_only means the path is absent after INIT in governed projects.
           if (!fs.existsSync(path.join(ROOT, o.carrier))) {
             console.error("  missing carrier", e.id, o.id, o.carrier);
             return false;

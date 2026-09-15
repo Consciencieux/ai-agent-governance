@@ -22,7 +22,7 @@ const CLASSES = [
   {
     id: "2-dual-domain",
     file: "references/capabilities/root-cause-repair.md",
-    must: ["judgment", "FINDING-0003", "双域"],
+    must: ["judgment", "双域"],
   },
   {
     id: "3-sibling-closure",
@@ -32,7 +32,7 @@ const CLASSES = [
   {
     id: "4-control-plane",
     file: "references/capabilities/root-cause-repair.md",
-    must: ["judgment", "FINDING-0003", "控制面"],
+    must: ["judgment", "控制面"],
   },
   {
     id: "5-evidence-tiers",
@@ -42,12 +42,12 @@ const CLASSES = [
   {
     id: "6-failure-budget",
     file: "references/capabilities/root-cause-repair.md",
-    must: ["judgment", "FINDING-0003", "失败预算"],
+    must: ["judgment", "失败预算"],
   },
   {
     id: "7-rule-capture",
     file: "references/capabilities/rule-capture.md",
-    must: ["judgment", "FINDING-0003", "5a"],
+    must: ["judgment", "5a"],
   },
   {
     id: "8-impact-face",

@@ -157,7 +157,7 @@
       "path": "docs/rules/capability-enforcement.json",
       "source": "references/capabilities/enforcement.v0.json",
       "type": "copy",
-      "description": "Obligation classification inventory (PLAN-0057 / ADR-0026 Q3)"
+      "description": "Obligation classification inventory (INSTALLED; ADR-0026 Q3)"
     },
     {
       "phase": "A",

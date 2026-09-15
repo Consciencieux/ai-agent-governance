@@ -3,17 +3,30 @@
   "version": 0,
   "authority": "classification",
   "installed_path": "docs/rules/capability-enforcement.json",
-  "plan": "PLAN-0057",
-  "adr": "ADR-0026",
   "notes": [
-    "Sole source for obligation classification. Capability markdown must not list ## Enforcement rows.",
+    "Sole source for obligation classification. Capability markdown must not list ## Enforcement rows or Classification dual-write.",
+    "leaf is the authoring path under references/capabilities/ (INIT copies this file to docs/rules/capability-enforcement.json).",
+    "scope=repo_only carriers exist only in the skill distribution repo; they are absent after INIT.",
     "mode is classification; result is enforcement-semantics allow/deny/warn/require_review.",
     "A green completeness gate does not prove agents complied with unmechanized or inherent_judgment rows."
   ],
   "enums": {
-    "mode": ["mechanical", "require_review", "unmechanized", "inherent_judgment"],
-    "result": ["allow", "deny", "warn", "require_review"],
-    "scope": ["installed", "repo_only"]
+    "mode": [
+      "mechanical",
+      "require_review",
+      "unmechanized",
+      "inherent_judgment"
+    ],
+    "result": [
+      "allow",
+      "deny",
+      "warn",
+      "require_review"
+    ],
+    "scope": [
+      "installed",
+      "repo_only"
+    ]
   },
   "entries": [
     {

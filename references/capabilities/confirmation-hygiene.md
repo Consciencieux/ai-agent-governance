@@ -1,9 +1,5 @@
 # 确认凭证与变更卫生
 
-> Capability leaf (`confirmation-hygiene`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/confirmation-hygiene.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 人授写操作后的凭证绑定、变更集卫生检查。

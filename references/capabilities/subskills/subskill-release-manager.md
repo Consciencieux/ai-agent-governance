@@ -1,9 +1,5 @@
 # 子技能：release-manager
 
-> Capability leaf (`subskill-release-manager`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-release-manager.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 被治理项目发布编排（HITL）。
@@ -19,7 +15,6 @@
 ## Verify
 
 人批后方可写 tag；provenance 规则不被手改。
-
 
 ## Non-goals
 

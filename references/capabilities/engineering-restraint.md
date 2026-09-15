@@ -1,16 +1,12 @@
 # 工程克制（机制测试）
 
-> Capability leaf (`engineering-restraint`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/engineering-restraint.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 新增机制、门禁、脚本、状态、流程之前。
 
 ## Authority
 
-`docs/rules/coding.md` § 工程克制与机制测试（**judgment**；FINDING-0003 类 ①；无机械 carrier）。
+`docs/rules/coding.md` § 工程克制与机制测试（**judgment**；无机械 carrier）。
 
 ## Invoke
 

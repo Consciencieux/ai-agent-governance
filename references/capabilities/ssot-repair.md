@@ -1,9 +1,5 @@
 # 门禁修复与单一事实源对齐
 
-> Capability leaf (`ssot-repair`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/ssot-repair.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 门禁误报/漏报、多源打架、修复治理缺陷时。

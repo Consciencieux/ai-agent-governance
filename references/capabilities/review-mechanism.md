@@ -1,9 +1,5 @@
 # Implementation Review 机制
 
-> Capability leaf (`review-mechanism`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/review-mechanism.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 发布/高风险变更需要 Implementation Review；用户触发 review-manager。
@@ -19,7 +15,6 @@
 ## Verify
 
 报告落地；须修项进入可追踪闭环。
-
 
 ## Non-goals
 

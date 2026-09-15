@@ -1,9 +1,5 @@
 # 治理校验器
 
-> Capability leaf (`governance-validator`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/governance-validator.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 INIT 后验证、AUDIT、发布前、CI must-ship/观测门禁。

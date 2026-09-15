@@ -1,9 +1,5 @@
 # 确定性 INIT / 生成器
 
-> Capability leaf (`deterministic-init`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/deterministic-init.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 新项目初始化、无 `.governance/manifest.json`、用户说 initialize governance。

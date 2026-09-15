@@ -1,9 +1,5 @@
 # 子技能：repository-inspection
 
-> Capability leaf (`subskill-repository-inspection`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-repository-inspection.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 需要仓库/环境/栈勘察输入时。
@@ -19,7 +15,6 @@
 ## Verify
 
 产出可被 ci-generator 等下游消费的勘察结果。
-
 
 ## Non-goals
 

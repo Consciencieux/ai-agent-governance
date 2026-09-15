@@ -1,9 +1,5 @@
 # Plan / milestone 同步
 
-> Capability leaf (`plan-sync`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/plan-sync.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 仍使用 DEVELOPMENT_PLAN↔TASK 模型的被治理项目；发布前计划同步。

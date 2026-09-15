@@ -1,19 +1,14 @@
 # 发现台账（Discovery Ledger）
 
-> Capability leaf (`discovery-ledger`). Instruction-surface 2.0 card (PLAN-0046) + 5c authority body restored (PLAN-0047 H2a).
-> Role: INSTALLED → `docs/rules/capabilities/discovery-ledger.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-> Disposition: ADR-0024 `later` for L2 mechanization; L1 INSTALLED contract remains.
-
 ## Trigger
 
-TASK 中发现已知问题需闭环时（ADR-0021）。
+TASK 中发现已知问题需闭环时。
 
 ## Authority
 
 本叶为权威正文（INIT → `docs/rules/capabilities/discovery-ledger.md`）。`docs/rules/lifecycle.md` 仅保留编排指针，不再承载本横切正文。
 
-**语义权威**：ADR-0021（Known-Issue Closure）。本节是 **INSTALLED L1 契约**——规定被治理项目 TASK 如何承载台账；不复述 ADR 全文，不新建 issue tracker / Control / 自动发现脚本。
+本节是 **INSTALLED L1 契约**——规定被治理项目 TASK 如何承载台账；不新建 issue tracker / Control / 自动发现脚本。
 
 **对象性质（存储边界）：** Discovery Ledger 是 **execution state + provenance**（本次工作发现了什么、如何处置），**不是**长期规则、不是 Research/ADR 正文、不是 Finding 仓库。
 
@@ -31,7 +26,7 @@ TASK 中发现已知问题需闭环时（ADR-0021）。
 
 - **类型（type）**：`bug` / `missing_capability` / `drift` / `migration_gap` / `observation`
 - **来源（source）**：`task` / `review` / `test` / `audit`（可加短备注）
-- **状态（status）** 与 **处置（disposition）** 是两轴（ADR-0021）：`open` = 仍跟踪；获得 terminal disposition 后必须 `closed`
+- **状态（status）** 与 **处置（disposition）** 是两轴：`open` = 仍跟踪；获得 terminal disposition 后必须 `closed`
 - **处置（disposition）权威枚举**：`resolved` / `deferred` / `duplicate` / `not-applicable` / `blocked` / `promoted-to-finding` / `promoted-to-adr` / `promoted-to-research` / `promoted-to-next-plan`。口语别名：`fix_now`→`resolved`；`create_plan`→`promoted-to-next-plan`；`create_finding`→`promoted-to-finding`；`create_adr`→`promoted-to-adr`；`ignore_with_reason`→`not-applicable`（理由写入验证/证据）
 - **非 resolved 的 terminal disposition** 必须带 **successor**（后继 ID）或显式 **revisit** 条件（写入验证/证据列）
 - **membership append-only**：已登记行不得删除；只更新状态/处置/证据

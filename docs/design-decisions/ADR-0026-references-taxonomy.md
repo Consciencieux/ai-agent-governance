@@ -37,7 +37,7 @@ generation: gen2
 
 **3. 兑现方式必须可陈述，但不是目录轴。** FINDING-0003 的观察（文档 MUST ≠ 脚本拒绝）仍成立；把「没脚本 / 要人批 / 天生不能判」捆成同一个 `judgment` **不**成立。
 
-权威载体：INSTALLED `docs/rules/capability-enforcement.json`（源：`references/capabilities/enforcement.v0.json`）。按 **义务行** 分类，禁止整文件一个 enum，禁止能力叶 `## Enforcement` 再写一份清单。
+权威载体：INSTALLED `docs/rules/capability-enforcement.json`（源：`references/capabilities/enforcement.v0.json`）。按 **义务行** 分类，禁止整文件一个 enum，禁止能力叶 `## Enforcement` 再写一份清单，**禁止**能力叶写入本仓 PLAN/ADR/Finding 施工指针或 Classification 双写行（生产者/产品分离）。JSON 内 `leaf` 是本仓写作路径（`references/capabilities/…`，含 `subskills/`）；门禁按该路径对账磁盘；INIT 只复制整份 JSON，不改写 `leaf`。
 
 义务四类（与 enforcement-semantics 的 allow/deny/warn/require_review **正交**——后者是检查结果语义）：
 

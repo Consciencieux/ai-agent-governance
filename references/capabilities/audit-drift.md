@@ -1,9 +1,5 @@
 # AUDIT / drift 巡检
 
-> Capability leaf (`audit-drift`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/audit-drift.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 已有 manifest；用户说 audit / 健康检查 / drift。
@@ -19,7 +15,6 @@ skill entry AUDIT 模式 + 生成子技能 `drift-check`（见 generated sub-ski
 ## Verify
 
 产出偏差报告；不擅自全量重建；修复走确认边界。
-
 
 ## Non-goals
 

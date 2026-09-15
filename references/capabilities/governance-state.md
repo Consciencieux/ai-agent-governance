@@ -1,9 +1,5 @@
 # 治理状态工件
 
-> Capability leaf (`governance-state`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/governance-state.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 INIT/AUDIT/RELEASE 需要读写治理状态时。

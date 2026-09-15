@@ -1,9 +1,5 @@
 # 子技能：state-manager
 
-> Capability leaf (`subskill-state-manager`). Instruction-surface 2.0 card (PLAN-0046).
-> Role: INSTALLED → `docs/rules/capabilities/subskill-state-manager.md`.
-> Classification (after INIT): `docs/rules/capability-enforcement.json` (PLAN-0057).
-
 ## Trigger
 
 治理状态读写、Rule Capture 运行脚手架。
@@ -19,7 +15,6 @@
 ## Verify
 
 状态变更可追踪；不发明平行状态家。
-
 
 ## Non-goals
 
