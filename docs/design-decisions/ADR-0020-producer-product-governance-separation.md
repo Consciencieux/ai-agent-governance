@@ -169,6 +169,12 @@ L3 Project Customization        — 目录名、编号、模板实例（可选�
 
 其余 `repo → skill` 依赖（consent、doc consistency/freshness、broken-links、plan-status 等）仍存在，属后续执行层分离任务。
 
+## 后续修正（2026-09-16）
+
+**术语门禁退役。** 上文「实施说明（2026-09-09）」记录的第一次执行层分离——把术语门禁从 INSTALLED 检查器拆为 repo-owned `repo-tools/check-terminology.js`——于 2026-09-16 按 FINDING-0034 **退役**：`repo-tools/check-terminology.js` 删除，`package.json` 的 `check` / `check:docs` / `check:full` 与 daily-check 接线移除，`docs/glossary.md` 回到三列对照表（`Forbidden` 列退役）。
+
+上文「拆出为 repo-owned、永不分发」的 clause 作为历史保留；本修正 supersede 其「持续维护该门禁」的现在时含义，以及 ownership inventory 中的 `Target: keep`。**执行层分离的结论不变**（术语关注点属 repo-only，不进入 INSTALLED 面）；变化的是实现形态：从「薄字符串黑名单门禁」回到「glossary 查表 + 源语言同步 + 人工/Agent 纪律」。
+
 ## 参考
 
 - FINDING-0001（producer/product 耦合，`docs/findings/FINDING-0001-producer-product-governance-coupling.md`）

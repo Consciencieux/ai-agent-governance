@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 9
+version: 10
 subject_generation: gen1
 ---
 
@@ -26,6 +26,7 @@ subject_generation: gen1
 - v7：INSTALLED **instruction/workflow** 产品面（8 sub-skills + githooks + 非 script init-spec 面）反向对账 → instruction/workflow surface `Unaccounted = 0`
 - v8：第四列投影 ADR-0024（must-ship / repo-keep / later / retire / out）；清单不再 `undecided`。发布含义按 ADR-0024 2026-09-12 修正：must-ship 须在干净目标上跑通，不是「指出载体」。
 - v9（2026-09-13）：现在时校准，不重开基线、不改第四列档位。`v2.0.0` 已发布；WRAP/must-ship 机械层存在；CONTROL-X / 独立 Control 文件仍 `later`（H2c）。consent 行语义权威已单一（`git.policy.md`，ADR-0024 §8）；Ownership 表该格从 `duplicated` 改为 `single`（只动 consent，不扫其他 duplicated 行）。
+- v10（2026-09-16）：术语 Forbidden 门禁退役（FINDING-0034）——「术语门禁」行不再以 `repo-tools/check-terminology.js` 为载体；翻译新鲜度载体不变。
 
 ## 为什么需要
 
@@ -439,7 +440,7 @@ Checker 层 KEEP/WRAP/EXTRACT 仍只在 PLAN-0035，与本列正交。ADR-0014 �
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 术语门禁 + 翻译新鲜度 | PLAN-0020 | `repo-tools/check-terminology.js` + freshness | 术语 `repo-keep`；CTRL-0004 翻译新鲜度 `repo-keep` |
+| 术语门禁 + 翻译新鲜度 | PLAN-0020 | 术语门禁**已退役**（FINDING-0034，2026-09-16）+ `check-doc-freshness.js` | 术语门禁退役（原 `repo-keep`）；CTRL-0004 翻译新鲜度 `repo-keep` |
 | 验证门禁分层与证据边界 | PLAN-0021 | evidence tiers | `must-ship`；单一权威（ADR-0020） |
 | 内容受众与可移植性 | PLAN-0022 | 四受众 portability 规则 | `must-ship`；单一权威（ADR-0020） |
 | 门禁修复与单一事实源对齐 | PLAN-0023 | SSOT 纪律 + 门禁修复协议 | `must-ship` 原则 |
@@ -522,7 +523,7 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 | 工程克制（机制测试） | skill | governed projects；repo | AGENTS.md 指针 → coding.policy § 工程克制 | coding.policy § 工程克制（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship（原则） |
 | 治理缺陷闭包 | skill | governed projects；repo | AGENTS.md 指针 → lifecycle.policy § 根因修复协议与失败预算（同类实例闭包） | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship |
 | 变更归位与残留清理 | skill | governed projects；repo | AGENTS.md 变更归位 + hygiene 对照 | lifecycle.policy § 变更归位（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship |
-| 术语门禁 | repo | repo | `repo-tools/check-terminology.js`（REPO-ONLY，已从 INSTALLED 检查器拆出） | —（已移除；无 glossary 的被治理项目本就不适用） | repo-only | single | none | repo-keep |
+| 术语门禁 | repo | repo | **已退役**（FINDING-0034，2026-09-16；原 `repo-tools/check-terminology.js` 已删除） | —（已移除；无 glossary 的被治理项目本就不适用） | repo-only | single | none | 已退役（原 `repo-keep`） |
 | 翻译新鲜度 | repo | repo | `check-doc-freshness.js` 翻译对推导（共享载体） | — | repo-only | single | repo→skill · accidental | repo-keep |
 | 验证门禁分层（evidence tiers） | core | repo；governed projects | AGENTS.md 证据等级表 | testing.policy 证据等级（INSTALLED） | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
 | 内容受众与可移植性 | core | repo；governed projects | AGENTS.md Content portability | 归档规则四受众（INSTALLED） | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |

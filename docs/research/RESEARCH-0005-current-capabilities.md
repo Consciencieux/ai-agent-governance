@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0005
 status: Active
-version: 2
+version: 3
 subject_generation: gen1
 ---
 
@@ -9,7 +9,7 @@ subject_generation: gen1
 
 > 回答「当前系统有哪些能力？」。本清单由原 roadmap 的「已完成」部分迁移而来（ADR-0015），按机制分类（见 `RESEARCH-0002-governance-mechanism-taxonomy.md`）组织。它是 Generation-1 的能力基线，不是路线图。
 
-> **现在时（2026-09-13，v2）：** 本文件仍是 **Gen1 快照**，不重写分类。两处载体已迁、处置已裁决，勿按正文字面当今日权威：术语门禁的执行面在 `repo-tools/check-terminology.js`（REPO-ONLY；不再由 INSTALLED consistency 承担）；治理健康分在 ADR-0024 为 `retire`，不进入 2.x 施工。产品去向问 ADR-0024 / RESEARCH-0006 第四列，不问本清单。
+> **现在时（2026-09-16，v3）：** 本文件仍是 **Gen1 快照**，不重写分类。载体已迁、处置已裁决，勿按正文字面当今日权威：术语门禁**已退役**（FINDING-0034；`repo-tools/check-terminology.js` 已删除，glossary 回到三列对照表）；治理健康分在 ADR-0024 为 `retire`，不进入 2.x 施工。产品去向问 ADR-0024 / RESEARCH-0006 第四列，不问本清单。
 
 ## 文件存在性检查
 
@@ -19,7 +19,7 @@ subject_generation: gen1
 ## 文本匹配检查
 
 - 密钥扫描门禁（`scripts/check-secrets.js`）—— 阻止暂存区密钥类内容（校验器门禁）
-- 术语门禁 —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。**今日载体：** `repo-tools/check-terminology.js`（REPO-ONLY）
+- 术语门禁 —— 术语表 `Forbidden zh-CN`/`Forbidden zh-TW` 列在三语树强制执行（`--gate` fail-closed、行级豁免、无术语表则 no-op）。**今日处置：** 已退役（FINDING-0034，2026-09-16）——`repo-tools/check-terminology.js` 删除，glossary 回到三列对照表
 - 治理健康分 —— 校验器 `--json` 输出综合 `score`（v1 等权）+ CI 产出 shields.io 徽章 endpoint 工件。**今日处置：** ADR-0024 `retire`（不施工、不删历史行）
 
 ## 结构解析检查
