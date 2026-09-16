@@ -74,11 +74,10 @@ ai-agent-governance/
 │   │   └── governance-files.policy.md
 │   ├── capabilities/               # 任务怎么做的叶卡（INIT → docs/rules/capabilities/）；硬规则正文在 policies/（FINDING-0038）
 │   │   ├── enforcement.v0.json     # 义务分类库存
-│   │   ├── audit-drift.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md
-│   │   ├── doc-freshness.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md
-│   │   ├── governance-state.md / governance-validator.md / plan-sync.md / release-orchestration.md
-│   │   ├── release-risk-tiering.md / review-mechanism.md / secret-scanning.md / seed-oracles.md
-│   │   ├── ssot-repair.md / sync-groups.md
+│   │   ├── audit-drift.md / content-consistency.md / deterministic-init.md / doc-freshness.md
+│   │   ├── evidence-tiers.md / git-workflow-safety.md / governance-state.md / governance-validator.md
+│   │   ├── plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md
+│   │   ├── secret-scanning.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
 │   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md

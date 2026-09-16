@@ -161,13 +161,6 @@
     },
     {
       "phase": "A",
-      "path": "docs/rules/capabilities/confirmation-hygiene.md",
-      "source": "references/capabilities/confirmation-hygiene.md",
-      "type": "copy",
-      "description": "Capability leaf (confirmation-hygiene) — instruction surface"
-    },
-    {
-      "phase": "A",
       "path": "docs/rules/capabilities/content-consistency.md",
       "source": "references/capabilities/content-consistency.md",
       "type": "copy",
@@ -193,13 +186,6 @@
       "source": "references/capabilities/evidence-tiers.md",
       "type": "copy",
       "description": "Capability leaf (evidence-tiers) — instruction surface"
-    },
-    {
-      "phase": "A",
-      "path": "docs/rules/capabilities/generated-subskill-lifecycle.md",
-      "source": "references/capabilities/generated-subskill-lifecycle.md",
-      "type": "copy",
-      "description": "Capability leaf (generated-subskill-lifecycle) — instruction surface"
     },
     {
       "phase": "A",
@@ -256,20 +242,6 @@
       "source": "references/capabilities/secret-scanning.md",
       "type": "copy",
       "description": "Capability leaf (secret-scanning) — instruction surface"
-    },
-    {
-      "phase": "A",
-      "path": "docs/rules/capabilities/seed-oracles.md",
-      "source": "references/capabilities/seed-oracles.md",
-      "type": "copy",
-      "description": "Capability leaf (seed-oracles) — instruction surface"
-    },
-    {
-      "phase": "A",
-      "path": "docs/rules/capabilities/ssot-repair.md",
-      "source": "references/capabilities/ssot-repair.md",
-      "type": "copy",
-      "description": "Capability leaf (ssot-repair) — instruction surface"
     },
     {
       "phase": "A",

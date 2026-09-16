@@ -1,6 +1,6 @@
 # Agent Operating Lifecycle（规则详解）
 
-> **生长禁令：** 本文件是操作编排骨架（义项 C），不是政策仓库。新横切规则默认进入 `docs/rules/capabilities/` / Control / 适用图；禁止向本文件某 Phase 新增大段横切正文。义项 A（Skill 安装生命周期）不回归本仓；义项 B（INIT/AUDIT/RELEASE）不并入本文件。`state.json` 的进度维是 **facet**（ContextFacet），不是能力分类轴。
+> **生长禁令：** 本文件是操作编排骨架（义项 C），不是政策仓库。新常驻硬规则进 `docs/rules/` 对应 **policy**（coding / git / testing / security / governance-files 等）；任务怎么做才进 `docs/rules/capabilities/` 薄卡。禁止把本仓施工表征、repo-only 门禁或迁移脚手架 INIT 成能力叶；禁止向本文件某 Phase 无差别堆百科。义项 A（Skill 安装生命周期）不回归本仓；义项 B（INIT/AUDIT/RELEASE）不并入本文件。`state.json` 的进度维是 **facet**（ContextFacet），不是能力分类轴。
 
 AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 AI Agent 执行任何开发任务时必须遵循。
 

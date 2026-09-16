@@ -2,7 +2,7 @@
 
 ## Trigger
 
-治理状态读写、Rule Capture 运行脚手架。
+治理状态读写；Rule Capture 候选暂存于 `state.json` 时的读写。
 
 ## Authority
 
@@ -10,7 +10,7 @@
 
 ## Invoke
 
-加载子技能；按模板操作 state/脚手架。
+加载子技能；按模板操作 state / rule_capture 字段。
 
 ## Verify
 

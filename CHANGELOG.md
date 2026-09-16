@@ -40,6 +40,8 @@ All notable changes to this project will be documented here.
 
 - Routing (FINDING-0038 slice 2): rehome always-on bodies into policies; **delete** the seven misplaced capability leaves (no pointer shells); enforcement `leaf` may point at policies; SKILL routes those themes to policy sections.
 
+- Remove construction-leak capability leaves: `seed-oracles`, `ssot-repair`, `confirmation-hygiene`, `generated-subskill-lifecycle` (fold product obligations into git/coding/deterministic-init; keep repo-only oracles out of INSTALLED).
+
 - Coding policy: add gate effective-zone default (structure/sync vs habits/semantics ≈0 vs action-class) under engineering restraint (FINDING-0037).
 
 - Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.

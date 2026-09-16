@@ -37,13 +37,13 @@ description: >-
 | 根因修复 / 失败预算 / 同类闭包 | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 |
 | 变更归位 / 残留清理 | `references/policies/coding.policy.md` § 变更归位与残留清理 |
 | 工程克制 | `references/policies/coding.policy.md` § 工程克制与机制测试 |
-| 种子 oracle / 路由完整性 | `seed-oracles.md` |
+| 种子 oracle / 路由完整性 | （本仓表征；不进 INSTALLED 能力叶） |
 | 文档一致性 / 新鲜度 / 计划同步 | `content-consistency.md` · `doc-freshness.md` · `plan-sync.md` |
 | 同步组 | `sync-groups.md` |
-| 确认凭证卫生 | `confirmation-hygiene.md` |
-| SSOT / 门禁修复 | `ssot-repair.md` |
+| 确认凭证卫生 | `references/policies/git.policy.md` § 确认范围（凭证卫生） |
+| SSOT / 门禁修复 | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 |
 | Implementation Review | `review-mechanism.md` · `subskills/subskill-review-manager.md` |
-| 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskills/subskill-*.md` |
+| 生成子技能 | `deterministic-init.md` · `subskills/subskill-*.md` · `references/instruction/sub-skills.md` |
 | Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 |
 
 完整清单以本节路由表与 `references/capabilities/` 目录为准。兑现分类唯一事实源：`references/capabilities/enforcement.v0.json`（INIT → `docs/rules/capability-enforcement.json`）。must-ship 覆盖的仓库侧索引是 REPO-ONLY，不进安装载荷。

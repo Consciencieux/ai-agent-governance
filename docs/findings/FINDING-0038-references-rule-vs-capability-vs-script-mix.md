@@ -92,6 +92,7 @@ observed_in: gen2
   - `enforcement.v0.json` 对应 entry 的 `leaf` 改挂政策路径；init-spec 去掉对已删叶的 copy。
   - SKILL 路由表直接指向政策节；三语 architecture 树同步。
   - B 表脚本说明书仍保留为薄 Invoke 卡（Authority 标明 RUN，不当阅读权威）。
+- 2026-09-16 **切片 3（清施工泄漏叶）：** 删除 `seed-oracles`（repo_only 却 INIT）、`ssot-repair` / `confirmation-hygiene` / `generated-subskill-lifecycle` 空壳投影；确认卫生并入 `git.policy`；子技能机制义务并入 `deterministic-init`；lifecycle 生长禁令改为「常驻→policy / 任务→薄卡」，禁止再默认堆 capabilities。
 - **仍欠（不挡本切片）：** `enforcement` carrier 与 routing `binds` 全面自动对齐（关闭条件 4 余量）。
 
 ## 关联

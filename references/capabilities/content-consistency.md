@@ -10,7 +10,7 @@
 
 ## Invoke
 
-`node scripts/check-doc-consistency.js --gate`（或项目等价）；本仓观测面与 must-ship 分流按 AGENTS。
+`node scripts/check-doc-consistency.js --gate`（或项目等价）。
 
 ## Verify
 

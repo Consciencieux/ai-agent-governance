@@ -70,20 +70,6 @@
           "carrier": null,
           "scope": "installed",
           "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "confirmation-hygiene",
-      "leaf": "references/capabilities/confirmation-hygiene.md",
-      "obligations": [
-        {
-          "id": "digest-fields-present",
-          "mode": "unmechanized",
-          "result": "warn",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": true
         },
         {
           "id": "coding-hygiene-when-declared",
@@ -92,14 +78,6 @@
           "carrier": "repo-tools/check-coding-hygiene.js",
           "scope": "repo_only",
           "mechanizable": true
-        },
-        {
-          "id": "human-understood-consent",
-          "mode": "require_review",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
         }
       ]
     },
@@ -128,6 +106,22 @@
           "carrier": "scripts/generate-governance.js",
           "scope": "installed",
           "mechanizable": true
+        },
+        {
+          "id": "eight-leaves-materialize",
+          "mode": "mechanical",
+          "result": "deny",
+          "carrier": "references/instruction/sub-skills.md",
+          "scope": "installed",
+          "mechanizable": true
+        },
+        {
+          "id": "loaded-in-task",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
         }
       ]
     },
@@ -228,28 +222,6 @@
       ]
     },
     {
-      "id": "generated-subskill-lifecycle",
-      "leaf": "references/capabilities/generated-subskill-lifecycle.md",
-      "obligations": [
-        {
-          "id": "eight-leaves-materialize",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
       "id": "git-workflow-safety",
       "leaf": "references/capabilities/git-workflow-safety.md",
       "obligations": [
@@ -277,6 +249,22 @@
         },
         {
           "id": "human-consent-before-write",
+          "mode": "require_review",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        },
+        {
+          "id": "digest-fields-present",
+          "mode": "unmechanized",
+          "result": "warn",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": true
+        },
+        {
+          "id": "human-understood-consent",
           "mode": "require_review",
           "result": "require_review",
           "carrier": null,
@@ -561,42 +549,6 @@
         },
         {
           "id": "rotation-after-leak",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        }
-      ]
-    },
-    {
-      "id": "seed-oracles",
-      "leaf": "references/capabilities/seed-oracles.md",
-      "obligations": [
-        {
-          "id": "oracle-inventory-gap",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/oracle-inventory.v0.json",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
-          "id": "routing-characterization",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "tests/suites/routing.test.js",
-          "scope": "repo_only",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
-      "id": "ssot-repair",
-      "leaf": "references/capabilities/ssot-repair.md",
-      "obligations": [
-        {
-          "id": "authority-meaning-correct",
           "mode": "inherent_judgment",
           "result": "require_review",
           "carrier": null,
