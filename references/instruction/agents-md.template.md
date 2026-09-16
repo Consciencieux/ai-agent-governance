@@ -20,7 +20,7 @@ Run these bare, without wrapping:
 - Lint: `{{LINT_CMD}}`
 - Build: `{{BUILD_CMD}}`
 - Governance check: `{{npm run governance-check | uv run scripts/check_governance.py | ...}}`
-- File-size budget (advisory): `node scripts/check-file-size-budget.js` (`--gate` fails on review tier; propose split, wait for human confirmation — never auto-split)
+- File-size budget (advisory): soft/review = alert ceilings, not target size; under budget ≠ thin enough. `node scripts/check-file-size-budget.js` (`--gate` fails on review tier; propose split, wait for human confirmation — never auto-split). Rule: `docs/rules/coding.md` § 文件行数预算
 
 ## Documentation Map
 Docs live under `docs/`; agents discover new files by listing the directory.

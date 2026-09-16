@@ -38,6 +38,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- File-size budget: soft/review are alert ceilings, not everyday size targets; under budget ≠ thin enough. Same protocol sentence in `coding.policy.md` (INSTALLED) and `docs/README.md` (repo); AGENTS / template markers only.
+
 - Relocate skill always-on body out of `SKILL.md`: new INSTALLED `runtime-invariants.policy.md` (SSOT / priority / permissions / status protocol) and capability `skill-execution.md` (INIT/AUDIT/RELEASE orchestration); SKILL keeps identity + routing only; AGENTS template points at the new rules instead of duplicating tables.
 
 - Thin `SKILL.md` entry (ADR-0022): drop concept map, Git policy restatement, and Phase encyclopaedia; keep routing table + invariants; move INIT/AUDIT procedure into `deterministic-init.md` / `audit-drift.md`; retarget AGENTS principles index to § 常驻不变量; Chinese-only section headings.

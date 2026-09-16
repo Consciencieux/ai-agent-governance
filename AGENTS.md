@@ -6,7 +6,7 @@ Thin entry ([ADR-0022](docs/design-decisions/ADR-0022-agent-instruction-architec
 
 **Always-on — producer ≠ skill product:** Skill payload (`SKILL.md` + `references/` + `scripts/`) MUST NOT embed this repo's construction IDs (`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`), and REPO-ONLY `tests/` MUST NOT require those IDs in INSTALLED bodies. `CTRL-*` product controls are allowed. Map: [architecture.md](docs/product/en/architecture.md) § Third axis · [ADR-0020](docs/design-decisions/ADR-0020-producer-product-governance-separation.md) I5. Gate: `payload` suite (no producer IDs).
 
-**Always-on — file size budget (advisory):** Line count is a smell, not a verdict. Over soft/review → report + propose a split plan; **do not** auto-trim or hard-split without explicit human confirmation. Map: [docs/README.md](docs/README.md) § 顾问级行数预算. Carrier: `node repo-tools/check-file-size-budget.js` (`npm run check:file-size`).
+**Always-on — file size budget (advisory):** soft/review = alert ceilings, not target size; under budget ≠ thin enough. Over soft/review → report + propose a split plan; **do not** auto-trim or hard-split without explicit human confirmation. Map: [docs/README.md](docs/README.md) § 顾问级行数预算. Carrier: `node repo-tools/check-file-size-budget.js` (`npm run check:file-size`).
 
 ## Governance principles index
 

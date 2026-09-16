@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // File size budget — REPO-ONLY advisory signal (docs/README § 顾问级行数预算).
+// soft/review = alert ceilings, not target size; under budget ≠ thin enough.
 // Line count is a smell, not a verdict. Never auto-split; Agent must report + propose,
 // then wait for human confirmation.
 // Usage: node repo-tools/check-file-size-budget.js [--json] [--gate]
