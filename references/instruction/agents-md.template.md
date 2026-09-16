@@ -65,11 +65,7 @@ Content boundary (what belongs in an entry): record what changed → what impact
 SemVer: MAJOR.MINOR.PATCH — breaking → MAJOR, feature → MINOR, fix → PATCH.
 
 ## Definition of Done
-Code + tests + all quality gates + CHANGELOG + docs sync. Anything missing = not done.
-
-Every "✓ passed" carries an evidence tier: **mechanical** (marker/structure/path/regex/existence — means "condition satisfied", NOT "behavior correct"), **human-attested** (a person judged it: release approval, translation review, root-cause adequacy), or **unverified** (self-reported only — not a verification result). Never promote a tier: a green gate is mechanical evidence, not proof of correct behavior.
-
-**Declaration vs mechanism**: a rule declares a SET (sync points, scanned dirs, CI gates, protected files, checklists); the mechanism must cover the same set. "Declared 5, verified 2" and "declared all trees, enumeration missed one" are the same defect class — they pass green while letting the real breach through. Fix by completing the mechanism or narrowing the declaration; editing the doc alone is not a fix. After any move/rename/split, re-check every hardcoded enumeration and path constant. Full rules: @docs/rules/lifecycle.md § 声明与机制的差距, @docs/rules/testing.md § 测试活性.
+Code + tests + agreed gates + docs sync (by scope tier). Evidence tiers and honesty rules: @docs/rules/runtime-invariants.md (§ 完成定义 / § 状态协议) and @docs/rules/testing.md.
 
 ## Dependency Management Rules
 Add dependencies only via the project package manager and state the purpose. Heavy dependencies need user confirmation.
@@ -92,19 +88,10 @@ Secrets, unrelated refactors, restructuring without cause, skipping Definition o
 {{CONVENTION: e.g. Conventional Commits in <lang>}}
 
 ## Agent Permission Model
-| Action | Permission |
-| --- | --- |
-| Read | automatic |
-| Create Documentation | automatic |
-| Modify Code | allowed, must validate (protected governance files listed below require the protection flow) |
-| Modify 3+ Files at Once | confirmation required |
-| Delete Code | confirmation required |
-| Dependency Change | confirmation required |
-| Git Commit / Git Push | one confirmation per change set (see Git Write Policy) |
+Full table: @docs/rules/runtime-invariants.md (§ Agent 权限模型). Summary: read/docs automatic; modify code allowed with validation; 3+ files / delete / dependencies need confirmation; git commit/push = one confirmation per change set (@docs/rules/git-policy.md).
 
 ## Rule Priority System
-1. System / Platform Safety → 2. Explicit User Request → 3. Governance Integrity → 4. AGENTS.md → 5. docs/rules/ → 6. Existing Code Convention
-Note: users may request governance changes via explicit instruction (through the Governance File Protection flow), but ordinary tasks may not implicitly bypass governance rules. "Edit AGENTS.md" triggers the protection flow, not a normal override.
+@docs/rules/runtime-invariants.md (§ 规则优先级). Ordinary tasks may not bypass governance; editing AGENTS.md uses the Governance File Protection flow.
 
 ## Git Write Policy
 - Auto: `git status`, `git diff`, `git add <specific files>`, clean switch to an **existing** branch. `git checkout -b` only when `check-git-policy.js` exits 1 or the user asked for a new branch.

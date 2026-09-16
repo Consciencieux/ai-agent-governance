@@ -14,19 +14,13 @@ Pointers only. **payload** = ships with skill; **repo** = this repository only.
 
 | Principle | Authoritative source | Scope |
 | --- | --- | --- |
-| Single source of truth | `SKILL.md` § 单一事实源 | payload |
-| Rule Priority | `SKILL.md` § Rule Priority | payload |
-| Agent permission matrix | `SKILL.md` § Agent Permission Model | payload |
-| Three-state status protocol | `SKILL.md` § 状态协议 | payload |
-| Anti-fabrication | `SKILL.md` § 反虚构规则 | payload |
-| Feature placeholder strategy | `SKILL.md` § Feature 占位策略 | payload |
-| Project defaults (no guessing) | `SKILL.md` § 项目默认值约定 | payload |
-| Language policy by audience | `SKILL.md` § 语言政策 · this file § Conventions | both |
-| Circuit breaker | `SKILL.md` § 熔断机制 | payload |
-| Two-pass context breaker | `SKILL.md` § 上下文熔断 | payload |
+| Single source of truth | `references/policies/runtime-invariants.policy.md` § 单一事实源 | payload |
+| Rule Priority | `references/policies/runtime-invariants.policy.md` § 规则优先级 | payload |
+| Agent permission matrix | `references/policies/runtime-invariants.policy.md` § Agent 权限模型 | payload |
+| Always-on invariants (三态 / 反虚构 / 默认值 / 语言 / 熔断 / 多 Agent / 错误分类) | `references/policies/runtime-invariants.policy.md` | payload |
+| Language policy by audience | `references/policies/runtime-invariants.policy.md` § 语言政策 · this file § Conventions | both |
 | Governance file protection | `references/policies/governance-files.policy.md` | both |
-| Multi-agent identity + locking | `SKILL.md` § 多 Agent 协作 | payload |
-| Error classification | `SKILL.md` § 错误分类 | payload |
+| Multi-agent identity + locking | `references/policies/runtime-invariants.policy.md` § 多 Agent · `scripts/check-lock.js` | payload |
 | Human-in-the-loop release | `references/workflows/release.md` · `repo-workflows/skill-release.md` | both |
 | SemVer discipline | `references/workflows/release.md` § Phase 2 | both |
 | Release transactionality | `references/workflows/release.md` § 事务性 | payload |
@@ -35,7 +29,7 @@ Pointers only. **payload** = ships with skill; **repo** = this repository only.
 | Distribution roles (declared, never inferred) | `references/init-spec.json` · `docs/product/en/architecture.md` § Three distribution roles | repo |
 | Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
 | Repo gate promotion (daily allowlist) | `repo-tools/daily-check-surface.v0.json` · `repo-tools/check-daily-check-surface.js` | repo |
-| Reference closure | `references/policies/testing.policy.md` § 引用闭合 · `SKILL.md` Audit step 3 | both |
+| Reference closure | `references/policies/testing.policy.md` § 引用闭合 · `references/capabilities/audit-drift.md` | both |
 | Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理（lifecycle 仅编排指针） | payload |
 | Root-cause repair + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
 | Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 · ADR-0021 | payload |
@@ -70,7 +64,7 @@ Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 
 1. Layout: `docs/product/en/architecture.md`. CI block = `check:must-ship`; daily = `npm run check` (allowlist: `daily-check-surface.v0.json`).
 2. Product spec: [SKILL.md](SKILL.md). Area guide: [CONTRIBUTING.md](CONTRIBUTING.md).
-3. Route first (ADR-0022): `node repo-tools/route-task.js --task <class>|--path <file>` → read `read_set` / run `run_set` only. Map: RESEARCH-0012. Leaves: `references/capabilities/` + `SKILL.md` § 能力叶快速路由 (REPO-ONLY). Plans consume ADR-0024 + `script-inventory.v0.json` only.
+3. Route first (ADR-0022): `node repo-tools/route-task.js --task <class>|--path <file>` → read `read_set` / run `run_set` only. Map: RESEARCH-0012. Leaves: `references/policies/` + `references/capabilities/` + `SKILL.md` § 政策优先 / § 任务怎么做 (REPO-ONLY). Plans consume ADR-0024 + `script-inventory.v0.json` only.
 4. **Status:** see `docs/plans/roadmap/` Now (no Active Plan; Design = PLAN-0054). Do not duplicate horizon lists here.
 
 ## Change / protect / validate
@@ -84,7 +78,7 @@ Authority: [docs/product/en/architecture.md](docs/product/en/architecture.md).
 
 ## Conventions
 
-- Language / glossary: CONTRIBUTING + SKILL § 语言政策 (product/roadmap ×3; plans/findings/ADR = 简体中文).
+- Language / glossary: CONTRIBUTING + `references/policies/runtime-invariants.policy.md` § 语言政策（product/roadmap ×3; plans/findings/ADR = 简体中文）.
 - Commits: Conventional Commits, English.
 - After moves: re-check hardcoded dir lists (`SCAN_DIRS`, role lists, roots).
 - Prompt-sync: sub-skill / check-script → `commands.md` (+ CHANGELOG if behavioral).

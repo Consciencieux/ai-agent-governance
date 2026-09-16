@@ -147,6 +147,13 @@
     },
     {
       "phase": "A",
+      "path": "docs/rules/runtime-invariants.md",
+      "source": "references/policies/runtime-invariants.policy.md",
+      "type": "copy",
+      "description": "Shared agent runtime invariants (SSOT, priority, permissions, status protocol)"
+    },
+    {
+      "phase": "A",
       "path": "docs/rules/capability-enforcement.json",
       "source": "references/capabilities/enforcement.v0.json",
       "type": "copy",
@@ -165,6 +172,13 @@
       "source": "references/capabilities/deterministic-init.md",
       "type": "copy",
       "description": "Capability leaf (deterministic-init) — instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/skill-execution.md",
+      "source": "references/capabilities/skill-execution.md",
+      "type": "copy",
+      "description": "Capability leaf (skill-execution) — INIT/AUDIT/RELEASE orchestration"
     },
     {
       "phase": "A",

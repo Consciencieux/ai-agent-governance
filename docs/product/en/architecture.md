@@ -71,11 +71,11 @@ ai-agent-governance/
 │   │   ├── git-policy.template.md / githooks-template.md / sync-rules.template.md
 │   ├── policies/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
-│   │   └── governance-files.policy.md
+│   │   ├── runtime-invariants.policy.md / governance-files.policy.md
 │   ├── capabilities/               # task how-to leaves — NOT a feature directory (see overview.md); hard rules stay in policies/
 │   │   ├── enforcement.v0.json     # obligation classification inventory (leaf may be policy or capability)
 │   │   ├── audit-drift.md / deterministic-init.md / generated-subskill-lifecycle.md / governance-state.md
-│   │   ├── plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / sync-groups.md
+│   │   ├── plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / skill-execution.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
 │   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md

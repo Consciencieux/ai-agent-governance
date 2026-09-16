@@ -12,6 +12,10 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- FINDING-0040 (Confirmed): agent edits default to in-place patches and assume existing scripts/docs are useful; relocate/delete is treated as unsafe — same posture behind timid SKILL thinning and reluctance to retire script piles (links 0014/0015/0032/0028).
+
+- FINDING-0039 (Confirmed): long-running compliance is host re-injection of files plus mechanical gates, not chat-window reminders; INIT does not emit `.cursor/rules/` while anti-regression claims it.
+
 - FINDING-0038 (Confirmed): policies (always-on rules), capability leaves (task how-to), and scripts (mechanical run) were mixed on one routing surface; first slice separates READ authorities from RUN binds.
 
 - FINDING-0037 (Resolved): scripts barely constrain agent habits/semantics (~0); structure and sync are the effective zone; action-class gates are a middle layer. Criterion landed in coding.policy § 工程克制.
@@ -33,6 +37,12 @@ All notable changes to this project will be documented here.
 - Layout-sync CI false green: do not document gitignored `repo-tools/.release/proposal.json` in architecture trees; `check-layout-sync.js` skips gitignored paths so local scratch cannot mask CI.
 
 ### Changed
+
+- Relocate skill always-on body out of `SKILL.md`: new INSTALLED `runtime-invariants.policy.md` (SSOT / priority / permissions / status protocol) and capability `skill-execution.md` (INIT/AUDIT/RELEASE orchestration); SKILL keeps identity + routing only; AGENTS template points at the new rules instead of duplicating tables.
+
+- Thin `SKILL.md` entry (ADR-0022): drop concept map, Git policy restatement, and Phase encyclopaedia; keep routing table + invariants; move INIT/AUDIT procedure into `deterministic-init.md` / `audit-drift.md`; retarget AGENTS principles index to § 常驻不变量; Chinese-only section headings.
+
+- Roadmap Now/Near: product slice is usable (INIT/AUDIT/RELEASE + overview); the honest gap for long-running control is trigger coverage, not “start H3”. H3 stays far and is not a usability prerequisite.
 
 - Doc truth alignment (FINDING-0029/0038 + ADR-0022/0024 + RESEARCH-0006 v13): freeze Finding observation as inventory-at-discovery; align 0029 Resolved body; move Rule Capture to ADR-0024 `retire`.
 

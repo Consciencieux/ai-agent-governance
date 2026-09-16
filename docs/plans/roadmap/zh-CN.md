@@ -14,17 +14,19 @@
 
 | | |
 | --- | --- |
-| **产品** | `v2.1.1` — INSTALLED 必装切片；CI 阻断 = `npm run check:must-ship` |
-| **Horizon** | H2 **已完成**；下一施工带 = **H3**（远；默认不挡下一 minor） |
+| **产品** | `v2.1.1` 必装切片可 INIT / AUDIT / RELEASE；能力地图 [overview](../../product/zh-CN/overview.md)；CI 阻断 = `npm run check:must-ship` |
+| **Horizon** | H2 **已完成**。H3 **远**（默认不挡下一 minor；也**不是**「真正可用」的前置） |
+| **诚实缺口** | 长期管理仍靠 Agent **记得跑门禁**（触发 ≠ 检测）。portable 无 runtime 硬拦。愿景「少依赖注意力」未达。 |
 | **Active Plan** | **无** |
 | **排队 Design** | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) — H3 边界 / 运行时与科研（未升 Active） |
 
-残留主题（不等于 Active Plan）：INSTALLED 机械调度（FINDING-0004/0005，须 Narrow ADR）、按需 Finding 补丁、仅在触契约时再 EXTRACT 厚 CLI。
+残留（≠ Active Plan）：运行期触发/调度（FINDING-0004/0005，进 INSTALLED 须 Narrow ADR）、按需 Finding 补丁、触契约才 EXTRACT 厚 CLI。指令面卫生（FINDING-0038 + overview）已落地、未另开 Plan。
 
 ## 近线
 
 | 项 | 角色 | 说明 |
 | --- | --- | --- |
+| 运行期触发 / 调度 | 按需小切片 | 门禁已机械，启动仍靠注意力。进 INSTALLED 须 Narrow ADR；默认不开工 H3。 |
 | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) | Design | H3 成员 / 非成员 / 升 Active 前置。只冻结边界；默认不装 L3。 |
 | Finding 补丁 | 按需 | 选定后做小切片——不是常驻清扫。最近闭合：[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（Archived）。何时需要 Plan：见 [AGENTS.md](../../../AGENTS.md) 原则索引（Horizon vs 日常小改）。 |
 

@@ -512,6 +512,36 @@
       ]
     },
     {
+      "id": "runtime-invariants",
+      "leaf": "references/policies/runtime-invariants.policy.md",
+      "obligations": [
+        {
+          "id": "ssot-no-dual-write",
+          "mode": "unmechanized",
+          "result": "deny",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": true
+        },
+        {
+          "id": "three-state-honest",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        },
+        {
+          "id": "anti-fabrication",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        }
+      ]
+    },
+    {
       "id": "secret-scanning",
       "leaf": "references/policies/security.policy.md",
       "obligations": [
@@ -530,6 +560,28 @@
           "carrier": null,
           "scope": "installed",
           "mechanizable": false
+        }
+      ]
+    },
+    {
+      "id": "skill-execution",
+      "leaf": "references/capabilities/skill-execution.md",
+      "obligations": [
+        {
+          "id": "mode-routing",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        },
+        {
+          "id": "no-auto-skill-update",
+          "mode": "unmechanized",
+          "result": "deny",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": true
         }
       ]
     },
