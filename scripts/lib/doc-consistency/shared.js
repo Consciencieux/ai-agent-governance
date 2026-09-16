@@ -137,8 +137,8 @@ function changelogCoverage(releaseGate) {
     }
   }
   // Empty-section diagnosis: at release time an [Unreleased] section with no category is
-  // almost always the "rebuilt the empty section too early" mistake (v0.15.0 and v1.0.1
-  // both hit it). Surface a hint so the operator rebuilds after the gate, not before.
+  // almost always the "rebuilt the empty section too early" mistake. Surface a hint so
+  // the operator rebuilds after the gate, not before.
   const emptyUnreleased = /^##\s+\[Unreleased\]/m.test(head) && !/###\s+/.test(sec);
   const ok = /###\s+(?:Added|Changed|Fixed|Removed|Security|Deprecated)/i.test(sec) && duplicateCategories.length === 0 && formatIssues.length === 0;
   return { applicable: true, duplicateCategories, formatIssues, emptyUnreleased, ok };

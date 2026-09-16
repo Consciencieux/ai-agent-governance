@@ -268,8 +268,8 @@ const PREFLIGHT_CONTENT = JSON.stringify({
 }, null, 2) + "\n";
 
 function generateState(inputs) {
-  // H2a / : operational progress dimension is `facet` (ContextFacet).
-  // Dual-write legacy `phase` during the compatibility window; readers MUST prefer
+  // Operational progress dimension is `facet`.
+  // Dual-write legacy `phase` for older readers; readers MUST prefer
   // `facet` and fall back to `phase`. INIT Phase A|B|C is a different axis — untouched.
   const facet = "completed";
   return JSON.stringify({
@@ -282,11 +282,7 @@ function generateState(inputs) {
     locked: null,
     completed: ["docs", "agents", "rules"],
     blocked: [],
-    rule_capture: {
-      status: "none",
-      task_id: "",
-      candidates: [],
-    },
+    updatedAt: new Date().toISOString(),
   }, null, 2) + "\n";
 }
 

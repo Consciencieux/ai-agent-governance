@@ -9,7 +9,7 @@ subject_generation: gen1
 
 > 回答「当前系统有哪些能力？」。本清单由原 roadmap 的「已完成」部分迁移而来（ADR-0015），按机制分类（见 `RESEARCH-0002-governance-mechanism-taxonomy.md`）组织。它是 Generation-1 的能力基线，不是路线图。
 
-> **现在时（2026-09-16，v4）：** 本文件仍是 **Gen1 快照**，不重写分类。载体已迁、处置已裁决，勿按正文字面当今日权威：术语门禁**已退役**（FINDING-0034）；consistency 侧 `consent_cluster` / `numeric_claims` / `adr-status` / changelog-narration / judgment-language **已退役**（FINDING-0035）；门禁有效区见 FINDING-0037；路由 READ/RUN 分离见 FINDING-0038。产品去向问 ADR-0024 / RESEARCH-0006 第四列，不问本清单。
+> **现在时（2026-09-16，v4）：** 本文件仍是 **Gen1 快照**，不重写分类。载体已迁、处置已裁决，勿按正文字面当今日权威：术语门禁**已退役**（FINDING-0034）；consistency 侧 `consent_cluster` / `numeric_claims` / `adr-status` / changelog-narration / judgment-language **已退役**（FINDING-0035）；门禁有效区见 FINDING-0037；路由 READ/RUN 分离见 FINDING-0038；**Rule Capture Phase 5a–5c 已从 INSTALLED 撤出**（施工协议，非产品常驻规则）。产品去向问 ADR-0024 / RESEARCH-0006 第四列，不问本清单。
 
 ## 文件存在性检查
 
@@ -53,7 +53,7 @@ subject_generation: gen1
 - INIT 生成器脚本化 —— 确定性、可快照测试的 INIT 生成（`scripts/generate-governance.js`）；分 A → B → C 三期
 - 确认政策重写 —— 跨五个同步点提交前一次确认；计划批准降为意图对齐
 - 治理原则索引 —— 27 条原则的纯指针索引 + 一个 `--gate` 检查保持每条来源可解析
-- 规则捕获 —— Agent 对每条要求预分类（持久 / 一次性 / 模糊），开发者在 Phase 6 裁定，确认的规则写入 `AGENTS.md` / `docs/rules/**`
+- ~~规则捕获~~ —— Gen1 施工协议（Phase 5a–5c / `rc-*` / `state.json.rule_capture`）；**已从 INSTALLED 撤出**，不是被治理项目常驻规则
 - 工程克制（机制测试）—— 未经批准的新增机制必须自证；已批准需求优先
 - 根因修复协议 + 失败预算 —— 复现优先的计划字段、`repairSessionId` 绑定、失败升级
 - 发布流程按受众拆分 —— `release.md` 仅覆盖被治理项目发布；本仓库自身流程在 `repo-workflows/skill-release.md`

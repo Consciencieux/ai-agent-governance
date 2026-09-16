@@ -22,8 +22,7 @@
     "edit_references": [
       "change-hygiene",
       "reference-closure",
-      "security-baseline",
-      "rule-capture"
+      "security-baseline"
     ],
     "edit_scripts": [
       "change-hygiene",
@@ -35,8 +34,7 @@
     ],
     "edit_skill_entry": [
       "change-hygiene",
-      "reference-closure",
-      "rule-capture"
+      "reference-closure"
     ],
     "git_write": [
       "change-hygiene",
@@ -84,8 +82,7 @@
       "root-cause-repair",
       "discovery-ledger",
       "review-implementation",
-      "security-baseline",
-      "rule-capture"
+      "security-baseline"
     ],
     "test_change": [
       "change-hygiene",
@@ -234,11 +231,6 @@
     },
     "security-baseline": {
       "path": "references/policies/security.policy.md"
-    },
-    "rule-capture": {
-      "path": "references/policies/lifecycle.policy.md",
-      "section": "规则捕获",
-      "notes": "FINDING-0038: Phase 5a–5c body in lifecycle; capability leaf is thin how-to."
     },
     "review-system": {
       "path": "docs/research/RESEARCH-0012-task-capability-routing.md"

@@ -46,7 +46,7 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 - 治理状态工件（manifest / state / validation / preflight 或其 Gen2 等价物）
 - 证据分层（mechanical ≠ human-attested ≠ unverified claim）
 - INSTALLED 内容可移植性（在被治理项目自身成立）
-- Rule Capture、根因修复 / 失败预算、同类闭包、变更卫生
+- 根因修复 / 失败预算、同类闭包、变更卫生
 - 工程克制（机制测试）：原则进入 INSTALLED 政策，不是新 gate
 - 种子负向 oracle：CTRL-0001–0006 + 路由完整性 + Safety Kernel 套件记账（PLAN-0042；`important_gap = 0`）
 - 生成子技能作为**产品能力叶**（禁止折叠成「有生成机制」一行）：`repository-inspection`、`ci-generator`、`governance-validator`、`state-manager`、`drift-check`、`release-manager`、`plan-manager`、`review-manager`
@@ -70,18 +70,19 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 - 保证等级 L3 运行时拦截
 - FINDING-0006 全量机械规则负向 oracle（超出种子集）
 - Discovery Ledger L2、consistency 剩余集群落地、principles-index #9
-- 5c leftover Capability 叶 / 可选 rename
-- lifecycle 残留抽出 / `state.json` phase 降为 facet（FINDING-0029）
+- lifecycle 残留抽出（规模分级 / 计划格式等编排面以外的百科残留；FINDING-0029 关闭后仍可 later）
 - 脚本 dogfood / `retire` 隔离（FINDING-0028）
 - Agent 活动审计的完整 `activity.jsonl` 形态
 - 多 Agent 锁的强化（FINDING-0012 原子性）
 - opt-in githooks 作为 2.0 必装
 - MIGRATE 编排的独立产品入口（1.x→2.0 升级路径可在发布后补；2.0 首发可用文档说明）
 - Git consent 的机械 evaluator（协议必须 must-ship；机器拦 Agent 违规是 later）
+- FINDING-0038 关闭条件 4：enforcement carrier 与 routing binds 全面对齐
 
 **7. 退役（retire）或移出（out）：**
 
 - `retire`：治理评分 / badge（PLAN-0004）。非基础 invariant；1.0 成熟错觉来源之一。
+- `retire`：Rule Capture Phase 5a–5c（PLAN-0016）——`rc-*` 候选、`state.json.rule_capture`、按 ID 裁定再写规则。这是本仓施工协议，不是被治理项目常驻规则；不得再进 INSTALLED（FINDING-0038）。
 - `out`：Skill INSTALL/UPDATE/ROLLBACK（PLAN-0025）→ 未来 `ai-skill-manager`。本仓只保留 version / check-update 类元数据（`later`，非必装）。
 - 已废语义不得回潮：PLAN-0017 与 Release 耦合的归档时序（ADR-0016 已解耦）。
 - PLAN-0015 的价值是历史失效证据，不把当时那批 bug 永久架构化。
@@ -148,6 +149,10 @@ Migration Mode 退出
 | FINDING-0006 全量 oracle、0001 CONTROL-X、0002 机器 Control、0012 锁、0015 长 prompt 全文、0019 单体、0026 leftover、0028 dogfood、0029 lifecycle 残留、PLAN-0037 | `later` |
 
 6. PLAN-0037 仍 Design 冻结。人类批准（ADR-0004）仍要。
+
+## 后续修正（2026-09-16）：Rule Capture 处置
+
+Narrow-amend 决策 4 / 7：Rule Capture Phase 5a–5c **不是** must-ship。自本修正起归入决策 7 `retire`（本仓施工协议；FINDING-0038）。must-ship 仍含根因修复 / 失败预算、同类闭包、变更卫生。FINDING-0038 关闭条件 4（enforcement↔routing 对齐）进决策 6 `later`，不挡既有 2.0 门槛。
 
 ## 后果
 

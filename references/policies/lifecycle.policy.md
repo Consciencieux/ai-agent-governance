@@ -1,6 +1,6 @@
 # Agent Operating Lifecycle（规则详解）
 
-> **生长禁令：** 本文件是操作编排骨架（义项 C），不是政策仓库。新常驻硬规则进 `docs/rules/` 对应 **policy**（coding / git / testing / security / governance-files 等）；任务怎么做才进 `docs/rules/capabilities/` 薄卡。禁止把本仓施工表征、repo-only 门禁或迁移脚手架 INIT 成能力叶；禁止向本文件某 Phase 无差别堆百科。义项 A（Skill 安装生命周期）不回归本仓；义项 B（INIT/AUDIT/RELEASE）不并入本文件。`state.json` 的进度维是 **facet**（ContextFacet），不是能力分类轴。
+> **生长禁令：** 本文件是操作编排骨架，不是政策仓库。新常驻硬规则进 `docs/rules/` 对应 **policy**（coding / git / testing / security / governance-files 等）；任务怎么做才进 `docs/rules/capabilities/` 薄卡。禁止把仓库私有门禁或迁移脚手架 INIT 成能力叶；禁止向本文件某 Phase 无差别堆长文。Skill 安装生命周期与 INIT/AUDIT/RELEASE 产品模式不并入本文件。`state.json` 的进度维是 **facet**，不是能力分类轴。
 
 AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 AI Agent 执行任何开发任务时必须遵循。
 
@@ -172,7 +172,7 @@ Phase 2 中/大型 TASK 必须携带台账；小型改动跳过台账，但若�
 
 ## 相对 Markdown 链接有效性
 
-**义务（CTRL-0006 规则语义权威）：** 被扫描的 Markdown 文件中，相对路径链接目标必须能解析为已存在的本地路径（`path.resolve` + 存在性检查；与 Gen1 一致，**不含** repo-root containment）。`http://` / `https://` / `mailto:` 目标（大小写不敏感）不适用本义务。断链是内容一致性缺陷，不得用叙事性「已知缺失」脚注代替修复或显式移出扫描面。
+**义务（CTRL-0006 规则语义权威）：** 被扫描的 Markdown 文件中，相对路径链接目标必须能解析为已存在的本地路径（`path.resolve` + 存在性检查；**不含** repo-root containment）。`http://` / `https://` / `mailto:` 目标（大小写不敏感）不适用本义务。断链是内容一致性缺陷，不得用叙事性「已知缺失」脚注代替修复或显式移出扫描面。
 
 本义务陈述「必须可解析存在」；**不**规定扫描集合、advisory/deny 或 CLI 标志——那些属于 evaluator / binding。机械求值见 `scripts/evaluators/ctrl-0006-broken-links.js`；一致性 CLI 的默认绑定为 advisory。若将来要求「链接不得逃出 repo root」，须显式收紧本义务并配套 primitive / negative test——不得借 refactor 静默加入。
 
@@ -185,20 +185,6 @@ Phase 2 中/大型 TASK 必须携带台账；小型改动跳过台账，但若�
  - watch 未命中 → ⚠️ not-applicable（无同步义务），报告中标注即可
  - 逐组报告 ✅ 已同步 / ⚠️ 不适用（同步组声明见 `.governance/sync-rules.json`）
 - **机械验证（gate）** —— 在中/大型改动声明完成前运行 `node scripts/check-sync.js`（默认 gate 模式；exit 0 = 通过、exit 1 = 漏同步组）；`--advisory` 模式仅报告不阻断；详见 `scripts/check-sync.js` 与 `.governance/sync-rules.json`
-- **规则捕获（Rule Capture）** —— 见下方同名专节。
-
-### 规则捕获（Rule Capture）
-
-> **语义权威在本节**（INIT → `docs/rules/lifecycle.md`）。
-
-> **Enforcement：** Phase 5a 内容裁定与「是否持久」为 **judgment** / `require_review`——须开发者按 ID 确认；**无**脚本代裁。5b/5c 中「文件是否写入 / 门禁 exit」可为 **mechanical** 观测，但不得把门禁绿当成裁定已发生。
-
-任务中只收集开发者明确提出的持久性行为要求，不收集系统指令、问题、任务专属验收标准、临时 workaround、秘密或凭据。候选必须有唯一 ID（`rc-<task_id>-<序号>`）、规范化文本、作用域、初始分类、理由和目标章节；重复出现只能提高优先级，不能单独升级为持久规则。
-
-- **Phase 5a 裁定门** — **judgment**：在写入前给出 `persistent / one-off / unclear` 清单。明确的一次性要求只报告、不写入、不计入待决；持久和模糊项必须由开发者按 ID 确认或改判，省略项不默认同意。规则内容裁定不等于 Git 提交/推送确认。
-- **Phase 5b 写入与同步**：只有明确确认的持久项才能写入 `AGENTS.md`/`docs/rules/**`。先搜索既有规则并更新单一事实源；遵守治理文件保护、CHANGELOG、AGENTS 指针和同步组流程。
-- **Phase 5c 重新验证**：规则文件写入后重新运行受影响的治理校验、密钥扫描和同步组门禁；运行项目自己的治理校验入口（`node scripts/verify-governance.js`，或项目注册的等价命令）。写入完成后才进入 Phase 6。门禁结果 = **mechanical**；「应跑哪些门」若无合同枚举则仍依赖 judgment。
-- **未裁定/中断**：把候选保存在受跟踪 `state.json.rule_capture`，任务状态为 `blocked`，下一次运行读取候选并从 Phase 5b 恢复；`activity.jsonl` 只作追加式审计记录，不单独承诺跨电脑持久化。
 - **文档引用规则、不复述规则** —— 同步知识时，`docs/` 里的内容（README、feature 文档、架构文档）只能**引用** `docs/rules/**` 与 AGENTS.md 中的规则（文件 + 章节指针），不得把规则原文复制进项目知识文档。规则变更 → 只改 `docs/rules/**`（单一事实源）；文档随之更新为引用，不复制。判断标准：这条内容"Agent 必须遵守" → 规则，进 `docs/rules/`；"只是帮助理解" → 知识，进 `docs/` 引用规则。
 - 更新 CHANGELOG.md（已完成变更，[Unreleased]；时机按 Change Classification 的更新时机规则）
 - 更新 Feature Registry（docs/features/，如涉及功能）
@@ -231,9 +217,9 @@ Phase 2 中/大型 TASK 必须携带台账；小型改动跳过台账，但若�
 - **[机械]** 每个版本节（`[X.Y.Z]` 或 `[Unreleased]`）下，同一分类小标题（`### Fixed` / `### Added` / `### Changed`）最多出现一次——本次变更全部追加到该分类块内，绝不新建重复的分类头；不同分类（如 `Fixed` 与 `Added`）可以并存。机械检查：重复分类标题 → 阻断（含 `--gate` 与 `--release-gate`）。
 - 追加条目时定位**已有分类块的尾部**（`### Fixed` 列出的最后一条之下），不插入新的分类头，不向旧的已发布版本节追加（已发布版本节是历史，不可改写）。机械检查：最新版本节须与当前版本一致（`--gate` 与 `--release-gate` 都会检查）；**对"向已发布版本节追加"本身无法判断**——它表现为某个版本节内容非空，机械上与正常发布相同。
 - 版本节内没有条目时，不写空分类头——分类头只在第一次写入该分类条目时才创建。机械检查：**未实现**——空分类头与合法条目在结构上等价，当前检查无法区分。
-- 发布时：把 `[Unreleased]` 改名为 `[X.Y.Z]`（连同日期），并在**顶部重建空 `[Unreleased]` 节**（仅节标题，无分类头）——不重建会使后续变更没有既定落点。**重建时机红线**：必须在发布门禁（`--release-gate`）**通过之后**重建，**不能在版本同步步骤里顺手重建**。`changelog_coverage` 在发布形态读"最顶部的版本节"，提前重建会让它读到空节而失败（v0.15.0 与本仓库 v1.0.1 均踩过此坑）。顺序：**改名 → 门禁通过 → 重建空节**。若门禁报 changelog_coverage 失败，先检查是否已提前重建空节，删除空节重跑门禁。机械检查：**部分实现**——版本节同步点验证最新已发布节与当前版本一致（改名有机械见证），且 `check-doc-consistency.js --release-gate` 检测到空 `[Unreleased]` 时报告"likely rebuilt too early"提示（fail-closed 于 release-gate）；"是否按正确时机重建"由该提示辅助，规则本身仍需人工遵守。
+- 发布时：把 `[Unreleased]` 改名为 `[X.Y.Z]`（连同日期），并在**顶部重建空 `[Unreleased]` 节**（仅节标题，无分类头）——不重建会使后续变更没有既定落点。**重建时机红线**：必须在发布门禁（`--release-gate`）**通过之后**重建，**不能在版本同步步骤里顺手重建**。`changelog_coverage` 在发布形态读"最顶部的版本节"，提前重建会让它读到空节而失败。顺序：**改名 → 门禁通过 → 重建空节**。若门禁报 changelog_coverage 失败，先检查是否已提前重建空节，删除空节重跑门禁。机械检查：**部分实现**——版本节同步点验证最新已发布节与当前版本一致（改名有机械见证），且 `check-doc-consistency.js --release-gate` 检测到空 `[Unreleased]` 时报告"likely rebuilt too early"提示（fail-closed 于 release-gate）；"是否按正确时机重建"由该提示辅助，规则本身仍需人工遵守。
 - 分类小标题必须使用规范名（`Added` / `Changed` / `Fixed` / `Removed` / `Security` / `Deprecated`），不使用自定义或中英混写标题。机械检查：**部分实现**——规范名用于识别分类（`matchAll` 只认规范名，因此非法名标题根本不会被当作分类计数）；非法分类名单独出现时，发布形态会因"没有任何分类"而阻断（结果正确但原因不同）；与合法 `### Fixed` 并存时**静默通过**，不报错。
-- **格式统一**（全文件通用，新旧版本节一律遵守）：①版本节标题 `## [X.Y.Z] - YYYY-MM-DD`（或 `## [Unreleased]`）之后必须空行，再进入分类；②分类小标题 `### <规范名>` 之前与之后都必须空行；③同一分类下的列表条目（`- ...`）之间必须用空行分隔。目的：全文件单一格式，任何版本节都不使用紧凑写法（`##` 后直接 `###`、`###` 后直接列表项、列表项连排）。机械检查：**已实现**——`changelogCoverage` 簇扫描最新版本节，`##` 后无空行 / `###` 前后无空行 / 列表项连排均报为结构缺陷并阻断（`--gate` 与 `--release-gate`）。注：与 `[机械]` 标注的既有前提一致——只扫最新版本节；历史版本节的格式靠人工对齐（本仓库已在 0.1.0 → 0.14.1 全量统一过一轮）。
+- **格式统一**（全文件通用，新旧版本节一律遵守）：①版本节标题 `## [X.Y.Z] - YYYY-MM-DD`（或 `## [Unreleased]`）之后必须空行，再进入分类；②分类小标题 `### <规范名>` 之前与之后都必须空行；③同一分类下的列表条目（`- ...`）之间必须用空行分隔。目的：全文件单一格式，任何版本节都不使用紧凑写法（`##` 后直接 `###`、`###` 后直接列表项、列表项连排）。机械检查：**已实现**——`changelogCoverage` 簇扫描最新版本节，`##` 后无空行 / `###` 前后无空行 / 列表项连排均报为结构缺陷并阻断（`--gate` 与 `--release-gate`）。注：与 `[机械]` 标注的既有前提一致——只扫最新版本节；历史版本节的格式靠人工对齐。
 
 **CHANGELOG 内容边界**（写条目时区分"该记录什么/不该记录什么"）：
 
@@ -269,7 +255,7 @@ Phase 2 中/大型 TASK 必须携带台账；小型改动跳过台账，但若�
 
 ## Phase 6 — Report（报告）
 
-最终输出：修改文件列表、新增功能列表、删除/重命名/替换/弃用内容列表、已捕获规则、一次性要求、未决候选、兼容项及退出条件、迁移/回滚结果、验证结果和文档更新情况。报告中的规则候选使用 ID 和规范化摘要，不复制秘密或整段对话；Phase 6 不再触发新的规则写入。
+最终输出：修改文件列表、新增功能列表、删除/重命名/替换/弃用内容列表、兼容项及退出条件、迁移/回滚结果、验证结果和文档更新情况。
 
 对于 Change Hygiene，报告必须说明：当前层未解释命中数、兼容层保留项及其退出条件、历史层命中是否仅为历史记录、未解决影响面以及 `git diff --name-only` 与 Affected Files/Target 的对照结果。
 

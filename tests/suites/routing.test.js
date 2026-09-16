@@ -111,7 +111,7 @@ module.exports = function register(test) {
         "review-implementation",
       ],
       run_set: [],
-      defer_set: ["security-baseline", "rule-capture"],
+      defer_set: ["security-baseline"],
     });
   });
 
@@ -311,7 +311,6 @@ module.exports = function register(test) {
       "engineering-restraint": "references/policies/coding.policy.md",
       "root-cause-repair": "references/policies/lifecycle.policy.md",
       "discovery-ledger": "references/policies/lifecycle.policy.md",
-      "rule-capture": "references/policies/lifecycle.policy.md",
       "git-write": "references/policies/git.policy.md",
     };
     const bad = [];

@@ -17,7 +17,7 @@ description: >-
 
 > **可复用原则包：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树或 Phase/PLAN 剧本当 portable L1。INSTALLED 权威正文不得嵌入 skill 仓施工 ID（`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`）；已交付的 `CTRL-*` 控制名除外。
 
-> **能力叶路由：** must-ship 的**任务怎么做**薄卡在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。常驻硬规则正文只在 `references/policies/`（INIT → `docs/rules/*.md`），**不**再为同一主题保留空壳能力叶。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + 目录为准；仓库侧覆盖索引是 REPO-ONLY，不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链本仓 `docs/` 路径）。
+> **能力叶路由：** **任务怎么做**薄卡在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。常驻硬规则正文只在 `references/policies/`（INIT → `docs/rules/*.md`），**不**再为同一主题保留空壳能力叶。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + 目录为准；仓库侧覆盖索引不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链 skill 仓 `docs/` 路径）。
 
 ### 能力叶快速路由（Capability leaves）
 
@@ -33,20 +33,18 @@ description: >-
 | manifest/state 工件 | `governance-state.md` |
 | 证据分层 | `evidence-tiers.md` |
 | INSTALLED 可移植性 | `references/policies/testing.policy.md` § INSTALLED 内容可移植性 |
-| Rule Capture | `references/policies/lifecycle.policy.md` § 规则捕获 |
 | 根因修复 / 失败预算 / 同类闭包 | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 |
 | 变更归位 / 残留清理 | `references/policies/coding.policy.md` § 变更归位与残留清理 |
 | 工程克制 | `references/policies/coding.policy.md` § 工程克制与机制测试 |
-| 种子 oracle / 路由完整性 | （本仓表征；不进 INSTALLED 能力叶） |
 | 文档一致性 / 新鲜度 / 计划同步 | `content-consistency.md` · `doc-freshness.md` · `plan-sync.md` |
 | 同步组 | `sync-groups.md` |
 | 确认凭证卫生 | `references/policies/git.policy.md` § 确认范围（凭证卫生） |
-| SSOT / 门禁修复 | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 |
+| SSOT / 门禁修复 | `ssot-repair.md`（权威在 lifecycle § 根因修复） |
 | Implementation Review | `review-mechanism.md` · `subskills/subskill-review-manager.md` |
-| 生成子技能 | `deterministic-init.md` · `subskills/subskill-*.md` · `references/instruction/sub-skills.md` |
+| 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskills/subskill-*.md` |
 | Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 |
 
-完整清单以本节路由表与 `references/capabilities/` 目录为准。兑现分类唯一事实源：`references/capabilities/enforcement.v0.json`（INIT → `docs/rules/capability-enforcement.json`）。must-ship 覆盖的仓库侧索引是 REPO-ONLY，不进安装载荷。
+完整清单以本节路由表与 `references/capabilities/` 目录为准。兑现分类唯一事实源：`references/capabilities/enforcement.v0.json`（INIT → `docs/rules/capability-enforcement.json`）。仓库侧覆盖索引不进安装载荷。
 
 ### 概念总览（Concept Map）
 
@@ -91,7 +89,7 @@ Governance Spec → Governance Engine → Runtime Contract → Coding Agents
 ### 单一事实源
 
 - 本 SKILL = 初始化规范源头；生成后的 **AGENTS.md** = 项目运行期规则源头；`docs/rules/` 承接细节。
-- 同一规则不得多处独立维护。变更归位 / 残留清理 → `references/policies/coding.policy.md`；根因修复 / 发现台账 / 规则捕获 → `references/policies/lifecycle.policy.md`；工程克制 → `references/policies/coding.policy.md`。能力叶只作任务提示。
+- 同一规则不得多处独立维护。变更归位 / 残留清理 → `references/policies/coding.policy.md`；根因修复 / 发现台账 → `references/policies/lifecycle.policy.md`；工程克制 → `references/policies/coding.policy.md`。能力叶只作任务提示。
 
 ### Rule Priority
 

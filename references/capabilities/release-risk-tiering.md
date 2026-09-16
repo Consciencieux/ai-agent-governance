@@ -18,4 +18,4 @@ release workflow（项目内发布流程权威）风险分级（单一权威）�
 
 ## Non-goals
 
-不把 System/Research review 塞进 skill 默认面（repo-keep）。
+不把 System/Research review 塞进 skill 默认面。

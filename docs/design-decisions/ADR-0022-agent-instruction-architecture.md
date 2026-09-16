@@ -63,7 +63,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 1. **目标形态不是「把大 Markdown 拆成很多小 Markdown」，也不是「再写更多自然语言」。** v1.0.0 的 instruction surface 已经很大（体积与演进证据见 RESEARCH-0009）。无路由的拆分只是把一个大 prompt 变成许多小 prompt，Agent 记忆仍是 dispatcher。文件拆分必须同时具备：树状检索（导航）、图状适用关系（横切控制不被单挂到一个 lifecycle 节点）、机械执行（关键保证不依赖入口被记住）。
 2. **三条约束。** 入口负责路由，不负责承载规则；叶节点负责单一能力，不负责全局编排；机械控制不依赖入口被 Agent 记住。这三句封住 Generation-1 的主要 instruction 缺陷：厚入口、政策单体、以及「忘了读 Markdown 就等于没有控制」。
-3. **lifecycle 的目标职责是编排骨架，不是政策仓库。** 横切能力（Root Cause Repair、Rule Capture、Security、CHANGELOG、Review 等）应成为独立 capability，由 applicability 图挂到多个导航节点；禁止继续把它们内嵌进某个 Phase 作为默认归宿。本条是目标形态，不授权当前移动 `references/` 或改写 Gen1 JS。
+3. **lifecycle 的目标职责是编排骨架，不是政策仓库。** 横切能力（Root Cause Repair、Security、CHANGELOG、Review 等）应成为独立 capability（常驻准则进 policy；任务怎么做进薄叶），由 applicability 图挂到多个导航节点；禁止继续把它们内嵌进某个 Phase 作为默认归宿。本条是目标形态，不授权当前移动 `references/` 或改写 Gen1 JS。**Narrow note（2026-09-16）：** 原文示例曾含 Rule Capture；其后裁定 Phase 5a–5c 为施工协议并从 INSTALLED 撤出（FINDING-0038 / ADR-0024 `retire`），不得再当产品横切能力回潮。
 4. **`templates/` 按生成方式分类不是可接受的长期知识分类。** 可执行 instruction source 与 bootstrap boilerplate 职责不同（FINDING-0026）。目录重排留待后续阶段；当前仍以 `init-spec.json` 为物化契约。
 
 ## 后续修正（2026-09-10）：Context Economy

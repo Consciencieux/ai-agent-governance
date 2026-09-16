@@ -75,9 +75,9 @@ ai-agent-governance/
 │   ├── capabilities/               # task how-to leaves (INIT → docs/rules/capabilities/); hard rules stay in policies/ (FINDING-0038)
 │   │   ├── enforcement.v0.json     # obligation classification inventory
 │   │   ├── audit-drift.md / content-consistency.md / deterministic-init.md / doc-freshness.md
-│   │   ├── evidence-tiers.md / git-workflow-safety.md / governance-state.md / governance-validator.md
-│   │   ├── plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md
-│   │   ├── secret-scanning.md / sync-groups.md
+│   │   ├── evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / governance-state.md
+│   │   ├── governance-validator.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md
+│   │   ├── review-mechanism.md / secret-scanning.md / ssot-repair.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
 │   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md
