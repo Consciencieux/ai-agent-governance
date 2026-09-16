@@ -48,4 +48,4 @@ Other prompts: `audit governance`, `release`. Full list: [commands.md](commands.
 - **opencode** — auto-scans `.opencode/skills`, `.claude/skills`, `.agents/skills` (project and global).
 - **Codex / others** — depend on their skill-loading implementation; AGENTS.md-based agents apply the generated runtime contract regardless.
 
-Quick Start in the root README mirrors this table; keep them aligned when paths change.
+**This page is the authoritative source for install paths.** The root README Quick Start carries a summary table and links here; when paths change, update this page first, then sync the README.

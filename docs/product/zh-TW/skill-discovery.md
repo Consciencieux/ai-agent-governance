@@ -48,4 +48,4 @@ initialize project governance
 - **opencode** — 自動掃描 `.opencode/skills`、`.claude/skills`、`.agents/skills`（專案級與全域）。
 - **Codex / 其他** — 取決於各自載入實作；基於 AGENTS.md 的 Agent 仍遵循產生的執行時契約。
 
-根目錄 README 的「快速開始」與本表對齊；路徑變更時兩邊一起改。
+**本頁是安裝路徑的權威來源。** 根目錄 README 的「快速開始」只保留摘要表並連結到這裡；路徑變更時先改本頁，再同步 README。

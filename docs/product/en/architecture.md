@@ -6,246 +6,151 @@ This page is the repository layout — a developer-facing map of what each direc
 
 The skill's behavior (operating modes INIT/AUDIT/RELEASE, lifecycle pipeline, design principles) is defined in the skill body, not here: see [SKILL.md](../../../SKILL.md) and `references/`. This page only records where things live.
 
-### Three distribution roles (read this before classifying any file)
+### Three distribution roles
 
-"Payload" used to mean three different things, which is exactly how a repo-only tool got
-labelled "NOT payload" while sitting in `scripts/`, and how a sub-skill ended up citing a
-workflow file governed projects never receive. Use these three role names instead — they
-are mutually exclusive, and `references/init-spec.json` is the machine-readable authority
-for which role a file has:
+Every file belongs to exactly one role. `references/init-spec.json` is the machine-readable authority; `repo-tools/check-role-completeness.js --gate` catches omissions.
 
-| Role | Definition | How to verify | Examples |
-| --- | --- | --- | --- |
-| **INSTALLED** | INIT writes it into the governed project (copy / template / generated). The governed project's agents read it at runtime. | listed as a `source` in `init-spec.json` (see `check-role-completeness.js --gate` for current counts) | `references/policies/coding.policy.md` → `docs/rules/coding.md`; `scripts/check-secrets.js`; `agents-md.template.md` → `AGENTS.md` |
-| **SKILL-INTERNAL** | Ships inside the tarball (packaging copies `references/` + `scripts/` wholesale) and the SKILL EXECUTOR reads it — but INIT never installs it, so a governed project never has this file. | listed in `init-spec.json` `distribution.skillInternal` | `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`, and `references/principles/*` (portable methodology) |
-| **REPO-ONLY** | Never in the tarball at all. Governs work on THIS repository. | outside `references/`/`scripts/`/`SKILL.md`/`LICENSE` | `repo-tools/**`, `repo-workflows/**`, `AGENTS.md`, `docs/**`, `tests/**`, `package.json`, `.github/**`, `.gitattributes` |
-
-Roles are **human decisions, never inferred**: `copy`/`template`/`generated`, renames
-(`lifecycle.policy.md` → `docs/rules/lifecycle.md`, `verify_governance.js` →
-`verify-governance.js`), one-to-many outputs (`githooks-template.md` → `pre-commit` +
-`commit-msg`) and the inline-content artifacts (`type: "static"`) all encode contract decisions a
-generator cannot recover from the file tree. What IS mechanical is catching omissions:
-`repo-tools/check-role-completeness.js --gate` fails on an unclassified file, a file in both
-sets, a declared path that no longer exists, or a role claim that `package-skill.sh` does
-not actually ship. Files whose role is genuinely unresolved sit in
-`distribution.undecided` with the open question recorded, and keep that gate red until
-adjudicated. Both items initially placed there have been resolved in the same change that
-introduced the role table: `governance-files.policy.md` (an INSTALLED check reads it, so it
-is now installed as `docs/rules/governance-files.md`) and `feature-doc.template.md`
-(SKILL.md tells agents to copy it, so it is now installed as `docs/features/_TEMPLATE.md`).
-
-Two rules follow, and both were violated before this table existed:
-
-1. **A SKILL-INTERNAL file must never be cited as a source of rules for a governed
-   project** (it is not there). Sub-skill and generated-AGENTS text may only point at
-   INSTALLED paths — `docs/rules/*`, the governed project's own `AGENTS.md`, or copied
-   `scripts/*`.
-2. **A SKILL-INTERNAL script must no-op outside this repo's shape** (now REPO-ONLY under repo-tools/, never shipped). `check-coding-hygiene.js` does this by reporting `applicable: false` when the suite layout is absent.
-
-### The second axis: portability (where a file GOES vs whether its content HOLDS there)
-
-The distribution role answers *where the file is delivered*. It does not answer *who reads
-it* or *whether its statements are true in the place it is read*. Those are a separate
-axis, and conflating the two produced a class of real defects: files correctly classified
-as INSTALLED whose text told a governed project to run `npm run check` (no package.json
-there), pointed at `references/…` siblings (renamed or never installed by INIT), or
-assumed a trilingual docs tree.
-
-| Audience | Reads it where | Portability the content must have |
+| Role | Definition | Examples |
 | --- | --- | --- |
-| skill executor | in the skill package | skill-portable — may name payload paths (`references/…`), never repo-only ones (`docs/`, `package.json`) |
-| governed-project agent | in the target project | project-portable — every path, command and script named must exist THERE |
-| this-repo contributor | in this repository | repo-specific — may name anything here |
-| generator | reads templates, writes target files | output must be project-portable at the stage that writes it |
-
-Per-file examples: `SKILL.md` = skill-portable · `lifecycle.policy.md` = project-portable
-(installed as `docs/rules/lifecycle.md`) · `release.md` = governed-project-portable ·
-`skill-release.md` = skill-repo-specific · `check-doc-parity.js` and the other repo-only
-gates = repo-specific · `AGENTS.md` (this repo's) = repo-specific.
-
-Three rules follow:
-
-1. **INSTALLED content must be project-portable.** An INSTALLED file references its
-   siblings by the path the TARGET has (`docs/rules/*.md`), or states the fact without a
-   path. A repo-specific command or path fact belongs in a repo file, never in installed
-   rule text.
-2. **Validate in the execution environment, not the authoring one.** The authoring repo
-   resolves references the target cannot; correctness is judged by generating a real
-   project and resolving there. "Looks repo-specific" is the wrong filter — it catches
-   `本仓库` and misses every reference that reads normally but simply is not installed.
-   Defects distribute by resolvability, not by suspicious wording.
-3. **Stage-portability is part of it.** A Phase A artifact may not command a script that
-   Phase B installs. The generated `AGENTS.md` prunes its clauses per stage
-   (`<!-- phase:A -->` / `<!-- phase:B+ -->` / `<!-- phase:C -->`) and later stages
-   upgrade the file in place, so the rules a project holds always match the scripts it has.
-
-### Third axis: construction provenance (repo knowledge vs skill contract)
-
-Distribution says *where a file is delivered*. Portability says *whether named paths hold*.
-This axis says *which knowledge system owns the text*. Roles alone do not stop repo
-construction IDs from leaking into skill payload.
-
-| Belongs to | Lives in | May cite | Must not appear in skill payload (`SKILL.md` + `references/` + `scripts/`) |
-| --- | --- | --- | --- |
-| **This repo (producer)** | `docs/` (plans, findings, ADR, research, product, roadmap), `tests/`, `repo-tools/`, `repo-workflows/`, this repo's `AGENTS.md` / `CHANGELOG.md` / CI | `PLAN-*`, `ADR-*`, `FINDING-*`, `RESEARCH-*`, repo paths, npm scripts | — (repo files may cite freely) |
-| **Skill product** | Tarball: `SKILL.md` + `references/` + `scripts/` + `LICENSE`. After INIT: governed-project paths such as `docs/rules/*`, copied `scripts/*`, `AGENTS.md` | Product language (`judgment` / `mechanical`, CTRL-* seed controls, install paths) | `PLAN-*`, `ADR-*`, `FINDING-*`, `RESEARCH-*`, pointers into this repo's `docs/` tree |
+| **INSTALLED** | INIT writes it into the governed project. The project's agents read it at runtime. | `references/policies/coding.policy.md` → `docs/rules/coding.md`; `scripts/check-secrets.js`; `agents-md.template.md` → `AGENTS.md` |
+| **SKILL-INTERNAL** | Ships in the tarball; the skill executor reads it — but INIT never installs it into governed projects. | `references/init-spec.json`, `references/workflows/release.md`, `scripts/generate-governance.js`, `references/principles/*` |
+| **REPO-ONLY** | Never in the tarball. Governs work on THIS repository only. | `repo-tools/**`, `repo-workflows/**`, `AGENTS.md`, `docs/**`, `tests/**`, `package.json`, `.github/**` |
 
 Hard rules:
 
-1. **`tests/` is REPO-ONLY.** It never ships in the skill tarball. A repo test must not force INSTALLED / payload text to embed Finding/Plan/ADR IDs (that re-couples producer docs into product).
-2. **CTRL-*** IDs are product control names (seed oracles), not the repo Finding system — allowed in payload when they name a shipped control.
-3. **Decision record for this boundary:** [ADR-0020](../../design-decisions/ADR-0020-producer-product-governance-separation.md) invariant I5. This page is the operational map; ADR-0020 is the decision.
+1. **SKILL-INTERNAL files must never be cited as rules for a governed project** — it does not have them. Sub-skill and generated-AGENTS text may only point at INSTALLED paths (`docs/rules/*`, `scripts/*`).
+2. **SKILL-INTERNAL scripts must no-op outside this repo's shape** (report `applicable: false` when the expected layout is absent).
+
+### Portability (where a file GOES vs whether its content HOLDS there)
+
+| Audience | Reads it where | Content must be |
+| --- | --- | --- |
+| skill executor | in the skill package | skill-portable — may name `references/…`, never repo-only paths |
+| governed-project agent | in the target project | project-portable — every path/command/script must exist THERE |
+| this-repo contributor | in this repository | repo-specific — may name anything here |
+| generator | reads templates, writes target files | output must be project-portable at the stage that writes it |
+
+Hard rules:
+
+1. **INSTALLED content must be project-portable.** Reference siblings by the path the TARGET has (`docs/rules/*.md`); repo-specific commands belong in repo files only.
+2. **Validate in the execution environment, not the authoring one.** Generate a real project and resolve there.
+3. **Stage-portability matters.** A Phase A artifact must not command a Phase B script. The generated `AGENTS.md` prunes clauses per stage (`<!-- phase:A/B+/C -->`).
+
+### Construction provenance (repo knowledge vs skill contract)
+
+| Belongs to | May cite | Must NOT appear in skill payload |
+| --- | --- | --- |
+| **This repo (producer)** | `PLAN-*`, `ADR-*`, `FINDING-*`, `RESEARCH-*`, repo paths, npm scripts | — |
+| **Skill product** | Product language (`judgment`/`mechanical`, `CTRL-*` controls, install paths) | `PLAN-*`, `ADR-*`, `FINDING-*`, `RESEARCH-*`, pointers into this repo's `docs/` |
+
+Decision record: [ADR-0020](../../design-decisions/ADR-0020-producer-product-governance-separation.md) invariant I5.
 
 ### Directory Roles
 
 | Path | Role | Reader | Language |
 | --- | --- | --- | --- |
-| `SKILL.md` | Thin always-on entry (identity · modes · invariants · capability routing). Full policy/workflow bodies live under `references/`; must-ship callable cards under `references/capabilities/`. Not an encyclopedia. | agents (skill users) | single |
-| `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL (see the role table). | agents (skill users) | single |
-| `scripts/` | Skill runtime scripts. Mixed INSTALLED + SKILL-INTERNAL (current counts: `check-role-completeness.js --gate`). INSTALLED scripts are copied into governed projects. | agents/CI | code |
+| `SKILL.md` | Thin always-on entry (identity · modes · invariants · capability routing) | agents (skill users) | single |
+| `references/` | **Skill body — the only place skill behavior lives.** Mixed INSTALLED + SKILL-INTERNAL. | agents (skill users) | single |
+| `scripts/` | Skill runtime scripts. Mixed INSTALLED + SKILL-INTERNAL. | agents/CI | code |
 | `LICENSE` | MIT license — travels with the tarball | installers | — |
-| `docs/` | **Project knowledge. REPO-ONLY.** Developer-maintained; read by developers AND agents working in this repo: how to use the skill (trigger words in `commands.md`), design plans (`plans/`), findings archive (`findings/`), research knowledge base (`research/`), roadmap, glossary. | developers + agents | mixed by knowledge type: product/roadmap trilingual; plans/findings/research/ADR canonical Chinese |
-| `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `README*.md`, `CONTRIBUTING*.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure: CI, release flow, change log, contributor guide | repo maintainers | per file |
+| `docs/` | **Project knowledge. REPO-ONLY.** | developers + agents | mixed by knowledge type |
+| `tests/`, `package.json`, `.github/`, `CHANGELOG.md`, `README*.md`, `CONTRIBUTING*.md`, `AGENTS.md`, `.gitattributes` | REPO-ONLY infrastructure | repo maintainers | per file |
 
 ### Repository Layout
 
 ```
 ai-agent-governance/
-├── SKILL.md                    # thin always-on entry + capability routing (not policy encyclopedia)
+├── SKILL.md                    # thin always-on entry + capability routing
 ├── references/                 # skill body — the only place skill behavior lives
 │   ├── init-spec.json          # machine-readable INIT spec (source for generate-governance.js)
-│   ├── instruction/                # executable instruction sources (ADR-0026; not templates)
+│   ├── instruction/                # executable instruction sources (not templates)
 │   │   ├── agents-md.template.md   # AGENTS.md runtime contract source
-│   │   └── sub-skills.md           # source for generated skills; each becomes .governance/generated/skills/<name>/SKILL.md
+│   │   └── sub-skills.md           # source for generated skills
 │   ├── templates/                  # materialization only (bootstrap / machine-state)
-│   │   ├── feature-doc.template.md # feature doc template (anti-fabrication rules)
-│   │   ├── env-example.template.md # .env.example template (placeholders, dependency-trimmed)
-│   │   ├── gitmessage.template.md  # .gitmessage.txt template (commit conventions)
-│   │   ├── git-policy.template.md  # .governance/git-policy.json template (Git workflow policy)
-│   │   ├── githooks-template.md     # opt-in .githooks/pre-commit + commit-msg templates
-│   │   └── sync-rules.template.md  # .governance/sync-rules.json template (sync groups)
+│   │   ├── feature-doc.template.md / env-example.template.md / gitmessage.template.md
+│   │   ├── git-policy.template.md / githooks-template.md / sync-rules.template.md
 │   ├── policies/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
-│   │   └── governance-files.policy.md   # protected files + .governance git-tracking policy
-│   ├── capabilities/               # Capability leaf authorities (Phase 5c; INIT → docs/rules/capabilities/)
-│   │   ├── enforcement.v0.json     # obligation classification inventory (INIT → docs/rules/capability-enforcement.json)
-│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / git-write-consent.md / governance-state.md / governance-validator.md / installed-portability.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / root-cause-repair.md / rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / sync-groups.md
+│   │   └── governance-files.policy.md
+│   ├── capabilities/               # capability leaf authorities (INIT → docs/rules/capabilities/)
+│   │   ├── enforcement.v0.json     # obligation classification inventory
+│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md
+│   │   ├── deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md
+│   │   ├── evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md
+│   │   ├── git-write-consent.md / governance-state.md / governance-validator.md
+│   │   ├── installed-portability.md / plan-sync.md / release-orchestration.md
+│   │   ├── release-risk-tiering.md / review-mechanism.md / root-cause-repair.md
+│   │   ├── rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
 │   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md
-│   ├── principles/                 # Portable methodology (PLAN-0037; SKILL-INTERNAL — not INIT-installed)
-│   │   ├── entry.md
-│   │   ├── instruction-architecture.md / document-model.md / metadata-policy.md
-│   │   ├── capability-model.md / decision-records.md / migration-method.md
-│   │   ├── control-shape.md / enforcement-semantics.md
-│   ├── contracts/                  # Portable contract examples (INIT may copy into .governance/)
+│   ├── principles/                 # portable methodology (SKILL-INTERNAL — not INIT-installed)
+│   │   ├── entry.md / instruction-architecture.md / document-model.md / metadata-policy.md
+│   │   └── capability-model.md / decision-records.md / migration-method.md / control-shape.md / enforcement-semantics.md
+│   ├── contracts/
 │   │   └── sibling-closure.example.json
 │   └── workflows/
 │       ├── ci.md               # CI templates (capability detection + degradation)
 │       └── release.md          # release preconditions + version consistency (governed projects)
 ├── scripts/                    # skill runtime scripts — INSTALLED into governed projects + the generator
 │   ├── verify_governance.js    # validator (manifest-driven paths + governance_version)
-│   ├── check-lock.js     # lock status + atomic acquire/release (FINDING-0012)
-│   ├── check-git-consent.js # CTRL-0002 git argv consent classifier (does not run git)
-│   ├── check-sibling-closure.js # sibling-instance closure carrier (declared contracts; FINDING-0003)
-│   ├── check-file-size-budget.js # file-size budget reporter (soft/review; human-confirmed split)
-│   ├── migrate-governance.js # discoverable MIGRATE entry (version compare + checklist; no auto-mutate)
-│   ├── check-git-policy.js     # Git workflow gate (protected branch + directPush=false → exit 1)
-│   ├── check-secrets.js        # skill-profile CTRL-0001 CLI WRAP (staged diff; never prints the secret)
-│   ├── check-sync.js           # sync groups gate (watch/require reconciliation, exit 1)
+│   ├── check-lock.js / check-git-consent.js / check-sibling-closure.js / check-file-size-budget.js
+│   ├── migrate-governance.js / check-git-policy.js / check-secrets.js / check-sync.js
 │   ├── lib/
-│   │   ├── git-facts.js        # shared git/path/date factual primitives (no Control policy)
-│   │   ├── md-link-facts.js    # shared Markdown-link factual primitives (extract/resolve/exists)
-│   │   ├── plan-status.js      # ADR-0016 plan-status frontmatter classifier (PLAN-0048)
-│   │   ├── adr-status.js       # FINDING-0011 ADR Status-field heuristic (PLAN-0048)
-│   │   ├── secret-scan-facts.js # shared secret-scan factual primitives (patterns / staged / blob)
+│   │   ├── git-facts.js / md-link-facts.js / plan-status.js / adr-status.js / secret-scan-facts.js
 │   │   ├── doc-consistency/
-│   │   │   ├── run.js                 # thin orchestrator (PLAN-0055 R10 cluster EXTRACT)
-│   │   │   ├── shared.js              # shared helpers/constants
-│   │   │   ├── changelog-coverage.js  # gate: changelog coverage
-│   │   │   ├── version-examples.js    # gate: version-example sync
-│   │   │   ├── protected-files.js     # gate: protected-files sync
-│   │   │   ├── consent-cluster.js     # gate: consent-cluster sync
-│   │   │   ├── principles-index.js    # gate: principles-index pointers
-│   │   │   ├── plan-status.js         # gate: plan-status / pending-archive
-│   │   │   ├── adr-status.js          # gate: ADR status sync
-│   │   │   ├── broken-links.js        # gate: link validity (CTRL-0006)
-│   │   │   ├── numeric-claims.js      # gate: numeric claims
-│   │   │   └── prompt-sync.js         # gate: prompt sync
+│   │   │   ├── run.js / shared.js
+│   │   │   ├── changelog-coverage.js / version-examples.js / protected-files.js
+│   │   │   ├── consent-cluster.js / principles-index.js / plan-status.js / adr-status.js
+│   │   │   └── broken-links.js / numeric-claims.js / prompt-sync.js
 │   │   └── generate/
-│       │   └── run.js          # EXTRACTED INIT generator body (PLAN-0055 Stage 3/4S; SKILL-INTERNAL)
+│   │       └── run.js              # INIT generator body (SKILL-INTERNAL)
 │   ├── evaluators/
-│   │   ├── ctrl-0001-secret-protection.js   # CTRL-0001 secret protection evaluator (deny at CLI binding)
-│   │   ├── ctrl-0002-git-write-consent.js   # CTRL-0002 git argv write-consent evaluator
-│   │   ├── ctrl-0003-doc-freshness.js       # CTRL-0003 governance-doc freshness evaluator (advisory)
-│   │   ├── ctrl-0004-translation-freshness.js # CTRL-0004 translation freshness evaluator (--release-gate deny)
-│   │   └── ctrl-0006-broken-links.js        # CTRL-0006 relative markdown link validity (consistency cluster #4)
-│   ├── check-doc-freshness.js  # thin CLI wrapper (CTRL-0003 + CTRL-0004; advisory, --release-gate blocks stale/draft translations)
-│   ├── check-doc-consistency.js # thin consistency CLI WRAP → lib/doc-consistency/run.js (cluster #4 → CTRL-0006; advisory default; --gate/--release-gate fail-closed)
-│   ├── check-plan-sync.js      # plan/milestone reconciliation (advisory; --release-gate fail-closed; no-op without DEVELOPMENT_PLAN.md)
-│   ├── generate-governance.js  # thin INIT CLI → lib/generate/run.js (SKILL-INTERNAL; spec: references/init-spec.json)
-│   └── release-manager.js      # plan (read-only) + execute (approval-gated) release tool
+│   │   ├── ctrl-0001-secret-protection.js / ctrl-0002-git-write-consent.js
+│   │   ├── ctrl-0003-doc-freshness.js / ctrl-0004-translation-freshness.js
+│   │   └── ctrl-0006-broken-links.js
+│   ├── check-doc-freshness.js / check-doc-consistency.js / check-plan-sync.js
+│   ├── generate-governance.js      # thin INIT CLI (SKILL-INTERNAL)
+│   └── release-manager.js          # plan (read-only) + execute (approval-gated) release tool
 ├── LICENSE                     # MIT
 │
-│  ▼ install payload ends here — everything below is repo infrastructure,
-│    NOT copied into skill installations. The boundary is PHYSICAL: package-skill.sh
-│    copies SKILL.md + references/ + scripts/ + LICENSE, so a file placed below this
-│    line cannot reach a tarball no matter what role it declares.
+│  ▼ Install payload ends here — everything below is repo infrastructure.
+│    package-skill.sh copies only SKILL.md + references/ + scripts/ + LICENSE.
 │
 ├── repo-tools/                 # THIS repo's own gates and packaging — never distributed
-│   ├── check-doc-parity.js     # trilingual tree parity (CI + release precondition)
-│   ├── check-layout-sync.js    # architecture.md Repository Layout vs the four scanned dirs (fail-closed gate)
-│   ├── check-plan-delivery.js  # plan declarations vs actual delivery (gate before archiving)
-│   ├── check-role-completeness.js # distribution-role completeness (unclassified/overlap/stale/packaging + repo-only reverse check)
-│   ├── check-coding-hygiene.js # coding hygiene (test-ownership + residue markers)
-│   ├── check-file-size-budget.js # advisory line-count budgets (soft/review; human-confirmed split)
-│   ├── check-daily-check-surface.js # daily npm run check allowlist gate (PLAN-0055)
-│   ├── daily-check-surface.v0.json # allowlist data for check-daily-check-surface.js
-│   ├── check-terminology.js    # repo-owned terminology gate (extracted from INSTALLED consistency checker; ADR-0020 first execution separation)
-│   ├── check-changelog-narration.js  # REPO-ONLY: Unreleased verification-narration markers; --gate fail-closed (FINDING-0016)
-│   ├── check-secrets.js        # repo-profile CTRL-0001 CLI (shared evaluator under scripts/; not the skill CLI path)
-│   ├── check-must-ship.js      # Phase 8 must-ship mechanical gate set (PLAN-0044 / ADR-0024)
-│   ├── check-must-ship-carriers.js  # must-ship carrier presence (sub-skills / scripts / SKILL entry)
-│   ├── lib/routing.js          # Phase 5b shared resolve + Context Detector (PLAN-0039)
-│   ├── routing-graph.v0.json   # machine Task→Capability graph (consumed by routing.js; not a Research object)
-│   ├── script-inventory.v0.json
-│   ├── oracle-inventory.v0.json
-│   ├── route-task.js           # Phase 5b Dispatcher CLI — Task→Capability RoutingResult
+│   ├── check-doc-parity.js / check-layout-sync.js / check-plan-delivery.js
+│   ├── check-role-completeness.js / check-coding-hygiene.js / check-file-size-budget.js
+│   ├── check-daily-check-surface.js / daily-check-surface.v0.json
+│   ├── check-terminology.js / check-changelog-narration.js / check-secrets.js
+│   ├── check-must-ship.js / check-must-ship-carriers.js
+│   ├── lib/
+│   │   └── routing.js
+│   ├── routing-graph.v0.json
+│   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
-│   ├── changelog-policy.md      # repo CHANGELOG policy (REPO-ONLY; AGENTS 放指针)
-│   └── skill-release.md        # skill repo release flow (five version sync points + tag, tarball build)
+│   ├── changelog-policy.md
+│   └── skill-release.md
 │
-├── docs/                       # project knowledge — developer-maintained, read by developers & agents (trigger words, plans, roadmap)
-│   ├── glossary.md             # trilingual terminology table (shared)
-│   ├── product/                # user-facing docs — trilingual
-│   │   ├── en/                 # English tree (architecture.md = this page)
-│   │   ├── zh-CN/              # 简体中文 tree (canonical source; incl. README.md, CONTRIBUTING.md)
-│   │   └── zh-TW/              # 繁體中文 tree (Taiwan; incl. README.md, CONTRIBUTING.md)
-│   ├── plans/                  # execution plans (single-language zh-CN canonical)
-│   │   ├── roadmap/            # roadmap — trilingual boundary object ({en,zh-CN,zh-TW}.md)
-│   │   ├── PLAN-xxxx-*.md      # active design plans
-│   │   └── archive/            # completed plan archives (shared, single-language)
-│   ├── findings/               # Issue/Finding archive (shared, single-language 简体中文; status change in place, never archived)
-│   ├── research/               # research knowledge base — system model, mechanism taxonomy, evaluation framework (shared, single-language 简体中文, versioned/superseded)
-│   └── design-decisions/       # architecture decision records (shared, single-language 简体中文)
-├── README.md                   # English landing
-├── README.zh-CN.md             # 简体中文 landing
-├── README.zh-TW.md             # 繁體中文 landing
-├── CONTRIBUTING.md             # English development guide
-├── CONTRIBUTING.zh-CN.md       # 简体中文 development guide
-├── CONTRIBUTING.zh-TW.md       # 繁體中文 development guide
-├── AGENTS.md                   # agent guidelines for working on this repo
-├── CHANGELOG.md                # release history
-├── package.json                # npm scripts (test, check)
+├── docs/                       # project knowledge — developer-maintained
+│   ├── glossary.md             # trilingual terminology table
+│   ├── product/                # user-facing docs — trilingual (en / zh-CN / zh-TW)
+│   ├── plans/                  # execution plans (zh-CN canonical)
+│   │   ├── roadmap/            # trilingual
+│   │   └── archive/
+│   ├── findings/               # issue/finding archive (zh-CN)
+│   ├── research/               # research knowledge base (zh-CN)
+│   └── design-decisions/       # architecture decision records (zh-CN)
+├── README.md / README.zh-CN.md / README.zh-TW.md
+├── CONTRIBUTING.md / CONTRIBUTING.zh-CN.md / CONTRIBUTING.zh-TW.md
+├── AGENTS.md / CHANGELOG.md / package.json
 ├── .github/                    # CI: must-ship gate + skill-payload-release on version tags
 └── tests/
-    ├── run-tests.js            # single discovery entry: runner + summary only
-    ├── support/helpers.js      # shared fixtures, git helpers, script paths, temp-root lifecycle
-    └── suites/                 # domain suites (validator, security, consistency, docs,
-                                # release, generator, payload, hygiene) — see anti-patch plan §3
+    ├── run-tests.js            # single discovery entry
+    ├── support/helpers.js
+    └── suites/                 # domain suites (validator, security, consistency, docs, etc.)
 ```
 
-Release scratch `repo-tools/.release/proposal.json` is gitignored (see `repo-workflows/skill-release.md`) and is intentionally **not** listed in the tree above — layout-sync only tracks committed paths.
+Release scratch `repo-tools/.release/proposal.json` is gitignored and intentionally not listed above.
 
-Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split (`docs/`, `tests/`, `package.json`, `.github/`, README, CONTRIBUTING, CHANGELOG, AGENTS.md) is repository infrastructure — do NOT copy it into skill installations. `repo-tools/` and `repo-workflows/` are REPO-ONLY by directory: the packaging step copies only the four payload items, so nothing under them can reach a tarball.
+Install payload = `SKILL.md` + `references/` + `scripts/` + `LICENSE` only. Everything below the split is repository infrastructure — do NOT copy it into skill installations.

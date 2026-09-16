@@ -1,7 +1,6 @@
 # Commands
 
 [English](commands.md) · [简体中文](../zh-CN/commands.md) · [繁體中文](../zh-TW/commands.md)
-<!-- i18n-reviewed: 43ffdb8 -->
 
 All prompts below are chat prompts for AI coding agents, not shell commands. They follow the governance lifecycle: **Initialize → Develop → Maintain → Release**.
 
@@ -20,115 +19,53 @@ All prompts below are chat prompts for AI coding agents, not shell commands. The
 | Reviewing changes or the project | `review this` | `review the changes` · `audit recent changes` · `review my changes` · `审核一下` · `review the whole project` · `deep review` |
 | Preparing a release | `release` | `publish version` · `create release` · `/release vX.Y.Z` |
 
-Git Workflow Governance has no prompt of its own — it takes effect automatically as a runtime rule: `scripts/check-git-policy.js` runs before work starts and blocks direct commits/pushes on protected branches (see `.governance/git-policy.json`). Likewise `push` / `merge` are not prompts — they are confirmation-gated write operations: the agent states intent and waits for your explicit approval (see `docs/rules/git-policy.md`).
+Git Workflow Governance has no prompt of its own — it takes effect automatically as a runtime rule: `scripts/check-git-policy.js` runs before work starts and gates direct pushes on protected branches when `.governance/git-policy.json` sets `directPush: false`. Git write operations (`commit` / `push` / `tag`) require explicit user consent — a write instruction or IDE stage-commit-push confirm counts as consent; the agent executes and reports afterward (see `docs/rules/git-policy.md`).
 
-### Prompt Details
+### Key Prompts
 
 #### initialize project governance
 
-Bootstraps the initial AI agent governance foundation for a repository (AGENTS.md, rules, feature registry, governance state, validation system, CI).
-
-Workflow:
+Bootstraps governance for a repository: AGENTS.md, rules, feature registry, governance state, validators, CI.
 
 ```
-Repository inspection
-→ Generate governance foundation
-→ Create governance state
-→ Configure agent rules
-→ Setup validation
-→ Setup CI
-→ Report
+Repository inspection → Generate foundation → Create state → Configure rules → Setup validation → Setup CI → Report
 ```
 
-Detailed output (full annotated tree): [bootstrap-output.md](bootstrap-output.md)
-
-#### plan this task
-
-Creates the development plan before a medium/large change (TASK file with Status, purpose, problem, solution, affected files, risks, validation).
-
-Workflow:
-
-```
-Create docs/plans/TASK_<name>.md
-→ Confirm with developer
-→ Start implementation
-```
-
-On completion the same planner checks off the milestone and marks the task Completed.
+Detailed output: [bootstrap-output.md](bootstrap-output.md).
 
 #### audit governance
 
-Maintains governance health: detects drift and keeps project knowledge synchronized.
-
-Workflow:
-
-```
-Read current state
-→ Detect drift
-→ Validate artifacts
-→ Apply minimal fixes
-```
+Health-checks a governed project: detects drift, validates artifacts, applies minimal fixes.
 
 #### release
 
-Creates a version release through human approval. The Proposal includes a risk level (low = lightweight gates only; medium = deep review suggested at approval; high = review-manager or item-by-item confirmation required).
-
-Workflow:
+Human-in-the-loop versioned release. The Proposal includes a risk level (low / medium / high).
 
 ```
-Analyze changes
-→ SemVer proposal + risk level
-→ Approval
-→ Tag
-→ GitHub Release
+Analyze changes → SemVer proposal + risk level → Approval → Tag → Push approved branch + tag (GitHub Release per project convention)
 ```
 
-#### check governance drift
+#### review this
 
-Detects governance drift: compares the manifest against reality, plus three advisory modes (results in `.governance/drift-report.json`):
-
-```
-Read manifest
-→ Run validator
-→ Detect drift
-→ Advisory modes: activity-report · freshness · consistency
-```
-
-Target a mode directly: `run the drift activity report` · `check doc freshness` · `check doc consistency`
-
-#### inspect the repo
-
-Inspects the environment before any task — project type, language, package manager, build tool, test framework, linter, git state, CI, existing AI guidance files — and returns a stack report. Also runs automatically at the start of INIT.
-
-#### setup CI
-
-Generates the CI pipeline for the detected stack (capability-detected, format/lint/typecheck/test/build steps with graceful degradation when scripts are missing).
-
-#### governance check
-
-Runs `scripts/verify-governance.js` and records results into `.governance/validation.json`. Gate: the validator must exit 0 before a task is declared done and before RELEASE.
-
-#### update state
-
-Persists progress into `.governance/state.json` (maturity, phase, agent identity, completed/blocked items) so later sessions resume correctly. Runs automatically at the end of every task.
+Review across depth × scope: lightweight (`review this`) or full (`deep review`); default = change set, append a path or `review the whole project` to change scope.
 
 ### Generated Skills
 
-These are generated skills, not scripts. Each is loaded from `.governance/generated/skills/<name>/SKILL.md`; the generated project's `AGENTS.md` contains the authoritative runtime registry. Users normally only interact with the prompts above.
+INIT generates sub-skills under `.governance/generated/skills/<name>/SKILL.md`; the project's `AGENTS.md` contains the runtime registry. Users interact through the prompts above.
 
-| Component | Prompts | Responsibility |
+| Component | Triggers | Responsibility |
 | --- | --- | --- |
-| drift-check | `check governance drift` · `governance health report` · `is governance intact` | compares manifest against reality, reports drift; `activity-report` mode aggregates the audit trail and current rule-capture candidates, `freshness` mode flags stale docs, `consistency` mode flags cross-document contradictions |
-| governance-validator | `governance check` · `verify governance` · `validate AGENTS` | runs the validator, records `validation.json` |
-| ci-generator | `setup CI` · `add CI` · `create workflow` | generates the CI pipeline for the detected stack |
-| repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | inspects the environment, returns the stack report |
-| state-manager | `update state` · `record progress` | persists progress and current rule-capture candidates into `.governance/state.json`, and records captured/pending/resolved candidate IDs in the activity trail |
-| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `archive completed plan` | creates TASK plans, checks off milestones, marks tasks completed, archives completed plans at release |
-| review-manager | depth: `review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下` (light) — `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查` (full) — scope: default = change set, append a path to scope it, or `review the whole project` · `全项目审核` (light) / `audit everything` · `全项目彻查` (full) | review across depth × scope (lightweight/full × change set/path/whole project) |
-| release-manager | `release` · `publish version` · `/release vX.Y.Z` | executes the approval-gated release flow |
+| drift-check | `check governance drift` · `governance health report` · `is governance intact` | Compares manifest vs reality; modes: activity-report, freshness, consistency |
+| governance-validator | `governance check` · `verify governance` · `validate AGENTS` | Runs the validator, records `validation.json` |
+| ci-generator | `setup CI` · `add CI` · `create workflow` | Generates CI pipeline for the detected stack |
+| repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | Inspects environment, returns stack report |
+| state-manager | `update state` · `record progress` | Persists progress to `.governance/state.json` |
+| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `archive completed plan` | Creates TASK plans, checks milestones, archives on release |
+| review-manager | `review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下` · `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查` · `review the whole project` · `全项目审核` · `audit everything` · `全项目彻查` | Depth × scope review (lightweight/full × change set/path/whole project) |
+| release-manager | `release` · `publish version` · `create release` · `/release vX.Y.Z` | Executes the approval-gated release flow |
 
 ### Execution Rules
 
-Any prompt with an uncertain outcome (e.g. a release with an unclear breaking change) pauses and asks for clarification — never a silent guess.
+Any prompt with an uncertain outcome pauses and asks for clarification — never a silent guess.
 
 ---

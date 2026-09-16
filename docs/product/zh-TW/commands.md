@@ -2,7 +2,7 @@
 
 [English](../en/commands.md) · [简体中文](../zh-CN/commands.md) · [繁體中文](commands.md)
 
-以下全部是**給 AI 編碼 Agent 的聊天提示語 —— 不是 shell 命令**。它們遵循治理生命週期：**初始化 → 開發 → 持續維護 → 發佈**。
+以下全部是**給 AI 編碼 Agent 的聊天提示語——不是 shell 命令**。它們遵循治理生命週期：**初始化 → 開發 → 持續維護 → 發佈**。
 
 ### 可用提示詞
 
@@ -19,114 +19,53 @@
 | 審查變動或專案 | `review this` | `review the changes` · `audit recent changes` · `review my changes` · `审核一下` · `review the whole project` · `deep review` |
 | 準備發佈版本 | `release` | `publish version` · `create release` · `/release vX.Y.Z` |
 
-Git 工作流程治理沒有獨立提示詞 —— 它作為執行期規則自動生效：任務開始前自動執行 `scripts/check-git-policy.js`，在受保護分支上阻止直接提交/推送（見 `.governance/git-policy.json`）。同理 `push` / `merge` 也不是提示詞 —— 它們是需確認的寫入操作：Agent 會說明意圖並等待你的明確批准（見 `docs/rules/git-policy.md`）。
+Git 工作流程治理沒有獨立提示詞——它作為執行期規則自動生效：任務開始前自動執行 `scripts/check-git-policy.js`，在 `.governance/git-policy.json` 設定 `directPush: false` 時閘控受保護分支的直接推送。Git 寫入操作（`commit` / `push` / `tag`）需使用者明確授權——寫入指令或 IDE 的暫存-提交-推送確認即為同意；Agent 執行後回報（見 `docs/rules/git-policy.md`）。
 
-### 提示詞詳情
+### 關鍵提示詞
 
 #### initialize project governance
 
-為倉庫引導（bootstrap）初始 AI Agent 治理地基（AGENTS.md、規則、Feature 登記、治理狀態、校驗系統、CI）。
-
-執行流程：
+為倉庫引導治理地基：AGENTS.md、規則、Feature 登記、治理狀態、校驗系統、CI。
 
 ```
-倉庫偵測
-→ 生成治理地基
-→ 建立治理狀態
-→ 設定 Agent 規則
-→ 建立校驗系統
-→ 設定 CI
-→ 報告
+倉庫偵測 → 生成地基 → 建立狀態 → 設定規則 → 設定校驗 → 設定 CI → 報告
 ```
 
-詳細輸出（完整帶註解目錄樹）：[bootstrap-output.md](bootstrap-output.md)
-
-#### plan this task
-
-在中大型修改前建立開發計劃（TASK 文件：Status、目的、問題、方案、受影響檔案、風險、驗證）。
-
-執行流程：
-
-```
-建立 docs/plans/TASK_<name>.md
-→ 與開發者確認
-→ 開始實作
-```
-
-完成後同一計劃器會勾選里程碑並把任務標記為 Completed。
+詳細輸出：[bootstrap-output.md](bootstrap-output.md)。
 
 #### audit governance
 
-持續維護治理健康：偵測漂移並保持專案知識同步。
-
-執行流程：
-
-```
-讀取當前狀態
-→ 偵測漂移
-→ 校驗工件
-→ 應用最小補丁
-```
+對已治理專案做健康檢查：偵測漂移、校驗工件、應用最小補丁。
 
 #### release
 
-透過人工批准建立版本發佈。Proposal 含風險分級（低 = 僅輕量級閘門；中 = 批准時建議深度審查；高 = 必須 review-manager 或逐項確認）。
-
-執行流程：
+人在環版本發佈。Proposal 含風險分級（低 / 中 / 高）。
 
 ```
-分析變更
-→ SemVer Proposal + 風險分級
-→ 批准
-→ tag
-→ GitHub Release
+分析變更 → SemVer Proposal + 風險分級 → 批准 → tag → 推送已批准分支與 tag（GitHub Release 按專案約定）
 ```
 
-#### check governance drift
+#### review this
 
-偵測治理漂移：將 manifest 與現實比對，外加三種建議性模式（結果寫入 `.governance/drift-report.json`）：
-
-```
-讀 manifest
-→ 跑校驗器
-→ 偵測漂移
-→ 建議模式：activity-report · freshness · consistency
-```
-
-單獨指定模式：`run the drift activity report` · `check doc freshness` · `check doc consistency`
-
-#### inspect the repo
-
-任務開始前偵測環境——專案類型、語言、套件管理員、建置工具、測試框架、linter、git 狀態、CI、既有 AI 指南檔案，回傳技術棧報告。INIT 開始時也會自動執行。
-
-#### setup CI
-
-為偵測到的技術棧生成 CI 管線（能力偵測式：format/lint/typecheck/test/build，腳本缺失時優雅降級）。
-
-#### governance check
-
-執行 `scripts/verify-governance.js` 並把結果記錄到 `.governance/validation.json`。閘門：宣稱任務完成前、以及 RELEASE 前校驗器必須 exit 0。
-
-#### update state
-
-把進度持久化到 `.governance/state.json`（成熟度、階段、Agent 身分、已完成/阻塞項），讓後續會話正確續跑。每個任務結束自動執行。
-
+深度 × 範圍二維審查：輕量（`review this`）或全量（`deep review`）；預設本次變更集，加路徑或 `review the whole project` 改變範圍。
 
 ### 生成的 Skills
 
-這些是生成的 skill，不是腳本。每個 skill 都從 `.governance/generated/skills/<name>/SKILL.md` 載入；生成專案的 `AGENTS.md` 包含權威執行時索引。使用者通常只需要使用上面的提示詞。
+INIT 在 `.governance/generated/skills/<name>/SKILL.md` 下生成子技能；專案的 `AGENTS.md` 包含執行時索引。使用者透過上面的提示詞互動。
 
-| 元件 | 提示詞 | 職責 |
+| 元件 | 觸發詞 | 職責 |
 | --- | --- | --- |
-| drift-check | `check governance drift` · `governance health report` · `is governance intact` | 將 manifest 與現實比對，報告漂移；`activity-report` 模式聚合稽核軌跡和當前規則捕獲候選，`freshness` 模式標記過時文件，`consistency` 模式標記文件間矛盾 |
+| drift-check | `check governance drift` · `governance health report` · `is governance intact` | 將 manifest 與現實比對；模式：activity-report、freshness、consistency |
 | governance-validator | `governance check` · `verify governance` · `validate AGENTS` | 執行校驗器，記錄 `validation.json` |
 | ci-generator | `setup CI` · `add CI` · `create workflow` | 為偵測到的技術棧生成 CI 管線 |
 | repository-inspection | `inspect the repo` · `what is the stack` · `check environment` | 偵測環境，返回技術棧報告 |
-| state-manager | `update state` · `record progress` | 把進度和當前規則捕獲候選持久化到 `.governance/state.json`，並在活動軌跡記錄已捕獲/待決/已解決的候選 ID |
-| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `archive completed plan` | 建立 TASK 計劃、勾選里程碑、標記任務完成、發佈時歸檔已完成計劃 |
-| review-manager | 深度：`review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下`（輕量）— `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查`（全量）— 範圍：預設本次變更集，加路徑參數限定範圍，或 `review the whole project` · `全项目审核`（輕量）/ `audit everything` · `全项目彻查`（全量） | 深度 × 範圍二維審核（輕量/全量 × 變更集/指定路徑/全專案） |
-| release-manager | `release` · `publish version` · `/release vX.Y.Z` | 執行帶審批閘門的發佈流程 |
+| state-manager | `update state` · `record progress` | 把進度持久化到 `.governance/state.json` |
+| plan-manager | `plan this task` · `create task plan` · `update development plan` · `check off milestone` · `mark task completed` · `archive completed plan` | 建立 TASK 計劃、勾選里程碑、發佈時歸檔 |
+| review-manager | `review this` · `review the changes` · `audit recent changes` · `review my changes` · `审核一下` · `deep review` · `full review` · `全面审查` · `彻底审查` · `逐行审查` · `review the whole project` · `全项目审核` · `audit everything` · `全项目彻查` | 深度 × 範圍審查（輕量/全量 × 變更集/指定路徑/全專案） |
+| release-manager | `release` · `publish version` · `create release` · `/release vX.Y.Z` | 執行帶審批閘門的發佈流程 |
 
 ### 執行規則
 
-任何結果不確定的提示詞（如發佈時 Breaking Change 判斷不清）都會暫停並請求釐清 —— 絕不靜默猜測。
+任何結果不確定的提示詞都會暫停並請求釐清——絕不靜默猜測。
+
+---
