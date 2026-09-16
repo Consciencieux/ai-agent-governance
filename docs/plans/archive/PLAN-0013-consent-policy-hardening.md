@@ -7,6 +7,7 @@ generation: gen1
 # PLAN-0013：提交确认政策重写（Consent）：提交前一次确认
 
 > （已归档。归档即断言完成。）
+> **勿当今日 carrier 地图：** 事后加的 consistency `consent-cluster` marker 门禁已于 FINDING-0035 退役。现行同意语义权威 = `references/policies/git.policy.md` + `check-git-consent.js`（分类 argv，不证明「人已同意」）。本 Plan 正文含已过时的「每步确认/回显仪式」历史，以 git.policy 现行条文为准。
 
 **Target：both** —— 五个同步点：本仓库侧 `AGENTS.md`；载荷侧 `references/policies/git.policy.md`（权威详解）、`references/policies/lifecycle.policy.md`（Phase 2 确认门）、`references/templates/agents-md.template.md`（被治理项目模板摘要）、`SKILL.md`（权限矩阵）。改任何一处必须同步其余四处，同步点清单见「受影响文件」。
 

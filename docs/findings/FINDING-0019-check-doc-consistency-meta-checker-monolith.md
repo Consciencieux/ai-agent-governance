@@ -45,6 +45,8 @@ resolved_in: gen2
 
 **Resolved（2026-09-13 · PLAN-0048 H2b Stage 2）。** 增长轴已切断：`plan-status` / `adr-status` 抽出为 `scripts/lib/plan-status.js` 与 `scripts/lib/adr-status.js`；docs-shape / discovery-ledger / metadata-projection 以独立 `repo-tools/` 检查器落地，不再往 `check-doc-consistency.js` 堆新事故 cluster。`tests/suites/h2b-checkers.test.js` 禁止把 Unreleased 全文扫描重新内联进 consistency 单文件。完整 Rule Registry 仍可由 H2c 承接，不挡本 Finding 关闭。
 
+**后续（2026-09-16 · FINDING-0035）：** consistency 侧 `adr-status` 簇与 `scripts/lib/adr-status.js` 已退役。本条「切断往 monolith 堆簇」的关闭结论仍成立；勿把已删 adr-status 当仍在跑的门禁。
+
 ## 关联
 
 - GitHub Issue #7

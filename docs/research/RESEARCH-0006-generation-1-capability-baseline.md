@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 10
+version: 11
 subject_generation: gen1
 ---
 
@@ -27,6 +27,7 @@ subject_generation: gen1
 - v8：第四列投影 ADR-0024（must-ship / repo-keep / later / retire / out）；清单不再 `undecided`。发布含义按 ADR-0024 2026-09-12 修正：must-ship 须在干净目标上跑通，不是「指出载体」。
 - v9（2026-09-13）：现在时校准，不重开基线、不改第四列档位。`v2.0.0` 已发布；WRAP/must-ship 机械层存在；CONTROL-X / 独立 Control 文件仍 `later`（H2c）。consent 行语义权威已单一（`git.policy.md`，ADR-0024 §8）；Ownership 表该格从 `duplicated` 改为 `single`（只动 consent，不扫其他 duplicated 行）。
 - v10（2026-09-16）：术语 Forbidden 门禁退役（FINDING-0034）——「术语门禁」行不再以 `repo-tools/check-terminology.js` 为载体；翻译新鲜度载体不变。
+- v11（2026-09-16）：consistency 假门禁退役与路由 READ/RUN（FINDING-0035/0037/0038）——压缩层与 Ownership 表不重开；若正文仍写 consent-cluster / numeric_claims / adr-status 为活门禁，以 Finding 为准。
 
 ## 为什么需要
 

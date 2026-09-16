@@ -12,6 +12,8 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- FINDING-0038 (Confirmed): policies (always-on rules), capability leaves (task how-to), and scripts (mechanical run) were mixed on one routing surface; first slice separates READ authorities from RUN binds.
+
 - FINDING-0037 (Resolved): scripts barely constrain agent habits/semantics (~0); structure and sync are the effective zone; action-class gates are a middle layer. Criterion landed in coding.policy § 工程克制.
 
 - FINDING-0036 (Resolved): Agent-invented compressed jargon in Chinese Finding titles reads as precision but blocks readers; plain-title rule in findings README; rename 0034/0035 H1s.
@@ -31,6 +33,12 @@ All notable changes to this project will be documented here.
 - Layout-sync CI false green: do not document gitignored `repo-tools/.release/proposal.json` in architecture trees; `check-layout-sync.js` skips gitignored paths so local scratch cannot mask CI.
 
 ### Changed
+
+- Doc truth alignment (FINDING-0034/0035/0037/0038): update present-tense claims in RESEARCH-0005/0007/0011/0012, ADR-0026 routing clarification, product architecture capability wording, and stale Finding notes so retired clusters and READ≠script are not treated as live law.
+
+- Routing (FINDING-0038 slice 1): `authorities.path` is text-only (no `.js`); script carriers move into `binds` → `run_set`. `engineering-restraint` reads `coding.policy.md`; secret/plan delivery read thin capability cards and run their scripts via binds.
+
+- Routing (FINDING-0038 slice 2): rehome always-on bodies into policies; **delete** the seven misplaced capability leaves (no pointer shells); enforcement `leaf` may point at policies; SKILL routes those themes to policy sections.
 
 - Coding policy: add gate effective-zone default (structure/sync vs habits/semantics ≈0 vs action-class) under engineering restraint (FINDING-0037).
 

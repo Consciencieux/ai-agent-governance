@@ -1,13 +1,15 @@
 ---
 id: RESEARCH-0011
 status: Active
-version: 5
+version: 6
 subject_generation: gen1
 ---
 
 # RESEARCH-0011：Gen1 机械控制库存（CTRL-centric）
 
 本 RESEARCH 是 **Phase 4 事实库存（inventory）**：按 **CTRL identity**（不是 `scripts/` 文件名）记录 Generation-1 当前机械面。它回答「这条 Control 现在靠什么实现、挂在哪条门禁、测什么、哪个 profile」。
+
+> **现在时（2026-09-16，v6）：** 下表大量行是 Gen1/H2 切片快照。**勿把已删簇当活门禁：** `consent-cluster` / `numeric_claims` / consistency `adr-status` / changelog-narration（FINDING-0035）；terminology（FINDING-0034）。CTRL-0002 的语义权威仍是 `git.policy.md` + `check-git-consent.js` 分类器，**不是**已删的 consent marker 同步簇。路由上脚本不得再当 READ authority（FINDING-0038）。
 
 Gen1→Gen2 **如何共存与吸收** 的演化模型见 RESEARCH-0004 v3；本文件不重复。
 
@@ -50,10 +52,10 @@ Control
 | 字段 | 现状 |
 | --- | --- |
 | semantics_ref | `references/policies/git.policy.md` § 确认范围（权威）；`AGENTS.md` § Git Operation Safety Protocol = 投影/双写残留 |
-| evaluator(s) | （1）`scripts/check-doc-consistency.js` **consent-cluster**（#8）：同步点 marker 扫描；（2）`scripts/release-manager.js` consent / proposal 绑定；（3）大量路径仍为 Agent 遵守（`none`） |
-| enforcement_boundary | `--gate` 下 consent_cluster fail-closed；release-manager 写路径；协议路径无单一 JS exit |
-| decision_effect | 缺 marker → gate deny；无确认则不得执行所覆盖写序列（L0 为主） |
-| tests | `tests/suites/consistency.test.js`（consent / gate 相关）；release-manager 套件 |
+| evaluator(s) | **今日：** `scripts/check-git-consent.js` + `scripts/evaluators/ctrl-0002-git-write-consent.js`（argv 分类）；`scripts/release-manager.js` consent / proposal 绑定；协议路径仍大量靠 Agent 遵守。**历史（已删）：** consistency `consent-cluster` marker 扫描（FINDING-0035 退役） |
+| enforcement_boundary | **今日：** git-consent CLI exit 2=require_consent / 1=deny；release-manager 写路径。**勿再用**「`--gate` 下 consent_cluster fail-closed」当现行描述 |
+| decision_effect | 无人类同意不得执行所覆盖写序列（L0）；marker 同步门禁已不存在 |
+| tests | security / finding-patch 等与 git-consent 相关套件；旧 `consistency.test.js` consent 簇测试随集群退役 |
 | profile | repo + skill（shared semantic；implementation 分散） |
 | characterization | 现有点必须含同一 marker 集合；缺文件点 skip；plan approval ≠ commit consent |
 | 候选 disposition | 见 PLAN-0035 § Disposition |
@@ -129,14 +131,14 @@ scripts/evaluators/ctrl-0004-…js         # CTRL-0004
 scripts/check-doc-freshness.js           # 薄 WRAP（CLI 不变）
 
 scripts/check-doc-consistency.js
-        ├── consent-cluster     → CTRL-0002（部分）
-        ├── 其余 cluster        → 尚未分配 CTRL（见下表）
-        └── terminology (#12)   → 已 EXTRACT → repo-tools/check-terminology.js（2026-09-16 退役，FINDING-0034）
+        ├── 存活簇（例）：protected-files / principles-index / plan-status / prompt-sync / broken-links / …
+        ├── consent-cluster / numeric_claims / adr-status  → **已退役**（FINDING-0035）
+        └── terminology (#12)   → 曾 EXTRACT 后 **已退役**（FINDING-0034）
 ```
 
 **主键是 Control，不是文件。** Disposition 不得写成整文件一句 `REWRITE`。
 
-## Monolith 集群库存（`check-doc-consistency.js`，~961 行）
+## Monolith 集群库存（`check-doc-consistency.js`；行数与簇集合已随 0035 收缩）
 
 尚未批量发 CTRL 编号（避免 Markdown 规则大爆炸）。每行 = 机械能力候选；EXTRACT 时再分配 `CTRL-0006+`。
 
@@ -144,12 +146,12 @@ scripts/check-doc-consistency.js
 | --- | --- | --- | --- | --- |
 | 1 | version-example / release sync points | `--gate` fail-closed | consistency suite | package.json / CHANGELOG / SKILL frontmatter / init-spec / generator |
 | 2 | protected-files sync | `--gate` | payload / consistency | 读 governance-files 权威表 |
-| 3 | ADR status sync | 报告；部分 gate | consistency | Unreleased vs 已发布 |
-| 4 | broken links | 报告（advisory） | consistency | **CTRL-0006 EXTRACT 已落地**；shell WRAP |
-| 5 | numeric claims | 报告 | consistency | 文档数字 vs 源 |
+| 3 | ADR status sync | **已退役**（FINDING-0035） | — | 曾：Unreleased vs 已发布；从不 fail-closed |
+| 4 | broken links | `--gate` fail-closed | consistency | **CTRL-0006** |
+| 5 | numeric claims | **已退役**（FINDING-0035） | — | 曾：文档数字 vs 源；入口无 claim 面后空转 |
 | 6 | prompt sync | `--gate` | consistency / docs | ADR-0008；双向 |
 | 7 | trilingual parity | 委托 | docs:parity | → `repo-tools/check-doc-parity.js` |
-| 8 | consent-cluster | `--gate` | consistency | **属 CTRL-0002** |
+| 8 | consent-cluster | **已退役**（FINDING-0035） | — | 曾误挂 CTRL-0002；真同意 ≠ marker 同步 |
 | 9 | principles-index pointers | `--gate` | consistency | AGENTS 索引路径存在 |
 | 10 | plan-status / pending-archive | unknown=`--gate`；pending=`--release-gate` | consistency | Gen1 pending-archive 语义 vs ADR-0016 归档触发 = known divergence |
 | 11 | changelog coverage | `--release-gate`（结构缺陷可 gate） | consistency | Unreleased 覆盖 |
@@ -227,7 +229,7 @@ payload    42/42 passed
 | CTRL-0001 | `--suite security` / `check-secrets:` |
 | CTRL-0003/0004 | `tests/suites/docs.test.js` freshness* |
 | CTRL-0005 | `tests/suites/plan-delivery.test.js` |
-| CTRL-0002（cluster） | consistency consent / gate 相关例 |
+| CTRL-0002 | git-consent / security 相关例（**不是**已删 consent-cluster） |
 
 完整 positive/negative oracle 矩阵 → [PLAN-0042](../plans/archive/PLAN-0042-invariant-based-testing.md)（Phase 6 Implemented / EXITED；种子集台账已落地，全量矩阵仍延后）；本库存只保留 characterization 锚点。
 
@@ -236,7 +238,7 @@ payload    42/42 passed
 | 调用 | 脚本角色 | 与 CTRL |
 | --- | --- | --- |
 | AGENTS 预提交 → `repo-tools/check-secrets.js` | REPO-ONLY CLI | CTRL-0001 repo binding（P3；不再 accidental 调 skill CLI） |
-| `npm run check*` → `scripts/check-doc-consistency.js` | INSTALLED | monolith；含 CTRL-0002 cluster |
+| `npm run check*` → `scripts/check-doc-consistency.js`（经 repo-tools WRAP） | INSTALLED 簇 | **不再**含 CTRL-0002 consent-cluster（FINDING-0035） |
 | `check:all` / release → `scripts/check-doc-freshness.js` | INSTALLED | CTRL-0003/0004 |
 | `plans:delivery` → `repo-tools/check-plan-delivery.js` | REPO-ONLY | CTRL-0005（无 skill 耦合） |
 | `check` → 原 `repo-tools/check-terminology.js` | REPO-ONLY | 已退役（FINDING-0034，2026-09-16） |

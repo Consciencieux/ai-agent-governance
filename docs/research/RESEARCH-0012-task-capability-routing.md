@@ -1,13 +1,15 @@
 ---
 id: RESEARCH-0012
 status: Active
-version: 4
+version: 5
 subject_generation: gen2
 ---
 
 # RESEARCH-0012：Task → Capability 适用路由（Phase 5 入口）
 
 本 RESEARCH 是 **Phase 5 入口观察与问题框定**。施工计划 PLAN-0038 / 0039 / 0040 已 Implemented；**Phase 5 checkpoint EXITED**（2026-09-12；见 PLAN-0040 § Phase 5 Exit Criteria）。本文件仍是系统模型，不因 checkpoint 归档。
+
+> **现在时（2026-09-16，v5 / FINDING-0038）：** `authorities.path` 是 **READ 面**——只指向 md/policy/docs，**禁止** `.js`。脚本与 CTRL 只经 `binds` → `run_set` 机械调用。勿把「读脚本路径」当成加载治理规则。常驻硬规则正文应在 `policies/`；能力叶是任务怎么做的薄卡（长文塞进叶 = 写作缺陷，不是本 RESEARCH 的目标形状）。
 
 **本文件不**实现 Dispatcher、不搬物理拓扑、不执行 PLAN-0037——那些是 Plan 的事（5b/5c 已落地；0037 为 Active 执行合同，不在本文件施工）。
 
@@ -155,11 +157,13 @@ RoutingResult:
   context: { … }
   always_on: [invariant pointers]
   capabilities: [ { id, authority_refs[], controls[], priority } ]
-  read_set:    ordered authority refs   # Agent 应读
-  run_set:     control ids              # 应评价 / 可机械跑
+  read_set:    ordered capability ids → authorities 富集为**文本**路径   # Agent 应读（md/policy/docs）
+  run_set:     CTRL ids 与/或 script 路径（来自 binds）                 # 应机械跑；不是阅读权威
   defer_set:   [reason + candidate refs] # 歧义或超预算时扩大
   unmatched:   bool
 ```
+
+`has_authority` / `authorities` 投影若指向 `.js`，视为路由图缺陷（FINDING-0038），不是合法「权威」。
 
 薄入口只消费此结果（或人工维护的同构表），不内嵌规则正文。
 

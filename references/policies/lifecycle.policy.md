@@ -46,9 +46,46 @@ AGENTS.md 只保留生命周期摘要，本文件是完整执行规范。所有 
 
 ### 发现台账（Discovery Ledger）
 
-**权威正文：** `docs/rules/capabilities/discovery-ledger.md`。
+> **语义权威在本节**（INIT → `docs/rules/lifecycle.md`）。本节是 **INSTALLED L1 契约**——规定被治理项目 TASK 如何承载台账；不新建 issue tracker / Control / 自动发现脚本。
 
-Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节不再复述契约正文。
+**对象性质（存储边界）：** Discovery Ledger 是 **execution state + provenance**（本次工作发现了什么、如何处置），**不是**长期规则、不是 Research/ADR 正文、不是 Finding 仓库。
+
+| 表面 | 是否放 Ledger 条目 |
+| --- | --- |
+| 当前 Active TASK 计划内 `## 发现台账（Discovery Ledger）` 表 | **是** — L1 唯一条目家（append-only membership） |
+| `.governance/state.json` | **否** — 仍只承载锁 / blocked 等任务运行态，不存发现 workset |
+| `docs/findings/` / ADR / Research | **否** — 仅当 disposition 为 promoted-to-* 时由后继对象承接 |
+| 独立 `docs/state/` 或机器 registry 文件 | **否** — L1 未授权 |
+
+**L1 表格式（列）：**
+
+| 标识（ID） | 类型 | 来源 | 问题 | 影响面 | 严重度 | 状态 | 处置 | 责任人 | 验证/证据 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+
+- **类型（type）**：`bug` / `missing_capability` / `drift` / `migration_gap` / `observation`
+- **来源（source）**：`task` / `review` / `test` / `audit`（可加短备注）
+- **状态（status）** 与 **处置（disposition）** 是两轴：`open` = 仍跟踪；获得 terminal disposition 后必须 `closed`
+- **处置（disposition）权威枚举**：`resolved` / `deferred` / `duplicate` / `not-applicable` / `blocked` / `promoted-to-finding` / `promoted-to-adr` / `promoted-to-research` / `promoted-to-next-plan`。口语别名：`fix_now`→`resolved`；`create_plan`→`promoted-to-next-plan`；`create_finding`→`promoted-to-finding`；`create_adr`→`promoted-to-adr`；`ignore_with_reason`→`not-applicable`（理由写入验证/证据）
+- **非 resolved 的 terminal disposition** 必须带 **successor**（后继 ID）或显式 **revisit** 条件（写入验证/证据列）
+- **membership append-only**：已登记行不得删除；只更新状态/处置/证据
+
+**工作流（最低）：**
+
+```text
+发现新问题
+ → 先登记一行（不得只靠对话记忆）
+ → 判断是否属于当前任务范围
+ 是 → 可 fix-now（处置 resolved）
+ 否 → 仍须登记 + terminal disposition（延期/提升/不适用…）
+任务宣称完成前
+ → Unaccounted = 0（每个 in-scope 条目有 terminal disposition 且 status=closed）
+```
+
+**反模式：** 不是每个发现都建 Plan / Finding——系统性才 `promoted-to-finding`，跨任务交付才 `promoted-to-next-plan`。禁止用「再开一个 Plan」逃避本任务台账闭包。
+
+**机械化（L1）：** 无自动发现、无自动分类、无 dashboard。契约与人工/Agent 遵守 + characterization 测试证明约定可达 INSTALLED 表面；fail-closed 门禁留后续阶段。
+
+Phase 2 中/大型 TASK 必须携带台账；小型改动跳过台账，但若执行中已登记条目，完成前仍须闭包。
 
 ## Phase 3 — Implement（实现）
 
@@ -62,13 +99,35 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 
 ### 变更归位与残留清理（Change Hygiene）
 
-**权威正文：** `docs/rules/capabilities/change-hygiene.md`。
+**权威正文：** `docs/rules/coding.md` § 变更归位与残留清理。
 
 ### 根因修复协议与失败预算（Root-Cause Repair Protocol）
 
-**权威正文：** `docs/rules/capabilities/root-cause-repair.md`。
+> **语义权威在本节**（INIT → `docs/rules/lifecycle.md`）。中/大型 bug 修复与机制变更任务适用。每次失败后不得围绕最后一个报错堆补丁；目标是把「修复一次」变成可复现、可解释、可验证的闭环。
 
-含同类实例闭包、控制面追查与失败预算；细则与 **judgment / mechanical** 分层见该叶。
+- **计划必备字段**（并入 Phase 2 的 TASK 计划）：复现命令、预期失败、根因假设、影响面、修复不变量、回归测试、未决风险。实现前必须先证明回归测试在修复前失败；无法复现时任务只能停在 `.governance/state.json` 的任务状态 `blocked`（**不是**计划 Status 关键词——计划 Status 只能取 Phase 2 的规范集合，写 `blocked` 会被计划状态门禁判为 unknown），或计划保持 `design plan, not implemented`；不得以猜测性补丁宣称完成。
+- **修复会话（repairSessionId）**：首次成功复现时建立任务级会话 ID，后续所有修复尝试绑定该 ID；每次尝试记录唯一编号、修改范围、验证结果与失败原因（技术摘要，不含秘密或整段对话）。失败签名与 diff 相似度只辅助聚类，不得通过修改报错文本重置尝试次数；只有开发者明确裁定为新问题才结束会话并建立新 ID。
+- **失败预算** — **judgment**：何时停手、何时升级假设、第三次失败后是否重开计划，由 Agent/人裁定；**无**机械 carrier 统计「第 N 次失败」。门禁绿 ≠ 预算已遵守。
+  - 第一次失败：停止继续加补丁，重新检查复现、调用链与架构边界。
+  - 第二次失败：扩大影响面搜索并运行 review-manager，或取得开发者明确决定后改变假设。
+  - 第三次失败：停止当前实现路径，重新建立计划；不得继续堆叠兼容分支、测试豁免或特殊 case。
+- **成功标准**：原始回归测试 + 完整门禁（Phase 4 验证序列）+ 相关不变量通过，不是「最后一次命令变绿」。门禁只验证证据与结构存在，不判定根因语义正确。
+- **双域对称（治理缺陷必查另一域）** — **judgment**：是否已检查「作者域 / 执行域」对侧、不适用理由是否充分，属判断义务；**无**机械 carrier。不得因单侧文件改完且门禁绿而宣称双域已闭合。
+  - 缺陷出现在项目自身的规则/脚本/门禁 → 必须检查它的来源与投影：生成该文件的模板或生成器、对应的检查器、以及规则文本本身是否也带同一错误。
+  - 缺陷出现在生成产物或分发产物 → 必须检查产生它的源文件与分发链路，不能只改产物（下次生成会覆盖）。
+  - 对应域**不存在或不适用时必须写明原因**（例如「该规则无模板来源，是手写文件」），不得默认正确、不得静默略过。
+- **同类实例闭包（修一个实例前先枚举同类）** — **judgment**（enforcement 四值 allow/deny/warn/require-review；sibling-closure 合同专题，INIT **不**安装为独立原则页）：修复一处治理契约缺陷后，在未搜索同一契约的其他承载处之前**不得宣称完成**。适用触发同上；孤立措辞错误不触发。
+  - 在声明的相关表面枚举同类实例，可包括：同一目录、脚本族、硬编码枚举或同步文档集合；源规则、模板、生成器、生成投影与兼容层；两个域的对应实现；同一批次修改的相关文件。
+  - 每个表面给出简短结果：已修复 / 有证据证明正确 / 不适用并说明原因 / 因前置条件缺失而阻塞。
+  - **写明搜索范围与使用的命令或枚举方式**；「没有发现其他问题」本身不算证据。结果记录在现有 `repairSessionId` 中，不新增注册表。
+  - **机械载体（declared contracts only）**：若项目提供 sibling-closure 合同（默认目录 `.governance/sibling-closure/*.json`，或 `--contract` / `--dir`），则 `scripts/check-sibling-closure.js` 对已声明 `instances[].path` 做 **mechanical deny**（缺一即红；负向：删 sibling → 必须失败）。未声明合同 ≠ 机械绿灯；判断义务仍在——不得把「无合同」当成闭包已完成。
+- **控制面追查（不能只修可见输出）** — **judgment**：链路是否查全、不适用层理由是否成立、负向注入是否充分，属判断义务。对**可判定**门禁行为的负向夹具（注入→必须红 / 恢复→必须绿）是 **mechanical** 观测，但「选了哪些层、是否宣称控制面已闭合」仍是 judgment。
+  - 对格式或输出类缺陷，通常检查链为：权威规则 → 模板/生成器 → 输出 → 检查器/门禁 → 测试预言机 → 发布或目标消费者。按缺陷实际相关性选择层次，不盲目套用无关清单。
+  - 对分发到其他项目的缺陷，还必须检查打包 → 初始化 → 干净目标项目这条链；对只作用于本项目的缺陷，目标消费者可以是本项目的发布或开发流程。
+  - 每个相关层必须修复、用证据证明正确，或明确标记为阻塞/不适用；不适用必须说明理由。
+  - 当某个门禁/检查器**声称**能拦截该缺陷时，用一次有界的负向验证证明它不是空转：在隔离夹具中重新注入缺陷 → 该检查必须失败；恢复正确形式 → 必须通过。只对可判定的门禁行为要求，不要求语义判断做变异。
+  - **停止条件**：相关同类表面都有证据结果、相关控制面已检查、对应域已检查，并记录适用的回归/门禁证据。
+  - 本组要求不引入通用相似度引擎、万能审计注册表、强制五层表格，也不为此新增门禁或状态体系；沿用既有修复会话、影响面搜索与变更卫生对账。
 
 ## Phase 4 — Validate（验证）
 
@@ -93,7 +152,7 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
 3. **密钥扫描门禁** —— `node scripts/check-secrets.js`（暂存区密钥类内容 → exit 1，绝不打印密钥）
 4. **治理校验器** —— `node scripts/verify-governance.js`（治理工件缺失 → exit 1）
 5. **项目自身验证** —— 测试、静态检查、构建（按 AGENTS.md Development Commands）
-6. **报告层（默认 exit 0，仅报告；发布形态 fail-closed）** —— `node scripts/check-doc-freshness.js`（过时文档 + 译文新鲜度）与 `node scripts/check-doc-consistency.js`（文档间矛盾）；结果可写入 `.governance/drift-report.json`。两者都有 fail-closed 的发布形态：`check-doc-consistency.js --gate/--release-gate`（consent/受保护清单/原则索引/计划状态/术语门禁）与 `check-doc-freshness.js --release-gate`（译文落后源文档或仍为 draft）
+6. **报告层（默认 exit 0，仅报告；发布形态 fail-closed）** —— `node scripts/check-doc-freshness.js`（过时文档 + 译文新鲜度）与 `node scripts/check-doc-consistency.js`（文档间矛盾）；结果可写入 `.governance/drift-report.json`。两者都有 fail-closed 的发布形态：`check-doc-consistency.js --gate/--release-gate`（受保护清单/原则索引/计划状态/结构同步等；**不含**已退役术语 Forbidden / consent marker 假门禁）与 `check-doc-freshness.js --release-gate`（译文落后源文档或仍为 draft）
 
 **规则**：第 1-5 项为**门禁层**，任何一项 exit ≠ 0 即任务未完成，不得宣称完成；第 6 项仅产出报告，稳定项目允许显示过时/矛盾而不阻塞。门禁层全部通过 + 记录真实输出，才进入 Phase 5。
 
@@ -126,7 +185,20 @@ Phase 2 中/大型 TASK 必须携带台账；细则见 Capability 叶。本节�
  - watch 未命中 → ⚠️ not-applicable（无同步义务），报告中标注即可
  - 逐组报告 ✅ 已同步 / ⚠️ 不适用（同步组声明见 `.governance/sync-rules.json`）
 - **机械验证（gate）** —— 在中/大型改动声明完成前运行 `node scripts/check-sync.js`（默认 gate 模式；exit 0 = 通过、exit 1 = 漏同步组）；`--advisory` 模式仅报告不阻断；详见 `scripts/check-sync.js` 与 `.governance/sync-rules.json`
-- **规则捕获（Rule Capture）** —— **权威正文：** `docs/rules/capabilities/rule-capture.md`。Phase 5a/5b/5c 裁定与写入流程见该叶；此处不复述。
+- **规则捕获（Rule Capture）** —— 见下方同名专节。
+
+### 规则捕获（Rule Capture）
+
+> **语义权威在本节**（INIT → `docs/rules/lifecycle.md`）。
+
+> **Enforcement：** Phase 5a 内容裁定与「是否持久」为 **judgment** / `require_review`——须开发者按 ID 确认；**无**脚本代裁。5b/5c 中「文件是否写入 / 门禁 exit」可为 **mechanical** 观测，但不得把门禁绿当成裁定已发生。
+
+任务中只收集开发者明确提出的持久性行为要求，不收集系统指令、问题、任务专属验收标准、临时 workaround、秘密或凭据。候选必须有唯一 ID（`rc-<task_id>-<序号>`）、规范化文本、作用域、初始分类、理由和目标章节；重复出现只能提高优先级，不能单独升级为持久规则。
+
+- **Phase 5a 裁定门** — **judgment**：在写入前给出 `persistent / one-off / unclear` 清单。明确的一次性要求只报告、不写入、不计入待决；持久和模糊项必须由开发者按 ID 确认或改判，省略项不默认同意。规则内容裁定不等于 Git 提交/推送确认。
+- **Phase 5b 写入与同步**：只有明确确认的持久项才能写入 `AGENTS.md`/`docs/rules/**`。先搜索既有规则并更新单一事实源；遵守治理文件保护、CHANGELOG、AGENTS 指针和同步组流程。
+- **Phase 5c 重新验证**：规则文件写入后重新运行受影响的治理校验、密钥扫描和同步组门禁；运行项目自己的治理校验入口（`node scripts/verify-governance.js`，或项目注册的等价命令）。写入完成后才进入 Phase 6。门禁结果 = **mechanical**；「应跑哪些门」若无合同枚举则仍依赖 judgment。
+- **未裁定/中断**：把候选保存在受跟踪 `state.json.rule_capture`，任务状态为 `blocked`，下一次运行读取候选并从 Phase 5b 恢复；`activity.jsonl` 只作追加式审计记录，不单独承诺跨电脑持久化。
 - **文档引用规则、不复述规则** —— 同步知识时，`docs/` 里的内容（README、feature 文档、架构文档）只能**引用** `docs/rules/**` 与 AGENTS.md 中的规则（文件 + 章节指针），不得把规则原文复制进项目知识文档。规则变更 → 只改 `docs/rules/**`（单一事实源）；文档随之更新为引用，不复制。判断标准：这条内容"Agent 必须遵守" → 规则，进 `docs/rules/`；"只是帮助理解" → 知识，进 `docs/` 引用规则。
 - 更新 CHANGELOG.md（已完成变更，[Unreleased]；时机按 Change Classification 的更新时机规则）
 - 更新 Feature Registry（docs/features/，如涉及功能）

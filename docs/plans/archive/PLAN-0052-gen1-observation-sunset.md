@@ -7,6 +7,8 @@ target: repo-infra
 
 # PLAN-0052：Gen1 观测门禁 sunset（替代 → 验证 → 观察 → 删除）
 
+> **勿当今日去向表：** 表内 `check-terminology.js` = keep 已作废——该脚本于 FINDING-0034（2026-09-16）退役。现行去向问 `script-inventory` + FINDING-0034/0035/0037，不问本归档表。
+
 **状态：** Archived（2026-09-13；Stage 0–2 完成；退出路径 4a = 删除 CI `gen1-observation`；脚本未删。Plan archive ≠ Release）。
 
 **归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；消费 [`script-inventory.v0.json`](../../../repo-tools/script-inventory.v0.json)，**禁止**预标整夹 `retire`、禁止无裁决批量删 `scripts/` / `repo-tools/`。[FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) 已 Resolved（L0 台账）；本计划兑现其「仅当 inventory 非空 `retire` 才隔离/删除」余句。

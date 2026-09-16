@@ -7,6 +7,8 @@ target: both
 
 # PLAN-0055：Gen1 carrier 重裁 — 吸收 / retire / 测试瘦身
 
+> **勿当今日门禁地图：** 正文曾把 `check-changelog-narration.js` 标 keep；该脚本后于 FINDING-0035 退役（与 Stage 1R 勘误同向，勿复活禁词叙述门禁）。术语 Forbidden 门禁见 FINDING-0034。
+
 **状态：** Archived（2026-09-13；本轮脚本重构主线完成：1R+3+4+4Q+4S+4D+4E+R10。daily allowlist 冻结；H2b/H2c 停车场已删；`check:full` ≡ daily；CTRL evaluator 保留、机读投影不恢复。verify/release/generate 再 EXTRACT **延后**，不阻塞归档。Plan archive ≠ Release。0053/0054 仍 Design。）
 
 **归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) 决策 10 / 15 —— 删除是最后一步；**唯一**去向权威 = [`script-inventory.v0.json`](../../../repo-tools/script-inventory.v0.json)（禁第三份 ledger）。接续 [FINDING-0028](../../findings/FINDING-0028-script-generation-disposition-gap.md) / [PLAN-0041](PLAN-0041-script-inventory.md) 与 [PLAN-0052](PLAN-0052-gen1-observation-sunset.md)。测试面遵守 [`references/policies/testing.policy.md`](../../../references/policies/testing.policy.md) § 测试保护。

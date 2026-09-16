@@ -6,7 +6,7 @@ INIT 后验证、AUDIT、发布前、CI must-ship/观测门禁。
 
 ## Authority
 
-`scripts/verify-governance.js`（INSTALLED 校验入口）。
+工件清单见 INIT manifest / 校验器契约。**机械载体（RUN，勿当阅读权威）：** `scripts/verify-governance.js`（INSTALLED 校验入口）。
 
 ## Invoke
 
@@ -18,4 +18,4 @@ INIT 后验证、AUDIT、发布前、CI must-ship/观测门禁。
 
 ## Non-goals
 
-不替代领域测试；不把观测性 Gen1 全绿当作产品阻断权威（本仓阻断=`check:must-ship`）。
+不替代领域测试；不把观测性 Gen1 全绿当作产品阻断权威（本仓阻断=`check:must-ship`）；读本叶 ≠ 已加载校验百科。

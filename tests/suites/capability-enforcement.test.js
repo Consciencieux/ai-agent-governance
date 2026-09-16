@@ -1,6 +1,7 @@
 // Capability enforcement JSON completeness (PLAN-0057).
 // Does NOT prove agents complied with unmechanized / inherent_judgment rows.
-// leaf = authoring path under references/capabilities/ (matches on-disk source tree).
+// leaf = authoring path: capability how-to under references/capabilities/,
+// or always-on rule body under references/policies/ (FINDING-0038 rehome).
 "use strict";
 
 const fs = require("fs");
@@ -24,6 +25,13 @@ function walkMd(dir) {
   return out.sort();
 }
 
+function leafOk(leaf) {
+  return (
+    typeof leaf === "string" &&
+    (leaf.startsWith("references/capabilities/") || leaf.startsWith("references/policies/"))
+  );
+}
+
 module.exports = function register(test) {
   test("capability-enforcement: inventory loads", () => {
     const inv = JSON.parse(fs.readFileSync(INV, "utf8"));
@@ -40,16 +48,18 @@ module.exports = function register(test) {
 
   test("capability-enforcement: every capability markdown is declared", () => {
     const inv = JSON.parse(fs.readFileSync(INV, "utf8"));
-    const declared = new Set(inv.entries.map((e) => e.leaf));
+    const declaredCap = new Set(
+      inv.entries.map((e) => e.leaf).filter((p) => p && p.startsWith("references/capabilities/"))
+    );
     const onDisk = walkMd(CAP);
-    const missing = onDisk.filter((p) => !declared.has(p));
+    const missing = onDisk.filter((p) => !declaredCap.has(p));
     if (missing.length) {
       console.error("  on disk but not in inventory:\n    " + missing.join("\n    "));
       return false;
     }
-    const extra = [...declared].filter((p) => !onDisk.includes(p));
+    const extra = [...declaredCap].filter((p) => !onDisk.includes(p));
     if (extra.length) {
-      console.error("  in inventory but not on disk:\n    " + extra.join("\n    "));
+      console.error("  capability leaf in inventory but not on disk:\n    " + extra.join("\n    "));
       return false;
     }
     return true;
@@ -58,8 +68,8 @@ module.exports = function register(test) {
   test("capability-enforcement: leaf paths are authoring sources; no Classification dual-write / PLAN-0057 leak", () => {
     const inv = JSON.parse(fs.readFileSync(INV, "utf8"));
     for (const e of inv.entries) {
-      if (!e.leaf || !e.leaf.startsWith("references/capabilities/")) {
-        console.error("  leaf must be authoring path under references/capabilities/:", e.id, e.leaf);
+      if (!leafOk(e.leaf)) {
+        console.error("  leaf must be under references/capabilities/ or references/policies/:", e.id, e.leaf);
         return false;
       }
       if (e.leaf.startsWith("docs/rules/")) {
@@ -71,6 +81,8 @@ module.exports = function register(test) {
         console.error("  missing leaf file", e.leaf);
         return false;
       }
+      // Producer-id / dual-write bans apply to INSTALLED capability cards only.
+      if (!e.leaf.startsWith("references/capabilities/")) continue;
       const body = fs.readFileSync(abs, "utf8");
       if (/^## Enforcement\s*$/m.test(body)) {
         console.error("  dual-write ## Enforcement in", e.leaf);

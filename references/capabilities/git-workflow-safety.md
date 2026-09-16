@@ -6,7 +6,7 @@
 
 ## Authority
 
-被治理项目：`.governance/git-policy.json` + `scripts/check-git-policy.js`。
+人授语义权威：`docs/rules/git-policy.md`。分支策略声明：`.governance/git-policy.json`。**机械载体（RUN，勿当阅读权威）：** `scripts/check-git-policy.js`。
 
 ## Invoke
 
@@ -18,4 +18,4 @@
 
 ## Non-goals
 
-不负责 consent/HITL 语义（见 git-write-consent）；不替代远程托管平台的 branch rules。
+不负责 consent/HITL 语义（见 git-write-consent / git.policy）；不替代远程托管平台 branch rules。

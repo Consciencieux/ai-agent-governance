@@ -6,7 +6,7 @@
 
 ## Authority
 
-`scripts/check-secrets.js`（INSTALLED）；策略边界见 `docs/rules/security.md`（若存在）与校验器接线。
+语义边界：`docs/rules/security.md`（若存在）。**机械载体（RUN，勿当阅读权威）：** `scripts/check-secrets.js`（INSTALLED；CTRL-0001）。
 
 ## Invoke
 
@@ -18,4 +18,4 @@
 
 ## Non-goals
 
-不负责密钥轮换、Vault 集成、或把扫描结果写成第二份政策。
+不负责密钥轮换、Vault 集成；读本叶 ≠ 已加载扫描算法语义。

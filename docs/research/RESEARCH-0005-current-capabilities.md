@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0005
 status: Active
-version: 3
+version: 4
 subject_generation: gen1
 ---
 
@@ -9,7 +9,7 @@ subject_generation: gen1
 
 > 回答「当前系统有哪些能力？」。本清单由原 roadmap 的「已完成」部分迁移而来（ADR-0015），按机制分类（见 `RESEARCH-0002-governance-mechanism-taxonomy.md`）组织。它是 Generation-1 的能力基线，不是路线图。
 
-> **现在时（2026-09-16，v3）：** 本文件仍是 **Gen1 快照**，不重写分类。载体已迁、处置已裁决，勿按正文字面当今日权威：术语门禁**已退役**（FINDING-0034；`repo-tools/check-terminology.js` 已删除，glossary 回到三列对照表）；治理健康分在 ADR-0024 为 `retire`，不进入 2.x 施工。产品去向问 ADR-0024 / RESEARCH-0006 第四列，不问本清单。
+> **现在时（2026-09-16，v4）：** 本文件仍是 **Gen1 快照**，不重写分类。载体已迁、处置已裁决，勿按正文字面当今日权威：术语门禁**已退役**（FINDING-0034）；consistency 侧 `consent_cluster` / `numeric_claims` / `adr-status` / changelog-narration / judgment-language **已退役**（FINDING-0035）；门禁有效区见 FINDING-0037；路由 READ/RUN 分离见 FINDING-0038。产品去向问 ADR-0024 / RESEARCH-0006 第四列，不问本清单。
 
 ## 文件存在性检查
 
@@ -29,7 +29,7 @@ subject_generation: gen1
 
 ## 一致性检查（Consistency / Drift）
 
-- 内容一致性（`scripts/check-doc-consistency.js`）—— 标记文档间交叉矛盾（版本示例/受保护清单/ADR 状态/roadmap 目标/链接/数值声明；consent/受保护清单/原则索引/计划状态/术语簇在 `--gate`/`--release-gate` 下 fail-closed）
+- 内容一致性（`scripts/check-doc-consistency.js`）—— Gen1 曾扫多簇交叉矛盾。**今日（FINDING-0035）：** 日常 fail-closed 侧重 protected-files / principles-index / plan-status / prompt-sync / broken-links / 部分 version-examples 与 changelog 结构；`consent_cluster`、`numeric_claims`、consistency `adr-status`、术语簇、changelog-narration **已退役**——勿把下列历史簇名当仍在跑的门禁。
 - 知识新鲜度（`scripts/check-doc-freshness.js`）—— 经 `git log` 提交日期标记过时治理文档，并按源/译文对派生译文新鲜度（`--release-gate` 阻断过时或 draft 译文）
 - 翻译新鲜度 —— Git 派生的逐对状态（stale / draft / reviewed 标记）
 - 计划交付门禁（`repo-tools/check-plan-delivery.js`）—— 计划与实际交付的机械对账（归档前 fail-closed）；锚点语法对已存在文件的声明按内容验证

@@ -74,7 +74,7 @@ module.exports = function register(test) {
         "security-baseline",
         "engineering-restraint",
       ],
-      run_set: ["CTRL-0001"],
+      run_set: ["CTRL-0001", "scripts/check-secrets.js"],
       defer_set: [],
     });
   });
@@ -91,7 +91,7 @@ module.exports = function register(test) {
         "secret-protection",
         "security-baseline",
       ],
-      run_set: ["CTRL-0001"],
+      run_set: ["CTRL-0001", "scripts/check-secrets.js"],
       defer_set: [],
     });
   });
@@ -127,7 +127,7 @@ module.exports = function register(test) {
         "discovery-ledger",
         "plan-delivery",
       ],
-      run_set: [],
+      run_set: ["repo-tools/check-plan-delivery.js"],
       defer_set: [],
     });
   });
@@ -220,7 +220,7 @@ module.exports = function register(test) {
         "security-baseline",
         "engineering-restraint",
       ],
-      run_set: ["CTRL-0001"],
+      run_set: ["CTRL-0001", "scripts/check-secrets.js"],
       defer_set: [],
     });
   });
@@ -281,9 +281,46 @@ module.exports = function register(test) {
       console.error("  authorities length", auth.length, "!==", got.read_set.length);
       return false;
     }
+    if (auth.some((a) => /\.(js|sh)$/.test(a.path || ""))) {
+      console.error("  READ authorities must not point at scripts", auth);
+      return false;
+    }
     const { authorities } = route({ task: "edit_docs", trees: ["docs"] }, graph);
     if (!authorities || authorities.length !== auth.length) {
       console.error("  route.authorities mismatch", authorities);
+      return false;
+    }
+    return true;
+  });
+
+  test("routing graph: no authority path is a script (FINDING-0038)", () => {
+    const bad = [];
+    for (const [id, a] of Object.entries(graph.authorities || {})) {
+      if (a && a.path && /\.(js|sh)$/.test(a.path)) bad.push(`${id}→${a.path}`);
+    }
+    if (bad.length) {
+      console.error("  script paths in authorities:", bad.join(", "));
+      return false;
+    }
+    return true;
+  });
+
+  test("routing graph: A-table always-on authorities are policies (FINDING-0038)", () => {
+    const expectPolicy = {
+      "change-hygiene": "references/policies/coding.policy.md",
+      "engineering-restraint": "references/policies/coding.policy.md",
+      "root-cause-repair": "references/policies/lifecycle.policy.md",
+      "discovery-ledger": "references/policies/lifecycle.policy.md",
+      "rule-capture": "references/policies/lifecycle.policy.md",
+      "git-write": "references/policies/git.policy.md",
+    };
+    const bad = [];
+    for (const [id, want] of Object.entries(expectPolicy)) {
+      const got = graph.authorities?.[id]?.path;
+      if (got !== want) bad.push(`${id}: got ${got} want ${want}`);
+    }
+    if (bad.length) {
+      console.error("  A-table authority mismatch:\n   ", bad.join("\n    "));
       return false;
     }
     return true;

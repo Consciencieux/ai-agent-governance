@@ -6,7 +6,7 @@
 
 ## Authority
 
-`scripts/check-plan-sync.js`。
+计划交付编排见 lifecycle / 发布流程。**机械载体（RUN，勿当阅读权威）：** `scripts/check-plan-sync.js`（被治理）；本仓另有 `repo-tools/check-plan-delivery.js`。
 
 ## Invoke
 
@@ -18,4 +18,4 @@
 
 ## Non-goals
 
-不替代本仓 `check-plan-delivery`（repo-keep）。
+不替代本仓 `check-plan-delivery`；读本叶 ≠ 已加载同步算法。

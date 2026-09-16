@@ -127,7 +127,7 @@ Machine-readable 独立序列化文件
 | --- | --- |
 | semantics_ref | **规则语义权威**：`references/policies/git.policy.md` § 确认范围。`AGENTS.md` / `SKILL.md` 仅指针 + always-on 摘要，不得作第二权威（现在时：authority single；ADR-0024 §8） |
 | applicability | 任何 git 写操作（按该节分类） |
-| evaluation_binding | repo/skill × consent cluster / release-manager × 已编码同步点 → deny；repo/skill × `none`（Agent 遵守） × 协议路径 → require-review / 不得执行（L0） |
+| evaluation_binding | repo/skill × `check-git-consent.js`（argv 分类）/ release-manager × 已编码写路径 → deny 或 require_consent；repo/skill × `none`（Agent 遵守） × 协议路径 → require-review / 不得执行（L0）。**勿**绑定已删 consistency `consent-cluster`（FINDING-0035） |
 | guarantee（派生） | 机械覆盖点偏 L1；协议主体 L0 |
 | CONTROL-X | 候选；Phase 3 不实现 fixture runner |
 

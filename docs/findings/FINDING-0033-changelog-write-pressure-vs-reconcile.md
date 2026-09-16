@@ -23,7 +23,7 @@ observed_in: gen2
 
 1. **政策 vs 指针冲突（2026-09-15 研究）**：changelog-policy 已区分写成/对账；薄入口与保护集仍用「CHANGELOG if behavioral」短句，Agent 优化「别漏写」→ 过度写入。
 2. **Unreleased 污染样例**：`[Unreleased]` 出现 Finding 开场条目（如 FINDING-0031 类决策/发现流水），违反「changelog ≠ finding/ADR 流水」的内容边界（与 C1 / 受众测试同向）。
-3. **门禁激励**：`changelogCoverage` 等在日常 gate 下把「机制面改了但无新条目」读成压力；`check-changelog-narration` 能挡验证叙事，但**挡不住**「勤写流水账」。发布闸 `changelog.required` 无法单独纠正日常灌水习惯。
+3. **门禁激励**：`changelogCoverage` 等在日常 gate 下把「机制面改了但无新条目」读成压力；曾用 `check-changelog-narration` 挡验证叙事关键词（**FINDING-0035 已整脚本退役**——禁词表挡不住灌水，也从未解决「该不该写」）。发布闸 `changelog.required` 无法单独纠正日常灌水习惯。
 4. **同族**：FINDING-0009（历史条目被不当改写）管的是**已发布节完整性**；本条管的是**写入时机与 Unreleased 准入**——互补，不互相关闭。
 
 ## 根因
@@ -56,7 +56,7 @@ observed_in: gen2
 - FINDING-0012 / ADR-0012（若涉及 repo accession 权威）
 - `repo-workflows/changelog-policy.md`
 - `references/policies/lifecycle.policy.md` § CHANGELOG 结构契约
-- `repo-tools/check-changelog-narration.js` / `changelogCoverage`
+- `repo-tools/check-changelog-narration.js`（**已删**，FINDING-0035）/ `changelogCoverage`
 
 ## 回归保护
 

@@ -72,3 +72,12 @@
 4. **反向依赖检查** —— 禁止：被治理规则 → 生产者仓库内部文档；生成物 → 仅生产者可见的脚本；安装面 → 生产者 `package.json`；早期阶段 → 后期阶段文件。
 
 按**可解析性**枚举，不要按「看起来像」抽样。
+
+## INSTALLED 内容可移植性
+
+> **语义权威在本节**（INIT → `docs/rules/testing.md`）。分发角色机读主人仍是 `init-spec.json` / 产品架构第三轴；本节写消费侧语义合同。
+
+- 每个 INSTALLED 引用的路径/命令必须在**被治理项目**存在；禁止依赖 skill 仓私有路径、本仓科研树（`docs/plans/`、`docs/findings/`、`docs/research/`、`docs/design-decisions/` 等）或未安装的打包工具入口。
+- **阶段可移植性**：Phase A 产物不得命令 Phase B 才安装的脚本或文件。
+- **不得**把宿主 hook/adapter 写成必装 hard enforcement；也不得把 portable 规则叙述成已具备跨工具拦截。
+- 干净目标 INIT 后，引用必须可解析；role-completeness / payload 表征不得因本仓私有路径回归。

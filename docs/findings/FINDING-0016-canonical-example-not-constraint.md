@@ -60,4 +60,4 @@ forbidden narration markers
 
 ## 回归保护
 
-对每个「标准示例」关联的规则，至少一个机械 check 覆盖其特征子集（heading/pointer/target/marker），使示例的约束部分可判定。
+对每个「标准示例」关联的规则：仅当特征属 **结构/同步有效区**（FINDING-0037）时，才用机械 check 覆盖可判定子集（heading/pointer/target/结构 marker）。**禁止**用禁词表/叙述关键词门禁冒充内容边界（changelog-narration 已退役，FINDING-0035）；语义习惯类示例保持 judgment，不复活假门禁。

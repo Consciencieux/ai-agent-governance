@@ -17,26 +17,26 @@ description: >-
 
 > **可复用原则包：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树或 Phase/PLAN 剧本当 portable L1。INSTALLED 权威正文不得嵌入 skill 仓施工 ID（`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`）；已交付的 `CTRL-*` 控制名除外。
 
-> **能力叶路由：** must-ship 能力的可调用说明在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + `references/capabilities/` 目录为准；仓库侧覆盖索引是 REPO-ONLY，不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链本仓 `docs/` 路径）。
+> **能力叶路由：** must-ship 的**任务怎么做**薄卡在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。常驻硬规则正文只在 `references/policies/`（INIT → `docs/rules/*.md`），**不**再为同一主题保留空壳能力叶。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + 目录为准；仓库侧覆盖索引是 REPO-ONLY，不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链本仓 `docs/` 路径）。
 
 ### 能力叶快速路由（Capability leaves）
 
-| 任务信号 | 加载叶（`references/capabilities/`） |
+| 任务信号 | 加载（政策正文或能力薄卡） |
 | --- | --- |
-| 密钥 / secret scan | `secret-scanning.md` |
-| 分支保护 / force / 直推 | `git-workflow-safety.md` |
-| commit/push/tag 人授 | `git-write-consent.md` |
+| 密钥 / secret scan | 薄卡 `secret-scanning.md`（跑 `check-secrets.js`） |
+| 分支保护 / force / 直推 | 薄卡 `git-workflow-safety.md` + `git.policy.md` |
+| commit/push/tag 人授 | `references/policies/git.policy.md` |
 | INIT / 生成治理 | `deterministic-init.md` |
 | AUDIT / drift | `audit-drift.md` |
 | RELEASE / 发版 | `release-orchestration.md` · `release-risk-tiering.md` |
 | 治理校验 | `governance-validator.md` |
 | manifest/state 工件 | `governance-state.md` |
 | 证据分层 | `evidence-tiers.md` |
-| INSTALLED 可移植性 | `installed-portability.md` |
-| Rule Capture | `rule-capture.md` |
-| 根因修复 / 失败预算 / 同类闭包 | `root-cause-repair.md` |
-| 变更归位 / 残留清理 | `change-hygiene.md` |
-| 工程克制 | `engineering-restraint.md` |
+| INSTALLED 可移植性 | `references/policies/testing.policy.md` § INSTALLED 内容可移植性 |
+| Rule Capture | `references/policies/lifecycle.policy.md` § 规则捕获 |
+| 根因修复 / 失败预算 / 同类闭包 | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 |
+| 变更归位 / 残留清理 | `references/policies/coding.policy.md` § 变更归位与残留清理 |
+| 工程克制 | `references/policies/coding.policy.md` § 工程克制与机制测试 |
 | 种子 oracle / 路由完整性 | `seed-oracles.md` |
 | 文档一致性 / 新鲜度 / 计划同步 | `content-consistency.md` · `doc-freshness.md` · `plan-sync.md` |
 | 同步组 | `sync-groups.md` |
@@ -44,7 +44,7 @@ description: >-
 | SSOT / 门禁修复 | `ssot-repair.md` |
 | Implementation Review | `review-mechanism.md` · `subskills/subskill-review-manager.md` |
 | 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskills/subskill-*.md` |
-| Discovery Ledger（later） | `discovery-ledger.md` |
+| Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 |
 
 完整清单以本节路由表与 `references/capabilities/` 目录为准。兑现分类唯一事实源：`references/capabilities/enforcement.v0.json`（INIT → `docs/rules/capability-enforcement.json`）。must-ship 覆盖的仓库侧索引是 REPO-ONLY，不进安装载荷。
 
@@ -91,7 +91,7 @@ Governance Spec → Governance Engine → Runtime Contract → Coding Agents
 ### 单一事实源
 
 - 本 SKILL = 初始化规范源头；生成后的 **AGENTS.md** = 项目运行期规则源头；`docs/rules/` 承接细节。
-- 同一规则不得多处独立维护。变更归位 / 残留清理 → `references/policies/lifecycle.policy.md`；工程克制 → `references/policies/coding.policy.md`。
+- 同一规则不得多处独立维护。变更归位 / 残留清理 → `references/policies/coding.policy.md`；根因修复 / 发现台账 / 规则捕获 → `references/policies/lifecycle.policy.md`；工程克制 → `references/policies/coding.policy.md`。能力叶只作任务提示。
 
 ### Rule Priority
 
@@ -128,7 +128,7 @@ Governance Spec → Governance Engine → Runtime Contract → Coding Agents
 - **反虚构**：Feature Registry 只登记真实代码；无业务代码时仅建模板占位（见 `references/templates/`）；证据必须是真实命令输出。
 - **输入缺失**：禁止乱猜——采用项目可观测默认（锁文件 → 包管理器；未提供测试命令 → 占位并高亮）。语言政策按受众：Agent 面向文件单语；开发者文档按项目约定（细节不在本入口展开）。
 - **熔断**：平台/身份不可用 → Blocked 并继续其余轨道；禁止跳过后假装成功。上下文不足时可在 Phase 1 前两步后暂停，获「继续」后再从 `.governance/state.json` 续跑。
-- **工程克制**：新机制先过机制测试 → `references/policies/coding.policy.md`；能力叶 `engineering-restraint.md`。
+- **工程克制**：新机制先过机制测试 → `references/policies/coding.policy.md`。
 - **治理文件保护**：完整清单 → `references/policies/governance-files.policy.md`（单一事实源）。修改须说明原因 → CHANGELOG → 更新 `governance_version` → `scripts/verify_governance.js`；权限/安全/删保护/校验步骤须用户明确确认。
 - **多 Agent**：`.governance/state.json` 记 identity；`scripts/check-lock.js` 持锁；不得并行改同一文件。
 - **错误分类**：Recoverable（重试 1 次）/ Blocked / Fatal（停整次 INIT 并给回滚依据）——禁止一律跳过。
@@ -149,7 +149,7 @@ Governance Spec → Governance Engine → Runtime Contract → Coding Agents
 
 ### AUDIT
 
-进入 AUDIT 时替代 Phase 1 构建（Phase 0 仍跑）。骨架：读 manifest → `scripts/verify_governance.js` `--json` → **引用闭包**（规则所引路径须在本项目可解析）→ 健康报告 → 最小补丁（不扩大范围；同类闭包 / 控制面追查见 lifecycle + 叶 `root-cause-repair.md` / `audit-drift.md`）。版本漂移只报告，不擅自升降；升级走 MIGRATE。日常巡检由生成的 `drift-check` 子技能承担。
+进入 AUDIT 时替代 Phase 1 构建（Phase 0 仍跑）。骨架：读 manifest → `scripts/verify_governance.js` `--json` → **引用闭包**（规则所引路径须在本项目可解析）→ 健康报告 → 最小补丁（不扩大范围；同类闭包 / 控制面追查见 `lifecycle.policy.md` § 根因修复 + 叶 `audit-drift.md`）。版本漂移只报告，不擅自升降；升级走 MIGRATE。日常巡检由生成的 `drift-check` 子技能承担。
 
 ### MIGRATE
 

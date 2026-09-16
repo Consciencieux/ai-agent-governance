@@ -36,7 +36,7 @@ validation 按 suite/脚本组织，而非按 invariant/impact 驱动。项目�
 ## 影响
 
 - 简单改动验证过重（成本高、迭代慢）。
-- 复杂规则缺 carrier（enforcement 弱）。
+- 复杂规则缺 **诚实** carrier（enforcement 弱）——但 **禁止**把「缺 carrier」读成「该加禁词表/标记同步假门禁」（FINDING-0034/0035/0037：习惯与语义靠脚本≈0；结构/同步才是脚本有效区）。
 - 简单 + 复杂两类规则的两头失衡。
 
 ## 关闭条件

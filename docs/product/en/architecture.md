@@ -72,15 +72,13 @@ ai-agent-governance/
 │   ├── policies/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
 │   │   └── governance-files.policy.md
-│   ├── capabilities/               # capability leaf authorities (INIT → docs/rules/capabilities/)
+│   ├── capabilities/               # task how-to leaves (INIT → docs/rules/capabilities/); hard rules stay in policies/ (FINDING-0038)
 │   │   ├── enforcement.v0.json     # obligation classification inventory
-│   │   ├── audit-drift.md / change-hygiene.md / confirmation-hygiene.md / content-consistency.md
-│   │   ├── deterministic-init.md / discovery-ledger.md / doc-freshness.md / engineering-restraint.md
-│   │   ├── evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md
-│   │   ├── git-write-consent.md / governance-state.md / governance-validator.md
-│   │   ├── installed-portability.md / plan-sync.md / release-orchestration.md
-│   │   ├── release-risk-tiering.md / review-mechanism.md / root-cause-repair.md
-│   │   ├── rule-capture.md / secret-scanning.md / seed-oracles.md / ssot-repair.md / sync-groups.md
+│   │   ├── audit-drift.md / confirmation-hygiene.md / content-consistency.md / deterministic-init.md
+│   │   ├── doc-freshness.md / evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md
+│   │   ├── governance-state.md / governance-validator.md / plan-sync.md / release-orchestration.md
+│   │   ├── release-risk-tiering.md / review-mechanism.md / secret-scanning.md / seed-oracles.md
+│   │   ├── ssot-repair.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
 │   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md

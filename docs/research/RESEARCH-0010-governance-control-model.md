@@ -1,10 +1,12 @@
 ---
 id: RESEARCH-0010
 status: Active
-version: 2
+version: 3
 ---
 
 # RESEARCH-0010：Governance Control 系统模型
+
+> **现在时（2026-09-16，v3）：** 模型层（Control / identity / binding）仍有效。正文里的 Gen1 载体举例若写 `consent cluster` / 术语门禁为活门禁，以 FINDING-0034/0035 为准——CTRL-0002 现行 evaluator = `check-git-consent.js`，不是已删 marker 簇。
 
 本 RESEARCH 是 **系统模型（System Model）**：描述 Generation-2 需要把「治理控制」看成什么对象、它与 evaluator / gate / test 的关系、Generation-1 如何把这些职责散落在 Markdown / JS / CI / tests 里、以及为什么需要显式 identity。规范裁决在 ADR-0023。KEEP / WRAP / EXTRACT / REWRITE / RETIRE 不在本文（Phase 4）。Dispatcher 不在本文（Phase 5）。
 
@@ -103,7 +105,7 @@ evaluatorA   evaluatorB     ← 实现可以完全不同
 | 证据 | 偶发 `--json` / drift-report | 无统一 evidence model |
 | 测试 | `tests/suites/*.test.js` | 有的验证 evaluator，有的再实现一遍规则 |
 
-身份今天靠**路径与函数名**（`check-secrets.js`、consent cluster）。路径一变，引用全断；同一脚本里塞进第二条 invariant 时，外部仍以为只有一个控制。
+身份今天靠**路径与函数名**（`check-secrets.js`、`check-git-consent.js`）。路径一变，引用全断；同一脚本里塞进第二条 invariant 时，外部仍以为只有一个控制。（历史曾误用 consistency `consent-cluster` marker 当 CTRL-0002 投影——已删，FINDING-0035。）
 
 ## 为什么需要显式 identity
 
@@ -149,9 +151,9 @@ evaluatorA   evaluatorB     ← 实现可以完全不同
 ### Slice B — Git consent / write policy
 
 - **义务（散落）**：一次确认覆盖 add→commit→push；独立危险操作另确认。repo：`AGENTS.md` § Git Operation Safety Protocol；skill：`references/policies/git.policy.md` § 确认范围。RESEARCH-0006：`authority: duplicated`，`owner: core` 尚无物理单一载体。
-- **Evaluator**：部分机械（release-manager consent、consistency consent cluster）；大量靠 Agent 遵守。
-- **Decision**：协议层阻断写操作；不是单一 JS exit。
-- **Agent 遗忘**：Markdown 被忘则 L0 塌陷；机械 cluster 只覆盖已编码的同步点，不能代替确认语义。
+- **Evaluator**：部分机械（`check-git-consent.js` argv 分类、release-manager consent / proposal 绑定）；大量靠 Agent 遵守。**勿**把已删 consistency `consent-cluster` 当现行求值器（FINDING-0035）。
+- **Decision**：协议层阻断写操作；分类器 exit 2=require_consent / 1=deny——不证明「人已同意」。
+- **Agent 遗忘**：Markdown 被忘则 L0 塌陷；机械分类器只覆盖已编码的 argv 形状，不能代替确认语义。
 - **跨 profile**：CONTROL-X 候选——同一 canonical 负例应同时打中两侧实现；今天没有同一 fixture。
 
 ### Slice C — Document freshness

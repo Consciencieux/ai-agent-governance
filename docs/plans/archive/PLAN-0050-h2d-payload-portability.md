@@ -7,6 +7,8 @@ target: both
 
 # PLAN-0050：H2d 载荷调度与可移植性
 
+> **勿当今日 carrier 地图：** 本计划交付的 `check-changelog-narration.js` 切片已于 FINDING-0035 退役；FINDING-0016/0017 仍 Confirmed，勿复活禁词叙述门禁当「关闭证据」。
+
 **状态：** Archived（2026-09-13 exit review）。Stage 0–4 完成；Discovery Ledger Open=0。Plan archive ≠ Release。下一步 = **H3**（远；无 Active Plan）。
 
 **归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) **H2d**（决策 5 + 决策 14：H2-0 → PLAN-0046 → a→b→c→**d**）。H2 完成；下一步 = **H3**（远；不挡 2.1；无 Active Plan）。

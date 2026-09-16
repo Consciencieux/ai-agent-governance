@@ -147,38 +147,10 @@
     },
     {
       "phase": "A",
-      "path": "docs/rules/capabilities/discovery-ledger.md",
-      "source": "references/capabilities/discovery-ledger.md",
-      "type": "copy",
-      "description": "Discovery Ledger (TASK known-issue closure)"
-    },
-    {
-      "phase": "A",
       "path": "docs/rules/capability-enforcement.json",
       "source": "references/capabilities/enforcement.v0.json",
       "type": "copy",
       "description": "Obligation classification inventory (INSTALLED; Q3)"
-    },
-    {
-      "phase": "A",
-      "path": "docs/rules/capabilities/change-hygiene.md",
-      "source": "references/capabilities/change-hygiene.md",
-      "type": "copy",
-      "description": "Change hygiene / residue cleanup"
-    },
-    {
-      "phase": "A",
-      "path": "docs/rules/capabilities/root-cause-repair.md",
-      "source": "references/capabilities/root-cause-repair.md",
-      "type": "copy",
-      "description": "Root-cause repair protocol and failure budget"
-    },
-    {
-      "phase": "A",
-      "path": "docs/rules/capabilities/rule-capture.md",
-      "source": "references/capabilities/rule-capture.md",
-      "type": "copy",
-      "description": "Rule Capture workflow"
     },
     {
       "phase": "A",
@@ -217,13 +189,6 @@
     },
     {
       "phase": "A",
-      "path": "docs/rules/capabilities/engineering-restraint.md",
-      "source": "references/capabilities/engineering-restraint.md",
-      "type": "copy",
-      "description": "Capability leaf (engineering-restraint) — instruction surface"
-    },
-    {
-      "phase": "A",
       "path": "docs/rules/capabilities/evidence-tiers.md",
       "source": "references/capabilities/evidence-tiers.md",
       "type": "copy",
@@ -245,13 +210,6 @@
     },
     {
       "phase": "A",
-      "path": "docs/rules/capabilities/git-write-consent.md",
-      "source": "references/capabilities/git-write-consent.md",
-      "type": "copy",
-      "description": "Capability leaf (git-write-consent) — instruction surface"
-    },
-    {
-      "phase": "A",
       "path": "docs/rules/capabilities/governance-state.md",
       "source": "references/capabilities/governance-state.md",
       "type": "copy",
@@ -263,13 +221,6 @@
       "source": "references/capabilities/governance-validator.md",
       "type": "copy",
       "description": "Capability leaf (governance-validator) — instruction surface"
-    },
-    {
-      "phase": "A",
-      "path": "docs/rules/capabilities/installed-portability.md",
-      "source": "references/capabilities/installed-portability.md",
-      "type": "copy",
-      "description": "Capability leaf (installed-portability) — instruction surface"
     },
     {
       "phase": "A",

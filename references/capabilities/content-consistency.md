@@ -6,7 +6,7 @@
 
 ## Authority
 
-`scripts/check-doc-consistency.js`（能力 must-ship；单体拆分 later）。
+编排指针见 `docs/rules/lifecycle.md` Phase 4 报告层。**机械载体（RUN，勿当阅读权威）：** `scripts/check-doc-consistency.js`。
 
 ## Invoke
 
@@ -18,4 +18,4 @@
 
 ## Non-goals
 
-不在本叶重写各 cluster 算法；parser 迁移属 H2b。
+不在本叶重写各 cluster 算法；读本叶 ≠ 已加载一致性语义百科。

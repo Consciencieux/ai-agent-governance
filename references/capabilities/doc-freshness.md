@@ -6,7 +6,7 @@
 
 ## Authority
 
-`scripts/check-doc-freshness.js`（被治理项目 must-ship；本仓翻译新鲜度 repo-keep）。
+义务边界见 CTRL-0003/0004 / 发布流程。**机械载体（RUN，勿当阅读权威）：** `scripts/check-doc-freshness.js`。
 
 ## Invoke
 
@@ -18,4 +18,4 @@
 
 ## Non-goals
 
-不负责本仓术语表执法（repo-tools）。
+不负责本仓术语表执法（已无 Forbidden 机械门禁）；读本叶 ≠ 已加载新鲜度算法。

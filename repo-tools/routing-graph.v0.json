@@ -106,9 +106,18 @@
   },
   "binds": {
     "secret-protection": [
-      "CTRL-0001"
+      "CTRL-0001",
+      "scripts/check-secrets.js"
+    ],
+    "plan-delivery": [
+      "repo-tools/check-plan-delivery.js"
     ]
   },
+  "notes_routing_surface": [
+    "FINDING-0038: authorities.path is READ surface only (md/policy/docs) — never .js.",
+    "Mechanical carriers belong in binds → run_set (CTRL id and/or script path).",
+    "Capability markdown may still describe Invoke; routing must not pretend reading a script is loading a rule."
+  ],
   "facet_adds": [
     {
       "when": {
@@ -183,7 +192,9 @@
       "path": "docs/README.md"
     },
     "change-hygiene": {
-      "path": "references/capabilities/change-hygiene.md"
+      "path": "references/policies/coding.policy.md",
+      "section": "变更归位与残留清理",
+      "notes": "FINDING-0038: always-on body in coding.policy; capability leaf is thin how-to."
     },
     "reference-closure": {
       "path": "CONTRIBUTING.md",
@@ -193,19 +204,25 @@
       "path": "references/policies/git.policy.md"
     },
     "secret-protection": {
-      "path": "scripts/check-secrets.js"
+      "path": "references/capabilities/secret-scanning.md",
+      "notes": "READ = thin how-to; RUN = binds (CTRL-0001 + check-secrets.js)."
     },
     "testing-evidence": {
       "path": "references/policies/testing.policy.md"
     },
     "root-cause-repair": {
-      "path": "references/capabilities/root-cause-repair.md"
+      "path": "references/policies/lifecycle.policy.md",
+      "section": "根因修复协议与失败预算",
+      "notes": "FINDING-0038: body in lifecycle; capability leaf is thin how-to."
     },
     "discovery-ledger": {
-      "path": "references/capabilities/discovery-ledger.md"
+      "path": "references/policies/lifecycle.policy.md",
+      "section": "发现台账",
+      "notes": "FINDING-0038: L1 contract in lifecycle; capability leaf is thin how-to."
     },
     "plan-delivery": {
-      "path": "repo-tools/check-plan-delivery.js"
+      "path": "references/capabilities/plan-sync.md",
+      "notes": "READ = plan-sync leaf; RUN = binds check-plan-delivery.js (repo-only)."
     },
     "release-governance": {
       "path": "repo-workflows/skill-release.md",
@@ -219,7 +236,9 @@
       "path": "references/policies/security.policy.md"
     },
     "rule-capture": {
-      "path": "references/capabilities/rule-capture.md"
+      "path": "references/policies/lifecycle.policy.md",
+      "section": "规则捕获",
+      "notes": "FINDING-0038: Phase 5a–5c body in lifecycle; capability leaf is thin how-to."
     },
     "review-system": {
       "path": "docs/research/RESEARCH-0012-task-capability-routing.md"
@@ -232,8 +251,9 @@
       "notes": "REPO-ONLY CHANGELOG accession (ADR-0012)."
     },
     "engineering-restraint": {
-      "path": "references/capabilities/engineering-restraint.md",
-      "notes": "Judgment leaf; bind on edit_scripts so machinery-test is in read_set before adding gates/scripts."
+      "path": "references/policies/coding.policy.md",
+      "section": "工程克制与机制测试",
+      "notes": "FINDING-0038: always-on criterion lives in policy; capability leaf is task reminder only."
     }
   }
 }

@@ -11,6 +11,8 @@ target: both
 
 > （**Phase 4 EXITED** · Implemented。2026-09-10：Exit Criteria 满足；PLAN-0036 L1 已落地；P2 剩余 / #9 = deferred by design。Successor = RESEARCH-0012。Architecture checkpoint ≠ Release；Plan archive 另按 ADR-0016。）
 
+> **勿当今日处置表：** 文中 `#8 consent-cluster` / `#12 terminology` 的 KEEP/EXTRACT 是 Phase 4 当时裁决；二者已于 FINDING-0035 / 0034 **退役**。CTRL-0002 现行 = git.policy + `check-git-consent.js`，不是 marker 簇。
+
 Phase 4 的执行主体。把 Generation-1 的 **file-centric checker architecture** 转成以 **CTRL identity** 为中心的 evaluator / primitive architecture。**不是**「把 JS 整理漂亮」，**不是** Dispatcher（Phase 5），**不是**完整 invariant framework（Phase 6）。
 
 ## 背景

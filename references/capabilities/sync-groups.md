@@ -6,7 +6,7 @@
 
 ## Authority
 
-声明：`.governance/sync-rules.json`（或 init 等价）；机械：`scripts/check-sync.js`。
+声明：`.governance/sync-rules.json`（或 init 等价）。**机械载体（RUN，勿当阅读权威）：** `scripts/check-sync.js`。编排见 `docs/rules/lifecycle.md` Phase 5。
 
 ## Invoke
 
@@ -18,4 +18,4 @@
 
 ## Non-goals
 
-不负责跨仓联邦同步。
+不负责跨仓联邦同步；读本叶 ≠ 已加载同步算法。

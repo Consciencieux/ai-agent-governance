@@ -8,6 +8,7 @@ generation: gen1
 
 
 > （已归档。归档即断言完成。）（原状态：已归档。 归档即断言完成。 本计划把三语文档从"结构同步"升级为"术语约束 + Git 派生新鲜度"，全部采用机械对账：事实源仍是源文档与术语表，状态一律派生，不引入手写 manifest、TMS 或运行时 i18n。）
+> **勿当今日权威：** Forbidden 列 + `check-terminology.js` 已于 FINDING-0034 退役。翻译新鲜度（CTRL-0004 / check-doc-freshness）仍有效；术语串台无机械语义门禁。
 
 **Target：both** —— `payload` 扩展两个已交付脚本（check-doc-consistency.js、check-doc-freshness.js）并同步其生命周期与子技能中的行为描述；`repo-infra` 扩展术语表、测试与本仓库文档。两个域分别列在"受影响文件"中。
 

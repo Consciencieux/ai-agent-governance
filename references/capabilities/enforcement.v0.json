@@ -53,7 +53,7 @@
     },
     {
       "id": "change-hygiene",
-      "leaf": "references/capabilities/change-hygiene.md",
+      "leaf": "references/policies/coding.policy.md",
       "obligations": [
         {
           "id": "unresolved-ledger-count",
@@ -133,7 +133,7 @@
     },
     {
       "id": "discovery-ledger",
-      "leaf": "references/capabilities/discovery-ledger.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "unaccounted-zero-table",
@@ -169,7 +169,7 @@
     },
     {
       "id": "engineering-restraint",
-      "leaf": "references/capabilities/engineering-restraint.md",
+      "leaf": "references/policies/coding.policy.md",
       "obligations": [
         {
           "id": "machinery-test",
@@ -265,7 +265,7 @@
     },
     {
       "id": "git-write-consent",
-      "leaf": "references/capabilities/git-write-consent.md",
+      "leaf": "references/policies/git.policy.md",
       "obligations": [
         {
           "id": "argv-classifier",
@@ -323,7 +323,7 @@
     },
     {
       "id": "installed-portability",
-      "leaf": "references/capabilities/installed-portability.md",
+      "leaf": "references/policies/testing.policy.md",
       "obligations": [
         {
           "id": "role-completeness",
@@ -441,7 +441,7 @@
     },
     {
       "id": "root-cause-repair",
-      "leaf": "references/capabilities/root-cause-repair.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "declared-sibling-paths",
@@ -527,7 +527,7 @@
     },
     {
       "id": "rule-capture",
-      "leaf": "references/capabilities/rule-capture.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "phase-5a-confirm-by-id",

@@ -36,7 +36,7 @@ Pointers only. **payload** = ships with skill; **repo** = this repository only.
 | Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
 | Repo gate promotion (daily allowlist) | `repo-tools/daily-check-surface.v0.json` · `repo-tools/check-daily-check-surface.js` | repo |
 | Reference closure | `references/policies/testing.policy.md` § 引用闭合 · `SKILL.md` Audit step 3 | both |
-| Change placement and residue cleanup | `references/policies/coding.policy.md` · `references/policies/lifecycle.policy.md` | payload |
+| Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理（lifecycle 仅编排指针） | payload |
 | Root-cause repair + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
 | Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 · ADR-0021 | payload |
 | Two-domain symmetry + sibling closure + control-plane trace | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |

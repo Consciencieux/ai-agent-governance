@@ -6,7 +6,7 @@
 
 ## Authority
 
-`docs/rules/capabilities/root-cause-repair.md`（根因 / 双域对称 / 控制面追查）+ 本叶 Invoke 纪律。禁止把 lifecycle 编排骨架当作 SSOT 正文权威。
+`docs/rules/lifecycle.md` § 根因修复协议与失败预算（根因 / 双域对称 / 控制面追查）+ 本叶 Invoke 纪律。禁止把能力叶或编排骨架当作 SSOT 第二正文。
 
 ## Invoke
 

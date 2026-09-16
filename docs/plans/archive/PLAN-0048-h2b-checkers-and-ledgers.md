@@ -7,6 +7,8 @@ target: both
 
 # PLAN-0048：H2b 检查器与台账（consistency 按 cluster 抽出 · 门禁真覆盖 · 台账 L2）
 
+> **勿当今日 carrier 地图：** 本计划抽出的 consistency `adr-status` 簇与 `scripts/lib/adr-status.js` 已于 FINDING-0035 退役。FINDING-0011 误报修复结论仍成立；勿把已删 lib 当活门禁。
+
 **状态：** Archived（2026-09-13 exit review）。Stage 0–4 完成；B0–B9 全关。Plan archive ≠ Release。
 
 **归属：** [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) **H2b**（决策 5 + 决策 14：H2-0 → PLAN-0046 → H2a → **b**→c→d）。前置 H2a [PLAN-0047](PLAN-0047-h2a-residue-extraction.md) 已 Archived。下一步 = **H2c**（尚无 Active Plan；待 Design）。
