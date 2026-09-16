@@ -12,6 +12,8 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- FINDING-0037 (Resolved): scripts barely constrain agent habits/semantics (~0); structure and sync are the effective zone; action-class gates are a middle layer. Criterion landed in coding.policy § 工程克制.
+
 - FINDING-0036 (Resolved): Agent-invented compressed jargon in Chinese Finding titles reads as precision but blocks readers; plain-title rule in findings README; rename 0034/0035 H1s.
 
 - FINDING-0035 (Resolved): retire low-ROI mechanical theater on the daily path (`numeric_claims`, consent marker sync, advisory-only adr-status, changelog-narration keyword list, judgment-language substring suite).
@@ -29,6 +31,8 @@ All notable changes to this project will be documented here.
 - Layout-sync CI false green: do not document gitignored `repo-tools/.release/proposal.json` in architecture trees; `check-layout-sync.js` skips gitignored paths so local scratch cannot mask CI.
 
 ### Changed
+
+- Coding policy: add gate effective-zone default (structure/sync vs habits/semantics ≈0 vs action-class) under engineering restraint (FINDING-0037).
 
 - Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.
 
