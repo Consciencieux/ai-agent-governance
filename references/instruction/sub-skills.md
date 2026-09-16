@@ -181,9 +181,8 @@ description: Use to detect governance drift in this repo — compare declared ar
 - **link validity** — relative markdown links must resolve to real files
 - **numeric claims** — documented counts (validator check count etc.) must match the source
 - **multi-language tree parity** — only when the project maintains parallel language trees AND a parity checker is installed; skip otherwise
-- **terminology gate** — only when the project keeps a glossary: its `Forbidden <lang>` columns register renderings that must not appear in that language tree (concept terms only; trigger words quoted in their source form are deliberate). A glossary that exists but cannot be parsed is reported, never silently skipped
 
-Append the result to `.governance/drift-report.json` (`consistency` object). Default mode is advisory — heuristics report but never affect the exit code. Fail-closed forms: `--gate` (protected lists, consent cluster, unknown plan status, terminology gate, malformed glossary) and `--release-gate` (adds pending-archive and changelog coverage).
+Append the result to `.governance/drift-report.json` (`consistency` object). Default mode is advisory — heuristics report but never affect the exit code. Fail-closed forms: `--gate` (protected lists, consent cluster, unknown plan status) and `--release-gate` (adds pending-archive and changelog coverage).
 
 **standard validation sequence** — lifecycle Phase 4 runs the gates in order: `check-lock.js` (multi-agent) → `check-git-policy.js` → `check-secrets.js` → `verify-governance.js` → project test/lint/build → advisory (`check-doc-freshness.js` + `check-doc-consistency.js`, exit 0). Gates 1-5 fail-closed; the advisory pair reports only. At RELEASE both advisory scripts have fail-closed forms: `check-doc-consistency.js --release-gate` and, for multi-language doc trees, `check-doc-freshness.js --release-gate` (stale or draft translations block).
 ````

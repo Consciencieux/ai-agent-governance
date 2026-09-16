@@ -50,23 +50,23 @@
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 54,
+    "total": 53,
     "by_disposition": {
-      "keep": 50,
+      "keep": 49,
       "wrap": 4
     },
     "by_generation": {
       "gen1_carrier": 14,
-      "gen2_native": 37,
+      "gen2_native": 36,
       "dual_profile": 3
     },
     "by_role": {
-      "REPO-ONLY": 17,
+      "REPO-ONLY": 16,
       "INSTALLED": 35,
       "SKILL-INTERNAL": 2
     },
     "by_necessity": {
-      "repo_gate": 16,
+      "repo_gate": 15,
       "must_ship": 6,
       "product_cli": 32
     },
@@ -82,9 +82,10 @@
       "plan": "PLAN-0055",
       "stage": "1R+3+4+4Q+4S+daily-check",
       "date": "2026-09-13",
-      "note": "Daily check surface frozen; H2b/H2c checkers demoted to check:full; check-daily-check-surface enforces allowlist",
+      "note": "Daily check surface frozen; H2b/H2c checkers demoted to check:full; check-daily-check-surface enforces allowlist; FINDING-0034 retired check-terminology.js",
       "retired_deleted": [
-        "repo-tools/mutation-probe.js"
+        "repo-tools/mutation-probe.js",
+        "repo-tools/check-terminology.js"
       ]
     },
     "short_lists": {
@@ -130,7 +131,6 @@
         "repo-tools/check-plan-delivery.js",
         "repo-tools/check-role-completeness.js",
         "repo-tools/check-secrets.js",
-        "repo-tools/check-terminology.js",
         "repo-tools/lib/routing.js",
         "repo-tools/route-task.js"
       ],
@@ -140,8 +140,7 @@
         "repo-tools/check-doc-consistency.js",
         "repo-tools/check-doc-parity.js",
         "repo-tools/check-layout-sync.js",
-        "repo-tools/check-role-completeness.js",
-        "repo-tools/check-terminology.js"
+        "repo-tools/check-role-completeness.js"
       ],
       "check_full": [
         "repo-tools/check-coding-hygiene.js",
@@ -149,8 +148,7 @@
         "repo-tools/check-doc-consistency.js",
         "repo-tools/check-doc-parity.js",
         "repo-tools/check-layout-sync.js",
-        "repo-tools/check-role-completeness.js",
-        "repo-tools/check-terminology.js"
+        "repo-tools/check-role-completeness.js"
       ],
       "doctrine_note": "daily_check = package.json scripts.check allowlist (check-daily-check-surface). Stage/Plan/Finding checkers are NOT parked on check:full — default on-demand or retire. check:full currently aliases daily check after PLAN-0055 Stage 4E retire of H2b/H2c stage gates."
     }
@@ -290,23 +288,6 @@
       "last_touch": "2026-09-10",
       "dogfood_from_repo_package_json": false,
       "notes": "PLAN-0055 minimum-necessary: repo_gate (corrected after 1R — REPO-ONLY twin / router, not Gen1 ceremony debt)",
-      "necessity": "repo_gate"
-    },
-    {
-      "path": "repo-tools/check-terminology.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "terminology",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-09",
-      "last_touch": "2026-09-09",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055 minimum-necessary: repo gate on npm run check / must-ship / release delivery",
       "necessity": "repo_gate"
     },
     {

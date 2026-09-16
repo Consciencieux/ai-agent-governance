@@ -121,7 +121,7 @@ ai-agent-governance/
 │   ├── check-doc-parity.js / check-layout-sync.js / check-plan-delivery.js
 │   ├── check-role-completeness.js / check-coding-hygiene.js / check-file-size-budget.js
 │   ├── check-daily-check-surface.js / daily-check-surface.v0.json
-│   ├── check-terminology.js / check-changelog-narration.js / check-secrets.js
+│   ├── check-changelog-narration.js / check-secrets.js
 │   ├── check-must-ship.js / check-must-ship-carriers.js
 │   ├── lib/
 │   │   └── routing.js

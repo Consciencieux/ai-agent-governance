@@ -4,7 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Removed
+
+- Terminology Forbidden columns and `repo-tools/check-terminology.js` daily gate (FINDING-0034): glossary stays a trilingual lookup table; no mechanical blacklist for cross-locale leaks.
+
 ### Added
+
+- FINDING-0034 (Resolved): Forbidden terminology columns + terminology gate were low-ROI ceremony for hard semantic alignment; retired with the gate wiring.
 
 - FINDING-0031 (Confirmed): citing Resolved/Accepted authority must not substitute for a user-requested re-judgment; conversational control gap (no mechanical carrier).
 

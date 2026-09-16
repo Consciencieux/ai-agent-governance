@@ -13,7 +13,6 @@
     "repo-tools/check-doc-consistency.js",
     "repo-tools/check-doc-parity.js",
     "repo-tools/check-layout-sync.js",
-    "repo-tools/check-role-completeness.js",
-    "repo-tools/check-terminology.js"
+    "repo-tools/check-role-completeness.js"
   ]
 }
