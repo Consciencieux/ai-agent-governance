@@ -102,30 +102,28 @@ State machine: `understand → plan → implement → validate → synchronize �
 At the end of every task (or on interruption), update `.governance/state.json`:
 
 ```json
-{"maturity":"","facet":"","phase":"","agent_id":"","task_id":"","locked":null,"completed":[],"blocked":[],"task_start_sha":"","updatedAt":"<ISO>","rule_capture":{"status":"none","task_id":"","candidates":[]}}
+{"maturity":"","facet":"","phase":"","agent_id":"","task_id":"","locked":null,"completed":[],"blocked":[],"task_start_sha":"","updatedAt":"<ISO>"}
 ```
 
 - `maturity`: LEVEL_0_EMPTY / LEVEL_1_PROTOTYPE / LEVEL_2_ACTIVE / LEVEL_3_PRODUCTION
-- `facet`: one of the lifecycle facets above (understand / plan / implement / validate / synchronize / report / completed / blocked / failed). Writers MUST set `facet`; during the H2a compatibility window they MAY dual-write the same value to legacy `phase`. Readers MUST prefer `facet` and fall back to `phase` when `facet` is absent.
+- `facet`: one of the lifecycle facets above (understand / plan / implement / validate / synchronize / report / completed / blocked / failed). Writers MUST set `facet`; they MAY dual-write the same value to legacy `phase` for older readers. Readers MUST prefer `facet` and fall back to `phase` when `facet` is absent.
 - `phase`: legacy alias of `facet` (do not treat as a second dimension)
 - `agent_id` / `task_id`: identify the working agent; used for multi-agent locking
 - `locked`: set while actively modifying a file; null when done
 - `completed`: list of done items (docs, agents, rules, security, ci, state)
 - `blocked`: external blockers with reason (e.g. "github_permission")
 - `task_start_sha`: at task start, write `git rev-parse HEAD` here; resume keeps the original (never overwrite mid-task); consumed by `scripts/check-sync.js` as the change-set base
-- `rule_capture`: optional current-task state for persistent/unclear requirement candidates; `status` is `none / collecting / awaiting_adjudication / resolved`. Missing in older projects means `none`; candidates use a unique `rc-<task_id>-<sequence>` ID, normalized text, scope, classification, reason, target and status.
 
 Multi-agent rule: before starting, run `node scripts/check-lock.js` (exit 1 = another agent holds `locked`) or read state.json — wait or coordinate, never edit the same file in parallel. Never remove a completed entry. If a previous run left state, resume from it instead of restarting.
 
 **Audit trail (activity log):** at the same task-execution end point, append exactly ONE line to `.governance/activity.jsonl` (append-only JSON Lines, git-ignored runtime output). A resumed execution with the same `task_id` may append a new linked line, but never rewrites an old line:
 
 ```json
-{"ts":"<ISO>","agent_id":"<id>","task_id":"<id>","phase":"<phase>","action":"<action>","files":["<paths>"],"commands":["<cmd>"],"result":"ok|blocked|failed","summary":"<one line>","rules_captured":["rc-<task>-01"],"rules_pending":["rc-<task>-02"],"rules_resolved":[{"id":"rc-<task>-03","decision":"one-off"}]}
+{"ts":"<ISO>","agent_id":"<id>","task_id":"<id>","phase":"<phase>","action":"<action>","files":["<paths>"],"commands":["<cmd>"],"result":"ok|blocked|failed","summary":"<one line>"}
 ```
 
 - `action` vocabulary (v1): `init / inspect / plan / implement / modify / delete / commit / release / audit / migrate`
-- **Redaction (mandatory):** mask any secret-like token in `summary` / `commands` / candidate text and the new rule fields (same pattern classes as `scripts/check-secrets.js`) before writing — never log secret material
-- **Rule capture:** collect only developer-stated persistent behavioral requirements. `one-off` items are report-only; `persistent` and `unclear` items require explicit ID-based adjudication before a rule-file write. If adjudication is missing, set `state.json.rule_capture.status` to `awaiting_adjudication`, keep the task `blocked`, and resume from lifecycle Phase 5b after the developer decides.
+- **Redaction (mandatory):** mask any secret-like token in `summary` / `commands` (same pattern classes as `scripts/check-secrets.js`) before writing — never log secret material
 - Never overwrite or rewrite existing lines (append-only); rotation is deferred
 ````
 
@@ -156,7 +154,6 @@ description: Use to detect governance drift in this repo — compare declared ar
 
 - Read the last N entries (default 50): group by `agent_id` / by `action` / failed-only (`result != "ok"`)
 - Output a summary table + the failed entries with `ts` / `agent_id` / `task_id` / `summary`
-- Read `.governance/state.json.rule_capture` and report its current unresolved candidates first. Use candidate IDs to reconcile `rules_pending`, `rules_captured` and `rules_resolved`; report current pending count, not the historical sum of old pending records.
 - Never print `commands` / `files` from failed entries verbatim when they may contain secret material (apply the same redaction as state-manager)
 
 **freshness mode** — flag governance docs gone stale relative to code activity, and translations gone stale relative to their source doc:
@@ -346,12 +343,12 @@ Archiving happens at RELEASE (release-manager), NOT here.
 ````
 ## 8. review-manager
 
-> **Phase 7 边界：** 本子技能 = **Implementation Review only**（must-ship）。不负责 System Review（架构 / control topology）或 Research Review（评价与研究主张）。后两类是 repo-keep，默认不进入 INSTALLED 子技能。触发「全面审查」若实为架构/研究问题，应改走 `system_review` / `research_review`，而不是扩大下面五域。
+> **边界：** 本子技能 = **Implementation Review only**。不负责 System Review（架构 / control topology）或 Research Review（评价与研究主张）。后两类默认不进入已安装子技能。触发「全面审查」若实为架构/研究问题，应改走对应审查入口，而不是扩大下面五域。
 
 ````
 ---
 name: review-manager
-description: Perform a review across two independent dimensions — depth (lightweight quick pass vs full audit: line-by-line, dev-plan cross-reference, execution-level verification, distrust-of-gates) and scope (the change set by default, a specified path, or the whole project). Triggers on "review this" · "review the changes" · "audit recent changes" · "review my changes" · "审核一下" (light/change-set) · "deep review" · "full review" · "全面审查" · "彻底审查" · "逐行审查" (full/change-set) · "review the whole project" · "全项目审核" (light/whole-project) · "audit everything" · "全项目彻查" (full/whole-project); append a path argument to scope it (review <path> / deep review <path> / 审核 <路径>). Implementation Review only — not System/Research review (those stay repo-keep).
+description: Perform a review across two independent dimensions — depth (lightweight quick pass vs full audit: line-by-line, dev-plan cross-reference, execution-level verification, distrust-of-gates) and scope (the change set by default, a specified path, or the whole project). Triggers on "review this" · "review the changes" · "audit recent changes" · "review my changes" · "审核一下" (light/change-set) · "deep review" · "full review" · "全面审查" · "彻底审查" · "逐行审查" (full/change-set) · "review the whole project" · "全项目审核" (light/whole-project) · "audit everything" · "全项目彻查" (full/whole-project); append a path argument to scope it (review <path> / deep review <path> / 审核 <路径>). Implementation Review only — not System/Research review.
 ---
 
 # Review Manager

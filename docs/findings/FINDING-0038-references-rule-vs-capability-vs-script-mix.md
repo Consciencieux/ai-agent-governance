@@ -49,7 +49,8 @@ observed_in: gen2
 - ~~`plan-delivery` → `repo-tools/check-plan-delivery.js`~~ → 现 READ=`plan-sync.md`，RUN=binds
 - `git-write` → `references/policies/git.policy.md`（政策，正确）
 - ~~`change-hygiene` → 长文能力叶~~ → 现 READ=`coding.policy.md` § 变更归位
-- ~~`root-cause-repair` / `discovery-ledger` / `rule-capture` → 长文叶~~ → 现 READ=`lifecycle.policy.md` 对应节
+- ~~`root-cause-repair` / `discovery-ledger` → 长文叶~~ → 现 READ=`lifecycle.policy.md` 对应节
+- ~~`rule-capture` → 长文叶 / lifecycle 5a–5c 专节~~ → **施工协议，已从 INSTALLED 删除**（不进 policy、不进路由、不进 enforcement）
 
 ### D. 与 FINDING-0037 的关系
 
@@ -92,8 +93,10 @@ observed_in: gen2
   - `enforcement.v0.json` 对应 entry 的 `leaf` 改挂政策路径；init-spec 去掉对已删叶的 copy。
   - SKILL 路由表直接指向政策节；三语 architecture 树同步。
   - B 表脚本说明书仍保留为薄 Invoke 卡（Authority 标明 RUN，不当阅读权威）。
-- 2026-09-16 **切片 3（清施工泄漏叶）：** 删除 `seed-oracles`（repo_only 却 INIT）、`ssot-repair` / `confirmation-hygiene` / `generated-subskill-lifecycle` 空壳投影；确认卫生并入 `git.policy`；子技能机制义务并入 `deterministic-init`；lifecycle 生长禁令改为「常驻→policy / 任务→薄卡」，禁止再默认堆 capabilities。
-- **仍欠（不挡本切片）：** `enforcement` carrier 与 routing `binds` 全面自动对齐（关闭条件 4 余量）。
+- 2026-09-16 **切片 4 勘误：** 按**正文**区分。发现台账、根因修复、变更归位、工程克制、INSTALLED 可移植性、确认凭证卫生 = **产品规则**，留在对应 policy。`generated-subskill-lifecycle.md` 与 `ssot-repair.md` 是产品怎么做，恢复薄卡。`seed-oracles.md` 是本仓表征 → 不进 INSTALLED。
+- 2026-09-16 **切片 5：** Rule Capture Phase 5a–5c（`rc-*` 候选、`state.json.rule_capture`、按 ID 裁定再写规则）是本仓施工协议（PLAN-0016），不是被治理项目常驻规则。已从 lifecycle / SKILL / enforcement / routing / INIT state / agents 与 sub-skills 模板删除。归档计划可留历史，INSTALLED 不再教 Agent 跑这套。
+- 2026-09-16 **切片 6：** 同轴清扫其他 INSTALLED 施工残留——H2a/Phase 7 阶段名、must-ship/repo-keep 处置词、本仓版本踩坑叙事、REPO-ONLY 脚本指针、enforcement 里的 `repo-tools/oracle-inventory` carrier、门禁文案里的 skill-release.md。产品规则与 `CTRL-*` 名保留。
+- **仍欠（不挡本切片）：** `enforcement` carrier 与 routing `binds` 全面自动对齐（关闭条件 4 余量）；脚本注释里大量 `audit 2026-09-*` 考古注仍可后 scrub。
 
 ## 关联
 

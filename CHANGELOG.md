@@ -40,7 +40,11 @@ All notable changes to this project will be documented here.
 
 - Routing (FINDING-0038 slice 2): rehome always-on bodies into policies; **delete** the seven misplaced capability leaves (no pointer shells); enforcement `leaf` may point at policies; SKILL routes those themes to policy sections.
 
-- Remove construction-leak capability leaves: `seed-oracles`, `ssot-repair`, `confirmation-hygiene`, `generated-subskill-lifecycle` (fold product obligations into git/coding/deterministic-init; keep repo-only oracles out of INSTALLED).
+- Keep INSTALLED portability (testing) and confirmation-artifact hygiene (git.policy) in policies after leaf rehome. Restore INIT how-to `generated-subskill-lifecycle.md` and SSOT-repair how-to `ssot-repair.md`. Leave `seed-oracles.md` out of INSTALLED — its body is this-repo characterization (`oracle-inventory` / routing suite), not a governed-project rule.
+
+- Remove Rule Capture Phase 5a–5c from the installed lifecycle, SKILL table, enforcement, routing graph, INIT `state.json`, and agent/sub-skill templates (`rc-*` candidates, `state.json.rule_capture`, ID adjudication before rule writes). That protocol is this-repo construction, not a governed-project always-on rule.
+
+- Scrub other construction narration from INSTALLED bodies: producer phase names (H2a / Phase 7), disposition jargon (must-ship / repo-keep), skill-repo version anecdotes, REPO-ONLY script pointers, `repo-tools/oracle-inventory` carrier in enforcement, and skill-release.md hints in installed gate messages. Keep product rules (change hygiene, discovery ledger, root-cause, portability, git consent, CTRL-* names).
 
 - Coding policy: add gate effective-zone default (structure/sync vs habits/semantics ≈0 vs action-class) under engineering restraint (FINDING-0037).
 

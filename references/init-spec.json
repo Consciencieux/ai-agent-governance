@@ -175,6 +175,20 @@
     },
     {
       "phase": "A",
+      "path": "docs/rules/capabilities/generated-subskill-lifecycle.md",
+      "source": "references/capabilities/generated-subskill-lifecycle.md",
+      "type": "copy",
+      "description": "Capability leaf (generated-subskill-lifecycle) — instruction surface"
+    },
+    {
+      "phase": "A",
+      "path": "docs/rules/capabilities/ssot-repair.md",
+      "source": "references/capabilities/ssot-repair.md",
+      "type": "copy",
+      "description": "Capability leaf (ssot-repair) — instruction surface"
+    },
+    {
+      "phase": "A",
       "path": "docs/rules/capabilities/doc-freshness.md",
       "source": "references/capabilities/doc-freshness.md",
       "type": "copy",
@@ -486,7 +500,7 @@
       "source": null,
       "type": "generated",
       "generator": "state",
-      "description": "Current state (maturity, phase, agent identity, optional rule-capture candidates)"
+      "description": "Current state (maturity, facet/phase, agent identity, lock, completed, blocked)"
     },
     {
       "phase": "B",
@@ -578,7 +592,7 @@
       "path": "scripts/check-secrets.js",
       "source": "scripts/check-secrets.js",
       "type": "copy",
-      "description": "Secret scan CLI WRAP for CTRL-0001 (skill profile; deny; never prints secrets)"
+      "description": "Secret scan CLI for CTRL-0001 (skill profile; deny; never prints secrets)"
     },
     {
       "phase": "B",
@@ -634,7 +648,7 @@
       "path": "scripts/check-doc-consistency.js",
       "source": "scripts/check-doc-consistency.js",
       "type": "copy",
-      "description": "Doc consistency thin CLI WRAP ( Stage 3 EXTRACT; clusters in lib/doc-consistency/run.js; advisory; --gate/--release-gate fail-closed)"
+      "description": "Doc consistency thin CLI (clusters in lib/doc-consistency/run.js; advisory; --gate/--release-gate fail-closed)"
     },
     {
       "phase": "C",

@@ -22,14 +22,9 @@ function runVersionExamples(ctx) {
         if (m[1] !== version) issues.version_examples.push(`${f}:${m[1]} != ${version}`);
       }
       // tag-version pairing: a `version` value paired with an adjacent `tag` value must
-      // agree (`tag` = `"v" + version`). The v1.0.0 release kept `"tag": "v0.15.0"`
-      // beside `"version": "1.0.0"` in the manifest examples (SKILL.md S3.2, release.md
-      // S5) and shipped green — version_examples only compared against the current
-      // version, never the adjacent tag. Match only INSIDE `{... }` object blocks with
+      // agree (`tag` = `"v" + version`). Match only INSIDE `{... }` object blocks with
       // `"version"` and `"tag"` as neighbouring slots: a narrative HISTORY quote
-      // (release.md S2 "v1.0.0 曾保留 …" describes the bug, it does not assert it) lives
-      // in prose without an object block and must never be paired — first run of this
-      // checker matched that prose across 200 lines and failed the current tree.
+      // in prose without an object block must never be paired.
       const pairRe =
         /\{[^{}]*"version"\s*:\s*"(\d+\.\d+\.\d+)"[^{}]*?\n?[^{}]*?"tag"\s*:\s*"(v\d+\.\d+\.\d+)"[^{}]*\}/g;
       let pm;
@@ -43,10 +38,8 @@ function runVersionExamples(ctx) {
         }
       }
       // YAML frontmatter carries an UNQUOTED `version: X.Y.Z`, which the regex above cannot
-      // match (its "version" alternative requires literal double quotes). SKILL.md's
-      // frontmatter is one of this repo's five release sync points, so it was the only one
-      // with no mechanical backstop — a release could ship a stale skill version and pass
-      // every gate (audit 2026-09-05). Gate class: a version sync point must not drift.
+      // match (its "version" alternative requires literal double quotes). SKILL.md frontmatter
+      // is a version sync point and must not drift without a mechanical backstop.
       const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(c);
       if (fm) {
         const fv = /^version:\s*["']?(\d+\.\d+\.\d+)["']?\s*$/m.exec(fm[1]);
@@ -57,13 +50,12 @@ function runVersionExamples(ctx) {
         }
       }
     }
-    // CHANGELOG top version section is the fourth release sync point (skill-release.md
-    // Phase 4 step 2 renames [Unreleased] -> [X.Y.Z] during version sync). It has no
-    // mechanical backstop either: the v0.13.1 release shipped with 40 entries still under
-    // [Unreleased] and every gate green, because changelog_coverage only asks "is the
-    // change recorded", never "has the version section advanced". The newest versioned
-    // section (first `## [X.Y.Z]` heading, [Unreleased] skipped) must equal the current
-    // version. No versioned section yet (fresh project) or no CHANGELOG → no-op.
+    // CHANGELOG top version section is a release sync point. Without this check, a
+    // release can ship with entries still under [Unreleased] and every gate green,
+    // because changelog_coverage only asks "is the change recorded", never "has the
+    // version section advanced". The newest versioned section (first `## [X.Y.Z]`
+    // heading, [Unreleased] skipped) must equal the current version. No versioned
+    // section yet (fresh project) or no CHANGELOG → no-op.
     const cl = readFile(path.join(ROOT, "CHANGELOG.md"));
     if (cl) {
       const heads = cl.match(/^##\s+\[(\d+\.\d+\.\d+)\]/gm) || [];
@@ -77,10 +69,9 @@ function runVersionExamples(ctx) {
     // The two generator sync points live OUTSIDE.md files, which mdFiles cannot see:
     // `references/init-spec.json` `inputs.governance_version.default` (stamped into every
     // new governed project's manifest) and `scripts/lib/generate/run.js`'s fallback
-    // sentinel ( extracted the body out of the thin CLI). Both are
-    // skill-release.md Phase 4 step 2 sync points — a release that bumps them silently
-    // changes the version stamped into future INITs. Gate class: a version sync point
-    // must not drift. No-op when either file is absent (a governed project does not
+    // sentinel. Both are skill-package version sync points — a release that bumps them
+    // silently changes the version stamped into future INITs. Gate class: a version sync
+    // point must not drift. No-op when either file is absent (a governed project does not
     // have references/init-spec.json — it is SKILL-INTERNAL).
     const specPath = path.join(ROOT, "references", "init-spec.json");
     if (fs.existsSync(specPath)) {

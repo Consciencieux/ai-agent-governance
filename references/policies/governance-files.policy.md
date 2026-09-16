@@ -17,18 +17,18 @@
 | `scripts/verify-governance.js` | 校验门禁 |
 | `scripts/check-lock.js` | 锁检查 |
 | `scripts/check-git-policy.js` | Git 策略门禁 |
-| `scripts/check-secrets.js` | skill 侧 CTRL-0001 密钥扫描 CLI WRAP |
+| `scripts/check-secrets.js` | CTRL-0001 密钥扫描 CLI |
 | `scripts/check-sibling-closure.js` | 同类实例闭包机械载体 |
 | `scripts/check-file-size-budget.js` | 文件行数预算报告（soft/review；人确认后拆分） |
 | `scripts/lib/secret-scan-facts.js` | 密钥扫描共享事实 primitive |
 | `scripts/evaluators/ctrl-0001-secret-protection.js` | CTRL-0001 密钥保护求值器 |
 | `scripts/check-sync.js` | 同步组门禁 |
-| `scripts/check-doc-consistency.js` | 文档一致性 WRAP（#4 → CTRL-0006） |
+| `scripts/check-doc-consistency.js` | 文档一致性 CLI（含 CTRL-0006） |
 | `scripts/lib/md-link-facts.js` | Markdown 链接共享事实 primitive |
 | `scripts/evaluators/ctrl-0006-broken-links.js` | CTRL-0006 相对链接有效性求值器 |
 | `scripts/check-plan-sync.js` | 计划与里程碑对账（发布形态 fail-closed；默认建议性） |
 | `scripts/release-manager.js` | 发布写操作执行器与审批门（创建 tag、`--yes` 才写、高风险 Proposal 拒绝） |
-| `scripts/check-doc-freshness.js` | 文档新鲜度 CLI 包装（CTRL-0003 + CTRL-0004） |
+| `scripts/check-doc-freshness.js` | 文档新鲜度 CLI（CTRL-0003 + CTRL-0004） |
 | `scripts/lib/git-facts.js` | 新鲜度共享 git/path/date 事实 primitive |
 | `scripts/evaluators/ctrl-0003-doc-freshness.js` | CTRL-0003 治理文档新鲜度求值器 |
 | `scripts/evaluators/ctrl-0004-translation-freshness.js` | CTRL-0004 译文新鲜度求值器 |
@@ -66,4 +66,4 @@
 
 ## .governance/README.md
 
-INIT 生成 `.governance/` 目录时同时生成 README.md，由生成器直接写出，**不复制模板**——曾经存在的那份模板从未被任何代码消费，只会与真实产物静默分叉（审计 2026-09-05）。README 的内容契约是：逐个说明 `.governance/` 下每个文件的用途与 Git 跟踪状态，与上方「.governance/ Git 跟踪策略」表保持一致。（生成器与其产物定义随技能包分发，不在被治理项目内。）
+INIT 生成 `.governance/` 目录时同时生成 README.md，由生成器直接写出，**不复制模板**——模板与生成器产物容易静默分叉。README 的内容契约是：逐个说明 `.governance/` 下每个文件的用途与 Git 跟踪状态，与上方「.governance/ Git 跟踪策略」表保持一致。（生成器与其产物定义随技能包分发，不在被治理项目内。）

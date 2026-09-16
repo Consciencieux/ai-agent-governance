@@ -20,7 +20,7 @@ function runChangelogCoverage(ctx) {
       ? " (format: " + changelog.formatIssues.join("; ") + ")"
       : "";
     const emptyHint = changelog.emptyUnreleased
-      ? " — the [Unreleased] section is empty: if this is a release, the empty section was likely rebuilt too early (rebuild it AFTER the release gates pass, per skill-release.md step 2)"
+      ? " — the [Unreleased] section is empty: if this is a release, the empty section was likely rebuilt too early (rebuild it AFTER the release gates pass; see the project release workflow)"
       : "";
     const item = "governance/payload changes require CHANGELOG.md change entries with a category (an [Unreleased] section daily; the topmost versioned section at release)" + dup + fmt + emptyHint;
     issues.changelog_coverage.push(item);

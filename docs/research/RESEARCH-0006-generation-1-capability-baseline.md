@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 11
+version: 12
 subject_generation: gen1
 ---
 
@@ -28,6 +28,7 @@ subject_generation: gen1
 - v9（2026-09-13）：现在时校准，不重开基线、不改第四列档位。`v2.0.0` 已发布；WRAP/must-ship 机械层存在；CONTROL-X / 独立 Control 文件仍 `later`（H2c）。consent 行语义权威已单一（`git.policy.md`，ADR-0024 §8）；Ownership 表该格从 `duplicated` 改为 `single`（只动 consent，不扫其他 duplicated 行）。
 - v10（2026-09-16）：术语 Forbidden 门禁退役（FINDING-0034）——「术语门禁」行不再以 `repo-tools/check-terminology.js` 为载体；翻译新鲜度载体不变。
 - v11（2026-09-16）：consistency 假门禁退役与路由 READ/RUN（FINDING-0035/0037/0038）——压缩层与 Ownership 表不重开；若正文仍写 consent-cluster / numeric_claims / adr-status 为活门禁，以 Finding 为准。
+- v12（2026-09-16）：Rule Capture Phase 5a–5c 已从 INSTALLED 撤出（FINDING-0038 切片 5）。下表「lifecycle.policy § Rule Capture / must-ship」是基线快照，**不是**今日产品面；被治理项目不再生成 `state.json.rule_capture`，也不跑 5a/5b/5c。
 
 ## 为什么需要
 

@@ -46,7 +46,7 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 - 治理状态工件（manifest / state / validation / preflight 或其 Gen2 等价物）
 - 证据分层（mechanical ≠ human-attested ≠ unverified claim）
 - INSTALLED 内容可移植性（在被治理项目自身成立）
-- Rule Capture、根因修复 / 失败预算、同类闭包、变更卫生
+- 根因修复 / 失败预算、同类闭包、变更卫生（Rule Capture Phase 5a–5c 已从 INSTALLED 撤出：那是本仓施工协议，不是被治理项目常驻规则；见 FINDING-0038 切片 5）
 - 工程克制（机制测试）：原则进入 INSTALLED 政策，不是新 gate
 - 种子负向 oracle：CTRL-0001–0006 + 路由完整性 + Safety Kernel 套件记账（PLAN-0042；`important_gap = 0`）
 - 生成子技能作为**产品能力叶**（禁止折叠成「有生成机制」一行）：`repository-inspection`、`ci-generator`、`governance-validator`、`state-manager`、`drift-check`、`release-manager`、`plan-manager`、`review-manager`

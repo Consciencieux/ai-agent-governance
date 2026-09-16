@@ -6,7 +6,7 @@
 
 ## Authority
 
-生成子技能 `review-manager`（generated sub-skills under `.governance/generated/skills/`）；Implementation Review = must-ship。
+生成子技能 `review-manager`（generated sub-skills under `.governance/generated/skills/`）。Implementation Review 是产品默认审查面。
 
 ## Invoke
 
@@ -18,4 +18,4 @@
 
 ## Non-goals
 
-System/Research review 不在本叶（repo-keep）。
+System/Research review 不在本叶。

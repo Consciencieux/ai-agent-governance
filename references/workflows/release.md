@@ -51,7 +51,7 @@ AI 仅在前两阶段自动行动（分析 + 提案，只读）；任何写操�
 
 > 说明：生成的子技能 SKILL.md（`.governance/generated/skills/*/SKILL.md`）不携带 `version` 字段，因此不是版本同步点；被治理项目的版本同步是「package.json → CHANGELOG → manifest → tag」四处，由 `release-manager` 子技能 Phase 4 执行。
 
-> **tag-version 配对**：`tag` 的值必须与相邻的 `version` 配对（`"version": "X.Y.Z"` 旁应为 `"tag": "vX.Y.Z"`）——`manifest release 字段`示例及其他文档示例携带版本+标签对，二者矛盾即示例失真（v1.0.0 发布时曾把 tag 留在 v0.15.0、version 升到 1.0.0，示例因此自相矛盾）。已安装 `scripts/check-doc-consistency.js` 的项目由 `version_examples` 簇机械验证（fail-closed）；未安装者人工核对。
+> **tag-version 配对**：`tag` 的值必须与相邻的 `version` 配对（`"version": "X.Y.Z"` 旁应为 `"tag": "vX.Y.Z"`）——`manifest release 字段`示例及其他文档示例携带版本+标签对，二者矛盾即示例失真。已安装 `scripts/check-doc-consistency.js` 的项目由 `version_examples` 簇机械验证（fail-closed）；未安装者人工核对。
 
 SemVer：MAJOR.MINOR.PATCH —— 破坏性 → MAJOR，新能力 → MINOR，修复 → PATCH。
 
@@ -188,7 +188,7 @@ Proceed with release?
 4. **归档计划**：本版本已完成的里程碑条目（含勾选状态与验收结果）聚合写入 `docs/plans/archive/vX.Y.Z.md`（一个版本一个文件）；已完成的 `TASK_<name>.md` 以独立文件原样移入 `docs/plans/archive/`（保留原文件名）。**保留原文，绝不删除**。未完成的里程碑继续留在 `docs/plans/`。归档运行的先决条件：不存在任何状态为 implemented/Completed 而未归档的计划（第 3 步的 release-gate 已强制）。
 5. **提交 release commit**：`git add`（仅版本同步与归档相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
 6. **校验**：运行 `scripts/verify-governance.js`，退出码必须为 0。
-7. **生成/更新 Proposal**：**重新运行 `scripts/release-manager.js plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha`、`recommended` 与 `provenance` 都随 plan 重建，写入 `.governance/release-proposal.json`。**不得手工编辑该 JSON 只改 `headSha` 或 `recommended`**：`execute` 会重算 provenance（绑定 current/recommended/releaseType/riskLevel/reviewRecommendation/reviewStatus/headSha）并拒绝任何被编辑的 proposal（v1.0.1 与本流程都曾踩过"手改 headSha 触发 provenance does not match"）。release commit 之后必须先 plan 再 execute。
+7. **生成/更新 Proposal**：**重新运行 `scripts/release-manager.js plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha`、`recommended` 与 `provenance` 都随 plan 重建，写入 `.governance/release-proposal.json`。**不得手工编辑该 JSON 只改 `headSha` 或 `recommended`**：`execute` 会重算 provenance（绑定 current/recommended/releaseType/riskLevel/reviewRecommendation/reviewStatus/headSha）并拒绝任何被编辑的 proposal。release commit 之后必须先 plan 再 execute。
 8. **创建 annotated tag**：
 
  ```bash

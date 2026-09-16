@@ -36,7 +36,7 @@ observed_in: gen1
 - RESEARCH-0009 §「lifecycle 是面向阶段的政策单体」：表面六阶段，打开后是规模分级、计划 schema、变更卫生、根因修复、证据、Rule Capture、CHANGELOG…「Lifecycle」只是容器名。
 - ADR-0022 后续修正：lifecycle 目标职责 = 编排骨架；横切独立 capability；禁止内嵌进某 Phase 当默认归宿。
 - RESEARCH-0012 § 物理拓扑：文件只是 `AuthorityRef` 当前投影；1.0 按 lifecycle Phase 堆横切 **不得**再当查找权威。
-- PLAN-0040（5c Implemented）：已抽出 discovery-ledger / change-hygiene / root-cause-repair / rule-capture；lifecycle 留指针——证明「留语义、拆容器」路径，而非整文件作废。
+- PLAN-0040（5c Implemented）：当时抽出 discovery-ledger / change-hygiene / root-cause-repair / rule-capture；lifecycle 留指针。其后 Rule Capture 5a–5c 被判定为施工协议并从 INSTALLED 删除（FINDING-0038 切片 5）；discovery-ledger / 根因修复仍留 lifecycle 政策正文。路径仍是「留产品语义、拆容器」，不是整文件作废。
 
 ## 根因
 

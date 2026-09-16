@@ -18,4 +18,4 @@ release workflow（项目内发布流程权威） + `scripts/release-manager.js`
 
 ## Non-goals
 
-不负责本仓 skill-release（repo-workflows）；不手改 proposal JSON。
+不负责 skill 仓自身的发布工作流；不手改 proposal JSON。

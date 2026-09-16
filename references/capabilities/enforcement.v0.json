@@ -106,22 +106,6 @@
           "carrier": "scripts/generate-governance.js",
           "scope": "installed",
           "mechanizable": true
-        },
-        {
-          "id": "eight-leaves-materialize",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "references/instruction/sub-skills.md",
-          "scope": "installed",
-          "mechanizable": true
-        },
-        {
-          "id": "loaded-in-task",
-          "mode": "inherent_judgment",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
         }
       ]
     },
@@ -213,6 +197,28 @@
         },
         {
           "id": "tier-used-correctly",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        }
+      ]
+    },
+    {
+      "id": "generated-subskill-lifecycle",
+      "leaf": "references/capabilities/generated-subskill-lifecycle.md",
+      "obligations": [
+        {
+          "id": "eight-leaves-materialize",
+          "mode": "mechanical",
+          "result": "deny",
+          "carrier": "references/instruction/sub-skills.md",
+          "scope": "installed",
+          "mechanizable": true
+        },
+        {
+          "id": "loaded-in-task",
           "mode": "inherent_judgment",
           "result": "require_review",
           "carrier": null,
@@ -440,14 +446,6 @@
           "mechanizable": true
         },
         {
-          "id": "negative-oracle-for-claimed-gate",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/oracle-inventory.v0.json",
-          "scope": "repo_only",
-          "mechanizable": true
-        },
-        {
           "id": "failure-attempt-counter",
           "mode": "unmechanized",
           "result": "warn",
@@ -514,28 +512,6 @@
       ]
     },
     {
-      "id": "rule-capture",
-      "leaf": "references/policies/lifecycle.policy.md",
-      "obligations": [
-        {
-          "id": "phase-5a-confirm-by-id",
-          "mode": "require_review",
-          "result": "require_review",
-          "carrier": null,
-          "scope": "installed",
-          "mechanizable": false
-        },
-        {
-          "id": "post-write-gates",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/verify_governance.js",
-          "scope": "installed",
-          "mechanizable": true
-        }
-      ]
-    },
-    {
       "id": "secret-scanning",
       "leaf": "references/capabilities/secret-scanning.md",
       "obligations": [
@@ -558,16 +534,16 @@
       ]
     },
     {
-      "id": "sync-groups",
-      "leaf": "references/capabilities/sync-groups.md",
+      "id": "ssot-repair",
+      "leaf": "references/capabilities/ssot-repair.md",
       "obligations": [
         {
-          "id": "declared-members-present",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "scripts/check-sync.js",
+          "id": "authority-meaning-correct",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
           "scope": "installed",
-          "mechanizable": true
+          "mechanizable": false
         }
       ]
     },
@@ -744,6 +720,20 @@
           "carrier": null,
           "scope": "installed",
           "mechanizable": false
+        }
+      ]
+    },
+    {
+      "id": "sync-groups",
+      "leaf": "references/capabilities/sync-groups.md",
+      "obligations": [
+        {
+          "id": "declared-members-present",
+          "mode": "mechanical",
+          "result": "deny",
+          "carrier": "scripts/check-sync.js",
+          "scope": "installed",
+          "mechanizable": true
         }
       ]
     }
