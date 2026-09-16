@@ -203,11 +203,11 @@
       "obligations": [
         {
           "id": "changelog-narration-island",
-          "mode": "mechanical",
-          "result": "deny",
-          "carrier": "repo-tools/check-changelog-narration.js",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
           "scope": "repo_only",
-          "mechanizable": true
+          "mechanizable": false
         },
         {
           "id": "report-tier-schema",

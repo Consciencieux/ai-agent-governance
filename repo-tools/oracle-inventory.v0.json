@@ -25,9 +25,9 @@
     "Important set (frozen): CTRL-0001–0006 + routing integrity + Safety Kernel suite accounting."
   ],
   "summary": {
-    "total": 15,
+    "total": 13,
     "by_classification": {
-      "oracle_pair": 13,
+      "oracle_pair": 11,
       "characterization_only": 2
     },
     "important_gap": 0
@@ -188,30 +188,6 @@
       ],
       "negative_tests": [],
       "notes": "Kernel suites retained; per-CTRL oracles live in CTRL-* rows."
-    },
-    {
-      "id": "CTRL-changelog-narration",
-      "kind": "ctrl",
-      "classification": "oracle_pair",
-      "positive_tests": [
-        "tests/suites/finding-patch-oracles.test.js::changelog narration: clean Unreleased exits 0 under --gate"
-      ],
-      "negative_tests": [
-        "tests/suites/finding-patch-oracles.test.js::changelog narration: mutation-verified in Unreleased fails --gate (0016)"
-      ],
-      "notes": "FINDING-0016: one observable example feature (forbidden Unreleased verification-narration markers) fail-closed. Not full example encyclopedia."
-    },
-    {
-      "id": "CTRL-numeric-claims",
-      "kind": "ctrl",
-      "classification": "oracle_pair",
-      "positive_tests": [
-        "tests/suites/repo-gates.test.js::doc-consistency --gate: this repo exits 0 (REPO dogfood)"
-      ],
-      "negative_tests": [
-        "tests/suites/finding-patch-oracles.test.js::ADR-0010 numeric_claims: wrong N checks enters gateIssues (0017)"
-      ],
-      "notes": "FINDING-0017 / ADR-0010: entry-layer wrong \"N checks\" claims fail-closed under --gate. Not all ADR decisions."
     }
   ]
 }

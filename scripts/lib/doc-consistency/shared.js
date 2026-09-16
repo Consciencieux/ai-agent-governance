@@ -7,61 +7,12 @@ const { spawnSync } = require("child_process");
 const { createMdLinkFacts } = require("../md-link-facts.js");
 const { evaluateBrokenLinks } = require("../../evaluators/ctrl-0006-broken-links.js");
 const { classifyPlanStatus, isPlanMarkdown } = require("../plan-status.js");
-const { evaluateAdrUnreleasedClaims } = require("../adr-status.js");
-// NOTE ( / ): plan-status + adr-status heuristics live in scripts/lib/
-// (EXTRACT). New mechanical clusters must not land as inline closures in this file — prefer
-// scripts/lib/* or a standalone repo-tools checker and call it from here.
+// NOTE: plan-status heuristics live in scripts/lib/ (EXTRACT). New mechanical clusters
+// must not land as inline closures in this file — prefer scripts/lib/* or a standalone
+// repo-tools checker and call it from here.
 
 const ROOT = process.cwd();
 const DOCS = path.join(ROOT, "docs");
-
-// Consent sync points — the same rule is expressed in several files across both domains
-// (this repo vs governed projects). Each GROUP holds the equivalent paths in each domain;
-// a group is checked when AT LEAST ONE of its paths exists, and every present path in the
-// group must declare all markers. In the skill repo the repo-side paths exist; in a
-// governed project the generated ones (AGENTS.md, docs/rules/git-policy.md) exist.
-const CONSENT_SYNC_GROUPS = [
-  ["AGENTS.md"],
-  ["references/policies/git.policy.md", "docs/rules/git-policy.md"],
-  ["references/instruction/agents-md.template.md"],
-  ["references/policies/lifecycle.policy.md", "docs/rules/lifecycle.md"],
-  ["SKILL.md"],
-];
-// A marker's `files` restriction is compared by its basename, with dots and dashes
-// normalised away: references/policies/git.policy.md and its governed rendering
-// docs/rules/git-policy.md both reduce to "gitpolicymd", so the restriction covers both
-// domains (they express the same rule, one in the skill repo, one in the governed project).
-// Without this, a governed-project docs/rules file would be skipped from M3/M4/M5 because
-// "git-policy.md" never matched the literal "git.policy.md".
-const consentBasename = (s) => path.basename(s).replace(/[ .-]/g, "").toLowerCase();
-const CONSENT_MARKERS = [
-  // Universal: every sync point must state one-confirmation (explicit write instruction
-  // or IDE confirm IS consent) and the intent-alignment demotion of plan approval.
-  // M1 does NOT require a pre-commit echo ritual (that was thinned to a post-hoc report).
-  // Still require add→commit→push coverage so a heading alone cannot satisfy the marker.
-  { name: "one confirmation per change set (write instruction or IDE confirm is consent)", re: /^(?=[\s\S]*(?:写指令|write instruction|IDE|确认条|confirm bar|暂存\s*\+\s*提交\s*\+\s*推送|stage\s*\+\s*commit\s*\+\s*push))(?=[\s\S]*(?:add.{0,25}commit.{0,25}push))/i, files: null },
-  { name: "plan approval is intent alignment, not commit authorisation", re: /intent alignment|意图对齐|不是提交授权|不是提交确认/i, files: null },
-  // Release alignment point — lifecycle.policy.md is a lifecycle doc and carries no
-  // release-approval clause by design; only files that own release flow must state it.
-  // M3 anchors on approval COVERING the sequence/write-ops, not the bare "Approval Gate"
-  // token: git.policy.md's git-tag bullet ("须先经 Approval Gate") and SKILL.md's
-  // artifacts mention ("由 RELEASE 的 Approval Gate 产生") both carry the token but state
-  // nothing about coverage — deleting the real release clause left the gate green (review).
-  { name: "release: Proposal at Approval Gate covers the sequence", re: /^(?=[\s\S]*(?:Approval Gate|获批准|获批))(?=[\s\S]*(?:covers?\s+[^.\n]{0,40}(?:sequence|write\s*ops?)|覆盖[^。\n]{0,30}(?:序列|写操作|发布序列)))/i,
-    files: ["AGENTS.md", "references/policies/git.policy.md", "references/instruction/agents-md.template.md", "SKILL.md"] },
-  // Universal hard constraints — the echo IS the sequence and execution never deviates;
-  // any step fails → stop and report (never retry differently); push rejected →
-  // stop and report (never pull/rebase). lifecycle doc carries no git sequence by design —
-  // it governs validation-gate failure (exit ≠ 0 = task undone), not git-command sequences.
-  // Markers anchor on each clause's OWN distinctive terms — "stop and report" is shared by
-  // both clauses, and "fails mid-sequence" appears in the release clause too ("If any
-  // check fails mid-sequence"), so broad terms would let a removed failure clause pass via
-  // the other clause's wording (both found as false negatives by regression).
-  { name: "mid-sequence failure: stop and report, never retry differently", re: /Any step fails|a step fails|任一步失败/i, 
-    files: ["AGENTS.md", "references/policies/git.policy.md", "references/instruction/agents-md.template.md", "SKILL.md"] },
-  { name: "push rejected (non-fast-forward): stop and report, never pull/rebase", re: /non-fast-forward|push rejected|push 被拒|非快进|pull\/rebase|不自行 pull|不得擅自 pull/i,
-    files: ["AGENTS.md", "references/policies/git.policy.md", "references/instruction/agents-md.template.md", "SKILL.md"] },
-];
 
 // #2 trigger tightening: a document is only held to the full protected-files list when it
 // CLAIMS to enumerate one. Mere mentions of the protection flow (e.g. "this change follows
@@ -238,12 +189,8 @@ module.exports = {
   evaluateBrokenLinks,
   classifyPlanStatus,
   isPlanMarkdown,
-  evaluateAdrUnreleasedClaims,
   ROOT,
   DOCS,
-  CONSENT_SYNC_GROUPS,
-  CONSENT_MARKERS,
-  consentBasename,
   CLAIMS_PROTECTED_LIST,
   walk,
   readFile,

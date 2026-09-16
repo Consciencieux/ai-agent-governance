@@ -46,7 +46,7 @@ observed_in: gen1
 ## 解决情况
 
 **进展（2026-09-13 · PLAN-0053 候选 A）：**
-- **关闭条件 3（余量收口）：** 其余 judgment 类在权威正文显式标 `judgment`，并与已有 `mechanical` 边界区分——① 机制测试（`coding.policy`）② 双域对称 ④ 控制面追查 ⑤ 证据档 ⑥ 失败预算 ⑦ Rule Capture ⑧ 影响面/引用搜索；③ sibling 维持 judgment + declared-contract mechanical。表征：`tests/suites/judgment-language.test.js`（产品语言断言；不得要求载荷嵌入 FINDING ID）。
+- **关闭条件 3（余量收口）：** 其余 judgment 类在权威正文显式标 `judgment`，并与已有 `mechanical` 边界区分——① 机制测试（`coding.policy`）② 双域对称 ④ 控制面追查 ⑤ 证据档 ⑥ 失败预算 ⑦ Rule Capture ⑧ 影响面/引用搜索；③ sibling 维持 judgment + declared-contract mechanical。当时表征曾用 `judgment-language.test.js`（产品语言断言）；该套件已于 FINDING-0035 退役——标签存在 ≠ 执行力。
 - **关闭条件 1–2：** 仍以 PLAN-0050 切片为准（sibling 合同 + `enforcement-semantics` 四值）。
 
 **状态：Resolved（2026-09-13）** — 三条关闭条件均已满足。Resolved ≠ 为其余 7 类补齐机械 carrier；无 carrier 的义务继续以 **judgment** 执行，禁止把门禁绿误读成判断已完成。
@@ -65,4 +65,4 @@ observed_in: gen1
 ## 回归保护
 
 - 负向 fixture：删除一个 sibling 实例 → checker 必须变红。
-- 语言分层表征：八类 judgment 标记不得从权威正文回退（`judgment-language` suite）。
+- judgment 分层写在权威正文与 `enforcement-semantics`；**不再**用子串存在性套件冒充执行力（FINDING-0035 已退役 `judgment-language`）。payload 套件继续禁止载荷嵌入生产者 ID（ADR-0020 I5）。

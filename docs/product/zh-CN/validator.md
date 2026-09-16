@@ -22,7 +22,7 @@ node scripts/verify-governance.js --help   # 用法
 
 工件路径经过包含性校验：manifest 条目尝试逃逸项目根（或通过链接解析到树外）时报告为失败，而不是 stat 到项目外。
 
-权威检查清单在 `scripts/verify_governance.js`（`DEFAULTS` 数组）；`check-doc-consistency.js` 用它交叉核对 docs 里的数值声明。运行时输出 `validation.json` / `drift-report.json` 不是 required artifact —— fresh checkout 无它们也能通过。
+权威检查清单在 `scripts/verify_governance.js`（`DEFAULTS` 数组）。运行时输出 `validation.json` / `drift-report.json` 不是 required artifact —— fresh checkout 无它们也能通过。
 
 ### 治理徽章（可选）
 

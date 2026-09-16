@@ -52,6 +52,8 @@ ADR 状态字段为 `状态：Accepted`，无异常。误报来自正文中的�
 
 **Resolved（2026-09-13 · PLAN-0048 H2b Stage 1）。** ADR 状态解析抽出为 `scripts/lib/adr-status.js`，并接入 `scripts/check-doc-consistency.js`；判定限定在状态字段，不再全文扫描正文里的 `[Unreleased]` 节名。负向回归在 `tests/suites/h2b-checkers.test.js`。
 
+**后续（2026-09-16 · FINDING-0035）：** consistency 侧 `adr-status` 簇与无引用的 `scripts/lib/adr-status.js` 一并退役（只报 issues、从不 fail-closed，属低收益编排）。本 Finding 的误报修复结论仍成立；勿把已删 lib 当持续执法 carrier。
+
 ## 关联
 
 - ADR-0012

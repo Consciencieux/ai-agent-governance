@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0007
 status: Active
-version: 5
+version: 6
 ---
 
 # RESEARCH-0007：文档知识架构 / 知识对象模型
@@ -166,7 +166,7 @@ Research / Finding
 | 计划状态规范（Plan status） | `scripts/check-doc-consistency.js` plan-status 集群 | Gen1 divergence（观测项） |
 | 计划交付声明（Plan delivery） | `repo-tools/check-plan-delivery.js` | 有效 |
 | ADR 状态 | `scripts/check-doc-consistency.js` ADR-status 集群 | 有效 |
-| 术语权威（glossary） | `repo-tools/check-terminology.js`（repo-owned） | 有效（ADR-0020 首次执行分离） |
+| 术语权威（glossary） | 无机械 carrier | **已退役**（FINDING-0034，2026-09-16；`repo-tools/check-terminology.js` 删除） |
 
 ## 维护规则
 

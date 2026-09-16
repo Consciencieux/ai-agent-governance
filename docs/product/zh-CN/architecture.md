@@ -97,12 +97,12 @@ ai-agent-governance/
 │   ├── check-lock.js / check-git-consent.js / check-sibling-closure.js / check-file-size-budget.js
 │   ├── migrate-governance.js / check-git-policy.js / check-secrets.js / check-sync.js
 │   ├── lib/
-│   │   ├── git-facts.js / md-link-facts.js / plan-status.js / adr-status.js / secret-scan-facts.js
+│   │   ├── git-facts.js / md-link-facts.js / plan-status.js / secret-scan-facts.js
 │   │   ├── doc-consistency/
 │   │   │   ├── run.js / shared.js
 │   │   │   ├── changelog-coverage.js / version-examples.js / protected-files.js
-│   │   │   ├── consent-cluster.js / principles-index.js / plan-status.js / adr-status.js
-│   │   │   └── broken-links.js / numeric-claims.js / prompt-sync.js
+│   │   │   ├── principles-index.js / plan-status.js
+│   │   │   └── broken-links.js / prompt-sync.js
 │   │   └── generate/
 │   │       └── run.js              # INIT 生成器本体（SKILL-INTERNAL）
 │   ├── evaluators/
@@ -121,7 +121,7 @@ ai-agent-governance/
 │   ├── check-doc-parity.js / check-layout-sync.js / check-plan-delivery.js
 │   ├── check-role-completeness.js / check-coding-hygiene.js / check-file-size-budget.js
 │   ├── check-daily-check-surface.js / daily-check-surface.v0.json
-│   ├── check-terminology.js / check-changelog-narration.js / check-secrets.js
+│   ├── check-secrets.js
 │   ├── check-must-ship.js / check-must-ship-carriers.js
 │   ├── lib/
 │   │   └── routing.js

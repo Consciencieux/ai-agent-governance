@@ -37,7 +37,7 @@ ADR-0009 确立了「索引不是事实源」：roadmap/里程碑是索引，计
 
 **3. 概念模型图可保留，实现架构图不保留。** README 表达「系统是什么」（概念闭环：Agent → Governance Rules → Repository State → Verification → Human-controlled Release），不维护「系统内部现在具体怎么实现」（模块/目录架构图随版本演化必然过时）。
 
-**4. 强制等级：可机械判定的子集由现有门禁覆盖，其余是设计判断。** `numeric_claims`（README 的 `N checks` 数字）、`broken_links`、`check-doc-parity`（三语结构）、`prompt_sync`（触发器清单唯一在 commands.md）已覆盖机械可判定部分；其中 `numeric_claims` 在 `check-doc-consistency.js --gate` / `--release-gate` 下 fail-closed（FINDING-0017 切片，2026-09-13）。什么算「稳定语义」不可机械判定，靠本 ADR 记录 + 贡献者判断，**不新增检查器**——这是 ADR-0009 工程克制原则在文档层的延续，把设计判断机械化只会制造假阳性。
+**4. 强制等级：可机械判定的子集由现有门禁覆盖，其余是设计判断。** `broken_links`、`check-doc-parity`（三语结构）、`prompt_sync`（触发器清单唯一在 commands.md）覆盖机械可判定部分。曾用 `numeric_claims` 守 README `N checks`（FINDING-0017 切片）；入口层已不再写该类数字后该簇空转，于 FINDING-0035 退役——**勿再为入口层数字诚实硬加同类门禁**。什么算「稳定语义」不可机械判定，靠本 ADR 记录 + 贡献者判断，**不新增检查器**——这是 ADR-0009 工程克制原则在文档层的延续，把设计判断机械化只会制造假阳性。
 
 ## 后果
 

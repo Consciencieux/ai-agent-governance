@@ -21,7 +21,7 @@ const CONSISTENCY_CHECK = path.join(__dirname, "..", "..", "scripts", "check-doc
 const RELEASE_TOOL = path.join(__dirname, "..", "..", "scripts", "release-manager.js");
 const SKILL_ROOT = path.join(__dirname, "..", "..");
 const CONSISTENCY = path.join(__dirname, "..", "..", "scripts", "check-doc-consistency.js");
-const TERMINOLOGY_CHECK = path.join(__dirname, "..", "..", "repo-tools", "check-terminology.js");
+const TERMINOLOGY_CHECK = null; // retired (FINDING-0034)
 const CONSENT_THREE_MARKERS_TEXT =
   "One confirmation per change set — echo the full git command sequence before committing.\n" +
   "Plan approval is intent alignment, not a commit authorisation workaround.\n" +
@@ -128,14 +128,12 @@ function planChanges(current, changes) {
 function buildI18nFixture(dir, opts = {}) {
   gitInit(dir);
   write(path.join(dir, "docs", "glossary.md"),
-    "# Glossary\n\n| English | 简体中文 | 繁體中文 | Forbidden zh-CN | Forbidden zh-TW |\n" +
-    "| --- | --- | --- | --- | --- |\n" +
-    "| protocol | 协议 | 協定 | 協定 | 協議 |\n" +
-    "| template | 模板 | 範本 | 範本 | 模板 |\n");
+    "# Glossary\n\n| English | 简体中文 | 繁體中文 |\n" +
+    "| --- | --- | --- |\n" +
+    "| protocol | 协议 | 協定 |\n" +
+    "| template | 模板 | 範本 |\n");
   // Legacy tree shape — shared with the INSTALLED freshness checker's pair derivation
-  // (docs/zh-CN → docs/en, docs/zh-TW). The repo-owned terminology checker falls back
-  // to this shape when docs/product/{lang} is absent (tests/suites/docs.test.js also
-  // exercises the post-migration docs/product/{lang} path directly).
+  // (docs/zh-CN → docs/en, docs/zh-TW).
   write(path.join(dir, "docs", "zh-CN", "guide.md"), opts.zhCN || "# 指南\n\n使用协议与模板。\n");
   write(path.join(dir, "docs", "en", "guide.md"), opts.en || "# Guide\n\nUse the protocol and template.\n");
   write(path.join(dir, "docs", "zh-TW", "guide.md"), opts.zhTW || "# 指南\n\n使用協定與範本。\n");

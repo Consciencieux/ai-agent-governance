@@ -4,7 +4,21 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Removed
+
+- Vacuous / low-ROI consistency theater (FINDING-0035): remove `numeric_claims`, `consent_cluster`, consistency `adr-status` (+ unused `scripts/lib/adr-status.js`), `check-changelog-narration.js`, and `judgment-language.test.js`. True gates (CTRL-0002, broken-links, payload I5, etc.) stay.
+
+- Terminology Forbidden columns and `repo-tools/check-terminology.js` daily gate (FINDING-0034): glossary stays a trilingual lookup table; no mechanical blacklist for cross-locale leaks.
+
 ### Added
+
+- FINDING-0037 (Resolved): scripts barely constrain agent habits/semantics (~0); structure and sync are the effective zone; action-class gates are a middle layer. Criterion landed in coding.policy § 工程克制.
+
+- FINDING-0036 (Resolved): Agent-invented compressed jargon in Chinese Finding titles reads as precision but blocks readers; plain-title rule in findings README; rename 0034/0035 H1s.
+
+- FINDING-0035 (Resolved): retire low-ROI mechanical theater on the daily path (`numeric_claims`, consent marker sync, advisory-only adr-status, changelog-narration keyword list, judgment-language substring suite).
+
+- FINDING-0034 (Resolved): Forbidden terminology columns + terminology gate were low-ROI ceremony for hard semantic alignment; retired with the gate wiring.
 
 - FINDING-0031 (Confirmed): citing Resolved/Accepted authority must not substitute for a user-requested re-judgment; conversational control gap (no mechanical carrier).
 
@@ -17,6 +31,8 @@ All notable changes to this project will be documented here.
 - Layout-sync CI false green: do not document gitignored `repo-tools/.release/proposal.json` in architecture trees; `check-layout-sync.js` skips gitignored paths so local scratch cannot mask CI.
 
 ### Changed
+
+- Coding policy: add gate effective-zone default (structure/sync vs habits/semantics ≈0 vs action-class) under engineering restraint (FINDING-0037).
 
 - Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.
 

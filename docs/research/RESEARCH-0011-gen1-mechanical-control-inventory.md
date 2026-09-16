@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0011
 status: Active
-version: 4
+version: 5
 subject_generation: gen1
 ---
 
@@ -131,7 +131,7 @@ scripts/check-doc-freshness.js           # 薄 WRAP（CLI 不变）
 scripts/check-doc-consistency.js
         ├── consent-cluster     → CTRL-0002（部分）
         ├── 其余 cluster        → 尚未分配 CTRL（见下表）
-        └── terminology (#12)   → 已 EXTRACT → repo-tools/check-terminology.js
+        └── terminology (#12)   → 已 EXTRACT → repo-tools/check-terminology.js（2026-09-16 退役，FINDING-0034）
 ```
 
 **主键是 Control，不是文件。** Disposition 不得写成整文件一句 `REWRITE`。
@@ -153,13 +153,13 @@ scripts/check-doc-consistency.js
 | 9 | principles-index pointers | `--gate` | consistency | AGENTS 索引路径存在 |
 | 10 | plan-status / pending-archive | unknown=`--gate`；pending=`--release-gate` | consistency | Gen1 pending-archive 语义 vs ADR-0016 归档触发 = known divergence |
 | 11 | changelog coverage | `--release-gate`（结构缺陷可 gate） | consistency | Unreleased 覆盖 |
-| 12 | terminology | **已 EXTRACT** | `repo-tools/check-terminology.js` | ADR-0020 先例 |
+| 12 | terminology | **已 EXTRACT → 已退役** | —（原 `repo-tools/check-terminology.js`） | ADR-0020 先例；2026-09-16 退役（FINDING-0034） |
 
 ## 其他机械面（本库存未赋 CTRL）
 
 | 机制 | 路径 | 为何暂不编号 |
 | --- | --- | --- |
-| terminology gate | `repo-tools/check-terminology.js` | 已分离；赋 CTRL 可在 disposition 时做 |
+| terminology gate | —（原 `repo-tools/check-terminology.js`） | 已退役（FINDING-0034）；不再赋 CTRL |
 | coding hygiene | `repo-tools/check-coding-hygiene.js` | repo-only；待 inventory 扩面 |
 | role completeness | `repo-tools/check-role-completeness.js` | 同上 |
 | roadmap sync | `repo-tools/check-roadmap-sync.js` | 同上 |
@@ -239,7 +239,7 @@ payload    42/42 passed
 | `npm run check*` → `scripts/check-doc-consistency.js` | INSTALLED | monolith；含 CTRL-0002 cluster |
 | `check:all` / release → `scripts/check-doc-freshness.js` | INSTALLED | CTRL-0003/0004 |
 | `plans:delivery` → `repo-tools/check-plan-delivery.js` | REPO-ONLY | CTRL-0005（无 skill 耦合） |
-| `check` → `repo-tools/check-terminology.js` | REPO-ONLY | 已解耦先例 |
+| `check` → 原 `repo-tools/check-terminology.js` | REPO-ONLY | 已退役（FINDING-0034，2026-09-16） |
 
 ## 对 PLAN-0035 的影响
 

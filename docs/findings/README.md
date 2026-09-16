@@ -45,11 +45,11 @@ Finding 按**研究对象和根因**分类，不按脚本/域分类——避免 
 | --- | --- | --- |
 | **A. 生产者 / 产品分离** | 仓库治理与 Skill 产品治理的隔离 | A01 逻辑耦合 · A02 ADR-0006 只解决 artifact-level · A03 control-level 隐性狗粮 · A04 repo 修复不传播到 skill · A05 `scope = both` 模糊 ownership · A06 脚本分发角色清、代际/处置不清（FINDING-0028） |
 | **B. 政策 / 控制平面** | 规则模型与执行控制平面 | B01 缺统一治理执行架构 · B02 document-centric · B03 AI 注意力当 trigger（FINDING-0015） · B04 缺 Rule Registry · B05 npm scripts 充当 dispatcher · B06 语义-机械执行缺显式控制身份（FINDING-0025） · B07 `templates/` 混置指令源与物化模板（FINDING-0026） · B08 `lifecycle` 一名三义与错误生长轴（FINDING-0029） |
-| **C. 执行缺口** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 · C06 行数仅靠 judgment ≈ 无限制（FINDING-0032）· C07 CHANGELOG 写成可推迟但执行逼每改必写（FINDING-0033） |
+| **C. 执行缺口** | 声明与执行强度脱节 | C01 MUST ≠ deny · C02 复杂语义规则无 carrier · C03 prompt 是 guidance 非 control · C04 enforcement semantics 未统一 · C05 enforcement boundary 未定义 · C06 行数仅靠 judgment ≈ 无限制（FINDING-0032）· C07 CHANGELOG 写成可推迟但执行逼每改必写（FINDING-0033）· C08 术语 Forbidden 门禁低收益已退役（FINDING-0034）· C09 为管不住的语义硬加低收益检查已清（FINDING-0035 Resolved）· C10 习惯/语义脚本≈0，结构同步才有效（FINDING-0037） |
 | **D. 验证 / 调度效率** | 验证调度效率 | D01 简单过重复杂不足 · D02 scope tiering 仍跑 full suite · D03 无自动 impact routing · D04 本地靠 AI / CI 太粗 |
-| **E. 检查器正确性 / 回归** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 权威元数据被多份投影重复（FINDING-0024） |
+| **E. 检查器正确性 / 回归** | checker 正确性与回归保证 | E01 vacuous pass · E02 fix 无 negative oracle · E03 测试数量误导 · E04 meta-checker monolith · E05 GitLab 多栈模板缺陷 · E06 ADR status false positive · E07 roadmap 投影漂移（FINDING-0020）· E08 roadmap 检查器 vacuous（FINDING-0021）· E09 权威元数据被多份投影重复（FINDING-0024）· E10 日常 gate 内低收益 cluster 已清（FINDING-0035 Resolved） |
 | **F. 可移植性 / 运行时边界** | 可移植性与运行时边界 | F01 hooks 非 hard boundary · F02 lock 非原子 · F03 portability vs runtime enforcement 冲突 · F04 portable core 与 adapter 分层 |
-| **G. 证据 / 研究方法** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023）· G08 正文级权威矩阵缺失（FINDING-0027）· G09 产物路由：无编号文件 / 禁止文件夹拆 Plan / Plan 不得吸收知识目录（FINDING-0030）· G10 用既有权威冒充重评（FINDING-0031） |
+| **G. 证据 / 研究方法** | 证据模型与科研方法 | G01 evidence 依赖 Agent 自述 · G02 缺 traceability · G03 缺 zero-attention model · G04 缺测量框架 · G05 治理自身膨胀 · G06 recursive-discovery workset 缺失（FINDING-0022）· G07 知识对象 authority/supporting-context 模型缺失（FINDING-0023）· G08 正文级权威矩阵缺失（FINDING-0027）· G09 产物路由：无编号文件 / 禁止文件夹拆 Plan / Plan 不得吸收知识目录（FINDING-0030）· G10 用既有权威冒充重评（FINDING-0031）· G11 Agent 造压缩黑话标题（FINDING-0036）· G12 门禁有效区：结构同步 vs 习惯语义（FINDING-0037） |
 
 ## 分层与 Finding 类型（L0–L4）
 
@@ -221,6 +221,8 @@ Plan 侧写 `Related Findings: [FINDING-0012, FINDING-0015]`。不要在两处�
 > **当前运行知识（Active operational knowledge）可以多语言；历史/研究证据（historical/research evidence）使用单一规范语言（canonical language）。**
 
 当前规范语言是简体中文。本目录属于后者，从创建开始就是简体中文单语，不进入三语树，不参与 parity / freshness 检查——避免重新制造 translation sync / parity / freshness / review 成本。
+
+**标题要人话（FINDING-0036）：** H1 必须是完整可念的句子或偏正短语，让没读过正文的人也能从标题知道出了什么事。禁止自造复合黑话（把英文 compound 硬压成汉字串却当术语）。文件名 / 机器 ID 可以继续用英文代号；中文标题不行。若必须保留内部标签，放在正文首次出现处，先用白话解释。**不要**为此加「禁黑话」机械门禁。
 
 ## 未来科研指标（数据源）
 

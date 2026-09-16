@@ -42,6 +42,8 @@ ADR 是冻结的决策记录，但没有与之绑定的机械检查（谁负责�
 
 **本切片（2026-09-13）：** 选 1 条可判定 ADR 决策——ADR-0010「入口层不得写错实现事实数量」——将 `numeric_claims` 簇在 `--gate`/`--release-gate` 下 fail-closed，并补负向 oracle。不声称所有 ADR 全自动执法。Finding 保持 Confirmed。
 
+**FINDING-0035（2026-09-16）：** `numeric_claims` 退役——入口文档已无 `\d+ checks` 命中面，日常路径空转。ADR 持续强制缺口仍在；勿把已删簇当作关闭证据。Finding 保持 Confirmed。
+
 
 ## 关联
 

@@ -52,7 +52,7 @@ Pointers only. **payload** = ships with skill; **repo** = this repository only.
 | Artifact placement | `docs/README.md` § 东西放哪里 · FINDING-0030 | repo |
 | File size budget (advisory) | `docs/README.md` § 顾问级行数预算 · `repo-tools/check-file-size-budget.js` | repo |
 
-Index honesty gates: `node repo-tools/check-doc-consistency.js --gate`. Terminology: `node repo-tools/check-terminology.js`. Release-only: pending-archive / changelog-coverage via `repo-workflows/skill-release.md`.
+Index honesty gates: `node repo-tools/check-doc-consistency.js --gate`. Release-only: pending-archive / changelog-coverage via `repo-workflows/skill-release.md`.
 
 ## Architecture (one-liners)
 
