@@ -106,14 +106,79 @@
       "CTRL-0001",
       "scripts/check-secrets.js"
     ],
+    "git-write": [
+      "CTRL-0002",
+      "scripts/check-git-consent.js",
+      "scripts/check-git-policy.js"
+    ],
     "plan-delivery": [
-      "repo-tools/check-plan-delivery.js"
+      "repo-tools/check-plan-delivery.js",
+      "scripts/check-plan-sync.js"
+    ],
+    "root-cause-repair": [
+      "scripts/check-sibling-closure.js"
+    ],
+    "engineering-restraint": [
+      "scripts/check-file-size-budget.js"
+    ],
+    "release-governance": [
+      "scripts/verify_governance.js",
+      "CTRL-0003",
+      "CTRL-0004",
+      "scripts/check-doc-freshness.js",
+      "CTRL-0006",
+      "scripts/check-doc-consistency.js"
+    ]
+  },
+  "enforcement_align": {
+    "notes": [
+      "FINDING-0038 close #4: binds = RUN scheduler; enforcement.v0.json = obligation classification (not auto-scheduler).",
+      "Alignment: (1) each binds[cap] item is a mechanical carrier (or declared CTRL id) of enforcement_aliases[cap]; (2) must_ship_ctrls each appear in some binds value.",
+      "change-hygiene mechanical carrier is repo_only advisory (check-coding-hygiene.js) — intentionally unbound so every edit does not auto-schedule it."
+    ],
+    "aliases": {
+      "secret-protection": [
+        "secret-scanning"
+      ],
+      "git-write": [
+        "git-write-consent",
+        "git-workflow-safety"
+      ],
+      "plan-delivery": [
+        "plan-sync"
+      ],
+      "root-cause-repair": [
+        "root-cause-repair"
+      ],
+      "engineering-restraint": [
+        "engineering-restraint"
+      ],
+      "release-governance": [
+        "release-orchestration",
+        "doc-freshness",
+        "content-consistency"
+      ]
+    },
+    "ctrl_carrier_map": {
+      "CTRL-0001": "scripts/check-secrets.js",
+      "CTRL-0002": "scripts/check-git-consent.js",
+      "CTRL-0003": "scripts/check-doc-freshness.js",
+      "CTRL-0004": "scripts/check-doc-freshness.js",
+      "CTRL-0006": "scripts/check-doc-consistency.js"
+    },
+    "must_ship_ctrls": [
+      "CTRL-0001",
+      "CTRL-0002",
+      "CTRL-0003",
+      "CTRL-0004",
+      "CTRL-0006"
     ]
   },
   "notes_routing_surface": [
     "FINDING-0038: authorities.path is READ surface only (md/policy/docs) — never .js.",
     "Mechanical carriers belong in binds → run_set (CTRL id and/or script path).",
-    "Capability markdown may still describe Invoke; routing must not pretend reading a script is loading a rule."
+    "Capability markdown may still describe Invoke; routing must not pretend reading a script is loading a rule.",
+    "enforcement_align documents how binds relate to enforcement.v0.json (close condition 4)."
   ],
   "facet_adds": [
     {
@@ -191,7 +256,7 @@
     "change-hygiene": {
       "path": "references/policies/coding.policy.md",
       "section": "变更归位与残留清理",
-      "notes": "FINDING-0038: always-on body in coding.policy; capability leaf is thin how-to."
+      "notes": "FINDING-0038: always-on body in coding.policy; no separate capability leaf after slice 2."
     },
     "reference-closure": {
       "path": "CONTRIBUTING.md",
@@ -201,8 +266,8 @@
       "path": "references/policies/git.policy.md"
     },
     "secret-protection": {
-      "path": "references/capabilities/secret-scanning.md",
-      "notes": "READ = thin how-to; RUN = binds (CTRL-0001 + check-secrets.js)."
+      "path": "references/policies/security.policy.md",
+      "notes": "READ = security.policy (incl. anti-echo); RUN = binds (CTRL-0001 + check-secrets.js)."
     },
     "testing-evidence": {
       "path": "references/policies/testing.policy.md"
@@ -210,12 +275,12 @@
     "root-cause-repair": {
       "path": "references/policies/lifecycle.policy.md",
       "section": "根因修复协议与失败预算",
-      "notes": "FINDING-0038: body in lifecycle; capability leaf is thin how-to."
+      "notes": "FINDING-0038: body in lifecycle; no separate capability leaf after slice 8."
     },
     "discovery-ledger": {
       "path": "references/policies/lifecycle.policy.md",
       "section": "发现台账",
-      "notes": "FINDING-0038: L1 contract in lifecycle; capability leaf is thin how-to."
+      "notes": "FINDING-0038: L1 contract in lifecycle; no separate capability leaf after slice 2."
     },
     "plan-delivery": {
       "path": "references/capabilities/plan-sync.md",

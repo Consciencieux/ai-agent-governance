@@ -6,6 +6,7 @@
 - 使用 `.env` 存储本地机密，`.env` 必须被 `.gitignore` 忽略
 - 模板值放在 `.env.example`（占位符，无真实值）
 - 提交前检查 `git diff --cached` 是否含机密；怀疑泄漏 → 立即报告并建议轮换密钥
+- **Agent 勿回显：** 扫描命中或用户粘贴的疑似密钥，报告时只给路径 / 变量名 / 类型，**不得**把完整 secret 原文写进聊天、日志或 CHANGELOG；机械扫描入口为 `scripts/check-secrets.js`（退出码以脚本为准）
 
 ## 敏感文件类型（一律 gitignore）
 

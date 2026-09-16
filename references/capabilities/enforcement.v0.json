@@ -83,7 +83,7 @@
     },
     {
       "id": "content-consistency",
-      "leaf": "references/capabilities/content-consistency.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "gate-clusters",
@@ -133,7 +133,7 @@
     },
     {
       "id": "doc-freshness",
-      "leaf": "references/capabilities/doc-freshness.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "release-gate-stale",
@@ -177,7 +177,7 @@
     },
     {
       "id": "evidence-tiers",
-      "leaf": "references/capabilities/evidence-tiers.md",
+      "leaf": "references/policies/testing.policy.md",
       "obligations": [
         {
           "id": "changelog-narration-island",
@@ -229,7 +229,7 @@
     },
     {
       "id": "git-workflow-safety",
-      "leaf": "references/capabilities/git-workflow-safety.md",
+      "leaf": "references/policies/git.policy.md",
       "obligations": [
         {
           "id": "protected-branch-direct-push",
@@ -303,7 +303,7 @@
     },
     {
       "id": "governance-validator",
-      "leaf": "references/capabilities/governance-validator.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "missing-required-artifact",
@@ -513,7 +513,7 @@
     },
     {
       "id": "secret-scanning",
-      "leaf": "references/capabilities/secret-scanning.md",
+      "leaf": "references/policies/security.policy.md",
       "obligations": [
         {
           "id": "staged-secret-deny",
@@ -535,7 +535,7 @@
     },
     {
       "id": "ssot-repair",
-      "leaf": "references/capabilities/ssot-repair.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "authority-meaning-correct",

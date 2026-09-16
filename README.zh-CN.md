@@ -97,6 +97,7 @@ my-project/
 
 ## 文档
 
+- [overview.md](docs/product/zh-CN/overview.md) — 治理能力总览：治理了什么、怎么落地
 - [commands.md](docs/product/zh-CN/commands.md) — 完整提示词清单
 - [bootstrap-output.md](docs/product/zh-CN/bootstrap-output.md) — 带注释的 INIT 输出
 - [governance-model.md](docs/product/zh-CN/governance-model.md) — Spec / Status / Health 状态模型

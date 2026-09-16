@@ -77,7 +77,6 @@ RESEARCH-0006 保存了 PLAN-0001..0030 与 Pre-PLAN 的能力基线，第四列
 - opt-in githooks 作为 2.0 必装
 - MIGRATE 编排的独立产品入口（1.x→2.0 升级路径可在发布后补；2.0 首发可用文档说明）
 - Git consent 的机械 evaluator（协议必须 must-ship；机器拦 Agent 违规是 later）
-- FINDING-0038 关闭条件 4：enforcement carrier 与 routing binds 全面对齐
 
 **7. 退役（retire）或移出（out）：**
 
@@ -152,7 +151,7 @@ Migration Mode 退出
 
 ## 后续修正（2026-09-16）：Rule Capture 处置
 
-Narrow-amend 决策 4 / 7：Rule Capture Phase 5a–5c **不是** must-ship。自本修正起归入决策 7 `retire`（本仓施工协议；FINDING-0038）。must-ship 仍含根因修复 / 失败预算、同类闭包、变更卫生。FINDING-0038 关闭条件 4（enforcement↔routing 对齐）进决策 6 `later`，不挡既有 2.0 门槛。
+Narrow-amend 决策 4 / 7：Rule Capture Phase 5a–5c **不是** must-ship。自本修正起归入决策 7 `retire`（本仓施工协议；FINDING-0038）。must-ship 仍含根因修复 / 失败预算、同类闭包、变更卫生。FINDING-0038 关闭条件 4（enforcement↔routing 对齐）已于同日满足并 Resolved，不再列 `later`。
 
 ## 后果
 

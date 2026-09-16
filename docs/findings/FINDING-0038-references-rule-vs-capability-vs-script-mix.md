@@ -1,8 +1,9 @@
 ---
 id: FINDING-0038
-status: Confirmed
+status: Resolved
 type: architecture-gap
 observed_in: gen2
+resolved_in: gen2
 ---
 
 # FINDING-0038：references 把常驻治理规则、任务怎么做、脚本调用混成同一路由面
@@ -83,8 +84,8 @@ observed_in: gen2
 | --- | --- | --- |
 | 1 | 路由：`authorities` 可读路径不得指向 `.js`；脚本只通过 `binds` / carrier→`run_set` | **已满足** |
 | 2 | A 表：准则正文只留在 policies（或单一已声明正文）；错位叶删除或薄卡；SKILL / lifecycle 指针无打架 | **已满足**（产品规则归 policy；Rule Capture 从 INSTALLED 撤出） |
-| 3 | B 表脚本说明书：可保留为薄 Invoke 卡；日常路由以 run 为主；不得叙述成「读此叶 = 语义已加载」 | **已满足**（薄卡 + Authority 标明 RUN） |
-| 4 | `enforcement.v0.json` 与 routing 的 mechanical 义务可对上（至少 must-ship CTRL 进 run_set），或显式声明「enforcement 不对调度负责」 | **仍欠**（本条保持 Confirmed 的唯一余量） |
+| 3 | B 表脚本说明书：可保留为薄 Invoke 卡；日常路由以 run 为主；不得叙述成「读此叶 = 语义已加载」 | **已满足**（零增量卡删除；SKILL 表分读/跑；剩余薄卡 Authority 标明 RUN） |
+| 4 | `enforcement.v0.json` 与 routing 的 mechanical 义务可对上（至少 must-ship CTRL 进 run_set），或显式声明「enforcement 不对调度负责」 | **已满足**（`binds` 扩 must-ship CTRL + 主载体；`enforcement_align` 声明调度面=binds、分类面=enforcement；routing 套件断言） |
 | 5 | 回归：routing 套件 + `route-task.js --task edit_scripts` 可见 read 无 `.js`、run 含密钥类 CTRL | **已满足** |
 
 ## 解决情况
@@ -94,8 +95,12 @@ observed_in: gen2
 - **切片 4：** 按正文恢复产品政策与 INIT 薄卡（`generated-subskill-lifecycle` / `ssot-repair`）；`seed-oracles` 不进 INSTALLED。
 - **切片 5：** Rule Capture 5a–5c 从 lifecycle / SKILL / enforcement / routing / INIT state / 模板删除。
 - **切片 6：** 清扫其他 INSTALLED 施工残留（H2a/Phase 7 名、must-ship/repo-keep 处置词、本仓版本叙事、REPO-ONLY 脚本指针、`oracle-inventory` carrier、门禁文案里的 skill-release.md）。
+- **切片 7（关闭条件 4）：** 扩展 `routing-graph.binds`（git-write / plan-delivery / root-cause-repair / engineering-restraint / release-governance + 既有 secret）；新增 `enforcement_align`（aliases + must_ship_ctrls + ctrl_carrier_map）；routing 套件断言 binds 项 ∈ 对应 enforcement mechanical carriers，且 CTRL-0001/0002/0003/0004/0006 均出现在 binds。显式声明：enforcement = 分类清单，binds = RUN 调度面。`change-hygiene` 的 repo_only advisory 载体故意不自动调度。
+- **切片 8（产品抛光）：** SKILL 能力叶表拆成「读 / 跑」两列；删除零增量卡（`content-consistency` / `doc-freshness` / `governance-validator` / `git-workflow-safety`）并把 `secret-scanning` 勿回显并进 `security.policy`、`ssot-repair`/`evidence-tiers` 改指 lifecycle/testing；enforcement leaf 同步指 policy；INIT / routing / 三语 architecture 树同步。保留有真实任务步骤的叶（deterministic-init、audit-drift、governance-state、release-*、review-mechanism、generated-subskill-lifecycle、plan-sync、sync-groups、subskills/*）。
 
-**仍欠：** 关闭条件 4（enforcement carrier ↔ routing binds 全面对齐）。脚本注释里的 `audit 2026-09-*` 考古注可后 scrub，不挡本条关闭判定。
+## 关闭记录
+
+**Resolved（2026-09-16）。** 关闭条件 1–5 均已满足。剩余非关闭项：脚本注释里的 `audit 2026-09-*` 考古注可后 scrub。
 
 ## 关联
 

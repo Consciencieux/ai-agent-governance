@@ -17,32 +17,33 @@ description: >-
 
 > **可复用原则包：** 跨项目方法论在 `references/principles/`（SKILL-INTERNAL：随包分发，INIT 不写入被治理项目）。向其他项目应用或审查治理设计时从 `references/principles/entry.md` 进入；禁止把本仓 `docs/` 树或 Phase/PLAN 剧本当 portable L1。INSTALLED 权威正文不得嵌入 skill 仓施工 ID（`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`）；已交付的 `CTRL-*` 控制名除外。
 
-> **能力叶路由：** **任务怎么做**薄卡在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。常驻硬规则正文只在 `references/policies/`（INIT → `docs/rules/*.md`），**不**再为同一主题保留空壳能力叶。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表 + 目录为准；仓库侧覆盖索引不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链 skill 仓 `docs/` 路径）。
+> **能力叶路由：** **任务怎么做**薄卡在 `references/capabilities/*.md`（INIT → `docs/rules/capabilities/`）。常驻硬规则正文只在 `references/policies/`（INIT → `docs/rules/*.md`），**不**再为同一主题保留空壳能力叶。叶卡 schema：Trigger / Authority / Invoke / Verify / Non-goals。Skill 执行器以本节路由表为准；**读** = 打开正文，**跑** = 执行脚本（输出即证据）。仓库侧覆盖索引不随 tarball。Git 写处置以 [`references/policies/git.policy.md`](references/policies/git.policy.md) 为唯一权威（不链 skill 仓 `docs/` 路径）。
 
 ### 能力叶快速路由（Capability leaves）
 
-| 任务信号 | 加载（政策正文或能力薄卡） |
-| --- | --- |
-| 密钥 / secret scan | 薄卡 `secret-scanning.md`（跑 `check-secrets.js`） |
-| 分支保护 / force / 直推 | 薄卡 `git-workflow-safety.md` + `git.policy.md` |
-| commit/push/tag 人授 | `references/policies/git.policy.md` |
-| INIT / 生成治理 | `deterministic-init.md` |
-| AUDIT / drift | `audit-drift.md` |
-| RELEASE / 发版 | `release-orchestration.md` · `release-risk-tiering.md` |
-| 治理校验 | `governance-validator.md` |
-| manifest/state 工件 | `governance-state.md` |
-| 证据分层 | `evidence-tiers.md` |
-| INSTALLED 可移植性 | `references/policies/testing.policy.md` § INSTALLED 内容可移植性 |
-| 根因修复 / 失败预算 / 同类闭包 | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 |
-| 变更归位 / 残留清理 | `references/policies/coding.policy.md` § 变更归位与残留清理 |
-| 工程克制 | `references/policies/coding.policy.md` § 工程克制与机制测试 |
-| 文档一致性 / 新鲜度 / 计划同步 | `content-consistency.md` · `doc-freshness.md` · `plan-sync.md` |
-| 同步组 | `sync-groups.md` |
-| 确认凭证卫生 | `references/policies/git.policy.md` § 确认范围（凭证卫生） |
-| SSOT / 门禁修复 | `ssot-repair.md`（权威在 lifecycle § 根因修复） |
-| Implementation Review | `review-mechanism.md` · `subskills/subskill-review-manager.md` |
-| 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskills/subskill-*.md` |
-| Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 |
+| 任务信号 | 读 | 跑 |
+| --- | --- | --- |
+| 密钥 / secret scan | `references/policies/security.policy.md`（含勿回显） | `scripts/check-secrets.js` |
+| 分支保护 / force / 直推 | `references/policies/git.policy.md` | `scripts/check-git-policy.js` |
+| commit/push/tag 人授 | `references/policies/git.policy.md` | — |
+| INIT / 生成治理 | `deterministic-init.md` | `scripts/generate-governance.js` |
+| AUDIT / drift | `audit-drift.md` | （卡内命令） |
+| RELEASE / 发版 | `release-orchestration.md` · `release-risk-tiering.md` · `workflows/release.md` | `scripts/release-manager.js` |
+| 治理校验 | （无独立叶；看校验器输出） | `scripts/verify_governance.js` |
+| manifest/state 工件 | `governance-state.md` + `init-spec.json` | — |
+| 证据分层 | `references/policies/testing.policy.md` | — |
+| INSTALLED 可移植性 | `references/policies/testing.policy.md` § INSTALLED 内容可移植性 | — |
+| 根因修复 / 失败预算 / 同类闭包 | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | — |
+| 变更归位 / 残留清理 | `references/policies/coding.policy.md` § 变更归位与残留清理 | — |
+| 工程克制 | `references/policies/coding.policy.md` § 工程克制与机制测试 | — |
+| 文档一致性 / 新鲜度 | `references/policies/lifecycle.policy.md` § Phase 4 报告层 | `check-doc-consistency.js` · `check-doc-freshness.js` |
+| 计划同步 | `plan-sync.md` | `scripts/check-plan-sync.js` |
+| 同步组 | `sync-groups.md` | `scripts/check-sync.js` |
+| 确认凭证卫生 | `references/policies/git.policy.md` § 确认范围（凭证卫生） | — |
+| SSOT / 门禁修复 | `references/policies/lifecycle.policy.md` § 根因修复 | （按失败门禁） |
+| Implementation Review | `review-mechanism.md` · `subskills/subskill-review-manager.md` | — |
+| 生成子技能（机制 + 子叶） | `generated-subskill-lifecycle.md` · `subskills/subskill-*.md` | （各子技能命令） |
+| Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 | — |
 
 完整清单以本节路由表与 `references/capabilities/` 目录为准。兑现分类唯一事实源：`references/capabilities/enforcement.v0.json`（INIT → `docs/rules/capability-enforcement.json`）。仓库侧覆盖索引不进安装载荷。
 
@@ -181,7 +182,7 @@ node scripts/generate-governance.js --target <项目根> --phase C \
 
 ### Phase 2：校验
 
-`scripts/verify_governance.js` → 真实输出写入 `validation.json` 与报告。校验项以校验器输出为准（叶 `governance-validator.md`）。
+`scripts/verify_governance.js` → 真实输出写入 `validation.json` 与报告。校验项以校验器输出为准（无独立能力叶）。
 
 ### Phase 3：交付报告
 
