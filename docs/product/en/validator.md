@@ -22,7 +22,7 @@ Exit code 0 when every governance artifact exists, 1 otherwise.
 
 Artifact paths are containment-checked: a manifest entry that escapes the project root (or resolves outside it through a link) is reported as failed rather than stat'ed out-of-tree.
 
-The authoritative check list lives in `scripts/verify_governance.js` (the `DEFAULTS` array); `check-doc-consistency.js` cross-checks numeric claims in docs against it. Runtime outputs `validation.json` / `drift-report.json` are NOT required artifacts — a fresh checkout passes without them.
+The authoritative check list lives in `scripts/verify_governance.js` (the `DEFAULTS` array). Runtime outputs `validation.json` / `drift-report.json` are NOT required artifacts — a fresh checkout passes without them.
 
 ### Governance badge (optional)
 

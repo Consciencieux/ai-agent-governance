@@ -4,8 +4,8 @@
 function runPrinciplesIndex(ctx) {
   const {
     fs, path, spawnSync,
-    createMdLinkFacts, evaluateBrokenLinks, classifyPlanStatus, isPlanMarkdown, evaluateAdrUnreleasedClaims,
-    ROOT, DOCS, CONSENT_SYNC_GROUPS, CONSENT_MARKERS, consentBasename, CLAIMS_PROTECTED_LIST,
+    createMdLinkFacts, evaluateBrokenLinks, classifyPlanStatus, isPlanMarkdown,
+    ROOT, DOCS, CLAIMS_PROTECTED_LIST,
     walk, readFile, currentVersion, changedPaths, changelogCoverage, mdFiles,
     issues, gateIssues, anyGate, releaseGate, version, planStatuses,
   } = ctx;

@@ -176,13 +176,10 @@ description: Use to detect governance drift in this repo — compare declared ar
 
 - **version-example sync** — `governance_version` / manifest examples in docs must match the current declared version
 - **protected-files sync** — protected-file summary lists must match the single source of truth (`docs/rules/governance-files.md`); summaries that defer to it ("single source of truth") are exempt
-- **ADR status sync** — ADRs marked `Accepted (Unreleased)` whose feature already shipped in a released CHANGELOG section
-- **roadmap target validity** — unfinished items whose target version ≤ current version
 - **link validity** — relative markdown links must resolve to real files
-- **numeric claims** — documented counts (validator check count etc.) must match the source
 - **multi-language tree parity** — only when the project maintains parallel language trees AND a parity checker is installed; skip otherwise
 
-Append the result to `.governance/drift-report.json` (`consistency` object). Default mode is advisory — heuristics report but never affect the exit code. Fail-closed forms: `--gate` (protected lists, consent cluster, unknown plan status) and `--release-gate` (adds pending-archive and changelog coverage).
+Append the result to `.governance/drift-report.json` (`consistency` object). Default mode is advisory — heuristics report but never affect the exit code. Fail-closed forms: `--gate` (protected lists, unknown plan status) and `--release-gate` (adds pending-archive and changelog coverage).
 
 **standard validation sequence** — lifecycle Phase 4 runs the gates in order: `check-lock.js` (multi-agent) → `check-git-policy.js` → `check-secrets.js` → `verify-governance.js` → project test/lint/build → advisory (`check-doc-freshness.js` + `check-doc-consistency.js`, exit 0). Gates 1-5 fail-closed; the advisory pair reports only. At RELEASE both advisory scripts have fail-closed forms: `check-doc-consistency.js --release-gate` and, for multi-language doc trees, `check-doc-freshness.js --release-gate` (stale or draft translations block).
 ````

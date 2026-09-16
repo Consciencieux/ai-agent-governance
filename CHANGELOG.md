@@ -6,9 +6,15 @@ All notable changes to this project will be documented here.
 
 ### Removed
 
+- Vacuous / low-ROI consistency theater (FINDING-0035): remove `numeric_claims`, `consent_cluster`, consistency `adr-status` (+ unused `scripts/lib/adr-status.js`), `check-changelog-narration.js`, and `judgment-language.test.js`. True gates (CTRL-0002, broken-links, payload I5, etc.) stay.
+
 - Terminology Forbidden columns and `repo-tools/check-terminology.js` daily gate (FINDING-0034): glossary stays a trilingual lookup table; no mechanical blacklist for cross-locale leaks.
 
 ### Added
+
+- FINDING-0036 (Resolved): Agent-invented compressed jargon in Chinese Finding titles reads as precision but blocks readers; plain-title rule in findings README; rename 0034/0035 H1s.
+
+- FINDING-0035 (Resolved): retire low-ROI mechanical theater on the daily path (`numeric_claims`, consent marker sync, advisory-only adr-status, changelog-narration keyword list, judgment-language substring suite).
 
 - FINDING-0034 (Resolved): Forbidden terminology columns + terminology gate were low-ROI ceremony for hard semantic alignment; retired with the gate wiring.
 

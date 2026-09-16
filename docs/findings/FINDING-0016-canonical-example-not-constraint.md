@@ -51,6 +51,8 @@ forbidden narration markers
 
 **本切片（2026-09-13）：** 恢复 `repo-tools/check-changelog-narration.js`，将 **1 个可观察示例特征**（`[Unreleased]` 验证叙事标记）改为 **fail-closed**（`--gate`）；经 `repo-tools/check-doc-consistency.js` WRAP 挂入日常 `--gate`。负向 oracle 见 `finding-patch-oracles`。不声称示例百科全机械化。Finding 保持 Confirmed。
 
+**FINDING-0035（2026-09-16）：** 日常 WRAP 先降级，随后整脚本退役——禁词表形态与 Forbidden 术语门禁同构、边际收益低。Finding 保持 Confirmed（示例→约束的系统性缺口未关；内容边界改回 judgment，无机械 carrier）。
+
 
 ## 关联
 

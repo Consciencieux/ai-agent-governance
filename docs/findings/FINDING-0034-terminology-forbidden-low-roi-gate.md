@@ -6,7 +6,7 @@ observed_in: gen2
 resolved_in: gen2
 ---
 
-# FINDING-0034：术语 Forbidden 列 + terminology 门禁——难问题机械皮、边际收益低
+# FINDING-0034：术语 Forbidden 列 + terminology 门禁——用假检查假装管住翻译，收益低
 
 ## 分类
 
@@ -16,7 +16,7 @@ resolved_in: gen2
 
 ## 观察
 
-`docs/glossary.md` 的 `Forbidden zh-CN` / `Forbidden zh-TW` 列与 `repo-tools/check-terminology.js`（PLAN-0020）意图是机械拦截简繁/译法串台。实际形态是：在**语义对齐很难**的问题上贴一层很薄的字符串黑名单——登记约十余个互斥对、加豁免注释、焊进日常 check——仪式感强，对真实翻译串台覆盖面极窄。
+`docs/glossary.md` 的 `Forbidden zh-CN` / `Forbidden zh-TW` 列与 `repo-tools/check-terminology.js`（PLAN-0020）意图是机械拦截简繁/译法串台。实际形态是：在**语义对齐很难**的问题上加一层很薄的字符串黑名单——登记约十余个互斥对、加豁免注释、焊进日常 check——仪式感强，对真实翻译串台覆盖面极窄。
 
 ## 证据
 

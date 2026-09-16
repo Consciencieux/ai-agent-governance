@@ -22,7 +22,7 @@ node scripts/verify-governance.js --help   # 用法
 
 工件路徑經過包含性校驗：manifest 條目嘗試逃逸專案根（或透過連結解析到樹外）時報告為失敗，而不是 stat 到專案外。
 
-權威檢查清單在 `scripts/verify_governance.js`（`DEFAULTS` 陣列）；`check-doc-consistency.js` 用它交叉核對 docs 裡的數值宣告。執行時輸出 `validation.json` / `drift-report.json` 不是 required artifact —— fresh checkout 無它們也能通過。
+權威檢查清單在 `scripts/verify_governance.js`（`DEFAULTS` 陣列）。執行時輸出 `validation.json` / `drift-report.json` 不是 required artifact —— fresh checkout 無它們也能通過。
 
 ### 治理徽章（可選）
 

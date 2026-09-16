@@ -7,12 +7,9 @@ const shared = require("./shared.js");
 const { runChangelogCoverage } = require("./changelog-coverage.js");
 const { runVersionExamples } = require("./version-examples.js");
 const { runProtectedFiles } = require("./protected-files.js");
-const { runConsentCluster } = require("./consent-cluster.js");
 const { runPrinciplesIndex } = require("./principles-index.js");
 const { runPlanStatus } = require("./plan-status.js");
-const { runAdrStatus } = require("./adr-status.js");
 const { runBrokenLinks } = require("./broken-links.js");
-const { runNumericClaims } = require("./numeric-claims.js");
 const { runPromptSync } = require("./prompt-sync.js");
 
 function main() {
@@ -21,8 +18,8 @@ function main() {
   const releaseGate = process.argv.includes("--release-gate");
   const anyGate = gate || releaseGate;
   const issues = {
-    version_examples: [], protected_lists: [], adr_statuses: [], broken_links: [],
-    numeric_claims: [], prompt_sync: [], plans_status_unknown: [], plans_pending_archive: [],
+    version_examples: [], protected_lists: [], broken_links: [],
+    prompt_sync: [], plans_status_unknown: [], plans_pending_archive: [],
     changelog_coverage: [],
   };
   const gateIssues = [];
@@ -42,12 +39,9 @@ function main() {
   runChangelogCoverage(ctx);
   runVersionExamples(ctx);
   runProtectedFiles(ctx);
-  runConsentCluster(ctx);
   runPrinciplesIndex(ctx);
   runPlanStatus(ctx);
-  runAdrStatus(ctx);
   runBrokenLinks(ctx);
-  runNumericClaims(ctx);
   runPromptSync(ctx);
 
   // ---- 7. trilingual tree parity (delegated) ----
@@ -55,8 +49,8 @@ function main() {
 
   const pendingArchive = planStatuses.filter((p) => p.status === "implemented" || p.status === "completed").length;
   const EVIDENCE = {
-    version_examples: "mechanical", protected_lists: "mechanical", adr_statuses: "mechanical",
-    broken_links: "mechanical", numeric_claims: "mechanical", prompt_sync: "mechanical",
+    version_examples: "mechanical", protected_lists: "mechanical",
+    broken_links: "mechanical", prompt_sync: "mechanical",
     changelog_coverage: "mechanical",
     plans_status_unknown: "mechanical", plans_pending_archive: "mechanical",
   };

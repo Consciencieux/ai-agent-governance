@@ -715,13 +715,6 @@
     },
     {
       "phase": "C",
-      "path": "scripts/lib/doc-consistency/adr-status.js",
-      "source": "scripts/lib/doc-consistency/adr-status.js",
-      "type": "copy",
-      "description": "Doc consistency gate: ADR status sync"
-    },
-    {
-      "phase": "C",
       "path": "scripts/lib/doc-consistency/broken-links.js",
       "source": "scripts/lib/doc-consistency/broken-links.js",
       "type": "copy",
@@ -733,20 +726,6 @@
       "source": "scripts/lib/doc-consistency/changelog-coverage.js",
       "type": "copy",
       "description": "Doc consistency gate: changelog coverage"
-    },
-    {
-      "phase": "C",
-      "path": "scripts/lib/doc-consistency/consent-cluster.js",
-      "source": "scripts/lib/doc-consistency/consent-cluster.js",
-      "type": "copy",
-      "description": "Doc consistency gate: consent-cluster sync"
-    },
-    {
-      "phase": "C",
-      "path": "scripts/lib/doc-consistency/numeric-claims.js",
-      "source": "scripts/lib/doc-consistency/numeric-claims.js",
-      "type": "copy",
-      "description": "Doc consistency gate: numeric claims"
     },
     {
       "phase": "C",
@@ -810,13 +789,6 @@
       "source": "scripts/lib/plan-status.js",
       "type": "copy",
       "description": "Shared plan-status classifier (frontmatter status authoritative; /)"
-    },
-    {
-      "phase": "C",
-      "path": "scripts/lib/adr-status.js",
-      "source": "scripts/lib/adr-status.js",
-      "type": "copy",
-      "description": "Shared ADR Status-field Unreleased heuristic"
     },
     {
       "phase": "C",
