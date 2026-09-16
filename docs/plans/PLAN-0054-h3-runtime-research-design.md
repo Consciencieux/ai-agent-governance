@@ -23,7 +23,7 @@ target: both
 
 | 主题 | 线索 | 备注 |
 | --- | --- | --- |
-| L3 运行时拦截 | FINDING-0007 later（tool-call / hooks 不可绕过） | 需宿主 adapter；非 portable MUST |
+| L3 运行时拦截 | FINDING-0007 later（tool-call / hooks 不可绕过） | 需宿主 adapter；非 portable MUST。成功标准是动作/能力拦截（RESEARCH-0014 L2），不是习惯执法 |
 | 测量框架 | FINDING-0008（若仍开放） | 科研 |
 | 静态 vs 注入 | FINDING-0015 | 实验 |
 | 完整 activity 轨迹 | `activity.jsonl` 类 | 非 2.x 默认必装 |
@@ -74,3 +74,4 @@ Unaccounted:  0
 ## 参考
 
 - ADR-0025 决策 6 / 8 / 11 · ADR-0024 later · FINDING-0004 / 0005 / 0007 later
+- RESEARCH-0014：H3 成功标准不得写成「hooks 保证 Agent 习惯」；拦截/实验属 L2 或通道测量。规范选择：[ADR-0027](../../design-decisions/ADR-0027-judgment-not-gate-thin-entry.md)

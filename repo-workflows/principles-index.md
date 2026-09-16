@@ -33,6 +33,7 @@ Honesty gate: `node repo-tools/check-doc-consistency.js --gate` (scans this file
 | Test protection | `references/policies/testing.policy.md` § 测试保护 | payload |
 | CHANGELOG content boundary | `references/policies/lifecycle.policy.md` · `repo-workflows/changelog-policy.md` | both |
 | Agent instruction architecture | `docs/design-decisions/ADR-0022-agent-instruction-architecture.md` · `docs/research/RESEARCH-0009-agent-instruction-architecture.md` | both |
+| Judgment vs gates (no habit checkers; thin entry) | `docs/design-decisions/ADR-0027-judgment-not-gate-thin-entry.md` · `docs/research/RESEARCH-0014-mechanizable-vs-judgment-governance.md` · `references/policies/coding.policy.md` § 门禁有效区 | both |
 | Task→Capability routing | `docs/research/RESEARCH-0012-task-capability-routing.md` · `repo-tools/routing-graph.v0.json` · `repo-tools/route-task.js` | repo |
 | Producer/product separation | `AGENTS.md` always-on I5 · `docs/design-decisions/ADR-0020-producer-product-governance-separation.md` · `docs/product/en/architecture.md` § Third axis | repo |
 | Governance Control Model | `docs/design-decisions/ADR-0023-governance-control-model.md` · `docs/research/RESEARCH-0010-governance-control-model.md` | repo |

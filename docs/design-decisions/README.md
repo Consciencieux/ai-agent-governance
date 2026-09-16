@@ -33,6 +33,7 @@
 | [ADR-0024](ADR-0024-gen2-product-freeze.md) | 2.0 产品冻结 | 必装可用/稳定；指出载体 ≠ 发布；Phase 8 EXIT ≠ 发布；Git HITL 削薄 |
 | [ADR-0025](ADR-0025-gen2x-product-path.md) | 2.x 产品演进路径 | Phase 0–8 已关闭；H0 Archived；H1 = PLAN-0037 Active；H1 不迁载体；SemVer ≠ Horizon |
 | [ADR-0026](ADR-0026-references-taxonomy.md) | `references/` 分类标准 | 目录只表达语义责任；兑现分类 = INSTALLED JSON 义务行 |
+| [ADR-0027](ADR-0027-judgment-not-gate-thin-entry.md) | 判断型义务不靠门禁；入口不靠堆全文 | L1/L2 可机械；L3 停止习惯门禁；Finding 不因无脚本关闭；SKILL 保持薄路由 |
 
 ## 生命周期与代际
 

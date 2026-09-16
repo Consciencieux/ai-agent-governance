@@ -46,6 +46,8 @@ All notable changes to this project will be documented here.
 
 - This skill-distribution repo's `AGENTS.md`: identity + always-on I5 + route table (backtick paths, not markdown link doubles); process body in `repo-workflows/principles-index.md`, `agent-change.md`, `conventions.md`.
 
+- ADR-0027: judgment/habit obligations are not gate-solvable; do not close Findings as unsolvable merely for lack of scripts; do not dump L3 into `SKILL.md`; mechanical-first applies only to structure/sync and action-class (narrow-amends ADR-0022 decision 8).
+
 - References taxonomy: instruction sources under `references/instruction/`; subskill cards under `references/capabilities/subskills/`; `templates/` is materialization only.
 
 - README Quick Start and skill-discovery (en / zh-CN / zh-TW): per-agent paths, tarball-only install, init in the target project.
