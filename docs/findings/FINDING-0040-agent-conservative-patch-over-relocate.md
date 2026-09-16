@@ -35,6 +35,10 @@ observed_in: gen2
 | 用户纠正：应搬家，不是只删重复 | 才新建 `runtime-invariants.policy.md` + `skill-execution.md`，SKILL → ~53 行路由 |
 | 对照 | policies 里原先只有局部「单一事实源」用语，没有 skill/运行期契约专章——按「有重复才删」会永远留在入口 |
 
+### A2. 同日：任务字面主义（只修点名表面）
+
+用户要求路由指针用反引号路径时，Agent **只改 `AGENTS.md`**，不打开同构的 `SKILL.md` 路由表，直到用户指出「SKILL.md 不看？」。与 FINDING-0003 C02 / lifecycle § 同类实例闭包同轴：不是不知道有第二入口，而是 **任务措辞被当成工作集边界**，judgment 枚举被跳过。详见 FINDING-0003 解决情况「复发证据（2026-09-16）」。
+
 ### B. 历史同族（已有 Finding，本条不重复关闭它们）
 
 | Finding | 同族表现 |
@@ -73,10 +77,11 @@ observed_in: gen2
 
 ## 解决情况
 
-（待填。）Confirmed。2026-09-16 已发生一次用户纠正后的搬家（SKILL 策略层/编排迁出）；纪律尚未成文，未宣称关闭。
+（待填。）Confirmed。2026-09-16：用户纠正后完成一次搬家（SKILL → runtime-invariants / skill-execution）；同日再发生「只改点名表面」漏 `SKILL.md` 路由表（见 § A2）。纪律尚未成文，未宣称关闭。
 
 ## 关联
 
+- FINDING-0003（C02 sibling omission；judgment 同类闭包无机械压力）
 - FINDING-0014（patch 默认 vs 架构变更）
 - FINDING-0015（加长散文补偿；完整=负责）
 - FINDING-0032（不敢拆文件）
@@ -84,6 +89,7 @@ observed_in: gen2
 - FINDING-0037（门禁有效区；习惯面脚本≈0）
 - FINDING-0038（能力叶与政策混面；空壳删除）
 - ADR-0022（薄入口）
+- `references/policies/lifecycle.policy.md` § 同类实例闭包
 - `references/policies/coding.policy.md` § 工程克制与机制测试 · § 变更归位
 
 ## 回归保护

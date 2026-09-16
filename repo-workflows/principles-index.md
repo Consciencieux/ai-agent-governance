@@ -1,6 +1,6 @@
 # 本仓治理原则索引（REPO-ONLY）
 
-Pointers only. Root `AGENTS.md` is the thin entry ([ADR-0022](../docs/design-decisions/ADR-0022-agent-instruction-architecture.md)). **payload** = ships with skill; **repo** = this repository only.
+Pointers only. Root `AGENTS.md` is the thin entry. Thin-entry rules: `docs/design-decisions/ADR-0022-agent-instruction-architecture.md`. **payload** = ships with skill; **repo** = this repository only.
 
 Honesty gate: `node repo-tools/check-doc-consistency.js --gate` (scans this file's principles table). Release-only: pending-archive / changelog-coverage via `repo-workflows/skill-release.md`.
 
@@ -26,16 +26,16 @@ Honesty gate: `node repo-tools/check-doc-consistency.js --gate` (scans this file
 | Reference closure | `references/policies/testing.policy.md` § 引用闭合 · `references/capabilities/audit-drift.md` | both |
 | Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理（lifecycle 仅编排指针） | payload |
 | Root-cause repair + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
-| Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 · ADR-0021 | payload |
+| Discovery Ledger | `references/policies/lifecycle.policy.md` § 发现台账 · `docs/design-decisions/ADR-0021-known-issue-closure.md` | payload |
 | Two-domain symmetry + sibling closure + control-plane trace | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |
 | Scope tiering | `references/policies/lifecycle.policy.md` § 规模分级 | payload |
-| Horizon vs everyday edits | [ADR-0025](../docs/design-decisions/ADR-0025-gen2x-product-path.md) decision 2 · lifecycle § 规模分级 · `docs/plans/roadmap/` | both |
+| Horizon vs everyday edits | `docs/design-decisions/ADR-0025-gen2x-product-path.md` decision 2 · lifecycle § 规模分级 · `docs/plans/roadmap/` | both |
 | Test protection | `references/policies/testing.policy.md` § 测试保护 | payload |
 | CHANGELOG content boundary | `references/policies/lifecycle.policy.md` · `repo-workflows/changelog-policy.md` | both |
-| Agent instruction architecture | [ADR-0022](../docs/design-decisions/ADR-0022-agent-instruction-architecture.md) · RESEARCH-0009 | both |
-| Task→Capability routing | RESEARCH-0012 · `repo-tools/routing-graph.v0.json` · `repo-tools/route-task.js` | repo |
-| Producer/product separation | `AGENTS.md` always-on I5 · [ADR-0020](../docs/design-decisions/ADR-0020-producer-product-governance-separation.md) · [architecture.md](../docs/product/en/architecture.md) § Third axis | repo |
-| Governance Control Model | [ADR-0023](../docs/design-decisions/ADR-0023-governance-control-model.md) · RESEARCH-0010 | repo |
-| 2.x product path | [ADR-0025](../docs/design-decisions/ADR-0025-gen2x-product-path.md) | repo |
-| Artifact placement | `docs/README.md` § 东西放哪里 · FINDING-0030 | repo |
+| Agent instruction architecture | `docs/design-decisions/ADR-0022-agent-instruction-architecture.md` · `docs/research/RESEARCH-0009-agent-instruction-architecture.md` | both |
+| Task→Capability routing | `docs/research/RESEARCH-0012-task-capability-routing.md` · `repo-tools/routing-graph.v0.json` · `repo-tools/route-task.js` | repo |
+| Producer/product separation | `AGENTS.md` always-on I5 · `docs/design-decisions/ADR-0020-producer-product-governance-separation.md` · `docs/product/en/architecture.md` § Third axis | repo |
+| Governance Control Model | `docs/design-decisions/ADR-0023-governance-control-model.md` · `docs/research/RESEARCH-0010-governance-control-model.md` | repo |
+| 2.x product path | `docs/design-decisions/ADR-0025-gen2x-product-path.md` | repo |
+| Artifact placement | `docs/README.md` § 东西放哪里 · `docs/findings/FINDING-0030-artifact-placement-routing-gap.md` | repo |
 | File size budget (advisory) | `docs/README.md` § 顾问级行数预算 · `repo-tools/check-file-size-budget.js` | repo |

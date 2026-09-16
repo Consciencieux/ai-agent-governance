@@ -30,7 +30,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- Thin `SKILL.md` to identity + policy-first routing; INIT/AUDIT how-to live in capability leaves; Chinese-only section headings where applicable.
+- Thin `SKILL.md` to identity + policy-first routing with **skill-root backtick paths** (not bare basenames); INIT/AUDIT how-to live in capability leaves; Chinese-only section headings where applicable.
 
 - Routing: `authorities.path` is text-only; script carriers move to `binds` → `run_set`. SKILL leaf table is READ vs RUN. Enforcement `leaf` may point at policies; expand binds / `enforcement_align` so mechanical carriers stay closed.
 
@@ -44,7 +44,7 @@ All notable changes to this project will be documented here.
 
 - Release friction: push the approved branch (not hard-coded `main`); skill payload tarball prefers CI on tag; GitHub Release optional for governed projects. Thin `repo-workflows/skill-release.md` / `changelog-policy.md` to runbook + C1–C5 (SemVer defers to governed `release.md`).
 
-- This skill-distribution repo's `AGENTS.md`: identity + always-on I5 + route table; process body split to `repo-workflows/principles-index.md`, `agent-change.md`, `conventions.md`.
+- This skill-distribution repo's `AGENTS.md`: identity + always-on I5 + route table (backtick paths, not markdown link doubles); process body in `repo-workflows/principles-index.md`, `agent-change.md`, `conventions.md`.
 
 - References taxonomy: instruction sources under `references/instruction/`; subskill cards under `references/capabilities/subskills/`; `templates/` is materialization only.
 

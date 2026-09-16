@@ -4,7 +4,7 @@
 
 - **格式契约（shared）：** `references/policies/lifecycle.policy.md` § CHANGELOG 结构契约  
 - **语义边界（shared）：** 记已交付变更，不记验证叙事（ADR-0020）  
-- **历史 / 反例：** [FINDING-0009](../docs/findings/FINDING-0009-changelog-historical-entry-rewrite.md) · [FINDING-0033](../docs/findings/FINDING-0033-changelog-write-pressure-vs-reconcile.md) · ADR-0012 修正条款  
+- **历史 / 反例：** `docs/findings/FINDING-0009-changelog-historical-entry-rewrite.md` · `docs/findings/FINDING-0033-changelog-write-pressure-vs-reconcile.md` · ADR-0012 修正条款  
 
 ## 定位
 

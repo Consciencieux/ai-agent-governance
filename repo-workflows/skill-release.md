@@ -2,7 +2,7 @@
 
 仅适用于**本技能分发仓库**发布。被治理项目 → `references/workflows/release.md`（本文件不分发、不 INIT）。
 
-事故与防踩坑证据 → [FINDING-0041](../docs/findings/FINDING-0041-skill-release-operational-traps.md)。按需读；不要把 Finding 正文当 runbook。
+事故与防踩坑证据 → `docs/findings/FINDING-0041-skill-release-operational-traps.md`。按需读；不要把 Finding 正文当 runbook。
 
 ## release_requirements
 
