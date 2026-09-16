@@ -124,6 +124,9 @@ ai-agent-governance/
 │   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
 │   └── package-skill.sh        # 發佈載荷 tarball 打包
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發
+│   ├── principles-index.md     # 治理原則指針表（AGENTS 路由至此）
+│   ├── agent-change.md         # 本倉編輯 / 保護 / 校驗
+│   ├── conventions.md          # 本倉施工約定
 │   ├── changelog-policy.md
 │   └── skill-release.md
 │

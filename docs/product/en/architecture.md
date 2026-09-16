@@ -124,6 +124,9 @@ ai-agent-governance/
 │   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
+│   ├── principles-index.md     # governance principles pointer table (AGENTS routes here)
+│   ├── agent-change.md         # edit / protect / validate for this repo
+│   ├── conventions.md          # repo construction conventions
 │   ├── changelog-policy.md
 │   └── skill-release.md
 │

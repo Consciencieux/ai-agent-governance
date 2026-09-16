@@ -28,9 +28,9 @@ Residual (≠ Active Plan): runtime trigger/dispatch (FINDING-0004/0005; INSTALL
 | --- | --- | --- |
 | Runtime trigger / dispatch | On-demand slices | Gates are mechanical; starting them still needs attention. INSTALLED needs Narrow ADR; do not start H3 by default. |
 | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) | Design | H3 membership / non-membership / promote-to-Active gates. Freeze only; no L3 install by default. |
-| Finding patches | On demand | Selective small slices when chosen — not a standing sweep. Latest closed: [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) (Archived). When a Plan is required: see [AGENTS.md](../../../AGENTS.md) principles index (Horizon vs everyday edits). |
+| Finding patches | On demand | Selective small slices when chosen — not a standing sweep. Latest closed: [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) (Archived). When a Plan is required: see [principles-index.md](../../../repo-workflows/principles-index.md) (Horizon vs everyday edits). |
 
-SemVer ≠ Horizon. Construction rules live in [AGENTS.md](../../../AGENTS.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § scale tier — **not** on this page.
+SemVer ≠ Horizon. Construction rules live in [AGENTS.md](../../../AGENTS.md) / [agent-change.md](../../../repo-workflows/agent-change.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § scale tier — **not** on this page.
 
 ## Done (one pass)
 

@@ -210,7 +210,7 @@ ADR 的修订政策（澄清 vs 语义变化；**ADR 可以演进，但不能改
 是 → 候选条目；否 → 通常不写 CHANGELOG
 ```
 
-判断依据是**影响**，不是文件类型：纯呈现文档无条目；改变公开导航 / 贡献者工作流 / 受支持行为的文档变更按普通准入评估。执行细则（受众测试、checkpoint 对账、C1–C5）在 `repo-workflows/changelog-policy.md`。
+判断依据是**影响**，不是文件类型：纯呈现文档无条目；改变公开导航 / 贡献者工作流 / 受支持行为的文档变更按普通准入评估。执行细则（C1–C5、对账触发、composition）在 `repo-workflows/changelog-policy.md`。
 
 **不应包含**：根因分析、架构 rationale、未来计划、research model、raw findings、测试计数 / exit code / 验证叙事、实现日志、每个 commit、每个文档对象。
 

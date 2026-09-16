@@ -28,9 +28,9 @@
 | --- | --- | --- |
 | 執行期觸發 / 調度 | 按需小切片 | 閘控已機械，啟動仍靠注意力。進 INSTALLED 須 Narrow ADR；預設不開工 H3。 |
 | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) | Design | H3 成員 / 非成員 / 升 Active 前置。只凍結邊界；預設不裝 L3。 |
-| Finding 補丁 | 按需 | 選定後做小切片——不是常駐清掃。最近閉合：[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（Archived）。何時需要 Plan：見 [AGENTS.md](../../../AGENTS.md) 原則索引（Horizon vs 日常小改）。 |
+| Finding 補丁 | 按需 | 選定後做小切片——不是常駐清掃。最近閉合：[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（Archived）。何時需要 Plan：見 [principles-index.md](../../../repo-workflows/principles-index.md)（Horizon vs 日常小改）。 |
 
-SemVer ≠ Horizon。施工規則在 [AGENTS.md](../../../AGENTS.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § 規模分級——**不**寫在本頁。
+SemVer ≠ Horizon。施工規則在 [AGENTS.md](../../../AGENTS.md) / [agent-change.md](../../../repo-workflows/agent-change.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § 規模分級——**不**寫在本頁。
 
 ## 已完成（一句）
 
