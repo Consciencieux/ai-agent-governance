@@ -34,7 +34,7 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
-- Doc truth alignment (FINDING-0034/0035/0037/0038): update present-tense claims in RESEARCH-0005/0007/0011/0012, ADR-0026 routing clarification, product architecture capability wording, and stale Finding notes so retired clusters and READ≠script are not treated as live law.
+- Doc truth alignment (FINDING-0029/0038 + ADR-0022/0024 + RESEARCH-0006 v13): freeze Finding observation as inventory-at-discovery; mark 0038 closing conditions honestly (only #4 open); align 0029 Resolved body with frontmatter; move Rule Capture to ADR-0024 `retire` instead of must-ship parenthetical.
 
 - Routing (FINDING-0038 slice 1): `authorities.path` is text-only (no `.js`); script carriers move into `binds` → `run_set`. `engineering-restraint` reads `coding.policy.md`; secret/plan delivery read thin capability cards and run their scripts via binds.
 

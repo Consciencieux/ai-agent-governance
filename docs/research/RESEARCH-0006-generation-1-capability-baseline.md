@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0006
 status: Active
-version: 12
+version: 13
 subject_generation: gen1
 ---
 
@@ -28,7 +28,8 @@ subject_generation: gen1
 - v9（2026-09-13）：现在时校准，不重开基线、不改第四列档位。`v2.0.0` 已发布；WRAP/must-ship 机械层存在；CONTROL-X / 独立 Control 文件仍 `later`（H2c）。consent 行语义权威已单一（`git.policy.md`，ADR-0024 §8）；Ownership 表该格从 `duplicated` 改为 `single`（只动 consent，不扫其他 duplicated 行）。
 - v10（2026-09-16）：术语 Forbidden 门禁退役（FINDING-0034）——「术语门禁」行不再以 `repo-tools/check-terminology.js` 为载体；翻译新鲜度载体不变。
 - v11（2026-09-16）：consistency 假门禁退役与路由 READ/RUN（FINDING-0035/0037/0038）——压缩层与 Ownership 表不重开；若正文仍写 consent-cluster / numeric_claims / adr-status 为活门禁，以 Finding 为准。
-- v12（2026-09-16）：Rule Capture Phase 5a–5c 已从 INSTALLED 撤出（FINDING-0038 切片 5）。下表「lifecycle.policy § Rule Capture / must-ship」是基线快照，**不是**今日产品面；被治理项目不再生成 `state.json.rule_capture`，也不跑 5a/5b/5c。
+- v12（2026-09-16）：Rule Capture Phase 5a–5c 已从 INSTALLED 撤出（FINDING-0038）。下表历史行若仍写 `lifecycle.policy § Rule Capture / must-ship`，是基线快照。
+- v13（2026-09-16）：第四列与 Ownership 表 Rule Capture 行改为 `retire`（对齐 ADR-0024 2026-09-16 修正）；CONTROL-X 候选列表去掉 Rule Capture。其余基线行不重开。
 
 ## 为什么需要
 
@@ -108,8 +109,9 @@ migration decision.
 
 2. Governance State / Coordination
    manifest desired-state · state current-state · validation observed-state
-   preflight/rollback snapshot · activity · Rule Capture
+   preflight/rollback snapshot · activity
    interruption/resume · multi-agent lock
+   （历史曾含 Rule Capture 运行脚手架；已 `retire`，见 v13）
 
 3. Knowledge Integrity
    freshness · consistency · translation · terminology · sync
@@ -191,7 +193,7 @@ migration decision.
 | `repository-inspection` | repository / environment inspection（栈、布局、成熟度输入） | 5 |
 | `ci-generator` | CI materialization（从 inspection 输入生成 CI） | 5 |
 | `governance-validator` | governance validation（调用/编排 validator） | 5 / 2 |
-| `state-manager` | state / persistence（含 Rule Capture 运行脚手架） | 2 |
+| `state-manager` | state / persistence | 2 |
 | `drift-check` | audit / drift repair（freshness/consistency 调用面） | 5 / 3 |
 | `release-manager` | release orchestration（HITL + tag executor 边界） | 5 / 4 |
 | `plan-manager` | plan lifecycle（TASK 创建/状态；归档边界归 RELEASE） | 7 |
@@ -432,7 +434,7 @@ Checker 层 KEEP/WRAP/EXTRACT 仍只在 PLAN-0035，与本列正交。ADR-0014 �
 
 | 1.0 能力 | 历史来源 | 当前实现载体 | 处置（ADR-0024） |
 | --- | --- | --- | --- |
-| 规则捕获（Rule Capture） | PLAN-0016 | `references/policies/lifecycle.policy.md` § Rule Capture | `must-ship` |
+| 规则捕获（Rule Capture） | PLAN-0016 | ~~lifecycle.policy § Rule Capture~~（已从 INSTALLED 撤出） | `retire`（ADR-0024 2026-09-16；施工协议，非产品常驻） |
 | 反补丁式开发 / 根因修复协议 | PLAN-0018 | lifecycle.policy § 根因修复 + 失败预算 | `must-ship` |
 | 工程克制（机制测试） | PLAN-0019 | coding.policy § 工程克制 | `must-ship` 原则；不是新 gate |
 | 治理缺陷闭包 | PLAN-0029 | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）+ sibling 搜索 | `must-ship` |
@@ -491,7 +493,7 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 
 因此 **Semantic authority state** 与 **Implementation dependency** 是两个不同的问题。**现在时（2026-09-13）：consent 行已是 `authority: single`**（`git.policy.md` 为唯一语义权威，ADR-0024 §8；AGENTS.md / SKILL.md 仅指针 + always-on 摘要）。下表其他 `duplicated` 行**未**在本校准中扫改。Repo 文档一致性仍是 `impl dependency: repo→skill`（repo 直接跑 skill checker，即使语义单一）。
 
-**关于 `core`**：Semantic owner 判定为 `core` 的 concern（consent、分级发布审查、Rule Capture、确认凭证与变更卫生、evidence tiers、portability、SSOT）当前状态是 **owner identified: core，但 physical canonical source 尚未建立**——它们现在仍以两份语义存在（repo 实现 + skill 实现）。`core` 只是 conceptual shared semantic authority（ADR-0020 § 决策 5），物理 canonical source 由 Phase 3 Governance Core 建立。因此「owner = core」不代表「canonical source physically established: yes」。
+**关于 `core`**：Semantic owner 判定为 `core` 的 concern（consent、分级发布审查、确认凭证与变更卫生、evidence tiers、portability、SSOT；**不含**已 `retire` 的 Rule Capture）当前状态是 **owner identified: core，但 physical canonical source 尚未建立**——它们现在仍以两份语义存在（repo 实现 + skill 实现）。`core` 只是 conceptual shared semantic authority（ADR-0020 § 决策 5），物理 canonical source 由 Phase 3 Governance Core 建立。因此「owner = core」不代表「canonical source physically established: yes」。
 
 | 关注项 | 语义所有者 | 消费者 | 仓库实现 | 技能实现 | 拓扑 | 语义权威状态 | 实现依赖 | 处置状态 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -514,13 +516,13 @@ repo implementation 直接依赖 mutable working-tree skill implementation
 | 领域级测试入口 | repo | repo | `tests/run-tests.js --suite` | — | repo-only | single | none | repo-keep |
 | 被治理项目同步组（声明层） | skill | governed projects | — | `.governance/sync-rules.json` | skill-only | single | none | must-ship |
 | 同步组机械校验 | skill | governed projects | — | `scripts/check-sync.js`（INSTALLED） | skill-only | single | none | must-ship |
-| 治理规则同步与元治理 | skill | governed projects | — | lifecycle.policy § Rule Capture + 规则同步 | skill-only | single | none | must-ship（Control identity 承接） |
+| 治理规则同步与元治理 | skill | governed projects | — | lifecycle 同步组 / 规则文件保护（**不含**已退役 Rule Capture） | skill-only | single | none | must-ship（Control identity 承接） |
 | 审查机制（Review mechanism；review-manager） | skill | governed projects | —（`.governance/review-evidence-*.md` 是**证据产物**，非机制实现） | sub-skills 模板 review-manager | skill-only | single | none | must-ship |
 | 分级发布审查（release risk tiering） | core | repo；governed projects | `repo-workflows/skill-release.md` | `references/workflows/release.md`（SKILL-INTERNAL） | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
 | 审查后积压修复 | repo | repo | `check-doc-consistency.js` broken-links 集群（共享载体） | — | repo-only | single | repo→skill · accidental | repo-keep（CTRL-0006 链接有效性 must-ship） |
 | Git 写操作确认（consent） | core | repo；governed projects | AGENTS.md 指针 + always-on 摘要（非第二权威） | git.policy.md § 确认范围 + release-manager | shared-semantic | single | none | must-ship；单一权威 git.policy（ADR-0024 §8） |
 | 确认凭证与变更卫生 | core | repo；governed projects | AGENTS.md 影响面对照 | `stagedDigest` + `.governance/change-hygiene.json` | shared-semantic | duplicated | none | must-ship |
-| 规则捕获（Rule Capture） | core | repo；governed projects | AGENTS.md Rule Capture 条文 | lifecycle.policy § Rule Capture | shared-semantic | duplicated | none | must-ship；单一权威 ADR-0020 |
+| 规则捕获（Rule Capture） | — | — | ~~AGENTS.md Rule Capture~~ | ~~lifecycle.policy § Rule Capture~~ | — | — | none | `retire`（ADR-0024 2026-09-16；FINDING-0038） |
 | 根因修复协议与失败预算 | skill | governed projects；repo | AGENTS.md 原则索引指针 → lifecycle.policy § 根因修复 | lifecycle.policy § 根因修复（INSTALLED） | shared-semantic | single | repo→skill · intentional（repo 消费 skill-owned canonical carrier） | must-ship |
 | 工程克制（机制测试） | skill | governed projects；repo | AGENTS.md 指针 → coding.policy § 工程克制 | coding.policy § 工程克制（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship（原则） |
 | 治理缺陷闭包 | skill | governed projects；repo | AGENTS.md 指针 → lifecycle.policy § 根因修复协议与失败预算（同类实例闭包） | lifecycle.policy § 根因修复协议与失败预算（同类实例闭包）（INSTALLED） | shared-semantic | single | repo→skill · intentional | must-ship |
@@ -543,18 +545,18 @@ shared semantic
 + 同一 negative oracle 对两侧都成立
 ```
 
-符合判据的 7 项：ADR-0024 将 CONTROL-X 本身标为 `later`（不挡 2.0）。Consent 等行的 **单一语义权威** 仍是 2.0 门槛（ADR-0020 + ADR-0024 §8），与是否已建 CONTROL-X 无关：
+符合判据的候选（ADR-0024 将 CONTROL-X 本身标为 `later`；不挡 2.0）。Consent 等行的 **单一语义权威** 仍是 2.0 门槛（ADR-0020 + ADR-0024 §8），与是否已建 CONTROL-X 无关：
 
 ```text
 1. Git 写操作确认（consent）
 2. 分级发布审查（release risk tiering）
 3. 确认凭证与变更卫生
-4. Rule Capture
-5. 验证门禁分层（evidence tiers）
-6. 内容受众与可移植性
-7. SSOT 对齐
+4. 验证门禁分层（evidence tiers）
+5. 内容受众与可移植性
+6. SSOT 对齐
 ```
 
+（原第 4 项 Rule Capture 已 `retire`，不再进 CONTROL-X 候选。）
 每条 future CONTROL-X 的 canonical negative fixture 必须同时打 repo 与 skill 两个实现，两侧都必须 fail。
 
 **排除说明**：仓库边界拆分（三角色）拓扑为 `shared-semantic`，但**不建 CONTROL-X**——skill 侧是 `init-spec.json` 的 distribution invariants（声明，不是独立 evaluator），role-completeness gate 是 REPO-ONLY；它不是「双独立 evaluator 的可执行 control」，故按上述判据排除。

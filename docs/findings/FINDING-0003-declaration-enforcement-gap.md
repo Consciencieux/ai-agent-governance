@@ -24,7 +24,7 @@ observed_in: gen1
 - **C03 prompt 是 guidance**：AI 阅读并引用规则后仍可能违反（engineering-restraint 实例）——自然语言规则即使进入上下文，也不能提供程序级执行保证。Issue #5 Evidence 2：agent 在同一 session 里先引用 machinery test 拒绝了两个方案，随后立即写了两个违反该规则的 throwaway 脚本（read → cited → violated）。
 - **judgment surface 规模**（Issue #5 Evidence 3）：跨 9 个文件（6 payload policies + SKILL.md + 生成 AGENTS 模板 + AGENTS.md）枚举出 8 类 judgment 子句（machinery test / human-attested evidence / control-plane tracing / sibling-instance enumeration / must state a reason / never assume correctness / negative-evidence requirement / escalate the decision），全部无机械 carrier。
 - **C04 enforcement semantics 未统一**：当前语义分散在各脚本和文档——`advisory` / `--gate` / `--release-gate` / `human-attested` / `unverified` / `exit 0` / `exit 1`，没有统一的 allow / deny / warn / require-review 四值语义，导致「这个检查到底意味着什么」不清晰（Issue #7 §24）。
-- **无 carrier 的判断型子句清单**（Issue #5 Affected clauses）：① 工程克制/machinery test（coding.policy.md，Evidence 2 命中）② 双域对称（lifecycle.policy.md）③ sibling-instance closure（lifecycle.policy.md，Evidence 1 命中）④ control-plane tracing（lifecycle.policy.md）⑤ evidence tiers（lifecycle.policy.md + testing.policy.md，无 gate 查 tier 是否真实存在）⑥ failure budget / escalation（lifecycle.policy.md，`repairSessionId` 无机械 carrier）⑦ ~~Rule Capture（lifecycle.policy.md Phase 5）~~ **已撤出 INSTALLED**（施工协议，非产品常驻规则）⑧ impact-face search（Phase 3，gate 只查声明文件已交付，不查搜索是否真的发生）。当时枚举 8 条；现产品侧判断型仍无机械 carrier 的是其余项。
+- **无 carrier 的判断型子句清单**（Issue #5 Affected clauses，历史枚举）：① 工程克制/machinery test ② 双域对称 ③ sibling-instance closure ④ control-plane tracing ⑤ evidence tiers ⑥ failure budget / escalation ⑦ Rule Capture（lifecycle Phase 5；**其后从 INSTALLED 撤出**，见 FINDING-0038 / ADR-0024 `retire`）⑧ impact-face search。当时 8 条全部 judgment-based；现产品侧仍无机械 carrier 的是除 ⑦ 外的其余项。
 
 ## 根因
 

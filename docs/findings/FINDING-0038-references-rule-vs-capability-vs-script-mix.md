@@ -13,44 +13,42 @@ observed_in: gen2
 - 影响范围：`references/policies/` · `references/capabilities/` · `repo-tools/routing-graph.v0.json` · `enforcement.v0.json` · SKILL 能力叶表
 - 研究方向：B. 政策/控制平面 · C. 执行缺口 · 与 FINDING-0037（脚本有效区）同轴
 
-## 观察（仅据本仓现文件；标注切片前后）
+## 观察（盘点当时；2026-09-16 初查）
 
-对 `references/capabilities/**/*.md`（33）与 6 份 `policies`、路由图、`enforcement.v0.json` 对照后：
+对当时 `references/capabilities/**/*.md`（约 33）与 6 份 `policies`、路由图、`enforcement.v0.json` 对照后：
 
 1. **能力叶模板是任务卡**（Trigger / Authority / Invoke / Verify），但一部分叶里塞了**常驻准则长文**（自称「本叶为权威正文」）。
 2. **另一部分叶几乎只是脚本说明书**（Authority = `scripts/*.js`，Invoke = `node …`），没有独立语义。
-3. **路由图曾把三类东西都挂进同一 `authorities.path`**：能力 md、policy md、**以及 `.js` 脚本**——Agent 会被指向去「读」脚本。**切片 1 后：** `.js` 已退出 authorities；脚本进 `binds`→`run_set`。
-4. **`binds`→`run_set` 曾几乎空**（几乎只有 CTRL-0001）。**切片 1 后：** secret 含脚本路径，plan-delivery 进 run；与 `enforcement.v0.json` 全面对齐仍欠。
-5. **政策与能力叶双写 / 指针打架**（同主题多权威）——正文归位仍欠。
+3. **路由图把三类东西都挂进同一 `authorities.path`**：能力 md、policy md、**以及 `.js` 脚本**——Agent 会被指向去「读」脚本。
+4. **`binds`→`run_set` 几乎空**（几乎只有 CTRL-0001）。
+5. **政策与能力叶双写 / 指针打架**（同主题多权威）。
 
 这与「治理规则 = 时时准则；能力路由 = 某次任务怎么做；脚本 = 机械调用」的分工不一致。
 
-## 证据
+## 证据（盘点当时的路径；其后处置见「解决情况」）
 
 ### A. 最像政策（常驻准则写进能力叶）的文件
 
-| 路径 | 现象 |
+| 路径（盘点时） | 现象 |
 | --- | --- |
-| `capabilities/change-hygiene.md` | 全文台账/分层法；自称权威正文；`coding.policy.md` 仍有平行「变更归位」段；`lifecycle.policy.md` 指针指向叶；SKILL 又指回 coding.policy |
+| `capabilities/change-hygiene.md` | 全文台账/分层法；自称权威正文 |
 | `capabilities/root-cause-repair.md` | 失败预算/双域/sibling 等长规范 |
 | `capabilities/discovery-ledger.md` | L1 契约 schema/枚举写在叶内 |
 | `capabilities/rule-capture.md` | Phase 5a–5c 协议正文在叶内 |
-| `capabilities/git-write-consent.md` | 复述同意规则；叶称 git.policy 唯一权威；路由 `git-write` 却绑 policy，SKILL 表绑本叶 |
-| `capabilities/engineering-restraint.md` | Authority 指 coding.policy，叶内再述机制测试；路由绑**叶**而非 policy |
+| `capabilities/git-write-consent.md` | 复述同意规则；叶与路由/SKILL 指针打架 |
+| `capabilities/engineering-restraint.md` | 叶内再述机制测试；路由绑叶而非 policy |
 | `capabilities/installed-portability.md` | 叶自称可移植合同正文 |
 
 ### B. 几乎纯脚本说明书（宜机械调用，不宜当「读准则」）
 
 `content-consistency.md` · `doc-freshness.md` · `secret-scanning.md` · `plan-sync.md` · `git-workflow-safety.md` · `governance-validator.md` · `sync-groups.md`（及部分 subskill 的「去跑门禁」指向）
 
-### C. 路由混用（摘自盘点时的 `routing-graph.v0.json`；切片 1–2 已改）
+### C. 路由混用（盘点时）
 
-- ~~`secret-protection` → `scripts/check-secrets.js`（当 authority）~~ → 现 READ=`secret-scanning.md`，RUN=binds
-- ~~`plan-delivery` → `repo-tools/check-plan-delivery.js`~~ → 现 READ=`plan-sync.md`，RUN=binds
+- `secret-protection` → `scripts/check-secrets.js`（当 authority）
+- `plan-delivery` → `repo-tools/check-plan-delivery.js`
+- `change-hygiene` / `root-cause-repair` / `discovery-ledger` / `rule-capture` → 长文能力叶
 - `git-write` → `references/policies/git.policy.md`（政策，正确）
-- ~~`change-hygiene` → 长文能力叶~~ → 现 READ=`coding.policy.md` § 变更归位
-- ~~`root-cause-repair` / `discovery-ledger` → 长文叶~~ → 现 READ=`lifecycle.policy.md` 对应节
-- ~~`rule-capture` → 长文叶 / lifecycle 5a–5c 专节~~ → **施工协议，已从 INSTALLED 删除**（不进 policy、不进路由、不进 enforcement）
 
 ### D. 与 FINDING-0037 的关系
 
@@ -66,7 +64,7 @@ observed_in: gen2
 
 `enforcement.v0.json` 已按义务行分了 mechanical / judgment，但**调度器没用它来填 `run_set`**，却用 authorities 把脚本混进阅读面。
 
-## 目标分工（本 Finding 主张，待落地）
+## 目标分工（主张）
 
 | 种类 | 放哪 | 怎么进 Agent |
 | --- | --- | --- |
@@ -77,33 +75,34 @@ observed_in: gen2
 能力叶允许：Trigger + 指向政策的 Authority + Invoke（含 `node …`）+ Verify。  
 能力叶禁止：再当第二份政策百科；也禁止只靠「读 .js」充当约束。
 
+**正文判定补充：** 不是「凡曾写在能力叶里的都是产品规则」。盘点后按正文区分——发现台账 / 根因修复 / 变更归位 / 工程克制 / 可移植性 / Git 确认卫生 = 产品常驻规则；Rule Capture Phase 5a–5c = 本仓施工协议，不进 INSTALLED。
+
 ## 关闭条件
 
-1. 路由：`authorities` 的可读路径不得指向 `.js`；脚本只通过 `binds` / carrier→`run_set`（或等价字段）出现。
-2. A 表七份：准则正文只留在 policies（或单一已声明正文）；能力叶改为薄卡或删除重复段；SKILL / lifecycle 指针无打架。
-3. B 表脚本说明书：可保留为薄 Invoke 卡，但不得被叙述成「读此叶 = 语义已加载」；日常路由以 run 为主。
-4. `enforcement.v0.json` 与 routing 的 mechanical 义务可对上（至少 must-ship CTRL 进 run_set），或显式文档声明「enforcement 不对调度负责」并改掉现状暗示。
-5. 回归：`npm test` routing 套件 + 人工跑 `route-task.js --task edit_scripts` 可见 read 无 `.js`、run 含密钥类 CTRL。
+| # | 条件 | 状态（2026-09-16） |
+| --- | --- | --- |
+| 1 | 路由：`authorities` 可读路径不得指向 `.js`；脚本只通过 `binds` / carrier→`run_set` | **已满足** |
+| 2 | A 表：准则正文只留在 policies（或单一已声明正文）；错位叶删除或薄卡；SKILL / lifecycle 指针无打架 | **已满足**（产品规则归 policy；Rule Capture 从 INSTALLED 撤出） |
+| 3 | B 表脚本说明书：可保留为薄 Invoke 卡；日常路由以 run 为主；不得叙述成「读此叶 = 语义已加载」 | **已满足**（薄卡 + Authority 标明 RUN） |
+| 4 | `enforcement.v0.json` 与 routing 的 mechanical 义务可对上（至少 must-ship CTRL 进 run_set），或显式声明「enforcement 不对调度负责」 | **仍欠**（本条保持 Confirmed 的唯一余量） |
+| 5 | 回归：routing 套件 + `route-task.js --task edit_scripts` 可见 read 无 `.js`、run 含密钥类 CTRL | **已满足** |
 
 ## 解决情况
 
-- 2026-09-16 **切片 1（路由读写分离）：** `routing-graph` 中 `secret-protection` / `plan-delivery` 不再把 `.js` 当作 authority；脚本进入 `binds`→`run_set`；`engineering-restraint` 的可读权威改为 `coding.policy.md`。回归：routing 套件断言 authorities 无脚本后缀。
-- 2026-09-16 **切片 2（A 表正文归位 + 删错位叶）：**
-  - 正文进 `coding` / `lifecycle` / `testing` / `git` 政策后，**删除**七份错位能力叶（不再留空壳指针）。
-  - `enforcement.v0.json` 对应 entry 的 `leaf` 改挂政策路径；init-spec 去掉对已删叶的 copy。
-  - SKILL 路由表直接指向政策节；三语 architecture 树同步。
-  - B 表脚本说明书仍保留为薄 Invoke 卡（Authority 标明 RUN，不当阅读权威）。
-- 2026-09-16 **切片 4 勘误：** 按**正文**区分。发现台账、根因修复、变更归位、工程克制、INSTALLED 可移植性、确认凭证卫生 = **产品规则**，留在对应 policy。`generated-subskill-lifecycle.md` 与 `ssot-repair.md` 是产品怎么做，恢复薄卡。`seed-oracles.md` 是本仓表征 → 不进 INSTALLED。
-- 2026-09-16 **切片 5：** Rule Capture Phase 5a–5c（`rc-*` 候选、`state.json.rule_capture`、按 ID 裁定再写规则）是本仓施工协议（PLAN-0016），不是被治理项目常驻规则。已从 lifecycle / SKILL / enforcement / routing / INIT state / agents 与 sub-skills 模板删除。归档计划可留历史，INSTALLED 不再教 Agent 跑这套。
-- 2026-09-16 **切片 6：** 同轴清扫其他 INSTALLED 施工残留——H2a/Phase 7 阶段名、must-ship/repo-keep 处置词、本仓版本踩坑叙事、REPO-ONLY 脚本指针、enforcement 里的 `repo-tools/oracle-inventory` carrier、门禁文案里的 skill-release.md。产品规则与 `CTRL-*` 名保留。
-- **仍欠（不挡本切片）：** `enforcement` carrier 与 routing `binds` 全面自动对齐（关闭条件 4 余量）；脚本注释里大量 `audit 2026-09-*` 考古注仍可后 scrub。
+- **切片 1：** `secret-protection` / `plan-delivery` 不再把 `.js` 当 authority；脚本进 `binds`→`run_set`；`engineering-restraint` READ=`coding.policy.md`。
+- **切片 2：** 七份错位能力叶删除；enforcement / SKILL / 三语 architecture 同步。
+- **切片 4：** 按正文恢复产品政策与 INIT 薄卡（`generated-subskill-lifecycle` / `ssot-repair`）；`seed-oracles` 不进 INSTALLED。
+- **切片 5：** Rule Capture 5a–5c 从 lifecycle / SKILL / enforcement / routing / INIT state / 模板删除。
+- **切片 6：** 清扫其他 INSTALLED 施工残留（H2a/Phase 7 名、must-ship/repo-keep 处置词、本仓版本叙事、REPO-ONLY 脚本指针、`oracle-inventory` carrier、门禁文案里的 skill-release.md）。
+
+**仍欠：** 关闭条件 4（enforcement carrier ↔ routing binds 全面对齐）。脚本注释里的 `audit 2026-09-*` 考古注可后 scrub，不挡本条关闭判定。
 
 ## 关联
 
 - FINDING-0037（门禁有效区）
-- FINDING-0003、FINDING-0015、FINDING-0026（相关但本条以**本轮文件盘点**为准）
+- FINDING-0003、FINDING-0015、FINDING-0026、FINDING-0029（相关但本条以本轮文件盘点为准）
 - `repo-tools/routing-graph.v0.json` · `repo-tools/lib/routing.js` · `references/capabilities/enforcement.v0.json`
 
 ## 回归保护
 
-关闭时必须有：routing 测试断言 authorities 富集路径非 `.js`；至少一条任务类 `run_set` 含已声明 CTRL；A 表主题在 policies 与 capabilities 之间无第二份完整正文。
+关闭时必须有：routing 测试断言 authorities 富集路径非 `.js`；至少一条任务类 `run_set` 含已声明 CTRL；A 表主题在 policies 与 capabilities 之间无第二份完整正文；INSTALLED 不再教 Rule Capture 5a–5c。
