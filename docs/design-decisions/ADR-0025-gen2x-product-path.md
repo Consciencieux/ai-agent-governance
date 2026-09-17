@@ -141,6 +141,14 @@ H2-0 与 H2-front **可并行**。**H2a→b→c 不可倒**：b 消费 a 的残�
 - `retire` / `out`（治理评分、`ai-skill-manager`）仍不进入 2.x 施工；脚本面今日 `retire = ∅`。
 - H2-front 期间对 `scripts/` 的默认动作仍是 **不动载体**；去向问题问 inventory，不问新表。
 
+## 后续修正（2026-09-17）：论文实验装置冻结
+
+不改 H0–H3 顺序。论文仓以本技能为实验装置时：
+
+- **引用钉点** = 产品 tag **`v2.2.0`**（下一发布边界；commit 在打 tag 后回填）。操作细则与假绿 Option B SHA：[`RESEARCH-0015`](../research/RESEARCH-0015-paper-experiment-apparatus.md)。
+- **冻结面** = 主实验四门及其 paper-profile 闭包依赖的 **CLI 契约**（exit / `--json` / 默认 gate）。窗口内不得为「提高论文有效性」新增 checker，也不得把已退役假绿门复活进日常 `check`。
+- **解冻** = 论文补充材料换 pin 并重跑夹具；本修正不把夹具树或三臂跑数收进本仓 Active Plan（仍属论文仓 / H3 远景外围）。
+
 ## 参考
 
 - ADR-0015 路线图不得裁决阶段顺序 · ADR-0016 Plan 归档 · ADR-0018 迁移路径 · ADR-0020 提炼边界 · ADR-0024 产品冻结与 `later` 成员

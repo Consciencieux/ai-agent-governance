@@ -16,6 +16,8 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- Repo paper-apparatus helper: `RESEARCH-0015` (cite planned pin `v2.2.0`, freeze the four experiment gates, false-green Option B SHAs) and `repo-tools/export-installed-scripts.js` (`npm run export:paper-scripts -- --out <dir> [--profile paper|all-installed] [--ref v2.2.0]` after tag).
+
 - Repo and INSTALLED file-size budget reporters (`repo-tools/check-file-size-budget.js` / `scripts/check-file-size-budget.js`): soft/review alert ceilings (not everyday size targets); report + propose split; human confirmation before split; optional `.governance/file-size-budget.json`.
 
 - INSTALLED `runtime-invariants.policy.md` (SSOT / priority / permissions / status protocol) and capability `skill-execution.md` (INIT/AUDIT/RELEASE orchestration) so SKILL can stay a thin router.
@@ -48,11 +50,13 @@ All notable changes to this project will be documented here.
 
 - ADR-0027: judgment/habit obligations are not gate-solvable; do not close Findings as unsolvable merely for lack of scripts; do not dump L3 into `SKILL.md`; mechanical-first applies only to structure/sync and action-class (narrow-amends ADR-0022 decision 8).
 
+- ADR-0025 narrow amendment: while the paper cites this skill, pin `v2.2.0` and freeze the four experiment-gate CLI contracts (`RESEARCH-0015`).
+
 - References taxonomy: instruction sources under `references/instruction/`; subskill cards under `references/capabilities/subskills/`; `templates/` is materialization only.
 
 - README Quick Start and skill-discovery (en / zh-CN / zh-TW): per-agent paths, tarball-only install, init in the target project.
 
-- Roadmap Now/Near: product slice usable; honest gap is trigger coverage for long-running control, not “start H3”.
+- Roadmap Now/Near: product slice usable; honest gap is trigger coverage for long-running control, not “start H3”; paper apparatus pin + four-gate freeze indexed from Now.
 
 - Reference-closure protocol restored in `references/policies/testing.policy.md` § 引用闭合 (both profiles).
 

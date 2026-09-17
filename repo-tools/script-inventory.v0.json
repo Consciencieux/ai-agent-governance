@@ -50,23 +50,23 @@
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 48,
+    "total": 49,
     "by_disposition": {
-      "keep": 44,
+      "keep": 45,
       "wrap": 4
     },
     "by_generation": {
       "gen1_carrier": 14,
-      "gen2_native": 31,
+      "gen2_native": 32,
       "dual_profile": 3
     },
     "by_role": {
-      "REPO-ONLY": 15,
+      "REPO-ONLY": 16,
       "INSTALLED": 31,
       "SKILL-INTERNAL": 2
     },
     "by_necessity": {
-      "repo_gate": 14,
+      "repo_gate": 15,
       "must_ship": 6,
       "product_cli": 28
     },
@@ -135,6 +135,7 @@
         "repo-tools/check-plan-delivery.js",
         "repo-tools/check-role-completeness.js",
         "repo-tools/check-secrets.js",
+        "repo-tools/export-installed-scripts.js",
         "repo-tools/lib/routing.js",
         "repo-tools/route-task.js"
       ],
@@ -973,6 +974,23 @@
       "dogfood_from_repo_package_json": false,
       "notes": "INSTALLED file-size budget reporter; INIT Phase B copy; soft/review; --gate on review; no auto-split",
       "necessity": "product_cli"
+    },
+    {
+      "path": "repo-tools/export-installed-scripts.js",
+      "distribution_role": "REPO-ONLY",
+      "generation": "gen2_native",
+      "disposition": "keep",
+      "owns": "paper_apparatus_export",
+      "baseline": {
+        "ref": "v2.2.0",
+        "present": false,
+        "commits_after": null
+      },
+      "first_seen": "2026-09-17",
+      "last_touch": "2026-09-17",
+      "dogfood_from_repo_package_json": true,
+      "notes": "On-demand export of INSTALLED gate scripts for paper fixtures; --profile paper|all-installed; --ref v2.2.0 after tag. Not on daily check. Authority: RESEARCH-0015",
+      "necessity": "repo_gate"
     }
   ],
   "adjudication_plan": "PLAN-0055"

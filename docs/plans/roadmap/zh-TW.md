@@ -14,7 +14,7 @@
 
 | | |
 | --- | --- |
-| **產品** | `v2.1.1` 必裝切片可 INIT / AUDIT / RELEASE；能力地圖 [overview](../../product/zh-TW/overview.md)；CI 阻斷 = `npm run check:must-ship` |
+| **產品** | 已發佈 `v2.1.1`；**下一發佈 / 論文釘點 `v2.2.0`**（[RESEARCH-0015](../../research/RESEARCH-0015-paper-experiment-apparatus.md)，四門凍結）；能力地圖 [overview](../../product/zh-TW/overview.md)；CI 阻斷 = `npm run check:must-ship` |
 | **Horizon** | H2 **已完成**。H3 **遠**（預設不擋下一 minor；也**不是**「真正可用」的前置） |
 | **誠實缺口** | 長期管理仍靠 Agent **記得跑閘控**（觸發 ≠ 偵測）。portable 無 runtime 硬攔。願景「少依賴注意力」未達。 |
 | **Active Plan** | **無** |

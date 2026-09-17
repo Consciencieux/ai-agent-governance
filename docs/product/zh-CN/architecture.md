@@ -122,6 +122,7 @@ ai-agent-governance/
 │   │   └── routing.js
 │   ├── routing-graph.v0.json
 │   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
+│   ├── export-installed-scripts.js  # 论文夹具：导出 INSTALLED 门禁（--ref 钉点）
 │   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发
 │   ├── principles-index.md     # 治理原则指针表（AGENTS 路由至此）

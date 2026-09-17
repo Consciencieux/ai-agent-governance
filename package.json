@@ -18,6 +18,7 @@
     "check:release": "npm run check:skill-release",
     "check:file-size": "node repo-tools/check-file-size-budget.js",
     "check:must-ship": "node repo-tools/check-must-ship.js",
+    "export:paper-scripts": "node repo-tools/export-installed-scripts.js",
     "plans:delivery": "node repo-tools/check-plan-delivery.js --gate"
   },
   "engines": {
