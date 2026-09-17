@@ -14,7 +14,7 @@ Authority for the 2.x path: [ADR-0024](../../design-decisions/ADR-0024-gen2-prod
 
 | | |
 | --- | --- |
-| **Product** | Shipped `v2.1.1`; **next release / paper pin `v2.2.0`** ([RESEARCH-0015](../../research/RESEARCH-0015-paper-experiment-apparatus.md), four-gate freeze); capability map [overview](../../product/en/overview.md); CI block = `npm run check:must-ship` |
+| **Product** | Shipped `v2.1.1`; next minor is Unreleased → release when ready; capability map [overview](../../product/en/overview.md); CI block = `npm run check:must-ship` |
 | **Horizon** | H2 **complete**. H3 is **far** (does not block the next minor; also **not** a prerequisite for “actually usable”) |
 | **Honest gap** | Long-running control still depends on the agent **remembering to run gates** (trigger ≠ detection). Portable core has no hard runtime intercept. The “less attention” vision is unmet. |
 | **Active Plan** | **None** |

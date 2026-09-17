@@ -6,6 +6,10 @@ All notable changes to this project will be documented here.
 
 ### Removed
 
+- Ceremony / meta-gates with no user-project invariant: `check-daily-check-surface` + `daily-check-surface.v0.json`; INSTALLED `prompt-sync` consistency cluster; must-ship slogan markers (`薄入口` / ADR-0022 / fixed `AUDIT（巡检）` heading); inventory suites demoted off `check:must-ship` (still on `npm test`).
+
+- Paper cite-pin apparatus that leaked into this skill repo on 2026-09-17 (`RESEARCH-0015`, `export-installed-scripts.js`, ADR-0025/roadmap “paper pin `v2.2.0`”). Version pins for external papers belong in the paper repo, not here.
+
 - Low-ROI daily gates that only matched wording or labels (`numeric_claims`, consent-marker sync, consistency `adr-status`, changelog-narration, judgment-language suite, terminology Forbidden / `check-terminology.js`). Real gates (CTRL-0002, broken-links, payload I5, etc.) remain; glossary stays a trilingual lookup table.
 
 - Zero-delta INSTALLED capability leaves that only restated policies; secret anti-echo folded into `security.policy`.
@@ -19,8 +23,6 @@ All notable changes to this project will be documented here.
 - INSTALLED `runtime-invariants.policy.md` and capability `skill-execution.md` so `SKILL.md` can stay a thin router.
 
 - Product overview pages (`docs/product/*/overview.md`) for skill discovery.
-
-- Repo-only `export-installed-scripts.js` (`npm run export:paper-scripts`) to copy INSTALLED gate scripts for external fixtures, with a planned cite pin of `v2.2.0`.
 
 ### Fixed
 

@@ -22,7 +22,6 @@ Honesty gate: `node repo-tools/check-doc-consistency.js --gate` (scans this file
 | Payload self-containment | `references/init-spec.json` § invariants | repo |
 | Distribution roles (declared, never inferred) | `references/init-spec.json` · `docs/product/en/architecture.md` § Three distribution roles | repo |
 | Engineering restraint / machinery test | `references/policies/coding.policy.md` § 工程克制与机制测试 | both |
-| Repo gate promotion (daily allowlist) | `repo-tools/daily-check-surface.v0.json` · `repo-tools/check-daily-check-surface.js` | repo |
 | Reference closure | `references/policies/testing.policy.md` § 引用闭合 · `references/capabilities/audit-drift.md` | both |
 | Change placement and residue cleanup | `references/policies/coding.policy.md` § 变更归位与残留清理（lifecycle 仅编排指针） | payload |
 | Root-cause repair + failure budget | `references/policies/lifecycle.policy.md` § 根因修复协议与失败预算 | payload |

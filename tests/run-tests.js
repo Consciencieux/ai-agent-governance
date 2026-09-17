@@ -35,7 +35,6 @@ const SUITES = [
   "./suites/repo-gates.test.js",
   "./suites/routing.test.js",
   "./suites/script-inventory.test.js",
-  "./suites/export-installed.test.js",
   "./suites/oracle-inventory.test.js",
   "./suites/finding-patch-oracles.test.js",
   "./suites/capability-enforcement.test.js",

@@ -130,15 +130,19 @@ module.exports = function register(test) {
     return true;
   });
 
-  test("script-inventory: daily_check short list matches daily-check-surface allowlist", () => {
+  test("script-inventory: daily_check short list matches package.json scripts.check node entries", () => {
     const inv = JSON.parse(fs.readFileSync(INV_PATH, "utf8"));
-    const surface = JSON.parse(
-      fs.readFileSync(path.join(ROOT, "repo-tools", "daily-check-surface.v0.json"), "utf8")
-    );
+    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
+    const check = (pkg.scripts && pkg.scripts.check) || "";
+    const nodeEntries = [];
+    for (const part of String(check).split(/\s*&&\s*/).map((s) => s.trim()).filter(Boolean)) {
+      const m = part.match(/^node\s+(\S+)/);
+      if (m) nodeEntries.push(m[1].replace(/^\.\//, ""));
+    }
     const daily = ((((inv.summary || {}).short_lists || {}).daily_check) || []).slice().sort();
-    const allow = (surface.allowed_node_entrypoints || []).slice().sort();
+    const allow = nodeEntries.slice().sort();
     if (daily.join("|") !== allow.join("|")) {
-      console.error("  daily_check", daily, "!== surface", allow);
+      console.error("  daily_check", daily, "!== package.json check nodes", allow);
       return false;
     }
     return true;

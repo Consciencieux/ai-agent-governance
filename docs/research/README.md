@@ -66,7 +66,6 @@ docs/research/
 ├── RESEARCH-0012-task-capability-routing.md           # Task→Capability 适用路由（Phase 5 入口；v2 六问工作假设；显式映射；禁图谱/全自动 Dispatcher）
 ├── RESEARCH-0013-research-provenance-and-context-economy.md # 科研回溯 vs 上下文经济；事前短合同 vs 事后沉淀；一般项目文档面
 ├── RESEARCH-0014-mechanizable-vs-judgment-governance.md    # 可机械化 vs 判断型义务；软约束无门禁银弹；科研议程约束
-├── RESEARCH-0015-paper-experiment-apparatus.md             # 论文实验装置钉点 v2.2.0 / 四门冻结 / 假绿 Option B SHA
 ```
 
 **一个编号 = 一个文件**（与 Plan 相同）。禁止同号第二份文件，禁止把 JSON 写成 Research，禁止把施工说明堆进 `repo-tools/`。`repo-tools/` 只放门禁/CLI 和代码读取的 JSON。
@@ -92,7 +91,6 @@ docs/research/
 | M. Task→Capability 路由 | `RESEARCH-0012-task-capability-routing.md` | Phase 5 入口：显式 Task/Context→Capability→Authority/Leaf；禁图谱与全自动 Dispatcher |
 | N. 科研回溯与上下文经济 | `RESEARCH-0013-research-provenance-and-context-economy.md` | 写全 provenance、执行 on-demand；Plan=短合同；一般项目不复制本仓科研树 |
 | O. 可机械化 vs 判断型义务 | `RESEARCH-0014-mechanizable-vs-judgment-governance.md` | L1/L2/L3 切割；Goodhart / 形式化缺口；H3 成功标准不得写成习惯执法 |
-| P. 论文实验装置 | `RESEARCH-0015-paper-experiment-apparatus.md` | 引用钉点 `v2.2.0`；四门 CLI 冻结；导出约定；假绿 Option B last-present SHA |
 
 **统一 envelope（表示法归一，ADR-0016）**：Frontmatter 元数据 = `id` / `status` / `version`（+按需 `subject_generation` / `supersedes` / `superseded_by`）；`status` 取值 `Draft` / `Active` / `Superseded` / `Archived`；不保留 `title` / `created` / `updated`（H1 / Git 已有）与空 `supersedes: []`；H1 = `# RESEARCH-xxxx：中文标题`。
 

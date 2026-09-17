@@ -653,13 +653,6 @@
     },
     {
       "phase": "C",
-      "path": "scripts/lib/doc-consistency/prompt-sync.js",
-      "source": "scripts/lib/doc-consistency/prompt-sync.js",
-      "type": "copy",
-      "description": "Doc consistency gate: prompt sync"
-    },
-    {
-      "phase": "C",
       "path": "scripts/lib/doc-consistency/protected-files.js",
       "source": "scripts/lib/doc-consistency/protected-files.js",
       "type": "copy",

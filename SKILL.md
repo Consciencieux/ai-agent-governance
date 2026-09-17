@@ -12,7 +12,7 @@ description: >-
 
 本 Skill 建立并巡检仓库内的 AI Agent 治理（不写业务代码）。工具中立。
 
-**常驻硬规则在 `references/policies/`（权威正文）**；任务怎么做才进 `references/capabilities/`；编排骨架见 `references/capabilities/skill-execution.md`。入口只做路由，不复写政策。方法论 → `references/principles/entry.md`（SKILL-INTERNAL）。
+**常驻硬规则在 `references/policies/`（权威正文）**；任务怎么做才进 `references/capabilities/`；编排骨架见 `references/capabilities/skill-execution.md`。薄入口只做路由，不复写政策。方法论 → `references/principles/entry.md`（SKILL-INTERNAL）。
 
 ### 政策优先（读哪份常驻规则）
 
@@ -57,3 +57,7 @@ description: >-
 | RELEASE | release / publish | `references/capabilities/skill-execution.md` → `references/workflows/release.md` |
 
 判定与阶段骨架 → `references/capabilities/skill-execution.md`。每次任务仍受上表**政策**约束。
+
+### AUDIT（巡检）
+
+巡检 / drift / 健康检查：读 `references/capabilities/skill-execution.md` → `references/capabilities/audit-drift.md`，按卡内命令跑校验；不在入口复写步骤。

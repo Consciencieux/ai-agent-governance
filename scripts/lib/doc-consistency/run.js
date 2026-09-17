@@ -10,7 +10,6 @@ const { runProtectedFiles } = require("./protected-files.js");
 const { runPrinciplesIndex } = require("./principles-index.js");
 const { runPlanStatus } = require("./plan-status.js");
 const { runBrokenLinks } = require("./broken-links.js");
-const { runPromptSync } = require("./prompt-sync.js");
 
 function main() {
   const json = process.argv.includes("--json");
@@ -19,7 +18,7 @@ function main() {
   const anyGate = gate || releaseGate;
   const issues = {
     version_examples: [], protected_lists: [], broken_links: [],
-    prompt_sync: [], plans_status_unknown: [], plans_pending_archive: [],
+    plans_status_unknown: [], plans_pending_archive: [],
     changelog_coverage: [],
   };
   const gateIssues = [];
@@ -42,7 +41,6 @@ function main() {
   runPrinciplesIndex(ctx);
   runPlanStatus(ctx);
   runBrokenLinks(ctx);
-  runPromptSync(ctx);
 
   // ---- 7. trilingual tree parity (delegated) ----
   const parityPass = "delegated";
@@ -50,7 +48,7 @@ function main() {
   const pendingArchive = planStatuses.filter((p) => p.status === "implemented" || p.status === "completed").length;
   const EVIDENCE = {
     version_examples: "mechanical", protected_lists: "mechanical",
-    broken_links: "mechanical", prompt_sync: "mechanical",
+    broken_links: "mechanical",
     changelog_coverage: "mechanical",
     plans_status_unknown: "mechanical", plans_pending_archive: "mechanical",
   };

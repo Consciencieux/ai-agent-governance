@@ -97,7 +97,7 @@ ai-agent-governance/
 │   │   │   ├── run.js / shared.js
 │   │   │   ├── changelog-coverage.js / version-examples.js / protected-files.js
 │   │   │   ├── principles-index.js / plan-status.js
-│   │   │   └── broken-links.js / prompt-sync.js
+│   │   │   └── broken-links.js
 │   │   └── generate/
 │   │       └── run.js              # INIT 生成器本体（SKILL-INTERNAL）
 │   ├── evaluators/
@@ -115,14 +115,12 @@ ai-agent-governance/
 ├── repo-tools/                 # 本仓库自己的门禁与打包——绝不分发
 │   ├── check-doc-parity.js / check-layout-sync.js / check-plan-delivery.js
 │   ├── check-role-completeness.js / check-coding-hygiene.js / check-file-size-budget.js
-│   ├── check-daily-check-surface.js / daily-check-surface.v0.json
 │   ├── check-secrets.js
 │   ├── check-must-ship.js / check-must-ship-carriers.js
 │   ├── lib/
 │   │   └── routing.js
 │   ├── routing-graph.v0.json
 │   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
-│   ├── export-installed-scripts.js  # 论文夹具：导出 INSTALLED 门禁（--ref 钉点）
 │   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发
 │   ├── principles-index.md     # 治理原则指针表（AGENTS 路由至此）

@@ -4,7 +4,7 @@
 
 ## Before editing
 
-1. Layout: `docs/product/en/architecture.md`. CI block = `check:must-ship`; daily = `npm run check` (allowlist: `daily-check-surface.v0.json`).
+1. Layout: `docs/product/en/architecture.md`. CI block = `check:must-ship`; daily = `npm run check` (composition in `package.json`).
 2. Product spec: `SKILL.md`. Area guide: `CONTRIBUTING.md`.
 3. Route first (ADR-0022): `node repo-tools/route-task.js --task <class>|--path <file>` → read `read_set` / run `run_set` only. Map: `docs/research/RESEARCH-0012-task-capability-routing.md`. Leaves: `references/policies/` + `references/capabilities/` + `SKILL.md` § 政策优先 / § 任务怎么做. Plans consume ADR-0024 + `repo-tools/script-inventory.v0.json` only.
 4. **Status:** `docs/plans/roadmap/` Now — do not duplicate horizon lists in `AGENTS.md`.

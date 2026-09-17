@@ -37,12 +37,8 @@ const REQUIRED_SUBSKILLS = [
   "review-manager",
 ];
 
-const REQUIRED_SKILL_MARKERS = [
-  /INIT/,
-  /AUDIT/,
-  /RELEASE/,
-  /薄入口|thin entry|ADR-0022/i,
-];
+// Mode names only — no slogan / section-title shape theater (薄入口, AUDIT（巡检）, ADR IDs).
+const REQUIRED_SKILL_MARKERS = [/INIT/, /AUDIT/, /RELEASE/];
 
 function fail(msg) {
   console.error(`must-ship-carriers: ${msg}`);
@@ -77,11 +73,6 @@ for (const n of instructionFiles) {
 }
 for (const n of allowedInstruction) {
   if (!instructionFiles.includes(n)) fail(`references/instruction/ missing ${n}`);
-}
-
-// AUDIT / drift entry: SKILL AUDIT mode + drift-check leaf (already checked).
-if (!/###?\s*Audit 流程|AUDIT（巡检）/.test(skill)) {
-  fail("SKILL.md missing AUDIT entry section");
 }
 
 console.log(

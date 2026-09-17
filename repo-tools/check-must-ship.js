@@ -20,13 +20,12 @@ const SYNTAX_ROOTS = [
   "tests/run-tests.js",
 ];
 
+// Inventory suites stay on `npm test` / on-demand — not CI must-ship theater.
 const SUITES = [
   "security",
   "generator",
   "payload",
   "repo-gates",
-  "oracle-inventory",
-  "script-inventory",
   "routing",
   "capability-enforcement",
 ];

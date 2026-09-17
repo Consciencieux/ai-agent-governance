@@ -50,9 +50,9 @@
     "summary.total MUST equal entries.length; recount on every adjudication."
   ],
   "summary": {
-    "total": 49,
+    "total": 46,
     "by_disposition": {
-      "keep": 45,
+      "keep": 42,
       "wrap": 4
     },
     "by_generation": {
@@ -66,9 +66,9 @@
       "SKILL-INTERNAL": 2
     },
     "by_necessity": {
-      "repo_gate": 15,
+      "repo_gate": 13,
       "must_ship": 6,
-      "product_cli": 28
+      "product_cli": 27
     },
     "wrap": [
       "scripts/check-doc-consistency.js",
@@ -124,7 +124,6 @@
       ],
       "repo_gate": [
         "repo-tools/check-coding-hygiene.js",
-        "repo-tools/check-daily-check-surface.js",
         "repo-tools/check-doc-consistency.js",
         "repo-tools/check-doc-freshness.js",
         "repo-tools/check-doc-parity.js",
@@ -135,27 +134,20 @@
         "repo-tools/check-plan-delivery.js",
         "repo-tools/check-role-completeness.js",
         "repo-tools/check-secrets.js",
-        "repo-tools/export-installed-scripts.js",
         "repo-tools/lib/routing.js",
         "repo-tools/route-task.js"
       ],
       "daily_check": [
         "repo-tools/check-coding-hygiene.js",
-        "repo-tools/check-daily-check-surface.js",
         "repo-tools/check-doc-consistency.js",
-        "repo-tools/check-doc-parity.js",
-        "repo-tools/check-layout-sync.js",
         "repo-tools/check-role-completeness.js"
       ],
       "check_full": [
         "repo-tools/check-coding-hygiene.js",
-        "repo-tools/check-daily-check-surface.js",
         "repo-tools/check-doc-consistency.js",
-        "repo-tools/check-doc-parity.js",
-        "repo-tools/check-layout-sync.js",
         "repo-tools/check-role-completeness.js"
       ],
-      "doctrine_note": "daily_check = package.json scripts.check allowlist (check-daily-check-surface). Stage/Plan/Finding checkers are NOT parked on check:full — default on-demand or retire. check:full currently aliases daily check after PLAN-0055 Stage 4E retire of H2b/H2c stage gates."
+      "doctrine_note": "daily_check = node entrypoints on package.json scripts.check (no meta allowlist gate). Stage/Plan/Finding checkers stay on-demand or release."
     }
   },
   "entries": [
@@ -789,23 +781,6 @@
       "necessity": "must_ship"
     },
     {
-      "path": "repo-tools/check-daily-check-surface.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "daily-check-surface",
-      "baseline": {
-        "ref": "v1.0.2",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
-      "dogfood_from_repo_package_json": true,
-      "notes": "PLAN-0055: mechanical gate — package.json scripts.check must stay inside daily-check-surface.v0.json / short_lists.daily_check",
-      "necessity": "repo_gate"
-    },
-    {
       "path": "scripts/lib/doc-consistency/broken-links.js",
       "generation": "gen2_native",
       "disposition": "keep",
@@ -858,23 +833,6 @@
     },
     {
       "path": "scripts/lib/doc-consistency/principles-index.js",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "baseline": {
-        "ref": "v2.1.0",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-13",
-      "last_touch": "2026-09-13",
-      "dogfood_from_repo_package_json": false,
-      "notes": "PLAN-0055 R10: doc-consistency gate cluster EXTRACT from run.js",
-      "necessity": "product_cli",
-      "distribution_role": "INSTALLED",
-      "owns": "doc-consistency"
-    },
-    {
-      "path": "scripts/lib/doc-consistency/prompt-sync.js",
       "generation": "gen2_native",
       "disposition": "keep",
       "baseline": {
@@ -974,23 +932,6 @@
       "dogfood_from_repo_package_json": false,
       "notes": "INSTALLED file-size budget reporter; INIT Phase B copy; soft/review; --gate on review; no auto-split",
       "necessity": "product_cli"
-    },
-    {
-      "path": "repo-tools/export-installed-scripts.js",
-      "distribution_role": "REPO-ONLY",
-      "generation": "gen2_native",
-      "disposition": "keep",
-      "owns": "paper_apparatus_export",
-      "baseline": {
-        "ref": "v2.2.0",
-        "present": false,
-        "commits_after": null
-      },
-      "first_seen": "2026-09-17",
-      "last_touch": "2026-09-17",
-      "dogfood_from_repo_package_json": true,
-      "notes": "On-demand export of INSTALLED gate scripts for paper fixtures; --profile paper|all-installed; --ref v2.2.0 after tag. Not on daily check. Authority: RESEARCH-0015",
-      "necessity": "repo_gate"
     }
   ],
   "adjudication_plan": "PLAN-0055"

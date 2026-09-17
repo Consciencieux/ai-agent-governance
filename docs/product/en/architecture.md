@@ -97,7 +97,7 @@ ai-agent-governance/
 │   │   │   ├── run.js / shared.js
 │   │   │   ├── changelog-coverage.js / version-examples.js / protected-files.js
 │   │   │   ├── principles-index.js / plan-status.js
-│   │   │   └── broken-links.js / prompt-sync.js
+│   │   │   └── broken-links.js
 │   │   └── generate/
 │   │       └── run.js              # INIT generator body (SKILL-INTERNAL)
 │   ├── evaluators/
@@ -115,14 +115,12 @@ ai-agent-governance/
 ├── repo-tools/                 # THIS repo's own gates and packaging — never distributed
 │   ├── check-doc-parity.js / check-layout-sync.js / check-plan-delivery.js
 │   ├── check-role-completeness.js / check-coding-hygiene.js / check-file-size-budget.js
-│   ├── check-daily-check-surface.js / daily-check-surface.v0.json
 │   ├── check-secrets.js
 │   ├── check-must-ship.js / check-must-ship-carriers.js
 │   ├── lib/
 │   │   └── routing.js
 │   ├── routing-graph.v0.json
 │   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
-│   ├── export-installed-scripts.js  # paper fixtures: copy INSTALLED gates (--ref pin)
 │   └── package-skill.sh        # release payload tarball packaging
 ├── repo-workflows/             # THIS repo's own process docs — never distributed
 │   ├── principles-index.md     # governance principles pointer table (AGENTS routes here)
