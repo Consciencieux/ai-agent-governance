@@ -6,63 +6,43 @@ All notable changes to this project will be documented here.
 
 ### Removed
 
-- Low-ROI daily consistency theater: `numeric_claims`, consent-marker sync cluster, consistency `adr-status` (+ unused `scripts/lib/adr-status.js`), `check-changelog-narration.js`, and `judgment-language.test.js`. Real gates (CTRL-0002, broken-links, payload I5, etc.) remain.
+- Low-ROI daily gates that only matched wording or labels (`numeric_claims`, consent-marker sync, consistency `adr-status`, changelog-narration, judgment-language suite, terminology Forbidden / `check-terminology.js`). Real gates (CTRL-0002, broken-links, payload I5, etc.) remain; glossary stays a trilingual lookup table.
 
-- Terminology Forbidden columns and `repo-tools/check-terminology.js` daily gate. Glossary stays a trilingual lookup table.
+- Zero-delta INSTALLED capability leaves that only restated policies; secret anti-echo folded into `security.policy`.
 
-- Zero-delta INSTALLED capability leaves that only restated policies (`content-consistency`, `doc-freshness`, `governance-validator`, `git-workflow-safety`, and the seven misplaced always-on leaves rehomed into policies). Secret anti-echo folded into `security.policy`.
-
-- Rule Capture protocol from the installed surface (lifecycle, SKILL table, enforcement, routing, INIT `state.json`, agent/sub-skill templates). It is this-repo construction, not a governed-project always-on rule.
+- Rule Capture protocol from the installed surface (it is this-repo construction, not a governed-project always-on rule).
 
 ### Added
 
-- Repo paper-apparatus helper: `RESEARCH-0015` (cite planned pin `v2.2.0`, freeze the four experiment gates, false-green Option B SHAs) and `repo-tools/export-installed-scripts.js` (`npm run export:paper-scripts -- --out <dir> [--profile paper|all-installed] [--ref v2.2.0]` after tag).
+- File-size budget reporters (repo + INSTALLED): soft/review alert ceilings, report then propose split, human confirmation before split; optional `.governance/file-size-budget.json`.
 
-- Repo and INSTALLED file-size budget reporters (`repo-tools/check-file-size-budget.js` / `scripts/check-file-size-budget.js`): soft/review alert ceilings (not everyday size targets); report + propose split; human confirmation before split; optional `.governance/file-size-budget.json`.
+- INSTALLED `runtime-invariants.policy.md` and capability `skill-execution.md` so `SKILL.md` can stay a thin router.
 
-- INSTALLED `runtime-invariants.policy.md` (SSOT / priority / permissions / status protocol) and capability `skill-execution.md` (INIT/AUDIT/RELEASE orchestration) so SKILL can stay a thin router.
+- Product overview pages (`docs/product/*/overview.md`) for skill discovery.
 
-- Product overview pages (`docs/product/*/overview.md`) for skill discovery without overloading architecture/README.
+- Repo-only `export-installed-scripts.js` (`npm run export:paper-scripts`) to copy INSTALLED gate scripts for external fixtures, with a planned cite pin of `v2.2.0`.
 
 ### Fixed
 
-- Layout-sync CI false green: do not document gitignored `repo-tools/.release/proposal.json` in architecture trees; `check-layout-sync.js` skips gitignored paths.
+- Layout-sync no longer documents gitignored `repo-tools/.release/proposal.json`; ignored paths are skipped.
 
-- `check:must-ship` runs via Node (`repo-tools/check-must-ship.js`) so the CI local gate works on Windows without Git Bash/WSL.
+- `check:must-ship` runs via Node so the CI local gate works on Windows without Git Bash/WSL.
 
 ### Changed
 
-- Lifecycle / runtime friction (mainstream alignment): Phase 1 is on-demand task-relevant reads (not ritual full features+CHANGELOG); medium tier is feature/rules/cross-module work (multi-file alone does not force it); Discovery Ledger required for medium/large bug or mechanism changes only; drop “3+ files” confirm gates; INIT emits `.gitattributes`; git/AGENTS governance lists point at `governance-files` only.
+- Thin `SKILL.md` / this-repo `AGENTS.md` to identity + always-on + route tables (skill-root backtick paths); process and INIT/AUDIT how-to live in policies, capabilities, and `repo-workflows/`.
 
-- Thin `SKILL.md` to identity + policy-first routing with **skill-root backtick paths** (not bare basenames); INIT/AUDIT how-to live in capability leaves; Chinese-only section headings where applicable.
+- INSTALLED payload must not embed producer construction IDs (`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`); `CTRL-*` allowed. Capability obligation inventory is `capability-enforcement.json` only.
 
-- Routing: `authorities.path` is text-only; script carriers move to `binds` → `run_set`. SKILL leaf table is READ vs RUN. Enforcement `leaf` may point at policies; expand binds / `enforcement_align` so mechanical carriers stay closed.
+- Git write consent: `git.policy.md` is sole authority — one confirmation per change set; no second echo gate; no “every push must edit CHANGELOG”; invent a branch only when `check-git-policy.js` exits 1.
 
-- Scrub producer construction IDs and narration from INSTALLED bodies (ADR-0020 I5): no `PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*` in payload; `tests/` must not force those IDs into INSTALLED text. `CTRL-*` allowed. This repo's `AGENTS.md` keeps I5 as the sole always-on hard rule.
+- Lifecycle / runtime friction: Phase 1 is on-demand task-relevant reads; medium tier is feature/rules/cross-module work (multi-file alone does not force it); Discovery Ledger for medium/large bug or mechanism changes only; drop “3+ files” confirm gates; INIT emits `.gitattributes`; AGENTS/git summaries point at `governance-files` only.
 
-- Capability leaves: strip producer provenance headers; INSTALLED `capability-enforcement.json` is the sole obligation inventory (no `## Enforcement` dual-write on leaves). Restore INIT how-to `generated-subskill-lifecycle.md` where needed; keep `seed-oracles.md` out of INSTALLED.
-
-- Coding policy: gate effective-zone default under engineering restraint (structure/sync vs habits/semantics ≈0 vs action-class).
-
-- Git write consent (CTRL-0002): `git.policy.md` is sole authority — change-set consent from explicit write instruction or IDE stage+commit+push; no second echo gate; no “every push must edit CHANGELOG”; branch invent only when `check-git-policy.js` exits 1; `gh pr create` / `pull` stay independently confirmed.
-
-- Release friction: push the approved branch (not hard-coded `main`); skill payload tarball prefers CI on tag; GitHub Release optional for governed projects. Thin `repo-workflows/skill-release.md` / `changelog-policy.md` to runbook + C1–C5 (SemVer defers to governed `release.md`).
-
-- This skill-distribution repo's `AGENTS.md`: identity + always-on I5 + route table (backtick paths, not markdown link doubles); process body in `repo-workflows/principles-index.md`, `agent-change.md`, `conventions.md`.
-
-- ADR-0027: judgment/habit obligations are not gate-solvable; do not close Findings as unsolvable merely for lack of scripts; do not dump L3 into `SKILL.md`; mechanical-first applies only to structure/sync and action-class (narrow-amends ADR-0022 decision 8).
-
-- ADR-0025 narrow amendment: while the paper cites this skill, pin `v2.2.0` and freeze the four experiment-gate CLI contracts (`RESEARCH-0015`).
-
-- References taxonomy: instruction sources under `references/instruction/`; subskill cards under `references/capabilities/subskills/`; `templates/` is materialization only.
+- Coding policy default: structure/sync gates preferred; habit/semantics scripts ≈ 0; action-class may deny. Testing policy restores reference-closure for installable surfaces.
 
 - README Quick Start and skill-discovery (en / zh-CN / zh-TW): per-agent paths, tarball-only install, init in the target project.
 
-- Roadmap Now/Near: product slice usable; honest gap is trigger coverage for long-running control, not “start H3”; paper apparatus pin + four-gate freeze indexed from Now.
-
-- Reference-closure protocol restored in `references/policies/testing.policy.md` § 引用闭合 (both profiles).
-
-- Skill-release sync-point docs: sentinel in `scripts/lib/generate/run.js`; Phase 1 no longer points at a removed roadmap Deferred section.
+- Release runbooks: push the approved branch; skill payload tarball prefers CI on tag; GitHub Release optional for governed projects.
 
 ## [2.1.1] - 2026-09-14
 
