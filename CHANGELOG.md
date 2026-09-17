@@ -4,6 +4,8 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-09-18
+
 ### Removed
 
 - Ceremony / meta-gates that only guarded slogans, allowlists, or inventory theater (`daily-check-surface`, INSTALLED `prompt-sync`, must-ship slogan markers; inventory suites off `check:must-ship`).

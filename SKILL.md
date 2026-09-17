@@ -1,6 +1,6 @@
 ---
 name: ai-agent-governance
-version: 2.1.1
+version: 2.2.0
 description: >-
   Initialize, audit, or release AI-agent governance in a repository. Use for
   initialize project governance, initialize governance, setup project for AI agents,

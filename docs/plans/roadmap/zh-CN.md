@@ -14,7 +14,7 @@
 
 | | |
 | --- | --- |
-| **产品** | 已发布 `v2.1.1`；下一 minor = Unreleased → 就绪再发；能力地图 [overview](../../product/zh-CN/overview.md)；CI 阻断 = `npm run check:must-ship` |
+| **产品** | 已发布 `v2.2.0`；能力地图 [overview](../../product/zh-CN/overview.md)；CI 阻断 = `npm run check:must-ship` |
 | **Horizon** | H2 **已完成**。H3 **远**（默认不挡下一 minor；也**不是**「真正可用」的前置） |
 | **诚实缺口** | 长期管理仍靠 Agent **记得跑门禁**（触发 ≠ 检测）。portable 无 runtime 硬拦。愿景「少依赖注意力」未达。 |
 | **Active Plan** | **无** |
