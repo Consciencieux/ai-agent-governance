@@ -68,7 +68,8 @@ resolved_in: gen2
 
 - FINDING-0034、FINDING-0035、FINDING-0003、FINDING-0015、FINDING-0033
 - `references/policies/coding.policy.md` § 工程克制与机制测试
-- ADR-0020、ADR-0023
+- `docs/research/RESEARCH-0014-mechanizable-vs-judgment-governance.md`（理论 / 科研议程；本条是操作通则）
+- ADR-0027（规范选择）· ADR-0020、ADR-0023
 
 ## 回归保护
 

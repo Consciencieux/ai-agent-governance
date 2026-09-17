@@ -51,6 +51,8 @@ observed_in: gen1
 
 **状态：Resolved（2026-09-13）** — 三条关闭条件均已满足。Resolved ≠ 为其余 7 类补齐机械 carrier；无 carrier 的义务继续以 **judgment** 执行，禁止把门禁绿误读成判断已完成。
 
+**复发证据（2026-09-16 · 未重开）：** 用户裁定「路由图指针用反引号路径」后，Agent **只改了点名的 `AGENTS.md`**，未扫同构的薄入口路由表 `SKILL.md`（短文件名 / 同职责 When→Read），直到用户明确怒指。`lifecycle.policy` § 同类实例闭包与本条 C02 实验同构：**未声明 sibling 合同 → 零机械压力**；任务字面范围（「改这个」）继续架空 judgment 枚举。Resolved 仍成立（declared-contract mechanical 未退）；本条证明 **judgment sibling 在日常改入口任务上仍可被系统性跳过**。
+
 **历史（2026-09-13 · PLAN-0050 第二刀）：**
 - **关闭条件 1（切片）：** `scripts/check-sibling-closure.js` + 合同模型（`instances[].path`）+ 本仓 dogfood；负向：缺 sibling → deny。
 - **关闭条件 2：** portable `references/principles/enforcement-semantics.md` 四值语义 + judgment/mechanical 分层。

@@ -51,6 +51,8 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 **8. Zero-Attention First（机械优先）。** 关键保证不得依赖「Agent 是否记得读某条 Markdown」；越重要的规则越应从 guidance 升级为机械 control（演进方向：Task Context → Context Detector → Applicable Controls → Dispatcher → Mechanism，Roadmap Phase 5）。
 
+> **Narrow amendment（2026-09-16，ADR-0027）：** 「升级为机械 control」只适用于可观察结构/同步（L1）与动作分类（L2）。判断/习惯（L3）不得因「重要」而加脚本或宣称门禁保证。完整切割与 Finding/入口处置见 ADR-0027。上方原句保留为历史读法。
+
 **9. 总原则。** 整套架构定义为：
 
 > **Use thin execution entrypoints to route task context into specialized skills; load only applicable instructions progressively, keep knowledge and history on demand, and move critical guarantees out of Agent attention into mechanical enforcement.**
@@ -119,7 +121,7 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 
 - 入口文档（`SKILL.md` / `AGENTS.md` / README）瘦身为路由层，领域规则下放子技能 / 领域文件。
 - 知识对象与执行规则分离加载；历史对象后置。
-- 关键控制逐步从 Markdown 升级为机械 carrier（与 ADR-0021 Known-Issue Closure、FINDING-0015 零注意力方向一致）。
+- 关键控制逐步从 Markdown 升级为机械 carrier（与 ADR-0021 Known-Issue Closure、FINDING-0015 零注意力方向一致）。**限定（ADR-0027）：** 仅 L1/L2；L3 不因重要而机械化。
 - 本 ADR 是 Gen2 instruction architecture 的演进依据；具体入口瘦身 / 子技能拆分 / `references/` 重分类属后续执行任务，不在本 ADR 一次性铺开。拆文件若无路由与机械路径，不得视为本 ADR 已执行。
 - Context Economy 约束预期总上下文成本与重复推理，不授权 token 预算门禁或「为省 token 而少读必要权威」。
 - 科研回溯通过类型化对象 + 链接完成；执行上下文不因此变厚（RESEARCH-0013）。
@@ -136,3 +138,4 @@ ADR-0010 已确立 README / CONTRIBUTING 等入口层文档不承担事实库职
 - 知识对象模型（当前/历史隔离、知识≠执行）：RESEARCH-0007 / ADR-0016
 - 科研回溯 vs 上下文经济、一般项目文档面：RESEARCH-0013
 - Dispatcher 演进（Roadmap Phase 5）：ADR-0018 / Roadmap
+- 判断型义务 vs 门禁、机械优先限定于 L1/L2：ADR-0027 · RESEARCH-0014

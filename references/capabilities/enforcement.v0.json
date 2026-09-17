@@ -83,7 +83,7 @@
     },
     {
       "id": "content-consistency",
-      "leaf": "references/capabilities/content-consistency.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "gate-clusters",
@@ -133,7 +133,7 @@
     },
     {
       "id": "doc-freshness",
-      "leaf": "references/capabilities/doc-freshness.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "release-gate-stale",
@@ -177,7 +177,7 @@
     },
     {
       "id": "evidence-tiers",
-      "leaf": "references/capabilities/evidence-tiers.md",
+      "leaf": "references/policies/testing.policy.md",
       "obligations": [
         {
           "id": "changelog-narration-island",
@@ -229,7 +229,7 @@
     },
     {
       "id": "git-workflow-safety",
-      "leaf": "references/capabilities/git-workflow-safety.md",
+      "leaf": "references/policies/git.policy.md",
       "obligations": [
         {
           "id": "protected-branch-direct-push",
@@ -303,7 +303,7 @@
     },
     {
       "id": "governance-validator",
-      "leaf": "references/capabilities/governance-validator.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "missing-required-artifact",
@@ -512,8 +512,38 @@
       ]
     },
     {
+      "id": "runtime-invariants",
+      "leaf": "references/policies/runtime-invariants.policy.md",
+      "obligations": [
+        {
+          "id": "ssot-no-dual-write",
+          "mode": "unmechanized",
+          "result": "deny",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": true
+        },
+        {
+          "id": "three-state-honest",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        },
+        {
+          "id": "anti-fabrication",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        }
+      ]
+    },
+    {
       "id": "secret-scanning",
-      "leaf": "references/capabilities/secret-scanning.md",
+      "leaf": "references/policies/security.policy.md",
       "obligations": [
         {
           "id": "staged-secret-deny",
@@ -534,8 +564,30 @@
       ]
     },
     {
+      "id": "skill-execution",
+      "leaf": "references/capabilities/skill-execution.md",
+      "obligations": [
+        {
+          "id": "mode-routing",
+          "mode": "inherent_judgment",
+          "result": "require_review",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": false
+        },
+        {
+          "id": "no-auto-skill-update",
+          "mode": "unmechanized",
+          "result": "deny",
+          "carrier": null,
+          "scope": "installed",
+          "mechanizable": true
+        }
+      ]
+    },
+    {
       "id": "ssot-repair",
-      "leaf": "references/capabilities/ssot-repair.md",
+      "leaf": "references/policies/lifecycle.policy.md",
       "obligations": [
         {
           "id": "authority-meaning-correct",

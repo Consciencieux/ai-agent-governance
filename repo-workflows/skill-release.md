@@ -1,159 +1,86 @@
 # Skill Repository Release（技能仓库发布流程）
 
-本文件仅适用于**技能仓库自身发布**（ai-agent-governance）。被治理项目请使用 `references/workflows/release.md`——本文件不在该流程中引用，不被 INIT 安装，不进入生成的治理项目。
+仅适用于**本技能分发仓库**发布。被治理项目 → `references/workflows/release.md`（本文件不分发、不 INIT）。
 
-`AGENTS.md` 中的发布路径映射即指向本文件。
+事故与防踩坑证据 → `docs/findings/FINDING-0041-skill-release-operational-traps.md`。按需读；不要把 Finding 正文当 runbook。
 
-## release_requirements（技能仓库发布前置检查）
+## release_requirements
 
-> **Phase 8 / ADR-0024：** Gen2 阻断权威是 `npm run check:must-ship`（必装机械集合；台账见 RESEARCH-0011 § Must-ship），不是「Migration Mode 下 Gen1 `npm run check` 观测红必须先变绿」。2.0 skill-release 另须满足干净目标可用性与 Migration Mode 退出（ADR-0024）；本表仍含完整仓库发布检查。
-
-| 检查 | 要求 | 失败处理 |
+| 检查 | 要求 | 失败 |
 | --- | --- | --- |
 | `git.require_clean_status` | 工作区干净 | ⚠️ Blocked |
-| `gates.must_ship` | `npm run check:must-ship` 退出码 0（ADR-0024 必装机械阻断） | ❌ 停止 |
-| `tests.required` | `npm test` 退出码 0 | ❌ 停止 |
-| `changelog.required` | CHANGELOG 已记录本次变更 | ⚠️ Blocked |
-| `version.manifest_match_tag` | `package.json` / CHANGELOG / `SKILL.md` frontmatter `version` / `references/init-spec.json` `governance_version.default` / `scripts/lib/generate/run.js` 兜底哨兵与 tag 一致（无 `.governance/manifest.json`）；`check-doc-consistency.js --gate` 的 `version_examples` 簇机械验证 | ❌ 停止 |
+| `gates.must_ship` | `npm run check:must-ship` = 0 | ❌ 停止 |
+| `tests.required` | `npm test` = 0 | ❌ 停止 |
+| `changelog.required` | CHANGELOG 已记录本次应交付变更 | ⚠️ Blocked |
+| `version.manifest_match_tag` | 五同步点 + tag 一致（见下；`version_examples` 簇） | ❌ 停止 |
 | `release.tag_required` | 目标 tag 尚不存在 | ⚠️ Blocked |
-| `release.proposal_approved` | Release Proposal 已生成且开发者已明确批准 | ⚠️ Blocked |
-| `release.review_satisfied` | 高风险 Proposal 的 `reviewStatus` 为 `completed` 或 `explicitly-approved` | ❌ 停止 |
-| `docs.parity_passed` | `check-doc-parity.js` 退出码 0（三语文档结构平行） | ⚠️ Blocked |
-| `sync.passed` | `check-sync.js` 退出码 0 | ❌ 停止 |
-| `plan.delivery_verified` | `check-plan-delivery.js` 退出码 0 | ❌ 停止 |
+| `release.proposal_approved` | Proposal 已生成且开发者明确批准 | ⚠️ Blocked |
+| `release.review_satisfied` | 高风险：`reviewStatus` = `completed` \| `explicitly-approved` | ❌ 停止 |
+| `docs.parity_passed` | `check-doc-parity.js` = 0 | ⚠️ Blocked |
+| `sync.passed` | `check-sync.js` = 0 | ❌ 停止 |
+| `plan.delivery_verified` | `check-plan-delivery.js` = 0 | ❌ 停止 |
 
-与被治理项目的差异：无 `validator.passed`。技能仓库没有 `.governance/manifest.json`，也没有软件项目形态的治理工件，`verify_governance.js` 按默认检查必然失败（ADR-0006）——该项由 `tests.required`（`npm test` 退出码 0）替代。本仓发布暂存：`repo-tools/.release/proposal.json`（git 忽略）。
+本仓无 `.governance/manifest.json`；`verify_governance.js` 在本仓**预期失败**（ADR-0006）——以 `tests.required` 替代，**禁止**为通过而伪造 `.governance/`。暂存：`repo-tools/.release/proposal.json`（gitignored）。
 
-## 版本一致性（五个同步点 + tag，无 manifest）
+Gen2 阻断权威：`check:must-ship`（ADR-0024），不是「Migration Mode 下 Gen1 `check` 观测红必须先绿」。
 
-技能仓库无 `.governance/manifest.json`，版本一致性落实为：
+## 版本同步点（五处 + tag，无 manifest）
 
-- `package.json` 的 `version`
-- `CHANGELOG.md` 顶部版本节（`[X.Y.Z]`）
-- `SKILL.md` frontmatter `version`
-- `references/init-spec.json` 的 `inputs.governance_version.default`（新 INIT 给被治理项目盖章的版本）
-- `scripts/lib/generate/run.js` 的兜底哨兵（package.json 不可用时的最后默认值；薄 CLI `scripts/generate-governance.js` 无此字面量）
+1. `package.json` `version`  
+2. `CHANGELOG.md` 顶部版本节 `[X.Y.Z]`  
+3. `SKILL.md` frontmatter `version`  
+4. `references/init-spec.json` `inputs.governance_version.default`  
+5. `scripts/lib/generate/run.js` 兜底哨兵  
 
-+ Git tag `v<version>`
++ Git tag `v<version>`（与 version 配对）。文档里的 `"version": "…"` 示例亦由 `version_examples` 簇 fail-closed。
 
-**tag-version 配对**：`tag` 的值必须与相邻的 `version` 配对（`"version": "X.Y.Z"` 旁应为 `"tag": "vX.Y.Z"`）。文档里的 manifest 示例（本仓库的 `SKILL.md`，以及被治理项目用的 `references/workflows/release.md` 中 release 字段示例）携带版本+标签对，二者矛盾即示例失真——v1.0.0 发布曾保留 `"tag": "v0.15.0"` 与 `"version": "1.0.0"` 并存且全部门禁全绿。现由 `check-doc-consistency.js --gate` 的 `version_examples` 簇机械验证（fail-closed），不依赖记忆。
+## Phase 1：Analyze
 
-## Phase 1：Analyze（分析）
-
-AI 分析当前仓库状态：
-
-- 当前 Git tag / 当前版本号（`git tag -l`、`package.json`）
-- `git log` 与 `git diff`（自上次发布以来的变更）
-- 文件变化、API/interface 变化、用户可见功能变化
-- **已裁定延后的发布安全事项**：本仓 roadmap 已瘦身为索引（ADR-0025），**不再**维护「Deferred release-safety decisions」小节。发布前改为查阅仍 Confirmed、且触及「门禁绿灯未覆盖之证明义务」的 Findings，以及 ADR-0024 `later` 中与本 tag 相关的项。它们不阻断发布；若触发条件已成立，先停下另开 TASK。历史条目只在归档 Plan 正文，不在 roadmap 复述。
-
-运行只读分析工具生成 Proposal：
+只读：当前 tag/版本、`git log`/`diff` 自上次发布、用户可见变化；查阅仍 Confirmed 且触及「门禁未覆盖之证明义务」的 Findings，以及 ADR-0024 `later` 中与本 tag 相关项（不阻断；触发条件已成立则另开任务）。
 
 ```bash
 node scripts/release-manager.js plan --json '{"current":"X.Y.Z","changes":[{"type":"breaking|feature|fix|docs|refactor|test|ci|chore","description":"...","uncertain":false}]}'
 ```
 
-`plan` 只读、永不写仓库；输出 JSON Proposal。退出码 2 = 需要澄清。
+`plan` 只读；退出码 2 = 需澄清。
 
-## Phase 2：Version Decision（SemVer 2.0.0）
+## Phase 2：Version Decision
 
-版本判断严格遵循 SemVer 2.0.0，优先级从高到低：
+SemVer 权威：`references/workflows/release.md` § Phase 2（shared）。本仓同样适用：Breaking 只看对外用户/开发者；不得用 diff 行数/commit 数启发式；`0.x` Breaking 不自动升 `1.0.0`。
 
-**Major —— 仅当存在真实 Breaking Change**：删除公开 API、修改公开 API 导致旧调用失效、删除公开配置、修改 CLI 行为导致已有脚本失效、修改公开协议或数据格式导致不兼容。Breaking Change 必须影响**外部用户或开发者**；内部重构、文件移动、架构调整不能触发 Major。
+## Phase 3：Approval Gate
 
-**Minor —— 仅当增加向后兼容的、用户可感知的新能力**：新增用户功能 / 公开 API / CLI 命令 / 配置能力 / 用户可感知的 Agent 行为。判定标准是**用户可感知**——开发者或被治理项目能直接感知其存在或效果。以下**不得**触发 Minor（归入 Patch）：README 与文档修改、测试增加、CI 修改、重构、性能优化、日志优化、类型注释、内部工具与机制完善。
-
-**Patch —— 其余全部**：Bug 修复、重构、性能优化、文档更新、测试调整、配置调整、依赖更新、内部工具与机制完善。
-
-**禁止的启发式判断**：不得根据 diff 行数、commit 数量、修改文件数量、新增代码数量判断版本——代码规模不代表版本影响范围。
-
-**0.x 规则**：`0.x.y` 仍按上述规则判断；Breaking Change **不自动升级到 1.0.0**，只有开发者明确要求稳定版本发布时才允许进入 1.0.0。
-
-## Phase 3：Approval Gate（审批门禁）
-
-生成 Release Proposal 后，必须等待开发者确认。**风险分级规则（Tiered Review Gate）**：
-
-| 风险等级 | 变更类型 | 审核要求 |
+| 风险 | 类型 | 要求 |
 | --- | --- | --- |
-| 低 | docs/typo/版本号/链接修正/格式 | 轻量级门禁（标准验证序列）自动跑，通过即提交，不询问 |
-| 中 | 新功能/脚本逻辑/政策变更/模板变更 | 轻量级门禁 + Proposal 标注 suggested；开发者批准时决定是否先跑 review-manager |
-| 高 | 安全/权限/删除保护/治理文件行为变更 | **必须**先跑 review-manager（范围 = git diff，非全项目），或开发者逐项明确确认，否则不发布 |
+| 低 | docs/typo/版本/链接/格式 | 轻量门禁通过即可 |
+| 中 | 功能/脚本/政策/模板 | 轻量门禁 + Proposal；开发者决定是否先 review-manager |
+| 高 | 安全/权限/删除保护/治理文件行为 | 必须先 review-manager（范围 = git diff）或逐项明确确认 |
 
-轻量级门禁**总是自动跑**；高风险清单**明确列举**（见上表），不依赖 AI 自由裁量，边界模糊时**取更高级别**。Proposal JSON 必须包含 `riskLevel`、`reviewRecommendation` 与 `reviewStatus`；高风险执行前 `reviewStatus` 必须为 `completed` 或 `explicitly-approved`，否则 `release-manager execute` 拒绝创建 tag。
+轻量门禁总是跑；边界模糊取更高档。Proposal 须含 `riskLevel` / `reviewRecommendation` / `reviewStatus`。批准后写入 `repo-tools/.release/proposal.json`（先 `mkdir -p repo-tools/.release`）。
 
-批准后把 Proposal 记录到 `repo-tools/.release/proposal.json`（先 `mkdir -p repo-tools/.release`；该目录整树 git 忽略）。
+## Phase 4：Release Execution
 
-## Phase 4：Release Execution（执行）
+开发者确认后按序执行（细节陷阱见 FINDING-0041）：
 
-开发者确认后，AI 执行：
+1. 再查 `git status` / `HEAD`；须干净且与 Proposal `headSha` 一致，否则重 plan。  
+2. **版本同步**（五同步点）：`[Unreleased]` → `[X.Y.Z]` **只改名**；**不在本步**重建空 `[Unreleased]`。同步文档中的版本示例。  
+3. **门禁（release commit 之前）：** `check-plan-delivery.js --gate` + `npm run check:skill-release`。  
+4. **归档残留** Completed/Implemented 计划 → `docs/plans/archive/`（保留原文；以 zh-CN 为准；权威触发是 Plan lifecycle / ADR-0016，本步兜底）。  
+5. **更新 roadmap**（索引对账；计划链接随归档改写；CHANGELOG 引计划只写名称不写路径）。  
+6. **release commit**（版本同步 + 归档 + roadmap 同提交）：`release: vX.Y.Z - <summary>`。  
+7. **复跑** `npm run check`（commit 后、tag 前）。  
+8. **重新** `release-manager plan`（用新 HEAD；**禁止**手改 proposal 的 `headSha`）。  
+9. **tag：** `node scripts/release-manager.js execute --proposal repo-tools/.release/proposal.json --yes`  
+10. **push** 当前已批准分支 + `vX.Y.Z`（勿写死 `main`；禁 force-push 受保护分支）。  
+11. **GitHub Release 说明：** `gh release create …`（未登录 → ⚠️）。  
+12. **载荷 tarball：** 默认等 CI `skill-payload-release.yml`；回退：`bash repo-tools/package-skill.sh vX.Y.Z` + `gh release upload`。校验：白名单仅 `SKILL.md`+`references/`+`scripts/`+`LICENSE`；记录 SHA-256。
 
-1. **再次检查仓库状态**：`git status`、`git rev-parse HEAD`。工作区干净且 HEAD 与 Proposal 中 `headSha` 一致；若变化 → 重新分析。
-2. **版本同步**（技能仓库五个同步点 + tag，无 manifest）：
-   - 更新 `package.json` 的 `version`
-   - 更新 CHANGELOG：`[Unreleased]` → `[X.Y.Z]`（**只改名，不在此步重建空节**——重建见下条红线）
-   - 更新 `SKILL.md` frontmatter 的 `version`
-   - 更新 `references/init-spec.json` 的 `inputs.governance_version.default`
-   - 更新 `scripts/lib/generate/run.js` 的兜底哨兵（与上一条共同决定新 INIT 给被治理项目打上的版本号；勿改薄 CLI）
+**空 `[Unreleased]` 重建：** 仅在第 3 步门禁通过之后（通常随 release commit 或紧随其后）。顺序：改名 → 门禁 → 重建。
 
-   **另外必须更新文档里的版本示例值**（不是同步点，但同一个 `version_examples` 簇会 fail-closed 拦下它们）：任何 `.md` 里形如 `"version": "X.Y.Z"` / `"governance_version": "X.Y.Z"` 的示例——目前分布在 `SKILL.md` 与被治理项目发布流程文档的 manifest 示例块中。它们不是发布状态的一部分，但门禁不区分「示例」与「事实」，一处未改就红。判定方式不靠记忆：`node scripts/check-doc-consistency.js --gate` 会逐条列出 `<file>:<旧版本> != <新版本>`。
+## 安全与事务
 
-   **空 `[Unreleased]` 节的重建时机**：必须在第 3 步发布门禁**通过之后**（通常与 release commit 一起，或紧随其后单独提交），**不在本步**。`changelog_coverage` 在发布形态读"最顶部的版本节"，提前重建会让它读到空节而失败——v0.15.0 与 v1.0.1 发布各踩过一次。顺序：改名 → 门禁 → 重建。若门禁报 changelog_coverage 失败，先检查是否已提前重建了空节，删除空节重跑门禁。
-3. **计划交付对账 + 发布门禁（全部在 release commit 之前）**：
-   - `node repo-tools/check-plan-delivery.js --gate`（退出码必须 0）
-   - `npm run check:skill-release`（exit 0；含 `check-doc-consistency.js --release-gate` 与 `check-doc-freshness.js --release-gate`）。**在归档与提交之前运行**：pending-archive（implemented 计划未归档）与 changelog 覆盖在此阶段失败还来得及补救——版本节推进有 `version_examples` 簇机械验证（CHANGELOG 最新版本节必须等于 package.json version，v0.13.1 发布曾因无此检查而漏改 CHANGELOG）。
-4. **归档计划**：归档**残留**的 Completed/Implemented 计划（若有）——移入 `docs/plans/archive/`（技能仓库共享单语），**保留原文，绝不删除**。权威触发是 Plan lifecycle closure（ADR-0016），不是本 release 步骤；本步只兜底漏归档。Gen1 pending-archive 门禁仍可能假设「release 才归档」——以 ADR-0016 / `docs/plans/README.md` 为语义权威，checker 迁移属 Phase 4。
-   - **归档冲突规则**：一份计划在本仓库存在三份语言副本（`docs/{en,zh-CN,zh-TW}/plans/X.md`），而 `docs/archive/` 是共享单语目录。**以简体中文副本为准**；en / zh-TW 副本不是归档候选。最终 `docs/archive/` 下只有一个 `X.md`。
-   - 未完成的计划继续留在 `docs/plans/` 下。
-5. **更新 roadmap**：按
-   `docs/plans/roadmap/en.md`
-   维护规则重置 horizon——roadmap 是索引而非事实源（设计计划是单一事实源）。**对账义务**：逐项检查自上次发布以来所有计划事件（新建、归档、implemented、withdrawn）是否同步反映到 roadmap：implemented 计划移入 Done 并链接归档（未归档的链接自
-   `plans/`，发布时改为
-   `archive/`）；新建计划在对应 horizon 加链接；已归档/撤回计划从活跃 horizon 移除；无设计计划的条目显式标注。**遗漏即治理缺陷**，不因门禁绿而豁免。
-
-   **计划链接迁移（roadmap 与 CHANGELOG 两个表面）**：归档把计划从 `docs/plans/` 移到 `docs/plans/archive/`，因此指向 `plans/` 的相对路径在归档后全部变成死链。roadmap 按上述规则改写链接；CHANGELOG 的做法不同——**条目引用计划时只写计划名称，不写路径**（如 `(plan: governance-defect-closure)`），这样归档不会使历史记录断链，也不需要在每次发布时回改已发布的版本节。ADR 编号稳定，可以直接引用（如 `(ADR-0012)`）。归档后检查：`rg 'plans/<slug>' CHANGELOG.md` 应无命中。
-6. **提交 release commit**：`git add`（版本同步、归档与 roadmap 相关文件）→ `git commit -m "release: vX.Y.Z - <summary>"`。**版本变更与归档必须进入同一个提交**——tag 稍后指向的 HEAD 必须包含它们。
-7. **复跑轻量门禁**（release commit 之后、tag 之前）：`npm run check`（exit 0）——确认归档与版本同步的提交内容本身没有破坏任何门禁。
-8. **校验（本仓库以 `npm test` 为准）**：技能仓库的校验义务由第 7 步的 `npm test` + 发布门禁承担。`scripts/verify_governance.js` 在本仓库**预期退出码 1**（无 `.governance/`、无软件项目形态工件，validator 按默认检查必然失败——ADR-0006，本仓库不 dogfood 自身框架）。它不是本流程的门禁：**不得为了让它通过而伪造 `.governance/`**，也不得因其非零退出码而中止发布。
-9. **生成/更新 Proposal**：**重新运行 `release-manager plan`**（此时 HEAD 已推进到 release commit），让 plan 以新 HEAD 重新生成 proposal——`headSha` 与 `provenance` 都随 plan 重建。**不得手工编辑 `repo-tools/.release/proposal.json` 只改 `headSha`**：`execute` 会重算 provenance 并拒绝任何被编辑的 proposal（v1.0.1 发布时曾手改 headSha 触发 "proposal provenance does not match" 拒绝）。provenance 绑定的是 plan 当时的 risk/review/version/headSha 字段，release commit 之后必须先 plan 再 execute。
-10. **创建 annotated tag**：
-
-    ```bash
-    node scripts/release-manager.js execute --proposal repo-tools/.release/proposal.json --yes
-    ```
-
-11. **推送**：推送**当前已批准发布的分支**（通常是合入后的默认分支），不要写死 `main`：
-
-    ```bash
-    BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-    # 若处于 detached HEAD，先检出默认分支或带 release commit 的分支再推
-    git push -u origin "HEAD:refs/heads/${BRANCH}"
-    git push origin "vX.Y.Z"
-    ```
-
-    推荐流程：特性分支 → PR → 合入默认分支 → 在默认分支上完成 release commit / tag → 再推送。禁止 force-push 受保护分支。
-
-12. **创建 GitHub Release（说明文字）**：`gh release create vX.Y.Z --title "vX.Y.Z" --notes "<Release Notes>"`（可暂不附资产）。`gh` 未登录/未安装 → ⚠️ Blocked。
-
-13. **技能载荷 tarball（优先 CI）**：
-
-    - **默认**：推送 tag 后由 `.github/workflows/skill-payload-release.yml` 在 Linux 上运行 `repo-tools/package-skill.sh`，并将 `dist/ai-agent-governance-skill.tar.gz` 上传到该 Release（避免本机 macOS 打包引入 `._*` 元数据）。
-    - **回退（CI 不可用时）**：本机执行：
-
-      ```bash
-      bash repo-tools/package-skill.sh vX.Y.Z
-      gh release upload vX.Y.Z dist/ai-agent-governance-skill.tar.gz --clobber
-      ```
-
-    校验两项，缺一不可：
-    - **内容白名单**：`tar -tzf` 列出的内容只含载荷（`SKILL.md` + `references/` + `scripts/` + `LICENSE`），不得含 `docs/`、`tests/`、`README` 等基础设施文件。
-    - **校验和**：记录 tarball 的 SHA-256（`shasum -a 256 dist/ai-agent-governance-skill.tar.gz`），写入 Release Notes，供安装方核对。
-
-## 安全规则
-
-AI 不得自动创建 tag、push tag、创建 release，除非：已生成 Release Proposal 且开发者已明确批准。
-
-批准后、执行前，必须重新检查 git HEAD 与 git status。任一变化 → 取消流程，重新 plan。
-
-**事务性**：任何前置检查失败 → 在开始写操作之前中止，不触碰仓库。进入写操作后（版本同步 → 归档 → release commit → tag → push 分支与 tag → GitHub Release 说明 → 资产由 CI 或本机回退上传）必须连续完成；任一步失败立即停止，报告 ⚠️/❌ 与已完成/未完成清单，**不得改用别的方式重试**。tag 已创建但 GitHub Release / 资产上传失败 → **不删除 tag、不强制重来**；报告 ⚠️ Blocked，由用户决定补建 release、等 CI、或本机回退上传。
-
-**恢复**：中断后依据 `git log`（release commit / tag 是否已创建、push 是否到达远端）与 `repo-tools/.release/proposal.json`（`headSha` 指向哪个提交）判断已完成步骤，**仅重做未完成部分**——已完成并推送的提交与 tag 绝不重做或强推。技能仓库无 `validation.json`，`git log` + proposal 即恢复依据。
+- 无已批准 Proposal → 不得自动 tag / push tag / 建 Release。  
+- 批准后、执行前 HEAD/status 变化 → 取消，重 plan。  
+- 前置失败 → 写操作前中止。进入写操作后必须连续完成；任一步失败 → 停止并报告已完成/未完成，**不得改道重试**。  
+- tag 已建但 Release/资产失败 → **不删 tag、不强推**；⚠️ 由人决定补救。  
+- 恢复：据 `git log` + `proposal.json` 只重做未完成部分。

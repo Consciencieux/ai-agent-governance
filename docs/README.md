@@ -83,9 +83,11 @@ docs/
 
 行数超限往往意味着职责混杂，但**不是**「过线就一定错」。禁止为过线自动硬拆或大删。
 
+**soft / review 是报警上限，不是日常合格线或目标长度。** 未超预算 ≠ 薄入口、职责密度或 Context Economy 已满足。日常该多长看职责单一与 ADR-0022，不看「配额还剩多少」；不得用「仍低于 soft」为继续堆胖辩护。INSTALLED 同句协议见 `references/policies/coding.policy.md` § 文件行数预算（表分家、协议对称）。
+
 | 对象 | soft | review | 备注 |
 | --- | --- | --- | --- |
-| 薄入口（`AGENTS.md` / `SKILL.md`） | 250 | 350 | 与薄入口原则一致 |
+| 薄入口（`AGENTS.md` / `SKILL.md`） | 250 | 350 | 报警档；日常仍以薄入口原则为准 |
 | 工作权威（`references/policies` · `capabilities` · `instruction`、`docs/product` 的 `.md`） | 400 | 500 | 机读库存 JSON（如 `enforcement.v0.json`）不按此档计量 |
 | Research / ADR / Finding 正文 | 600 | 800 | 允许证据，禁止百科化施工 |
 | 生产脚本（`scripts/**`、`repo-tools/**`） | 600 | 800 | |
@@ -208,7 +210,7 @@ ADR 的修订政策（澄清 vs 语义变化；**ADR 可以演进，但不能改
 是 → 候选条目；否 → 通常不写 CHANGELOG
 ```
 
-判断依据是**影响**，不是文件类型：纯呈现文档无条目；改变公开导航 / 贡献者工作流 / 受支持行为的文档变更按普通准入评估。执行细则（受众测试、checkpoint 对账、C1–C5）在 `repo-workflows/changelog-policy.md`。
+判断依据是**影响**，不是文件类型：纯呈现文档无条目；改变公开导航 / 贡献者工作流 / 受支持行为的文档变更按普通准入评估。执行细则（C1–C5、对账触发、composition）在 `repo-workflows/changelog-policy.md`。
 
 **不应包含**：根因分析、架构 rationale、未来计划、research model、raw findings、测试计数 / exit code / 验证叙事、实现日志、每个 commit、每个文档对象。
 

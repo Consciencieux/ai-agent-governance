@@ -97,6 +97,7 @@ State model: [governance-model.md](docs/product/en/governance-model.md). Agent o
 
 ## Documentation
 
+- [overview.md](docs/product/en/overview.md) — what this skill governs and how each concern lands
 - [commands.md](docs/product/en/commands.md) — all available prompts
 - [bootstrap-output.md](docs/product/en/bootstrap-output.md) — annotated INIT output
 - [governance-model.md](docs/product/en/governance-model.md) — Spec / Status / Health state model

@@ -2,7 +2,8 @@
 // PAYLOAD SCRIPT — file-size budget reporter for governed projects.
 // Self-contained: Node builtins only. No skill-repo construction IDs.
 //
-// Line count is a smell, not a verdict. This script ONLY reports (and optionally
+// Line count is a smell, not a verdict. soft/review = alert ceilings, not target size;
+// under budget ≠ thin enough. This script ONLY reports (and optionally
 // fails --gate on review tier). Agents must propose a split and wait for human
 // confirmation — never auto-trim or hard-split because of line count alone.
 //

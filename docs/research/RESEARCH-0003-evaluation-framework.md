@@ -95,7 +95,7 @@ release metadata 能不能漂移？
 CI 是否还能保证运行？
 ```
 
-真正机械的 rule 应尽量在该假设下成立；prompt rule 则明确承认 zero-attention 下不保证（FINDING-0008 G03）。这是判断「治理 control vs 只是 guidance」的标准。
+真正机械的 rule 应尽量在该假设下成立；prompt rule 则明确承认 zero-attention 下不保证（FINDING-0008 G03）。这是判断「治理 control vs 只是 guidance」的标准。指标的机械意义只覆盖 RESEARCH-0014 的 L1/L2；L3（习惯/语义）不在 zero-attention 可证集合里。
 
 ## 数据源
 

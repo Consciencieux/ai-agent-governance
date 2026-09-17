@@ -14,21 +14,23 @@
 
 | | |
 | --- | --- |
-| **產品** | `v2.1.1` — INSTALLED 必裝切片；CI 阻斷 = `npm run check:must-ship` |
-| **Horizon** | H2 **已完成**；下一施工帶 = **H3**（遠；預設不擋下一 minor） |
+| **產品** | 已發佈 `v2.1.1`；**下一發佈 / 論文釘點 `v2.2.0`**（[RESEARCH-0015](../../research/RESEARCH-0015-paper-experiment-apparatus.md)，四門凍結）；能力地圖 [overview](../../product/zh-TW/overview.md)；CI 阻斷 = `npm run check:must-ship` |
+| **Horizon** | H2 **已完成**。H3 **遠**（預設不擋下一 minor；也**不是**「真正可用」的前置） |
+| **誠實缺口** | 長期管理仍靠 Agent **記得跑閘控**（觸發 ≠ 偵測）。portable 無 runtime 硬攔。願景「少依賴注意力」未達。 |
 | **Active Plan** | **無** |
 | **排隊 Design** | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) — H3 邊界 / 執行期與科研（未升 Active） |
 
-殘留主題（不等於 Active Plan）：INSTALLED 機械調度（FINDING-0004/0005，須 Narrow ADR）、按需 Finding 補丁、僅在觸契約時再 EXTRACT 厚 CLI。
+殘留（≠ Active Plan）：執行期觸發/調度（FINDING-0004/0005，進 INSTALLED 須 Narrow ADR）、按需 Finding 補丁、觸契約才 EXTRACT 厚 CLI。指令面衛生（FINDING-0038 + overview）已落地、未另開 Plan。
 
 ## 近線
 
 | 項 | 角色 | 說明 |
 | --- | --- | --- |
+| 執行期觸發 / 調度 | 按需小切片 | 閘控已機械，啟動仍靠注意力。進 INSTALLED 須 Narrow ADR；預設不開工 H3。 |
 | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) | Design | H3 成員 / 非成員 / 升 Active 前置。只凍結邊界；預設不裝 L3。 |
-| Finding 補丁 | 按需 | 選定後做小切片——不是常駐清掃。最近閉合：[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（Archived）。何時需要 Plan：見 [AGENTS.md](../../../AGENTS.md) 原則索引（Horizon vs 日常小改）。 |
+| Finding 補丁 | 按需 | 選定後做小切片——不是常駐清掃。最近閉合：[PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md)（Archived）。何時需要 Plan：見 [principles-index.md](../../../repo-workflows/principles-index.md)（Horizon vs 日常小改）。 |
 
-SemVer ≠ Horizon。施工規則在 [AGENTS.md](../../../AGENTS.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § 規模分級——**不**寫在本頁。
+SemVer ≠ Horizon。施工規則在 [AGENTS.md](../../../AGENTS.md) / [agent-change.md](../../../repo-workflows/agent-change.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § 規模分級——**不**寫在本頁。
 
 ## 已完成（一句）
 

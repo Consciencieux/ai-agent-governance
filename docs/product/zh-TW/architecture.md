@@ -71,13 +71,11 @@ ai-agent-governance/
 │   │   ├── git-policy.template.md / githooks-template.md / sync-rules.template.md
 │   ├── policies/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
-│   │   └── governance-files.policy.md
-│   ├── capabilities/               # 任務怎麼做的葉卡（INIT → docs/rules/capabilities/）；硬規則正文在 policies/（FINDING-0038）
-│   │   ├── enforcement.v0.json     # 義務分類庫存
-│   │   ├── audit-drift.md / content-consistency.md / deterministic-init.md / doc-freshness.md
-│   │   ├── evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / governance-state.md
-│   │   ├── governance-validator.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md
-│   │   ├── review-mechanism.md / secret-scanning.md / ssot-repair.md / sync-groups.md
+│   │   ├── runtime-invariants.policy.md / governance-files.policy.md
+│   ├── capabilities/               # 任務葉卡——不是功能總目錄（見 overview.md）；硬規則正文在 policies/
+│   │   ├── enforcement.v0.json     # 義務分類庫存（leaf 可指 policy 或 capability）
+│   │   ├── audit-drift.md / deterministic-init.md / generated-subskill-lifecycle.md / governance-state.md
+│   │   ├── plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / skill-execution.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
 │   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md
@@ -124,8 +122,12 @@ ai-agent-governance/
 │   │   └── routing.js
 │   ├── routing-graph.v0.json
 │   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
+│   ├── export-installed-scripts.js  # 論文夾具：匯出 INSTALLED 閘控（--ref 釘點）
 │   └── package-skill.sh        # 發佈載荷 tarball 打包
 ├── repo-workflows/             # 本倉庫自己的流程文件——絕不分發
+│   ├── principles-index.md     # 治理原則指針表（AGENTS 路由至此）
+│   ├── agent-change.md         # 本倉編輯 / 保護 / 校驗
+│   ├── conventions.md          # 本倉施工約定
 │   ├── changelog-policy.md
 │   └── skill-release.md
 │

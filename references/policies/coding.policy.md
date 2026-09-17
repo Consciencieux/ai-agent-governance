@@ -5,12 +5,12 @@
 - 遵循项目既有代码风格与格式化配置（Formatter/Lint 配置为基准，不自定义风格）
 - 命名：按语言惯例（camelCase / snake_case / PascalCase），保持一致
 - 保持向后兼容；不因重构热情破坏公共接口
-- **行尾由仓库声明，不靠每台机器的 Git 配置**：仓库根应提供 `.gitattributes`（`* text=auto eol=lf`，`*.sh` 强制 LF，二进制后缀标 `binary`）。理由是 `core.autocrlf` 是**本机**设置——一台配置不同的机器就能提交 CRLF blob，使之后每次 diff 变成整文件改动。没有 Formatter/Lint 配置的项目（如纯脚本仓库）也应至少有这一条，因为它约束的是仓库存储而非编辑器行为。**注意**：INIT 当前不生成 `.gitattributes`，项目需自行添加；上面括号内的三条即完整内容，无需另找范本。
+- **行尾由仓库声明，不靠每台机器的 Git 配置**：仓库根应有 `.gitattributes`（`* text=auto eol=lf`，`*.sh` 强制 LF，常见二进制后缀标 `binary`）。理由是 `core.autocrlf` 是**本机**设置——一台配置不同的机器就能提交 CRLF blob，使之后每次 diff 变成整文件改动。INIT Phase B 生成最小 `.gitattributes`；已有文件则不覆盖。
 
 ## 结构与依赖
 
 - 遵循 docs/ARCHITECTURE.md 声明的目录结构，不随意改变
-- 新模块/服务必须登记到组件登记表（New Code Registration）
+- 新模块/服务：有可运行代码入口时必须登记到组件登记表（New Code Registration）；仅有 Feature/架构占位、尚无业务代码时不强制填满登记表
 - 加依赖必须用项目包管理器并说明用途；重型依赖需用户确认
 - 不引入"看起来不错"但未被要求的抽象
 
@@ -44,6 +44,8 @@
 ### 文件行数预算（机械报告 + 人确认后拆分）
 
 行数是**信号不是证明**：过长往往暗示职责混杂，但不得以行数代替机制测试，也不得为过线自动硬拆。
+
+**soft / review 是报警上限，不是日常合格线或目标长度。** 未超预算 ≠ 薄入口、职责密度或 Context Economy 已满足。日常该多长看职责单一与工程克制，不看「配额还剩多少」；不得用「仍低于 soft」为继续堆胖辩护。
 
 | 对象（被治理项目路径） | soft | review |
 | --- | --- | --- |

@@ -111,7 +111,7 @@ git diff → 知道改了什么 → 选择相关 rule → 运行相关 gate
 Rule → Trigger → Mechanism → Evidence → Decision
 ```
 
-例如规则「修改 validator-command 时必须检查所有 sibling instance」：当前没有结构化 sibling 列表、没有 instance model、没有触发条件、没有 closure checker，只能靠 AI 记得检查（FINDING-0003）。
+例如规则「修改 validator-command 时必须检查所有 sibling instance」：当前没有结构化 sibling 列表、没有 instance model、没有触发条件、没有 closure checker，只能靠 AI 记得检查（FINDING-0003）。为何「记得检查」无法用文本门禁补齐——以及声明合同只收缩论域、不消灭判断——见 RESEARCH-0014。
 
 ## 与下一代的关系
 

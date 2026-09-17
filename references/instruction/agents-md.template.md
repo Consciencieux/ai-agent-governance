@@ -20,7 +20,7 @@ Run these bare, without wrapping:
 - Lint: `{{LINT_CMD}}`
 - Build: `{{BUILD_CMD}}`
 - Governance check: `{{npm run governance-check | uv run scripts/check_governance.py | ...}}`
-- File-size budget (advisory): `node scripts/check-file-size-budget.js` (`--gate` fails on review tier; propose split, wait for human confirmation — never auto-split)
+- File-size budget (advisory): soft/review = alert ceilings, not target size; under budget ≠ thin enough. `node scripts/check-file-size-budget.js` (`--gate` fails on review tier; propose split, wait for human confirmation — never auto-split). Rule: `docs/rules/coding.md` § 文件行数预算
 
 ## Documentation Map
 Docs live under `docs/`; agents discover new files by listing the directory.
@@ -39,9 +39,9 @@ The entries below are skills, not scripts. Load the indicated `SKILL.md` when a 
 {{GENERATED_SKILL_REGISTRY}}
 
 ## Agent Operating Lifecycle
-All agents MUST follow this lifecycle for every dev task. Scope tiers: small (single file, <50 lines, no public-interface change) runs Understand → Implement → Validate → Report only; medium/large run the full lifecycle with a TASK plan. Full detail: @docs/rules/lifecycle.md
-- **Phase 1 Understand**: read AGENTS.md, docs/ARCHITECTURE.md, docs/features/, recent CHANGELOG.md before acting.
-- **Phase 2 Plan**: medium/large changes MUST first create `docs/plans/TASK_<name>.md` (Status, Task Purpose, Current Problem, Proposed Solution, Affected Files, Risks, Validation Method). The Status line must lead with a canonical keyword (Active / design plan, not implemented / implemented / Completed / archived) so gates can classify it — anything else reads as unknown and fails the consistency gate. Affected Files must be based on reference search (`rg`), not guesswork.
+All agents MUST follow this lifecycle for every dev task. Scope tiers: small (single concern, no public-interface/rules-contract change; may touch a few related files) runs Understand → Implement → Validate → Report only; medium/large run the full lifecycle with a TASK plan. Multi-file alone does not force medium. Full detail: @docs/rules/lifecycle.md
+- **Phase 1 Understand**: read task-relevant sections of AGENTS.md and related ARCHITECTURE/feature docs on demand; do not ritual-read the whole features tree or CHANGELOG.
+- **Phase 2 Plan**: medium/large changes MUST first create `docs/plans/TASK_<name>.md` (Status, Task Purpose, Current Problem, Proposed Solution, Affected Files, Risks, Validation Method). Discovery Ledger is required for medium/large **bug fixes or mechanism changes**; optional otherwise. The Status line must lead with a canonical keyword (Active / design plan, not implemented / implemented / Completed / archived) so gates can classify it — anything else reads as unknown and fails the consistency gate. Affected Files must be based on reference search (`rg`), not guesswork.
 - **Phase 3 Implement**: respect architecture, keep backward compatibility, do not restructure without reason. Before touching any public interface/module/file, search its references first and include the found files in the plan. Maintain the Change Hygiene Ledger for old/new names, paths, config keys, commands and dynamic references. **Fixing a governance defect (rules, templates, generators, gates, tests, generated artifacts, synced governance docs, release flow) does not end at the reported line**: enumerate sibling instances on the surfaces that share the same contract and state the search scope and command used ("found nothing else" is not evidence), and trace the control plane that produced or failed to catch it (authoritative rule → template/generator → output → checker/gate → test oracle → release or target consumer) — editing only the visible output is undone by the next generation. Each surface and layer gets a short outcome: fixed / correct with evidence / not applicable with reason / blocked. Detail: @docs/rules/lifecycle.md
 - **Phase 4 Validate**: run tests, lint, build; record real output.
 - **Phase 5 Synchronize Knowledge** (medium/large only): update CHANGELOG.md (at merge/release boundaries, not per commit), Feature Registry, ARCHITECTURE.md (if changed), check off the corresponding milestone in docs/plans/DEVELOPMENT_PLAN.md (if one exists), and set the completed TASK_<name>.md Status to Completed. Reconcile sync groups per `.governance/sync-rules.json` — a watch hit without its required files = task not done. Archiving happens at RELEASE, not here.
@@ -65,25 +65,21 @@ Content boundary (what belongs in an entry): record what changed → what impact
 SemVer: MAJOR.MINOR.PATCH — breaking → MAJOR, feature → MINOR, fix → PATCH.
 
 ## Definition of Done
-Code + tests + all quality gates + CHANGELOG + docs sync. Anything missing = not done.
-
-Every "✓ passed" carries an evidence tier: **mechanical** (marker/structure/path/regex/existence — means "condition satisfied", NOT "behavior correct"), **human-attested** (a person judged it: release approval, translation review, root-cause adequacy), or **unverified** (self-reported only — not a verification result). Never promote a tier: a green gate is mechanical evidence, not proof of correct behavior.
-
-**Declaration vs mechanism**: a rule declares a SET (sync points, scanned dirs, CI gates, protected files, checklists); the mechanism must cover the same set. "Declared 5, verified 2" and "declared all trees, enumeration missed one" are the same defect class — they pass green while letting the real breach through. Fix by completing the mechanism or narrowing the declaration; editing the doc alone is not a fix. After any move/rename/split, re-check every hardcoded enumeration and path constant. Full rules: @docs/rules/lifecycle.md § 声明与机制的差距, @docs/rules/testing.md § 测试活性.
+Code + tests + agreed gates + docs sync (by scope tier). Evidence tiers and honesty rules: @docs/rules/runtime-invariants.md (§ 完成定义 / § 状态协议) and @docs/rules/testing.md.
 
 ## Dependency Management Rules
 Add dependencies only via the project package manager and state the purpose. Heavy dependencies need user confirmation.
 
 ## Code Modification / Deletion Protection
 Before touching existing code, always:
-1. **Context Analysis**: check AGENTS.md, ARCHITECTURE.md, docs/features/, CHANGELOG.md, git history.
+1. **Context Analysis**: read task-relevant sections of AGENTS.md / ARCHITECTURE.md / related feature docs / recent CHANGELOG / git history on demand (no ritual full-tree read).
 2. **Determine Code Ownership**: registered feature? core architecture? test-covered? depended on by other modules?
 3. **Before Deletion**: never delete directly — explain why, what it does, search all references, check Feature Registry impact, provide migration.
 4. **Breaking Changes**: removing modules, changing public APIs, altering data structures, swapping core deps, changing architecture layers MUST be recorded and reflected in ARCHITECTURE.md, Feature Registry, CHANGELOG.
 - Forbidden: deleting code because it "looks unused"; be extra careful with dynamic invocation / plugin / config-driven code.
 
 ## New Code Registration
-Every new module/service MUST be registered in the component registry table in `docs/ARCHITECTURE.md` (name, responsibility, dependencies, entry). If it forms a new feature, register in `docs/features/`. Unregistered = task incomplete.
+Every new module/service with a runnable code entry MUST be registered in the component registry table in `docs/ARCHITECTURE.md` (name, responsibility, dependencies, entry). Placeholder-only Feature/architecture rows without business code do not force a full registry fill. If it forms a new feature, register in `docs/features/`. Unregistered runnable modules = task incomplete.
 
 ## Do Not
 Secrets, unrelated refactors, restructuring without cause, skipping Definition of Done.
@@ -92,19 +88,10 @@ Secrets, unrelated refactors, restructuring without cause, skipping Definition o
 {{CONVENTION: e.g. Conventional Commits in <lang>}}
 
 ## Agent Permission Model
-| Action | Permission |
-| --- | --- |
-| Read | automatic |
-| Create Documentation | automatic |
-| Modify Code | allowed, must validate (protected governance files listed below require the protection flow) |
-| Modify 3+ Files at Once | confirmation required |
-| Delete Code | confirmation required |
-| Dependency Change | confirmation required |
-| Git Commit / Git Push | one confirmation per change set (see Git Write Policy) |
+Full table: @docs/rules/runtime-invariants.md (§ Agent 权限模型). Summary: read/docs automatic; modify code allowed with validation (file count alone is not a confirm gate); delete code / change dependencies / edit governance files need confirmation; git commit/push = one confirmation per change set (@docs/rules/git-policy.md).
 
 ## Rule Priority System
-1. System / Platform Safety → 2. Explicit User Request → 3. Governance Integrity → 4. AGENTS.md → 5. docs/rules/ → 6. Existing Code Convention
-Note: users may request governance changes via explicit instruction (through the Governance File Protection flow), but ordinary tasks may not implicitly bypass governance rules. "Edit AGENTS.md" triggers the protection flow, not a normal override.
+@docs/rules/runtime-invariants.md (§ 规则优先级). Ordinary tasks may not bypass governance; editing AGENTS.md uses the Governance File Protection flow.
 
 ## Git Write Policy
 - Auto: `git status`, `git diff`, `git add <specific files>`, clean switch to an **existing** branch. `git checkout -b` only when `check-git-policy.js` exits 1 or the user asked for a new branch.
@@ -129,44 +116,8 @@ Note: users may request governance changes via explicit instruction (through the
 - Never force push. Do not `gh pr create` unless the user asked. Small single-file doc/typo changes on a non-protected branch may skip a feature branch, but must be reported.
 
 ## Governance File Protection
-The protected files list is:
-
-- `AGENTS.md`
-- `CLAUDE.md`
-- `docs/rules/**`
-- `.governance/manifest.json`
-- `.governance/preflight.json`
-- `.governance/git-policy.json`
-- `.governance/sync-rules.json`
-<!-- phase:B+ -->
-- `scripts/verify-governance.js`
-- `scripts/check-lock.js`
-- `scripts/check-git-policy.js`
-- `scripts/check-secrets.js`
-- `scripts/check-sibling-closure.js`
-- `scripts/check-file-size-budget.js`
-- `scripts/lib/secret-scan-facts.js`
-- `scripts/evaluators/ctrl-0001-secret-protection.js`
-- `scripts/check-sync.js`
-<!-- /phase -->
-<!-- phase:C -->
-- `scripts/check-doc-consistency.js`
-- `scripts/lib/md-link-facts.js`
-- `scripts/evaluators/ctrl-0006-broken-links.js`
-- `scripts/check-doc-freshness.js`
-- `scripts/lib/git-facts.js`
-- `scripts/evaluators/ctrl-0003-doc-freshness.js`
-- `scripts/evaluators/ctrl-0004-translation-freshness.js`
-- `scripts/check-plan-sync.js`
-- `scripts/release-manager.js`
-<!-- /phase -->
-- `.githooks/pre-commit`
-- `.githooks/commit-msg`
-- `opencode.json`
-- `.github/workflows/**`
-- `.gitlab-ci.yml`
-
-Modifying any of them requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
+Protected-path list single source of truth: @docs/rules/governance-files.md (完整清单见该文件) — do not maintain a second path table here.
+Modifying any listed path requires: reason → CHANGELOG update → bump `.governance/manifest.json` governance_version → run verify-governance.js. Never loosen permission limits or remove validation without explicit user approval.
 
 ## Mandatory Pre-commit Checklist
 Before commit/push: secrets scan exit 0; no unrelated files staged; required tests/gates recorded. CHANGELOG: follow project accession (writing may be deferred to a checkpoint; accounting may not). Do not treat "every push must edit CHANGELOG" as a hard gate. Doc-only / presentation-only edits normally need no entry.

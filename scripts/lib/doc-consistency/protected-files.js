@@ -100,7 +100,7 @@ function runProtectedFiles(ctx) {
       if (!claimsEnum) continue;
 
       // Scope the claim to its own section so an unrelated single-source-of-truth mention
-      // elsewhere (e.g. the AGENTS.md principles index) cannot disable the check.
+      // elsewhere (e.g. repo-workflows/principles-index.md) cannot disable the check.
       // Split on ANY heading level: SKILL.md carries its protection block under "### ",
       // so a "## "-only split found no claim section and fell back to the whole file —
       // which dragged unrelated prose (".governance/state.json" in the state-file docs)

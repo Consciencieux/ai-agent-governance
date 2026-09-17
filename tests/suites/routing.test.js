@@ -74,7 +74,11 @@ module.exports = function register(test) {
         "security-baseline",
         "engineering-restraint",
       ],
-      run_set: ["CTRL-0001", "scripts/check-secrets.js"],
+      run_set: [
+        "CTRL-0001",
+        "scripts/check-secrets.js",
+        "scripts/check-file-size-budget.js",
+      ],
       defer_set: [],
     });
   });
@@ -91,7 +95,13 @@ module.exports = function register(test) {
         "secret-protection",
         "security-baseline",
       ],
-      run_set: ["CTRL-0001", "scripts/check-secrets.js"],
+      run_set: [
+        "CTRL-0002",
+        "scripts/check-git-consent.js",
+        "scripts/check-git-policy.js",
+        "CTRL-0001",
+        "scripts/check-secrets.js",
+      ],
       defer_set: [],
     });
   });
@@ -110,7 +120,7 @@ module.exports = function register(test) {
         "discovery-ledger",
         "review-implementation",
       ],
-      run_set: [],
+      run_set: ["scripts/check-sibling-closure.js"],
       defer_set: ["security-baseline"],
     });
   });
@@ -127,7 +137,7 @@ module.exports = function register(test) {
         "discovery-ledger",
         "plan-delivery",
       ],
-      run_set: ["repo-tools/check-plan-delivery.js"],
+      run_set: ["repo-tools/check-plan-delivery.js", "scripts/check-plan-sync.js"],
       defer_set: [],
     });
   });
@@ -220,7 +230,11 @@ module.exports = function register(test) {
         "security-baseline",
         "engineering-restraint",
       ],
-      run_set: ["CTRL-0001", "scripts/check-secrets.js"],
+      run_set: [
+        "CTRL-0001",
+        "scripts/check-secrets.js",
+        "scripts/check-file-size-budget.js",
+      ],
       defer_set: [],
     });
   });
@@ -439,6 +453,69 @@ module.exports = function register(test) {
     const abs = path.join(REPO_ROOT, auth[0].path);
     if (!fs.existsSync(abs)) {
       console.error("  review-research path missing on disk", abs);
+      return false;
+    }
+    return true;
+  });
+
+  test("routing graph: enforcement_align binds ↔ mechanical carriers (FINDING-0038 #4)", () => {
+    const align = graph.enforcement_align;
+    if (!align || !align.aliases || !align.must_ship_ctrls || !align.ctrl_carrier_map) {
+      console.error("  missing enforcement_align block");
+      return false;
+    }
+    const enf = JSON.parse(
+      fs.readFileSync(path.join(REPO_ROOT, "references", "capabilities", "enforcement.v0.json"), "utf8")
+    );
+    const byId = new Map((enf.entries || []).map((e) => [e.id, e]));
+    const binds = graph.binds || {};
+    const bad = [];
+
+    for (const [cap, aliasIds] of Object.entries(align.aliases)) {
+      const bound = binds[cap];
+      if (!bound || !bound.length) {
+        bad.push(`${cap}: aliases declared but binds empty`);
+        continue;
+      }
+      const carriers = new Set();
+      for (const eid of aliasIds) {
+        const entry = byId.get(eid);
+        if (!entry) {
+          bad.push(`${cap}: missing enforcement entry ${eid}`);
+          continue;
+        }
+        for (const o of entry.obligations || []) {
+          if (o.mode === "mechanical" && o.carrier) carriers.add(o.carrier);
+        }
+      }
+      for (const item of bound) {
+        if (item.startsWith("CTRL-")) {
+          const mapped = align.ctrl_carrier_map[item];
+          if (!mapped) {
+            bad.push(`${cap}: CTRL ${item} not in ctrl_carrier_map`);
+            continue;
+          }
+          if (!carriers.has(mapped)) {
+            bad.push(`${cap}: ${item}→${mapped} not a mechanical carrier of aliases`);
+          }
+          continue;
+        }
+        if (!carriers.has(item)) {
+          bad.push(`${cap}: bind ${item} not among mechanical carriers [${[...carriers].join(", ")}]`);
+        }
+        const abs = path.join(REPO_ROOT, item);
+        if (!fs.existsSync(abs)) bad.push(`${cap}: bind path missing on disk: ${item}`);
+      }
+    }
+
+    const allBound = new Set();
+    for (const list of Object.values(binds)) for (const x of list) allBound.add(x);
+    for (const ctrl of align.must_ship_ctrls) {
+      if (!allBound.has(ctrl)) bad.push(`must-ship ${ctrl} missing from any binds value`);
+    }
+
+    if (bad.length) {
+      console.error("  enforcement_align failures:\n   ", bad.join("\n    "));
       return false;
     }
     return true;

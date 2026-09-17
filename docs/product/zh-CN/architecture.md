@@ -71,13 +71,11 @@ ai-agent-governance/
 │   │   ├── git-policy.template.md / githooks-template.md / sync-rules.template.md
 │   ├── policies/
 │   │   ├── lifecycle.policy.md / git.policy.md / security.policy.md / coding.policy.md / testing.policy.md
-│   │   └── governance-files.policy.md
-│   ├── capabilities/               # 任务怎么做的叶卡（INIT → docs/rules/capabilities/）；硬规则正文在 policies/（FINDING-0038）
-│   │   ├── enforcement.v0.json     # 义务分类库存
-│   │   ├── audit-drift.md / content-consistency.md / deterministic-init.md / doc-freshness.md
-│   │   ├── evidence-tiers.md / generated-subskill-lifecycle.md / git-workflow-safety.md / governance-state.md
-│   │   ├── governance-validator.md / plan-sync.md / release-orchestration.md / release-risk-tiering.md
-│   │   ├── review-mechanism.md / secret-scanning.md / ssot-repair.md / sync-groups.md
+│   │   ├── runtime-invariants.policy.md / governance-files.policy.md
+│   ├── capabilities/               # 任务叶卡——不是功能总目录（见 overview.md）；硬规则正文在 policies/
+│   │   ├── enforcement.v0.json     # 义务分类库存（leaf 可指 policy 或 capability）
+│   │   ├── audit-drift.md / deterministic-init.md / generated-subskill-lifecycle.md / governance-state.md
+│   │   ├── plan-sync.md / release-orchestration.md / release-risk-tiering.md / review-mechanism.md / skill-execution.md / sync-groups.md
 │   │   └── subskills/
 │   │       ├── subskill-ci-generator.md / subskill-drift-check.md / subskill-governance-validator.md / subskill-plan-manager.md
 │   │       └── subskill-release-manager.md / subskill-repository-inspection.md / subskill-review-manager.md / subskill-state-manager.md
@@ -124,8 +122,12 @@ ai-agent-governance/
 │   │   └── routing.js
 │   ├── routing-graph.v0.json
 │   ├── script-inventory.v0.json / oracle-inventory.v0.json / route-task.js
+│   ├── export-installed-scripts.js  # 论文夹具：导出 INSTALLED 门禁（--ref 钉点）
 │   └── package-skill.sh        # 发布载荷 tarball 打包
 ├── repo-workflows/             # 本仓库自己的流程文档——绝不分发
+│   ├── principles-index.md     # 治理原则指针表（AGENTS 路由至此）
+│   ├── agent-change.md         # 本仓编辑 / 保护 / 校验
+│   ├── conventions.md          # 本仓施工约定
 │   ├── changelog-policy.md
 │   └── skill-release.md
 │

@@ -6,71 +6,43 @@ All notable changes to this project will be documented here.
 
 ### Removed
 
-- Vacuous / low-ROI consistency theater (FINDING-0035): remove `numeric_claims`, `consent_cluster`, consistency `adr-status` (+ unused `scripts/lib/adr-status.js`), `check-changelog-narration.js`, and `judgment-language.test.js`. True gates (CTRL-0002, broken-links, payload I5, etc.) stay.
+- Low-ROI daily gates that only matched wording or labels (`numeric_claims`, consent-marker sync, consistency `adr-status`, changelog-narration, judgment-language suite, terminology Forbidden / `check-terminology.js`). Real gates (CTRL-0002, broken-links, payload I5, etc.) remain; glossary stays a trilingual lookup table.
 
-- Terminology Forbidden columns and `repo-tools/check-terminology.js` daily gate (FINDING-0034): glossary stays a trilingual lookup table; no mechanical blacklist for cross-locale leaks.
+- Zero-delta INSTALLED capability leaves that only restated policies; secret anti-echo folded into `security.policy`.
+
+- Rule Capture protocol from the installed surface (it is this-repo construction, not a governed-project always-on rule).
 
 ### Added
 
-- FINDING-0038 (Confirmed): policies (always-on rules), capability leaves (task how-to), and scripts (mechanical run) were mixed on one routing surface; first slice separates READ authorities from RUN binds.
+- File-size budget reporters (repo + INSTALLED): soft/review alert ceilings, report then propose split, human confirmation before split; optional `.governance/file-size-budget.json`.
 
-- FINDING-0037 (Resolved): scripts barely constrain agent habits/semantics (~0); structure and sync are the effective zone; action-class gates are a middle layer. Criterion landed in coding.policy § 工程克制.
+- INSTALLED `runtime-invariants.policy.md` and capability `skill-execution.md` so `SKILL.md` can stay a thin router.
 
-- FINDING-0036 (Resolved): Agent-invented compressed jargon in Chinese Finding titles reads as precision but blocks readers; plain-title rule in findings README; rename 0034/0035 H1s.
+- Product overview pages (`docs/product/*/overview.md`) for skill discovery.
 
-- FINDING-0035 (Resolved): retire low-ROI mechanical theater on the daily path (`numeric_claims`, consent marker sync, advisory-only adr-status, changelog-narration keyword list, judgment-language substring suite).
-
-- FINDING-0034 (Resolved): Forbidden terminology columns + terminology gate were low-ROI ceremony for hard semantic alignment; retired with the gate wiring.
-
-- FINDING-0031 (Confirmed): citing Resolved/Accepted authority must not substitute for a user-requested re-judgment; conversational control gap (no mechanical carrier).
-
-- Repo-only advisory file-size budgets: `repo-tools/check-file-size-budget.js` / `npm run check:file-size` (layered soft/review thresholds; human-confirmed split protocol; not on daily `check`).
-
-- INSTALLED file-size budget reporter: `scripts/check-file-size-budget.js` (INIT Phase B); portable defaults in `docs/rules/coding.md`; optional `.governance/file-size-budget.json`; engineering-restraint + capability-enforcement obligations.
+- Repo-only `export-installed-scripts.js` (`npm run export:paper-scripts`) to copy INSTALLED gate scripts for external fixtures, with a planned cite pin of `v2.2.0`.
 
 ### Fixed
 
-- Layout-sync CI false green: do not document gitignored `repo-tools/.release/proposal.json` in architecture trees; `check-layout-sync.js` skips gitignored paths so local scratch cannot mask CI.
+- Layout-sync no longer documents gitignored `repo-tools/.release/proposal.json`; ignored paths are skipped.
+
+- `check:must-ship` runs via Node so the CI local gate works on Windows without Git Bash/WSL.
 
 ### Changed
 
-- Doc truth alignment (FINDING-0029/0038 + ADR-0022/0024 + RESEARCH-0006 v13): freeze Finding observation as inventory-at-discovery; mark 0038 closing conditions honestly (only #4 open); align 0029 Resolved body with frontmatter; move Rule Capture to ADR-0024 `retire` instead of must-ship parenthetical.
+- Thin `SKILL.md` / this-repo `AGENTS.md` to identity + always-on + route tables (skill-root backtick paths); process and INIT/AUDIT how-to live in policies, capabilities, and `repo-workflows/`.
 
-- Routing (FINDING-0038 slice 1): `authorities.path` is text-only (no `.js`); script carriers move into `binds` → `run_set`. `engineering-restraint` reads `coding.policy.md`; secret/plan delivery read thin capability cards and run their scripts via binds.
+- INSTALLED payload must not embed producer construction IDs (`PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*`); `CTRL-*` allowed. Capability obligation inventory is `capability-enforcement.json` only.
 
-- Routing (FINDING-0038 slice 2): rehome always-on bodies into policies; **delete** the seven misplaced capability leaves (no pointer shells); enforcement `leaf` may point at policies; SKILL routes those themes to policy sections.
+- Git write consent: `git.policy.md` is sole authority — one confirmation per change set; no second echo gate; no “every push must edit CHANGELOG”; invent a branch only when `check-git-policy.js` exits 1.
 
-- Keep INSTALLED portability (testing) and confirmation-artifact hygiene (git.policy) in policies after leaf rehome. Restore INIT how-to `generated-subskill-lifecycle.md` and SSOT-repair how-to `ssot-repair.md`. Leave `seed-oracles.md` out of INSTALLED — its body is this-repo characterization (`oracle-inventory` / routing suite), not a governed-project rule.
+- Lifecycle / runtime friction: Phase 1 is on-demand task-relevant reads; medium tier is feature/rules/cross-module work (multi-file alone does not force it); Discovery Ledger for medium/large bug or mechanism changes only; drop “3+ files” confirm gates; INIT emits `.gitattributes`; AGENTS/git summaries point at `governance-files` only.
 
-- Remove Rule Capture Phase 5a–5c from the installed lifecycle, SKILL table, enforcement, routing graph, INIT `state.json`, and agent/sub-skill templates (`rc-*` candidates, `state.json.rule_capture`, ID adjudication before rule writes). That protocol is this-repo construction, not a governed-project always-on rule.
+- Coding policy default: structure/sync gates preferred; habit/semantics scripts ≈ 0; action-class may deny. Testing policy restores reference-closure for installable surfaces.
 
-- Scrub other construction narration from INSTALLED bodies: producer phase names (H2a / Phase 7), disposition jargon (must-ship / repo-keep), skill-repo version anecdotes, REPO-ONLY script pointers, `repo-tools/oracle-inventory` carrier in enforcement, and skill-release.md hints in installed gate messages. Keep product rules (change hygiene, discovery ledger, root-cause, portability, git consent, CTRL-* names).
+- README Quick Start and skill-discovery (en / zh-CN / zh-TW): per-agent paths, tarball-only install, init in the target project.
 
-- Coding policy: add gate effective-zone default (structure/sync vs habits/semantics ≈0 vs action-class) under engineering restraint (FINDING-0037).
-
-- Git write consent (CTRL-0002): land ADR-0024 §8 thinning in `references/policies/git.policy.md` — explicit write instruction or IDE stage+commit+push confirm is change-set consent; echo is execution record not a second gate; drop “every push must edit CHANGELOG” and `feature/agent-*` hard branch naming; sync AGENTS/SKILL pointers, agents template, git-policy template, and `check-git-policy.js` messaging.
-
-- Branch workflow is a **conditional** obligation: invent a feature branch only when `check-git-policy.js` actually exits 1; missing `.governance/git-policy.json` means stay on the current branch. `gh pr create` only when the user asked. GitHub’s post-push PR URL is not consent.
-
-- Git consent: after write-instruction or IDE confirm, execute immediately; post-hoc report (files / hash) is enough — no mandatory pre-echo of the full git sequence. `pull` stays independently confirmed.
-
-- Release friction: skill-release and governed `release.md` push the approved branch (not hard-coded `main`); GitHub Release optional for governed projects; skill payload tarball prefers `.github/workflows/skill-payload-release.yml` on tag (local `package-skill.sh` remains fallback).
-
-- README Quick Start (en / zh-CN / zh-TW): per-agent skill discovery paths, tarball-only install (no full-repo clone), init prompt in the target project; align `docs/product/*/skill-discovery.md`.
-
-- References taxonomy (ADR-0026): instruction sources live in `references/instruction/`; subskill leaf cards in `references/capabilities/subskills/`; `templates/` is materialization only.
-
-- Obligation classification (PLAN-0057): INSTALLED `docs/rules/capability-enforcement.json` is the sole inventory of mechanical / require_review / unmechanized / inherent_judgment rows; capability leaves must not dual-write `## Enforcement` lists.
-
-- INSTALLED capability leaves: strip producer construction provenance (PLAN/ADR/FINDING headers and body pointers, Role/Disposition/Classification dual-write); inventory `leaf` stays authoring paths under `references/capabilities/` (including `subskills/`).
-
-- Producer/product content boundary (ADR-0020 I5): skill payload (`SKILL.md` + `references/` + `scripts/`) must not embed this repo's `PLAN-*` / `ADR-*` / `FINDING-*` / `RESEARCH-*` IDs; operational map in `docs/product/*/architecture.md` § Third axis; `tests/` remain REPO-ONLY and must not force those IDs into INSTALLED bodies. Judgment-language suite renamed to `judgment-language.test.js`. Always-on hard rule in this repo's `AGENTS.md`; one-line boundary in `SKILL.md`.
-
-- `check:must-ship` runs via Node (`repo-tools/check-must-ship.js`) instead of bash, so the CI local gate works on Windows without Git Bash/WSL.
-
-- Skill-release sync-point docs: sentinel lives in `scripts/lib/generate/run.js`; Phase 1 no longer points at a removed roadmap Deferred release-safety section.
-
-- Reference closure: canonical protocol restored as `references/policies/testing.policy.md` § 引用闭合 (generalized for both profiles after the CONTRIBUTING simplification); `AGENTS.md` principles index and always-on pointer updated.
+- Release runbooks: push the approved branch; skill payload tarball prefers CI on tag; GitHub Release optional for governed projects.
 
 ## [2.1.1] - 2026-09-14
 

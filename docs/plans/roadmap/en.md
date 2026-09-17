@@ -14,21 +14,23 @@ Authority for the 2.x path: [ADR-0024](../../design-decisions/ADR-0024-gen2-prod
 
 | | |
 | --- | --- |
-| **Product** | `v2.1.1` — INSTALLED must-ship slice; CI block = `npm run check:must-ship` |
-| **Horizon** | H2 **complete**; next construction horizon = **H3** (far; does not block the next minor) |
+| **Product** | Shipped `v2.1.1`; **next release / paper pin `v2.2.0`** ([RESEARCH-0015](../../research/RESEARCH-0015-paper-experiment-apparatus.md), four-gate freeze); capability map [overview](../../product/en/overview.md); CI block = `npm run check:must-ship` |
+| **Horizon** | H2 **complete**. H3 is **far** (does not block the next minor; also **not** a prerequisite for “actually usable”) |
+| **Honest gap** | Long-running control still depends on the agent **remembering to run gates** (trigger ≠ detection). Portable core has no hard runtime intercept. The “less attention” vision is unmet. |
 | **Active Plan** | **None** |
 | **Queued Design** | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) — H3 boundary / runtime & research (not Active) |
 
-Open residual themes (not an Active Plan): INSTALLED mechanical dispatcher (FINDING-0004/0005; needs Narrow ADR), selective Finding patches, further EXTRACT of thick CLIs only when contracts are touched.
+Residual (≠ Active Plan): runtime trigger/dispatch (FINDING-0004/0005; INSTALLED needs Narrow ADR), on-demand Finding patches, EXTRACT thick CLIs only when contracts move. Instruction-surface hygiene (FINDING-0038 + overview) landed without a Plan.
 
 ## Near term
 
 | Item | Role | Note |
 | --- | --- | --- |
+| Runtime trigger / dispatch | On-demand slices | Gates are mechanical; starting them still needs attention. INSTALLED needs Narrow ADR; do not start H3 by default. |
 | [PLAN-0054](../PLAN-0054-h3-runtime-research-design.md) | Design | H3 membership / non-membership / promote-to-Active gates. Freeze only; no L3 install by default. |
-| Finding patches | On demand | Selective small slices when chosen — not a standing sweep. Latest closed: [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) (Archived). When a Plan is required: see [AGENTS.md](../../../AGENTS.md) principles index (Horizon vs everyday edits). |
+| Finding patches | On demand | Selective small slices when chosen — not a standing sweep. Latest closed: [PLAN-0053](../archive/PLAN-0053-v2.1.x-finding-patch-slice.md) (Archived). When a Plan is required: see [principles-index.md](../../../repo-workflows/principles-index.md) (Horizon vs everyday edits). |
 
-SemVer ≠ Horizon. Construction rules live in [AGENTS.md](../../../AGENTS.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § scale tier — **not** on this page.
+SemVer ≠ Horizon. Construction rules live in [AGENTS.md](../../../AGENTS.md) / [agent-change.md](../../../repo-workflows/agent-change.md) / [ADR-0025](../../design-decisions/ADR-0025-gen2x-product-path.md) / lifecycle § scale tier — **not** on this page.
 
 ## Done (one pass)
 
