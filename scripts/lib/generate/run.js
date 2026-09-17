@@ -211,7 +211,7 @@ function writeOrUpgradeStaged(filepath, content, priorRenderings, mode) {
 function artifactType(artPath) {
   if (artPath === "AGENTS.md") return "policy";
   if (artPath.startsWith("docs/rules/")) return "policy";
-  if (artPath === ".gitignore" || artPath === ".env.example" || artPath === ".gitmessage.txt") return "policy";
+  if (artPath === ".gitignore" || artPath === ".env.example" || artPath === ".gitmessage.txt" || artPath === ".gitattributes") return "policy";
   if (artPath === ".governance" || artPath.startsWith(".governance/")) return "state";
   if (artPath.startsWith(".githooks/")) return "script";
   if (artPath.startsWith("scripts/")) return "script";

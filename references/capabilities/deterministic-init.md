@@ -20,7 +20,7 @@ node scripts/generate-governance.js --target <项目根> --phase C \
 ```
 
 3. Agent 兜底（合并不覆盖）：工具入口适配、README 合并、Feature/ARCHITECTURE 真实内容、CI 降级占位、L2/L3 合并——反虚构与确认门仍适用。
-4. 确认门：依赖变更 · Git 身份 · CI 首次推送 · L3 写入 · 跨 3+ 文件额外改动。
+4. 确认门：依赖变更 · Git 身份 · CI 首次推送 · L3 写入 · 删代码/改依赖/治理文件（文件数量本身不触发确认）。
 5. 未实现生成器 → exit 1（除非显式允许 stub）。
 
 ## Verify

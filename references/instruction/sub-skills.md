@@ -323,7 +323,7 @@ Active
 
 Small changes (typo, single-function tweak) may skip the TASK file but must state the reason in the final report.
 
-**Present & confirm** — after creating the plan, present it to the user (Proposed Solution, Affected Files, Risks, Validation Method) and get explicit confirmation before implementation proceeds. Changes spanning 3+ files require user confirmation regardless of size judgement. Do not start implementing without confirmation (unless the user explicitly waives it).
+**Present & confirm** — after creating the plan, present it to the user (Proposed Solution, Affected Files, Risks, Validation Method) and get explicit confirmation before implementation proceeds. File count alone does not force an extra confirm gate. Do not start implementing without confirmation (unless the user explicitly waives it).
 
 ## Phase 5 — Update plans on completion
 

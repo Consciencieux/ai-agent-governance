@@ -32,6 +32,8 @@ All notable changes to this project will be documented here.
 
 ### Changed
 
+- Lifecycle / runtime friction (mainstream alignment): Phase 1 is on-demand task-relevant reads (not ritual full features+CHANGELOG); medium tier is feature/rules/cross-module work (multi-file alone does not force it); Discovery Ledger required for medium/large bug or mechanism changes only; drop “3+ files” confirm gates; INIT emits `.gitattributes`; git/AGENTS governance lists point at `governance-files` only.
+
 - Thin `SKILL.md` to identity + policy-first routing with **skill-root backtick paths** (not bare basenames); INIT/AUDIT how-to live in capability leaves; Chinese-only section headings where applicable.
 
 - Routing: `authorities.path` is text-only; script carriers move to `binds` → `run_set`. SKILL leaf table is READ vs RUN. Enforcement `leaf` may point at policies; expand binds / `enforcement_align` so mechanical carriers stay closed.

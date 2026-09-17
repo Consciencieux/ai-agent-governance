@@ -410,6 +410,14 @@
     },
     {
       "phase": "B",
+      "path": ".gitattributes",
+      "source": null,
+      "type": "static",
+      "content": "* text=auto eol=lf\n*.sh text eol=lf\n*.png binary\n*.jpg binary\n*.jpeg binary\n*.gif binary\n*.ico binary\n*.webp binary\n*.pdf binary\n*.zip binary\n*.gz binary\n*.tgz binary\n*.woff binary\n*.woff2 binary\n",
+      "description": "Repo-declared LF line endings and common binary markers (coding.policy)"
+    },
+    {
+      "phase": "B",
       "path": ".env.example",
       "source": "references/templates/env-example.template.md",
       "type": "template",
