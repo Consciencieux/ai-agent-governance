@@ -30,7 +30,9 @@ resolved_in: gen2
 | `judgment-language.test.js` | 曾是（`npm test`） | 正文仍含子串 `judgment` 等 | **RETIRED**（标签存在 ≠ judgment 执行；I5 仍由 payload 套件守） |
 | `docs:parity` / freshness | parity 日常 | 结构计数 / git 时钟 | **KEEP**（勿叙述成译文质量 OK） |
 
-**KEEP（有真实失败面或结构契约）：** `broken-links`、`prompt-sync`、gated 半边 `version-examples`、`protected-files`、`principles-index`、`plans_status_unknown`、`layout-sync`、`role-completeness`、`daily-check-surface`、`coding-hygiene`、secrets / must-ship / verify_governance。
+**KEEP（有真实失败面或结构契约）：** `broken-links`、gated 半边 `version-examples`、`protected-files`、`principles-index`、`plans_status_unknown`、`layout-sync`、`role-completeness`、`coding-hygiene`、secrets / must-ship / verify_governance。
+
+> **2026-09-18 追记：** 原 KEEP 中的 `prompt-sync` / `daily-check-surface` 已退役（仪式 / 元门禁；装进用户项目无 invariant）。
 
 ## 根因
 

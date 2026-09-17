@@ -29,7 +29,7 @@ subject_generation: gen1
 
 ## 一致性检查（Consistency / Drift）
 
-- 内容一致性（`scripts/check-doc-consistency.js`）—— Gen1 曾扫多簇交叉矛盾。**今日（FINDING-0035）：** 日常 fail-closed 侧重 protected-files / principles-index / plan-status / prompt-sync / broken-links / 部分 version-examples 与 changelog 结构；`consent_cluster`、`numeric_claims`、consistency `adr-status`、术语簇、changelog-narration **已退役**——勿把下列历史簇名当仍在跑的门禁。
+- 内容一致性（`scripts/check-doc-consistency.js`）—— Gen1 曾扫多簇交叉矛盾。**今日：** 日常 fail-closed 侧重 protected-files / principles-index / plan-status / broken-links / 部分 version-examples 与 changelog 结构；`prompt-sync`、`consent_cluster`、`numeric_claims`、consistency `adr-status`、术语簇、changelog-narration **已退役**——勿把下列历史簇名当仍在跑的门禁。
 - 知识新鲜度（`scripts/check-doc-freshness.js`）—— 经 `git log` 提交日期标记过时治理文档，并按源/译文对派生译文新鲜度（`--release-gate` 阻断过时或 draft 译文）
 - 翻译新鲜度 —— Git 派生的逐对状态（stale / draft / reviewed 标记）
 - 计划交付门禁（`repo-tools/check-plan-delivery.js`）—— 计划与实际交付的机械对账（归档前 fail-closed）；锚点语法对已存在文件的声明按内容验证

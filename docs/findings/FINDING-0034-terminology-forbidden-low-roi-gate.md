@@ -40,7 +40,7 @@ resolved_in: gen2
 ## 关闭条件
 
 1. `docs/glossary.md` 去掉 Forbidden 两列，仅保留 English / 简体中文 / 繁體中文；页脚禁止译法说明删除。
-2. `repo-tools/check-terminology.js` 退役并从 `package.json`、`daily-check-surface.v0.json`、`script-inventory` short_lists 移除。
+2. `repo-tools/check-terminology.js` 退役并从 `package.json`、`script-inventory` short_lists 移除（当时若存在 `daily-check-surface` allowlist，一并清出）。
 3. 测试夹具 / AGENTS / sub-skills 中对 Forbidden·terminology gate 的描述同步清除或改为「无机械术语串台门禁」。
 4. 本 Finding 记为 Resolved，且不得声称「Forbidden 已充分解决翻译串台」。
 
@@ -59,5 +59,5 @@ resolved_in: gen2
 ## 回归保护
 
 - `npm run check` / `check:docs` 不再调用 `check-terminology.js`。
-- `docs/glossary.md` 表头仅三列；`check-daily-check-surface` 允许名单无 terminology 入口。
-- `script-inventory` 中该脚本为 `retire` 或不存在。
+- `docs/glossary.md` 表头仅三列。
+- `script-inventory` 中该脚本为 `retire` 或不存在。（原依赖 `check-daily-check-surface` 的回归句已失效——该元门禁亦已删。）

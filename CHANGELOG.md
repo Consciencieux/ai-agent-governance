@@ -6,9 +6,9 @@ All notable changes to this project will be documented here.
 
 ### Removed
 
-- Ceremony / meta-gates with no user-project invariant: `check-daily-check-surface` + `daily-check-surface.v0.json`; INSTALLED `prompt-sync` consistency cluster; must-ship slogan markers (`薄入口` / ADR-0022 / fixed `AUDIT（巡检）` heading); inventory suites demoted off `check:must-ship` (still on `npm test`).
+- Ceremony / meta-gates that only guarded slogans, allowlists, or inventory theater (`daily-check-surface`, INSTALLED `prompt-sync`, must-ship slogan markers; inventory suites off `check:must-ship`).
 
-- Paper cite-pin apparatus that leaked into this skill repo on 2026-09-17 (`RESEARCH-0015`, `export-installed-scripts.js`, ADR-0025/roadmap “paper pin `v2.2.0`”). Version pins for external papers belong in the paper repo, not here.
+- Paper cite-pin / export helper (`RESEARCH-0015`, `export-installed-scripts`) — pins belong in the paper repo.
 
 - Low-ROI daily gates that only matched wording or labels (`numeric_claims`, consent-marker sync, consistency `adr-status`, changelog-narration, judgment-language suite, terminology Forbidden / `check-terminology.js`). Real gates (CTRL-0002, broken-links, payload I5, etc.) remain; glossary stays a trilingual lookup table.
 

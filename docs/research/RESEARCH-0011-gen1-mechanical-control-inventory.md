@@ -1,7 +1,7 @@
 ---
 id: RESEARCH-0011
 status: Active
-version: 6
+version: 7
 subject_generation: gen1
 ---
 
@@ -9,7 +9,7 @@ subject_generation: gen1
 
 本 RESEARCH 是 **Phase 4 事实库存（inventory）**：按 **CTRL identity**（不是 `scripts/` 文件名）记录 Generation-1 当前机械面。它回答「这条 Control 现在靠什么实现、挂在哪条门禁、测什么、哪个 profile」。
 
-> **现在时（2026-09-16，v6）：** 下表大量行是 Gen1/H2 切片快照。**勿把已删簇当活门禁：** `consent-cluster` / `numeric_claims` / consistency `adr-status` / changelog-narration（FINDING-0035）；terminology（FINDING-0034）。CTRL-0002 的语义权威仍是 `git.policy.md` + `check-git-consent.js` 分类器，**不是**已删的 consent marker 同步簇。路由上脚本不得再当 READ authority（FINDING-0038）。
+> **现在时（2026-09-18，v7）：** 下表大量行是 Gen1/H2 切片快照。**勿把已删簇当活门禁：** `consent-cluster` / `numeric_claims` / consistency `adr-status` / changelog-narration（FINDING-0035）；terminology（FINDING-0034）；`prompt-sync` / `daily-check-surface`（2026-09-18 仪式门禁清仓）。CTRL-0002 的语义权威仍是 `git.policy.md` + `check-git-consent.js` 分类器，**不是**已删的 consent marker 同步簇。路由上脚本不得再当 READ authority（FINDING-0038）。
 
 Gen1→Gen2 **如何共存与吸收** 的演化模型见 RESEARCH-0004 v3；本文件不重复。
 
@@ -131,8 +131,8 @@ scripts/evaluators/ctrl-0004-…js         # CTRL-0004
 scripts/check-doc-freshness.js           # 薄 WRAP（CLI 不变）
 
 scripts/check-doc-consistency.js
-        ├── 存活簇（例）：protected-files / principles-index / plan-status / prompt-sync / broken-links / …
-        ├── consent-cluster / numeric_claims / adr-status  → **已退役**（FINDING-0035）
+        ├── 存活簇（例）：protected-files / principles-index / plan-status / broken-links / …
+        ├── prompt-sync / consent-cluster / numeric_claims / adr-status  → **已退役**
         └── terminology (#12)   → 曾 EXTRACT 后 **已退役**（FINDING-0034）
 ```
 
@@ -149,7 +149,7 @@ scripts/check-doc-consistency.js
 | 3 | ADR status sync | **已退役**（FINDING-0035） | — | 曾：Unreleased vs 已发布；从不 fail-closed |
 | 4 | broken links | `--gate` fail-closed | consistency | **CTRL-0006** |
 | 5 | numeric claims | **已退役**（FINDING-0035） | — | 曾：文档数字 vs 源；入口无 claim 面后空转 |
-| 6 | prompt sync | `--gate` | consistency / docs | ADR-0008；双向 |
+| 6 | prompt sync | **已退役**（2026-09-18） | — | 曾：ADR-0008 双向；装进用户项目常空转 |
 | 7 | trilingual parity | 委托 | docs:parity | → `repo-tools/check-doc-parity.js` |
 | 8 | consent-cluster | **已退役**（FINDING-0035） | — | 曾误挂 CTRL-0002；真同意 ≠ marker 同步 |
 | 9 | principles-index pointers | `--gate` | consistency | AGENTS 索引路径存在 |

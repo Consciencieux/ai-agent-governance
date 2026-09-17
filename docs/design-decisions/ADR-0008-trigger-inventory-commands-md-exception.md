@@ -31,6 +31,10 @@ AGENTS.md 存在两条相互矛盾的规则：第 47 行“Never restate skill c
 ## 后果
 
 - AGENTS.md 第 47 行被修改（记录本 ADR 引用的语境），第 113 行保持原样——两者的“矛盾”从此转化为“规则 + 明确例外”的关系。
-- prompt-sync 簇升级为 gate 类（fail-closed under `--gate`），并新增“残留触发词”检测；这属于检查器行为变化，需要 CHANGELOG 记录与测试保护（见 gate-repair-and-ssot-alignment 计划）。
-- 本 ADR 不构成第三事实源：触发词的权威仍在 `references/instruction/sub-skills.md`（单一事实源），commands.md 是面向用户的投影，其与源的等价性由 prompt-sync（升级后）机械保持。
-- 后续新增子技能时，同步组规则中“commands.md（触发词）”从“手册职责”升级为“受控投影 + 门禁强制”。
+- prompt-sync 簇曾升级为 gate 类（fail-closed under `--gate`），并新增“残留触发词”检测（见当时 gate-repair 计划）。
+- 本 ADR 不构成第三事实源：触发词的权威仍在 `references/instruction/sub-skills.md`（单一事实源），commands.md 是面向用户的投影。
+- 后续新增子技能时，同步组规则中“commands.md（触发词）”仍是受控投影义务——**机械保持改由审查/发布判断**，见下节。
+
+## 后续修正（2026-09-18）
+
+**决策 4 的机械载体已退役。** `scripts/lib/doc-consistency/prompt-sync.js` 已从 INSTALLED consistency 编排删除：装进用户项目时常空转，且本仓手册同步属施工义务，不是用户项目 invariant。commands.md 触发词例外（决策 1–3）仍成立；与 `sub-skills.md` 的对齐改为 judgment / 发布审查，**不得再声称本仓有 prompt-sync 日常门禁**。

@@ -28,7 +28,7 @@ resolved_in: gen2
 ## 证据
 
 1. FINDING-0034 / 0035：Forbidden、numeric_claims、consent marker、narration 禁词、judgment 子串套件——难语义贴薄检查，退役后日常失败面几乎不损真约束。
-2. 清仓后剩余 daily 门禁（broken-links、prompt-sync、layout、parity、role、protected-files 枚举对齐、version 同步点等）证明的都是**产物形状**，不是 agent 执行度。
+2. 清仓后剩余 daily 门禁（broken-links、layout、parity、role、protected-files 枚举对齐、version 同步点等）证明的都是**产物形状**，不是 agent 执行度。（`prompt-sync` / `daily-check-surface` 于 2026-09-18 再退役，不改变本条结论。）
 3. CTRL-0002 `check-git-consent` 只分类 argv，不证明「人已经同意」；不跑则效力为 0（与 FINDING-0015 注意力/触发同族）。
 4. coding.policy 机制测试早已要求「非平凡机制须自证必要」；本条是把它落到**门禁有效区**的显式切割。
 
