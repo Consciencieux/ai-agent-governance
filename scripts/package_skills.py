@@ -51,7 +51,9 @@ def links(text: str) -> list[str]:
 
 def target(source: Path, url: str) -> Path:
     path = unquote(urlsplit(url).path)
-    return Path(os.path.abspath(source.parent / path)) if path else source
+    if not path:
+        return source.resolve()
+    return Path(os.path.abspath(source.parent / path)).resolve()
 
 
 def check_links(root: Path) -> None:
@@ -121,27 +123,31 @@ def validate_source(root: Path) -> None:
 
 def mapping(root: Path, stage: Path, name: str) -> dict[Path, Path]:
     dest = stage / name
-    result = {root / 'LICENSE': dest / 'LICENSE', entries(root)[name]: dest / 'SKILL.md'}
+    result = {
+        (root / 'LICENSE').resolve(): dest / 'LICENSE',
+        entries(root)[name].resolve(): dest / 'SKILL.md',
+    }
     base = root if name == ROLES[0] else root / 'skills' / name
     for folder in ('references',):
         for p in files(base / folder):
-            result[p] = dest / p.relative_to(base)
+            result[p.resolve()] = dest / p.relative_to(base)
     for folder in ('shared', 'assets'):
         for p in files(root / folder):
-            result[p] = dest / p.relative_to(root)
+            result[p.resolve()] = dest / p.relative_to(root)
     return result
 
 
 def rewrite(text: str, source: Path, dest: Path, paths: dict[Path, Path]) -> str:
+    resolved_paths = {Path(key).resolve(): value for key, value in paths.items()}
     replacements = {}
     for url in links(text):
         parts = urlsplit(url)
         if parts.scheme or parts.netloc or not parts.path:
             continue
         old_target = target(source, url)
-        if old_target not in paths:
+        if old_target not in resolved_paths:
             raise PackageError(f'{source}: package lacks {url}')
-        new = Path(os.path.relpath(paths[old_target], dest.parent)).as_posix()
+        new = Path(os.path.relpath(resolved_paths[old_target], dest.parent)).as_posix()
         new += ('?' + parts.query) if parts.query else ''
         new += ('#' + parts.fragment) if parts.fragment else ''
         replacements[url] = new
@@ -165,7 +171,7 @@ def rewrite(text: str, source: Path, dest: Path, paths: dict[Path, Path]) -> str
 
 
 def stage_all(root: Path, stage: Path) -> None:
-    entry_map = {p: stage / name / 'SKILL.md' for name, p in entries(root).items()}
+    entry_map = {p.resolve(): stage / name / 'SKILL.md' for name, p in entries(root).items()}
     for name in ROLES:
         current = mapping(root, stage, name)
         for source, dest in current.items():

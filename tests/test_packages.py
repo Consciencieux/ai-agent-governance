@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -135,7 +136,12 @@ class PackagingTests(unittest.TestCase):
                 reachable = {package.target(entry, u) for u in package.links(entry.read_text(encoding='utf-8'))
                              if not u.startswith('https://')}
                 for resource in c['required_resources']:
-                    self.assertIn(ROOT / resource, reachable, resource)
+                    parts = urlsplit(resource)
+                    path = (ROOT / unquote(parts.path)).resolve()
+                    self.assertIn(path, reachable, resource)
+                    if parts.fragment:
+                        self.assertIn(f'<a id="{unquote(parts.fragment)}"></a>',
+                                      path.read_text(encoding='utf-8'), resource)
 
 
 if __name__ == '__main__':
