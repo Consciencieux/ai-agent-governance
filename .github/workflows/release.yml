@@ -1,0 +1,43 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Match release version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PYCODE'
+          import os
+          from pathlib import Path
+          version = Path('VERSION').read_text().strip()
+          if os.environ['RELEASE_TAG'] != 'v' + version:
+              raise SystemExit('Tag and VERSION differ')
+          if f'## [{version}] - ' not in Path('CHANGELOG.md').read_text():
+              raise SystemExit('Add the dated version entry to CHANGELOG.md')
+          PYCODE
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/package_skills.py --output-dir dist
+      - name: Publish bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" dist/ai-agent-governance-skills.zip dist/SHA256SUMS --clobber
+          else
+            gh release create "$RELEASE_TAG" dist/ai-agent-governance-skills.zip dist/SHA256SUMS --title "$RELEASE_TAG" --generate-notes
+          fi

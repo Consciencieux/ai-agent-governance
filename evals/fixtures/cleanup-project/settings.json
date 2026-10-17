@@ -1,0 +1,11 @@
+{
+  "queue": {
+    "capacity": 64
+  },
+  "REPLAY_STAGE": true,
+  "quick_replay": true,
+  "commands": [
+    "enqueue",
+    "quick-replay"
+  ]
+}
