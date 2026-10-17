@@ -1,0 +1,5 @@
+{
+  "extraPaths": ["scripts", "evals/oracles"],
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic"
+}
